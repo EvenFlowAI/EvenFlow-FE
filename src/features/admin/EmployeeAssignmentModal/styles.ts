@@ -1,7 +1,7 @@
 import { makeStyles } from 'tss-react/mui';
 import {styled, TableCell} from "@mui/material";
 
-export const useStyles = makeStyles()(() => ({
+export const useStyles = makeStyles()((theme) => ({
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'flex-end',
@@ -13,10 +13,12 @@ export const useStyles = makeStyles()(() => ({
         alignItems: 'center',
     },
     cancelButton: {
-        color: '#9FA2B4',
         marginRight: 20,
         border: 'none',
         outline: 'none',
+        [theme.breakpoints.down('mdl')]: {
+            width: 150
+        }
     },
     saveButton: {
         background: '#7898FF',
@@ -25,6 +27,9 @@ export const useStyles = makeStyles()(() => ({
         outline: 'none',
         '&:hover': {
             color: '#7898FF'
+        },
+        [theme.breakpoints.down('mdl')]: {
+            width: 150
         }
     },
 }));

@@ -13,7 +13,7 @@ type Tab = {
     component: JSX.Element
 }
 const tabs: Tab[] = [
-    {id: "0", label: "Day Of Week Ops Code", component: <DayOfWeekOpsCode />},
+    {id: "0", label: "Day Of Week Op Code", component: <DayOfWeekOpsCode />},
     {id: "1", label: "Day Of Week Maintenance Package", component: <DayOfWeekPackage />},
 ]
 

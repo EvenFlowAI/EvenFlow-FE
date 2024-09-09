@@ -16,13 +16,13 @@ type TEditDayOfWeekOpsCodeProps = DialogProps & {
 };
 
 type TState = {
-    low: number | undefined;
-    high: number | undefined;
+    low: number | string;
+    high: number | string;
 }
 
 const initialValues: TState = {
-    low: undefined,
-    high: undefined
+    low: "",
+    high: ""
 }
 
 const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditDayOfWeekOpsCodeProps>>> = ({editingItem, ...props}) => {
@@ -56,7 +56,7 @@ const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
                 } else {
                     data.values.push({
                         demandCategory: EDemandCategory.Low,
-                        value: values.low,
+                        value: +values.low,
                     })
                 }
             }
@@ -69,7 +69,7 @@ const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
                 } else {
                     data.values.push({
                         demandCategory: EDemandCategory.High,
-                        value: values.high,
+                        value: +values.high,
                     });
                 }
             }
@@ -88,7 +88,7 @@ const EditDayOfWeekOpsCode: React.FC<React.PropsWithChildren<React.PropsWithChil
         setValues(prev => ({...prev, [type]: e.target.value}))
     }
     return <BaseModal  {...props} width={340} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Day of Week Ops Code</DialogTitle>
+        <DialogTitle onClose={onCancel}>Edit Day of Week Op Code</DialogTitle>
         <DialogContent>
             <TextField type="number"
                        fullWidth

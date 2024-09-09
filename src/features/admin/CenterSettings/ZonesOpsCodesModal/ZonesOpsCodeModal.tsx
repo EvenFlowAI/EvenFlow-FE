@@ -52,7 +52,7 @@ const ZonesOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                     .map(el => ({zoneId: el.zone.id, serviceRequestId: el.serviceRequest.id}))
                 dispatch(updateServiceValetZonesOpsCodes(selectedSC.id, data, onCancel, showError))
             } else {
-                showError("All Service Valet Zones should have assigned Ops Code")
+                showError("All Service Valet Zones should have assigned Op Code")
             }
         }
     }
@@ -60,7 +60,7 @@ const ZonesOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     return <BaseModal onClose={onCancel} open={open} width={425}>
         <DialogTitle>
             <TopWrapper>
-                Service Valet Ops Code
+                Service Valet Op Code
                 <ButtonsWrapper>
                     <Button variant="text" onClick={onCancel} color="secondary" style={{textTransform: 'none'}}>Cancel</Button>
                     <Button variant="text" onClick={onSave} color="primary" style={{textTransform: 'none'}}>Save</Button>

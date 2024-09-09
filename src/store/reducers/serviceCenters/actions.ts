@@ -405,7 +405,7 @@ export const updateDefaultRecallOpsCode = (id: number, serviceRequestId: number)
             if (result) dispatch(loadAllSCs())
         })
         .catch(err => {
-            console.log('update default ops code err', err)
+            console.log('update default op code err', err)
         })
         .finally(() => dispatch(loading(false)))
 }

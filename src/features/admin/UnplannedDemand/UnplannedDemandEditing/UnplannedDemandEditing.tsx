@@ -89,8 +89,6 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
                 <div className={classes.title}>Enter The Unplanned Demand By Appointment Slot</div>
                 <div>
                     <SaveEditBlock
-                        withoutPadding
-                        isLowerCase
                         onSave={handleSave}
                         onEdit={() => setEdit(true)}
                         onCancel={handleCancel}
@@ -103,8 +101,8 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
                 ? <Loading/>
                 : slots1.length
                     ?  <div className={classes.tablesWrapper}>
-                        <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1}/>
-                        <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2}/>
+                        <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1} withEmptyRow={slots1.length < slots2.length}/>
+                        <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2} withEmptyRow={slots2.length < slots1.length}/>
                     </div>
                     : <div className={classes.text}>
                         <Divider style={{marginBottom: 36}}/>

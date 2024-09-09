@@ -150,7 +150,7 @@ const SaveRequestToDMSModal: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     return (
         <BaseModal {...props} style={{ minWidth: 1000 }}>
-            <DialogTitle onClose={props.onClose}>Choose Service Requests to send to DMS</DialogTitle>
+            <DialogTitle onClose={props.onClose}>Choose Op Codes to send to DMS</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
                     <TableContainer>

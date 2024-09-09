@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {TActionProps} from "../../../../../types/types";
 import {TransportationNeeds} from "../../Screens/TransportationNeeds/TransportationNeeds";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,21 +17,22 @@ import {Routes} from "../../../../../routes/constants";
 
 const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
     const {isUsualFlowNeeded, appointmentByKey, serviceOptionChangedFromSlotPage, editingPosition} = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
+    const {wasWarningShowed} = useSelector((state: RootState) => state.modals);
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
     const showError = useException();
     const history = useHistory();
 
-    const redirect = () => {
+    const redirect = useCallback(() => {
         if (editingPosition === 'serviceOption') {
             dispatch(setWelcomeScreenView('serviceSelect'));
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
             dispatch(setCurrentFrameScreen("manageAppointment"))
         }
-    }
+    }, [editingPosition, id, history])
 
-    const handleBack = () => {
+    const handleBack = useCallback(() => {
         if ((serviceOptionChangedFromSlotPage && editingPosition === 'slot') || editingPosition === 'serviceOption') {
             dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
         }
@@ -42,17 +43,17 @@ const TransportationsManage: React.FC<TActionProps> = ({onBack, onNext}) => {
             dispatch(setTransportation(null));
             onBack();
         }
-    }
+    }, [serviceOptionChangedFromSlotPage, editingPosition, appointmentByKey, isUsualFlowNeeded, redirect, onBack])
 
     const checkPod = () => {
         dispatch(checkPodChanged(decodeSCID(id), showError))
     }
 
-    const handleNext = () => {
-        editingPosition === 'slot'
-            ? onNext()
-            : dispatch(setSlotsWarningOpen(true))
-    }
+    const handleNext = useCallback(() => {
+        editingPosition === 'transportation' && !wasWarningShowed
+            ? dispatch(setSlotsWarningOpen(true))
+            : onNext()
+    }, [editingPosition, wasWarningShowed, onNext])
 
     return <TransportationNeeds onBack={handleBack} onNext={handleNext} handleConsentsAccepted={checkPod}/>
 };

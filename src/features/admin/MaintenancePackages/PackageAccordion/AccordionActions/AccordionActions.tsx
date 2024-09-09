@@ -23,7 +23,7 @@ const AccordionActions: React.FC<React.PropsWithChildren<React.PropsWithChildren
                   <Button
                     onClick={onAddOpsCode}
                     className={classes.addButton}>
-                    Assign Ops Code to Option
+                    Assign Op Code to Option
                   </Button>
                   <Button
                     onClick={onSave}

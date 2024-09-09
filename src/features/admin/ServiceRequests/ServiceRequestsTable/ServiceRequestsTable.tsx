@@ -88,7 +88,7 @@ export const ServiceRequestsTable: React.FC<React.PropsWithChildren<React.PropsW
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Please confirm you want to remove Ops Code ${editedItem?.serviceRequest.code}`,
+            title: `Please confirm you want to remove Op Code ${editedItem?.serviceRequest.code}`,
             onConfirm: handleRemove
         });
     }

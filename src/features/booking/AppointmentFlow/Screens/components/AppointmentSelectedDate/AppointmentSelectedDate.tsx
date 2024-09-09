@@ -29,6 +29,7 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
         customerLoadedData
     } = useSelector((state: RootState) => state.appointment);
     const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {wasWarningShowed} = useSelector((state: RootState) => state.modals);
     const {
         serviceTypeOption,
         isAppointmentSaving,
@@ -94,7 +95,7 @@ export const AppointmentSelectedDate: React.FC<React.PropsWithChildren<React.Pro
             dispatch(setServiceOptionChanged(false))
         }
         if (!isAppointmentSaving) {
-            if (isTransportationAvailable && !transportation) {
+            if (isTransportationAvailable && !transportation && !wasWarningShowed) {
                 dispatch(setSlotsWarningOpen(true))
             } else {
                 onChangeSlot();

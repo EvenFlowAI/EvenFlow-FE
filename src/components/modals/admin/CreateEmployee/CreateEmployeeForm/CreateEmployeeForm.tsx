@@ -79,7 +79,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
         setEmployeeForm(prev => ({...prev, dmsId: value ? value.dmsId : null}));
     }
 
-    const handleRoleChange = (e: any, value: string) => {
+    const handleRoleChange = (e: any, value: string|null) => {
         setFormIsChecked(false);
         setEmployeeForm(prev => ({...prev, role: value as TRole, dmsId: null}));
     }
@@ -183,8 +183,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                         isOptionEqualToValue={(option, value) => option === value}
                         onChange={handleRoleChange}
                         loading={shortLoading}
-                        disableClearable
-                        value={form.role ?? undefined}
+                        value={form.role ?? null}
                         renderInput={autocompleteRender({label: "Role", fullWidth: true, placeholder: "Select Role"})}
                     />}
             </Grid>
@@ -199,7 +198,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                     isOptionEqualToValue={(o, s) => o.id === s.id}
                     disabled={!form.role || shortLoading || loadingDMSAdvisors}
                     loading={shortLoading || loadingDMSAdvisors}
-                    value={dmsAdvisor}
+                    value={dmsAdvisor ?? null}
                     renderInput={autocompleteRender({label: "Assign Employee from DMS", fullWidth: true, placeholder: "Assign Employee from DMS"})}
                 />
             </Grid>

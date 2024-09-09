@@ -71,7 +71,7 @@ export const PriceCalculations = () => {
                 <Box display="flex" flexWrap={"wrap"}>
                     <Box p={2} width={300}>
                         <Label style={{color: "#252733"}} htmlFor="serviceRequest">
-                            Select Service Request
+                            Select Op Code
                         </Label>
                         <Autocomplete
                             style={{marginTop: 4}}
@@ -85,7 +85,7 @@ export const PriceCalculations = () => {
                             renderInput={params => <TextField {...{
                                 ...params, InputProps: {
                                     ...params.InputProps,
-                                    disableUnderline: true,
+                                    // disableUnderline: true,
                                     style: fieldStyles,
                                     placeholder: "Select here"
                                 }
@@ -108,7 +108,7 @@ export const PriceCalculations = () => {
                             renderInput={params => <TextField {...{
                                 ...params, InputProps: {
                                     ...params.InputProps,
-                                    disableUnderline: true,
+                                    // disableUnderline: true,
                                     style: fieldStyles,
                                     placeholder: "Select here"
                                 }

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Button, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {Button, MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
@@ -28,6 +28,9 @@ const EmployeesFilters = () => {
     const dispatch = useDispatch();
     const { classes  } = useLabelStyles();
     const {isOpen, onClose, onOpen} = useModal();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"))
+
     const {changePage} = usePagination(
         (s: RootState) => s.employees.pageData,
         changePageData
@@ -98,7 +101,14 @@ const EmployeesFilters = () => {
 
                 {currentUser && !currentUser.isSuperUser
                     ? <>
-                        <SearchDB onSearch={handleSearch} search={searchTerm} style={{marginRight: 20}}/>
+                        <SearchDB
+                            onSearch={handleSearch}
+                            search={searchTerm}
+                            style={{
+                                marginRight: isMobile ? 0 : 20,
+                                marginTop: isMobile ? 14 : 0,
+                                marginBottom: isMobile ? 16 : 0 }}
+                        />
                         <Button
                             onClick={onOpen}
                             variant="contained"

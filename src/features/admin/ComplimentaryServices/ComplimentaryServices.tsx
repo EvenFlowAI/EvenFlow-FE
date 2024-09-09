@@ -54,7 +54,7 @@ export const ComplimentaryServices = () => {
     const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
 
     const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
-        {header: "Ops Code", val: el => el.code, align: "left", orderId: "code", width: 130},
+        {header: "Op Code", val: el => el.code, align: "left", orderId: "code", width: 130},
         {header: "Description", val: el => el.name, orderId: "name"},
         {header: "Labor Hours", val: el => `${el.durationInHours}`, width: 150, orderId: "durationInHours"},
         {header: "Market Rate", val: el => `$${el.price.toFixed(2)}`, width: 150, orderId: "price" },
@@ -105,7 +105,7 @@ export const ComplimentaryServices = () => {
         setAnchorEl(null);
         askConfirm({
             isRemove: true,
-            title: `Please confirm you want to remove Ops Code ${editedItem?.code}`,
+            title: `Please confirm you want to remove Op Code ${editedItem?.code}`,
             onConfirm: handleRemove
         });
     }
@@ -180,7 +180,7 @@ export const ComplimentaryServices = () => {
                         variant="contained"
                         onClick={handleAddOpsCodeOpen}
                     >
-                        Add Ops Codes
+                        Add Op Codes
                     </Button>
                     <Button
                         style={{marginLeft: 16}}

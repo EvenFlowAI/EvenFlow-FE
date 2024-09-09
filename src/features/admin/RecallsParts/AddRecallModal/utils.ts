@@ -9,7 +9,7 @@ export const checkIsValid = (form: TForm, showError: TArgCallback<string>) => {
     if (!form.yearFrom?.length) showError('"Year From" must not be empty')
     if (!form.recallComponent.length) showError('"Recall Component" must not be empty')
     if (!form.recallSummary) showError('"Recall Summary" must not be empty')
-    if (!form.serviceRequest) showError('"Ops Code Assignment" must not be empty')
+    if (!form.serviceRequest) showError('"Op Code Assignment" must not be empty')
 
     return form.recallCampaignNumber.length
         && form.make

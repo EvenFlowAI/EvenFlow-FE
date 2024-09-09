@@ -27,7 +27,7 @@ import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
-    {header: "Service Ops Code", val: el => el.code},
+    {header: "Service Op Code", val: el => el.code},
     {header: "Description", val: el => el.description}
 ];
 
@@ -60,7 +60,7 @@ export const UrgentRequests = () => {
         if (selectedSC) {
             askConfirm({
                 isRemove: true,
-                title: `Please confirm you want to remove Ops Code ${el.code}`,
+                title: `Please confirm you want to remove Op Code ${el.code}`,
                 onConfirm: handleRemove(el)
             });
         }
@@ -75,7 +75,7 @@ export const UrgentRequests = () => {
             }
             try {
                 await Api.call(Api.endpoints.ServiceRequests.Prioritize, {data});
-                showMessage("Ops Code removed");
+                showMessage("Op Code removed");
                 dispatch(setPageDataUrgentServiceRequests({pageSize, pageIndex: 0}))
                 dispatch(loadUrgentServiceRequests(selectedSC.id, selectedPod?.id));
             } catch (e) {

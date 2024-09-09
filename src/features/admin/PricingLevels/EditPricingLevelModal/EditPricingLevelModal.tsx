@@ -97,7 +97,7 @@ const EditPricingLevelModal: React.FC<React.PropsWithChildren<React.PropsWithChi
     }
 
     return <BaseModal  {...props} width={540} onClose={onCancel}>
-        <DialogTitle onClose={onCancel}>Edit Pricing Levels by Ops Code</DialogTitle>
+        <DialogTitle onClose={onCancel}>Edit Pricing Levels by Op Code</DialogTitle>
         <DialogContent>
             <TextField
                 fullWidth
@@ -110,9 +110,9 @@ const EditPricingLevelModal: React.FC<React.PropsWithChildren<React.PropsWithChi
             <Box p={1}/>
             <TextField
                 fullWidth
-                label='Ops Code'
+                label='Op Code'
                 disabled
-                placeholder='Type Ops Code'
+                placeholder='Type Op Code'
                 error={!opsCode && formIsChecked}
                 onChange={e => onTextFieldChange(e, 'opsCode')}
                 value={opsCode}/>

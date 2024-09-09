@@ -1,16 +1,16 @@
 import React, {ChangeEvent} from 'react';
-import {TableRow} from "../../../../components/styled/TableRow";
+import {TableRow} from "../../../../../components/styled/TableRow";
 import {Autocomplete, TableCell} from "@mui/material";
-import {SelectsWrapper, TCellData} from "../styles";
+import {SelectsWrapper, TCellData} from "../../styles";
 import {
     EAdvisorAssignMethod,
     EAssignmentLevel,
     IEmployeeAssignmentSetting
-} from "../../../../store/reducers/employees/types";
-import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {TOption} from "../../ServiceBookModal/types";
-import {methodOptions, secondaryOptions} from "../constants";
-import {getOptionsByRole} from "../utils";
+} from "../../../../../store/reducers/employees/types";
+import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
+import {TOption} from "../../../ServiceBookModal/types";
+import {methodOptions, secondaryOptions} from "../../constants";
+import {getMethods, getOptionsByRole} from "../../utils";
 
 type TProps = {
     item: IEmployeeAssignmentSetting;
@@ -19,14 +19,11 @@ type TProps = {
 }
 
 const ServiceBookRow: React.FC<TProps> = ({item, onMethodChange}) => {
-    const advisorPrimaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Advisor')?.methods?.find(el => el.level === EAssignmentLevel.Primary)?.type;
-    const technicianPrimaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Primary)?.type;
-    const advisorSecondaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Advisor')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
-    const technicianSecondaryMethod = item.employeeAssignmentSettings
-        .find(el => el.role === 'Technician')?.methods?.find(el => el.level === EAssignmentLevel.Secondary)?.type;
+    const {
+        advisorPrimaryMethod,
+        technicianPrimaryMethod,
+        advisorSecondaryMethod,
+        technicianSecondaryMethod} = getMethods(item);
     const isAdvisorSecondaryDisabled = advisorPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
     const isTechSecondaryDisabled = technicianPrimaryMethod !== EAdvisorAssignMethod.LastEmployee
     const advisorOptions = getOptionsByRole(methodOptions, "Advisor")

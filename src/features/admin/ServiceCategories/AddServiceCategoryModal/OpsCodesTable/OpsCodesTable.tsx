@@ -10,7 +10,7 @@ import {TableRowDataType} from "../../../../../types/types";
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
     {
-        header: "OPS CODE",
+        header: "OP CODE",
         val: el => el.serviceRequest.code
     },
     {

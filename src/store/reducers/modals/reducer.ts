@@ -7,6 +7,7 @@ const initialState: TModalState = {
     isServiceWarningOpen: false,
     isUnavailableServiceOpen: false,
     isConsentOpen: false,
+    wasWarningShowed: false,
 }
 
 export const modalsReducer = (state=initialState, action: TModalActions): TModalState => {
@@ -18,13 +19,16 @@ export const modalsReducer = (state=initialState, action: TModalActions): TModal
         case "Modals/SetOpenChanges":
             return {...state, isChangesCompletedOpen: action.payload};
         case "Modals/SetSlotsWarning":
-            return {...state, isSlotsWarningOpen: action.payload};
+            return {...state, isSlotsWarningOpen: action.payload, wasWarningShowed: true};
         case "Modals/SetServiceWarning":
-            return {...state, isServiceWarningOpen: action.payload};
+            return {...state, isServiceWarningOpen: action.payload, wasWarningShowed: true};
         case "Modals/OpenUnavailableService":
             return {...state, isUnavailableServiceOpen: action.payload};
         case "Modals/OpenConsent":
             return {...state, isConsentOpen: action.payload};
+        case "Modals/SlotsWarningShowed": {
+            return {...state, wasWarningShowed: action.payload};
+        }
         default:
             return state
     }

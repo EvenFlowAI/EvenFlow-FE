@@ -28,7 +28,7 @@ type TAssignOpsCodeModalProps = DialogProps & {
 }
 
 const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
-    {header: "OPS CODE", val: el => el.serviceRequest.code, align: "left"},
+    {header: "OP CODE", val: el => el.serviceRequest.code, align: "left"},
     {header: "DESCRIPTION", val: el => el.serviceRequest.description ?? el.serviceRequestOverride?.description, align: "left"},
     {header: "PARTS UNIT COST", val: el => `$${el.serviceRequestOverride?.partsUnitCost || el.serviceRequest.partsUnitCost}`, align: "left"},
     {header: "# OF PARTS", val: el => `${el.serviceRequestOverride?.numberOfParts || el.serviceRequest.numberOfParts}`, align: "left"},
@@ -99,7 +99,7 @@ const AddOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
 
     return (
         <BaseModal {...props} width={1150} onClose={handleClose}>
-            <DialogTitle onClose={handleClose}>Add Ops Codes</DialogTitle>
+            <DialogTitle onClose={handleClose}>Add Op Codes</DialogTitle>
             <DialogContent>
                 <div className={classes.wrapper}>
                     <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={    searchTerm} />

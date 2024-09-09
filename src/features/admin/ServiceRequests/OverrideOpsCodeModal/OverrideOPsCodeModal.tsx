@@ -106,7 +106,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
             <Grid container spacing={3} alignItems="flex-end">
                 <Grid item xs={12}>
                     <TextField
-                        label="Ops Code"
+                        label="Op Code"
                         disabled
                         fullWidth
                         value={payload?.serviceRequest.code || ""}

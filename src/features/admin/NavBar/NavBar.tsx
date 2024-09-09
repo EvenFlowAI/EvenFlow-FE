@@ -37,7 +37,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({sideBarOpened, onOpen
     const { classes  } = useStyles();
     const history = useHistory();
     const theme = useTheme();
-    const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+    const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
     const isAdminDealership = currentUser?.adminDealership ?? false;
 
     const handleClick: React.MouseEventHandler<HTMLElement> = e => {

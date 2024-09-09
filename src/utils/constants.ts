@@ -43,7 +43,7 @@ export const servicesRoot: TTitle = {
 
 export const bookingFlowRoot: TTitle = {
     to: Routes.BookingFlow.Base,
-    title: "Booking Flow"
+    title: "Booking Experience"
 }
 
 export const pricingRoot: TTitle = {

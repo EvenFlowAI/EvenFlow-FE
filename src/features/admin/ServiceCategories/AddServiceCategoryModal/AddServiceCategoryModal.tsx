@@ -341,7 +341,7 @@ export const AddServiceCategoryModal: React.FC<React.PropsWithChildren<React.Pro
                     />
                     <FileInput setState={setFileState} label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload' } Service Category Icon`}/>
                     <div className={classes.inputWrapper}>
-                        <label className={classes.label}>Add Ops Codes</label>
+                        <label className={classes.label}>Add Op Codes</label>
                         <SearchInput onSearch={handleSearch} onChange={handleSearchChange} value={assignedFilter.searchTerm} />
                     </div>
                     <Autocomplete

@@ -35,7 +35,7 @@ import {useModal} from "../../../../hooks/useModal/useModal";
 import Informing from "../../../../components/modals/common/Informing/Informing";
 import {clearAfterCloning} from "../../../../store/reducers/appointments/actions";
 
-const CloneAppointmentModal: React.FC<DialogProps & {onViewClose: TCallback}> = (props) => {
+const CloneAppointmentModal: React.FC<DialogProps & {onViewClose: TCallback}> = ({onViewClose, ...props}) => {
     const {currentAppointment, isAppointmentLoading} = useSelector((state: RootState) => state.appointments);
     const {isAppointmentSaving} = useSelector((state: RootState) => state.appointmentFrame);
     const {
@@ -111,7 +111,7 @@ const CloneAppointmentModal: React.FC<DialogProps & {onViewClose: TCallback}> = 
     const onInformClose = () => {
         onClose();
         onCloneClose();
-        props.onViewClose();
+        onViewClose();
     }
 
     return <BaseModal {...props} width={900}>

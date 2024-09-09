@@ -111,11 +111,11 @@ const OrderIndexModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
 
     return (
         <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Add Index To Maintenance Package's Ops Codes</DialogTitle>
+            <DialogTitle onClose={onCancel}>Add Index To Maintenance Package's Op Codes</DialogTitle>
             {isPackageLoading
                 ? <Loading/>
                 : <DialogContent>
-                    <h3 className={classes.title}>Service Requests</h3>
+                    <h3 className={classes.title}>Op Codes</h3>
                     <TableContainer style={{ overflowX: 'unset' }}>
                         <Table>
                             <TableHead>
