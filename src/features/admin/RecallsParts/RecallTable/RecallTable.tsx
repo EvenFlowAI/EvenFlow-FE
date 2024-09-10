@@ -59,11 +59,11 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         },
         {
             header: "From",
-            val: el => el.yearRange?.from?.toString() ?? '',
+            val: el => el.yearFrom?.toString() ?? '',
         },
         {
             header: "To",
-            val: el => el.yearRange?.to?.toString() ?? '',
+            val: el => el.yearTo?.toString() ?? '',
         },
         {
             header: "Recall Component",

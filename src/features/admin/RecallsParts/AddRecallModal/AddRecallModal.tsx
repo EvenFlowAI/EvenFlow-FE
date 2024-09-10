@@ -43,11 +43,9 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 recallCampaignNumber: editingItem.recallCampaignNumber,
                 make: make ?? null,
                 model: model ?? null,
-                yearFrom: editingItem.yearRange?.from?.toString() ?? '',
-                yearTo: editingItem.yearRange?.to?.toString() ?? '',
+                yearFrom: editingItem.yearFrom?.toString() ?? '',
+                yearTo: editingItem.yearTo?.toString() ?? '',
                 recallComponent: editingItem.recallComponent,
-                partLeadDaysCount: editingItem.partLeadDaysCount?.toString() ?? '',
-                dailyPartsCount: editingItem.dailyPartsCount?.toString() ?? '',
                 recallSummary: editingItem.recallSummary,
                 serviceRequest: sr ?? null,
             }))
@@ -69,14 +67,10 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 recallCampaignNumber: form.recallCampaignNumber,
                 makeId: form.make?.id ?? null,
                 modelId: form.model?.id ?? null,
-                yearRange: {
-                    from: form.yearFrom?.length ? +form.yearFrom : null,
-                    to: form.yearTo?.length ? +form.yearTo : null,
-                },
+                yearFrom: form.yearFrom?.length ? +form.yearFrom : null,
+                yearTo: form.yearTo?.length ? +form.yearTo : null,
                 recallComponent: form.recallComponent,
                 recallSummary: form.recallSummary,
-                partLeadDaysCount: +form.partLeadDaysCount,
-                dailyPartsCount: +form.dailyPartsCount,
                 serviceRequestId: form.serviceRequest?.id ?? null,
                 serviceCenterId: selectedSC.id,
             }
@@ -127,10 +121,10 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 <TextField
                     style={{ marginBottom: 10 }}
                     fullWidth
-                    label='Recall Campaign Number'
+                    label='NHTSA Campaign'
                     id="recallCampaignNumber"
                     name="recallCampaignNumber"
-                    placeholder='Type Recall Campaign Number'
+                    placeholder='Type NHTSA Campaign'
                     error={formIsChecked && !form.recallCampaignNumber.length}
                     onChange={onFormChange}
                     value={form.recallCampaignNumber}/>
@@ -215,6 +209,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     options={allAssignedList}
                     isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.serviceRequest.code}
+                    getOptionKey={o => o.serviceRequest.code + o.id}
                     value={form.serviceRequest}
                     onChange={onSRChange}
                     renderInput={autocompleteRender({
@@ -223,28 +218,6 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                         placeholder: 'Select Op Code Assignment'
                     })}
                 />
-                <TextField
-                    fullWidth
-                    type="number"
-                    style={{ marginBottom: 10 }}
-                    label='Part Lead Time (Days)'
-                    id="partLeadDaysCount"
-                    name="partLeadDaysCount"
-                    placeholder='Type Part Lead Days Count'
-                    error={formIsChecked && (!form.partLeadDaysCount || !Number.isInteger(+form.partLeadDaysCount) || +form.partLeadDaysCount < 0) }
-                    onChange={onFormChange}
-                    value={form.partLeadDaysCount}/>
-                <TextField
-                    fullWidth
-                    type="number"
-                    style={{ marginBottom: 10 }}
-                    label='Daily Parts'
-                    id="dailyPartsCount"
-                    name="dailyPartsCount"
-                    placeholder='Type Daily Parts'
-                    error={formIsChecked && (!form.dailyPartsCount || !Number.isInteger(+form.dailyPartsCount) || +form.dailyPartsCount < 0)}
-                    onChange={onFormChange}
-                    value={form.dailyPartsCount}/>
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>

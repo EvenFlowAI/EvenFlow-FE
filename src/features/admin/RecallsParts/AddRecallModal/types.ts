@@ -12,8 +12,6 @@ export type TForm = {
     yearFrom: string;
     recallComponent: string;
     recallSummary: string;
-    partLeadDaysCount: string;
-    dailyPartsCount: string;
     serviceRequest: IAssignedServiceRequest|null;
 }
 export type TAddRecallProps = DialogProps & {
