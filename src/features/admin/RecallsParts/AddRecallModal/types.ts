@@ -7,7 +7,7 @@ import {Dispatch, SetStateAction} from "react";
 export type TForm = {
     recallCampaignNumber: string;
     make: IMakeExtended|null;
-    model: IModel|null;
+    models: IModel[];
     yearTo: string;
     yearFrom: string;
     recallComponent: string;

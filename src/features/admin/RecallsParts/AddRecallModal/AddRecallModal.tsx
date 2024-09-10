@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {ICreateUpdateRecall} from "../../../../store/reducers/recall/types";
 import {Autocomplete, Button} from "@mui/material";
@@ -16,6 +16,9 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {checkIsValid} from "./utils";
 import {initialForm, yearOptions} from "./constants";
+import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
+import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 
 const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddRecallProps>>> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
@@ -27,6 +30,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     const showError = useException();
     const {selectedSC} = useSCs();
     const { classes  } = useStyles();
+    const { classes: autocompleteClasses  } = useAutocompleteStyles();
 
     useEffect(() => {
         if (open && selectedSC) {
@@ -37,12 +41,12 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     useEffect(() => {
         if (open && editingItem) {
             const make = makesModels.find(el => el.id === editingItem.make?.id);
-            const model = make?.models.find(el => el.id === editingItem.model?.id);
+            const models = make?.models.filter(el => editingItem.models.find(item => item.id === el.id)) ?? [];
             const sr = allAssignedList.find(item => item.id === editingItem.serviceRequest?.id);
             setForm(() => ({
                 recallCampaignNumber: editingItem.recallCampaignNumber,
                 make: make ?? null,
-                model: model ?? null,
+                models: models,
                 yearFrom: editingItem.yearFrom?.toString() ?? '',
                 yearTo: editingItem.yearTo?.toString() ?? '',
                 recallComponent: editingItem.recallComponent,
@@ -66,7 +70,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             const data: ICreateUpdateRecall = {
                 recallCampaignNumber: form.recallCampaignNumber,
                 makeId: form.make?.id ?? null,
-                modelId: form.model?.id ?? null,
+                modelIds: form.models.map(el => el.id),
                 yearFrom: form.yearFrom?.length ? +form.yearFrom : null,
                 yearTo: form.yearTo?.length ? +form.yearTo : null,
                 recallComponent: form.recallComponent,
@@ -99,18 +103,32 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
 
     const onMakeChange = (e: ChangeEvent<{}>, value: IMakeExtended|null) => {
         setFormIsChecked(false);
-        setForm(prev => ({...prev, make: value, model: null}))
+        setForm(prev => ({...prev, make: value, models: []}))
     }
 
-    const onModelChange = (e: ChangeEvent<{}>, value: IModel|null) => {
+    const onModelChange = (e: ChangeEvent<{}>, value: IModel[]) => {
         setFormIsChecked(false);
-        setForm(prev => ({...prev, model: value}))
+        setForm(prev => ({...prev, models: value}))
     }
 
     const onSRChange = (e: ChangeEvent<{}>, value: IAssignedServiceRequest|null) => {
         setFormIsChecked(false);
         setForm(prev => ({...prev, serviceRequest: value}));
     }
+
+    const renderModelOption = useCallback((props: any, option: IModel) => {
+        const checked = Boolean(form.models.find(el => el.id === option.id));
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.id} >
+            <Checkbox
+                color="primary"
+                icon={checked
+                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
+                checked={checked}
+            />
+            {option.name}
+        </li>
+    }, [form]);
 
     return (
         <BaseModal open={open} onClose={onCancel} width={500}>
@@ -147,11 +165,14 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     options={form.make?.models ?? []}
                     isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.name}
-                    value={form.model}
+                    value={form.models}
                     onChange={onModelChange}
+                    renderOption={renderModelOption}
+                    multiple
+                    classes={autocompleteClasses}
                     renderInput={autocompleteRender({
                         label: "Model",
-                        error: formIsChecked && !form.model,
+                        error: formIsChecked && !form.models,
                         placeholder: 'Select Model'
                     })}
                 />
