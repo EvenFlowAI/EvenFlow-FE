@@ -47,7 +47,7 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
     }, [selectedSC, editingElement, selectedPod])
 
     const setInitialData = useCallback(() => {
-        const half = Math.floor(unplannedSlots.length / 2);
+        const half = Math.ceil(unplannedSlots.length / 2);
         setSlots1(unplannedSlots.slice(0, half));
         setSlots2(unplannedSlots.slice(half));
     }, [unplannedSlots])

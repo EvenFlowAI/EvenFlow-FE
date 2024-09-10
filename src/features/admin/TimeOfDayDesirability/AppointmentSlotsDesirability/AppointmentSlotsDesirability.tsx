@@ -67,7 +67,7 @@ export const AppointmentSlotsDesirability = () => {
 
     const [slots1, slots2]: [TSlot[], TSlot[]] = useMemo(() => {
         const slots = [...form.items];
-        const half = Math.floor(slots.length / 2);
+        let half = Math.ceil(slots.length / 2);
         return [slots.slice(0, half), slots.slice(half)];
     }, [form]);
 
