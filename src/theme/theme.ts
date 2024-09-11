@@ -24,8 +24,8 @@ const themeOptions: ThemeOptions = {
             xs: 0,
             sm: 600,
             mds: 720,
+            mdl: 768,
             md: 960,
-            mdl: 1024,
             lg: 1280,
             xl: 1440
         }
