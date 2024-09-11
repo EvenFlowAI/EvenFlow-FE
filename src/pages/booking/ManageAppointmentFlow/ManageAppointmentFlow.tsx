@@ -28,7 +28,7 @@ import AppointmentSlotsManage
 import AppointmentTimingManage
     from "../../../features/booking/AppointmentFlow/Manage/AppointmentTimingManage/AppointmentTimingManage";
 import ConsultantsManage from "../../../features/booking/AppointmentFlow/Manage/ConsultantsManage/ConsultantsManage";
-import MaintenanceManage from "../../../features/booking/AppointmentFlow/Manage/MaintenanceManage/MaintenanceManage";
+import MaintenanceDetailsManage from "../../../features/booking/AppointmentFlow/Manage/MaintenanceDetailsManage/MaintenanceDetailsManage";
 import {
     ServiceNeedsManage
 } from "../../../features/booking/AppointmentFlow/Manage/ServiceNeedsManage/ServiceNeedsManage";
@@ -93,7 +93,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
                 setPage={setServiceCategoryPage}
                 setLastSelectedCategory={setLastSelectedCategory}
                 onSelect={handleSetScreen} />,
-            maintenanceDetails: <MaintenanceManage
+            maintenanceDetails: <MaintenanceDetailsManage
                 serviceCategoryPage={serviceCategoryPage}
                 onBack={handleSetScreen}
                 onNext={handleSetScreen}
@@ -133,7 +133,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
                 onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
                 onNext={() => handleSetScreen('appointmentConfirmed')}
             />,
-            appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment}/>,
+            appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment} isManagingFlow/>,
             location: <YourLocationManage
                 onUpdateAppointment={onUpdateAppointment}
                 setNeedToShowServiceSelection={setNeedToShowServiceTypes}

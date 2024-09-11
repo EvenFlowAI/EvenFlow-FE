@@ -12,17 +12,18 @@ export const SelectedPriceManaging = () => {
     const {t} = useTranslation();
     const price = appointmentRequestsPrices
         .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
-
+    const noDefinedPriceExists = appointmentRequestsPrices
+        .find(el => el.priceValue === 0 || typeof el.priceValue === 'undefined')
     return (
         <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Selected Price")}</AppointmentConfirmationTitle>
             <Price>
-                {price > 0
+                {price > 0 && !noDefinedPriceExists
                     ? <span>${scProfile?.isRoundPrice
                         ? price
                         : price.toFixed(2)}
                     </span>
-                    : t('Service items will be quoted at dealership')
+                    : t('A full quote will be provided at the dealership')
                 }
                 {/*todo uncomment for offer new functionality*/}
                 {/*{appointment?.serviceRequestPrices?.find(item => !!item.offer)*/}

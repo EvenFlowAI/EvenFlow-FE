@@ -22,9 +22,10 @@ import {ESettingType} from "../../../../../store/reducers/generalSettings/types"
 
 type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
+    isManagingFlow: boolean
 }
 
-export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onUpdateAppointment}) => {
+export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isManagingFlow, onUpdateAppointment}) => {
     const {
         appointment,
         serviceValetAppointment,
@@ -99,6 +100,21 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
         [serviceValetAppointment, serviceTypeOption]);
     const isServiceValetManage = useMemo(() => !Boolean(appointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
         [appointment, serviceTypeOption]);
+    const {appointmentRequestsPrices} = useSelector((state: RootState) => state.appointmentFrame);
+
+    const noDefinedPriceExists = useMemo(() => {
+            if (isManagingFlow) {
+                return appointmentRequestsPrices.find(el => el.priceValue === 0 || typeof el.priceValue === 'undefined')
+            } else {
+                if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                    return serviceValetAppointment?.serviceRequestPrices
+                        ?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+                }
+                return appointment?.serviceRequestPrices
+                    ?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+            }
+        },
+        [appointment, serviceValetAppointment, serviceTypeOption, isManagingFlow, appointmentRequestsPrices])
 
     useEffect(() => {
         ReactGA.event({
@@ -119,6 +135,8 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
 
     const getPriceContent = (): string => {
         let price  = t('Will be quoted at the dealership');
+        if (noDefinedPriceExists) return t("A full quote will be provided at the dealership");
+
         if (!Number.isNaN(transactionValue) && transactionValue > 0) {
             price = scProfile?.isRoundPrice
                 ? `$${transactionValue}`
