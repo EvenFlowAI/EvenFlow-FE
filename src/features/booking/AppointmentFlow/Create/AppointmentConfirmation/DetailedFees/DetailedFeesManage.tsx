@@ -29,7 +29,11 @@ const DetailedFeesManage: React.FC<React.PropsWithChildren<React.PropsWithChildr
     return (
         <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose} style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                {t("Selected Price")}:   {price}
+                {noDefinedPriceExists
+                    ? `${t("Selected Price")}:
+                    ${t("A full quote will be provided at the dealership")}`
+                : `${t("Selected Price")}:   $${price}`
+                }
             </DialogTitle>
             <DialogContent>
                 <DetailedFeesList>

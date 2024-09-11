@@ -122,7 +122,7 @@ export const ViewAppointmentsModal:
                 variant="outlined">
                 Edit
             </Button>
-            <Button onClick={onClone} variant="outlined" style={{color: '#5FA077', borderColor: "#5FA077"}}>
+            <Button onClick={onClone} variant="outlined" style={{color: '#5FA077', borderColor: "#5FA077"}} aria-hidden={false}>
                 Clone
             </Button>
             <Button onClick={props.onClose} color="info">
