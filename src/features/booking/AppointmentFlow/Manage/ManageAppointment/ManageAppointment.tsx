@@ -86,6 +86,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
 
     const [errors, setErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [userClickedOnSave, setUserClickedOnSave] = useState<boolean>(false);
     const currentUser = useCurrentUser();
     const {id} = useParams<{id: string}>();
     const {isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen} = useModal();
@@ -142,6 +143,12 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     useEffect(() => {
         dispatch(setReminders([0, 2]));
     }, [])
+
+    useEffect(() => {
+        if (appointmentByKey && !appointmentByKey?.vehicle?.mileage && !selectedVehicle?.mileage) {
+            onMileageOpen();
+        }
+    }, [appointmentByKey, selectedVehicle])
 
     const handleConsultants = async () => {
         if (appointmentByKey) {
@@ -214,6 +221,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     }
 
     const handleCreateAppointment = () => {
+        setUserClickedOnSave(true)
         const mileageIsValid = selectedVehicle?.mileage && mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString())
         if (!mileageIsValid && !isMileageOpen) {
             onMileageOpen()
@@ -290,6 +298,10 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         }
     }
 
+    const onSaveMileage = () => {
+        userClickedOnSave ? handleCreateAppointment() : onMileageClose();
+    }
+
     return <StepWrapper>
         <ManageTitle>Manage Appointment</ManageTitle>
         <Wrapper>
@@ -322,7 +334,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             ? null
             :  <ActionButtons
                 loading={isAppointmentSaving || isConsentsLoading}
-                nextDisabled={loading}
+                nextDisabled={loading || isMileageOpen}
                 onBack={onCancelConfirmOpen}
                 onNext={searchForConsents}
                 nextLabel="Confirm Changes"
@@ -345,6 +357,6 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         <CommentModal open={isCommentOpen} onClose={onCommentClose}/>
         <ConfirmCancelUpdate open={isCancelConfirmOpen} onClose={onCancelConfirmClose} onCancelChanges={onCancelChanges}/>
         <CustomerConsents onNext={handleCreateAppointment}/>
-        <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={handleCreateAppointment}/>
+        <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={onSaveMileage}/>
     </StepWrapper>
 };
