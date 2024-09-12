@@ -77,6 +77,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             open={isOpened}
             anchor="left"
         >
+            <div>
             {isTablet
                 ? <IconButton className={classes.closeButton} onClick={onClose} size="large">
                     <Close style={{color: "#fff"}} />
@@ -89,7 +90,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     : links.map(link =>  <Link link={link} closeSidebar={closeSidebar} key={link.name}/>)
                 }
             </List>
-            <div style={{flex: 1}} />
+            </div>
+            {/*<div style={{flex: 1}} />*/}
             {selectedSC
                 ? <Button
                     endIcon={<ArrowForwardIos/>}
