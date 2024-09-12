@@ -12,11 +12,8 @@ export const useStyles = makeStyles()((theme: Theme) => ({
         ...titleSt,
         fontWeight: "bold",
         [theme.breakpoints.down('mdl')]: {
-            fontSize: 20
+            fontSize: 16
         },
-        [theme.breakpoints.down('sm')]: {
-            textAlign: "center"
-        }
     },
     subtitle: {},
     titleContainer: {
@@ -37,7 +34,7 @@ export const useStyles = makeStyles()((theme: Theme) => ({
             }
         },
         [theme.breakpoints.down('mdl')]: {
-            fontSize: 20
+            fontSize: 16
         },
     }
 }));

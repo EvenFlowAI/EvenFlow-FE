@@ -75,6 +75,7 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                     <Autocomplete
                         fullWidth
                         options={advisorOptions}
+                        blurOnSelect="touch"
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         disableClearable
                         getOptionLabel={i => i.name}
@@ -90,6 +91,7 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                 <SmallGreyGrid item xs={6} mdl={2} style={isAdvisorSecondaryDisabled ? {backgroundColor: "#EAEBEE"} : {}}>
                     <Autocomplete
                         fullWidth
+                        blurOnSelect="touch"
                         options={secondaryOptions}
                         disabled={isAdvisorSecondaryDisabled}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
@@ -119,6 +121,7 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                 >
                     <Autocomplete
                         fullWidth
+                        blurOnSelect="touch"
                         options={technicianOptions}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         getOptionLabel={i => i.name}
@@ -141,6 +144,7 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                     }}>
                     <Autocomplete
                         fullWidth
+                        blurOnSelect="touch"
                         options={secondaryOptions}
                         disabled={isTechSecondaryDisabled}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
