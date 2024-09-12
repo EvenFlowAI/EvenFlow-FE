@@ -155,7 +155,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                         <MenuItem onClick={onDeleteEmployee}>Remove</MenuItem>
                         <MenuItem
                             onClick={onOpenResend}
-                            style={editedItem?.emailConfirmed ? {} : {color: "#858585"}}>
+                            style={editedItem?.emailConfirmed ? {color: "#858585"} : {}}>
                             Resend
                         </MenuItem>
                     </MenuItem>
