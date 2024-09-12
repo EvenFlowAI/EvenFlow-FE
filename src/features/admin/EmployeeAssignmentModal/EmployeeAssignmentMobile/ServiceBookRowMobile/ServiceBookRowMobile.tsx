@@ -76,6 +76,8 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                         fullWidth
                         options={advisorOptions}
                         blurOnSelect="touch"
+                        selectOnFocus={false}
+                        style={{userSelect: 'none'}}
                         isOptionEqualToValue={(o, v) => o.value === v.value}
                         disableClearable
                         getOptionLabel={i => i.name}
