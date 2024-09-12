@@ -22,7 +22,9 @@ export const StyledContainer = styled("div")<TStyleProps>(({theme, pad}) => ({
         "&>*:not(:first-child)": {
             marginTop: theme.spacing(1)
         },
-        alignItems: "start"
+        alignItems: "start",
+        width: '100%',
+        alignSelf: 'flex-start'
     },
 }))
 
