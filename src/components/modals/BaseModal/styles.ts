@@ -26,7 +26,6 @@ export const StyledDialog = styled(Dialog, {
     },
 }))
 
-//
 export const useStyles = makeStyles()({
     dialogTitle: {
         textAlign: "center",
