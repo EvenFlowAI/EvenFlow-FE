@@ -26,7 +26,7 @@ export const StyledDialog = styled(Dialog, {
     },
 }))
 
-export const useStyles = makeStyles()({
+export const useStyles = makeStyles()((theme) => ({
     dialogTitle: {
         textAlign: "center",
         fontSize: 19,
@@ -40,11 +40,15 @@ export const useStyles = makeStyles()({
         padding: "10px 25px"
     },
     dialogActions: {
-        padding: "10px 25px 25px"
+        padding: "10px 25px 25px",
+        [theme.breakpoints.down('mdl')]: {
+            justifyContent: 'space-around',
+            padding: '16px !important'
+        }
     },
     closeButton: {
         position: "absolute",
         top: 0,
         right: 0,
     },
-});
+}));

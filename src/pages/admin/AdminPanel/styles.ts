@@ -21,7 +21,7 @@ export const useStyles = makeStyles()(theme => ({
             marginLeft: 0
         },
         [theme.breakpoints.down('mdl')]: {
-            marginLeft: "-100%"
+            // marginLeft: "-100%"
         }
     },
     mainOpened: {

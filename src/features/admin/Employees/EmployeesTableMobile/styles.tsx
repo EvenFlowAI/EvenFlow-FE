@@ -87,3 +87,8 @@ export const TitleRow = styled('div')({
         gap: 4
     }
 })
+
+export const Wrapper = styled('div')({
+    marginBottom: 24,
+    width: '100%'
+})

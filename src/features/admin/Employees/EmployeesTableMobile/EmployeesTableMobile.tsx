@@ -24,7 +24,7 @@ import {
     Menu,
     MenuItem,
     TitleRow,
-    useStyles
+    useStyles, Wrapper
 } from "./styles";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {defaultRowsPerPageOptions} from "../../../../config/config";
@@ -111,7 +111,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
             {loading
                 ? <Loading/>
                 : <>
-                    <div style={{marginBottom: 24}}>
+                    <Wrapper>
                         <TitleRow>
                             <div style={{color: order.orderBy ? "#252733" : "#858585"}}>
                                 <div>Name</div>
@@ -136,7 +136,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                                 setExpandedItem={setExpandedItem}
                                 setAnchorEl={setAnchorEl}/>
                         })}
-                    </div>
+                    </Wrapper>
                     <TablePagination
                         component="div"
                         count={numberOfRecords}
@@ -145,7 +145,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                         className={classes.pagination}
                         onRowsPerPageChange={changeRowsPerPage}
                         rowsPerPage={pageSize}
-                        hidden={numberOfRecords < pageSize}
+                        hidden={numberOfRecords < 11}
                         rowsPerPageOptions={defaultRowsPerPageOptions}/>
                 </>}
             <Drawer anchor="bottom" open={Boolean(anchorEl)} variant="persistent" classes={{paper: classes.drawer}}>
@@ -155,7 +155,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                         <MenuItem onClick={onDeleteEmployee}>Remove</MenuItem>
                         <MenuItem
                             onClick={onOpenResend}
-                            style={editedItem?.emailConfirmed ? {} : {color: "#858585"}}>
+                            style={editedItem?.emailConfirmed ? {color: "#858585"} : {}}>
                             Resend
                         </MenuItem>
                     </MenuItem>
