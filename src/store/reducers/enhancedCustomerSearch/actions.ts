@@ -95,6 +95,7 @@ export const loadCustomersByPhoneOrEmail = (
                         engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
                         appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
                         id: item.vehicleId,
+                        dmsId: item.vehicleDmsId,
                     }
                     if (item.hasOrders) vehicle.hasRepairOrders = true;
                     return vehicle;
