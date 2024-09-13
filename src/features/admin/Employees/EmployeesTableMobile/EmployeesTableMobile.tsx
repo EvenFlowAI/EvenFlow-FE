@@ -145,7 +145,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                         className={classes.pagination}
                         onRowsPerPageChange={changeRowsPerPage}
                         rowsPerPage={pageSize}
-                        hidden={numberOfRecords < pageSize}
+                        hidden={numberOfRecords < 11}
                         rowsPerPageOptions={defaultRowsPerPageOptions}/>
                 </>}
             <Drawer anchor="bottom" open={Boolean(anchorEl)} variant="persistent" classes={{paper: classes.drawer}}>
