@@ -24,7 +24,7 @@ import {
     Menu,
     MenuItem,
     TitleRow,
-    useStyles
+    useStyles, Wrapper
 } from "./styles";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {defaultRowsPerPageOptions} from "../../../../config/config";
@@ -111,7 +111,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
             {loading
                 ? <Loading/>
                 : <>
-                    <div style={{marginBottom: 24}}>
+                    <Wrapper>
                         <TitleRow>
                             <div style={{color: order.orderBy ? "#252733" : "#858585"}}>
                                 <div>Name</div>
@@ -136,7 +136,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                                 setExpandedItem={setExpandedItem}
                                 setAnchorEl={setAnchorEl}/>
                         })}
-                    </div>
+                    </Wrapper>
                     <TablePagination
                         component="div"
                         count={numberOfRecords}
