@@ -91,6 +91,7 @@ export interface ILoadedVehicle  extends IVehicle {
     appointmentHashKeys: string[];
     hasRepairOrders?: boolean;
     hasOrders?: boolean;
+    vehicleDmsId?: string;
 }
 
 export interface IVehicleForRequest extends IVehicle {
