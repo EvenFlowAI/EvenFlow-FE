@@ -30,11 +30,5 @@ export const SmallGreyGrid = styled(Grid)({
 })
 
 export const StyledActions = styled(DialogActions)(({theme}) => ({
-    root: {
-        [theme.breakpoints.down('mdl')]: {
-            justifyContent: 'space-around',
-            padding: '16px !important'
-        }
-    }
 }))
 
