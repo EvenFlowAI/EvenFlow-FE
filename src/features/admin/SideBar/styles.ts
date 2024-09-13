@@ -8,6 +8,9 @@ export const useStyles = makeStyles()(theme => ({
         display: "flex",
         flexFlow: "column",
         position: "relative",
+        [theme.breakpoints.down('sm')]: {
+            width: "100%",
+        }
     },
     link: {
         color: "#fff",
@@ -36,5 +39,8 @@ export const useStyles = makeStyles()(theme => ({
         padding: "60px 30px",
         alignItems: "center",
         justifyContent: 'space-between',
+        [theme.breakpoints.down('sm')]: {
+            width: "100%"
+        }
     },
 }));
