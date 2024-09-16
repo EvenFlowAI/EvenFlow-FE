@@ -4,7 +4,7 @@ import {Table, TableBody, TableHead} from "@mui/material";
 import {timeSpanString, time12HourFormat} from "../../../../utils/constants";
 import {sortSlots} from "../utils";
 import DemandInput from "../../AppointmentAllocation/DemandInput";
-import {useStyles} from "./styles";
+import {UnplannedTableCell, useStyles} from "./styles";
 import {TableRow} from "../../../../components/styled/TableRow";
 import {TableCell} from "../../../../components/styled/TableCell";
 import dayjs from "dayjs";
@@ -59,21 +59,21 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
         <TableBody>
             {slots.map((item, index) => {
                 return <TableRow key={dayjs().toISOString() + index} className={classes.row}>
-                    <TableCell
+                    <UnplannedTableCell
                         key={item.start}
-                        style={{textAlign: 'left'}}
+                        style={{textAlign: 'left', padding: '22px 16px'}}
                         className={classes.cell}>
                         {dayjs.utc(item.start, timeSpanString).format(time12HourFormat)}
-                    </TableCell>
-                    <TableCell
+                    </UnplannedTableCell>
+                    <UnplannedTableCell
                         key={item.end}
-                        style={{textAlign: 'left'}}
+                        style={{textAlign: 'left', padding: '22px 16px'}}
                         className={classes.cell}>
                         {dayjs.utc(item.end, timeSpanString).format(time12HourFormat)}
-                    </TableCell>
-                    <TableCell className={classes.cell}>
+                    </UnplannedTableCell>
+                    <UnplannedTableCell className={classes.cell}>
                         <DemandInput item={item} onBlur={onChange}/>
-                    </TableCell>
+                    </UnplannedTableCell>
                 </TableRow>
             })}
             {withEmptyRow
