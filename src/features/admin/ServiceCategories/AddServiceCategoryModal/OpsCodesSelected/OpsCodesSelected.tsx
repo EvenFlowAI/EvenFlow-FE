@@ -12,7 +12,7 @@ type TProps = {
 const OpsCodesSelected: React.FC<TProps> = ({selectedCodes, onDelete}) => {
     return (
         <Wrapper>
-            <Title>Op Code Selected: </Title>
+            <Title>Op Codes Selected: </Title>
             <CodesWrapper>
                 {selectedCodes.map(el => {
                     return <OpsCode onDelete={onDelete} serviceRequest={el}/>
