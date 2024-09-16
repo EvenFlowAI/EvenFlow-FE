@@ -120,9 +120,11 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }
 
-    const onMobileMethodChange = useCallback((item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
+    const onMobileMethodChange = useCallback((item: IEmployeeAssignmentSetting|null, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
         (e: SelectChangeEvent<number>) => {
-            onChange(item, level, role, e.target?.value !== '' ? +e.target?.value as EAdvisorAssignMethod : null)
+            if (item) {
+                onChange(item, level, role, e.target?.value !== '' ? +e.target?.value as EAdvisorAssignMethod : null)
+            }
         }, [data])
 
     const onMethodChange = useCallback((item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>

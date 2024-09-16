@@ -6,6 +6,6 @@ export type TEmployeeAssignmentMobileProps = {
     data: IEmployeeAssignmentSetting[];
     expandedItem: IEmployeeAssignmentSetting | null;
     setExpandedItem: Dispatch<SetStateAction<IEmployeeAssignmentSetting | null>>;
-    onMethodChange: (item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor" | "Technician") =>
+    onMethodChange: (item: IEmployeeAssignmentSetting|null, level: EAssignmentLevel, role: "Advisor" | "Technician") =>
         (e: SelectChangeEvent<number>) => void;
 }

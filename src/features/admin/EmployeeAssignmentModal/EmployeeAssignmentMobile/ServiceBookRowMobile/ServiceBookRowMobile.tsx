@@ -7,14 +7,11 @@ import {
 import {getMethods, getOptionsByRole} from "../../utils";
 import {methodOptions, secondaryOptions} from "../../constants";
 import {ServiceBook, SmallGreyGrid} from "../styles";
-import {Autocomplete, IconButton, MenuItem, Select, SelectChangeEvent} from "@mui/material";
-import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
+import {IconButton, MenuItem, Select} from "@mui/material";
 import {ReactComponent as ArrowDown} from '../../../../../assets/img/dropdown_closed.svg';
 import {TEmployeeAssignmentMobileProps} from "../../types";
-import {setEmployeeFilters} from "../../../../../store/reducers/employees/actions";
 import {TextField} from "../../../../../components/formControls/TextFieldStyled/TextField";
 import {EmptyMenuItem} from "../../../Appointments/AppointmentFilters/styles";
-import {Clear, Close} from "@mui/icons-material";
 
 type TProps = TEmployeeAssignmentMobileProps & {
     item: IEmployeeAssignmentSetting;
@@ -88,20 +85,6 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                                              value={item.value}>{item.name}</MenuItem>
                         })}
                     </Select>
-                    {/*<Autocomplete*/}
-                    {/*    fullWidth*/}
-                    {/*    options={advisorOptions}*/}
-                    {/*    isOptionEqualToValue={(o, v) => o.value === v.value}*/}
-                    {/*    disableClearable*/}
-                    {/*    getOptionLabel={i => i.name}*/}
-                    {/*    value={advisorOptions.find(el => el.value === advisorPrimaryMethod)}*/}
-                    {/*    onChange={onMethodChange(item, EAssignmentLevel.Primary, "Advisor")}*/}
-                    {/*    renderInput={autocompleteRender({*/}
-                    {/*        label: '',*/}
-                    {/*        placeholder: '',*/}
-                    {/*        error: advisorPrimaryMethod === advisorSecondaryMethod*/}
-                    {/*    })}*/}
-                    {/*/>*/}
                 </SmallGreyGrid>
                 <SmallGreyGrid item xs={6} mdl={2} style={isAdvisorSecondaryDisabled ? {backgroundColor: "#EAEBEE"} : {}}>
                     <Select
@@ -112,26 +95,12 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                         value={methodOptions.find(el => el.value === advisorSecondaryMethod)?.value ?? ''}
                         input={<TextField/>}
                     >
-                        <EmptyMenuItem value=""></EmptyMenuItem>
+                        <EmptyMenuItem value="">Not Selected</EmptyMenuItem>
                         {secondaryOptions.map(item => {
                             return <MenuItem key={item.name}
                                              value={item.value}>{item.name}</MenuItem>
                         })}
                     </Select>
-                    {/*<Autocomplete*/}
-                    {/*    fullWidth*/}
-                    {/*    options={secondaryOptions}*/}
-                    {/*    disabled={isAdvisorSecondaryDisabled}*/}
-                    {/*    isOptionEqualToValue={(o, v) => o.value === v.value}*/}
-                    {/*    getOptionLabel={i => i.name}*/}
-                    {/*    value={methodOptions.find(el => el.value === advisorSecondaryMethod) ?? null}*/}
-                    {/*    onChange={onMethodChange(item, EAssignmentLevel.Secondary, "Advisor")}*/}
-                    {/*    renderInput={autocompleteRender({*/}
-                    {/*        label: '',*/}
-                    {/*        placeholder: '',*/}
-                    {/*        error: advisorPrimaryMethod === advisorSecondaryMethod*/}
-                    {/*    })}*/}
-                    {/*/>*/}
                 </SmallGreyGrid>
                 <SmallGreyGrid item xs={6} mdl={2} style={{borderRightWidth: 0}}>
                     Technician Primary
@@ -149,7 +118,6 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                 >
                     <Select
                         fullWidth
-                        endAdornment={<IconButton style={{marginRight: 4}} onClick={() => {}}><Clear/></IconButton>}
                         onChange={onMethodChange(item, EAssignmentLevel.Primary, "Technician")}
                         error={technicianPrimaryMethod === technicianSecondaryMethod}
                         value={technicianOptions.find(el => el.value === technicianPrimaryMethod)?.value ?? ''}
@@ -160,19 +128,6 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                                              value={item.value}>{item.name}</MenuItem>
                         })}
                     </Select>
-                    {/*<Autocomplete*/}
-                    {/*    options={technicianOptions}*/}
-                    {/*    isOptionEqualToValue={(o, v) => o.value === v.value}*/}
-                    {/*    getOptionLabel={i => i.name}*/}
-                    {/*    disableClearable*/}
-                    {/*    value={technicianOptions.find(el => el.value === technicianPrimaryMethod)}*/}
-                    {/*    onChange={onMethodChange(item, EAssignmentLevel.Primary, "Technician")}*/}
-                    {/*    renderInput={autocompleteRender({*/}
-                    {/*        label: '',*/}
-                    {/*        placeholder: '',*/}
-                    {/*        error: technicianPrimaryMethod === technicianSecondaryMethod*/}
-                    {/*    })}*/}
-                    {/*/>*/}
                 </SmallGreyGrid>
                 <SmallGreyGrid
                     item xs={6}
@@ -183,33 +138,18 @@ const ServiceBookRowMobile: React.FC<TProps> = ({
                     }}>
                     <Select
                         fullWidth
-                        displayEmpty
                         disabled={isTechSecondaryDisabled}
                         onChange={onMethodChange(item, EAssignmentLevel.Secondary, "Technician")}
                         error={technicianPrimaryMethod === technicianSecondaryMethod}
                         value={methodOptions.find(el => el.value === technicianSecondaryMethod)?.value ?? ''}
                         input={<TextField/>}
                     >
-                        <EmptyMenuItem value=""></EmptyMenuItem>
+                        <EmptyMenuItem value="">Not Selected</EmptyMenuItem>
                         {secondaryOptions.map(item => {
                             return <MenuItem key={item.name}
                                              value={item.value}>{item.name}</MenuItem>
                         })}
                     </Select>
-                    {/*<Autocomplete*/}
-                    {/*    fullWidth*/}
-                    {/*    options={secondaryOptions}*/}
-                    {/*    disabled={isTechSecondaryDisabled}*/}
-                    {/*    isOptionEqualToValue={(o, v) => o.value === v.value}*/}
-                    {/*    getOptionLabel={i => i.name}*/}
-                    {/*    value={methodOptions.find(el => el.value === technicianSecondaryMethod) ?? null}*/}
-                    {/*    onChange={onMethodChange(item, EAssignmentLevel.Secondary, "Technician")}*/}
-                    {/*    renderInput={autocompleteRender({*/}
-                    {/*        label: '',*/}
-                    {/*        placeholder: '',*/}
-                    {/*        error: technicianPrimaryMethod === technicianSecondaryMethod*/}
-                    {/*    })}*/}
-                    {/*/>*/}
                 </SmallGreyGrid>
             </>
             : null}
