@@ -13,6 +13,7 @@ import {TableCell} from "../../../components/styled/TableCell";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import dayjs from "dayjs";
+import {UnplannedTableCell} from "./UnplannedDemandSlots/styles";
 
 type TForm = number[];
 
@@ -64,13 +65,13 @@ export const UnplannedDemand = () => {
             <TableBody>
                 {dayjs.weekdays().map((d, idx) => {
                     return <TableRow key={d}>
-                        <TableCell>
+                        <UnplannedTableCell>
                             {d}
-                        </TableCell>
-                        <TableCell>
+                        </UnplannedTableCell>
+                        <UnplannedTableCell>
                             {segments[idx].historicalWalkInScheduleBlocks}
-                        </TableCell>
-                        <TableCell>
+                        </UnplannedTableCell>
+                        <UnplannedTableCell>
                             {!isEdit
                                 ? (segments[idx].optimizerSetting || 0)
                                 : <TextField
@@ -82,10 +83,10 @@ export const UnplannedDemand = () => {
                                     onChange={handleChange(idx)}
                                 />
                             }
-                        </TableCell>
-                        <TableCell>
+                        </UnplannedTableCell>
+                        <UnplannedTableCell>
                             <Button variant="text" color="primary" onClick={() => onEdit(idx)}>Edit</Button>
-                        </TableCell>
+                        </UnplannedTableCell>
                     </TableRow>
                 })}
             </TableBody>
