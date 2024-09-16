@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
 import {Price} from "./styles";
 import {ConfirmationItemWrapper} from "../../../../../../components/styled/ConfirmationItemWrapper";
+import {EPricingDisplayType} from "../../../../../../store/reducers/pricingSettings/types";
 
 export const SelectedPrice = () => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
@@ -13,11 +14,12 @@ export const SelectedPrice = () => {
     const {t} = useTranslation();
     const noDefinedPriceExists = useMemo(() => {
             if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return serviceValetAppointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+                return serviceValetAppointment?.serviceRequestPrices?.find(item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed)
             }
-            return appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+            return appointment?.serviceRequestPrices?.find(item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed)
         },
         [appointment, serviceValetAppointment, serviceTypeOption])
+
     return (
         <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Selected Price")}</AppointmentConfirmationTitle>
