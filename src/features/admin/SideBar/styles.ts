@@ -8,9 +8,6 @@ export const useStyles = makeStyles()(theme => ({
         display: "flex",
         flexFlow: "column",
         position: "relative",
-        [theme.breakpoints.down('sm')]: {
-            width: "100%",
-        }
     },
     link: {
         color: "#fff",
