@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, useMediaQuery, useTheme} from "@mui/material";
+import {Button, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -84,41 +84,50 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }
 
+    const onChange = (item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician", value: EAdvisorAssignMethod|null) => {
+        const itemToUpdate = data.find(el => el.serviceBookId === item.serviceBookId)
+        let roleToUpdate = itemToUpdate?.employeeAssignmentSettings.find(el => el.role === role);
+        let methodToUpdate = roleToUpdate?.methods?.find(el => el.level === level);
+        if (itemToUpdate && roleToUpdate) {
+            methodToUpdate = methodToUpdate
+                ? {...methodToUpdate, type: value}
+                : {level, type: value}
+            if (methodToUpdate.level === EAssignmentLevel.Primary && value !== EAdvisorAssignMethod.LastEmployee) {
+                roleToUpdate = {...roleToUpdate, methods: [methodToUpdate]}
+            } else if (methodToUpdate.level === EAssignmentLevel.Secondary && value === null) {
+                roleToUpdate = {
+                    ...roleToUpdate,
+                    methods: roleToUpdate.methods.filter(el => el.level !== EAssignmentLevel.Secondary)
+                }
+            } else {
+                roleToUpdate = {
+                    ...roleToUpdate,
+                    methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)
+                }
+            }
+            const newItem = {
+                ...itemToUpdate,
+                employeeAssignmentSettings: item.employeeAssignmentSettings
+                    .filter(el => el.role !== role)
+                    .concat(roleToUpdate)
+            }
+            setData(data.filter(el => el.serviceBookId
+                ? el.serviceBookId !== item.serviceBookId
+                : el.serviceBookName !== item.serviceBookName
+            )
+                .concat(newItem)
+                .sort(sortServiceBooks))
+        }
+    }
+
+    const onMobileMethodChange = useCallback((item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
+        (e: SelectChangeEvent<number>) => {
+            onChange(item, level, role, e.target?.value !== '' ? +e.target?.value as EAdvisorAssignMethod : null)
+        }, [data])
+
     const onMethodChange = useCallback((item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor"|"Technician") =>
         (e: ChangeEvent<{}>, value: TOption|null) => {
-            const itemToUpdate = data.find(el => el.serviceBookId === item.serviceBookId)
-            let roleToUpdate = itemToUpdate?.employeeAssignmentSettings.find(el => el.role === role);
-            let methodToUpdate = roleToUpdate?.methods?.find(el => el.level === level);
-            if (itemToUpdate && roleToUpdate) {
-                methodToUpdate = methodToUpdate
-                    ? {...methodToUpdate, type: value?.value ?? null}
-                    : {level, type: value?.value ?? null}
-                if (methodToUpdate.level === EAssignmentLevel.Primary && value?.value !== EAdvisorAssignMethod.LastEmployee) {
-                    roleToUpdate = {...roleToUpdate, methods: [methodToUpdate]}
-                } else if (methodToUpdate.level === EAssignmentLevel.Secondary && !value) {
-                    roleToUpdate = {
-                        ...roleToUpdate,
-                        methods: roleToUpdate.methods.filter(el => el.level !== EAssignmentLevel.Secondary)
-                    }
-                } else {
-                    roleToUpdate = {
-                        ...roleToUpdate,
-                        methods: roleToUpdate.methods.filter(el => el.level !== level).concat(methodToUpdate)
-                    }
-                }
-                const newItem = {
-                    ...itemToUpdate,
-                    employeeAssignmentSettings: item.employeeAssignmentSettings
-                        .filter(el => el.role !== role)
-                        .concat(roleToUpdate)
-                }
-                setData(data.filter(el => el.serviceBookId
-                    ? el.serviceBookId !== item.serviceBookId
-                    : el.serviceBookName !== item.serviceBookName
-                )
-                    .concat(newItem)
-                    .sort(sortServiceBooks))
-            }
+            onChange(item, level, role, value ? value?.value : null)
         }, [data])
 
     return (
@@ -135,7 +144,7 @@ const EmployeeAssignmentModal: React.FC<React.PropsWithChildren<React.PropsWithC
                 {loading
                     ? <Loading/>
                     : isMobile
-                        ? <EmployeeAssignmentMobile data={data} onMethodChange={onMethodChange} expandedItem={expandedItem} setExpandedItem={setExpandedItem}/>
+                        ? <EmployeeAssignmentMobile data={data} onMethodChange={onMobileMethodChange} expandedItem={expandedItem} setExpandedItem={setExpandedItem}/>
                         : <EmployeeAssignmentDesktop
                             data={data}
                             isAdvisorSecondaryEnabled={!!isAdvisorSecondaryEnabled}

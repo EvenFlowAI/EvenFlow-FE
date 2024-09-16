@@ -1,11 +1,11 @@
 import {EAssignmentLevel, IEmployeeAssignmentSetting} from "../../../store/reducers/employees/types";
-import {ChangeEvent, Dispatch, SetStateAction} from "react";
-import {TOption} from "../ServiceBookModal/types";
+import {Dispatch, SetStateAction} from "react";
+import {SelectChangeEvent} from "@mui/material";
 
 export type TEmployeeAssignmentMobileProps = {
     data: IEmployeeAssignmentSetting[];
     expandedItem: IEmployeeAssignmentSetting | null;
     setExpandedItem: Dispatch<SetStateAction<IEmployeeAssignmentSetting | null>>;
     onMethodChange: (item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: "Advisor" | "Technician") =>
-        (e: ChangeEvent<{}>, value: TOption | null) => void;
+        (e: SelectChangeEvent<number>) => void;
 }
