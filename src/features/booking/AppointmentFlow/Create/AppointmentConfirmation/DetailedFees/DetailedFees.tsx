@@ -11,6 +11,7 @@ import {EServiceType} from "../../../../../../store/reducers/appointmentFrameRed
 import {DetailedFeesInfo, DetailedFeesList, useStyles} from "./styles";
 import {useDialogStyles} from "../../../../../../hooks/styling/useDialogStyles";
 import {getOfferString} from "../../../../../../utils/utils";
+import {EPricingDisplayType} from "../../../../../../store/reducers/pricingSettings/types";
 
 const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({ open, onClose, }) => {
     const {appointment, scProfile, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
@@ -36,9 +37,9 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
         [appointment, serviceValetAppointment, serviceTypeOption])
     const noDefinedPriceExists = useMemo(() => {
             if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                return serviceValetAppointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+                return serviceValetAppointment?.serviceRequestPrices?.find(item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed)
             }
-            return appointment?.serviceRequestPrices?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+            return appointment?.serviceRequestPrices?.find(item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed)
         },
         [appointment, serviceValetAppointment, serviceTypeOption])
 
@@ -91,7 +92,9 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
                                        {getOfferString(item.offer, Boolean(scProfile?.isRoundPrice))}
                                 </span>
                                     : null}
-                                {Object(item).hasOwnProperty('priceValue') && item.priceValue
+                                {Object(item).hasOwnProperty('priceValue')
+                                && item.priceValue
+                                && item.pricingDisplayType !== EPricingDisplayType.Suppressed
                                     ? <span className={classes.price}>
                                     ${scProfile?.isRoundPrice
                                         ? item.priceValue
