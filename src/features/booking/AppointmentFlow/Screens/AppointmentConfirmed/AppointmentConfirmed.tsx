@@ -19,6 +19,7 @@ import {getAddressLabel, getServiceName} from "./utils";
 import {calendarDateFormat, dateTimeString, time24HourFormat, timeSpanString} from "../../../../../utils/constants";
 import dayjs from "dayjs";
 import {ESettingType} from "../../../../../store/reducers/generalSettings/types";
+import {EPricingDisplayType} from "../../../../../store/reducers/pricingSettings/types";
 
 type TProps = {
     onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -104,14 +105,14 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
 
     const noDefinedPriceExists = useMemo(() => {
             if (isManagingFlow) {
-                return appointmentRequestsPrices.find(el => el.priceValue === 0 || typeof el.priceValue === 'undefined')
+                return appointmentRequestsPrices.find(el => !el.priceValue || el.pricingDisplayType === EPricingDisplayType.Suppressed)
             } else {
                 if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
                     return serviceValetAppointment?.serviceRequestPrices
-                        ?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+                        ?.find(item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed)
                 }
                 return appointment?.serviceRequestPrices
-                    ?.find(item => typeof item.priceValue === 'undefined' || item.priceValue === 0)
+                    ?.find(item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed)
             }
         },
         [appointment, serviceValetAppointment, serviceTypeOption, isManagingFlow, appointmentRequestsPrices])

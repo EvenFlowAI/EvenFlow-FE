@@ -1,10 +1,13 @@
 import React from 'react';
-import {AppointmentConfirmationTitle} from "../../../../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
+import {
+    AppointmentConfirmationTitle
+} from "../../../../../../components/wrappers/AppointmentConfirmationTitle/AppointmentConfirmationTitle";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {Price} from "./styles";
 import {ConfirmationItemWrapper} from "../../../../../../components/styled/ConfirmationItemWrapper";
+import {EPricingDisplayType} from "../../../../../../store/reducers/pricingSettings/types";
 
 export const SelectedPriceManaging = () => {
     const {scProfile} = useSelector((state: RootState) => state.appointment);
@@ -13,7 +16,7 @@ export const SelectedPriceManaging = () => {
     const price = appointmentRequestsPrices
         .reduce((prev, current) => prev + (current.priceValue ?? 0),0)
     const noDefinedPriceExists = appointmentRequestsPrices
-        .find(el => el.priceValue === 0 || typeof el.priceValue === 'undefined')
+        .find(el => !el.priceValue || el.pricingDisplayType === EPricingDisplayType.Suppressed)
     return (
         <ConfirmationItemWrapper>
             <AppointmentConfirmationTitle>{t("Selected Price")}</AppointmentConfirmationTitle>
