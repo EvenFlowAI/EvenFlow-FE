@@ -21,11 +21,14 @@ export const useStyles = makeStyles()(theme => ({
             marginLeft: 0
         },
         [theme.breakpoints.down('mdl')]: {
-            marginLeft: "-100%"
+            marginLeft: "-270px"
         }
     },
     mainOpened: {
         transition: theme.transitions.create(["margin"]),
         marginLeft: 0,
+        [theme.breakpoints.down('mdl')]: {
+            marginRight: "-270px"
+        }
     }
 }));

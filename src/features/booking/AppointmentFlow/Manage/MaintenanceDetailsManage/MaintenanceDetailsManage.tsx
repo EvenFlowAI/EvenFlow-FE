@@ -15,7 +15,7 @@ type TMaintenanceDetailsProps = {
     serviceCategoryPage: EServiceCategoryPage;
 }
 
-const MaintenanceManage:React.FC<TMaintenanceDetailsProps> = ({onBack, onNext, serviceCategoryPage}) => {
+const MaintenanceDetailsManage:React.FC<TMaintenanceDetailsProps> = ({onBack, onNext, serviceCategoryPage}) => {
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const {
         service,
@@ -65,4 +65,4 @@ const MaintenanceManage:React.FC<TMaintenanceDetailsProps> = ({onBack, onNext, s
     />;
 };
 
-export default MaintenanceManage;
+export default MaintenanceDetailsManage;

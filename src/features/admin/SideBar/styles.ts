@@ -1,7 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 import {sideBarWidth} from "../../../theme/theme";
 
-// 
 export const useStyles = makeStyles()(theme => ({
     drawer: {
         flexShrink: 0,
@@ -9,12 +8,10 @@ export const useStyles = makeStyles()(theme => ({
         display: "flex",
         flexFlow: "column",
         position: "relative",
-        [theme.breakpoints.down('sm')]: {
-            width: "100%",
-        }
     },
     link: {
-        color: "#fff"
+        color: "#fff",
+        marginTop: 16
     },
     closeButton: {
         position: "absolute",
@@ -38,6 +35,7 @@ export const useStyles = makeStyles()(theme => ({
         flexFlow: "column",
         padding: "60px 30px",
         alignItems: "center",
+        justifyContent: 'space-between',
         [theme.breakpoints.down('sm')]: {
             width: "100%"
         }

@@ -14,6 +14,7 @@ import {TPackagePrice} from "../store/reducers/packages/types";
 import {TScheduler, TServiceBook} from "../store/reducers/appointments/types";
 import {TEnumKeyLabel} from "../store/reducers/types";
 import {ParsableDate, TParsableDate} from "../types/types";
+import {EPricingDisplayType} from "../store/reducers/pricingSettings/types";
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 
@@ -90,6 +91,7 @@ export interface ILoadedVehicle  extends IVehicle {
     appointmentHashKeys: string[];
     hasRepairOrders?: boolean;
     hasOrders?: boolean;
+    vehicleDmsId?: string;
 }
 
 export interface IVehicleForRequest extends IVehicle {
@@ -254,6 +256,12 @@ export type TDateAppointmentData = {
     scheduler: TScheduler;
 }
 
+export type TServiceRequested = {
+    code?: string;
+    description?: string;
+    pricingDisplayType?: EPricingDisplayType;
+}
+
 export interface IAppointment {
     id: number;
     hashKey: string;
@@ -265,7 +273,7 @@ export interface IAppointment {
     customerInformation?: IAppointmentCustomerInfo;
     vehicle?: IAppointmentVehicle;
     serviceBook: TServiceBook;
-    servicesRequested: string[];
+    servicesRequested: TServiceRequested[];
     isDefaultRecall: boolean;
     serviceOption?: string;
     totalValue: number;
