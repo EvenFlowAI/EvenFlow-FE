@@ -7,13 +7,11 @@ import {Dispatch, SetStateAction} from "react";
 export type TForm = {
     recallCampaignNumber: string;
     make: IMakeExtended|null;
-    model: IModel|null;
+    models: IModel[];
     yearTo: string;
     yearFrom: string;
     recallComponent: string;
     recallSummary: string;
-    partLeadDaysCount: string;
-    dailyPartsCount: string;
     serviceRequest: IAssignedServiceRequest|null;
 }
 export type TAddRecallProps = DialogProps & {

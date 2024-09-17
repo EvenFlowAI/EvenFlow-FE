@@ -5,21 +5,17 @@ export type TIdName = {
     name: string;
 }
 
-export type TYearRange = {
-    from: number|null;
-    to: number|null;
-}
-
 export interface IRecall {
     id: number;
     recallCampaignNumber: string;
     make: TIdName;
-    model: TIdName;
-    yearRange: TYearRange;
+    models: TIdName[];
+    yearFrom: number|null;
+    yearTo: number|null;
     recallComponent: string;
     recallSummary: string;
-    partLeadDaysCount: number;
-    dailyPartsCount: number;
+    partLeadDaysCount?: number;
+    dailyPartsCount?: number;
     serviceRequest: TIdName;
 }
 
@@ -27,12 +23,11 @@ export interface ICreateUpdateRecall {
     id?: number;
     recallCampaignNumber: string;
     makeId: number|null;
-    modelId: number|null;
-    yearRange: TYearRange;
+    modelIds: number[];
+    yearFrom: number|null;
+    yearTo: number|null;
     recallComponent: string;
     recallSummary: string;
-    partLeadDaysCount: number;
-    dailyPartsCount: number;
     serviceRequestId: number|null;
     serviceCenterId: number;
 }

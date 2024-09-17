@@ -6,9 +6,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
 import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
-import {RecallSummary} from "../RecallSummary/RecallSummary";
 import {TableRowDataType} from "../../../../types/types";
-import {useModal} from "../../../../hooks/useModal/useModal";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useException} from "../../../../hooks/useException/useException";
@@ -28,7 +26,6 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
     const showError = useException();
     const {askConfirm} = useConfirm();
     const {selectedSC} = useSCs();
-    const {isOpen: isSummaryOpen, onOpen: onSummaryOpen, onClose: onSummaryClose} = useModal();
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
         (s: RootState) => s.recalls.recallPageData,
         setRecallPageData
@@ -38,14 +35,9 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         if (selectedSC) dispatch(loadRecalls(selectedSC.id))
     }, [selectedSC, pageIndex, pageSize])
 
-    const onSummaryClick = (item: IRecall) => {
-        setCurrentItem(item);
-        onSummaryOpen();
-    }
-
     const rowData: TableRowDataType<IRecall>[] = [
         {
-            header: "Campaign #",
+            header: "NHTSA Campaign",
             val: el => el.recallCampaignNumber,
             width: 150,
         },
@@ -55,41 +47,25 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         },
         {
             header: "Model",
-            val: el => el.model?.name ?? ''
+            val: el => el.models.map(el => el.name).join(', ')
         },
         {
             header: "From",
-            val: el => el.yearRange?.from?.toString() ?? '',
+            val: el => el.yearFrom?.toString() ?? '',
         },
         {
             header: "To",
-            val: el => el.yearRange?.to?.toString() ?? '',
+            val: el => el.yearTo?.toString() ?? '',
         },
         {
             header: "Recall Component",
             val: el => el.recallComponent
         },
         {
-            header: "Summary",
-            val: el => <div
-                style={{color: "#7898FF", cursor: 'pointer'}}
-                onClick={() => onSummaryClick(el)}>
-                Recall Summary
-            </div>
-        },
-        {
             header: "Op Code",
             val: el => el.serviceRequest?.name ?? '',
             width: 150,
         },
-        {
-            header: "Part Lead Time (days)",
-            val: el => el.partLeadDaysCount?.toString() ?? '',
-        },
-        {
-            header: "Daily Parts",
-            val: el => el.dailyPartsCount?.toString() ?? ''
-        }
     ]
 
     const openMenu = (el: IRecall) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -163,7 +139,6 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
-            {currentItem && <RecallSummary open={isSummaryOpen} onClose={onSummaryClose} summary={currentItem.recallSummary}/>}
         </div>
     );
 };
