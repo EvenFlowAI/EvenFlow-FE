@@ -12,7 +12,7 @@ import {updateDefaultRecallOpsCode} from "../../../store/reducers/serviceCenters
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {useStyles} from "./styles";
+import {useInputStyles, useStyles} from "./styles";
 
 const RecallParts = () => {
     const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
@@ -22,6 +22,7 @@ const RecallParts = () => {
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const {isOpen, onOpen, onClose} = useModal();
     const { classes } = useStyles();
+    const {classes: inputClasses} = useInputStyles();
     const dispatch = useDispatch();
     const showError = useException();
 
@@ -57,11 +58,9 @@ const RecallParts = () => {
 
     return <>
         <div className={classes.wrapper}>
-            <div className={classes.title}>
-                default recall op code:
-            </div>
             <Autocomplete
-                style={{width: 335}}
+                classes={inputClasses}
+                style={{width: 240}}
                 loading={loading}
                 value={selectedOpsCode}
                 options={allAssignedList}
@@ -69,7 +68,7 @@ const RecallParts = () => {
                 getOptionLabel={o => o.serviceRequest.code}
                 onChange={onSRChange}
                 renderInput={autocompleteRender({
-                    label: "",
+                    label: "default recall op code:",
                     placeholder: 'Select Op Code'
                 })}
             />

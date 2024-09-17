@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {ICreateUpdateRecall} from "../../../../store/reducers/recall/types";
 import {Autocomplete, Button} from "@mui/material";
@@ -16,6 +16,9 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {checkIsValid} from "./utils";
 import {initialForm, yearOptions} from "./constants";
+import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
+import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 
 const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAddRecallProps>>> = ({editingItem, open, onClose, setEditingItem}) => {
     const {makesModels} = useSelector((state: RootState) => state.vehicleDetails);
@@ -27,6 +30,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     const showError = useException();
     const {selectedSC} = useSCs();
     const { classes  } = useStyles();
+    const { classes: autocompleteClasses  } = useAutocompleteStyles();
 
     useEffect(() => {
         if (open && selectedSC) {
@@ -37,17 +41,15 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     useEffect(() => {
         if (open && editingItem) {
             const make = makesModels.find(el => el.id === editingItem.make?.id);
-            const model = make?.models.find(el => el.id === editingItem.model?.id);
+            const models = make?.models.filter(el => editingItem.models.find(item => item.id === el.id)) ?? [];
             const sr = allAssignedList.find(item => item.id === editingItem.serviceRequest?.id);
             setForm(() => ({
                 recallCampaignNumber: editingItem.recallCampaignNumber,
                 make: make ?? null,
-                model: model ?? null,
-                yearFrom: editingItem.yearRange?.from?.toString() ?? '',
-                yearTo: editingItem.yearRange?.to?.toString() ?? '',
+                models: models,
+                yearFrom: editingItem.yearFrom?.toString() ?? '',
+                yearTo: editingItem.yearTo?.toString() ?? '',
                 recallComponent: editingItem.recallComponent,
-                partLeadDaysCount: editingItem.partLeadDaysCount?.toString() ?? '',
-                dailyPartsCount: editingItem.dailyPartsCount?.toString() ?? '',
                 recallSummary: editingItem.recallSummary,
                 serviceRequest: sr ?? null,
             }))
@@ -68,15 +70,11 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             const data: ICreateUpdateRecall = {
                 recallCampaignNumber: form.recallCampaignNumber,
                 makeId: form.make?.id ?? null,
-                modelId: form.model?.id ?? null,
-                yearRange: {
-                    from: form.yearFrom?.length ? +form.yearFrom : null,
-                    to: form.yearTo?.length ? +form.yearTo : null,
-                },
+                modelIds: form.models.map(el => el.id),
+                yearFrom: form.yearFrom?.length ? +form.yearFrom : null,
+                yearTo: form.yearTo?.length ? +form.yearTo : null,
                 recallComponent: form.recallComponent,
                 recallSummary: form.recallSummary,
-                partLeadDaysCount: +form.partLeadDaysCount,
-                dailyPartsCount: +form.dailyPartsCount,
                 serviceRequestId: form.serviceRequest?.id ?? null,
                 serviceCenterId: selectedSC.id,
             }
@@ -105,18 +103,32 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
 
     const onMakeChange = (e: ChangeEvent<{}>, value: IMakeExtended|null) => {
         setFormIsChecked(false);
-        setForm(prev => ({...prev, make: value, model: null}))
+        setForm(prev => ({...prev, make: value, models: []}))
     }
 
-    const onModelChange = (e: ChangeEvent<{}>, value: IModel|null) => {
+    const onModelChange = (e: ChangeEvent<{}>, value: IModel[]) => {
         setFormIsChecked(false);
-        setForm(prev => ({...prev, model: value}))
+        setForm(prev => ({...prev, models: value}))
     }
 
     const onSRChange = (e: ChangeEvent<{}>, value: IAssignedServiceRequest|null) => {
         setFormIsChecked(false);
         setForm(prev => ({...prev, serviceRequest: value}));
     }
+
+    const renderModelOption = useCallback((props: any, option: IModel) => {
+        const checked = Boolean(form.models.find(el => el.id === option.id));
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.id} >
+            <Checkbox
+                color="primary"
+                icon={checked
+                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
+                checked={checked}
+            />
+            {option.name}
+        </li>
+    }, [form]);
 
     return (
         <BaseModal open={open} onClose={onCancel} width={500}>
@@ -127,10 +139,10 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 <TextField
                     style={{ marginBottom: 10 }}
                     fullWidth
-                    label='Recall Campaign Number'
+                    label='NHTSA Campaign'
                     id="recallCampaignNumber"
                     name="recallCampaignNumber"
-                    placeholder='Type Recall Campaign Number'
+                    placeholder='Type NHTSA Campaign'
                     error={formIsChecked && !form.recallCampaignNumber.length}
                     onChange={onFormChange}
                     value={form.recallCampaignNumber}/>
@@ -153,11 +165,14 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     options={form.make?.models ?? []}
                     isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.name}
-                    value={form.model}
+                    value={form.models}
                     onChange={onModelChange}
+                    renderOption={renderModelOption}
+                    multiple
+                    classes={autocompleteClasses}
                     renderInput={autocompleteRender({
                         label: "Model",
-                        error: formIsChecked && !form.model,
+                        error: formIsChecked && !form.models,
                         placeholder: 'Select Model'
                     })}
                 />
@@ -215,6 +230,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     options={allAssignedList}
                     isOptionEqualToValue={(o, v) => o.id === v.id}
                     getOptionLabel={o => o.serviceRequest.code}
+                    getOptionKey={o => o.serviceRequest.code + o.id}
                     value={form.serviceRequest}
                     onChange={onSRChange}
                     renderInput={autocompleteRender({
@@ -223,28 +239,6 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                         placeholder: 'Select Op Code Assignment'
                     })}
                 />
-                <TextField
-                    fullWidth
-                    type="number"
-                    style={{ marginBottom: 10 }}
-                    label='Part Lead Time (Days)'
-                    id="partLeadDaysCount"
-                    name="partLeadDaysCount"
-                    placeholder='Type Part Lead Days Count'
-                    error={formIsChecked && (!form.partLeadDaysCount || !Number.isInteger(+form.partLeadDaysCount) || +form.partLeadDaysCount < 0) }
-                    onChange={onFormChange}
-                    value={form.partLeadDaysCount}/>
-                <TextField
-                    fullWidth
-                    type="number"
-                    style={{ marginBottom: 10 }}
-                    label='Daily Parts'
-                    id="dailyPartsCount"
-                    name="dailyPartsCount"
-                    placeholder='Type Daily Parts'
-                    error={formIsChecked && (!form.dailyPartsCount || !Number.isInteger(+form.dailyPartsCount) || +form.dailyPartsCount < 0)}
-                    onChange={onFormChange}
-                    value={form.dailyPartsCount}/>
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>
