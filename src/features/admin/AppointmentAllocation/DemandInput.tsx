@@ -5,14 +5,14 @@ import { makeStyles } from 'tss-react/mui';
 
 import {useException} from "../../../hooks/useException/useException";
 
-const useStyles = makeStyles()({
+const useStyles = makeStyles()(theme => ({
     inputWrapper: {
         width: 152,
-        '& > input': {
-            // textAlign: "center"
+        [theme.breakpoints.down("xl")]: {
+            width: 72,
         }
     }
-});
+}));
 
 type TDemandInputProps = {
     item: IUnplannedDemandBySlot;

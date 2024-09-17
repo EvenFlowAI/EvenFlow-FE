@@ -1,7 +1,7 @@
 import {makeStyles, withStyles} from 'tss-react/mui';
 import {TableCell as TC} from "@mui/material";
 
-export const useStyles = makeStyles()({
+export const useStyles = makeStyles()(() => ({
     headCell: {
         fontSize: 12,
         fontWeight: 700,
@@ -13,7 +13,7 @@ export const useStyles = makeStyles()({
     },
     cell: {
         fontSize: 16,
-        padding: '22px 16px'
+        padding: '22px 16px',
     },
     row: {
         borderRight: "1px solid #D9D9D9 !important"
@@ -22,7 +22,7 @@ export const useStyles = makeStyles()({
         borderRight: "1px solid #D9D9D9 !important",
         borderTop: "1px solid #D9D9D9 !important"
     },
-});
+}));
 
 export const UnplannedTableCell = withStyles(TC, {
     root: {
