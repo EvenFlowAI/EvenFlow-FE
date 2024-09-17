@@ -97,7 +97,8 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                 </TableHead>}
                 <TableBody>
                     {props.data.map((row, idx) => {
-                        const rIdx = props.index ? row[props.index] : idx;
+                        let rIdx: any = props.index ? row[props.index] : idx;
+                        if (props.getKey) rIdx = props.getKey(row);
                         return (
                             <TableRow key={`${rIdx}`} className={classes.tableRow}>
                                 {props.startActions

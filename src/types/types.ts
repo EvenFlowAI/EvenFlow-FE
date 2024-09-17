@@ -155,7 +155,7 @@ export interface ITableProps<Data> {
     isAscending?: boolean;
     hidePagination?: boolean;
     data: Data[];
-    index: keyof Data;
+    index?: keyof Data;
     rowData: TableRowDataTypeResp<Data>[];
     onChangePage?: (e: React.MouseEvent<Element, MouseEvent> | null, page: number) => void;
     changePageCb?: (page: number, pageSize: number) => void;
@@ -175,6 +175,7 @@ export interface ITableProps<Data> {
     actionsAlign?: "center"|"left"|"right";
     withoutOverflow?: boolean;
     verticalAlign?: string;
+    getKey?: (el: Data) => string;
 }
 
 export type TBaseScreen =

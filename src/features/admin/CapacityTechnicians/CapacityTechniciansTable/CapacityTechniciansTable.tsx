@@ -60,18 +60,12 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
 
     const onChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
         setTableChecked(false)
-        const [employeeId, serviceBookId] = name.split('/');
         setData(prev => {
-            let employee = prev.find(el => el.employeeId === employeeId)
-            if (serviceBookId) {
-                employee = prev.find(el => el.employeeId === employeeId && +serviceBookId === el.serviceBookId)
-            }
+            let employee = prev.find(el => el.localId === +name)
             if (employee) {
                 const updated = {...employee, efficiency: +value}
                 return prev
-                    .filter(item => serviceBookId
-                        ? item.serviceBookId !== +serviceBookId || item.employeeId !== employeeId
-                        : item.employeeId !== employeeId)
+                    .filter(item => item.localId !== employee?.localId)
                     .concat(updated)
                     .sort(sortEmployees)
             }
@@ -148,7 +142,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
                     defaultValue={"100%"}
                     disabled={false}
                     error={(el.efficiency > 999 || el.efficiency < 1) && tableIsChecked}
-                    name={el.serviceBookId ? `${el.employeeId}/${el.serviceBookId}` : `${el.employeeId}`}
+                    name={el.localId.toString()}
                     onChange={onChange}/>
                 <div style={{marginLeft: 4, padding: 0}}>%</div>
             </InputWrapper>,
@@ -178,6 +172,10 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
         }))
     }
 
+    const getRowKey = (item: ITechnicianCapacity) => {
+        return `${item.employeeId}-${item.serviceBookId}`
+    }
+
     return (
         <div>
             <PickerWrapper>
@@ -185,7 +183,7 @@ const CapacityTechniciansTable: React.FC<{selectedTab: string}> = ({selectedTab}
             </PickerWrapper>
             {isLoading
                 ? <Loading/>
-                : <Table data={data} index="employeeId" rowData={RowData} hidePagination withoutOverflow/>}
+                : <Table data={data} rowData={RowData} hidePagination withoutOverflow getKey={getRowKey}/>}
         </div>
     );
 };
