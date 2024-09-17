@@ -605,9 +605,11 @@ export const disableEmotionWarning = () => {
         consoleError(msg, ...args);
     };
 }
-export const sortEmployees = (a: IAdvisorCapacity | ITechnicianCapacity, b: IAdvisorCapacity | ITechnicianCapacity): number => a.employeeName
-    ? a.employeeName.localeCompare(b.employeeName)
-    : a.employeeId.localeCompare(b.employeeId)
+export const sortEmployees = (a: IAdvisorCapacity | ITechnicianCapacity, b: IAdvisorCapacity | ITechnicianCapacity): number => a.localId && b.localId
+    ? a.localId - b.localId
+    : a.employeeName
+        ? a.employeeName.localeCompare(b.employeeName)
+        : a.employeeId.localeCompare(b.employeeId)
 
 export const getAppointmentDate = (appointment: IAppointmentByKey|IAppointmentByQuery|null): string => {
     if (appointment) {

@@ -39,7 +39,8 @@ export const loadTechniciansCapacity = (serviceCenterId: number, capacityType: E
         {params: {serviceCenterId, dateTo: to, dateFrom: from, capacityType}})
         .then(res => {
             if (res.data) {
-                dispatch(getTechniciansCapacity(res.data.technicianCapacitySettings))
+                dispatch(getTechniciansCapacity(res.data.technicianCapacitySettings
+                    .map((el, index) => ({...el, localId: index + 1}))))
                 dispatch(getCapacityTypeOption(res.data.capacityTypeOption))
             }
         })
