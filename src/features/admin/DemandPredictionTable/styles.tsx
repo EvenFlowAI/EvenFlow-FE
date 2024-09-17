@@ -35,7 +35,7 @@ export const BigLabelRadioBtn = styled(RadioBtn)({
 export const SubCellWhite = styled('div')({
     color: "#252733",
     lineHeight: 'normal',
-    padding: 16
+    padding: '15px 16px'
 })
 
 export const SubCellGrey = styled(SubCellWhite)({
@@ -45,7 +45,7 @@ export const SubCellGrey = styled(SubCellWhite)({
 export const SwitchWrapperWhite = styled("div")({
     textAlign: 'center',
     verticalAlign: 'center',
-    padding: 8,
+    padding: 7,
     "& > .MuiSwitch-root": {
         height: 36
     }
