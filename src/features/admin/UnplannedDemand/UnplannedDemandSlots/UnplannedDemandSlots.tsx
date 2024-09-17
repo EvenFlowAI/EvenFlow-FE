@@ -81,7 +81,7 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
                     key={dayjs().toISOString() + 1806}
                     style={{backgroundColor: (slots.length + 1) % 2 === 0 ? '#F2F3F7' : "#FFFFFF"}}
                     className={classes.row}>
-                    <TableCell style={{height: 67}} colSpan={3}/>
+                    <TableCell style={{height: 83}} colSpan={3}/>
             </TableRow>
                 : null}
         </TableBody>
