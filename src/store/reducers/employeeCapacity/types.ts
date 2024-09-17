@@ -12,7 +12,8 @@ export type TAdvisorPerPodCapacity = TAdvisorPerPodBase & {
 export interface IAdvisorCapacity {
     employeeId: string;
     employeeName: string;
-    capacityPerServiceBook: TAdvisorPerPodCapacity[]
+    localId?: number;
+    capacityPerServiceBook: TAdvisorPerPodCapacity[];
 }
 
 export interface ITechnicianCapacity {
@@ -22,7 +23,8 @@ export interface ITechnicianCapacity {
     employeeName: string;
     serviceBookName: string;
     avarageBillHoursPerRO: number;
-    dailyCapacity: {[key: string]: number}
+    dailyCapacity: {[key: string]: number};
+    localId: number;
 }
 
 export enum ECapacityType {
