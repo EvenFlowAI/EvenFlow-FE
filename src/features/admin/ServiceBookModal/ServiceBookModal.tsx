@@ -448,7 +448,7 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 renderOption={autocompleteOptionsRender((e) => e.code)}
                                 loading={false}
                                 value={form.serviceRequests}
-                                renderInput={autocompleteRender({label: "Service Requests", fullWidth: true, placeholder: "Select Service Requests"})}
+                                renderInput={autocompleteRender({label: "Op Codes", fullWidth: true, placeholder: "Select Op Codes"})}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={6}>

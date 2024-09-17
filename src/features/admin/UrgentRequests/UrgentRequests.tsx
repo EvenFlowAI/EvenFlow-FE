@@ -27,7 +27,7 @@ import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
 const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
-    {header: "Service Op Code", val: el => el.code},
+    {header: "Op Code", val: el => el.code},
     {header: "Description", val: el => el.description}
 ];
 

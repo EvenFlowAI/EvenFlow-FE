@@ -29,7 +29,7 @@ export const VehicleServices = () => {
             scrollButtons="auto"
             indicatorColor="primary"
         >
-            <Tab label="Op Code" value="0"/>
+            <Tab label="Op Codes" value="0"/>
             <Tab label="Maintenance Packages" value="1"/>
             <Tab label="Complimentary Services" value="2"/>
             <Tab label="Interval Upsell" value="3"/>
