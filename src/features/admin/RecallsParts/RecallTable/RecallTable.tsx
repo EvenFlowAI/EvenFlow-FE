@@ -5,7 +5,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
-import {deleteRecall, loadRecalls, setRecallOrder, setRecallPageData} from "../../../../store/reducers/recall/actions";
+import {
+    deleteRecall,
+    loadRecalls,
+    setRecallOrder,
+    setRecallPageData,
+} from "../../../../store/reducers/recall/actions";
 import {IOrder, TableRowDataType} from "../../../../types/types";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
@@ -19,7 +24,7 @@ type TRecallTableProps = {
 }
 
 const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({onOpenModal, currentItem, setCurrentItem}) => {
-    const {recalls, recallsCount, order} = useSelector((state: RootState) => state.recalls);
+    const {recalls, recallsCount, order, searchTerm} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
     const dispatch = useDispatch();
@@ -32,8 +37,10 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
     );
 
     useEffect(() => {
-        if (selectedSC) dispatch(loadRecalls(selectedSC.id))
-    }, [selectedSC, pageIndex, pageSize, order])
+        if (selectedSC) {
+            dispatch(loadRecalls(selectedSC.id))
+        }
+    }, [selectedSC, pageIndex, pageSize, order, searchTerm])
 
     const rowData: TableRowDataType<IRecall>[] = [
         {
