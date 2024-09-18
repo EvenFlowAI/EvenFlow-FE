@@ -145,7 +145,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     id="recallCampaignNumber"
                     name="recallCampaignNumber"
                     placeholder='Type NHTSA Campaign'
-                    error={formIsChecked && !form.recallCampaignNumber.length}
+                    error={formIsChecked && !form.recallCampaignNumber.length && !form.oemProgram.length}
                     onChange={onFormChange}
                     value={form.recallCampaignNumber}/>
                 <TextField
@@ -156,6 +156,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     name="oemProgram"
                     placeholder='Type OEM Program'
                     onChange={onFormChange}
+                    error={formIsChecked && !form.recallCampaignNumber.length && !form.oemProgram.length}
                     value={form.oemProgram}/>
                 <Autocomplete
                     style={{ marginBottom: 10 }}
