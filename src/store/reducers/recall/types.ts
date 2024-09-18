@@ -31,6 +31,7 @@ export interface ICreateUpdateRecall {
     recallSummary: string;
     serviceRequestId: number|null;
     serviceCenterId: number;
+    oemProgram?: string;
 }
 
 export interface IRecallResponse {

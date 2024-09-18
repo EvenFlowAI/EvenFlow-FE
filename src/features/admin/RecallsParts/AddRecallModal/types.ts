@@ -13,6 +13,7 @@ export type TForm = {
     recallComponent: string;
     recallSummary: string;
     serviceRequest: IAssignedServiceRequest|null;
+    oemProgram: string;
 }
 export type TAddRecallProps = DialogProps & {
     editingItem: IRecall | null;
