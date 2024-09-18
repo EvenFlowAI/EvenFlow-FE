@@ -1,4 +1,4 @@
-import {IPageRequest, IPagingResponse, IRecallByVin} from "../../../types/types";
+import {IOrder, IPageRequest, IPagingResponse, IRecallByVin} from "../../../types/types";
 
 export type TIdName = {
     id: number;
@@ -17,6 +17,7 @@ export interface IRecall {
     partLeadDaysCount?: number;
     dailyPartsCount?: number;
     serviceRequest: TIdName;
+    oemProgram?: string;
 }
 
 export interface ICreateUpdateRecall {
@@ -43,4 +44,15 @@ export type TState = {
     recallPageData: IPageRequest;
     recallsCount: number,
     recallsByVin: IRecallByVin[];
+    order: IOrder<IRecall>;
+    searchTerm: string;
+}
+
+export type TRecallRequest = {
+    serviceCenterId: number;
+    pageSize: number;
+    pageIndex: number;
+    orderBy?: string;
+    isAscending?: boolean;
+    searchTerm?: string;
 }

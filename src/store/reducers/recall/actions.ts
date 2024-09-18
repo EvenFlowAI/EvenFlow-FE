@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICreateUpdateRecall, IRecall, IRecallResponse} from "./types";
-import {AppThunk, IPageRequest, IRecallByVin} from "../../../types/types";
+import {ICreateUpdateRecall, IRecall, IRecallResponse, TRecallRequest} from "./types";
+import {AppThunk, IOrder, IPageRequest, IRecallByVin} from "../../../types/types";
 import {setSelectedRecalls} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -9,11 +9,24 @@ export const setLoading  = createAction<boolean>('Recall/SetLoading');
 export const setRecallPageData = createAction<Partial<IPageRequest>>("Recall/SetRecallPageData");
 export const setRecallsCount = createAction<number>("Recall/SetRecallsCount");
 export const getRecallsByVin = createAction<IRecallByVin[]>("Recall/GetRecallsByVin");
+export const setRecallOrder = createAction<IOrder<IRecall>>("Recall/SetOrder");
+export const setRecallSearch = createAction<string>("Recall/SetSearch");
 
 export const loadRecalls = (serviceCenterId: number): AppThunk => (dispatch, getState) => {
     dispatch(setLoading(true));
-    const {pageSize, pageIndex} = getState().recalls.recallPageData;
-    Api.call<IRecallResponse>(Api.endpoints.Recalls.GetAll, {data: {serviceCenterId, pageSize, pageIndex}})
+    const {recallPageData, order, searchTerm} = getState().recalls;
+    const {pageSize, pageIndex} = recallPageData;
+    const data: TRecallRequest = {
+        serviceCenterId,
+        pageSize,
+        pageIndex,
+        searchTerm
+    }
+    if (order) {
+        data.orderBy = order.orderBy;
+        data.isAscending = order.isAscending;
+    }
+    Api.call<IRecallResponse>(Api.endpoints.Recalls.GetAll, {data})
         .then(result => {
             if (result.data?.result) {
                 dispatch(getRecalls(result.data.result))

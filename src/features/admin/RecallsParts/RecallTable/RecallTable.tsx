@@ -5,8 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import {MoreHoriz} from "@mui/icons-material";
-import {deleteRecall, loadRecalls, setRecallPageData} from "../../../../store/reducers/recall/actions";
-import {TableRowDataType} from "../../../../types/types";
+import {deleteRecall, loadRecalls, setRecallOrder, setRecallPageData} from "../../../../store/reducers/recall/actions";
+import {IOrder, TableRowDataType} from "../../../../types/types";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {useException} from "../../../../hooks/useException/useException";
@@ -19,7 +19,7 @@ type TRecallTableProps = {
 }
 
 const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({onOpenModal, currentItem, setCurrentItem}) => {
-    const {recalls, recallsCount} = useSelector((state: RootState) => state.recalls);
+    const {recalls, recallsCount, order} = useSelector((state: RootState) => state.recalls);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
 
     const dispatch = useDispatch();
@@ -33,17 +33,23 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
 
     useEffect(() => {
         if (selectedSC) dispatch(loadRecalls(selectedSC.id))
-    }, [selectedSC, pageIndex, pageSize])
+    }, [selectedSC, pageIndex, pageSize, order])
 
     const rowData: TableRowDataType<IRecall>[] = [
         {
             header: "NHTSA Campaign",
             val: el => el.recallCampaignNumber,
-            width: 150,
+            orderId: "CampaignNumber"
+        },
+        {
+            header: "OEM Program",
+            val: el => el.oemProgram,
+            orderId: "OemProgram"
         },
         {
             header: "Make",
-            val: el => el.make?.name ?? ''
+            val: el => el.make?.name ?? '',
+            orderId: "Make"
         },
         {
             header: "Model",
@@ -52,19 +58,22 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         {
             header: "From",
             val: el => el.yearFrom?.toString() ?? '',
+            orderId: "YearFrom"
         },
         {
             header: "To",
             val: el => el.yearTo?.toString() ?? '',
+            orderId: "YearTo"
         },
         {
             header: "Recall Component",
-            val: el => el.recallComponent
+            val: el => el.recallComponent,
+            orderId: "RecallComponent"
         },
         {
             header: "Op Code",
             val: el => el.serviceRequest?.name ?? '',
-            width: 150,
+            orderId: "OpCode"
         },
     ]
 
@@ -117,11 +126,18 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         }
     }
 
+    const onSort = (o: IOrder<IRecall>) => () => {
+        dispatch(setRecallOrder(o))
+    }
+
     return (
         <div>
             <Table<IRecall>
                 data={recalls}
                 index={"id"}
+                isAscending={order.isAscending}
+                order={order?.orderBy}
+                onSort={onSort}
                 rowData={rowData}
                 actions={tableActions}
                 rowsPerPage={pageSize}
