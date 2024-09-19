@@ -346,6 +346,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             <SlotsScreenWrapper>
                 <SelectedAppointment handleSetScreen={handleSetScreen}/>
                 <ActionButtons
+                    removeTopMargin
                     onBack={handleBack}
                     onNext={handleNext}
                     nextDisabled={nextDisabled}

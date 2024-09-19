@@ -105,7 +105,7 @@ export const AppointmentComment: React.FC<TProps> = ({isManagingFlow, handleSetS
                 variant="standard"
                 InputProps={{disableUnderline: true}}
                 required={scProfile?.isCommentRequired}
-                placeholder={t("Describe what`s going on")}
+                placeholder={t("Enter comments")}
             />
             <ActionButtons onBack={handleBack} onNext={onSubmit} nextLabel={t("Next")}/>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen}/>
