@@ -60,7 +60,7 @@ export const updateRecall = (data: ICreateUpdateRecall, id: number, onError: (er
 
 export const deleteRecall = (id: number, serviceCenterId: number,onError: (err: string) => void): AppThunk => dispatch => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.Recalls.Remove, {urlParams: {id}})
+    Api.call(Api.endpoints.Recalls.Remove, {urlParams: {id}, params: {serviceCenterId}})
         .then(result => {
             if (result) dispatch(loadRecalls(serviceCenterId))
         })
