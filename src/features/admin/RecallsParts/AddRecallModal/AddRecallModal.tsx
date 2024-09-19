@@ -181,6 +181,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     onChange={onModelChange}
                     renderOption={renderModelOption}
                     multiple
+                    disableCloseOnSelect
                     classes={autocompleteClasses}
                     renderInput={autocompleteRender({
                         label: "Model",
