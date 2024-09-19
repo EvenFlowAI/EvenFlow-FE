@@ -16,12 +16,13 @@ export const ActionButtons: React.FC<React.PropsWithChildren<React.PropsWithChil
         prevLabel,
         hideNext,
         hidePrev,
-        color
+        color,
+        removeTopMargin
     }
 ) => {
     const {t} = useTranslation();
     return (
-        <ButtonsRow>
+        <ButtonsRow style={removeTopMargin ? {marginTop: 0} : {}}>
             {!loading ? <>
                 {!hidePrev && <Button
                     onClick={onBack}
