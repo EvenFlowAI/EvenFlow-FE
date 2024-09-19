@@ -248,6 +248,7 @@ export type TActionProps = {
     hideNext?: boolean;
     hidePrev?: boolean;
     color?: "inherit" | "primary" | "secondary" | "error" | "warning" | "info" | "success";
+    removeTopMargin?: boolean;
 };
 
 export enum Roles {
