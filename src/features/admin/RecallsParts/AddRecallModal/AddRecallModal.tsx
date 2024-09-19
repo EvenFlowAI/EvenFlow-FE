@@ -186,8 +186,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     renderInput={autocompleteRender({
                         label: 'Year From',
                         placeholder: 'Select Year From',
-                        error: (form.yearFrom && form.yearTo && (form.yearFrom > form.yearTo))
-                            || formIsChecked && !form.yearFrom
+                        error: Boolean(form.yearFrom && form.yearTo && (form.yearFrom > form.yearTo))
                     })}
                 />
                 <Autocomplete
@@ -200,8 +199,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     renderInput={autocompleteRender({
                         label: 'Year To',
                         placeholder: 'Select Year To',
-                        error: (form.yearFrom && form.yearTo && (form.yearFrom > form.yearTo))
-                        || formIsChecked && !form.yearTo
+                        error: Boolean(form.yearFrom && form.yearTo && (form.yearFrom > form.yearTo))
                     })}
                 />
                 <TextField
