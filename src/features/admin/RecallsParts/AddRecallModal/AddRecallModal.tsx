@@ -52,6 +52,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 recallComponent: editingItem.recallComponent,
                 recallSummary: editingItem.recallSummary,
                 serviceRequest: sr ?? null,
+                oemProgram: editingItem.oemProgram ?? '',
             }))
         }
     }, [open, editingItem, makesModels, allAssignedList])
@@ -78,6 +79,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 serviceRequestId: form.serviceRequest?.id ?? null,
                 serviceCenterId: selectedSC.id,
             }
+            if (form.oemProgram) data.oemProgram = form.oemProgram;
             if (editingItem) {
                 dispatch(updateRecall(data, editingItem.id, showError, onCancel))
             } else {
@@ -143,9 +145,19 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     id="recallCampaignNumber"
                     name="recallCampaignNumber"
                     placeholder='Type NHTSA Campaign'
-                    error={formIsChecked && !form.recallCampaignNumber.length}
+                    error={formIsChecked && !form.recallCampaignNumber.length && !form.oemProgram.length}
                     onChange={onFormChange}
                     value={form.recallCampaignNumber}/>
+                <TextField
+                    style={{ marginBottom: 10 }}
+                    fullWidth
+                    label='OEM Program'
+                    id="oemProgram"
+                    name="oemProgram"
+                    placeholder='Type OEM Program'
+                    onChange={onFormChange}
+                    error={formIsChecked && !form.recallCampaignNumber.length && !form.oemProgram.length}
+                    value={form.oemProgram}/>
                 <Autocomplete
                     style={{ marginBottom: 10 }}
                     options={makesModels}

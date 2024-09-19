@@ -1,6 +1,19 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {TState} from "./types";
-import {getRecalls, getRecallsByVin, setLoading, setRecallPageData, setRecallsCount} from "./actions";
+import {
+    getRecalls,
+    getRecallsByVin,
+    setLoading,
+    setRecallOrder,
+    setRecallPageData,
+    setRecallsCount,
+    setRecallSearch
+} from "./actions";
+
+export const initialOrder = {
+    orderBy: "CampaignNumber",
+    isAscending: true,
+}
 
 const initialState: TState = {
     recalls: [],
@@ -11,6 +24,8 @@ const initialState: TState = {
         pageSize: 10,
     },
     recallsByVin: [],
+    order: initialOrder,
+    searchTerm: '',
 }
 
 export const recallsReducer = createReducer(initialState, builder => builder
@@ -28,5 +43,11 @@ export const recallsReducer = createReducer(initialState, builder => builder
     })
     .addCase(getRecallsByVin, (state, {payload}) => {
         return {...state, recallsByVin: payload};
+    })
+    .addCase(setRecallOrder, (state, {payload}) => {
+        return {...state, order: payload};
+    })
+    .addCase(setRecallSearch, (state, {payload}) => {
+        return {...state, searchTerm: payload};
     })
 )

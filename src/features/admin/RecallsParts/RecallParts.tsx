@@ -13,11 +13,14 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {useInputStyles, useStyles} from "./styles";
+import {SearchDebounced} from "../../../components/formControls/SearchDebounced/SearchDebounced";
+import {setRecallPageData, setRecallSearch} from "../../../store/reducers/recall/actions";
 
 const RecallParts = () => {
     const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
     const [selectedOpsCode, setSelectedOpsCode] = useState<IAssignedServiceRequest | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [search, setSearch] = useState<string>('');
     const {selectedSC} = useSCs();
     const {allAssignedList} = useSelector((state: RootState) => state.serviceRequests);
     const {isOpen, onOpen, onClose} = useModal();
@@ -56,11 +59,20 @@ const RecallParts = () => {
         }
     }
 
+    const onSearch = () => {
+        dispatch(setRecallSearch(search))
+        dispatch(setRecallPageData({pageIndex: 0, pageSize: 10}))
+    }
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value)
+    }
+
     return <>
         <div className={classes.wrapper}>
             <Autocomplete
                 classes={inputClasses}
-                style={{width: 240}}
+                style={{width: 240, marginRight: 20}}
                 loading={loading}
                 value={selectedOpsCode}
                 options={allAssignedList}
@@ -72,6 +84,12 @@ const RecallParts = () => {
                     placeholder: 'Select Op Code'
                 })}
             />
+            <SearchDebounced
+                onSearch={onSearch}
+                onChange={handleSearchChange}
+                style={{height: 40}}
+                value={search}
+                placeholder="Search ..."/>
             <Button
                 className={classes.button}
                 color="primary"
