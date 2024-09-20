@@ -44,8 +44,8 @@ export const ServiceTypeButton = styled("div")<{
     height: "100%",
     maxHeight: 285,
     display: "grid",
-    gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
-    gap: isTaglinePresent ? 10 : 20,
+    gridTemplateRows: isTaglinePresent ? '1fr 1fr 2fr' : '1fr 1fr',
+    gap: 8,
     fontWeight: "bold",
     fontSize: 32,
     textAlign: "center",
@@ -65,22 +65,25 @@ export const ServiceTypeButton = styled("div")<{
         fontSize: 18,
         padding: "2%"
     },
+    [theme.breakpoints.down('mdl')]: {
+        padding: "7px 10%",
+        maxHeight: 150,
+    },
     [theme.breakpoints.down('md')]: {
         justifyItems: 'center',
     },
     [theme.breakpoints.down('sm')]: {
         fontSize: 18,
-        padding: "5% 10%"
     },
     "& .infoIcon": {
         position: 'absolute',
-        top: 15,
-        right: 15,
+        top: 8,
+        right: 8,
         display: 'flex',
         justifyContent: 'flex-end',
     },
 }));
-//
+
 export const useServiceTypeStyles = makeStyles()(() => ({
     name: {
         width: "100%",

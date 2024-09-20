@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useStyles = makeStyles()((theme) => ({
     icon: {
         width: '100%',
@@ -9,12 +8,14 @@ export const useStyles = makeStyles()((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
         [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
-            maxWidth: 224,
-            height: 112,
-            width: '90%',
+            maxWidth: 152,
+            padding: '7%',
+            maxHeight: 80,
         },
         [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
-            padding: '7%'
+            padding: '7%',
+            maxWidth: 224,
+            maxHeight: 112,
         },
     },
     noLogo: {
@@ -29,12 +30,15 @@ export const useStyles = makeStyles()((theme) => ({
         padding: '10%',
         backgroundColor: "#F4F4F4",
         [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
-            width: 224,
-            height: 112,
-            maxWidth: '90%'
+            padding: '7%',
+            height: 80,
+            minHeight: 80,
+            width: 152
         },
         [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
-            padding: '7%'
+            width: 224,
+            padding: '7%',
+            height: 112,
         },
     },
     image: {
@@ -42,6 +46,11 @@ export const useStyles = makeStyles()((theme) => ({
         maxHeight: 112,
         [theme.breakpoints.down('md')]: {
             maxWidth: 224,
+            maxHeight: 112,
+        },
+        [theme.breakpoints.down('mdl')]: {
+            maxWidth: 152,
+            maxHeight: 80,
         }
     }
 }));
