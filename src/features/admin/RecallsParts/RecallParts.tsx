@@ -60,7 +60,7 @@ const RecallParts = () => {
     }
 
     const onSearch = () => {
-        dispatch(setRecallSearch(search))
+        dispatch(setRecallSearch(search.trim()))
         dispatch(setRecallPageData({pageIndex: 0, pageSize: 10}))
     }
 

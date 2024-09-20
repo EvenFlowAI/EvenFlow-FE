@@ -93,9 +93,9 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
         setForm((form) => ({...form, [name]: value}))
     }
 
-    const onYearChange = (name: "yearFrom"|"yearTo") => (e: ChangeEvent<{}>, value: string) => {
+    const onYearChange = (name: "yearFrom"|"yearTo") => (e: ChangeEvent<{}>, value: string|null) => {
         setFormIsChecked(false);
-        setForm((form) => ({...form, [name]: value}))
+        setForm((form) => ({...form, [name]: value ?? ''}))
     }
 
     const onSummaryChange: React.ChangeEventHandler<HTMLTextAreaElement> = ({target: {value}}) => {
@@ -190,7 +190,6 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     })}
                 />
                 <Autocomplete
-                    disableClearable
                     style={{ marginBottom: 10 }}
                     options={yearOptions}
                     isOptionEqualToValue={(option, value) => option === value}
@@ -203,7 +202,6 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     })}
                 />
                 <Autocomplete
-                    disableClearable
                     style={{ marginBottom: 10 }}
                     options={yearOptions}
                     isOptionEqualToValue={(option, value) => option === value}

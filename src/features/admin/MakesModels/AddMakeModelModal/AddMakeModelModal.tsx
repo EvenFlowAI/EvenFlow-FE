@@ -32,6 +32,9 @@ export const AddMakeModelModal:React.FC<React.PropsWithChildren<React.PropsWithC
         if (isEditing && currentMake) {
             setMake(currentMake?.name);
             setModels(currentMake?.models);
+        } else {
+            setMake('')
+            setModels([])
         }
     }, [isEditing, currentMake])
 
