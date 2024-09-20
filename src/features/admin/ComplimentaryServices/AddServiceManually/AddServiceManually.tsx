@@ -34,6 +34,10 @@ const AddServiceManually: React.FC<React.PropsWithChildren<React.PropsWithChildr
             setDuration(+editedItem.durationInHours);
             setDescription(editedItem.name);
             setTotal(editedItem.price.toFixed(2));
+        } else {
+            setDuration(+'');
+            setDescription('');
+            setTotal('');
         }
     }, [editedItem])
 

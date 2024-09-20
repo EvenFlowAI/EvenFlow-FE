@@ -81,6 +81,11 @@ export const MakesModelsTable: React.FC<React.PropsWithChildren<React.PropsWithC
         onOpen();
     }
 
+    const onMenuClose = () => {
+        setAnchorEl(null);
+        dispatch(setCurrentMake(null));
+    }
+
     return (
         <div>
             <Table
@@ -92,7 +97,7 @@ export const MakesModelsTable: React.FC<React.PropsWithChildren<React.PropsWithC
                 isLoading={isLoading}/>
             <Menu
                 open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}
+                onClose={onMenuClose}
                 anchorEl={anchorEl}
             >
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
