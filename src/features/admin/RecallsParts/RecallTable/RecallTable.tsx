@@ -137,6 +137,11 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         dispatch(setRecallOrder(o))
     }
 
+    const onMenuClose = () => {
+        setAnchorEl(null)
+        setCurrentItem(null)
+    }
+
     return (
         <div>
             <Table<IRecall>
@@ -156,7 +161,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
             />
             <Menu
                 open={Boolean(anchorEl)}
-                onClose={() => {setAnchorEl(null);}}
+                onClose={onMenuClose}
                 anchorEl={anchorEl}
             >
                 <MenuItem onClick={openEdit}>Edit</MenuItem>
