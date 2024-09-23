@@ -34,6 +34,7 @@ export const List = styled('ul')(({theme}) => ({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            fontWeight: "normal",
             "& .price": {
                 fontSize: 20,
                 fontWeight: "bold",

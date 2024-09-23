@@ -45,7 +45,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         transportation
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { scProfile } = useSelector(({appointment}: RootState) => appointment);
+    const { scProfile, appointment, serviceValetAppointment } = useSelector(({appointment}: RootState) => appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
@@ -225,25 +225,27 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     }
 
     return serviceValetIsPossibleToUse
-            ? <div className={classes.selectWrapper} style={isMobile ? {marginBottom: 8} : {marginTop: 10}}>
-                <div className={classes.selectWrapper}>
-                    <span style={{whiteSpace: 'nowrap'}}>{t("Service Option")}: {isSm ? <br/> : null}</span>
-                    <Select
-                        value={serviceTypeOption?.id}
-                        className={classes.select}
-                        variant="standard"
-                        disableUnderline
-                        fullWidth={isMobile}
-                        onChange={handleServiceOptionChange}>
-                        {firstScreenOptions
-                            .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
-                            .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
-                    </Select>
-                </div>
+        ? <div
+            className={classes.selectWrapper}
+            style={isMobile ? appointment || serviceValetAppointment ? {marginBottom: 8} : {} : {marginTop: 10}}>
+            <div className={classes.selectWrapper}>
+                <span style={{whiteSpace: 'nowrap'}}>{t("Service Option")}: {isSm ? <br/> : null}</span>
+                <Select
+                    value={serviceTypeOption?.id}
+                    className={classes.select}
+                    variant="standard"
+                    disableUnderline
+                    fullWidth={isMobile}
+                    onChange={handleServiceOptionChange}>
+                    {firstScreenOptions
+                        .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
+                        .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
+                </Select>
             </div>
-            : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
-                <div>{t("Service Option")}: {getServiceName()}</div>
-            </div>
+        </div>
+        : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
+            <div>{t("Service Option")}: {getServiceName()}</div>
+        </div>
 };
 
 export default ServiceOption;
