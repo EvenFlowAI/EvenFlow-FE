@@ -7,16 +7,13 @@ export const useStyles = makeStyles()((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
-            padding: '7%',
-        },
+        minHeight: 112,
         [`${theme.breakpoints.down('mdl')} and (orientation: portrait)`]: {
             maxWidth: 147,
-            padding: '7%',
             maxHeight: 77,
+            minHeight: 77,
         },
         [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
-            padding: '7%',
             maxWidth: 224,
             maxHeight: 112,
         },

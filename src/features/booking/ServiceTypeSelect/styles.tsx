@@ -34,7 +34,8 @@ export const Tagline = styled("div")<{
     display: 'flex',
     justifyContent: "center",
     fontWeight: 600,
-    fontSize: 20,
+    fontSize: 24,
+    lineHeight: 'normal',
     paddingBottom: 16,
     color: taglineColor ? `#${taglineColor}` : 'inherit',
     [theme.breakpoints.down("mdl")]: {
@@ -49,15 +50,16 @@ export const ServiceTypeButton = styled("div")<{
 }>(({theme, isTaglinePresent}) => ({
     position: 'relative',
     height: "100%",
-    maxHeight: 285,
+    maxHeight: 300,
     display: "grid",
     gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
     gap: isTaglinePresent ? 10 : 20,
     fontWeight: "bold",
     fontSize: 32,
+    lineHeight: 'normal',
     textAlign: "center",
     cursor: "pointer",
-    padding: "10%",
+    padding: "16px 8px",
     border: "1px solid #DADADA",
     background: "#FFFFFF",
     transition: theme.transitions.create(["box-shadow"]),
@@ -92,7 +94,8 @@ export const ServiceTypeButton = styled("div")<{
 export const useServiceTypeStyles = makeStyles()(theme => ({
     name: {
         width: "100%",
-        fontSize: 28,
+        fontSize: 32,
+        lineHeight: 'normal',
         [theme.breakpoints.down('mdl')]: {
             fontSize: 24,
         },

@@ -41,6 +41,7 @@ import {useAnalyticsForParentSite} from "../../../hooks/useAnalyticsBySCId/useAn
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {Routes} from "../../../routes/constants";
+import {useMediaQuery, useTheme} from "@mui/material";
 
 type TProps = {
     handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -70,6 +71,9 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const showError = useException();
     const scId = useMemo(() => id ? id : scProfile?.id ? encodeSCID(scProfile.id) : '',
         [scProfile, id])
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"))
+    const isTagLinePresent = useMemo(() => firstScreenOptions.some(el => el.taglineText), [firstScreenOptions])
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
@@ -206,7 +210,9 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                     .map((card) => {
                         if (card) {
                             return <div key={card.id}>
-                                <ServiceTypeButton onClick={() => handleSelectOption(card)} isTaglinePresent={!!card.taglineText?.length}>
+                                <ServiceTypeButton
+                                    onClick={() => handleSelectOption(card)}
+                                    isTaglinePresent={isMobile ? !!card.taglineText?.length : isTagLinePresent}>
                                     {card.description ? <HtmlTooltip
                                         enterTouchDelay={0}
                                         placement="right-end"
@@ -215,7 +221,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                         <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                     </HtmlTooltip> : null}
                                     <div className={classes.name}>{card.name}</div>
-                                    {card.taglineText?.length ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
+                                    {isMobile ? !!card.taglineText : isTagLinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                     <ServiceTypeIcon card={card}/>
                                 </ServiceTypeButton>
                             </div>
