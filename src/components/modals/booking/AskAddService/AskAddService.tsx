@@ -20,7 +20,7 @@ const AskAddService = (props: TAskAddServiceProps) => {
             <DialogTitle onClose={props.onClose}>
                 {t("Would you like to add another service?")}
             </DialogTitle>
-            <DialogActions style={{justifyContent: 'flex-end'}}>
+            <DialogActions>
                 <LoadingButton
                     loading={false}
                     onClick={props.onSave}

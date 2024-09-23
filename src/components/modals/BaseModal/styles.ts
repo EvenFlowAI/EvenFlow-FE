@@ -42,8 +42,18 @@ export const useStyles = makeStyles()((theme) => ({
     dialogActions: {
         padding: "10px 25px 25px",
         [theme.breakpoints.down('mdl')]: {
+            flexDirection: 'column',
             justifyContent: 'space-around',
-            padding: '16px !important'
+            padding: '16px !important',
+            '& div':{
+                width: '100%',
+            },
+            '& div:not(first-child)':{
+                marginLeft: 0,
+            },
+            '& div:not(last-child)':{
+                marginBottom: 12,
+            }
         }
     },
     closeButton: {
