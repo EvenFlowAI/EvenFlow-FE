@@ -9,7 +9,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
     "& button": {
         minWidth: 144
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('mdl')]: {
         flexDirection: "row",
         width: "100%",
         gap: "12px",

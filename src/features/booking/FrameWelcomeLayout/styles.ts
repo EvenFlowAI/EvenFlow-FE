@@ -1,4 +1,5 @@
 import {styled} from "@mui/material";
+import theme from "../../../theme/theme";
 
 export const Wrapper = styled('div')(() => ({
     width: '80%',
@@ -36,8 +37,8 @@ export const frameSmStyles = {
     ...frameStyles,
     height: 'auto',
     overflowY: 'auto',
-    paddingTop: 16,
-    paddingBottom: 16,
+    // paddingTop: 16,
+    // paddingBottom: 16,
 }
 
 export const MainWrapper = styled('div')({
@@ -45,5 +46,8 @@ export const MainWrapper = styled('div')({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: "center",
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('mdl')]: {
+        justifyContent: 'unset'
+    }
 })

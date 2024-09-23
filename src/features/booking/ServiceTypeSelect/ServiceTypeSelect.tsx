@@ -1,5 +1,4 @@
 import React, {useEffect, useMemo} from 'react';
-import {Grid} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {EServiceType, EUserType} from "../../../store/reducers/appointmentFrameReducer/types";
@@ -71,7 +70,6 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const showError = useException();
     const scId = useMemo(() => id ? id : scProfile?.id ? encodeSCID(scProfile.id) : '',
         [scProfile, id])
-    const isTaglinePresent = useMemo(() => firstScreenOptions.find(el => el?.taglineText?.length), [firstScreenOptions]);
 
     const setTracker = (ids: string[]) => dispatch(setTrackerCreated({isCreated: true, ids}))
 
@@ -207,8 +205,8 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                     .sort((a, b) => a && b ? a.orderIndex - b.orderIndex : 0)
                     .map((card) => {
                         if (card) {
-                            return <Grid key={card.id}>
-                                <ServiceTypeButton onClick={() => handleSelectOption(card)} isTaglinePresent={!!isTaglinePresent}>
+                            return <div key={card.id}>
+                                <ServiceTypeButton onClick={() => handleSelectOption(card)} isTaglinePresent={!!card.taglineText?.length}>
                                     {card.description ? <HtmlTooltip
                                         enterTouchDelay={0}
                                         placement="right-end"
@@ -217,10 +215,10 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                         <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                     </HtmlTooltip> : null}
                                     <div className={classes.name}>{card.name}</div>
-                                    {isTaglinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
+                                    {card.taglineText?.length ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                     <ServiceTypeIcon card={card}/>
                                 </ServiceTypeButton>
-                            </Grid>
+                            </div>
                         }
                     })}
             </ServiceTypeCardsWrapper>
