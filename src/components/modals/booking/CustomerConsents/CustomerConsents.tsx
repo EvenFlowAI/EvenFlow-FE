@@ -1,5 +1,5 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -11,6 +11,7 @@ import {
 import {TCallback} from "../../../../types/types";
 import Consent from "./Consent/Consent";
 import {useMediaQuery, useTheme} from "@mui/material";
+import {BfButtonsWrapper} from "../../../styled/BfButtonsWrapper";
 
 const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({onNext, onPrev}) => {
     const {isConsentOpen} = useSelector((state: RootState) => state.modals);
@@ -43,7 +44,7 @@ const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({on
             <DialogContent>
                 {consents.map(consent => <Consent consent={consent} key={consent.id}/>)}
             </DialogContent>
-            <DialogActions style={{paddingLeft: 72, paddingRight: 72}}>
+            <BfButtonsWrapper style={{paddingLeft: 72, paddingRight: 72}}>
                 {isSm ? <React.Fragment>
                         <LoadingButton
                             fullWidth
@@ -81,7 +82,7 @@ const CustomerConsents: React.FC<{onNext: TCallback, onPrev?: TCallback}> = ({on
                         </LoadingButton>
                     </React.Fragment>}
 
-            </DialogActions>
+            </BfButtonsWrapper>
         </BaseModal>
     );
 };
