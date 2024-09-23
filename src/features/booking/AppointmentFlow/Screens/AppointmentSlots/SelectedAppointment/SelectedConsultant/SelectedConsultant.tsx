@@ -19,7 +19,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
     const dispatch = useDispatch();
     const { classes  } = useSelectedAppointmentStyles();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('md'));
+    const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
         || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
@@ -34,7 +34,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
     }
 
     return isAdvisorAvailable && consultants?.length
-        ? <div className={classes.selectWrapper}>
+        ? <div className={classes.selectWrapper} style={isSm ? {marginBottom: 8} : {}}>
             <div className={classes.selectWrapper}>
                 {t("Advisor")}: {isSm ? <br/> : null}
                 <Select
@@ -42,6 +42,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
                     className={classes.select}
                     variant="standard"
                     disableUnderline
+                    fullWidth={isSm}
                     disabled={disabled || (!!currentConfig && !consultants.length)}
                     onChange={handleConsultantChange}>`
                     {consultants

@@ -4,6 +4,7 @@ import {EPricingDisplayType} from "../../../../../../../store/reducers/pricingSe
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
+import {InfoWrapper} from "./styles";
 
 const Info = () => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
@@ -19,11 +20,11 @@ const Info = () => {
             : false;
 
     return isDynamicPricing && serviceTypeOption?.type !== EServiceType.PickUpDropOff
-        ? <div className="info">
+        ? <InfoWrapper>
             {!appointment?.price?.amountOfSavingMoney
                 ? t("Save by booking at off peak times!")
                 : `${t("Off Peak Savings Of")} $${appointment.price.amountOfSavingMoney.toFixed(2)}`}
-        </div>
+        </InfoWrapper>
         : null
 };
 

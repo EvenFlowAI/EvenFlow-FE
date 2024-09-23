@@ -6,8 +6,10 @@ export const Wrapper = styled('div')(({theme}) => ({
     gap: 10,
     alignItems: "stretch",
     justifyContent: "space-between",
-    [theme.breakpoints.down('sm')]: {
-        flexDirection: "column"
+    [theme.breakpoints.down('mdl')]: {
+        flexDirection: "column",
+        gridTemplateColumns: "1fr",
+        gap: 8,
     }
 }))
 export const List = styled('ul')(({theme}) => ({
@@ -20,14 +22,14 @@ export const List = styled('ul')(({theme}) => ({
     gap: "18px",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('mdl')]: {
         alignSelf: "flex-start",
-        gap: "10px",
+        gap: "8px",
         width: "100%",
     },
     "& .service-item": {
         textTransform: "capitalize",
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('mdl')]: {
             width: "100%",
             display: 'flex',
             justifyContent: 'space-between',
@@ -45,6 +47,9 @@ export const List = styled('ul')(({theme}) => ({
             maxHeight: 120,
             overflow: "auto",
             padding: '8px 8px 8px 0',
+            [theme.breakpoints.down('mdl')]: {
+                padding: 0
+            }
         }
     },
     "& ul": {
@@ -57,6 +62,15 @@ export const List = styled('ul')(({theme}) => ({
             "&:hover": {
                 textDecoration: "none"
             }
+        }
+    },
+    "& .price": {
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 20,
+        },
+        fontWeight: "bold",
+        "&>span": {
+            fontSize: 18
         }
     },
 }));
