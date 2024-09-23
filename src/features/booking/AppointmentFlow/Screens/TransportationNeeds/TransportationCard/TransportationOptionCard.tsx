@@ -13,7 +13,7 @@ type TSCProps = {
 
 export const TransportationOptionCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSCProps>>> = ({card, onSelect, active}) => {
     const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down('md'));
+    const isSM = useMediaQuery(theme.breakpoints.down('mdl'));
 
     return <CardWrapper
         onClick={onSelect}

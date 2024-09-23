@@ -17,10 +17,10 @@ export const ConsultantCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     const {t} = useTranslation();
     return <ConsultantWrapper onClick={onClick} active={active}>
         {blank
-            ? <div className={"icon-wrapper"}><AnyConsultantIcon width={84} height={84}/></div>
+            ? <div className={"icon-wrapper"}><AnyConsultantIcon width={80} height={80}/></div>
             : advisor?.iconPath
                 ? <Avatar src={advisor?.iconPath}/>
-                : <ConsultantIcon width={84} height={84}/>
+                : <ConsultantIcon width={80} height={80}/>
         }
         <div>
             {blank ? t("Any available advisor") : advisor?.name ?? "-"}

@@ -5,7 +5,7 @@ export const ConsultantsWrapper = styled('div')(({theme}) => ({
     gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "stretch",
     justifyContent: "flex-start",
-    gap: "20px",
+    gap: "8px",
     width: "100%",
     [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr 1fr",
