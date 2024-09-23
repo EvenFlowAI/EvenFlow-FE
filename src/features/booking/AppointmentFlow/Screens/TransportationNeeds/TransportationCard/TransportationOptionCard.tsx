@@ -16,7 +16,6 @@ export const TransportationOptionCard: React.FC<React.PropsWithChildren<React.Pr
     const isSM = useMediaQuery(theme.breakpoints.down('md'));
 
     return <CardWrapper
-        style={{gridTemplateRows: '1fr 1fr', alignItems: 'start', padding: '20px 17px', minHeight: 260}}
         onClick={onSelect}
         selected={false}
         key={card.id}
