@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {TextFieldWhite} from "../../../styled/EndUserInputs";
-import {ActionButtons} from "../../../../features/booking/ActionButtons/ActionButtons";
 import {setFrameDescription} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {Button} from "@mui/material";
 import {useException} from "../../../../hooks/useException/useException";
+import {BfButtonsWrapper} from "../../../styled/BfButtonsWrapper";
+import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 
 const CommentModal: React.FC<DialogProps> = ({open, onClose}) => {
     const {appointmentByKey, description, subService, service} = useSelector((state: RootState) => state.appointmentFrame)
@@ -59,11 +60,26 @@ const CommentModal: React.FC<DialogProps> = ({open, onClose}) => {
                         ? appointmentByKey.comment
                         : <div style={{textAlign: 'center', color: "#828282", fontWeight: 600, marginBottom: 12, marginTop: 10}}>{t("No appointment comments provided")}</div>}
             </DialogContent>
-            <DialogActions>
-                {description?.length
-                    ? <ActionButtons onBack={onCancel} onNext={onSave} nextLabel={t("Save")} prevLabel={t("Cancel")}/>
-                    : <Button onClick={onClose} variant="outlined" style={{width: 150}}>{t("Close")}</Button>}
-            </DialogActions>
+            {description?.length
+                ? <BfButtonsWrapper>
+                    <LoadingButton
+                        loading={false}
+                        onClick={onSave}
+                        color="primary"
+                        variant="outlined">
+                        {t("Save")}
+                    </LoadingButton>
+                    <LoadingButton
+                        loading={false}
+                        onClick={onCancel}
+                        variant="contained"
+                        color="primary">
+                        {t("Cancel")}
+                    </LoadingButton>
+                </BfButtonsWrapper>
+                : <BfButtonsWrapper>
+                    <Button onClick={onClose} variant="outlined" style={{width: 150}}>{t("Close")}</Button>
+                </BfButtonsWrapper>}
         </BaseModal>
     );
 };

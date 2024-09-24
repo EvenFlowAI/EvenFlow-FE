@@ -1,8 +1,9 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../../../../components/buttons/LoadingButton/LoadingButton";
+import {BfButtonsWrapper} from "../../../../../../components/styled/BfButtonsWrapper";
 
 type TAskAddServiceProps = DialogProps & {
     onClose: () => void;
@@ -20,7 +21,7 @@ const AddCommentPrompt = (props: TAskAddServiceProps) => {
             <DialogTitle onClose={props.onClose}>
                 {t("In order for us to be better prepared for your appointment, please leave a brief description of your concern.")}
             </DialogTitle>
-            <DialogActions>
+            <BfButtonsWrapper>
                 <LoadingButton
                     loading={false}
                     onClick={props.onClose}
@@ -28,7 +29,7 @@ const AddCommentPrompt = (props: TAskAddServiceProps) => {
                     variant="outlined">
                     {t("Close")}
                 </LoadingButton>
-            </DialogActions>
+            </BfButtonsWrapper>
         </BaseModal>
     );
 };
