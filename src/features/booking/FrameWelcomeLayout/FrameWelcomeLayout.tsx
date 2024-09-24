@@ -16,7 +16,8 @@ export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWit
     const isFrame = useLayout();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
-    const isTopAligning = useMemo(() => isTop || welcomeScreenView === 'serviceCenterSelect', [scProfile, welcomeScreenView]);
+    const isTopAligning = useMemo(() => isTop || welcomeScreenView === 'serviceCenterSelect' || isSm,
+        [isSm, scProfile, welcomeScreenView]);
 
     return (
         <MainWrapper style={{height: isTopAligning ? "100%" : "100vh"}}>
