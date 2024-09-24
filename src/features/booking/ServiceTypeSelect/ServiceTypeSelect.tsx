@@ -221,7 +221,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                         <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                     </HtmlTooltip> : null}
                                     <div className={classes.name}>{card.name}</div>
-                                    {isMobile ? !!card.taglineText : isTagLinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
+                                    {(isMobile && card.taglineText) || isTagLinePresent ? <Tagline taglineColor={card.taglineFontColorHex}>{card.taglineText}</Tagline> : null}
                                     <ServiceTypeIcon card={card}/>
                                 </ServiceTypeButton>
                             </div>

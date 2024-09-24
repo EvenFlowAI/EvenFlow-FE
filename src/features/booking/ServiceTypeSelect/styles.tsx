@@ -49,10 +49,10 @@ export const ServiceTypeButton = styled("div")<{
     isTaglinePresent: boolean
 }>(({theme, isTaglinePresent}) => ({
     position: 'relative',
-    height: "100%",
-    maxHeight: 300,
-    display: "grid",
-    gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
+    height: 300,
+    display: "flex",
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     gap: isTaglinePresent ? 10 : 20,
     fontWeight: "bold",
     fontSize: 32,
@@ -75,6 +75,7 @@ export const ServiceTypeButton = styled("div")<{
         padding: "2%"
     },
     [theme.breakpoints.down('mdl')]: {
+        height: '100%',
         display: 'flex',
         flexDirection: "column",
         padding: "7px 10%",
