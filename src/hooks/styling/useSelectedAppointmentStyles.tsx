@@ -1,14 +1,16 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useSelectedAppointmentStyles = makeStyles()(theme => ({
     selectWrapper: {
         display: 'flex',
         alignItems: 'center',
         '& > span': {
-            marginLeft: 5,
+            [theme.breakpoints.up("mdl")]:{
+                marginLeft: 5,
+            }
         },
         [theme.breakpoints.down('md')]: {
+            display: 'block',
             '& > div > div': {
                 padding: 5
             }
@@ -16,7 +18,6 @@ export const useSelectedAppointmentStyles = makeStyles()(theme => ({
     },
     select: {
         width: '100%',
-        marginLeft: 10,
         borderRadius: 0,
         '&:before': {
             display: 'none',
@@ -26,6 +27,9 @@ export const useSelectedAppointmentStyles = makeStyles()(theme => ({
                 backgroundColor: 'transparent'
             }
         },
+        [theme.breakpoints.up('mdl')]: {
+            marginLeft: 10,
+        }
     },
     title: {
         fontSize: 16,

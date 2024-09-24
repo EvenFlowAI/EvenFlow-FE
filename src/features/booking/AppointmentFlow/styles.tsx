@@ -1,4 +1,5 @@
 import {styled} from "@mui/material";
+import theme from "../../../theme/theme";
 
 export const Container = styled('div')({
     display: "flex",
@@ -8,7 +9,10 @@ export const Container = styled('div')({
     minHeight: "100%",
     padding: 20,
     maxWidth: 1280,
-    margin: "auto"
+    margin: "auto",
+    [theme.breakpoints.down('mdl')]: {
+        paddingBottom: 57,
+    }
 });
 
 export const SidebarWrapper = styled('div')(({theme}) => ({

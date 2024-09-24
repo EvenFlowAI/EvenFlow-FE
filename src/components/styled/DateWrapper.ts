@@ -5,8 +5,9 @@ export const DateWrapper = styled('div')(({theme}) => ({
     textAlign: "right",
     fontSize: 16,
     fontWeight: "bold",
-    [theme.breakpoints.down('md')]: {
-        marginTop: 8,
+    [theme.breakpoints.down('mdl')]: {
+        marginTop: 12,
         textAlign: "left",
+        fontWeight: "normal",
     }
 }))

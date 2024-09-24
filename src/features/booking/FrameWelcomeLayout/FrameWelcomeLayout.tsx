@@ -15,8 +15,9 @@ export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWit
     const {t} = useTranslation();
     const isFrame = useLayout();
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('md'));
-    const isTopAligning = useMemo(() => isTop || welcomeScreenView === 'serviceCenterSelect', [scProfile, welcomeScreenView]);
+    const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
+    const isTopAligning = useMemo(() => isTop || welcomeScreenView === 'serviceCenterSelect' || isSm,
+        [isSm, scProfile, welcomeScreenView]);
 
     return (
         <MainWrapper style={{height: isTopAligning ? "100%" : "100vh"}}>
@@ -26,10 +27,13 @@ export const FrameWelcomeLayout: React.FC<React.PropsWithChildren<React.PropsWit
             <div
                 style={!isFrame
                     ? nonFrameStyles
-                    : isSm && welcomeScreenView === 'serviceSelect'
+                    : isSm
                         ? frameSmStyles
                         : frameStyles}>
-                <Wrapper style={{paddingTop: isTopAligning ? 20 : 'unset'}}>
+                <Wrapper style={{
+                    paddingTop: isTopAligning ? 20 : 'unset',
+                    width: isSm && welcomeScreenView === 'serviceSelect' ? '90%' : '80%'
+                }}>
                     <div>
                         <Title>
                             { welcomeScreenView === 'serviceCenterSelect'

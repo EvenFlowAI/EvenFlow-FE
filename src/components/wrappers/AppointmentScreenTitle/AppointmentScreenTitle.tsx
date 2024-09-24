@@ -6,10 +6,10 @@ const Wrapper = styled('h1')(({theme}) => ({
     fontWeight: 700,
     margin: 0,
     alignSelf: "flex-start",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('mdl')]: {
         alignSelf: "center",
         textAlign: "center",
-        fontSize: 22,
+        fontSize: 20,
         lineHeight: "26px",
         marginBottom: 12
     }

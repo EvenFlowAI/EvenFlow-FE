@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
-import {Container, IconButton} from '@mui/material';
+import {Container, IconButton, useMediaQuery, useTheme} from '@mui/material';
 import {useHistory} from 'react-router-dom';
 import {ConfirmModal} from './components/modals/common/ConfirmModal/ConfirmModal';
 import {SnackbarProvider} from "notistack";
@@ -23,6 +23,8 @@ const App = () => {
     const notificationsRef = useRef<SnackbarProvider|null>(null);
     const dispatch = useDispatch();
     const history = useHistory();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"));
     const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
 
     useEffect(() => {
@@ -91,7 +93,7 @@ const App = () => {
                 className={isWin ? "winos" : undefined}
                 disableGutters
                 style={{
-                    height: isTopAligning ? "auto" : "100vh",
+                    height: isTopAligning || isMobile? "auto" : "100vh",
                     maxHeight: "-webkit-fill-available"}}>
                 <ConfirmModal/>
                 <AppRoutes

@@ -9,10 +9,16 @@ export const ButtonsRow = styled('div')(({theme}) => ({
     "& button": {
         minWidth: 144
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('mdl')]: {
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
         flexDirection: "row",
         width: "100%",
         gap: "12px",
+        backgroundColor: '#F7F8FB',
+        marginTop: 0,
+        padding: '10px 0',
         "& button": {
             width: "100%"
         }

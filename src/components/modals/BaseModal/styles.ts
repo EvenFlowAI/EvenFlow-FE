@@ -43,7 +43,7 @@ export const useStyles = makeStyles()((theme) => ({
         padding: "10px 25px 25px",
         [theme.breakpoints.down('mdl')]: {
             justifyContent: 'space-around',
-            padding: '16px !important'
+            padding: '16px !important',
         }
     },
     closeButton: {

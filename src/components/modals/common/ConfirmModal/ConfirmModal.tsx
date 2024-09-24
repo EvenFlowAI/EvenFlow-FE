@@ -1,13 +1,13 @@
 import React, {useCallback, useState} from "react";
 import {Divider, Grid} from "@mui/material";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from '../../BaseModal/BaseModal';
+import {BaseModal, DialogContent, DialogTitle} from '../../BaseModal/BaseModal';
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {ReportProblemOutlined} from "@mui/icons-material";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
 import {MainButtons} from "./MainButtons/MainButtons";
-import {useStyles} from "./styles";
+import {ButtonsWrapper, useStyles} from "./styles";
 
 export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<unknown>>> = () => {
     const {open, payload} = useSelector((state: RootState) => state.modals.confirm);
@@ -71,7 +71,7 @@ export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChild
         }</DialogTitle>
         {payload.content ? <DialogContent>{payload.content}</DialogContent> : null}
         {payload.isRemove && !payload.isBooking ? <Divider style={{margin: "0 0 10px"}} /> : null}
-        <DialogActions style={{
+        <ButtonsWrapper style={{
             justifyContent: payload.additionalContent && payload.onAdditional
                 ? 'space-between'
                 : "flex-end"}}
@@ -111,6 +111,6 @@ export const ConfirmModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                     cancelContent={payload.cancelContent}
                 />
             }
-        </DialogActions>
+        </ButtonsWrapper>
     </BaseModal>
 };

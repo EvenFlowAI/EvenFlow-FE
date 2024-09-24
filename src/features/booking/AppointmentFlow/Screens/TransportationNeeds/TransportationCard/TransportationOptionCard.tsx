@@ -13,10 +13,9 @@ type TSCProps = {
 
 export const TransportationOptionCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSCProps>>> = ({card, onSelect, active}) => {
     const theme = useTheme();
-    const isSM = useMediaQuery(theme.breakpoints.down('md'));
+    const isSM = useMediaQuery(theme.breakpoints.down('mdl'));
 
     return <CardWrapper
-        style={{gridTemplateRows: '1fr 1fr', alignItems: 'start', padding: '20px 17px', minHeight: 260}}
         onClick={onSelect}
         selected={false}
         key={card.id}

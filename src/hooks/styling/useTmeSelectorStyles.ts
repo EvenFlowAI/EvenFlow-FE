@@ -13,9 +13,16 @@ export const useTimeSelectorStyles = makeStyles()(theme => ({
         gap: 34,
         alignItems: 'center',
         fontSize: 16,
+        [theme.breakpoints.down("mdl")]:{
+            justifyContent: 'space-between',
+            marginBottom: 13
+        }
     },
     title: {
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        [theme.breakpoints.down('mdl')]: {
+            margin: 0
+        }
     },
     boldText: {
         textTransform: 'uppercase',

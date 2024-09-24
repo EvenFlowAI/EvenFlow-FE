@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {EServiceType, IAncillaryByZipRequest,} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -45,7 +45,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         transportation
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { scProfile } = useSelector(({appointment}: RootState) => appointment);
+    const { scProfile, appointment, serviceValetAppointment } = useSelector(({appointment}: RootState) => appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
@@ -53,6 +53,8 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const dispatch = useDispatch();
     const showError = useException();
     const {id} = useParams<{id: string}>();
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"))
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceValetIsPossibleToUse = useMemo(() => {
@@ -223,24 +225,27 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     }
 
     return serviceValetIsPossibleToUse
-            ? <div className={classes.selectWrapper} style={{marginTop: 10}}>
-                <div className={classes.selectWrapper}>
-                    <span style={{whiteSpace: 'nowrap'}}>{t("SERVICE OPTION")}: {isSm ? <br/> : null}</span>
-                    <Select
-                        value={serviceTypeOption?.id}
-                        className={classes.select}
-                        variant="standard"
-                        disableUnderline
-                        onChange={handleServiceOptionChange}>
-                        {firstScreenOptions
-                            .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
-                            .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
-                    </Select>
-                </div>
+        ? <div
+            className={classes.selectWrapper}
+            style={isMobile ? appointment || serviceValetAppointment ? {marginBottom: 8} : {} : {marginTop: 10}}>
+            <div className={classes.selectWrapper}>
+                <span style={{whiteSpace: 'nowrap'}}>{t("Service Option")}: {isSm ? <br/> : null}</span>
+                <Select
+                    value={serviceTypeOption?.id}
+                    className={classes.select}
+                    variant="standard"
+                    disableUnderline
+                    fullWidth={isMobile}
+                    onChange={handleServiceOptionChange}>
+                    {firstScreenOptions
+                        .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
+                        .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
+                </Select>
             </div>
-            : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
-                <div>{t("SERVICE OPTION")}: {getServiceName()}</div>
-            </div>
+        </div>
+        : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
+            <div>{t("Service Option")}: {getServiceName()}</div>
+        </div>
 };
 
 export default ServiceOption;

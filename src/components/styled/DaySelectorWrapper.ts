@@ -8,8 +8,8 @@ export const DaySelectorWrapper = styled('div')(({theme}) => ({
     textAlign: "center",
     gap: "12px",
     width: "100%",
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('mdl')]: {
         marginTop: 0,
-        gap: "10px",
+        gap: "11px",
     }
 }));
