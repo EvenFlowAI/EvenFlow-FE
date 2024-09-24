@@ -7,9 +7,9 @@ export const useStyles = makeStyles()((theme) => ({
         display: 'flex',
         justifyContent: 'flex-end',
         padding: '12px 0 28px 0',
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('mdl')]: {
             justifyContent: 'center',
-            marginBottom: 20,
+            marginBottom: 8,
             padding: '12px 0 0 0',
         }
     },

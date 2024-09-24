@@ -6,51 +6,60 @@ import { makeStyles } from 'tss-react/mui';
 export const ServiceTypeCardsWrapper = styled("div")
     <{ cardsAmount: number}>
     (({theme, cardsAmount}) => ({
-    display: 'grid',
-    gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
-    gap: "18px",
-    marginTop: "5%",
-    marginBottom: 20,
-    justifyItems: cardsAmount === 1 ? "center" : "unset",
-    '& > div': {
-        minWidth: cardsAmount === 1 ? 440 : 'unset'
-    },
-    [mh600]: {
-        marginTop: "2%"
-    },
-    [theme.breakpoints.down('md')]: {
-        gridTemplateRows: `repeat(${cardsAmount}, 1fr)`,
-        gridTemplateColumns: '1fr',
-        marginTop: theme.spacing(5)
-    }
-}));
+        display: 'grid',
+        gridTemplateColumns: `repeat(${cardsAmount}, 1fr)`,
+        gap: "18px",
+        marginTop: "5%",
+        marginBottom: 20,
+        justifyItems: cardsAmount === 1 ? "center" : "unset",
+        '& > div': {
+            minWidth: cardsAmount === 1 ? 440 : 'unset'
+        },
+        [theme.breakpoints.down('md')]: {
+            gridTemplateRows: cardsAmount  > 3 ? '1fr 1fr' : '1fr',
+            gridTemplateColumns: cardsAmount < 4 ? `repeat(${cardsAmount}, 1fr)` : '1fr 1fr',
+        },
+        [theme.breakpoints.down('mdl')]: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 8,
+            marginTop: 16
+        }
+    }));
 export const Tagline = styled("div")<{
     taglineColor?: string
-}>(({taglineColor}) => ({
+}>(({theme, taglineColor}) => ({
     minHeight: 40,
     width: '100%',
     display: 'flex',
     justifyContent: "center",
     fontWeight: 600,
-    fontSize: 20,
+    fontSize: 24,
+    lineHeight: 'normal',
     paddingBottom: 16,
     color: taglineColor ? `#${taglineColor}` : 'inherit',
+    [theme.breakpoints.down("mdl")]: {
+        minHeight: 0,
+        fontSize: 16,
+        paddingBottom: 0,
+    }
 }))
 
 export const ServiceTypeButton = styled("div")<{
     isTaglinePresent: boolean
 }>(({theme, isTaglinePresent}) => ({
     position: 'relative',
-    height: "100%",
-    maxHeight: 285,
-    display: "grid",
-    gridTemplateRows: isTaglinePresent ? '1fr 2fr 3fr' : '1fr 3fr',
+    height: 300,
+    display: "flex",
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     gap: isTaglinePresent ? 10 : 20,
     fontWeight: "bold",
     fontSize: 32,
+    lineHeight: 'normal',
     textAlign: "center",
     cursor: "pointer",
-    padding: "10%",
+    padding: "16px 8px",
     border: "1px solid #DADADA",
     background: "#FFFFFF",
     transition: theme.transitions.create(["box-shadow"]),
@@ -65,26 +74,32 @@ export const ServiceTypeButton = styled("div")<{
         fontSize: 18,
         padding: "2%"
     },
-    [theme.breakpoints.down('md')]: {
-        justifyItems: 'center',
-    },
-    [theme.breakpoints.down('sm')]: {
-        fontSize: 18,
-        padding: "5% 10%"
+    [theme.breakpoints.down('mdl')]: {
+        height: '100%',
+        display: 'flex',
+        flexDirection: "column",
+        padding: "7px 10%",
+        fontSize: 24,
+        alignItems: 'center',
+        gap: 8
     },
     "& .infoIcon": {
         position: 'absolute',
-        top: 15,
-        right: 15,
+        top: 8,
+        right: 8,
         display: 'flex',
         justifyContent: 'flex-end',
     },
 }));
-//
-export const useServiceTypeStyles = makeStyles()(() => ({
+
+export const useServiceTypeStyles = makeStyles()(theme => ({
     name: {
         width: "100%",
-        fontSize: 28,
+        fontSize: 32,
+        lineHeight: 'normal',
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 24,
+        },
     },
     wrapper: {
         display: 'flex',

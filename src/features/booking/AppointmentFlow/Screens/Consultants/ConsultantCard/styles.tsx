@@ -14,16 +14,16 @@ export const ConsultantWrapper = styled("div", {
     fontSize: 18,
     fontWeight:400,
     lineHeight:"18px",
-    padding:16,
+    padding: "8px 12px",
     transition:"all .2s",
     cursor:"pointer",
     "& .icon-wrapper":
 {
-    width: 84,
-        display:"flex",
+    width: 80,
+    height:80,
+    display:"flex",
     alignItems:"center",
     justifyContent:'center',
-    height:84,
     borderRadius:"50%",
     color:active ? "#FFFFFF" : theme.palette.text.primary,
 }}));
@@ -31,8 +31,8 @@ export const ConsultantWrapper = styled("div", {
 export const Avatar = styled('div', {
     shouldForwardProp: (prop) => prop !== "src" && prop !== "contain"
 })<{ src?: string, contain?: boolean }>(({ src, contain }) => ({
-    width: 84,
-    height: 84,
+    width: 80,
+    height: 80,
     borderRadius: "50%",
     backgroundColor: "#FFFFFF",
     backgroundSize: contain ? "contain" : "cover",

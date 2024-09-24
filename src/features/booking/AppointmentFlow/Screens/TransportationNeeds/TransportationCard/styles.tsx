@@ -7,25 +7,29 @@ export const CardWrapper = styled("div")<{
     selected?: boolean
 }>(({theme, active, selected}) => {
     return {
+        width: "100%",
         display: "grid",
         gridTemplateColumns: "1fr",
-        gridTemplateRows: "1fr 4fr 3fr 2fr",
-        width: "100%",
+        gridTemplateRows: '1fr 1fr',
+        minHeight: 260,
         maxWidth: 250,
         transition: "all .2s",
         fontSize: 24,
         textAlign: "center",
-        alignItems: "center",
-        padding: 10,
+        alignItems: 'center',
+        padding: '20px 17px',
         background: active ? '#000000' : selected ? "#DEFFDF" : "transparent",
         border: `1px solid ${active ? '#000000' : selected ? '#89E5AB' : '#DADADA'}`,
         cursor: "pointer",
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('mdl')]: {
             position: 'relative',
-            maxWidth: 300,
-            gridTemplateColumns: "26% 1fr",
+            minHeight: 0,
+            maxWidth: '100%',
+            gridTemplateColumns: "80px 1fr",
             gridTemplateRows: "1fr",
             fontSize: 18,
+            padding: '8px 12px',
+            gap: 8,
             ".cardIcon": {
                 width: 78,
                 height: 78

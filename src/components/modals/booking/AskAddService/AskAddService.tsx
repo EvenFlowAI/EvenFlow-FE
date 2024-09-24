@@ -1,8 +1,9 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogTitle} from "../../BaseModal/BaseModal";
+import {BaseModal, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
+import {BfButtonsWrapper} from "../../../styled/BfButtonsWrapper";
 
 type TAskAddServiceProps = DialogProps & {
     onSave: () => void;
@@ -20,7 +21,7 @@ const AskAddService = (props: TAskAddServiceProps) => {
             <DialogTitle onClose={props.onClose}>
                 {t("Would you like to add another service?")}
             </DialogTitle>
-            <DialogActions>
+            <BfButtonsWrapper>
                 <LoadingButton
                     loading={false}
                     onClick={props.onSave}
@@ -35,7 +36,7 @@ const AskAddService = (props: TAskAddServiceProps) => {
                     color="primary">
                     {t("No")}
                 </LoadingButton>
-            </DialogActions>
+            </BfButtonsWrapper>
         </BaseModal>
     );
 };

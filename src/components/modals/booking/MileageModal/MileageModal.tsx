@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
     BaseModal,
-    DialogActions,
     DialogContent,
     DialogTitle
 } from "../../BaseModal/BaseModal";
@@ -14,6 +13,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {updateVehicle} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useTranslation} from "react-i18next";
 import {getCurrentAppointment} from "../../../../store/reducers/appointments/actions";
+import {BfButtonsWrapper} from "../../../styled/BfButtonsWrapper";
 
 const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: boolean}> = ({open, onClose, isAdminPanel, onSave}) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
@@ -67,10 +67,10 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
                     />
                 </div>
             </DialogContent>
-            <DialogActions>
+            <BfButtonsWrapper>
                 <Button onClick={onCancel} variant="outlined">{t("Cancel")}</Button>
                 <Button onClick={handleSave} variant="contained" color="info" disabled={!value}>{t("Next")}</Button>
-            </DialogActions>
+            </BfButtonsWrapper>
         </BaseModal>
     );
 };

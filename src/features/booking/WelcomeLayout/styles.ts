@@ -1,7 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
-import {mh400, mh600} from "../CustomerSelect/constants";
+import {mh600} from "../CustomerSelect/constants";
 
-// 
 export const useStyles = makeStyles()((theme) => ({
     container: {
         width: "100vw",
@@ -24,15 +23,9 @@ export const useStyles = makeStyles()((theme) => ({
         fontSize: 32,
         margin: 0,
         textAlign: "center",
-        [mh600]: {
-            fontSize: 22
+        [theme.breakpoints.down('mdl')]: {
+            fontSize: 20
         },
-        [mh400]: {
-            fontSize: 18
-        },
-        [theme.breakpoints.down('sm')]: {
-            fontSize: 18,
-        }
     },
     paper: {
         borderRadius: 4,

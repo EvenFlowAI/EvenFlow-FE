@@ -1,6 +1,7 @@
 import React from 'react';
 import {NoIcon} from "../styles";
 import {useTranslation} from "react-i18next";
+import {ReactComponent as NoIconMobile} from '../../../../../../../assets/img/noIcon.svg'
 
 type TProps = {
     iconPath?: string;
@@ -19,7 +20,7 @@ const CardIcon: React.FC<TProps> = ({iconPath, isSM, active}) => {
                         style={{width: isSM ? 78 : 110, height: isSM ? 78 : 110}}
                         alt={"service_category_logo"}/>
                  </span>
-        : <NoIcon>{t("No Icon")}</NoIcon>
+        : isSM ? <NoIconMobile/> : <NoIcon>{t("No Icon")}</NoIcon>
 };
 
 export default CardIcon;

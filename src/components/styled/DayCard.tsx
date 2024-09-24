@@ -50,9 +50,9 @@ export const Day = styled("div")<TDayCardProps>(({theme, isCurrent, isOffPeak}) 
     '& > svg': {
         marginBottom: 4
     },
-    [theme.breakpoints.down('sm')]: {
-        width: 50,
-        height: 50,
+    [theme.breakpoints.down('mdl')]: {
+        width: 56,
+        height: 56,
         minHeight: "auto",
         border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
         borderRadius: "50%",

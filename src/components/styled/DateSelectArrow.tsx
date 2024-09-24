@@ -1,4 +1,5 @@
 import {styled} from "@mui/material";
+import theme from "../../theme/theme";
 
 export const DateSelectArrow = styled('div')<{ disabled?: boolean }>(({ disabled}) => ({
     border: "1px solid #DADADA",
@@ -11,4 +12,7 @@ export const DateSelectArrow = styled('div')<{ disabled?: boolean }>(({ disabled
     alignItems: "center",
     justifyContent: "center",
     cursor: disabled ? "default" : "pointer",
+    [theme.breakpoints.down("mdl")]: {
+        marginTop: 38,
+    }
 }));

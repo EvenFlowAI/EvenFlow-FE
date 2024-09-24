@@ -24,8 +24,12 @@ export const ProgressStepper: React.FC<React.PropsWithChildren<React.PropsWithCh
             </Label>
         </Box>
         <Box p={1} fontWeight="bold">
-            <Typography variant="h5" color="primary"><strong>{label}</strong></Typography>
-            <Typography variant="caption" color="textSecondary"><strong>{nextLabel ? `${t("Next")}: ${nextLabel}` : ""}</strong></Typography>
+            <Typography variant="h6" color="primary"><strong>{label}</strong></Typography>
+            <Typography
+                color="primary"
+                style={{fontSize: 14, fontWeight: 400}}>
+                {nextLabel ? `${t("Next")}: ${nextLabel}` : ""}
+            </Typography>
         </Box>
     </Wrapper>
 };

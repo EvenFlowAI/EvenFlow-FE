@@ -39,44 +39,47 @@ export const SelectedAppointment: React.FC<{handleSetScreen: TArgCallback<TScree
                 <div>
                     {!isSm && <p className={classes.title}>{t("Your selections")}</p>}
                 <List>
-                    <li className={"service-item"} key="service-item">
+                    <li className="service-item" key="service-item">
                        <ServicesList/>
-                        { isSm && Boolean(price) &&
-                        <Prices price={price} ancillaryPrice={ancillaryPrice}/> }
                     </li>
-                    <li key="advisor">
+                    <li key="advisor" style={isSm ? {width: '100%'} : {}}>
                         <SelectedConsultant />
                         <Address />
                         <ServiceOption isSm={isSm} handleSetScreen={handleSetScreen}/>
                         {appointment && isSm
                             ? <DateWrapper>
-                                {dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')}
+                                {t("Date & Time")}: {dayjs.utc(appointment.date).format('MMMM D, h:mm A')}
                                 <WaitListLabel/>
                         </DateWrapper>
                             : serviceValetAppointment && isSm
                                 ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
                                 : null}
+                        { isSm && Boolean(price) &&
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                <Prices price={price} ancillaryPrice={ancillaryPrice}/>
+                                <Info/>
+                            </div>}
                     </li>
                 </List>
                 </div>
-                <PriceWrapper>
-                    {appointment && !isSm
+                {!isSm ? <PriceWrapper>
+                    {appointment
                         ? <DateWrapper>
-                            {t("Date & Time")}: <br /> {dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')}
+                            {t("Date & Time")}: <br/> {dayjs.utc(appointment.date).format('ddd, MMMM D, h:mm A')}
                         </DateWrapper>
-                        : serviceValetAppointment && !isSm
+                        : serviceValetAppointment
                             ? <ServiceValetDateTime serviceValetAppointment={serviceValetAppointment}/>
                             : null}
                     <React.Fragment>
-                        {!isSm && Boolean(price) && <Prices price={price} ancillaryPrice={ancillaryPrice}/>}
-                        {!isSm ? <WaitListLabel/> : null}
+                        {Boolean(price) && <Prices price={price} ancillaryPrice={ancillaryPrice}/>}
+                        <WaitListLabel/>
                         {/*todo uncomment for offer new functionality*/}
                         {/*{!isSm && Boolean(appointment?.serviceRequestPrices?.find(sr => sr.offer)) ? <div className="offerLabel">*/}
                         {/*  <SpecialLabel><SpecialServiceIcon className="icon"/>{t("Service special applied")}</SpecialLabel>*/}
                         {/*</div> : null}*/}
                         <Info/>
                     </React.Fragment>
-                </PriceWrapper>
+                </PriceWrapper> : null}
             </Wrapper>
         </div>
     );
