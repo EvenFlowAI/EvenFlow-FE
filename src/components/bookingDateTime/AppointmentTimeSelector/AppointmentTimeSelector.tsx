@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "../TimeSlotCard/TimeSlotCard";
 import {Loading} from "../../wrappers/Loading/Loading";
@@ -43,7 +43,6 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
             appointmentByKey,
             trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
-        const titleRef = useRef<HTMLDivElement|null>(null);
         const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
 
@@ -125,7 +124,7 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
         return (
             <div className={classes.wrapper}>
                 <div className={classes.titleWrapper}>
-                    <h4 ref={titleRef} className={classes.title}>{t("Select Time")}</h4>
+                    <h4 className={classes.title}>{t("Select Time")}</h4>
                     <div>{dayjs(date).format("ddd")}, <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span></div>
                 </div>
                 {!loading
