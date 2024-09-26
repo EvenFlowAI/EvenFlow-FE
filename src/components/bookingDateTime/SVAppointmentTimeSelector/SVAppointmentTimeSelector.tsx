@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {IServiceValetAppointment,} from "../../../store/reducers/appointment/types";
 import {Loading} from "../../wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
@@ -23,16 +23,23 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, sideBarSteps, trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
-        const firstCardRef = useRef<HTMLDivElement|null>(null);
         const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
         const currentSlots = useMemo(() => {
             return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(date, 'date'))
         }, [serviceValetSlots, date])
 
-        useEffect(() => {
-           // if (firstCardRef?.current && date) firstCardRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
-        }, [date, firstCardRef])
+        useEffect(() =>{
+            const utcOffset = dayjs().utcOffset();
+            const dateWithOffset = dayjs().add(utcOffset, 'minute')
+            if (currentSlots) {
+                const firstAvailableSlot = currentSlots.find(slot => {
+                    return dayjs(slot?.date).isSame(dayjs.utc(date), 'day')
+                        && dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                })
+                firstAvailableSlot && handleSelect(firstAvailableSlot);
+            }
+        }, [date,currentSlots])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({
