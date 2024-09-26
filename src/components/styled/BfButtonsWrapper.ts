@@ -14,7 +14,7 @@ export const BfButtonsWrapper = styled('div')({
             width: '100%'
         }
     },
-    '& div:first-child, & button:first-child': {
+    '& > div:first-child, & > button:first-child': {
         marginRight: 16,
         [theme.breakpoints.down('mdl')]: {
             marginBottom: 12,
