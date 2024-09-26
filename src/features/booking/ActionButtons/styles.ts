@@ -18,7 +18,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
         gap: "12px",
         backgroundColor: '#F7F8FB',
         marginTop: 0,
-        padding: '10px 0',
+        padding: '10px 20px',
         "& button": {
             width: "100%"
         }
