@@ -5,6 +5,7 @@ export const InfoWrapper = styled('div')({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
+    textAlign: 'right',
     color: "#008331",
     fontSize: 14,
     fontWeight: "bold",

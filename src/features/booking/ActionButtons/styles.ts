@@ -13,6 +13,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
         position: 'fixed',
         bottom: 0,
         left: 0,
+        zIndex: 100,
         flexDirection: "row",
         width: "100%",
         gap: "12px",
