@@ -22,3 +22,10 @@ export const BfButtonsWrapper = styled('div')({
         }
     }
 })
+
+export const CenteredButtonsWrapper = styled(BfButtonsWrapper)({
+    justifyContent: 'center',
+    [theme.breakpoints.down('mdl')]: {
+        justifyContent: 'space-around'
+    }
+})

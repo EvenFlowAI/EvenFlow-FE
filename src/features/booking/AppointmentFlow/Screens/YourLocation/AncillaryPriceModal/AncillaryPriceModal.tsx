@@ -3,7 +3,6 @@ import {useDialogStyles} from "../../../../../../hooks/styling/useDialogStyles";
 import {BaseModal, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
-import {ActionButtons} from "../../../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {EAncillaryType, EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
@@ -13,6 +12,8 @@ import {
     setZipCode
 } from "../../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";
+import {CenteredButtonsWrapper} from "../../../../../../components/styled/BfButtonsWrapper";
+import {Button} from "@mui/material";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
     onNext: TCallback;
@@ -83,14 +84,14 @@ const AncillaryPriceModal: React.FC<React.PropsWithChildren<React.PropsWithChild
                     </span>
                 </div>
             </DialogContent>
-            <div className={classes.actionsWrapper}>
-                <ActionButtons
-                    onBack={onBack}
-                    onNext={onSubmit}
-                    nextLabel={`${t("Continue with")} ${serviceString}`}
-                    prevLabel={customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage ? t("Back") : t("Visit Center instead")}
-                />
-            </div>
+            <CenteredButtonsWrapper>
+                <Button onClick={onBack} variant="outlined" style={{backgroundColor: '#F7F8FB'}}>
+                    {customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage ? t("Back") : t("Visit Center instead")}
+                </Button>
+                <Button onClick={onSubmit} variant="contained">
+                    {`${t("Continue with")} ${serviceString}`}
+                </Button>
+            </CenteredButtonsWrapper>
         </BaseModal>
     );
 };
