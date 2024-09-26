@@ -18,12 +18,12 @@ export const AppointmentDateSelector: React.FC<React.PropsWithChildren<React.Pro
     appointments, dateChangeDisabled,
     dateRangeUpdated, onDateRangeSet}) => {
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down('md'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
     const {t} = useTranslation();
 
     return (
-        <div>
-            {!isXs && <h4>{t("Select Date")}</h4>}
+        <div style={isMobile ? {padding: "16px 8px"} : {}}>
+            {!isMobile && <h4>{t("Select Date")}</h4>}
             {!dateChangeDisabled ? <MonthSelector
                 date={date}
                 loading={loading}

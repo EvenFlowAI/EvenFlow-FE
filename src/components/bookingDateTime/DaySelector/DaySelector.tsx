@@ -35,14 +35,15 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     const theme = useTheme();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
-    const isSm = useMediaQuery(theme.breakpoints.down('md'));
-    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
     const isMds = useMediaQuery(theme.breakpoints.down("mds"));
     const history = useHistory();
     const isAdminPanel = history.location.pathname.includes('admin');
     const daysPerScreen: number = useMemo(() => {
-        return isSm ? 4 : isMds ? 5 : 6;
-    }, [isSm, isMds]);
+        return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+    }, [isMd, isMds]);
 
     const [daysInMonth, days]: [number, string[]] = useMemo(() => {
         let daysInMonth: number = dayjs.utc(date).daysInMonth();
@@ -147,7 +148,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
             .map(day =>
                 <DaySelectCard
                     key={day}
-                    isXs={isXs}
+                    isXs={isSm}
                     isCurrent={dayjs.utc(date).isSame(dayjs.utc(day), 'date')}
                     appointment={appointments[day]}
                     appointments={appointments}
