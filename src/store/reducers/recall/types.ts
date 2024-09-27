@@ -18,6 +18,9 @@ export interface IRecall {
     dailyPartsCount?: number;
     serviceRequest: TIdName;
     oemProgram?: string;
+    isRemedyAvailable: boolean;
+    rolloverMessage?: string;
+    localIndex: number;
 }
 
 export interface ICreateUpdateRecall {

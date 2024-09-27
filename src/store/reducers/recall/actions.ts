@@ -29,7 +29,7 @@ export const loadRecalls = (serviceCenterId: number): AppThunk => (dispatch, get
     Api.call<IRecallResponse>(Api.endpoints.Recalls.GetAll, {data})
         .then(result => {
             if (result.data?.result) {
-                dispatch(getRecalls(result.data.result))
+                dispatch(getRecalls(result.data.result.map((el, index)=> ({...el, localIndex: index}))))
                 dispatch(setRecallsCount(result.data.paging.numberOfRecords))
             }
         })
