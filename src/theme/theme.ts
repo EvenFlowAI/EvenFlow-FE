@@ -23,7 +23,7 @@ const themeOptions: ThemeOptions = {
     breakpoints: {
         values: {
             xs: 0,
-            xsm: 360,
+            xsm: 375,
             sm: 600,
             mds: 720,
             mdl: 768,
