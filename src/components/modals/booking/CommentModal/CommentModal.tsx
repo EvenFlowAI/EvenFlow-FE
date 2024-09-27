@@ -6,7 +6,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {TextFieldWhite} from "../../../styled/EndUserInputs";
 import {setFrameDescription} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {Button} from "@mui/material";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {useException} from "../../../../hooks/useException/useException";
 import {BfButtonsWrapper} from "../../../styled/BfButtonsWrapper";
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
@@ -17,6 +17,8 @@ const CommentModal: React.FC<DialogProps> = ({open, onClose}) => {
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const showError = useException();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('mdl'))
 
     useEffect(() => {
         setText(description)
@@ -58,7 +60,9 @@ const CommentModal: React.FC<DialogProps> = ({open, onClose}) => {
                     />
                     : appointmentByKey?.comment?.length
                         ? appointmentByKey.comment
-                        : <div style={{textAlign: 'center', color: "#828282", fontWeight: 600, marginBottom: 12, marginTop: 10}}>{t("No appointment comments provided")}</div>}
+                        : <div style={{textAlign: 'center', color: "#828282", fontWeight: 600, marginBottom: 12, marginTop: 10}}>
+                            {t("No appointment comments provided")}
+                </div>}
             </DialogContent>
             {description?.length
                 ? <BfButtonsWrapper>
@@ -78,7 +82,7 @@ const CommentModal: React.FC<DialogProps> = ({open, onClose}) => {
                     </LoadingButton>
                 </BfButtonsWrapper>
                 : <BfButtonsWrapper>
-                    <Button onClick={onClose} variant="outlined" style={{width: 150}}>{t("Close")}</Button>
+                    <Button onClick={onClose} variant="outlined" style={{width: isMobile ? "100%" : 150}}>{t("Close")}</Button>
                 </BfButtonsWrapper>}
         </BaseModal>
     );

@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useStyles = makeStyles()(theme => ({
     info: {
         display: 'flex',
@@ -21,13 +20,17 @@ export const useStyles = makeStyles()(theme => ({
         justifyContent: 'center',
         marginBottom: 30,
         [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
+            flexDirection: 'column',
             '& > div': {
                 flexDirection: 'column',
                 padding: '0 16px',
                 '& > button:first-child': {
                     order: 2
                 }
-            }
+            },
+            '& > div:first-child': {
+                marginBottom: 12
+            },
         }
     }
 }));

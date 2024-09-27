@@ -1,6 +1,4 @@
 import {styled} from "@mui/material";
-import React from "react";
-import theme from "../../../../../../theme/theme";
 
 export const CardWrapper = styled("div")<{
     active?: boolean,
@@ -87,24 +85,3 @@ export const CardWrapper = styled("div")<{
         },
     };
 });
-
-export const NoIcon = styled('div')({
-    width: '100%',
-    minHeight: 105,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: "#DADADA",
-    fontWeight: 'bold',
-    fontSize: 32,
-    padding: '10%',
-    backgroundColor: "#F1F1F1",
-    [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
-        width: 224,
-        height: 112,
-        maxWidth: '90%'
-    },
-    [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
-        padding: '7%'
-    },
-})

@@ -10,6 +10,6 @@ export const DaySelectorWrapper = styled('div')(({theme}) => ({
     width: "100%",
     [theme.breakpoints.down('mdl')]: {
         marginTop: 0,
-        gap: "11px",
+        gap: "10px",
     }
 }));
