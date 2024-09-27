@@ -15,8 +15,9 @@ export const Wrapper = styled('ul')(({theme}) => ({
         fontSize: 18,
         textTransform: "none"
     },
-    [theme.breakpoints.down('md')]: {
-        marginBottom: "auto"
+    [theme.breakpoints.down('mdl')]: {
+        marginBottom: "auto",
+        alignSelf: 'flex-start'
     }
 }));
 

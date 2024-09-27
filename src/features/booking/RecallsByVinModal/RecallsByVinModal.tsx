@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
@@ -21,6 +21,7 @@ import {IRecallByVin} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
 import dayjs from "dayjs";
+import {BfButtonsWrapper} from "../../../components/styled/BfButtonsWrapper";
 
 type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,
@@ -165,16 +166,14 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                             </React.Fragment>))}
                     </DialogContent>
             }
-            <DialogActions>
-                <div className={classes.actionsWrapper}>
-                    <Button variant="outlined" onClick={onDecline}>
-                        {t("Decline")}
-                    </Button>
-                    <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length}>
-                        {t("Add Service")}
-                    </Button>
-                </div>
-            </DialogActions>
+            <BfButtonsWrapper>
+                <Button variant="outlined" onClick={onDecline}>
+                    {t("Decline")}
+                </Button>
+                <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length}>
+                    {t("Add Service")}
+                </Button>
+            </BfButtonsWrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAddServiceOpen}/>
         </BaseModal>
     );

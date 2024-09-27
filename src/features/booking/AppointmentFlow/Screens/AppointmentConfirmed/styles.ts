@@ -1,4 +1,5 @@
 import {styled} from "@mui/material";
+import theme from "../../../../../theme/theme";
 
 export const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
@@ -23,6 +24,13 @@ export const ButtonsWrapper = styled('div')({
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "15px",
     marginBottom: 20,
+    [theme.breakpoints.down("mdl")]:{
+        display: 'flex',
+        flexDirection: 'column',
+        '& > div:first-child':{
+            marginBottom: 12
+        }
+    }
 })
 
 export const Wrapper = styled('div')(() => ({
