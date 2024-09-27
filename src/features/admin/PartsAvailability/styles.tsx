@@ -1,6 +1,6 @@
 import {styled, Switch} from "@mui/material";
 import theme from "../../../theme/theme";
-import {withStyles} from "tss-react/mui";
+import {makeStyles, withStyles} from "tss-react/mui";
 
 export const FiltersWrapper = styled("div")({
     width: '100%',
@@ -46,4 +46,12 @@ export const SwitcherLabel = styled('p')({
 })
 
 export const StyledSwitch = withStyles(Switch, {
+})
+
+export const useStyles = makeStyles()({
+    input: {
+        "& > textarea": {
+            padding: '7px 11px !important'
+        }
+    }
 })

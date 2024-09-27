@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {IOrder, TableRowDataType} from "../../../../types/types";
 import {IRecall} from "../../../../store/reducers/recall/types";
 import {EditableTableCell} from "../../CapacityAdvisors/EditableTableCell";
@@ -10,6 +10,7 @@ import {usePagination} from "../../../../hooks/usePaginations/usePaginations";
 import {Box, Button} from "@mui/material";
 import {StyledSwitch, SwitcherLabel} from "../styles";
 import {useModal} from "../../../../hooks/useModal/useModal";
+import RolloverIconModal from "../RolloverIconModal/RolloverIconModal";
 
 type TProps = {
     isEdit: boolean;
@@ -19,6 +20,7 @@ type TProps = {
 
 const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
     const {recallsCount, order, isLoading} = useSelector((state: RootState) => state.recalls);
+    const [editingItem, setEditingItem] = useState<IRecall|null>(null);
     const {onOpen, onClose, isOpen} = useModal();
     const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
         (s: RootState) => s.recalls.recallPageData,
@@ -49,6 +51,16 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
             }
             return prev;
         })
+    }
+
+    const onRolloverIconClick = (el: IRecall) => {
+        setEditingItem(el)
+        onOpen()
+    }
+
+    const onCloseModal = () => {
+        setEditingItem(null);
+        onClose()
     }
 
     const rowData: TableRowDataType<IRecall>[] = [
@@ -122,7 +134,13 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
             header: "Rollover Icon",
             width: 114,
             val: el => isEdit
-                ? <Button variant="text" color="primary" onClick={onOpen} style={{marginLeft:-16}}>{el.rolloverMessage?.length ? 'Update': 'Add'}</Button>
+                ? <Button
+                    variant="text"
+                    color="primary"
+                    onClick={() => onRolloverIconClick(el)}
+                    style={{marginLeft: -16}}>
+                    {el.rolloverMessage?.length ? 'Update': 'Add'}
+            </Button>
                 : el.rolloverMessage?.length
                     ? <SwitcherLabel>YES</SwitcherLabel>
                     : <SwitcherLabel>NO</SwitcherLabel>,
@@ -150,6 +168,7 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
                 count={recallsCount}
                 hidePagination={recallsCount < 11}
             />
+            <RolloverIconModal open={isOpen} onClose={onCloseModal} editingItem={editingItem} setData={setData}/>
         </div>
     );
 };
