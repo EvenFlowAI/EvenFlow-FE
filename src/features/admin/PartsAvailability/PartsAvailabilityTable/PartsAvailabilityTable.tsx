@@ -16,9 +16,11 @@ type TProps = {
     isEdit: boolean;
     data: IRecall[];
     setData: Dispatch<SetStateAction<IRecall[]>>;
+    checked: boolean;
+    setChecked: Dispatch<SetStateAction<boolean>>;
 }
 
-const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
+const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData, checked, setChecked }) => {
     const {recallsCount, order, isLoading} = useSelector((state: RootState) => state.recalls);
     const [editingItem, setEditingItem] = useState<IRecall|null>(null);
     const {onOpen, onClose, isOpen} = useModal();
@@ -29,6 +31,7 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
     const dispatch = useDispatch()
 
     const onChange = ({target: {name, value}}: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(false)
         const [field, id] = name.split('-');
         setData(prev => {
             const item = prev.find(el => el.id === +id)
@@ -42,6 +45,7 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
     }
 
     const onCheck = (id: number) => (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+        setChecked(false)
         setData(prev => {
             const item = prev.find(el => el.id === id)
             if (item) {
@@ -92,6 +96,7 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
                 value={el.partLeadDaysCount?.toString() ?? '0'}
                 name={`partLeadDaysCount-${el.id}`}
                 onChange={onChange}
+                error={(el.partLeadDaysCount < 0 || el.partLeadDaysCount > 99) && checked}
                 isEdit={isEdit}
                 keepDefaultStyling
                 defaultValue={"0"}
@@ -107,6 +112,7 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData }) => {
                 name={`dailyPartsCount-${el.id}`}
                 onChange={onChange}
                 isEdit={isEdit}
+                error={(el.dailyPartsCount < 1 || el.dailyPartsCount > 99) && checked}
                 defaultValue={"0"}
                 type="number"
                 keepDefaultStyling

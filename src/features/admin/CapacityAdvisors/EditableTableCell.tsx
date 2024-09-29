@@ -13,6 +13,7 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
     disabled?: boolean;
     keepDefaultStyling?: boolean;
     width?: number;
+    error?: boolean;
 }>>> = ({
             name,
             value,
@@ -23,7 +24,8 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
             type,
             disabled,
                                             keepDefaultStyling,
-    width
+    width,
+    error,
         }) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
@@ -32,6 +34,7 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
         name={name}
         value={value}
         type={type ?? "number"}
+        error={error}
         style={keepDefaultStyling
             ? {width: width ?? 'unset',}
             : {

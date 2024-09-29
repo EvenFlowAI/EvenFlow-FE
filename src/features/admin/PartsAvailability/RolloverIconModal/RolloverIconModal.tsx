@@ -40,6 +40,7 @@ const RolloverIconModal: React.FC<TProps> = ({open, onClose, editingItem, setDat
             }
             return prev
         })
+        onCancel()
     }
 
     return (
