@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICreateUpdateRecall, IRecall, IRecallResponse, TRecallRequest} from "./types";
-import {AppThunk, IOrder, IPageRequest, IRecallByVin} from "../../../types/types";
+import {ICreateUpdateRecall, IRecall, IRecallResponse, TRecallRequest, TUpdateRecall} from "./types";
+import {AppThunk, IOrder, IPageRequest, IRecallByVin, TArgCallback, TCallback} from "../../../types/types";
 import {setSelectedRecalls} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -29,7 +29,7 @@ export const loadRecalls = (serviceCenterId: number): AppThunk => (dispatch, get
     Api.call<IRecallResponse>(Api.endpoints.Recalls.GetAll, {data})
         .then(result => {
             if (result.data?.result) {
-                dispatch(getRecalls(result.data.result))
+                dispatch(getRecalls(result.data.result.map((el, index)=> ({...el, localIndex: index}))))
                 dispatch(setRecallsCount(result.data.paging.numberOfRecords))
             }
         })
@@ -108,7 +108,20 @@ export const updateSelectedRecalls = (serviceCenterId: number, vin: string, make
             }
         })
         .catch(err => {
-            console.log('set update seleted recalls err', err)
+            console.log('set update selected recalls err', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
+
+export const updatePartsAvailability = (serviceCenterId: number, data: TUpdateRecall[], onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.Recalls.UpdateRecallParts, {data: {serviceCenterId, recallParts: data}})
+        .then(res => {
+            if (res) dispatch(loadRecalls(serviceCenterId))
+            onSuccess()
+        })
+        .catch(err => {
+            onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
 }
