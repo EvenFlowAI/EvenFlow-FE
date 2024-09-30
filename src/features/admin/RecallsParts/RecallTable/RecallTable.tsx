@@ -60,7 +60,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         },
         {
             header: "Model",
-            val: el => el.models.map(el => el.name).join(', ')
+            val: el => el.models ? el.models.map(el => el.name).join(', ') : el.model?.name ?? '-'
         },
         {
             header: "From",

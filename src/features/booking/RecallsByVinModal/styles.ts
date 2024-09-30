@@ -17,9 +17,11 @@ export const useStyles = makeStyles()(() => ({
         textTransform: "uppercase",
     },
     serviceAddedBtn: {
-        width: "35%",
+        width: "45%",
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'flex-end',
         textTransform: 'uppercase',
         fontWeight: 'bold',
     },
@@ -60,6 +62,14 @@ export const useStyles = makeStyles()(() => ({
         '& > button:not(:first-child)': {
             marginLeft: 20,
         }
+    },
+    iIcon: {
+        position: 'absolute',
+        top: -5,
+        right: -20,
+    },
+    button: {
+        width: 144,
     }
 }));
 
@@ -79,6 +89,8 @@ export const Label = withStyles(FormControlLabel, {
         marginLeft: 0,
     },
     label: {
-        fontWeight: "bold"
-    }
+        fontWeight: "bold",
+        position: 'relative',
+        marginRight: 20,
+    },
 });
