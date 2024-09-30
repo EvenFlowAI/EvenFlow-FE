@@ -16,7 +16,7 @@ type TProps = {
 }
 
 const Recall: React.FC<TProps> = ({item, recalls, onAddService, index}) => {
-    const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
+    const {recallsByVin} = useSelector((state: RootState) => state.recalls);
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
