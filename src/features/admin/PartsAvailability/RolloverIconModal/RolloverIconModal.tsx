@@ -58,8 +58,8 @@ const RolloverIconModal: React.FC<TProps> = ({open, onClose, editingItem, setDat
                     onChange={handleChange}/>
             </DialogContent>
             <DialogActions>
-                <Button color="info" variant="text" onClick={onCancel}>Close</Button>
-                <Button color="primary" variant="contained" onClick={onSave}>Save</Button>
+                <Button color="info" variant="text" onClick={onCancel}>Cancel</Button>
+                <Button color="primary" variant="contained" onClick={onSave}>Close</Button>
             </DialogActions>
         </BaseModal>
     );
