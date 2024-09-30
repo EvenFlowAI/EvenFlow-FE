@@ -64,10 +64,10 @@ const PartsAvailability = () => {
         const isValid = data
             .every(el => el.partLeadDaysCount >=0 && el.partLeadDaysCount <= 99 && el.dailyPartsCount >= 1 && el.dailyPartsCount <= 99)
         if (!isValid) {
-            if (data.some(el => el.partLeadDaysCount < 0 || el.partLeadDaysCount > 99)) {
+            if (data.find(el => el.partLeadDaysCount < 0 || el.partLeadDaysCount > 99)) {
                 showError("Part Lead Days Count must be from 0 to 99")
             }
-            if (data.some(el => el.dailyPartsCount < 1 || el.partLeadDaysCount > 99)) {
+            if (data.find(el => el.dailyPartsCount < 1 || el.partLeadDaysCount > 99)) {
                 showError("Daily Parts Count must be from 1 to 99")
             }
         }

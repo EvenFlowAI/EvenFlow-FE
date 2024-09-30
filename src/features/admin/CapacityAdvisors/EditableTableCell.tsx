@@ -14,6 +14,8 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
     keepDefaultStyling?: boolean;
     width?: number;
     error?: boolean;
+    min?: number;
+    max?: number;
 }>>> = ({
             name,
             value,
@@ -26,6 +28,8 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
                                             keepDefaultStyling,
     width,
     error,
+    min,
+    max,
         }) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
@@ -45,8 +49,9 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
             opacity: disabled ? '0.5' : 'unset',
             borderRadius: 3}}
         inputProps={{
-            min: 0,
-            step: 1
+            min: min ?? 0,
+            step: 1,
+            max: max
         }}
         disabled={disabled}
         endAdornment={!isXS ? endAdornment : undefined}
