@@ -176,6 +176,7 @@ export interface ITableProps<Data> {
     withoutOverflow?: boolean;
     verticalAlign?: string;
     getKey?: (el: Data) => string;
+    verticalPadding?: number;
 }
 
 export type TBaseScreen =

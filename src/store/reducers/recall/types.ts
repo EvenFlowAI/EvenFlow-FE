@@ -14,10 +14,13 @@ export interface IRecall {
     yearTo: number|null;
     recallComponent: string;
     recallSummary: string;
-    partLeadDaysCount?: number;
-    dailyPartsCount?: number;
+    partLeadDaysCount: number;
+    dailyPartsCount: number;
     serviceRequest: TIdName;
     oemProgram?: string;
+    isRemedyAvailable: boolean;
+    rolloverMessage?: string;
+    localIndex: number;
 }
 
 export interface ICreateUpdateRecall {
@@ -56,4 +59,12 @@ export type TRecallRequest = {
     orderBy?: string;
     isAscending?: boolean;
     searchTerm?: string;
+}
+
+export type TUpdateRecall = {
+    id: number;
+    partLeadDaysCount: number;
+    dailyPartsCount: number;
+    isRemedyAvailable: boolean;
+    rolloverMessage?: string;
 }
