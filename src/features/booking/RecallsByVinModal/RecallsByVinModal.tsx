@@ -52,7 +52,7 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }, [selectedVehicle, open, makes])
 
     useEffect(() => {
-        if (open) setRecalls(recallsByVin);
+        if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
     }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
