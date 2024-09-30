@@ -44,8 +44,9 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     useEffect(() => {
         if (selectedVehicle) {
             const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make?.toLowerCase());
-            if (selectedVehicle.vin?.length && open && make?.id) {
-                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id))
+            const model = make?.modelCodes?.find(el => el.name.toLowerCase() === selectedVehicle.model.toLowerCase())
+            if (selectedVehicle.vin?.length && open && make?.id && model && selectedVehicle.year) {
+                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id, model.id, selectedVehicle.year))
             }
         }
     }, [selectedVehicle, open, makes])
