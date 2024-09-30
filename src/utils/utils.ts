@@ -388,7 +388,7 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
     return selectedRecalls.map(recall => {
         const data: TRecallForRequest = {
             serviceRequestId: recall.serviceRequestId,
-            number: recall.campaignNumber,
+            number: recall.campaignNumber ?? recall.oemProgram,
         }
         if (recall.id) data.id = recall.id;
         return data;
