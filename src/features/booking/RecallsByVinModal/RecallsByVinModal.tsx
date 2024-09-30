@@ -114,10 +114,10 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                     </DialogContent>
             }
             <BfButtonsWrapper style={{padding: '10px 36px 25px'}}>
-                <Button variant="outlined" onClick={onDecline}>
+                <Button variant="outlined" onClick={onDecline} className={classes.button}>
                     {t("Cancel")}
                 </Button>
-                <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length}>
+                <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length} className={classes.button}>
                     {t("Next")}
                 </Button>
             </BfButtonsWrapper>
