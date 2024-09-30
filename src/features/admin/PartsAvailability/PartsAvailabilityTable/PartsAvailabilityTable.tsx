@@ -100,6 +100,8 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData, checke
                 isEdit={isEdit}
                 keepDefaultStyling
                 defaultValue={"0"}
+                min={0}
+                max={99}
                 disabled={isLoading}
                 width={80}
             />,
@@ -115,6 +117,8 @@ const PartsAvailabilityTable: React.FC<TProps> = ({isEdit, data, setData, checke
                 error={(el.dailyPartsCount < 1 || el.dailyPartsCount > 99) && checked}
                 defaultValue={"0"}
                 type="number"
+                min={1}
+                max={99}
                 keepDefaultStyling
                 disabled={isLoading}
                 width={80}
