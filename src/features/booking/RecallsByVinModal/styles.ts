@@ -67,6 +67,9 @@ export const useStyles = makeStyles()(() => ({
         position: 'absolute',
         top: -5,
         right: -20,
+    },
+    button: {
+        width: 144,
     }
 }));
 
