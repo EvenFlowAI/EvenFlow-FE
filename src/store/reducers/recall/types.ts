@@ -10,7 +10,10 @@ export interface IRecall {
     recallCampaignNumber: string;
     make: TIdName;
     models: TIdName[];
-    model?: string;
+    model?: {
+        id: number;
+        name: string;
+    };
     yearFrom: number|null;
     yearTo: number|null;
     recallComponent: string;
