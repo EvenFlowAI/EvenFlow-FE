@@ -333,6 +333,15 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             engineType: {order: isSM ? 4 : 3}
         }
 
+        const onNextForRecalls = () => {
+            if (onlyRecallsSelected && !selectedRecalls.length) {
+                dispatch(clearAppointmentSteps("serviceNeeds"))
+                onBack('serviceNeeds');
+            } else {
+                onNext()
+            }
+        }
+
         return (
             <StepWrapper>
                 {isLoading
@@ -463,7 +472,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 <RecallsByVinModal
                     open={isOpen}
                     onClose={onClose}
-                    handleNext={onNext}
+                    handleNext={onNextForRecalls}
                     handleAddServices={handleAddServices}
                     onDeclineRecalls={handleDeclineRecalls}
                 />
