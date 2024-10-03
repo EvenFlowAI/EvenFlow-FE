@@ -7,7 +7,7 @@ export type TIdName = {
 
 export interface IRecall {
     id: number;
-    recallCampaignNumber: string;
+    recallCampaignNumber?: string;
     make: TIdName;
     models: TIdName[];
     model?: {

@@ -44,7 +44,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             const models = make?.models.filter(el => editingItem.models.find(item => item.id === el.id)) ?? [];
             const sr = allAssignedList.find(item => item.id === editingItem.serviceRequest?.id);
             setForm(() => ({
-                recallCampaignNumber: editingItem.recallCampaignNumber,
+                recallCampaignNumber: editingItem.recallCampaignNumber ?? '',
                 make: make ?? null,
                 models: models,
                 yearFrom: editingItem.yearFrom?.toString() ?? '',
