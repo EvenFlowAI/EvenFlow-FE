@@ -298,12 +298,13 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
             const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
             if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
-                const {vin, make} = selectedVehicle;
-                if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected)) {
-                    setLoading(true);
+                const {vin, make, model, year} = selectedVehicle;
+                if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
+                    const modelId = makeInTheList.modelCodes?.find(el => el.name.toLowerCase() === model.toLowerCase())?.id
+                        setLoading(true);
                     try {
                         const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
-                            {data: {serviceCenterId: decodeSCID(id), vin: vin, vehicleMakeId: makeInTheList?.id}})
+                            {data: {serviceCenterId: decodeSCID(id), vin: vin, makeId: makeInTheList?.id, year: +year, modelId}})
                         dispatch(setRecallsAreShown(true));
                         if (data.length) {
                             await onOpen()
@@ -330,6 +331,15 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             model: {order: isSM ? 1 : 2},
             vin: {order: isSM ? 5 : currentConfig?.engineType ? 5 : 3},
             engineType: {order: isSM ? 4 : 3}
+        }
+
+        const onNextForRecalls = () => {
+            if (onlyRecallsSelected && !selectedRecalls.length) {
+                dispatch(clearAppointmentSteps("serviceNeeds"))
+                onBack('serviceNeeds');
+            } else {
+                onNext()
+            }
         }
 
         return (
@@ -462,7 +472,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 <RecallsByVinModal
                     open={isOpen}
                     onClose={onClose}
-                    handleNext={onNext}
+                    handleNext={onNextForRecalls}
                     handleAddServices={handleAddServices}
                     onDeclineRecalls={handleDeclineRecalls}
                 />

@@ -16,7 +16,7 @@ export const Title = styled('h1')(({theme}) => ({
         fontSize: 24
     },
     [theme.breakpoints.down('sm')]: {
-        fontSize: 18
+        fontSize: 20
     }
 }));
 
@@ -48,6 +48,7 @@ export const MainWrapper = styled('div')({
     justifyContent: "center",
     alignItems: 'center',
     [theme.breakpoints.down('mdl')]: {
-        justifyContent: 'unset'
+        justifyContent: 'unset',
+        paddingBottom: 57,
     }
 })

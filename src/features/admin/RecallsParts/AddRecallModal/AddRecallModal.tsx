@@ -44,7 +44,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             const models = make?.models.filter(el => editingItem.models.find(item => item.id === el.id)) ?? [];
             const sr = allAssignedList.find(item => item.id === editingItem.serviceRequest?.id);
             setForm(() => ({
-                recallCampaignNumber: editingItem.recallCampaignNumber,
+                recallCampaignNumber: editingItem.recallCampaignNumber ?? '',
                 make: make ?? null,
                 models: models,
                 yearFrom: editingItem.yearFrom?.toString() ?? '',
@@ -145,7 +145,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     id="recallCampaignNumber"
                     name="recallCampaignNumber"
                     placeholder='Type NHTSA Campaign'
-                    error={formIsChecked && !form.recallCampaignNumber.length && !form.oemProgram.length}
+                    error={formIsChecked && !form.recallCampaignNumber && !form.oemProgram}
                     onChange={onFormChange}
                     value={form.recallCampaignNumber}/>
                 <TextField
@@ -156,7 +156,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     name="oemProgram"
                     placeholder='Type OEM Program'
                     onChange={onFormChange}
-                    error={formIsChecked && !form.recallCampaignNumber.length && !form.oemProgram.length}
+                    error={formIsChecked && !form.recallCampaignNumber && !form.oemProgram}
                     value={form.oemProgram}/>
                 <Autocomplete
                     style={{ marginBottom: 10 }}
@@ -220,7 +220,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                     id="recallComponent"
                     name="recallComponent"
                     placeholder='Type Recall Component'
-                    error={formIsChecked && !form.recallComponent.length}
+                    error={formIsChecked && !form.recallComponent}
                     onChange={onFormChange}
                     value={form.recallComponent}/>
                 <Textarea

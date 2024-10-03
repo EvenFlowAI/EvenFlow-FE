@@ -295,6 +295,7 @@ export class Api {
             Create: {route: "/recall", method: "post"},
             Update: {route: "/recall/{id}", method: "put"},
             Remove: {route: "/recall/{id}", method: "delete"},
+            UpdateRecallParts: {route: "/recall", method: "put"},
         },
         ServiceCategories: {
             Create: {route: "/service-categories", method: "post"},

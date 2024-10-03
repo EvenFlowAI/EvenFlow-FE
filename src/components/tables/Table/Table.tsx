@@ -42,6 +42,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
         withBorders: Boolean(props.withBorders),
         compactBodyPadding: Boolean(props.compactBodyPadding),
         verticalAlign: props.verticalAlign,
+        verticalPadding: props.verticalPadding,
     }), [props])
 
     const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {

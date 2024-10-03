@@ -554,6 +554,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
 
 export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => (dispatch, getState) => {
     const {scProfile} = getState().appointment;
+    const {makes} = getState().appointmentFrame;
     const {
         vehicle,
         recalls,
@@ -563,7 +564,11 @@ export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => 
         serviceCategories
     } = data;
     if (vehicle?.vin && scProfile && recalls?.length) {
-        if (vehicle?.makeId) dispatch(updateSelectedRecalls(scProfile.id, vehicle.vin, vehicle.makeId, recalls))
+        const make = makes.find(el => el.id === vehicle.makeId)
+        if (make) {
+            const model = make.modelCodes?.find(item => item.name.toLowerCase() === vehicle.model.toLowerCase())
+            if (model && make.id) dispatch(updateSelectedRecalls(scProfile.id, vehicle.vin, make.id, model.id, vehicle.year, recalls))
+        }
         const serviceType = serviceTypeOption?.type === EServiceType.MobileService
             ? EServiceType.MobileService
             : EServiceType.VisitCenter;

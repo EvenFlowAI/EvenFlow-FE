@@ -62,7 +62,7 @@ export interface IApiEndpoints {
         | "GetPackagePricingLevels" | "ChangePackagePricingLevels" | "AddPackagePricingSettings"
         | "RemovePackagePricingSettings" | "UpdateMaxPrice", TApiEndpoint>,
     Qrvey: Record<"GetToken", TApiEndpoint>,
-    Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove", TApiEndpoint>,
+    Recalls: Record<"GetAll" | "GetById" | "GetByVin" | "Create" | "Update" | "Remove" | "UpdateRecallParts", TApiEndpoint>,
     ServiceCategories: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
         | "GetByQuery" | "GetByPage" | "GetShortByQuery", TApiEndpoint>,
     ServiceCenters: Record<"Create" | "GetShort" | "Update" | "Remove" | "Retrieve" | "UpdateAddress"

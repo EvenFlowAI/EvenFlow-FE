@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {ActionButtons} from "../../ActionButtons/ActionButtons";
 import {IAppointmentByQuery} from "../../../../api/types";
 import {API} from "../../../../api/api";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
@@ -15,6 +14,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import dayjs from "dayjs";
 import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
 import {getAppointmentDate} from "../../../../utils/utils";
+import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
 
 const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&{hashKey: string, loadData: TArgCallback<boolean>}>>> = ({open, onClose, hashKey, loadData}) => {
     const {customerSearchData} = useSelector((state: RootState) => state.customers);
@@ -82,14 +82,8 @@ const CancelAppointmentModal: React.FC<React.PropsWithChildren<React.PropsWithCh
             </DialogContent>
                     : <NoData/>}
             <div className={classes.actionsWrapper}>
-                <ActionButtons
-                    nextDisabled={loading}
-                    prevDisabled={loading}
-                    onBack={onClose}
-                    onNext={handleSubmit}
-                    nextLabel="Cancel Appointment"
-                    prevLabel="Back"
-                />
+                <LoadingButton onClick={onClose} loading={loading} variant="outlined">Back</LoadingButton>
+                <LoadingButton onClick={handleSubmit} loading={loading}>Cancel Appointment</LoadingButton>
             </div>
         </BaseModal>
     );

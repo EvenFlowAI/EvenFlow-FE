@@ -1,8 +1,9 @@
 import React from 'react';
-import {BaseModal, DialogActions, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../../../../components/buttons/LoadingButton/LoadingButton";
+import {BfButtonsWrapper} from "../../../../../../components/styled/BfButtonsWrapper";
 
 type TPromptNewSearchRangeProps = DialogProps & {
     onSave: () => void
@@ -19,7 +20,7 @@ const PromptNewSearchModal: React.FC<React.PropsWithChildren<React.PropsWithChil
             <DialogTitle onClose={props.onClose}>
                 {t("To see more options")}
             </DialogTitle>
-            <DialogActions>
+            <BfButtonsWrapper>
                 <LoadingButton
                     loading={false}
                     onClick={props.onSave}
@@ -34,7 +35,7 @@ const PromptNewSearchModal: React.FC<React.PropsWithChildren<React.PropsWithChil
                     variant="contained">
                     {t("No")}
                 </LoadingButton>
-            </DialogActions>
+            </BfButtonsWrapper>
         </BaseModal>
     );
 };

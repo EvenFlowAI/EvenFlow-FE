@@ -60,7 +60,7 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         },
         {
             header: "Model",
-            val: el => el.models.map(el => el.name).join(', ')
+            val: el => el.models ? el.models.map(el => el.name).join(', ') : el.model?.name ?? '-'
         },
         {
             header: "From",
@@ -122,9 +122,16 @@ const RecallTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRec
         if (!currentItem) {
             showError("Recall is not chosen");
         } else {
-            const itemName = currentItem.recallCampaignNumber?.length < 25
-                ? currentItem.recallCampaignNumber
-                : currentItem.recallCampaignNumber.slice(0, 24).concat('...')
+            let itemName = '';
+            if (currentItem.recallCampaignNumber) {
+                itemName = currentItem.recallCampaignNumber?.length < 25
+                    ? currentItem.recallCampaignNumber
+                    : currentItem.recallCampaignNumber.slice(0, 24).concat('...')
+            } else if (currentItem.oemProgram) {
+                itemName = currentItem.oemProgram?.length < 25
+                    ? currentItem.oemProgram
+                    : currentItem.oemProgram.slice(0, 24).concat('...')
+            }
             askConfirm({
                 isRemove: true,
                 title: `Please confirm you want to remove Recall ${itemName}?`,

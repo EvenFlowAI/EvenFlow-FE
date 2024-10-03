@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
-import {ICreateUpdateRecall, IRecall, IRecallResponse, TRecallRequest} from "./types";
-import {AppThunk, IOrder, IPageRequest, IRecallByVin} from "../../../types/types";
+import {ICreateUpdateRecall, IRecall, IRecallResponse, TRecallRequest, TUpdateRecall} from "./types";
+import {AppThunk, IOrder, IPageRequest, IRecallByVin, TArgCallback, TCallback} from "../../../types/types";
 import {setSelectedRecalls} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 
@@ -29,7 +29,7 @@ export const loadRecalls = (serviceCenterId: number): AppThunk => (dispatch, get
     Api.call<IRecallResponse>(Api.endpoints.Recalls.GetAll, {data})
         .then(result => {
             if (result.data?.result) {
-                dispatch(getRecalls(result.data.result))
+                dispatch(getRecalls(result.data.result.map((el, index)=> ({...el, localIndex: index}))))
                 dispatch(setRecallsCount(result.data.paging.numberOfRecords))
             }
         })
@@ -84,9 +84,9 @@ export const deleteRecall = (id: number, serviceCenterId: number,onError: (err: 
         })
 }
 
-export const loadRecallsByVin = (serviceCenterId: number, vin: string, vehicleMakeId: number): AppThunk => dispatch => {
+export const loadRecallsByVin = (serviceCenterId: number, vin: string, makeId: number, modelId: number, year: number): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, vehicleMakeId}})
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, makeId, modelId, year}})
         .then(result => {
             if (result.data) dispatch(getRecallsByVin(result.data))
         })
@@ -96,19 +96,34 @@ export const loadRecallsByVin = (serviceCenterId: number, vin: string, vehicleMa
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateSelectedRecalls = (serviceCenterId: number, vin: string, vehicleMakeId: number, recallsNumbers: string[]): AppThunk => dispatch => {
+export const updateSelectedRecalls = (serviceCenterId: number, vin: string, makeId: number, modelId: number, year: number, recallsNumbers: string[]): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, vehicleMakeId}})
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, makeId, modelId, year}})
         .then(result => {
             if (result.data) {
                 const data: IRecallByVin[] = result.data
                 dispatch(getRecallsByVin(data))
-                const selected = data.filter(item => recallsNumbers.includes(item.campaignNumber))
+                const selected = data.filter(item => {
+                   return item.campaignNumber ? recallsNumbers.includes(item.campaignNumber) : (item.oemProgram && recallsNumbers.includes(item.oemProgram))
+                })
                 dispatch(setSelectedRecalls(selected));
             }
         })
         .catch(err => {
-            console.log('set update seleted recalls err', err)
+            console.log('set update selected recalls err', err)
+        })
+        .finally(() => dispatch(setLoading(false)))
+}
+
+export const updatePartsAvailability = (serviceCenterId: number, data: TUpdateRecall[], onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.Recalls.UpdateRecallParts, {data: {serviceCenterId, recallParts: data}})
+        .then(res => {
+            if (res) dispatch(loadRecalls(serviceCenterId))
+            onSuccess()
+        })
+        .catch(err => {
+            onError(err)
         })
         .finally(() => dispatch(setLoading(false)))
 }

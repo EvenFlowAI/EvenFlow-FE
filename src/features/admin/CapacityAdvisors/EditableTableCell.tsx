@@ -11,6 +11,11 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
     defaultValue?: string;
     type?: string;
     disabled?: boolean;
+    keepDefaultStyling?: boolean;
+    width?: number;
+    error?: boolean;
+    min?: number;
+    max?: number;
 }>>> = ({
             name,
             value,
@@ -19,7 +24,12 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
             endAdornment,
             defaultValue,
             type,
-            disabled
+            disabled,
+                                            keepDefaultStyling,
+    width,
+    error,
+    min,
+    max,
         }) => {
     const theme = useTheme();
     const isXS = useMediaQuery(theme.breakpoints.down('sm'));
@@ -28,14 +38,20 @@ export const EditableTableCell: React.FC<React.PropsWithChildren<React.PropsWith
         name={name}
         value={value}
         type={type ?? "number"}
-        style={{
+        error={error}
+        style={keepDefaultStyling
+            ? {width: width ?? 'unset',}
+            : {
+            width: width ?? 'unset',
             minWidth: 80,
             border: disabled ? '1px solid #DADADA' : "1px solid #5E5F66",
             color: disabled ? "#DADADA" : "#5E5F66",
             opacity: disabled ? '0.5' : 'unset',
             borderRadius: 3}}
         inputProps={{
-            min: 0
+            min: min ?? 0,
+            step: 1,
+            max: max
         }}
         disabled={disabled}
         endAdornment={!isXS ? endAdornment : undefined}

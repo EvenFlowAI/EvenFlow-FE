@@ -7,22 +7,29 @@ export type TIdName = {
 
 export interface IRecall {
     id: number;
-    recallCampaignNumber: string;
+    recallCampaignNumber?: string;
     make: TIdName;
     models: TIdName[];
+    model?: {
+        id: number;
+        name: string;
+    };
     yearFrom: number|null;
     yearTo: number|null;
     recallComponent: string;
     recallSummary: string;
-    partLeadDaysCount?: number;
-    dailyPartsCount?: number;
+    partLeadDaysCount: number;
+    dailyPartsCount: number;
     serviceRequest: TIdName;
     oemProgram?: string;
+    isRemedyAvailable: boolean;
+    rolloverMessage?: string;
+    localIndex: number;
 }
 
 export interface ICreateUpdateRecall {
     id?: number;
-    recallCampaignNumber: string;
+    recallCampaignNumber?: string;
     makeId: number|null;
     modelIds: number[];
     yearFrom: number|null;
@@ -56,4 +63,12 @@ export type TRecallRequest = {
     orderBy?: string;
     isAscending?: boolean;
     searchTerm?: string;
+}
+
+export type TUpdateRecall = {
+    id: number;
+    partLeadDaysCount: number;
+    dailyPartsCount: number;
+    isRemedyAvailable: boolean;
+    rolloverMessage?: string;
 }

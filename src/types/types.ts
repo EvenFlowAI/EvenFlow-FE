@@ -176,6 +176,7 @@ export interface ITableProps<Data> {
     withoutOverflow?: boolean;
     verticalAlign?: string;
     getKey?: (el: Data) => string;
+    verticalPadding?: number;
 }
 
 export type TBaseScreen =
@@ -227,13 +228,16 @@ export type IMaintenanceItem = {
 export interface IRecallByVin {
     id: number | null;
     serviceRequestId: number;
-    campaignNumber: string;
+    campaignNumber?: string;
     recallComponent: string;
     recallStatus: string;
     shortDescription: string;
     recallOpenDate?: string;
     summary?: string;
     safetyRisk?: string;
+    isRemedyAvailable: boolean;
+    rolloverMessage?: string;
+    oemProgram?: string;
 }
 
 export type TActionProps = {

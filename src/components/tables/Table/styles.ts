@@ -10,17 +10,18 @@ export type TStyleProps = {
     withBorders?: boolean;
     compactBodyPadding?: boolean;
     verticalAlign?: string;
+    verticalPadding?: number;
 }
 
 export const StyledTableCell = styled(TableCell, {
     shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont"
         && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
-    && prop !== "compactBodyPadding" && prop !== "verticalAlign"
-})<TStyleProps>(({theme, compact, compactBodyPadding, superCompact, withBorders}) => ({
+    && prop !== "compactBodyPadding" && prop !== "verticalAlign" && prop !== "verticalPadding"
+})<TStyleProps>(({theme, compact, compactBodyPadding, verticalPadding, superCompact, withBorders}) => ({
     fontSize: 16,
     border: withBorders ? '1px solid #DADADA' : "none",
     // borderBottomColor: "#000000",
-    padding: compact || compactBodyPadding ? compactPadding : superCompact ? superCompactPadding : cellPadding,
+    padding: compact || compactBodyPadding ? compactPadding : superCompact ? superCompactPadding : verticalPadding ? `${verticalPadding}px 16px`: cellPadding,
     [theme.breakpoints.down('sm')]: {
         fontSize: 12,
         padding: theme.spacing(1)
@@ -30,7 +31,7 @@ export const StyledTableCell = styled(TableCell, {
 export const StyledTableHead = styled(TableCell, {
     shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont"
         && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders" && prop !== "verticalAlign"
-        && prop !== "compactBodyPadding"
+        && prop !== "compactBodyPadding" && prop !== "verticalPadding"
 })<TStyleProps>(({theme, compact, smallHeaderFont, superCompact,
                                                           borderHeader, withBorders, verticalAlign}) => ({
     fontSize: smallHeaderFont ? 12 : 16,

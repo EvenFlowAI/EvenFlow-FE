@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useParams} from "react-router-dom";
@@ -8,7 +8,7 @@ import {loadRecallsByVin} from "../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {Button, Divider} from "@mui/material";
+import {Button} from "@mui/material";
 import {
     checkCarIsValid,
     setAdditionalServicesChosen,
@@ -16,11 +16,12 @@ import {
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import AskAddService from "../../../components/modals/booking/AskAddService/AskAddService";
 import {checkPodChanged} from "../../../store/reducers/appointments/actions";
-import {CustomSwitch, Label, useStyles} from "./styles";
+import {useStyles} from "./styles";
 import {IRecallByVin} from "../../../types/types";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useException} from "../../../hooks/useException/useException";
-import dayjs from "dayjs";
+import {BfButtonsWrapper} from "../../../components/styled/BfButtonsWrapper";
+import Recall from "./Recall/Recall";
 
 type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,
@@ -43,14 +44,15 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     useEffect(() => {
         if (selectedVehicle) {
             const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make?.toLowerCase());
-            if (selectedVehicle.vin?.length && open && make?.id) {
-                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id))
+            const model = make?.modelCodes?.find(el => el.name.toLowerCase() === selectedVehicle.model.toLowerCase())
+            if (selectedVehicle.vin?.length && open && make?.id && model && selectedVehicle.year) {
+                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id, model.id, selectedVehicle.year))
             }
         }
     }, [selectedVehicle, open, makes])
 
     useEffect(() => {
-        if (open) setRecalls(recallsByVin);
+        if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
     }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
@@ -103,78 +105,27 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
             {
                 isLoading
                     ? <Loading/>
-                    : <DialogContent>
+                    : <DialogContent style={{padding: '10px 36px'}}>
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
                         <div className={classes.vinData}>{t("associated with VIN")}: {selectedVehicle?.vin}</div>
-                        {recallsByVin.map((item, index) => (
-                            <React.Fragment key={item.campaignNumber}>
-                                <div>
-                                    <div className={classes.recallTitleWrapper}>
-                                        <div>
-                                            <div className={classes.title}>{index + 1} {t("Recall")}</div>
-                                            <div className={classes.recallComponent}>{item.shortDescription}</div>
-                                        </div>
-                                        <div className={classes.serviceAddedBtn}>
-                                            <Label
-                                                checked={Boolean(recalls.find(el => el.campaignNumber === item.campaignNumber))}
-                                                onChange={() => onAddService(item)}
-                                                label={recalls.find(el => el.campaignNumber === item.campaignNumber)
-                                                    ? t("Service Added")
-                                                    : t("Service Declined")}
-                                                labelPlacement="start"
-                                                control={<CustomSwitch color="primary" />}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className={classes.recallDetailsWrapper}>
-                                        {item.recallOpenDate
-                                            ? <div>
-                                                <div className={classes.label}>{t("Recall Open Date")}</div>
-                                                <div className={classes.data}>
-                                                    {dayjs(item.recallOpenDate).format("MMM DD, YYYY")}
-                                                </div>
-                                            </div>
-                                            : null}
-                                        <div>
-                                            <div className={classes.label}>{t("Campaign Number")}</div>
-                                            <div className={classes.data}>{item.campaignNumber}</div>
-                                        </div>
-                                        <div>
-                                            <div className={classes.label}>{t("Recall Component")}</div>
-                                            <div className={classes.data}>{item.recallComponent}</div>
-                                        </div>
-                                        <div>
-                                            <div className={classes.label}>{t("Recall Status")}</div>
-                                            <div className={classes.data} style={{color: 'red'}}>{item.recallStatus}</div>
-                                        </div>
-                                    </div>
-                                    {item.summary
-                                        ? <div className={classes.textBox}>
-                                            <div className={classes.label}>{t("Summary")}</div>
-                                            <div>{item.summary}</div>
-                                        </div>
-                                        : null}
-                                    {item.safetyRisk
-                                        ? <div className={classes.textBox}>
-                                            <div className={classes.label}>{t("Safety Risk")}</div>
-                                            <div>{item.safetyRisk}</div>
-                                        </div>
-                                        : null}
-                                </div>
-                                {recallsByVin.length > 1 && index < recallsByVin.length - 1 ? <Divider style={{marginBottom: 20}}/> : null}
-                            </React.Fragment>))}
+                        {recallsByVin.map((item, index) => {
+                            return <Recall
+                                item={item}
+                                recalls={recalls}
+                                onAddService={onAddService}
+                                index={index}
+                                key={item.campaignNumber ?? item.oemProgram}/>
+                        })}
                     </DialogContent>
             }
-            <DialogActions>
-                <div className={classes.actionsWrapper}>
-                    <Button variant="outlined" onClick={onDecline}>
-                        {t("Decline")}
-                    </Button>
-                    <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length}>
-                        {t("Add Service")}
-                    </Button>
-                </div>
-            </DialogActions>
+            <BfButtonsWrapper style={{padding: '10px 36px 25px'}}>
+                <Button variant="outlined" onClick={onDecline} className={classes.button}>
+                    {t("Cancel")}
+                </Button>
+                <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length} className={classes.button}>
+                    {t("Next")}
+                </Button>
+            </BfButtonsWrapper>
             <AskAddService onSave={handleYes} onClose={handleNo} open={isAddServiceOpen}/>
         </BaseModal>
     );
