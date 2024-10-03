@@ -228,7 +228,7 @@ export type IMaintenanceItem = {
 export interface IRecallByVin {
     id: number | null;
     serviceRequestId: number;
-    campaignNumber: string;
+    campaignNumber?: string;
     recallComponent: string;
     recallStatus: string;
     shortDescription: string;
