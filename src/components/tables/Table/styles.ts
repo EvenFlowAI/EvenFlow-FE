@@ -31,7 +31,7 @@ export const StyledTableCell = styled(TableCell, {
 export const StyledTableHead = styled(TableCell, {
     shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont"
         && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders" && prop !== "verticalAlign"
-        && prop !== "compactBodyPadding"
+        && prop !== "compactBodyPadding" && prop !== "verticalPadding"
 })<TStyleProps>(({theme, compact, smallHeaderFont, superCompact,
                                                           borderHeader, withBorders, verticalAlign}) => ({
     fontSize: smallHeaderFont ? 12 : 16,
