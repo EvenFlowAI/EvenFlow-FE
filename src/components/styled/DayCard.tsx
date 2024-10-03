@@ -13,10 +13,13 @@ export const DayCard = styled("div")<TDayCardProps>(({theme, available, isCurren
     display: "flex",
     textTransform: "uppercase",
     flexDirection: "column",
-    gap: "8px",
+    gap: "4px",
     fontWeight: "bold",
     alignItems: "center",
     justifyContent: "center",
+    [theme.breakpoints.down('mdl')]: {
+        gap: "8px"
+    }
 }));
 
 export const DayName = styled("div")({
@@ -31,31 +34,28 @@ export const Date = styled("div")({
 })
 
 export const Day = styled("div")<TDayCardProps>(({theme, isCurrent, isOffPeak}) => ({
-    height: "auto",
-    minHeight: 80,
+    width: 48,
+    height: 48,
+    minHeight: "auto",
     display: "flex",
     flexDirection: 'column',
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    textAlign: "center",
     padding: '4px 12px',
-    border: isCurrent ? "1px solid #000000" : "1px solid #DADADA",
-    background: isCurrent ? "#000000" : "#FAFAFA",
+    border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
+    borderRadius: "50%",
+    background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
     color: isCurrent ? "#FFFFFF" : "#252733",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    cursor: "pointer",
+    fontWeight: "normal",
     fontSize: 14,
+    textAlign: "center",
+    textTransform: 'capitalize',
+    cursor: "pointer",
     '& > svg': {
         marginBottom: 4
     },
     [theme.breakpoints.down('mdl')]: {
         width: 56,
         height: 56,
-        minHeight: "auto",
-        border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
-        borderRadius: "50%",
-        background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
     }
 }))
