@@ -64,7 +64,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (selectedVehicle && customerLoadedData?.isUpdating) {
+        if (selectedVehicle && customerLoadedData?.isUpdating && currentScreen !== "manageAppointment") {
             if (customerLoadedData?.fromSearchByName) dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
             onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
