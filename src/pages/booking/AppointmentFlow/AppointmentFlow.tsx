@@ -111,7 +111,7 @@ const AppointmentFlow = () => {
 
     return (
         <Switch>
-            <Route path={Routes.EndUser.AppointmentFrame} exact render={() => <CreateAppointmentFlow
+            <Route path={Routes.EndUser.AppointmentFrame} render={() => <CreateAppointmentFlow
                 onUpdateAppointment={onUpdateAppointment}
                 onSelectAppointment={onSelectAppointment}
                 handleLogin={handleLogin}
@@ -125,7 +125,7 @@ const AppointmentFlow = () => {
                 needToShowServiceTypes={needToShowServiceTypes}
                 setNeedToShowServiceTypes={setNeedToShowServiceTypes}
             />} />
-            <Route path={Routes.EndUser.ManageAppointmentFrame} exact render={() => <ManageAppointmentFlow
+            <Route path={Routes.EndUser.ManageAppointmentFrame} render={() => <ManageAppointmentFlow
                 onUpdateAppointment={onUpdateAppointment}
                 onSelectAppointment={onSelectAppointment}
                 handleLogin={handleLogin}
