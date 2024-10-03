@@ -138,7 +138,7 @@ export interface IVehicleForSlots {
 
 export type TRecallForRequest = {
     serviceRequestId: number;
-    number: string;
+    number: string|undefined;
     id?: number;
 }
 

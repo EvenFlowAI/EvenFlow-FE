@@ -109,7 +109,12 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
                         <div className={classes.vinData}>{t("associated with VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => {
-                            return <Recall item={item} recalls={recalls} onAddService={onAddService} index={index} key={item.campaignNumber}/>
+                            return <Recall
+                                item={item}
+                                recalls={recalls}
+                                onAddService={onAddService}
+                                index={index}
+                                key={item.campaignNumber ?? item.oemProgram}/>
                         })}
                     </DialogContent>
             }

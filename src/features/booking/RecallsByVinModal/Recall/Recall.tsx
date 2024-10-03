@@ -29,10 +29,12 @@ const Recall: React.FC<TProps> = ({item, recalls, onAddService, index}) => {
             ? t("Service Added")
             : t("Service Declined"), [item, recalls, t])
 
-    const checked = item.isRemedyAvailable && Boolean(recalls.find(el => el.campaignNumber === item.campaignNumber))
+    const checked = item.isRemedyAvailable && Boolean(recalls.find(el => {
+        return item.campaignNumber ? el.campaignNumber === item.campaignNumber : el.oemProgram === item.oemProgram
+    }))
 
     return (
-        <React.Fragment key={item.campaignNumber}>
+        <React.Fragment key={item.campaignNumber ?? item.oemProgram}>
             <div>
                 <div className={classes.recallTitleWrapper}>
                     <div>
