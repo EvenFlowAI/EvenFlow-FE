@@ -588,7 +588,7 @@ export const getMaintenanceList = (
                 id: item.serviceRequestId,
                 name: item.shortDescription,
                 type: "recall",
-                campaignNumber: item.campaignNumber,
+                campaignNumber: item.campaignNumber ?? item.oemProgram,
             })
         })
     }

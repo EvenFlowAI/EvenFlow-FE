@@ -25,7 +25,7 @@ const Recall: React.FC<TProps> = ({item, recalls, onAddService, index}) => {
         ? <>{t("Remedy Not Available")}
             {item.rolloverMessage?.length ? <Icon item={item}/> : null}
         </>
-        : recalls.find(el => el.campaignNumber === item.campaignNumber)
+        : recalls.find(el => item.campaignNumber ? el.campaignNumber === item.campaignNumber : el.oemProgram === item.oemProgram)
             ? t("Service Added")
             : t("Service Declined"), [item, recalls, t])
 
