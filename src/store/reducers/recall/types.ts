@@ -29,7 +29,7 @@ export interface IRecall {
 
 export interface ICreateUpdateRecall {
     id?: number;
-    recallCampaignNumber: string;
+    recallCampaignNumber?: string;
     makeId: number|null;
     modelIds: number[];
     yearFrom: number|null;
