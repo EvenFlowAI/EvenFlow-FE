@@ -36,28 +36,26 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
     }
 
     const getLabel = () => {
-        if (isXs) {
-            return dayjs.utc(day).format("ddd");
-        }
-        if (isCurrent) {
-            if (appointment) {
-                return t("Available");
-            } else {
-                return t("Not Available");
-            }
-        }
-        if (appointment?.lowestPrice) {
-            const price = getMaxPrice();
-            if (price) {
-                return `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}`;
-            } else {
-                return t("Available");
-            }
-        }
-        if (appointment) {
-            return t("Available");
-        }
-        return t("Not Available");
+        return dayjs.utc(day).format("ddd");
+        // if (isCurrent) {
+        //     if (appointment) {
+        //         return t("Available");
+        //     } else {
+        //         return t("Not Available");
+        //     }
+        // }
+        // if (appointment?.lowestPrice) {
+        //     const price = getMaxPrice();
+        //     if (price) {
+        //         return `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}`;
+        //     } else {
+        //         return t("Available");
+        //     }
+        // }
+        // if (appointment) {
+        //     return t("Available");
+        // }
+        // return t("Not Available");
     }
 
     const isOffPeak = Boolean(appointment?.amountOfSavingMoney);
