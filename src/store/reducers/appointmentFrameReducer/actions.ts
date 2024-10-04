@@ -541,6 +541,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
         updatedData.id = data.customerId;
         updatedData.phoneNumbers = [data.driver?.phoneNumber];
         updatedData.companyName = data.driver.companyName;
+        updatedData.isUpdating = false;
 
         dispatch(setCustomerLoadedData(updatedData));
         dispatch(setCustomer(data.driver));
