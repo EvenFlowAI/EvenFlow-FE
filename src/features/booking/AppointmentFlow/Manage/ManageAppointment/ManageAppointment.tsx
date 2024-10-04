@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../../ActionButtons/ActionButtons";
 import {AppointmentUserData} from "../../Screens/components/AppointmentUserData/AppointmentUserData";
-import {Button} from "@mui/material";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {AppointmentSelectedDate} from "../../Screens/components/AppointmentSelectedDate/AppointmentSelectedDate";
 import {AppointmentReminders} from "../../Screens/components/AppointmentReminders/AppointmentReminders";
 import {TArgCallback, TCallback, TError} from "../../../../../types/types";
@@ -101,6 +101,8 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     const {askConfirm} = useConfirm();
     const showMessage = useMessage();
     const history = useHistory();
+    const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down("smMobile"));
 
     const isAuthorized = useMemo(() =>  currentUser && currentUser.dealershipId === scProfile?.dealershipId,
         [currentUser, scProfile])
@@ -302,7 +304,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
         userClickedOnSave ? handleCreateAppointment() : onMileageClose();
     }
 
-    return <StepWrapper>
+    return <StepWrapper style={isXs ? {paddingBottom: 30} : {}}>
         <ManageTitle>Manage Appointment</ManageTitle>
         <Wrapper>
             {isAppointmentSaving || isConsentsLoading
