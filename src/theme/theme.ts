@@ -8,6 +8,7 @@ declare module "@mui/material/styles" {
     interface BreakpointOverrides {
         xs: true;
         xsm: true;
+        smMobile: true;
         sm: true;
         mds: true;
         md: true;
@@ -24,6 +25,7 @@ const themeOptions: ThemeOptions = {
         values: {
             xs: 0,
             xsm: 375,
+            smMobile: 390,
             sm: 600,
             mds: 720,
             mdl: 768,

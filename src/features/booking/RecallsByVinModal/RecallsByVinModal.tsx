@@ -8,7 +8,7 @@ import {loadRecallsByVin} from "../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {Button} from "@mui/material";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {
     checkCarIsValid,
     setAdditionalServicesChosen,
@@ -40,6 +40,8 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const {t} = useTranslation();
     const { classes  } = useStyles();
     const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
+    const theme = useTheme()
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"))
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -104,7 +106,7 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
             {
                 isLoading
                     ? <Loading/>
-                    : <DialogContent style={{padding: '10px 36px'}}>
+                    : <DialogContent style={{padding: isSm ? '10px 16px' : '10px 36px'}}>
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
                         <div className={classes.vinData}>{t("associated with VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => {
