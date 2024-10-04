@@ -300,11 +300,10 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
                 const {vin, make, model, year} = selectedVehicle;
                 if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
-                    const modelId = makeInTheList.modelCodes?.find(el => el.name.toLowerCase() === model.toLowerCase())?.id
                         setLoading(true);
                     try {
                         const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
-                            {data: {serviceCenterId: decodeSCID(id), vin: vin, makeId: makeInTheList?.id, year: +year, modelId}})
+                            {data: {serviceCenterId: decodeSCID(id), vin: vin, make, year: +year, model}})
                         dispatch(setRecallsAreShown(true));
                         if (data.length) {
                             await onOpen()
