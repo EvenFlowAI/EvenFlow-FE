@@ -56,8 +56,8 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
-        const data = recalls.find(el => el.campaignNumber === item.campaignNumber)
-            ? recalls.filter(el => el.campaignNumber !== item.campaignNumber)
+        const data = recalls.find(el => item.campaignNumber ? el.campaignNumber === item.campaignNumber : item.oemProgram)
+            ? recalls.filter(el => item.campaignNumber ? el.campaignNumber !== item.campaignNumber : el.oemProgram !== item.oemProgram)
             : [...recalls, item]
         setRecalls(data)
     }
