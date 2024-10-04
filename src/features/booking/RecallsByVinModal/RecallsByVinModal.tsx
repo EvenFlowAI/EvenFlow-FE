@@ -31,7 +31,7 @@ type TRecallsByVinProps = DialogProps & {
 
 const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallsByVinProps>>> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
     const dispatch = useDispatch();
@@ -43,13 +43,12 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
 
     useEffect(() => {
         if (selectedVehicle) {
-            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make?.toLowerCase());
-            const model = make?.modelCodes?.find(el => el.name.toLowerCase() === selectedVehicle.model.toLowerCase())
-            if (selectedVehicle.vin?.length && open && make?.id && model && selectedVehicle.year) {
-                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id, model.id, selectedVehicle.year))
+           const {make, model, year, vin} = selectedVehicle;
+            if (vin?.length && open && make && model && year) {
+                dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year))
             }
         }
-    }, [selectedVehicle, open, makes])
+    }, [selectedVehicle, open])
 
     useEffect(() => {
         if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
