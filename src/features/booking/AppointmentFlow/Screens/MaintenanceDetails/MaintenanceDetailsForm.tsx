@@ -6,7 +6,10 @@ import {ActionButtons} from "../../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
 import {EUserType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {
-    clearAppointmentSteps, selectCategoriesIds, selectService, selectSubService,
+    clearAppointmentSteps,
+    selectCategoriesIds,
+    selectService,
+    selectSubService,
     setRecallsAreShown,
     setSelectedRecalls,
     setVehicle,
@@ -54,6 +57,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             appointmentByKey,
             selectedRecalls
         }= useSelector((state: RootState) => state.appointmentFrame);
+        const {allCategories} = useSelector(({categories}: RootState) => categories)
         const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
         const {mileage, engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
         const {currentConfig} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -104,9 +108,10 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
         }, [service, subService])
 
         const onlyRecallsSelected = useMemo(() => {
-            const uniqueCategories = Array.from(new Set(categoriesIds));
-            return !selectedSR.length && !selectedPackage && isRecallsCategorySelected && uniqueCategories.length === 1
-        }, [selectedSR, selectedPackage, isRecallsCategorySelected, categoriesIds])
+            const selectedCategories = allCategories.filter(el => categoriesIds.includes(el.id));
+            const isGeneralCategorySelected = selectedCategories.find(el => el.type === EServiceCategoryType.GeneralCategory);
+            return !selectedSR.length && !selectedPackage && !isGeneralCategorySelected && isRecallsCategorySelected
+        }, [selectedSR, selectedPackage, isRecallsCategorySelected, categoriesIds, allCategories])
 
         const isNextDisabled = useMemo(() => {
             return !Boolean(selectedVehicle?.make
@@ -233,8 +238,12 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
         const handleDeclineRecalls = () => {
             dispatch(setSelectedRecalls([]));
             if (isRecallsCategorySelected) {
-                if (onlyRecallsSelected) dispatch(clearAppointmentSteps("serviceNeeds"))
-                onBack('serviceNeeds');
+                if (onlyRecallsSelected) {
+                    dispatch(clearAppointmentSteps("serviceNeeds"))
+                    onBack('serviceNeeds');
+                } else {
+                    onNext()
+                }
             } else {
                 onNext()
             }
