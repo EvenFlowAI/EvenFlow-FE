@@ -357,7 +357,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                     : <SelectWrapper>
                         <Autocomplete
                             key="year"
-                            style={orderMapStyles.year}
+                            style={{...orderMapStyles.year}}
                             options={getYearOptions()}
                             onChange={handleChange('year', false)}
                             fullWidth
@@ -450,7 +450,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                         {recallsToggledOn || isRecallsCategorySelected
                             ? <div key="vin"
                                    className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
-                                   style={orderMapStyles.vin}>
+                                   style={{...orderMapStyles.vin, display: 'grid'}}>
                                 <TextField
                                     onChange={handleTextChange("vin")}
                                     label={recallsToggledOn && !isRecallsCategorySelected
