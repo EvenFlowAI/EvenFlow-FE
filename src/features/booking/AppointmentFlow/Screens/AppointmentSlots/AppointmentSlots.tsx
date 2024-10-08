@@ -164,16 +164,24 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (selectedTime) {
                     setDate(dayjs.utc(selectedTime).startOf('day'));
                 } else {
-                    if (currentSlots?.length) {
-                        const utcOffset = dayjs().utcOffset();
-                        const dateWithOffset = dayjs(currentSlots[0].date).add(utcOffset, 'minute').startOf('day')
-                        setDate(dateWithOffset)
-                    }
+                    // if (currentSlots?.length) {
+                    //
+                    // }
                 }
             }
             isMount.current = false;
         }
-    }, [appointmentSlots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
+    }, [appointmentSlots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment, isMount]);
+
+    useEffect(() => {
+        const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
+        const currentAppointment = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment;
+        if (!currentAppointment?.date && !selectedTime && currentSlots?.length) {
+            const utcOffset = dayjs().utcOffset();
+            const dateWithOffset = dayjs(currentSlots[0].date).add(utcOffset, 'minute').startOf('day')
+            setDate(dateWithOffset)
+        }
+    }, [appointmentSlots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment])
 
     const clearData = () => {
         dispatch(selectAppointment(null));
@@ -188,7 +196,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             setMonth(d);
         }
     }, [month, selectedTiming]);
-
 
     const setDateCallback = useCallback((d: TParsableDate) => {
         if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {

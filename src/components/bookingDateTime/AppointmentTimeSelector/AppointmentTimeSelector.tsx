@@ -71,6 +71,8 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                         && dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
                 })
                 firstAvailableSlot && handleSelect(firstAvailableSlot);
+            } else {
+                handleSelect(null)
             }
         }, [date, appointments?.appointments])
 

@@ -436,6 +436,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setWaitListSettings(null));
     dispatch(setAcceptedConsentIds([]));
     dispatch(setSlotsWarningShowed(false));
+    dispatch(setTime(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
