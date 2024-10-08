@@ -48,7 +48,9 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
     }
 
     const handleChangeTime = useCallback((t: unknown) => {
-        dispatch(setTime(t as TParsableDate));
+        const utcOffset = dayjs(t as TParsableDate).utcOffset();
+        const dateWithOffset = dayjs(t as TParsableDate).add(utcOffset, 'minute')
+        dispatch(setTime(dateWithOffset));
         if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) clearAppointmentSlots()
     }, [selectedTime])
 

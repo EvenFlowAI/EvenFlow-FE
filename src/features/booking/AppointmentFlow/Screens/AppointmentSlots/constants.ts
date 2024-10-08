@@ -6,6 +6,8 @@ export const defaultFormat = 'D, ddd';
 
 export const monthFormat = "MMM D";
 
+export const monthDayFormat = "MMM DD"
+
 export const XsMontFormat = "MMM";
 
 export const mockSlotTime = {

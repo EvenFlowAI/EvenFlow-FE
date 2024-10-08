@@ -164,7 +164,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (selectedTime) {
                     setDate(dayjs.utc(selectedTime).startOf('day'));
                 } else {
-                    if (currentSlots?.length) setDate(dayjs(currentSlots[0].date).startOf('day'))
+                    if (currentSlots?.length) {
+                        const utcOffset = dayjs().utcOffset();
+                        const dateWithOffset = dayjs(currentSlots[0].date).add(utcOffset, 'minute').startOf('day')
+                        setDate(dateWithOffset)
+                    }
                 }
             }
             isMount.current = false;
