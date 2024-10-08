@@ -8,7 +8,7 @@ import {loadRecallsByVin} from "../../../store/reducers/recall/actions";
 import {decodeSCID} from "../../../utils/utils";
 import {DialogProps} from "../../../components/modals/BaseModal/types";
 import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {Button} from "@mui/material";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {
     checkCarIsValid,
     setAdditionalServicesChosen,
@@ -31,7 +31,7 @@ type TRecallsByVinProps = DialogProps & {
 
 const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallsByVinProps>>> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
-    const {selectedVehicle, makes, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
+    const {selectedVehicle, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
     const dispatch = useDispatch();
@@ -40,24 +40,25 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     const {t} = useTranslation();
     const { classes  } = useStyles();
     const {isOpen: isAddServiceOpen, onClose: onAddServiceClose, onOpen: onAddServiceOpen} = useModal();
+    const theme = useTheme()
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"))
 
     useEffect(() => {
         if (selectedVehicle) {
-            const make = makes.find(item => item.name.toLowerCase() === selectedVehicle.make?.toLowerCase());
-            const model = make?.modelCodes?.find(el => el.name.toLowerCase() === selectedVehicle.model.toLowerCase())
-            if (selectedVehicle.vin?.length && open && make?.id && model && selectedVehicle.year) {
-                dispatch(loadRecallsByVin(decodeSCID(id), selectedVehicle.vin, make.id, model.id, selectedVehicle.year))
+           const {make, model, year, vin} = selectedVehicle;
+            if (vin?.length && open && make && model && year) {
+                dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year))
             }
         }
-    }, [selectedVehicle, open, makes])
+    }, [selectedVehicle, open])
 
     useEffect(() => {
         if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
     }, [recallsByVin, open])
 
     const onAddService = (item: IRecallByVin) => {
-        const data = recalls.find(el => el.campaignNumber === item.campaignNumber)
-            ? recalls.filter(el => el.campaignNumber !== item.campaignNumber)
+        const data = recalls.find(el => item.campaignNumber ? el.campaignNumber === item.campaignNumber : item.oemProgram === el.oemProgram)
+            ? recalls.filter(el => item.campaignNumber ? el.campaignNumber !== item.campaignNumber : el.oemProgram !== item.oemProgram)
             : [...recalls, item]
         setRecalls(data)
     }
@@ -105,7 +106,7 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
             {
                 isLoading
                     ? <Loading/>
-                    : <DialogContent style={{padding: '10px 36px'}}>
+                    : <DialogContent style={{padding: isSm ? '10px 16px' : '10px 36px'}}>
                         <div className={classes.mainTitle}>{recallsByVin.length} {t("Unrepaired")} {recallsByVin.length > 1 ? t("Recalls") : t("Recall")}</div>
                         <div className={classes.vinData}>{t("associated with VIN")}: {selectedVehicle?.vin}</div>
                         {recallsByVin.map((item, index) => {

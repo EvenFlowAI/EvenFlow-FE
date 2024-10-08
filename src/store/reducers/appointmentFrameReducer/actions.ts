@@ -541,6 +541,7 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
         updatedData.id = data.customerId;
         updatedData.phoneNumbers = [data.driver?.phoneNumber];
         updatedData.companyName = data.driver.companyName;
+        updatedData.isUpdating = false;
 
         dispatch(setCustomerLoadedData(updatedData));
         dispatch(setCustomer(data.driver));
@@ -554,7 +555,6 @@ export const handleAppointmentResponse = (data: ICreateAppointmentResp, endpoint
 
 export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => (dispatch, getState) => {
     const {scProfile} = getState().appointment;
-    const {makes} = getState().appointmentFrame;
     const {
         vehicle,
         recalls,
@@ -564,10 +564,9 @@ export const updateRecalls = (data: IAppointmentByKey, id: string): AppThunk => 
         serviceCategories
     } = data;
     if (vehicle?.vin && scProfile && recalls?.length) {
-        const make = makes.find(el => el.id === vehicle.makeId)
-        if (make) {
-            const model = make.modelCodes?.find(item => item.name.toLowerCase() === vehicle.model.toLowerCase())
-            if (model && make.id) dispatch(updateSelectedRecalls(scProfile.id, vehicle.vin, make.id, model.id, vehicle.year, recalls))
+        const {vin, make, model, year} = vehicle;
+        if (make && model && make && year) {
+            dispatch(updateSelectedRecalls(scProfile.id, vin, make, model, year, recalls))
         }
         const serviceType = serviceTypeOption?.type === EServiceType.MobileService
             ? EServiceType.MobileService
