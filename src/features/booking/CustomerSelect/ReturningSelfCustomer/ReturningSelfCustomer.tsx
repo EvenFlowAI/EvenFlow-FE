@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {TextField} from "../../../../components/styled/EndUserInputs";
-import {Grid, useMediaQuery} from "@mui/material";
+import {Grid, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
@@ -23,6 +23,8 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
     const { classes  } = useStyles();
     const loadingClasses = useLoadingStyles();
     const { t } = useTranslation();
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isXs = useMediaQuery("xs");
     const dispatch = useDispatch();
 
@@ -41,7 +43,7 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
         if (e.keyCode === 13) handleComplete().then()
     }
 
-    return <Grid item xs={12} sm={12} md={6}>
+    return <Grid item xs={12} sm={12} md={6} style={{padding: isSm ? "16px 0" : 16}}>
         <div className={classes.existing}>
             <span>{t("I`m a returning customer")}</span>
             <TextField
