@@ -112,6 +112,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
 
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
+        handleNext(o)
     }
 
     return <StepWrapper>
@@ -136,7 +137,8 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
             onBack={onBack}
             nextLabel={t("Next")}
             onNext={() => handleNext(transportation)}
-            nextDisabled={loading || isConsentsLoading || (!transportation && !!transportations.length)}
+            hideNext={!transportation && !!transportations.length}
+            nextDisabled={loading || isConsentsLoading}
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>
