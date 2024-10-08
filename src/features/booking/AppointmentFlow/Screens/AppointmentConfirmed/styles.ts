@@ -7,7 +7,7 @@ export const Paper = styled('div')(({theme}) => ({
     fontSize: 15,
     maxWidth: 700,
     [theme.breakpoints.up('sm')]: {
-        minWidth: 545,
+        minWidth: 600,
     },
     "& h3": {
         textTransform: "uppercase",
