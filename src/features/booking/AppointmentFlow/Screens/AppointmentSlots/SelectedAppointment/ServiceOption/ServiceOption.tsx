@@ -6,7 +6,7 @@ import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {
     selectAppointment,
-    selectServiceValetAppointment,
+    selectServiceValetAppointment, setSlotWasSelected,
 } from "../../../../../../../store/reducers/appointment/actions";
 import {
     checkCarIsValid,
@@ -144,6 +144,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     }
 
     const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
+        dispatch(setSlotWasSelected(false));
         if (newOption?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
         } else {

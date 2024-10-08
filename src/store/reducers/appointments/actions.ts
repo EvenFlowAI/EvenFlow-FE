@@ -34,7 +34,7 @@ import {
     loadAppointmentSlots,
     loadServiceValetSlots,
     selectAppointment,
-    selectServiceValetAppointment
+    selectServiceValetAppointment, setSlotWasSelected
 } from "../appointment/actions";
 import {getRecallsByVin} from "../recall/actions";
 import dayjs from "dayjs";
@@ -305,6 +305,7 @@ export const loadAppointmentByKey =
 export const clearAfterCloning = (): AppThunk => dispatch => {
     dispatch(getCurrentAppointment(null))
     dispatch(selectAppointment(null))
+    dispatch(setSlotWasSelected(false));
     dispatch(selectServiceValetAppointment(null))
     dispatch(setConsultants([]));
     dispatch(getAppointmentSlots([]));

@@ -9,7 +9,11 @@ import {RootState} from "../../../store/rootReducer";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import PromptNewSearchModal from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/PromptNewSearchModal/PromptNewSearchModal";
 import {setCurrentFrameScreen, setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment, selectServiceValetAppointment,} from "../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    setSlotWasSelected,
+} from "../../../store/reducers/appointment/actions";
 import {WHILE_LIMIT} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/constants";
 import {DaySelectorWrapper} from "../../styled/DaySelectorWrapper";
 import {DateSelectArrow} from "../../styled/DateSelectArrow";
@@ -137,6 +141,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
         dispatch(setCurrentFrameScreen('appointmentTiming'));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
+        dispatch(setSlotWasSelected(false));
     }
 
     return <DaySelectorWrapper>

@@ -24,7 +24,7 @@ import {EServiceType, EUserType} from "../../../../../store/reducers/appointment
 import {useTranslation} from "react-i18next";
 import {
     selectAppointment,
-    selectServiceValetAppointment,
+    selectServiceValetAppointment, setSlotWasSelected,
 } from "../../../../../store/reducers/appointment/actions";
 import {Routes} from "../../../../../routes/constants";
 import {Api} from "../../../../../api/ApiEndpoints/ApiEndpoints";
@@ -138,6 +138,7 @@ export const ServiceNeedsCards: React.FC<React.PropsWithChildren<React.PropsWith
         dispatch(setAdditionalServicesChosen(false));
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
+        dispatch(setSlotWasSelected(false));
         dispatch(clearAppointmentSteps(isTransportationAvailable ? "transportationNeeds" : "appointmentSelection"));
     }
 
