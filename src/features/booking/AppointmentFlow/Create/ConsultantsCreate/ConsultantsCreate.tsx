@@ -2,7 +2,11 @@ import React from 'react';
 import {TActionProps} from "../../../../../types/types";
 import {IServiceConsultant} from "../../../../../api/types";
 import {setAdvisor, setAnyAdvisorSelected} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {selectAppointment, selectServiceValetAppointment} from "../../../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    setSlotWasSelected
+} from "../../../../../store/reducers/appointment/actions";
 import {useDispatch} from "react-redux";
 import {Consultants} from "../../Screens/Consultants/Consultants";
 
@@ -14,6 +18,7 @@ const ConsultantsCreate: React.FC<TActionProps> = ({onNext, onBack}) => {
         dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
+        dispatch(setSlotWasSelected(false));
     }
 
     return (

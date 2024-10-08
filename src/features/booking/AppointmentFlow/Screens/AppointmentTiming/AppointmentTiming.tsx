@@ -5,7 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {setSideBarSteps, setTime, setTiming,} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {EAppointmentTimingType,} from "../../../../../store/reducers/appointment/types";
-import {selectAppointment, selectServiceValetAppointment,} from "../../../../../store/reducers/appointment/actions";
+import {
+    selectAppointment,
+    selectServiceValetAppointment,
+    setSlotWasSelected,
+} from "../../../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import AppointmentTimingCard from "./AppointmentTimingCard/AppointmentTimingCard";
@@ -45,6 +49,7 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
     const clearAppointmentSlots = () => {
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
+        dispatch(setSlotWasSelected(false));
     }
 
     const handleChangeTime = useCallback((t: unknown) => {

@@ -17,7 +17,10 @@ export const useStyles = makeStyles()(theme => ({
             },
             '& > div:first-child': {
                 marginBottom: 12,
-            }
+            },
+            "& > div:not(:last-child)": {
+                marginRight: 0
+            },
         }
     },
 }));

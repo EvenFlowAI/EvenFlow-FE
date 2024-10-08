@@ -13,7 +13,7 @@ import {
 import {TArgCallback, TScreen} from "../../../../../types/types";
 import {
     selectAppointment,
-    selectServiceValetAppointment,
+    selectServiceValetAppointment, setSlotWasSelected,
 } from "../../../../../store/reducers/appointment/actions";
 import AskAddService from "../../../../../components/modals/booking/AskAddService/AskAddService";
 import {useTranslation} from "react-i18next";
@@ -86,6 +86,7 @@ export const AppointmentComment: React.FC<TProps> = ({isManagingFlow, handleSetS
     const clearData = () => {
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));
+        dispatch(setSlotWasSelected(false));
         dispatch(clearAppointmentSteps("serviceNeeds"));
     }
 

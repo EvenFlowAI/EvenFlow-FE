@@ -81,6 +81,7 @@ export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAp
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
 export const setSlotsLoading = createAction<boolean>("Appointment/setSlotsLoading");
+export const setSlotWasSelected = createAction<boolean>("Appointment/setSlotWasSelected");
 
 export const loadAppointmentSlots = (
     data: IAppointmentSlotsRequest,

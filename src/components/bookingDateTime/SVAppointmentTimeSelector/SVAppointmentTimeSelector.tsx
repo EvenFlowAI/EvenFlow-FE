@@ -20,8 +20,16 @@ type TProps = {
 
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading}) => {
-        const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
-        const {selectedTiming, sideBarSteps, trackerData} = useSelector((state : RootState) => state.appointmentFrame);
+        const {
+            serviceValetAppointment: selectedAppointment,
+            serviceValetSlots,
+            wasSlotSelected
+        } = useSelector((state: RootState) => state.appointment);
+        const {
+            selectedTiming,
+            sideBarSteps,
+            trackerData
+        } = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
@@ -32,14 +40,14 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         useEffect(() =>{
             const utcOffset = dayjs().utcOffset();
             const dateWithOffset = dayjs().add(utcOffset, 'minute')
-            if (currentSlots) {
+            if (currentSlots && !wasSlotSelected) {
                 const firstAvailableSlot = currentSlots.find(slot => {
                     return dayjs(slot?.date).isSame(dayjs.utc(date), 'day')
                         && dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
                 })
                 firstAvailableSlot && handleSelect(firstAvailableSlot);
             }
-        }, [date,currentSlots])
+        }, [date,currentSlots, wasSlotSelected])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({
