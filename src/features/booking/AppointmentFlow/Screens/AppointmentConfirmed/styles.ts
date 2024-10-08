@@ -5,6 +5,7 @@ export const Paper = styled('div')(({theme}) => ({
     boxShadow: "1px 5px 15px rgba(0, 0, 0, 0.25);",
     padding: 20,
     fontSize: 15,
+    maxWidth: 700,
     [theme.breakpoints.up('sm')]: {
         minWidth: 545,
     },
@@ -34,8 +35,9 @@ export const ButtonsWrapper = styled('div')({
 })
 
 export const Wrapper = styled('div')(() => ({
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
+    display: "flex",
+    flexDirection: 'column',
+    // gridTemplateColumns: "repeat(2, 1fr)",
     gap: "15px",
     marginBottom: 20,
     "& h2": {
@@ -47,16 +49,21 @@ export const Wrapper = styled('div')(() => ({
         fontSize: 19,
         textAlign: 'center'
     },
+    "& .item": {
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: "space-between"
+    },
     "&>div": {
         textAlign: "right"
     },
-    "&>.label": {
+    "& .label": {
         textAlign: "left",
         textTransform: "uppercase",
         color: "#9FA2B4",
         fontWeight: "bold"
     },
-    "& > .emptyContainer": {
+    "& .emptyContainer": {
         width: '100%',
         minHeight: 300,
         minWidth: 300,
@@ -64,6 +71,9 @@ export const Wrapper = styled('div')(() => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: "center",
+    },
+    "& .content": {
+        maxWidth: "50%"
     }
 }));
 
