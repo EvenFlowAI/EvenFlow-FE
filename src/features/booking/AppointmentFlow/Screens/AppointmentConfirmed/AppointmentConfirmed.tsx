@@ -288,10 +288,10 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
                     ? <div className="emptyContainer"><Loading/></div>
                     : data.filter(el => el.content).map((item, index) => {
                     if (!item.label.length && item.content.length) return null;
-                    return <React.Fragment key={item.label + index}>
+                    return <div className="item" key={item.label + index}>
                         <div className="label">{item.label}</div>
-                        <div>{item.content}</div>
-                    </React.Fragment>;
+                        <div className="content">{item.content}</div>
+                    </div>;
                 })}
             </Wrapper>
             <ButtonsWrapper>

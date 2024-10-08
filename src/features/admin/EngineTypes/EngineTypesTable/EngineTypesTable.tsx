@@ -13,10 +13,6 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
-const RowData = [
-    {val: (el: IEngineType) => `${el.name}`, header: "Estimated Mileage", orderId: "name"},
-]
-
 export const EngineTypesTable = () => {
     const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
@@ -32,6 +28,10 @@ export const EngineTypesTable = () => {
     useEffect(() => {
         setTypes(engineTypes);
     }, [engineTypes])
+
+    const RowData = [
+        {val: (el: IEngineType) => `${el.name}`, header: selectedSC?.engineTypeFieldName ?? "Engine Type", orderId: "name"},
+    ]
 
     const openMenu = (el: IEngineType) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setCurrentEngineType(el)
