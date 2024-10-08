@@ -81,8 +81,7 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
     return <div className={classes.wrapper}>
         <Grid className={classes.buttonsContainer}
               alignItems="stretch"
-              container
-              spacing={4}>
+              container>
             {isAuthorized
                 ? <ReturningCustomerForAdmin handleNew={onSelectNewCustomer} redirect={redirect}/>
                 : <ReturningSelfCustomer onComplete={onComplete} loading={loading} />}
