@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TimeSlotCard} from "../TimeSlotCard/TimeSlotCard";
 import {Loading} from "../../wrappers/Loading/Loading";
@@ -24,6 +24,10 @@ type TProps = {
     appointments?: TGroupedAppointment;
 }
 
+const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppointmentSlot) => {
+    return dayjs(a.date).isAfter(b.date) ? 1 : -1
+}
+
 export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading, appointments}) => {
         const {
@@ -39,7 +43,6 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
             appointmentByKey,
             trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
-        const titleRef = useRef<HTMLDivElement|null>(null);
         const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
 
@@ -48,6 +51,28 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                 dispatch(loadHoursOfOperations(scProfile.id))
             }
         }, [scProfile])
+
+        const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
+            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
+            handleGA(a);
+            dispatch(selectAppointment(data));
+            if (!customerLoadedData?.isUpdating && !appointmentByKey) {
+                handleSideBar();
+            }
+        }, [selectedTiming])
+
+        useEffect(() =>{
+            const utcOffset = dayjs().utcOffset();
+            const dateWithOffset = dayjs().add(utcOffset, 'minute')
+            if (appointments?.appointments) {
+                const sorted = appointments?.appointments.sort(sortAppointments);
+                const firstAvailableSlot = sorted.find(slot => {
+                    return dayjs(slot?.date).isSame(dayjs.utc(date), 'day')
+                        && dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                })
+                firstAvailableSlot && handleSelect(firstAvailableSlot);
+            }
+        }, [date, appointments?.appointments])
 
         const generateSlots = (startHours: number|string, startMinutes: number|string, endHours: number|string, endMinutes: number|string): TSlot[] => {
             const slots: TSlot[] = [];
@@ -96,19 +121,10 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
             }
         }
 
-        const handleSelect = useCallback((a: IRemappedAppointmentSlot|null) => {
-            const data = a && selectedTiming ? {...a, timingType: selectedTiming} : a;
-            handleGA(a);
-            dispatch(selectAppointment(data));
-            if (!customerLoadedData?.isUpdating && !appointmentByKey) {
-                handleSideBar();
-            }
-        }, [selectedTiming])
-
         return (
             <div className={classes.wrapper}>
                 <div className={classes.titleWrapper}>
-                    <h4 ref={titleRef} className={classes.title}>{t("Select Time")}</h4>
+                    <h4 className={classes.title}>{t("Select Time")}</h4>
                     <div>{dayjs(date).format("ddd")}, <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span></div>
                 </div>
                 {!loading
