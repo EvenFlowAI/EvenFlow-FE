@@ -18,6 +18,7 @@ export const useStyles = makeStyles()(() => ({
     },
     serviceAddedBtn: {
         width: "45%",
+        minWidth: "fit-content",
         position: 'relative',
         display: 'flex',
         alignItems: 'center',

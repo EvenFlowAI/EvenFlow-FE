@@ -12,7 +12,7 @@ export const Container = styled('div')({
     margin: "auto",
     [theme.breakpoints.down('mdl')]: {
         paddingBottom: 57,
-    }
+    },
 });
 
 export const SidebarWrapper = styled('div')(({theme}) => ({
