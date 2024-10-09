@@ -61,6 +61,7 @@ import {
     mapRecallsForRequest
 } from "../../../utils/utils";
 import {
+    getAppointmentSlots, getServiceValetSlots,
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
@@ -436,6 +437,8 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setWaitListSettings(null));
     dispatch(setAcceptedConsentIds([]));
     dispatch(setSlotsWarningShowed(false));
+    dispatch(getAppointmentSlots([]));
+    dispatch(getServiceValetSlots([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
