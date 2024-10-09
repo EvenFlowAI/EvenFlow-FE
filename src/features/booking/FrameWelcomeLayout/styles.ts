@@ -49,6 +49,6 @@ export const MainWrapper = styled('div')({
     alignItems: 'center',
     [theme.breakpoints.down('mdl')]: {
         justifyContent: 'unset',
-        paddingBottom: 57,
+        paddingBottom: 81,
     }
 })
