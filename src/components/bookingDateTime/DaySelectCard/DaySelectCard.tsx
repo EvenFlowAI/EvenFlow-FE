@@ -1,9 +1,6 @@
 import React from 'react';
 import {TCallback} from "../../../types/types";
-import {TGroupedAppointment, TGroupedAppointments} from "../../../utils/types";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {useTranslation} from "react-i18next";
+import {TGroupedAppointment} from "../../../utils/types";
 import {ReactComponent as CalendarIcon} from "../../../assets/img/empty_calendar.svg";
 import {ReactComponent as CalendarIconWhite} from "../../../assets/img/empty_calendar_white.svg";
 import {
@@ -18,44 +15,13 @@ type TProps = {
     isCurrent: boolean;
     appointment?: TGroupedAppointment;
     isXs: boolean;
-    appointments: TGroupedAppointments;
 };
 
 export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
-    day, onClick, appointment, isCurrent, isXs, appointments,
+    day, onClick, appointment, isCurrent, isXs,
 }) => {
-    const {scProfile} = useSelector((state: RootState) => state.appointment);
-    const {t} = useTranslation();
-    const getMaxPrice = () => {
-        if (appointment) {
-            const prices = appointment.appointments
-                .filter(app => dayjs(app.appointmentDate).isSame(dayjs(appointment.date), 'day'))
-                .map(item => item.price.value)
-            return Math.max(...prices);
-        }
-    }
-
     const getLabel = () => {
         return dayjs.utc(day).format("ddd");
-        // if (isCurrent) {
-        //     if (appointment) {
-        //         return t("Available");
-        //     } else {
-        //         return t("Not Available");
-        //     }
-        // }
-        // if (appointment?.lowestPrice) {
-        //     const price = getMaxPrice();
-        //     if (price) {
-        //         return `$${scProfile?.isRoundPrice ? price : price.toFixed(2)}`;
-        //     } else {
-        //         return t("Available");
-        //     }
-        // }
-        // if (appointment) {
-        //     return t("Available");
-        // }
-        // return t("Not Available");
     }
 
     const isOffPeak = Boolean(appointment?.amountOfSavingMoney);

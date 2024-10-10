@@ -40,6 +40,8 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const isMds = useMediaQuery(theme.breakpoints.down("mds"));
     const history = useHistory();
+    const utcOffset = dayjs().utcOffset();
+
     const isAdminPanel = history.location.pathname.includes('admin');
     const daysPerScreen: number = useMemo(() => {
         return isSm ? 4 : isMds ? 5 : 6;
@@ -148,7 +150,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
                 <SVDaySelectCard
                     key={day}
                     isXs={isXs}
-                    isCurrent={dayjs.utc(date).isSame(dayjs.utc(day), 'date')}
+                    isCurrent={dayjs.utc(date).add(utcOffset, 'minute').isSame(dayjs.utc(day), 'date')}
                     appointment={appointments.find(item => dayjs(item.date).isSame(dayjs.utc(day), 'date'))}
                     onClick={handleChangeDay(day)}
                     day={day}
