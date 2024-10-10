@@ -151,7 +151,6 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
                     isXs={isSm}
                     isCurrent={dayjs.utc(date).isSame(dayjs.utc(day), 'date')}
                     appointment={appointments[day]}
-                    appointments={appointments}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />
