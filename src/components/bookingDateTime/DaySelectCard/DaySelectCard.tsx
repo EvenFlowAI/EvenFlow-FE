@@ -20,20 +20,25 @@ type TProps = {
 export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
     day, onClick, appointment, isCurrent, isXs,
 }) => {
+    const utcOffset = dayjs().utcOffset();
+    const dateWithOffset = dayjs().add(utcOffset, 'minute')
+
     const getLabel = () => {
         return dayjs.utc(day).format("ddd");
     }
 
-    const isOffPeak = Boolean(appointment?.amountOfSavingMoney);
+    const isAvailable = Boolean(appointment?.appointments?.find(slot => dayjs(slot?.date).isAfter(dateWithOffset)))
+
+    const isOffPeak = Boolean(appointment?.amountOfSavingMoney) && isAvailable
 
     return <DayCard
-            available={Boolean(appointment)}
+            available={isAvailable}
             isCurrent={isCurrent}
             isOffPeak={isOffPeak}
         >
         <Date>{dayjs.utc(day).format(monthDayFormat)}</Date>
         <Day
-            available={Boolean(appointment)}
+            available={isAvailable}
             isCurrent={isCurrent}
             isOffPeak={isOffPeak}
             onClick={onClick}>

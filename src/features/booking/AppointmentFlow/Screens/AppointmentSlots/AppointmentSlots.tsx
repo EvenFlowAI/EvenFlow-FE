@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {
     EAppointmentTimingType,
-    IAppointmentSlotsRequest,
+    IAppointmentSlotsRequest, IRemappedAppointmentSlot, IServiceValetAppointment,
     MPOptionShort,
 } from "../../../../../store/reducers/appointment/types";
 import {
@@ -54,6 +54,14 @@ type TAppointmentSelectionProps = {
     prevLogicalScreen: TScreen;
     fromServiceValetToVisitCenter?: boolean;
     isManaging?: boolean;
+}
+
+const sortSVAppointments = (a: IServiceValetAppointment, b: IServiceValetAppointment) => {
+    return dayjs(a.date).isAfter(b.date) ? 1 : -1
+}
+
+const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppointmentSlot) => {
+    return dayjs(a.date).isAfter(b.date) ? 1 : -1
 }
 
 export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({
@@ -168,8 +176,23 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 } else {
                     if (currentSlots?.length) {
                         const utcOffset = dayjs().utcOffset();
-                        const dateWithOffset = dayjs(currentSlots[0].date).add(utcOffset, 'minute').startOf('day')
-                        setDate(dateWithOffset)
+                        const dateWithOffset = dayjs().add(utcOffset, 'minute')
+                        let firstAvailableSlot = null;
+                        if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+                            const sorted = [...serviceValetSlots].sort(sortSVAppointments)
+                            firstAvailableSlot = sorted.find(slot => {
+                                return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                            })
+                        } else {
+                            const sorted = [...appointmentSlots].sort(sortAppointments)
+                            firstAvailableSlot = sorted.find(slot => {
+                                return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                            })
+                        }
+                        if (firstAvailableSlot) {
+                            const dateOfSlot = dayjs(firstAvailableSlot.date).add(utcOffset, 'minute').startOf('day')
+                            setDate(dateOfSlot)
+                        }
                     }
                 }
             }
