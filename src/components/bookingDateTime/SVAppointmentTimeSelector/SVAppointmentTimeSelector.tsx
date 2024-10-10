@@ -18,6 +18,10 @@ type TProps = {
     loading: boolean;
 }
 
+const sortAppointments = (a: IServiceValetAppointment, b: IServiceValetAppointment) => {
+    return dayjs(a.date).isAfter(b.date) ? 1 : -1
+}
+
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading}) => {
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
@@ -25,21 +29,27 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const dispatch = useDispatch();
         const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
+        const utcOffset = dayjs().utcOffset();
+
         const currentSlots = useMemo(() => {
-            return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(date, 'date'))
+            const dateWithOffset = dayjs(date).add(utcOffset, 'minute')
+            return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(dateWithOffset, 'date'))
         }, [serviceValetSlots, date])
 
         useEffect(() =>{
-            const utcOffset = dayjs().utcOffset();
-            const dateWithOffset = dayjs().add(utcOffset, 'minute')
-            if (currentSlots) {
-                const firstAvailableSlot = currentSlots.find(slot => {
-                    return dayjs(slot?.date).isSame(dayjs.utc(date), 'day')
-                        && dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
-                })
-                firstAvailableSlot && handleSelect(firstAvailableSlot);
+            if (serviceValetSlots.length) {
+                const dateWithOffset = dayjs(date).add(utcOffset, 'minute')
+                const slotForThisDateIsSelected = selectedAppointment
+                    && dayjs(selectedAppointment?.date).isSame(dayjs.utc(dateWithOffset), 'day')
+                if (!slotForThisDateIsSelected) {
+                    const sorted = [...serviceValetSlots].sort(sortAppointments)
+                    const firstAvailableSlot = sorted.find(slot => {
+                        return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
+                    })
+                    firstAvailableSlot && handleSelect(firstAvailableSlot);
+                }
             }
-        }, [date,currentSlots])
+        }, [date, serviceValetSlots, selectedAppointment])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({

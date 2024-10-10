@@ -14,7 +14,7 @@ const Address = () => {
 
     return serviceType !== EServiceType.VisitCenter && address
         ? <div className="service-list">
-            <h4 style={isMobile ? {textTransform: 'capitalize', margin: 0} : {}}> {t("You Address")}:</h4>
+            <h4 style={isMobile ? {textTransform: 'capitalize', margin: 0} : {textTransform: 'uppercase'}}> {t("Your Address")}:</h4>
             <div style={isMobile ? {fontWeight: 400} : {}}>{`${typeof address === "string" ? address : address?.label}` || ""}{zipCode ? `, ${zipCode}` : ""}</div>
         </div>
         : null
