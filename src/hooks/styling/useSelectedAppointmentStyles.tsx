@@ -4,11 +4,6 @@ export const useSelectedAppointmentStyles = makeStyles()(theme => ({
     selectWrapper: {
         display: 'flex',
         alignItems: 'center',
-        '& > span': {
-            [theme.breakpoints.up("mdl")]:{
-                marginLeft: 5,
-            }
-        },
         [theme.breakpoints.down('md')]: {
             display: 'block',
             '& > div > div': {
