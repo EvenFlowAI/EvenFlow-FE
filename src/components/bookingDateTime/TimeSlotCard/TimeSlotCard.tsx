@@ -10,6 +10,7 @@ import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/Appointme
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
 import useOnScreen from "../../../hooks/useOnScreen/useOnScreen";
+import {isMobile} from 'react-device-detect';
 
 type TProps = {
     timeSlot: TSlot;
@@ -49,8 +50,10 @@ export const TimeSlotCard: React.FC<TProps> =
         }, [slot, date])
 
         useEffect(() => {
-            if (slotRef.current && selected && !isVisible) slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
-        }, [selected, isVisible])
+            if (!isMobile) {
+                if (slotRef.current && selected && !isVisible) slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+            }
+        }, [selected, isVisible, isMobile])
 
 
         const getContent = (timePassed: boolean): string => {
