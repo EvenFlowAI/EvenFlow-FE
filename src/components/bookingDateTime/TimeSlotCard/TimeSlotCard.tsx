@@ -52,6 +52,11 @@ export const TimeSlotCard: React.FC<TProps> =
         useEffect(() => {
             if (!isMobile) {
                 if (slotRef.current && selected && !isVisible) slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+            } else {
+                if (selected && !isVisible && slot?.id) {
+                    const element = document.getElementById(slot.id);
+                    element && element.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
             }
         }, [selected, isVisible, isMobile])
 
@@ -71,6 +76,7 @@ export const TimeSlotCard: React.FC<TProps> =
 
         return isWaitList
             ? <Wrapper
+                id={slot?.id}
                 available={Boolean(slot) && !timePassed}
                 isWaitList={isWaitList && !timePassed}
                 waitListBackground={waitListSettings?.boxHex}
@@ -94,6 +100,7 @@ export const TimeSlotCard: React.FC<TProps> =
                 </HtmlTooltip>
             </Wrapper>
             : <Wrapper
+                id={slot?.id}
                 available={Boolean(slot) && !timePassed}
                 isWaitList={isWaitList && !timePassed}
                 selected={selected}
