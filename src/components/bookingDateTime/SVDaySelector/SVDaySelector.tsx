@@ -39,13 +39,14 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const isMds = useMediaQuery(theme.breakpoints.down("mds"));
+    const isMd = useMediaQuery(theme.breakpoints.down('md'));
     const history = useHistory();
     const utcOffset = dayjs().utcOffset();
 
     const isAdminPanel = history.location.pathname.includes('admin');
     const daysPerScreen: number = useMemo(() => {
-        return isSm ? 4 : isMds ? 5 : 6;
-    }, [isSm, isMds]);
+        return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+    }, [isSm, isMds, isMd]);
 
     const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
     const currentConfig = config.find(item => item.serviceType?.toString() === serviceType.toString());
