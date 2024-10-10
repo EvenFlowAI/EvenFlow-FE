@@ -50,15 +50,8 @@ export const TimeSlotCard: React.FC<TProps> =
         }, [slot, date])
 
         useEffect(() => {
-            if (!isMobile) {
-                if (slotRef.current && selected && !isVisible) slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
-            } else {
-                if (selected && !isVisible && slot?.id) {
-                    const element = document.getElementById(slot.id);
-                    element && element.scrollIntoView({ behavior: "smooth", block: "center" });
-                }
-            }
-        }, [selected, isVisible, isMobile])
+           // if (slotRef.current && selected && !isVisible) slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+        }, [selected, isVisible])
 
 
         const getContent = (timePassed: boolean): string => {
