@@ -50,6 +50,7 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({handleSet
 
     return (
         <AppointmentSlots
+            isManaging
             handleSetScreen={handleSetScreen}
             onNext={askChangesCompleted}
             fromServiceValetToVisitCenter={fromServiceValetToVisitCenter}

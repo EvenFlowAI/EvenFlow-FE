@@ -53,6 +53,7 @@ type TAppointmentSelectionProps = {
     onNext: TCallback;
     prevLogicalScreen: TScreen;
     fromServiceValetToVisitCenter?: boolean;
+    isManaging?: boolean;
 }
 
 export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({
@@ -60,6 +61,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                                                                                                                              onNext,
                                                                                                                              prevLogicalScreen,
                                                                                                                              fromServiceValetToVisitCenter,
+                                                                                                                             isManaging,
 
 }) => {
     const {
@@ -330,15 +332,21 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const handleBack = useCallback((): void => {
         handleGABack();
+        if (!isManaging) {
+            dispatch(selectAppointment(null))
+            dispatch(selectServiceValetAppointment(null));
+        }
         if (prevLogicalScreen === "appointmentSelection" || (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)) {
             dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
             dispatch(setWelcomeScreenView("serviceSelect"))
             history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
         } else {
-            if (editingPosition === "slot" && serviceOptionChangedFromSlotPage) dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+            if (editingPosition === "slot" && serviceOptionChangedFromSlotPage) {
+                dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
+            }
             handleSetScreen(prevLogicalScreen);
         }
-    }, [currentConfig, history, fromServiceValetToVisitCenter, prevLogicalScreen])
+    }, [currentConfig, history, fromServiceValetToVisitCenter, prevLogicalScreen, isManaging])
 
     const loadDataForMileage = () => {
         onMileageClose()
