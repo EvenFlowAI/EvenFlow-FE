@@ -27,6 +27,7 @@ import {useSelectedAppointmentStyles} from "../../../../../../../hooks/styling/u
 import {useException} from "../../../../../../../hooks/useException/useException";
 import {setUnavailableServiceOpen} from "../../../../../../../store/reducers/modals/actions";
 import {TArgCallback, TScreen} from "../../../../../../../types/types";
+import {TServiceTypeSettings} from "../../../../../../../store/reducers/bookingFlowConfig/types";
 
 type TProps = {
     isSm: boolean;
@@ -193,18 +194,17 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    const handleTransportation = (newOption: IFirstScreenOption)=> {
-        const newConfig = config.find(item => item.serviceType === newOption.type);
-        const isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+    const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable) {
+            sliceSteps(sideBarSteps.indexOf("serviceNeeds"))
             handleSetScreen("transportationNeeds")
         } else if (transportation) {
             dispatch(setTransportation(null));
         }
     }
 
-    const handleAdvisors = (newOption: IFirstScreenOption) => {
-        const shouldLoadAdvisors = newOption?.type === EServiceType.VisitCenter
+    const handleAdvisors = (newOption: IFirstScreenOption, newConfig?: TServiceTypeSettings) => {
+        const shouldLoadAdvisors = newConfig?.advisorSelection && newOption?.type === EServiceType.VisitCenter
             || Boolean(newOption?.type === EServiceType.PickUpDropOff && address && zipCode);
         let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === newOption.type)?.advisorSelection);
         dispatch(checkCarIsValid(
@@ -216,9 +216,11 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const handleServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
-            handleTransportation(newOption)
+            const newConfig = config.find(item => item.serviceType === newOption.type);
+            const isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+            handleTransportation(isTransportationAvailable);
             dispatch(setServiceTypeOption(newOption));
-            handleAdvisors(newOption);
+            handleAdvisors(newOption, newConfig);
             clearAppointmentSlot(newOption);
             dispatch(setServiceOptionChanged(true))
         }
