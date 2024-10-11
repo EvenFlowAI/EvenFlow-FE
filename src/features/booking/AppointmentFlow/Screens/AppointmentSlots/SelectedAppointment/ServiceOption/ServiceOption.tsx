@@ -198,7 +198,9 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
 
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable) {
-            sliceSteps(sideBarSteps.indexOf("serviceNeeds"))
+            let index = sideBarSteps.indexOf("serviceNeeds");
+            if (index < 0 ) index = sideBarSteps.indexOf("location");
+            sliceSteps(index)
             handleSetScreen("transportationNeeds")
         } else if (transportation) {
             dispatch(setTransportation(null));
