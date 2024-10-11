@@ -32,9 +32,10 @@ import {TServiceTypeSettings} from "../../../../../../../store/reducers/bookingF
 type TProps = {
     isSm: boolean;
     handleSetScreen: TArgCallback<TScreen>;
+    onChangeServiceOption: TArgCallback<IFirstScreenOption>;
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isSm, handleSetScreen}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isSm, handleSetScreen, onChangeServiceOption}) => {
     const {
         serviceTypeOption,
         sideBarSteps,
@@ -145,6 +146,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     }
 
     const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
+        onChangeServiceOption(newOption)
         if (newOption?.type === EServiceType.PickUpDropOff) {
             dispatch(selectAppointment(null));
         } else {

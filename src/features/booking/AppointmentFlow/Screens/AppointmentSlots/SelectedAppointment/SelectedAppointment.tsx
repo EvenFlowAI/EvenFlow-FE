@@ -17,8 +17,14 @@ import {List, PriceWrapper, Wrapper} from "./styles";
 import {WaitListLabel} from "../WaitListLabel/WaitListLabel";
 import dayjs from "dayjs";
 import {TArgCallback, TScreen} from "../../../../../../types/types";
+import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 
-export const SelectedAppointment: React.FC<{handleSetScreen: TArgCallback<TScreen>}> = ({handleSetScreen}) => {
+type TProps = {
+    handleSetScreen: TArgCallback<TScreen>;
+    onChangeServiceOption: TArgCallback<IFirstScreenOption>
+}
+
+export const SelectedAppointment: React.FC<TProps> = ({handleSetScreen, onChangeServiceOption}) => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { classes  } = useSelectedAppointmentStyles();
@@ -45,7 +51,7 @@ export const SelectedAppointment: React.FC<{handleSetScreen: TArgCallback<TScree
                     <li key="advisor" style={isSm ? {width: '100%'} : {}}>
                         <SelectedConsultant />
                         <Address />
-                        <ServiceOption isSm={isSm} handleSetScreen={handleSetScreen}/>
+                        <ServiceOption isSm={isSm} handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
                         {appointment && isSm
                             ? <DateWrapper>
                                 {t("Date & Time")}: {dayjs.utc(appointment.date).format('MMMM D, h:mm A')}

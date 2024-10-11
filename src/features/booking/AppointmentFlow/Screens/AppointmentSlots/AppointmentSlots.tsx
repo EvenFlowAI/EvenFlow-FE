@@ -47,6 +47,7 @@ import dayjs from "dayjs";
 import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
+import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -107,7 +108,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         trackerData,
         transportation,
         editingPosition,
-        serviceOptionChangedFromSlotPage
+        serviceOptionChangedFromSlotPage,
     } = useSelector((state: RootState) => state.appointmentFrame)
 
     const {currentConfig, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig)
@@ -135,6 +136,14 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const groupedAppointments: TGroupedAppointments = useMemo(() => {
         return groupAppointments(appointmentSlots);
     }, [appointmentSlots]);
+
+    const currentSlots = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
+        ? serviceValetSlots
+        : appointmentSlots, [serviceTypeOption, serviceValetSlots, appointmentSlots]);
+
+    const currentAppointment = useMemo(() => {
+        return serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment
+    }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
     const handleGALandingOnPage = useCallback(() => {
         if (consultants?.length && currentConfig?.advisorSelection) {
@@ -164,9 +173,38 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         if (selectedTime) setMonth(dayjs.utc(selectedTime))
     }, [selectedTime])
 
+    const selectFirstSlot = useCallback((date?: TParsableDate, newServiceOption?: IFirstScreenOption) => {
+        const serviceOption = newServiceOption ?? serviceTypeOption;
+        const currentSlots = serviceOption?.type === EServiceType.PickUpDropOff
+            ? serviceValetSlots
+            : appointmentSlots
+        if (currentSlots?.length) {
+            const utcOffset = dayjs().utcOffset();
+            const newDate = date ?? dayjs();
+            const dateWithOffset = dayjs(newDate).add(utcOffset, 'minute')
+            let firstAvailableSlot = null;
+            if (serviceOption?.type === EServiceType.PickUpDropOff) {
+                const sorted = [...serviceValetSlots].sort(sortSVAppointments)
+                firstAvailableSlot = sorted.find(slot => {
+                    return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
+                        || dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                })
+                firstAvailableSlot && dispatch(selectServiceValetAppointment(firstAvailableSlot))
+            } else {
+                const sorted = [...appointmentSlots].sort(sortAppointments)
+                firstAvailableSlot = sorted.find(slot => {
+                    return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                })
+                firstAvailableSlot && dispatch(selectAppointment(firstAvailableSlot))
+            }
+            if (firstAvailableSlot) {
+                const dateOfSlot = dayjs(firstAvailableSlot.date).add(utcOffset, 'minute').startOf('day')
+                setDate(dateOfSlot)
+            }
+        }
+    }, [serviceValetSlots, appointmentSlots, currentSlots])
+
     useEffect(() => {
-        const currentSlots = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
-        const currentAppointment = serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment;
         if (currentSlots.length && isMount.current) {
             if (currentAppointment?.date) {
                 setDate(dayjs.utc(currentAppointment.date).startOf('day'))
@@ -174,31 +212,12 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (selectedTime) {
                     setDate(dayjs.utc(selectedTime).startOf('day'));
                 } else {
-                    if (currentSlots?.length) {
-                        const utcOffset = dayjs().utcOffset();
-                        const dateWithOffset = dayjs().add(utcOffset, 'minute')
-                        let firstAvailableSlot = null;
-                        if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                            const sorted = [...serviceValetSlots].sort(sortSVAppointments)
-                            firstAvailableSlot = sorted.find(slot => {
-                                return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
-                            })
-                        } else {
-                            const sorted = [...appointmentSlots].sort(sortAppointments)
-                            firstAvailableSlot = sorted.find(slot => {
-                                return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
-                            })
-                        }
-                        if (firstAvailableSlot) {
-                            const dateOfSlot = dayjs(firstAvailableSlot.date).add(utcOffset, 'minute').startOf('day')
-                            setDate(dateOfSlot)
-                        }
-                    }
+                    selectFirstSlot()
                 }
             }
             isMount.current = false;
         }
-    }, [appointmentSlots, selectedTime, appointment, serviceTypeOption, serviceValetSlots, serviceValetAppointment]);
+    }, [selectedTime, selectFirstSlot, currentAppointment, currentSlots]);
 
     const clearData = () => {
         dispatch(selectAppointment(null));
@@ -206,14 +225,22 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         dispatch(clearAppointmentSteps(isTransportationAvailable ? "transportationNeeds" : "appointmentSelection"));
     }
 
-    const updateDate = useCallback((d: TParsableDate) => {
+    const updateDate = useCallback((d: TParsableDate, keepSlot?: boolean) => {
         clearData()
+        const minDate = dayjs(d).isSame(dayjs(), 'date')
+            ? dayjs()
+            : dayjs(d).startOf('day');
         setDate(dayjs(d).startOf('day'));
+        !keepSlot && selectFirstSlot(minDate)
         if (!dayjs(d).isSame(month, 'month')) {
             setMonth(d);
         }
-    }, [month, selectedTiming]);
+    }, [month, selectedTiming, selectFirstSlot]);
 
+    const onChangeServiceOption = (newOption: IFirstScreenOption) => {
+        updateDate(dayjs(), true)
+        selectFirstSlot(null, newOption)
+    }
 
     const setDateCallback = useCallback((d: TParsableDate) => {
         if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
@@ -379,7 +406,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     return (
         <StepWrapper>
             <SlotsScreenWrapper>
-                <SelectedAppointment handleSetScreen={handleSetScreen}/>
+                <SelectedAppointment handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
                 <ActionButtons
                     removeTopMargin
                     onBack={handleBack}
