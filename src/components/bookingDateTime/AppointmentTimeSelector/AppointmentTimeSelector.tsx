@@ -24,10 +24,6 @@ type TProps = {
     appointments?: TGroupedAppointment;
 }
 
-const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppointmentSlot) => {
-    return dayjs(a.date).isAfter(b.date) ? 1 : -1
-}
-
 export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading, appointments}) => {
         const {
@@ -60,22 +56,6 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                 handleSideBar();
             }
         }, [selectedTiming])
-
-        useEffect(() =>{
-            const utcOffset = dayjs().utcOffset();
-            const dateWithOffset = dayjs().add(utcOffset, 'minute')
-            if (appointments?.appointments) {
-                const slotForThisDateIsSelected = selectedAppointment && dayjs(selectedAppointment?.appointmentDate).isSame(dayjs.utc(date), 'day')
-                if (!slotForThisDateIsSelected) {
-                    const sorted = appointments?.appointments.sort(sortAppointments);
-                    const firstAvailableSlot = sorted.find(slot => {
-                        return dayjs(slot?.date).isSame(dayjs.utc(date), 'day')
-                            && dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
-                    })
-                    firstAvailableSlot && handleSelect(firstAvailableSlot);
-                }
-            }
-        }, [date, appointments?.appointments, selectedAppointment])
 
         const generateSlots = (startHours: number|string, startMinutes: number|string, endHours: number|string, endMinutes: number|string): TSlot[] => {
             const slots: TSlot[] = [];

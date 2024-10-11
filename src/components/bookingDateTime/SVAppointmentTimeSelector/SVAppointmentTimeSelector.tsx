@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
-import {IServiceValetAppointment,} from "../../../store/reducers/appointment/types";
+import React, {useCallback, useMemo} from 'react';
+import {IServiceValetAppointment} from "../../../store/reducers/appointment/types";
 import {Loading} from "../../wrappers/Loading/Loading";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
@@ -18,10 +18,6 @@ type TProps = {
     loading: boolean;
 }
 
-const sortAppointments = (a: IServiceValetAppointment, b: IServiceValetAppointment) => {
-    return dayjs(a.date).isAfter(b.date) ? 1 : -1
-}
-
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading}) => {
         const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
@@ -36,20 +32,20 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
             return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(dateWithOffset, 'date'))
         }, [serviceValetSlots, date])
 
-        useEffect(() =>{
-            if (serviceValetSlots.length) {
-                const dateWithOffset = dayjs(date).add(utcOffset, 'minute')
-                const slotForThisDateIsSelected = selectedAppointment
-                    && dayjs(selectedAppointment?.date).isSame(dayjs.utc(dateWithOffset), 'day')
-                if (!slotForThisDateIsSelected) {
-                    const sorted = [...serviceValetSlots].sort(sortAppointments)
-                    const firstAvailableSlot = sorted.find(slot => {
-                        return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
-                    })
-                    firstAvailableSlot && handleSelect(firstAvailableSlot);
-                }
-            }
-        }, [date, serviceValetSlots, selectedAppointment])
+        // useEffect(() =>{
+        //     if (serviceValetSlots.length) {
+        //         const dateWithOffset = dayjs(date).add(utcOffset, 'minute')
+        //         const slotForThisDateIsSelected = selectedAppointment
+        //             && dayjs(selectedAppointment?.date).isSame(dayjs.utc(dateWithOffset), 'day')
+        //         if (!slotForThisDateIsSelected) {
+        //             const sorted = [...serviceValetSlots].sort(sortAppointments)
+        //             const firstAvailableSlot = sorted.find(slot => {
+        //                 return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
+        //             })
+        //             firstAvailableSlot && handleSelect(firstAvailableSlot);
+        //         }
+        //     }
+        // }, [date, serviceValetSlots, selectedAppointment])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({
