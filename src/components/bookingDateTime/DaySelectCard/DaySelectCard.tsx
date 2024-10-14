@@ -29,7 +29,8 @@ export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChil
 
     const isAvailable = Boolean(appointment?.appointments?.find(slot => dayjs(slot?.date).isAfter(dateWithOffset)))
 
-    const isOffPeak = Boolean(appointment?.amountOfSavingMoney) && isAvailable
+    const isOffPeak = isAvailable
+        && Boolean(appointment?.appointments?.find(el => el.price?.amountOfSavingMoney))
 
     return <DayCard
             available={isAvailable}
