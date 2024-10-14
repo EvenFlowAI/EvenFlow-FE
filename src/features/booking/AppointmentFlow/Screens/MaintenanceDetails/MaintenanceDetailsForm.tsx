@@ -42,6 +42,10 @@ type TMaintenanceDetailsProps = {
 
 const blankOptions: TOptionsState = {};
 
+const checkVin = (vin: string) => {
+    return vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm)
+}
+
 export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> =
     ({onBack, serviceCategoryPage, handleNext}) => {
         const {
@@ -262,9 +266,9 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
         }
 
         const checkVINforRecallCategory = () => {
-            if (selectedVehicle?.vin?.length !== 17) {
+            if (!selectedVehicle?.vin || !checkVin(selectedVehicle?.vin)) {
                 errors.push('vin')
-                showError("VIN must include 17 characters")
+                showError("VIN is not correct")
             } else {
                 onNoRecallsOpen()
             }
@@ -295,6 +299,10 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 setErrors(e => [...e, "engineTypeId"]);
             }
 
+            if (selectedVehicle?.vin && !checkVin(selectedVehicle.vin)) {
+                showError("VIN is not correct")
+            }
+
             if (errorsArray.length) {
                 const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
                 const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat(` ${t("required")}`);
@@ -308,7 +316,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
             if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
                 const {vin, make, model, year} = selectedVehicle;
-                if (vin?.length === 17 && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
+                if (vin && checkVin(vin) && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
                         setLoading(true);
                     try {
                         const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
