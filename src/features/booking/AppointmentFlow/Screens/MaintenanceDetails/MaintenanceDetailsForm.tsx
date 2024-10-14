@@ -267,7 +267,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
 
         const checkVINforRecallCategory = () => {
             if (!selectedVehicle?.vin || !checkVin(selectedVehicle?.vin)) {
-                errors.push('vin')
+                setErrors(prev => ([...prev, 'vin']))
                 showError("VIN is not correct")
             } else {
                 onNoRecallsOpen()
@@ -299,15 +299,18 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 setErrors(e => [...e, "engineTypeId"]);
             }
 
-            if (selectedVehicle?.vin && !checkVin(selectedVehicle.vin)) {
-                showError("VIN is not correct")
-            }
-
             if (errorsArray.length) {
                 const fields = errorsArray.map((error) => error[0].toUpperCase() + error.slice(1));
                 const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat(` ${t("required")}`);
                 showError(message);
             }
+
+            if (selectedVehicle?.vin && !checkVin(selectedVehicle.vin)) {
+                setErrors(prev => ([...prev, 'vin']))
+                showError("VIN is not correct")
+                return false
+            }
+
             return !errorsArray.length;
         }
 
