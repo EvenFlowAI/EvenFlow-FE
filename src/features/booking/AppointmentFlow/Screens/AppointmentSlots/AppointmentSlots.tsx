@@ -14,7 +14,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {
     EAppointmentTimingType,
-    IAppointmentSlotsRequest, IRemappedAppointmentSlot, IServiceValetAppointment,
+    IAppointmentSlotsRequest,
+    IRemappedAppointmentSlot,
+    IServiceValetAppointment,
     MPOptionShort,
 } from "../../../../../store/reducers/appointment/types";
 import {
@@ -189,17 +191,19 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
                         || dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
                 })
-                firstAvailableSlot && dispatch(selectServiceValetAppointment(firstAvailableSlot))
+                if (firstAvailableSlot) {
+                    dispatch(selectServiceValetAppointment(firstAvailableSlot))
+                    setDate(firstAvailableSlot.date)
+                }
             } else {
                 const sorted = [...appointmentSlots].sort(sortAppointments)
                 firstAvailableSlot = sorted.find(slot => {
                     return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
                 })
-                firstAvailableSlot && dispatch(selectAppointment(firstAvailableSlot))
-            }
-            if (firstAvailableSlot) {
-                const dateOfSlot = dayjs(firstAvailableSlot.date).add(utcOffset, 'minute').startOf('day')
-                setDate(dateOfSlot)
+                if (firstAvailableSlot) {
+                    dispatch(selectAppointment(firstAvailableSlot))
+                    setDate(firstAvailableSlot.date)
+                }
             }
         }
     }, [serviceValetSlots, appointmentSlots, currentSlots])
@@ -437,7 +441,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         loading={loading || isConsentsLoading}/>
                 : <AppointmentTimeSelector
                         appointments={
-                            groupedAppointments[dayjs(date).toISOString().replace('.000', '')]
+                            groupedAppointments[dayjs(date).startOf('day').toISOString().replace('.000', '')]
                         }
                         date={date}
                         loading={loading || isConsentsLoading}/>}
