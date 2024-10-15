@@ -188,7 +188,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         if (currentSlots?.length) {
             const utcOffset = dayjs().utcOffset();
             const newDate = date ?? dayjs();
-            const dateWithOffset = dayjs(newDate)
+            const dateWithOffset = utcOffset > 0 ? dayjs(newDate) : getClearDate(newDate)
             let firstAvailableSlot = null;
             if (serviceOption?.type === EServiceType.PickUpDropOff) {
                 const sorted = [...serviceValetSlots].sort(sortSVAppointments)
@@ -241,7 +241,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const updateDate = useCallback((d: TParsableDate, keepSlot?: boolean) => {
         clearData()
         const minDate = dayjs(d).isSame(dayjs(), 'date')
-            ? getClearDate(dayjs())
+            ? dayjs()
             : getClearDate(d)
         setDate(getClearDate(d));
         !keepSlot && selectFirstSlot(minDate)
