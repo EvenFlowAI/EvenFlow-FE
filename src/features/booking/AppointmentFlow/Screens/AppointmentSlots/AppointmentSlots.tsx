@@ -9,14 +9,19 @@ import {
     AppointmentTimeSelector
 } from "../../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
 import {useHistory, useParams} from "react-router-dom";
-import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../../utils/utils";
+import {
+    collectServiceRequestIds,
+    decodeSCID,
+    getClearDate,
+    mapRecallsForRequest,
+    sortAppointments,
+    sortSVAppointments
+} from "../../../../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {
     EAppointmentTimingType,
     IAppointmentSlotsRequest,
-    IRemappedAppointmentSlot,
-    IServiceValetAppointment,
     MPOptionShort,
 } from "../../../../../store/reducers/appointment/types";
 import {
@@ -57,19 +62,6 @@ type TAppointmentSelectionProps = {
     prevLogicalScreen: TScreen;
     fromServiceValetToVisitCenter?: boolean;
     isManaging?: boolean;
-}
-
-const sortSVAppointments = (a: IServiceValetAppointment, b: IServiceValetAppointment) => {
-    return dayjs(a.date).isAfter(b.date) ? 1 : -1
-}
-
-const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppointmentSlot) => {
-    return dayjs(a.date).isAfter(b.date) ? 1 : -1
-}
-
-const getClearDate = (d: TParsableDate) => {
-    const utcOffset = dayjs().utcOffset();
-    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(utcOffset, 'minutes')
 }
 
 export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({
