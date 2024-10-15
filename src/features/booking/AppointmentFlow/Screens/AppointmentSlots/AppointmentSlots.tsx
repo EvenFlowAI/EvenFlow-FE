@@ -220,13 +220,18 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     useEffect(() => {
         if (currentSlots.length) {
             if (currentAppointment?.date) {
-                setDate(dayjs.utc(currentAppointment.date).startOf('day'))
-            } else {
-                if (selectedTime) {
-                    setDate(dayjs.utc(selectedTime).startOf('day'));
+                let appointmentIsInTheList = currentSlots.map(el => el.uniqueId).includes(currentAppointment?.uniqueId)
+                if (appointmentIsInTheList) {
+                    setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
-                    selectFirstSlot()
+                    selectedTime
+                        ? setDate(dayjs.utc(selectedTime).startOf('day'))
+                        :selectFirstSlot()
                 }
+            } else {
+                selectedTime
+                    ? setDate(dayjs.utc(selectedTime).startOf('day'))
+                    :selectFirstSlot()
             }
             isMount.current = false;
         }

@@ -181,6 +181,7 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
     serviceRequestPrices?: IServiceRequestPrice[];
     timingType?: number;
     appointmentDate?: string;
+    uniqueId: string;
 }
 
 export interface IAppointmentFilters {
@@ -268,6 +269,8 @@ export interface IServiceValetAppointment {
     serviceRequestPrices: IServiceValetRequestPrice[];
     dropOffMin?: string;
     dropOffMax?: string;
+    localId?: string;
+    uniqueId: string;
 }
 
 export interface IDropOffSettings {

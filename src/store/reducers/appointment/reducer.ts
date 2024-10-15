@@ -30,6 +30,7 @@ import {
 } from "./actions";
 import {setPackage} from "../appointmentFrameReducer/actions";
 import dayjs from "dayjs";
+import {v4 as uuidv4} from "uuid";
 
 const blankPersonalInfo: IPersonalInformation = {
     fullName: "",
@@ -121,7 +122,8 @@ export const appointmentReducer = createReducer(initialState, builder => builder
     .addCase(getAppointmentSlots, (state, {payload}) => {
         let appointmentSlots = payload.map(sl => {
             const date = `${String(sl.date).split("T")[0]}T${sl.time}Z`;
-            return {...sl, id: `${sl.date}|${sl.time}`, date: dayjs.utc(date)}
+            const uniqueId = uuidv4();
+            return {...sl, id: `${sl.date}|${sl.time}`, date: dayjs.utc(date), uniqueId}
         });
 
         return {...state, appointmentSlots};
