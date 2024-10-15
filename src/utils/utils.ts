@@ -2,9 +2,18 @@ import {IAddress} from "../store/reducers/dealershipGroups/types";
 import {ICurrentUser} from "../store/reducers/users/types";
 import {PERMISSIONS} from "../permissions";
 import {matchPath} from "react-router-dom";
-import {IServiceCenterProfile, ISR, TRecallForRequest} from "../store/reducers/appointment/types";
 import {
-    EMaintenanceOptionType, EServiceCenterName, IAppointmentByKey, IAppointmentByQuery,
+    IRemappedAppointmentSlot,
+    IServiceCenterProfile,
+    IServiceValetAppointment,
+    ISR,
+    TRecallForRequest
+} from "../store/reducers/appointment/types";
+import {
+    EMaintenanceOptionType,
+    EServiceCenterName,
+    IAppointmentByKey,
+    IAppointmentByQuery,
     ILoadedVehicle,
     IOfferForCategory,
     IPackageOptions,
@@ -627,4 +636,14 @@ export const getAppointmentDate = (appointment: IAppointmentByKey|IAppointmentBy
     } else {
         return dayjs.utc().format("dddd, MMM Do, h:mm a");
     }
+}
+export const sortSVAppointments = (a: IServiceValetAppointment, b: IServiceValetAppointment) => {
+    return dayjs(a.date).isAfter(b.date) ? 1 : -1
+}
+export const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppointmentSlot) => {
+    return dayjs(a.date).isAfter(b.date) ? 1 : -1
+}
+export const getClearDate = (d: TParsableDate) => {
+    const utcOffset = dayjs().utcOffset();
+    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(utcOffset, 'minutes')
 }
