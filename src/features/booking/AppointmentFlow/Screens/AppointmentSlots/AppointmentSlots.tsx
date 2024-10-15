@@ -67,6 +67,11 @@ const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppointmentSl
     return dayjs(a.date).isAfter(b.date) ? 1 : -1
 }
 
+const getClearDate = (d: TParsableDate) => {
+    const utcOffset = dayjs().utcOffset();
+    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(utcOffset, 'minutes')
+}
+
 export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>> = ({
                                                                                                                              handleSetScreen,
                                                                                                                              onNext,
@@ -183,7 +188,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         if (currentSlots?.length) {
             const utcOffset = dayjs().utcOffset();
             const newDate = date ?? dayjs();
-            const dateWithOffset = dayjs(newDate).add(utcOffset, 'minute')
+            const dateWithOffset = dayjs(newDate)
             let firstAvailableSlot = null;
             if (serviceOption?.type === EServiceType.PickUpDropOff) {
                 const sorted = [...serviceValetSlots].sort(sortSVAppointments)
@@ -198,7 +203,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             } else {
                 const sorted = [...appointmentSlots].sort(sortAppointments)
                 firstAvailableSlot = sorted.find(slot => {
-                    return dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                    const formatted = getClearDate(slot?.date)
+                    const selected = dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
+                    if (selected) {
+                        return dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
+                    }
                 })
                 if (firstAvailableSlot) {
                     dispatch(selectAppointment(firstAvailableSlot))
@@ -209,7 +218,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [serviceValetSlots, appointmentSlots, currentSlots])
 
     useEffect(() => {
-        if (currentSlots.length && isMount.current) {
+        if (currentSlots.length) {
             if (currentAppointment?.date) {
                 setDate(dayjs.utc(currentAppointment.date).startOf('day'))
             } else {
@@ -221,7 +230,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             }
             isMount.current = false;
         }
-    }, [selectedTime, selectFirstSlot, currentAppointment, currentSlots]);
+    }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption]);
 
     const clearData = () => {
         dispatch(selectAppointment(null));
@@ -232,9 +241,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const updateDate = useCallback((d: TParsableDate, keepSlot?: boolean) => {
         clearData()
         const minDate = dayjs(d).isSame(dayjs(), 'date')
-            ? dayjs()
-            : dayjs(d).startOf('day');
-        setDate(dayjs(d).startOf('day'));
+            ? getClearDate(dayjs())
+            : getClearDate(d)
+        setDate(getClearDate(d));
         !keepSlot && selectFirstSlot(minDate)
         if (!dayjs(d).isSame(month, 'month')) {
             setMonth(d);
@@ -243,7 +252,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const onChangeServiceOption = (newOption: IFirstScreenOption) => {
         updateDate(dayjs(), true)
-        selectFirstSlot(null, newOption)
+        // selectFirstSlot(null, newOption)
     }
 
     const setDateCallback = useCallback((d: TParsableDate) => {
