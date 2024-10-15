@@ -217,13 +217,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
                     selectedTime
-                        ? setDate(dayjs.utc(selectedTime).startOf('day'))
-                        :selectFirstSlot()
+                        ? selectFirstSlot(selectedTime)
+                        : selectFirstSlot()
                 }
             } else {
                 selectedTime
-                    ? setDate(dayjs.utc(selectedTime).startOf('day'))
-                    :selectFirstSlot()
+                    ? selectFirstSlot(selectedTime)
+                    : selectFirstSlot()
             }
             isMount.current = false;
         }
