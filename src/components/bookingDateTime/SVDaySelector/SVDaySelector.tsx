@@ -151,8 +151,8 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
                 <SVDaySelectCard
                     key={day}
                     isXs={isXs}
-                    isCurrent={dayjs.utc(date).add(utcOffset, 'minute').isSame(dayjs.utc(day), 'date')}
-                    appointment={appointments.find(item => dayjs(item.date).isSame(dayjs.utc(day), 'date'))}
+                    isCurrent={dayjs.utc(date).isSame(dayjs.utc(day), 'date')}
+                    appointment={appointments.find(item => dayjs(item.date).isSame(dayjs(day), 'date'))}
                     onClick={handleChangeDay(day)}
                     day={day}
                 />

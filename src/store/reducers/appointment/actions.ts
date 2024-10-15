@@ -25,6 +25,7 @@ import {
 import {getSlotsGap} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
+import {v4 as uuidv4} from "uuid";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const setTopAligning = createAction<boolean>("Appointment/SetTopAligning");
@@ -229,7 +230,7 @@ export const loadServiceValetSlots = (
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             const {items, searchedDateRange, dropOffSettings} = result.data;
-            dispatch(getServiceValetSlots(items));
+            dispatch(getServiceValetSlots(items.map(el => ({...el, uniqueId: uuidv4()}))));
             if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
             if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
             loadCB && loadCB();

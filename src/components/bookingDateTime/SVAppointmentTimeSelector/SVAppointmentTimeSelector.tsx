@@ -28,7 +28,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const utcOffset = dayjs().utcOffset();
 
         const currentSlots = useMemo(() => {
-            const dateWithOffset = dayjs(date).add(utcOffset, 'minute')
+            const dateWithOffset = dayjs(date)
             return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(dateWithOffset, 'date'))
         }, [serviceValetSlots, date])
 
@@ -83,7 +83,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
                                         date={date}
                                         onSelect={handleSelect}
                                         selected={Boolean(
-                                            selectedAppointment && timeSlot?.date === selectedAppointment.date
+                                            selectedAppointment && dayjs(timeSlot?.date).isSame(selectedAppointment.date, 'minute')
                                         )}
                                         timeSlot={timeSlot}
                                         key={dayjs.utc(timeSlot.date).toISOString()}
