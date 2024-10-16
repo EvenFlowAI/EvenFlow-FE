@@ -16,7 +16,7 @@ import {
     setCurrentFrameScreen,
     setServiceOptionChanged,
     setServiceTypeOption,
-    setSideBarSteps,
+    setSideBarSteps, setTime,
     setTransportation
 } from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
@@ -222,6 +222,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         if (newOption) {
             const newConfig = config.find(item => item.serviceType === newOption.type);
             const isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+            if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
             handleTransportation(isTransportationAvailable);
             dispatch(setServiceTypeOption(newOption));
             handleAdvisors(newOption, newConfig);

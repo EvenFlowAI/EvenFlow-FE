@@ -217,12 +217,12 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
                     selectedTime
-                        ? selectFirstSlot(selectedTime)
+                        ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
                         : selectFirstSlot()
                 }
             } else {
                 selectedTime
-                    ? selectFirstSlot(selectedTime)
+                    ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
                     : selectFirstSlot()
             }
             isMount.current = false;
@@ -249,7 +249,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const onChangeServiceOption = (newOption: IFirstScreenOption) => {
         updateDate(dayjs(), true)
-        // selectFirstSlot(null, newOption)
     }
 
     const setDateCallback = useCallback((d: TParsableDate) => {

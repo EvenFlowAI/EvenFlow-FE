@@ -40,6 +40,7 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
 
     const handleSelectTiming = useCallback((t: EAppointmentTimingType) => () => {
         dispatch(setTiming(t));
+        if (t === EAppointmentTimingType.FirstAvailable) dispatch(setTime(null))
     }, [])
 
     const clearAppointmentSlots = () => {
@@ -49,6 +50,7 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
 
     const handleChangeTime = useCallback((t: unknown) => {
         const date = dayjs(t as TParsableDate)
+        dispatch(setTiming(EAppointmentTimingType.PreferredDate))
         dispatch(setTime(date));
         if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) clearAppointmentSlots()
     }, [selectedTime])
