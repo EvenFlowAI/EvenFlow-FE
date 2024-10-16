@@ -249,7 +249,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const onChangeServiceOption = (newOption: IFirstScreenOption) => {
         updateDate(dayjs(), true)
-        // selectFirstSlot(null, newOption)
     }
 
     const setDateCallback = useCallback((d: TParsableDate) => {
