@@ -212,14 +212,14 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     useEffect(() => {
         if (currentSlots.length) {
             if (currentAppointment?.date) {
-                let appointmentIsInTheList = currentSlots.map(el => el.uniqueId).includes(currentAppointment?.uniqueId)
-                if (appointmentIsInTheList) {
-                    setDate(dayjs.utc(currentAppointment.date).startOf('day'))
-                } else {
-                    selectedTime
-                        ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
-                        : selectFirstSlot()
-                }
+                setDate(dayjs.utc(currentAppointment.date).startOf('day'))
+                // let appointmentIsInTheList = currentSlots.map(el => el.uniqueId).includes(currentAppointment?.uniqueId)
+                // if (appointmentIsInTheList) {
+                // } else {
+                //     selectedTime
+                //         ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
+                //         : selectFirstSlot()
+                // }
             } else {
                 selectedTime
                     ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
