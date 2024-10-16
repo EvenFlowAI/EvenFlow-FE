@@ -333,7 +333,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 } else {
                     await dispatch(loadAppointmentSlots(
                         data,
-                        setDateCallback,
+                        currentAppointment ? () => {} : setDateCallback,
                         () => handleDateRangeSet(false)
                     ));
                 }
