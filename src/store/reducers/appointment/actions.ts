@@ -97,7 +97,7 @@ export const loadAppointmentSlots = (
             Api.endpoints.AppointmentSlots.GetSlots,
             {data}
         );
-        const res = dispatch(getAppointmentSlots(items));
+        const res = dispatch(getAppointmentSlots(items.map(item => ({...item, searchDate: data.fromDate as TParsableDate}))));
         if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
         dispatch(setWaitListSettings(waitlistSettings ?? null))
         dispatch(setSlotPodId(podId ?? null));
@@ -114,6 +114,8 @@ export const loadAppointmentSlots = (
         return res;
     } catch (err) {
         onLoadedCb && onLoadedCb(true)
+        dispatch(setSlotsServiceTypeOptionId(null))
+        dispatch(setSlotsSearchDate(null))
         return dispatch(getAppointmentSlots([]));
     } finally {
         dispatch(setSlotsLoading(false))

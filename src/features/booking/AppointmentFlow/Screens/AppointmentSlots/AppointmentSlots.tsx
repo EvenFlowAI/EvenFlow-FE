@@ -56,6 +56,7 @@ import {useModal} from "../../../../../hooks/useModal/useModal";
 import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
 import utc from "dayjs/plugin/utc";
+
 dayjs.extend(utc)
 
 type TAppointmentSelectionProps = {
@@ -217,11 +218,17 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [serviceValetSlots, appointmentSlots, currentSlots])
 
-
     useEffect(() => {
         if (currentSlots.length) {
+            const utcOffset = dayjs().utcOffset();
+            const dateWithOffset = dayjs(slotsSearchedDate as TParsableDate).isSame(dayjs(), 'date')
+                ? dayjs()
+                : utcOffset > 0
+                    ? dayjs(slotsSearchedDate as TParsableDate)
+                    : getClearDate(slotsSearchedDate as TParsableDate);
             if (currentAppointment?.date) {
-                if (slotsServiceTypeOptionId === serviceTypeOption?.id) {
+                const sameSearchDate = dayjs(currentAppointment.searchDate).isSame(dateWithOffset, 'date')
+                if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate) {
                     setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
                     selectedTime
@@ -235,7 +242,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             }
             isMount.current = false;
         }
-    }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption, slotsServiceTypeOptionId]);
+    }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption, slotsServiceTypeOptionId, slotsSearchedDate]);
 
     const clearData = () => {
         dispatch(selectAppointment(null));
