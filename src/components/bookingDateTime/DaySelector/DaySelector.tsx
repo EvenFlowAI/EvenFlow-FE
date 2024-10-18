@@ -99,7 +99,6 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
     const handleChangeDay = (date: string) => () => {
-        console.log(date)
         onDateChange(dayjs.utc(date));
     }
 
