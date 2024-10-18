@@ -107,6 +107,7 @@ export interface IAppointmentSlot {
     offer?: IOffer;
     isShorterWaitTime: boolean;
     isOverbookingApplied?: boolean;
+    searchDate?: TParsableDate;
 }
 
 export interface ISearchedDateRange {
@@ -270,6 +271,7 @@ export interface IServiceValetAppointment {
     serviceRequestPrices: IServiceValetRequestPrice[];
     dropOffMin?: string;
     dropOffMax?: string;
+    searchDate?: TParsableDate;
 }
 
 export interface IDropOffSettings {

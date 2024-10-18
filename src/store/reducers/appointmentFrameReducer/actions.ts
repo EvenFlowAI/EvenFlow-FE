@@ -68,7 +68,7 @@ import {
     selectSR,
     selectSRMultiple,
     setAppointmentWasChanged,
-    setCustomerLoadedData,
+    setCustomerLoadedData, setSlotsSearchDate, setSlotsServiceTypeOptionId,
     setWaitListSettings
 } from "../appointment/actions";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -439,6 +439,8 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(setSlotsWarningShowed(false));
     dispatch(getAppointmentSlots([]));
     dispatch(getServiceValetSlots([]));
+    dispatch(setSlotsSearchDate(null));
+    dispatch(setSlotsServiceTypeOptionId(null));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {
