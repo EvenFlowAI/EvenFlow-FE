@@ -216,6 +216,8 @@ export type TAppointmentState = {
     slotPodId: number|null;
     isAppointmentSlotsLoading: boolean;
     isTopAligning: boolean;
+    slotsServiceTypeOptionId: number|null;
+    slotsSearchedDate: ParsableDate;
 };
 
 export enum EReminderType {
