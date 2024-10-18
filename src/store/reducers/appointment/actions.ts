@@ -15,7 +15,7 @@ import {
     ISR, ISVAppointmentResponse, IWaitListData,
     TAppointmentState,
 } from "./types";
-import {AppThunk, PaginatedAPIResponse, TCallback, TParsableDate} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, ParsableDate, TCallback, TParsableDate} from "../../../types/types";
 import {
     EServiceCenterName,
     ICreateAppointmentResp,
@@ -82,6 +82,8 @@ export const setAppointmentWasChanged = createAction<boolean>("Appointment/SetAp
 export const setWaitListSettings = createAction<IWaitListData|null>("Appointment/SetWaitListSettings");
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
 export const setSlotsLoading = createAction<boolean>("Appointment/setSlotsLoading");
+export const setSlotsServiceTypeOptionId = createAction<number|null>("Appointment/SetSlotsServiceTypeOptionId");
+export const setSlotsSearchDate = createAction<ParsableDate>("Appointment/SetSlotsServiceSearchDate");
 
 export const loadAppointmentSlots = (
     data: IAppointmentSlotsRequest,
@@ -104,6 +106,8 @@ export const loadAppointmentSlots = (
         }
         if (onLoadedCb) onLoadedCb(!Boolean(items.length))
         searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)))
+        dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null))
+        dispatch(setSlotsSearchDate(data.fromDate))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable && searchedDateRange) {
             return cb(dayjs.utc(searchedDateRange.from));
         }
@@ -233,6 +237,8 @@ export const loadServiceValetSlots = (
             dispatch(getServiceValetSlots(items.map(el => ({...el, uniqueId: uuidv4()}))));
             if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
             if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
+            dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null))
+            dispatch(setSlotsSearchDate(data.fromDate))
             loadCB && loadCB();
             if (onLoadedCb) onLoadedCb(!Boolean(items.length))
         })
