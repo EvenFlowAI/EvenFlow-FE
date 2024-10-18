@@ -55,6 +55,8 @@ import CustomerConsents from "../../../../../components/modals/booking/CustomerC
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc)
 
 type TAppointmentSelectionProps = {
     handleSetScreen: TArgCallback<TScreen>;
@@ -180,7 +182,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         if (currentSlots?.length) {
             const utcOffset = dayjs().utcOffset();
             const newDate = date ?? dayjs();
-            const dateWithOffset = utcOffset > 0 ? dayjs(newDate) : getClearDate(newDate)
+            const dateWithOffset = dayjs(newDate).isSame(dayjs(), 'date')
+                ? dayjs()
+                : utcOffset > 0
+                    ? dayjs(newDate)
+                    : getClearDate(newDate);
             let firstAvailableSlot = null;
             if (serviceOption?.type === EServiceType.PickUpDropOff) {
                 const sorted = [...serviceValetSlots].sort(sortSVAppointments)
@@ -196,9 +202,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 const sorted = [...appointmentSlots].sort(sortAppointments)
                 firstAvailableSlot = sorted.find(slot => {
                     const formatted = getClearDate(slot?.date)
-                    const selected = dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
+                    const selected = dayjs(formatted).isAfter(dateWithOffset)
                     if (selected) {
-                        return dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
+                        return dayjs(formatted).isAfter(dateWithOffset)
                     }
                 })
                 if (firstAvailableSlot) {
@@ -208,6 +214,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             }
         }
     }, [serviceValetSlots, appointmentSlots, currentSlots])
+
 
     useEffect(() => {
         if (currentSlots.length) {
