@@ -239,8 +239,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         clearData()
         const minDate = dayjs(d).isSame(dayjs(), 'date')
             ? dayjs()
-            : getClearDate(d)
-        setDate(getClearDate(d));
+            : dayjs(d)
+        setDate(dayjs(d));
         !keepSlot && selectFirstSlot(minDate)
         if (!dayjs(d).isSame(month, 'month')) {
             setMonth(d);
