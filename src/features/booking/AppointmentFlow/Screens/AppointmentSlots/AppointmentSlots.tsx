@@ -194,8 +194,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             if (serviceOption?.type === EServiceType.PickUpDropOff) {
                 const sorted = [...serviceValetSlots].sort(sortSVAppointments)
                 firstAvailableSlot = sorted.find(slot => {
-                    return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
-                        || dayjs(slot?.date).isAfter(dayjs.utc(dateWithOffset))
+                    const formatted = getClearDate(slot?.date)
+                    return dayjs(formatted).isSame(dayjs.utc(dateWithOffset), 'date')
+                        || dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
                 })
                 if (firstAvailableSlot) {
                     dispatch(selectServiceValetAppointment(firstAvailableSlot))
@@ -205,10 +206,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 const sorted = [...appointmentSlots].sort(sortAppointments)
                 firstAvailableSlot = sorted.find(slot => {
                     const formatted = getClearDate(slot?.date)
-                    const selected = dayjs(formatted).isAfter(dateWithOffset)
-                    if (selected) {
-                        return dayjs(formatted).isAfter(dateWithOffset)
-                    }
+                    return dayjs(formatted).isAfter(dateWithOffset)
                 })
                 if (firstAvailableSlot) {
                     dispatch(selectAppointment(firstAvailableSlot))
