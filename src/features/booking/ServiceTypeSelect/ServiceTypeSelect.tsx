@@ -106,9 +106,9 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         const newConfigHasTransportation = config
             .find(el => el.serviceType === newServiceOption.type)?.transportationNeeds
         if (newConfigHasTransportation && !newServiceOption?.transportationOption) {
-            dispatch(checkPodChanged(decodeSCID(id), showError, redirectToTransportation))
+            dispatch(checkPodChanged(decodeSCID(id), showError, redirectToTransportation, redirect))
         } else {
-            dispatch(checkPodChanged(decodeSCID(id), showError, undefined, redirect))
+            dispatch(checkPodChanged(decodeSCID(id), showError, redirect, redirect))
         }
     }
 
@@ -136,7 +136,6 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
         handleValueServiceConfig(newServiceOption.type);
         dispatch(setUsualFlowNeeded(false));
         if (customerLoadedData?.isUpdating) {
-            // handleTransportation(newServiceOption)
             handleUpdateOption(newServiceOption)
         } else {
             if (serviceTypeOption?.id !== newServiceOption.id) {

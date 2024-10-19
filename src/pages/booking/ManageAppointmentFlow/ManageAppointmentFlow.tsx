@@ -55,6 +55,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
         serviceTypeOption,
         isUsualFlowNeeded,
         advisor,
+        appointmentByKey,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
