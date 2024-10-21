@@ -123,7 +123,7 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                 <Button variant="outlined" onClick={onDecline} className={classes.button}>
                     {t("Cancel")}
                 </Button>
-                <Button  variant="contained" onClick={handleSubmit} color="primary" disabled={!recalls.length} className={classes.button}>
+                <Button  variant="contained" onClick={handleSubmit} color="primary" className={classes.button}>
                     {t("Next")}
                 </Button>
             </BfButtonsWrapper>
