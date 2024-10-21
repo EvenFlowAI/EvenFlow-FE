@@ -225,7 +225,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     ? dayjs(slotsSearchedDate as TParsableDate)
                     : getClearDate(slotsSearchedDate as TParsableDate);
             if (currentAppointment?.date) {
-                const sameSearchDate = dayjs(currentAppointment.searchDate).isSame(dateWithOffset, 'date')
+                const sameSearchDate = getClearDate(currentAppointment.searchDate).isSame(dateWithOffset, 'date')
                 if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate) {
                     setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
