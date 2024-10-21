@@ -494,6 +494,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                     handleNext={onNextForRecalls}
                     handleAddServices={handleAddServices}
                     onDeclineRecalls={handleDeclineRecalls}
+                    isRecallsCategorySelected={isRecallsCategorySelected}
                 />
                 <NoRecallsModal open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
             </StepWrapper>

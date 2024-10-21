@@ -27,9 +27,10 @@ type TRecallsByVinProps = DialogProps & {
     handleNext : () => void,
     onDeclineRecalls: () => void,
     handleAddServices: () => void,
+    isRecallsCategorySelected: boolean;
 }
 
-const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallsByVinProps>>> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices}) => {
+const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallsByVinProps>>> = ({open, onClose, handleNext, onDeclineRecalls, handleAddServices, isRecallsCategorySelected}) => {
     const {recallsByVin, isLoading} = useSelector((state: RootState) => state.recalls);
     const {selectedVehicle, isUsualFlowNeeded} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
@@ -123,7 +124,12 @@ const RecallsByVinModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
                 <Button variant="outlined" onClick={onDecline} className={classes.button}>
                     {t("Cancel")}
                 </Button>
-                <Button  variant="contained" onClick={handleSubmit} color="primary" className={classes.button}>
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    color="primary"
+                    disabled={!recalls.length && isRecallsCategorySelected}
+                    className={classes.button}>
                     {t("Next")}
                 </Button>
             </BfButtonsWrapper>
