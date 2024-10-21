@@ -12,6 +12,7 @@ import {PickUpSlotsWrapper} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {useTimeSelectorStyles} from "../../../hooks/styling/useTmeSelectorStyles";
+import {getClearDate} from "../../../utils/utils";
 
 type TProps = {
     date: TParsableDate;
@@ -25,27 +26,11 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
         const dispatch = useDispatch();
         const { classes  } = useTimeSelectorStyles();
         const {t} = useTranslation();
-        const utcOffset = dayjs().utcOffset();
 
         const currentSlots = useMemo(() => {
             const dateWithOffset = dayjs(date)
             return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(dateWithOffset, 'date'))
         }, [serviceValetSlots, date])
-
-        // useEffect(() =>{
-        //     if (serviceValetSlots.length) {
-        //         const dateWithOffset = dayjs(date).add(utcOffset, 'minute')
-        //         const slotForThisDateIsSelected = selectedAppointment
-        //             && dayjs(selectedAppointment?.date).isSame(dayjs.utc(dateWithOffset), 'day')
-        //         if (!slotForThisDateIsSelected) {
-        //             const sorted = [...serviceValetSlots].sort(sortAppointments)
-        //             const firstAvailableSlot = sorted.find(slot => {
-        //                 return dayjs(slot?.date).isSame(dayjs.utc(dateWithOffset), 'day')
-        //             })
-        //             firstAvailableSlot && handleSelect(firstAvailableSlot);
-        //         }
-        //     }
-        // }, [date, serviceValetSlots, selectedAppointment])
 
         const handleGA = useCallback((a: IServiceValetAppointment|null) => {
             ReactGA.event({
@@ -74,7 +59,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
             <div className={classes.wrapper}>
                 <div className={classes.titleWrapper}>
                     <h4 className={classes.title}>{t("Select Time")}</h4>
-                    <div>{dayjs(date).format("ddd")}, <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span></div>
+                    <div>{getClearDate(date).format("ddd")}, <span className={classes.boldText}>{getClearDate(date).format('MMM DD')}</span></div>
                 </div>
                 {!loading
                         ? <PickUpSlotsWrapper>
