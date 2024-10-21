@@ -107,6 +107,7 @@ export interface IAppointmentSlot {
     offer?: IOffer;
     isShorterWaitTime: boolean;
     isOverbookingApplied?: boolean;
+    searchDate?: TParsableDate;
 }
 
 export interface ISearchedDateRange {
@@ -216,6 +217,8 @@ export type TAppointmentState = {
     slotPodId: number|null;
     isAppointmentSlotsLoading: boolean;
     isTopAligning: boolean;
+    slotsServiceTypeOptionId: number|null;
+    slotsSearchedDate: ParsableDate;
 };
 
 export enum EReminderType {
@@ -268,6 +271,7 @@ export interface IServiceValetAppointment {
     serviceRequestPrices: IServiceValetRequestPrice[];
     dropOffMin?: string;
     dropOffMax?: string;
+    searchDate?: TParsableDate;
 }
 
 export interface IDropOffSettings {

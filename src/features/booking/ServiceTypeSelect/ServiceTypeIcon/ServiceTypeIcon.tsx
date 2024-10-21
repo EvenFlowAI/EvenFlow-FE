@@ -16,7 +16,7 @@ const ServiceTypeIcon: React.FC<React.PropsWithChildren<React.PropsWithChildren<
         ? <div className={classes.icon}>
             <img className={classes.image} src={card.iconPath} alt="logo"/>
         </div>
-        : <div className={classes.icon}>{isMobile ? <NoLogo/> : <NoLogoBig/>}</div>
+        : <div className={classes.icon}>{isMobile ? <NoLogo/> : <div className={classes.noLogo}>No logo</div>}</div>
 };
 
 export default ServiceTypeIcon;
