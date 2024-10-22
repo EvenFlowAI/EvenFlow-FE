@@ -5,7 +5,7 @@ import {setVehicle} from "../../../../../../store/reducers/appointmentFrameReduc
 import {TArgCallback} from "../../../../../../types/types";
 import {RootState} from "../../../../../../store/rootReducer";
 import {CarDataWithBtn, CardBtnWrapper, CarInfo, StyledButton, Wrapper} from "./styles";
-import {Button} from "@mui/material";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 
 type TProps = {
     car: ILoadedVehicle;
@@ -22,6 +22,8 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
 }) => {
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const dispatch = useDispatch();
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const onButtonClick = () => {
         clearData()
@@ -35,7 +37,6 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     }
 
     return (
-        <>
         <Wrapper>
             <CarDataWithBtn>
                 <CarInfo>
@@ -43,10 +44,13 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
                 </CarInfo>
             </CarDataWithBtn>
             <CardBtnWrapper>
-                <Button color="info" variant="contained" onClick={onSchedule}>Schedule</Button>
-                <StyledButton onClick={onButtonClick} disabled={!car.appointmentHashKeys.length}>Manage</StyledButton>
+                <Button color="info" variant="contained" onClick={onSchedule}>
+                    Schedule {isSm ? "Appointment" : null}
+                </Button>
+                <StyledButton onClick={onButtonClick} disabled={!car.appointmentHashKeys.length}>
+                    Manage {isSm ? "Appointment" : null}
+                </StyledButton>
             </CardBtnWrapper>
         </Wrapper>
-        </>
     );
 };

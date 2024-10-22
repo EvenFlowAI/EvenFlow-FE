@@ -10,8 +10,10 @@ export const CarsWrapper = styled('div')(({theme}) => ({
     padding: "36px 48px",
     border: "2px solid #DADADA",
     borderRadius: 2,
-    [theme.breakpoints.down('md')]: {
-        height: 350,
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: "1fr",
+        padding: "24px 16px",
+        gap: "16px",
     }
 }));
 

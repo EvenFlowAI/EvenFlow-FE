@@ -59,8 +59,8 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const theme = useTheme();
-    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
-    const isSm = useMediaQuery(theme.breakpoints.down('md'));
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMd = useMediaQuery(theme.breakpoints.down('md'));
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
@@ -213,10 +213,10 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                                             car={vehicle}
                                             key={vehicle.dmsId || new Date().toISOString() + index}/>
                                     )}
-                                <NewVehicleCard role="presentation" onClick={handleAddNewVehicle}>
+                                {!isSm ? <NewVehicleCard role="presentation" onClick={handleAddNewVehicle}>
                                     <CarIcon/>
                                     <BookNewVehicle>Book Another Vehicle</BookNewVehicle>
-                                </NewVehicleCard>
+                                </NewVehicleCard> : null}
                             </> : <p>{t("No vehicles present")}</p>
                         }
                     </CarsWrapper>
