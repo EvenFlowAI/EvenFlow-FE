@@ -2,10 +2,14 @@ import {styled} from "@mui/material";
 
 export const CarsWrapper = styled('div')(({theme}) => ({
     width: "100%",
-    display: "flex",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "center",
     gap: "20px",
     justifyContent: "stretch",
+    padding: "36px 48px",
+    border: "2px solid #DADADA",
+    borderRadius: 2,
     [theme.breakpoints.down('md')]: {
         height: 350,
     }
