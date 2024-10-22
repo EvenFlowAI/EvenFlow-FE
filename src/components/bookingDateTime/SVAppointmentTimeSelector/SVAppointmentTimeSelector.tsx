@@ -12,11 +12,15 @@ import {PickUpSlotsWrapper} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {useTimeSelectorStyles} from "../../../hooks/styling/useTmeSelectorStyles";
-import {getClearDate} from "../../../utils/utils";
 
 type TProps = {
     date: TParsableDate;
     loading: boolean;
+}
+
+const getClearDate = (d: TParsableDate) => {
+    const utcOffset = dayjs(d).utcOffset();
+    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
 }
 
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =

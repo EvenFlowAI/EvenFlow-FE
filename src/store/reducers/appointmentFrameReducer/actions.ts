@@ -441,6 +441,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(getServiceValetSlots([]));
     dispatch(setSlotsSearchDate(null));
     dispatch(setSlotsServiceTypeOptionId(null));
+    dispatch(setPassedScreens([]));
 }
 
 export const loadAncillaryPriceByZip = (data: IAncillaryByZipRequest, onSuccess: (data: TAncillaryPriceByZip) => void, onError: (err?: string) => void, onUnavailableOpen: () => void): AppThunk => dispatch => {

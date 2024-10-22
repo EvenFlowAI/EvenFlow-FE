@@ -43,7 +43,7 @@ type TMaintenanceDetailsProps = {
 const blankOptions: TOptionsState = {};
 
 const checkVin = (vin: string) => {
-    return vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm)
+    return vin.length === 17 && vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm)
 }
 
 export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> =
@@ -304,7 +304,6 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 const message = fields.join(', ').concat(fields.length < 2 ? ` ${t("is")}` : ` ${t("are")}`).concat(` ${t("required")}`);
                 showError(message);
             }
-
             if (selectedVehicle?.vin && !checkVin(selectedVehicle.vin)) {
                 setErrors(prev => ([...prev, 'vin']))
                 showError("VIN is not correct")
@@ -319,23 +318,28 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             const makeInTheList = makes.find(item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase());
             if (selectedVehicle && makeInTheList && (!customerLoadedData?.isUpdating || isRecallsCategorySelected)) {
                 const {vin, make, model, year} = selectedVehicle;
-                if (vin && checkVin(vin) && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
+                if (checkVin(vin)) {
+                    if (vin && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
                         setLoading(true);
-                    try {
-                        const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
-                            {data: {serviceCenterId: decodeSCID(id), vin: vin, make, year: +year, model}})
-                        dispatch(setRecallsAreShown(true));
-                        if (data.length) {
-                            await onOpen()
-                        } else {
+                        try {
+                            const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
+                                {data: {serviceCenterId: decodeSCID(id), vin: vin, make, year: +year, model}})
+                            dispatch(setRecallsAreShown(true));
+                            if (data.length) {
+                                await onOpen()
+                            } else {
+                                onEmptyRecalls()
+                            }
+                        } catch (err) {
+                            console.log(err)
                             onEmptyRecalls()
                         }
-                    } catch (err) {
-                        console.log(err)
-                        onEmptyRecalls()
+                    } else {
+                        handleNoRecalls()
                     }
                 } else {
-                    handleNoRecalls()
+                    setErrors(prev => ([...prev, 'vin']))
+                    showError("VIN is not correct")
                 }
             } else {
                 handleNoRecalls()
@@ -494,6 +498,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                     handleNext={onNextForRecalls}
                     handleAddServices={handleAddServices}
                     onDeclineRecalls={handleDeclineRecalls}
+                    isRecallsCategorySelected={isRecallsCategorySelected}
                 />
                 <NoRecallsModal open={isNoRecallsOpen} onClose={onNoRecallsClose} handleNext={handleDeclineRecalls}/>
             </StepWrapper>
