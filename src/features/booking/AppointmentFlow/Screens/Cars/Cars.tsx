@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from 'react';
 import {CarCard} from "./CarCard/CarCard";
 import {useMediaQuery, useTheme} from "@mui/material";
 import {ActionButtons} from "../../../ActionButtons/ActionButtons";
@@ -24,7 +24,6 @@ import {getBlankVehicle} from "../../../../../store/reducers/appointment/actions
 import {useHistory, useParams} from "react-router-dom";
 import {CarsWrapper} from "./styles";
 import {AppointmentScreenTitle} from "../../../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
-import {checkSelectedCar} from "./utils";
 import {useException} from "../../../../../hooks/useException/useException";
 import {Routes} from "../../../../../routes/constants";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -208,7 +207,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                                 {customerLoadedData.vehicles
                                     .map((vehicle, index) =>
                                         <CarCard
-                                            hasOrders={vehicle.hasRepairOrders}
+                                            onScheduleNewAppointment={handleAddNewCarAppointment}
                                             onSelectCar={onSelectCar}
                                             clearData={clearData}
                                             car={vehicle}
@@ -226,8 +225,6 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                         onBack={onBack}
                         nextLabel={t("Next")}
                         onNext={onNext}
-                        nextDisabled={!selectedVehicle
-                            || !checkSelectedCar(selectedVehicle, customerLoadedData?.vehicles)}
                         loading={loading} />
                 </>}
         </StepWrapper>
