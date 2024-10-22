@@ -338,8 +338,12 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                         handleNoRecalls()
                     }
                 } else {
-                    setErrors(prev => ([...prev, 'vin']))
-                    showError("VIN is not correct")
+                    if (!vin.length && !isRecallsCategorySelected && !requiredFields.includes("vin")) {
+                        handleNoRecalls()
+                    } else {
+                        setErrors(prev => ([...prev, 'vin']))
+                        showError("VIN is not correct")
+                    }
                 }
             } else {
                 handleNoRecalls()
