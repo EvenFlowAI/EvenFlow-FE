@@ -22,13 +22,6 @@ export const DayCard = styled("div")<TDayCardProps>(({theme, available, isCurren
     }
 }));
 
-export const DayName = styled("div")({
-    fontSize: 14,
-    fontWeight: "normal",
-    marginBottom: -12,
-    textTransform: 'none'
-})
-
 export const Date = styled("div")({
     fontSize: 14,
 })
@@ -44,7 +37,7 @@ export const Day = styled("div")<TDayCardProps>(({theme, isCurrent, isOffPeak}) 
     padding: '4px 12px',
     border: isCurrent ? "1px solid #000000" : (isOffPeak ? "1px solid #237243" : "1px solid #DADADA"),
     borderRadius: "50%",
-    background: isCurrent ? "#000000" : isOffPeak ? "#89E5AB" : "#FAFAFA",
+    background: isCurrent ? "#000000" : isOffPeak ? "#E6FCEC" : "#FAFAFA",
     color: isCurrent ? "#FFFFFF" : "#252733",
     fontWeight: "normal",
     fontSize: 14,
