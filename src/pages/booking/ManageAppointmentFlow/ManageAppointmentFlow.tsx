@@ -55,6 +55,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
         serviceTypeOption,
         isUsualFlowNeeded,
         advisor,
+        welcomeScreenView
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -66,9 +67,9 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     useEffect(() => {
         if (selectedVehicle && customerLoadedData?.isUpdating) {
             if (customerLoadedData?.fromSearchByName) dispatch(setCustomerLoadedData({...customerLoadedData, fromSearchByName: false}))
-            onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
+            welcomeScreenView !== 'serviceSelect' && onUpdateAppointment(selectedVehicle).then(() => handleSetScreen("manageAppointment"))
         }
-    }, [customerLoadedData, selectedVehicle?.make])
+    }, [customerLoadedData, selectedVehicle?.make, welcomeScreenView])
 
     const onChangeSlot = () => {
         const nextScreen: TScreen = isAdvisorAvailable && !advisor
