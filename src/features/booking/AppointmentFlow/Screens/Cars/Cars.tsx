@@ -1,7 +1,6 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from 'react';
 import {CarCard} from "./CarCard/CarCard";
-import {useMediaQuery, useTheme} from "@mui/material";
-import {ActionButtons} from "../../../ActionButtons/ActionButtons";
+import {Button, useMediaQuery, useTheme} from "@mui/material";
 import {TArgCallback, TCallback, TScreen} from "../../../../../types/types";
 import {StepWrapper} from '../../../../../components/styled/StepWrapper';
 import {useDispatch, useSelector} from "react-redux";
@@ -22,7 +21,7 @@ import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {getBlankVehicle} from "../../../../../store/reducers/appointment/actions";
 import {useHistory, useParams} from "react-router-dom";
-import {CarsWrapper} from "./styles";
+import {ButtonsRow, CarsWrapper, NewVehicleBtn} from "./styles";
 import {AppointmentScreenTitle} from "../../../../../components/wrappers/AppointmentScreenTitle/AppointmentScreenTitle";
 import {useException} from "../../../../../hooks/useException/useException";
 import {Routes} from "../../../../../routes/constants";
@@ -59,8 +58,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     const { isAdvisorAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const theme = useTheme();
-    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-    const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
     const dispatch = useDispatch();
     const showError = useException();
     const {t} = useTranslation();
@@ -191,10 +189,6 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     }, [handleSetScreen, showError, dispatch, firstScreenOptions, makes, scProfile,
         onSelectAppointment, needToShowServiceSelection, selectedVehicle, clearPrevAppointmentData]);
 
-    const onNext = useCallback( () => {
-        selectedVehicle && onSelectCar(selectedVehicle)
-    }, [selectedVehicle, onSelectCar]);
-
     return (
         <StepWrapper>
             {loading || isAuthorized
@@ -215,17 +209,29 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                                     )}
                                 {!isSm ? <NewVehicleCard role="presentation" onClick={handleAddNewVehicle}>
                                     <CarIcon/>
-                                    <BookNewVehicle>Book Another Vehicle</BookNewVehicle>
+                                    <BookNewVehicle>{t("Book Another Vehicle")}</BookNewVehicle>
                                 </NewVehicleCard> : null}
                             </> : <p>{t("No vehicles present")}</p>
                         }
                     </CarsWrapper>
-                    <ActionButtons
-                        hideNext
-                        onBack={onBack}
-                        nextLabel={t("Next")}
-                        onNext={onNext}
-                        loading={loading} />
+                    <ButtonsRow>
+                        {isSm
+                            ? <NewVehicleBtn
+                                onClick={handleAddNewVehicle}
+                                variant='outlined'
+                                color="primary"
+                                disabled={loading}>
+                                {t("Book Another Vehicle")}
+                        </NewVehicleBtn>
+                            : null}
+                        <Button
+                            onClick={onBack}
+                            disabled={loading}
+                            variant='outlined'
+                            color="primary">
+                            Back
+                        </Button>
+                    </ButtonsRow>
                 </>}
         </StepWrapper>
     );
