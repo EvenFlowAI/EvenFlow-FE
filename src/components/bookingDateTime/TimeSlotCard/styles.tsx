@@ -89,7 +89,7 @@ export const Wrapper = styled("div", {
                 : isWaitList
                     ? waitListBackground ? `#${waitListBackground}` : "#FFE6CF"
                     : offPeak
-                        ? "#DEFFDF"
+                        ? "#E6FCEC"
                         : "transparent",
             '& > svg': {
                 marginBottom: 4,
