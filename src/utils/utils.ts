@@ -644,6 +644,6 @@ export const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppoin
     return dayjs(a.date).isAfter(b.date) ? 1 : -1
 }
 export const getClearDate = (d: TParsableDate) => {
-    const utcOffset = dayjs(d).utcOffset();
+    const utcOffset = dayjs().utcOffset();
     return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
 }
