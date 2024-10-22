@@ -56,6 +56,7 @@ import {useModal} from "../../../../../hooks/useModal/useModal";
 import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
 import utc from "dayjs/plugin/utc";
+import {useException} from "../../../../../hooks/useException/useException";
 
 dayjs.extend(utc)
 
@@ -131,6 +132,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const history = useHistory();
+    const showError = useException();
     const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
@@ -298,6 +300,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     && transportation
                         ? transportation.id
                         : null;
+
                 const data: IAppointmentSlotsRequest = {
                     appointmentTimingType: serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
                         ? EAppointmentTimingType.FirstAvailable
@@ -342,12 +345,14 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (hashKey) data.appointmentHashKey = hashKey;
                 if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
                 if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data));
+                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, undefined, showError));
                 } else {
                     await dispatch(loadAppointmentSlots(
                         data,
                         currentAppointment ? () => {} : setDateCallback,
-                        () => handleDateRangeSet(false)
+                        () => handleDateRangeSet(false),
+                        undefined,
+                        showError
                     ));
                 }
             } finally {
