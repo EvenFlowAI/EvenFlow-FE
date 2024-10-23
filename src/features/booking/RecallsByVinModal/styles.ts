@@ -97,6 +97,19 @@ export const useStyles = makeStyles()((theme) => ({
     },
     button: {
         width: 144,
+    },
+    serviceAddedMobile: {
+        width: "100%",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        marginBottom: 40,
+        fontSize: 16,
+    },
+    mobileLabel: {
+        position: 'relative',
     }
 }));
 
