@@ -284,6 +284,18 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
+    const handleError = (e: any) => {
+        const internalServerError = e.response?.data?.message?.toLowerCase().includes("internal server");
+        if (internalServerError) {
+            const errorMessage = `We are sorry but there is a capacity configuration error. 
+            No appointment dates and times are available for the specific appointment request. 
+            Error identifier: ${e.response?.data?.id ?? ''}`
+            showError(errorMessage)
+        } else {
+            showError(e)
+        }
+    }
+
     const loadData = async () => {
         if (id) {
             const utcOffset = dayjs().utcOffset()
@@ -345,14 +357,14 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (hashKey) data.appointmentHashKey = hashKey;
                 if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
                 if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, undefined, showError));
+                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, undefined, handleError));
                 } else {
                     await dispatch(loadAppointmentSlots(
                         data,
                         currentAppointment ? () => {} : setDateCallback,
                         () => handleDateRangeSet(false),
                         undefined,
-                        showError
+                        handleError
                     ));
                 }
             } finally {
