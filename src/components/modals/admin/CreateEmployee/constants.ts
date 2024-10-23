@@ -13,4 +13,6 @@ export const DmsRoles = {
     [EDmsRole.Advisor]: "Advisor",
     [EDmsRole.Technician]: "Technician",
     [EDmsRole.ServiceManager]: "Manager",
+    [EDmsRole.ServiceDirector]: "Service Director",
+    [EDmsRole.CallCenterRep]: "Call Center Rep",
 }
