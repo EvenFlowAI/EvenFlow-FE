@@ -72,7 +72,9 @@ export enum EConsultantRole {
     None,
     Advisor,
     Technician,
-    ServiceManager
+    ServiceManager,
+    ServiceDirector,
+    CallCenterRep
 }
 
 export type TServiceConsultant = {
