@@ -1,13 +1,24 @@
-import {styled} from "@mui/material";
+import {Button, styled} from "@mui/material";
 
 export const CarsWrapper = styled('div')(({theme}) => ({
     width: "100%",
-    display: "flex",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: "center",
     gap: "20px",
     justifyContent: "stretch",
+    padding: "36px 48px",
+    border: "2px solid #DADADA",
+    borderRadius: 2,
     [theme.breakpoints.down('md')]: {
-        height: 350,
+        gridTemplateColumns: "1fr 1fr",
+        padding: "24px 16px",
+        justifyContent: "space-around",
+    },
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: "1fr",
+        padding: "24px 16px",
+        gap: "16px",
     }
 }));
 
@@ -23,34 +34,33 @@ export const Info = styled('div')({
     }
 });
 
-export const Arrow = styled("span", {
-    shouldForwardProp: (prop) => prop !== "disabled"
-})<{ disabled?: boolean }>(({theme, disabled}) => ({
-    position: "relative",
+export const ButtonsRow = styled('div')(({theme}) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: 40,
-    height: 40,
-    cursor: "pointer",
-    border: `1px solid ${disabled ? "#DADADA" : "#91CFF7"}`,
-    backgroundColor: disabled ? "#DADADA" : "#E5F5FF",
-    color: "#202021",
-    opacity: disabled ? 0.4 : 1,
-    "&:hover": {
-        border: `1px solid ${disabled ? "#DADADA" : "#E5F5FF"}`,
-        backgroundColor: disabled ? "#DADADA" : "#91CFF7",
+    gap: "22px",
+    marginTop: 20,
+    "& button": {
+        minWidth: 144
     },
-    "& .text": {
-        position: 'absolute',
-        bottom: -24,
-        fontSize: 12,
-        whiteSpace: 'nowrap',
-        [theme.breakpoints.down('md')]: {
-            bottom: -40,
-            fontSize: 12,
-            whiteSpace: 'normal',
-            textAlign: 'center',
+    [theme.breakpoints.down('mdl')]: {
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        zIndex: 100,
+        flexDirection: "column",
+        width: "100%",
+        gap: "12px",
+        backgroundColor: '#F7F8FB',
+        marginTop: 0,
+        padding: '10px 20px',
+        "& button": {
+            width: "100%"
         }
     }
 }));
+
+export const NewVehicleBtn = styled(Button)({
+    borderColor: "#DADADA",
+    backgroundColor: "#FFFFFF"
+})
