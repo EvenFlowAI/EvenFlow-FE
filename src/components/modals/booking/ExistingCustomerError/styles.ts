@@ -1,7 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 import {styled} from "@mui/material";
 
-// 
 export const useStyles = makeStyles()((theme) => ({
     info: {
         display: 'flex',
@@ -20,10 +19,9 @@ export const useStyles = makeStyles()((theme) => ({
     actionsWrapper: {
         display: 'flex',
         justifyContent: 'center',
-        marginBottom: 30,
         [theme.breakpoints.down('md')]: {
             padding: '0 20px'
-        }
+        },
     }
 }));
 
@@ -37,7 +35,7 @@ export const ButtonsRow = styled('div')(({theme}) => ({
         minWidth: 144
     },
     [theme.breakpoints.down('md')]: {
-        flexDirection: "column",
+        flexDirection: "column-reverse",
         width: "100%",
         gap: "12px",
         "& button": {

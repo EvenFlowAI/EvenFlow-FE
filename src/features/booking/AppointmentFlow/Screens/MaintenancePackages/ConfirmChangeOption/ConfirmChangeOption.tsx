@@ -4,6 +4,7 @@ import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../../../../components/buttons/LoadingButton/LoadingButton";
 import {BfButtonsWrapper} from "../../../../../../components/styled/BfButtonsWrapper";
+import {useMediaQuery, useTheme} from "@mui/material";
 
 type TConfirmProps = DialogProps & {
     onSave: () => void;
@@ -11,6 +12,8 @@ type TConfirmProps = DialogProps & {
 
 const ConfirmChangeOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TConfirmProps>>> = (props) => {
     const {t} = useTranslation();
+    const theme = useTheme()
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"))
     return (
         <BaseModal
             width={400}
@@ -24,6 +27,7 @@ const ConfirmChangeOption: React.FC<React.PropsWithChildren<React.PropsWithChild
                     <LoadingButton
                         loading={false}
                         onClick={props.onClose}
+                        style={isSm ? {marginBottom: 0} : {}}
                         variant="outlined"
                         color="primary">
                         {t("No")}
@@ -31,6 +35,7 @@ const ConfirmChangeOption: React.FC<React.PropsWithChildren<React.PropsWithChild
                     <LoadingButton
                         loading={false}
                         onClick={props.onSave}
+                        style={isSm ? {order: -1, marginBottom: 12} : {}}
                         color="primary"
                         variant="contained">
                         {t("Yes")}
