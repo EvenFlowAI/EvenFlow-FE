@@ -27,5 +27,15 @@ export const CenteredButtonsWrapper = styled(BfButtonsWrapper)({
     justifyContent: 'center',
     [theme.breakpoints.down('mdl')]: {
         justifyContent: 'space-around'
+    },
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column-reverse',
+        '& > div:last-child, & > button:last-child': {
+            marginBottom: 12,
+            marginRight: 0,
+        },
+        '& > div:first-child, & > button:first-child': {
+            marginBottom: 0
+        }
     }
 })

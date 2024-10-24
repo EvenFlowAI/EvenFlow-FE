@@ -11,14 +11,14 @@ export const useStyles = makeStyles()(theme => ({
         },
         [theme.breakpoints.down("mdl")]: {
             padding: 16,
-            flexDirection: 'column',
+            flexDirection: 'column-reverse',
             '& > div': {
                 width: "100%"
             },
-            '& > div:first-child': {
+            '& > div:last-child': {
                 marginBottom: 12,
             },
-            "& > div:not(:last-child)": {
+            "& > div:first-child": {
                 marginRight: 0
             },
         }
