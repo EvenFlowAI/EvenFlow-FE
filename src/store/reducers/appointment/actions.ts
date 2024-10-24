@@ -15,7 +15,14 @@ import {
     ISR, ISVAppointmentResponse, IWaitListData,
     TAppointmentState,
 } from "./types";
-import {AppThunk, PaginatedAPIResponse, ParsableDate, TCallback, TParsableDate} from "../../../types/types";
+import {
+    AppThunk,
+    PaginatedAPIResponse,
+    ParsableDate,
+    TArgCallback,
+    TCallback,
+    TParsableDate
+} from "../../../types/types";
 import {
     EServiceCenterName,
     ICreateAppointmentResp,
@@ -89,7 +96,8 @@ export const loadAppointmentSlots = (
     data: IAppointmentSlotsRequest,
     cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
-    onLoadedCb?: (isEmptyList: boolean) => void
+    onLoadedCb?: (isEmptyList: boolean) => void,
+    onError?: TArgCallback<any>,
 ): AppThunk => async dispatch => {
     dispatch(setSlotsLoading(true))
     try {
@@ -113,6 +121,7 @@ export const loadAppointmentSlots = (
         }
         return res;
     } catch (err) {
+        onError && onError(err);
         onLoadedCb && onLoadedCb(true)
         dispatch(setSlotsServiceTypeOptionId(null))
         dispatch(setSlotsSearchDate(null))
@@ -231,7 +240,8 @@ export const loadServiceValetSlots = (
     data: IAppointmentSlotsRequest,
     cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
-    onLoadedCb?: (isEmptyList: boolean) => void
+    onLoadedCb?: (isEmptyList: boolean) => void,
+    onError?: TArgCallback<any>,
 ): AppThunk => dispatch => {
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
@@ -245,6 +255,7 @@ export const loadServiceValetSlots = (
             if (onLoadedCb) onLoadedCb(!Boolean(items.length))
         })
         .catch(err => {
+            onError && onError(err)
             onLoadedCb && onLoadedCb(true)
             dispatch(getServiceValetSlots([]));
             console.log('get service valet slots err', err)
