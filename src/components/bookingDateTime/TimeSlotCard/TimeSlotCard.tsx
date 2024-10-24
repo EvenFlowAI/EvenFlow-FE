@@ -9,8 +9,6 @@ import {RootState} from "../../../store/rootReducer";
 import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
-import useOnScreen from "../../../hooks/useOnScreen/useOnScreen";
-import {isMobile} from 'react-device-detect';
 
 type TProps = {
     timeSlot: TSlot;
@@ -34,7 +32,6 @@ export const TimeSlotCard: React.FC<TProps> =
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
         const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
         const slotRef = useRef<HTMLDivElement|null>(null);
-        const isVisible = useOnScreen(slotRef)
 
         useEffect(() => {
             if (slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day') && dayjs(date).isSame(dayjs.utc(), 'day')) {
@@ -50,8 +47,20 @@ export const TimeSlotCard: React.FC<TProps> =
         }, [slot, date])
 
         useEffect(() => {
-           // if (slotRef.current && selected && !isVisible) slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
-        }, [selected, isVisible])
+            const rect = slotRef?.current?.getBoundingClientRect()
+            const parentHeight = slotRef.current?.parentElement?.clientHeight;
+            const parentWidth = slotRef.current?.parentElement?.clientWidth;
+            const isVisible = Boolean(rect) && parentHeight && parentWidth && (
+                rect?.top && rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= parentHeight &&
+                rect.right <= parentWidth
+            )
+           if (slotRef.current && selected) {
+               !isVisible && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+           }
+
+        }, [selected])
 
 
         const getContent = (timePassed: boolean): string => {
