@@ -12,15 +12,11 @@ import {PickUpSlotsWrapper} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {useTimeSelectorStyles} from "../../../hooks/styling/useTmeSelectorStyles";
+import {getClearSVDate} from "../../../utils/utils";
 
 type TProps = {
     date: TParsableDate;
     loading: boolean;
-}
-
-const getClearDate = (d: TParsableDate) => {
-    const utcOffset = dayjs(d).utcOffset();
-    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
 }
 
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
@@ -63,7 +59,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
             <div className={classes.wrapper}>
                 <div className={classes.titleWrapper}>
                     <h4 className={classes.title}>{t("Select Time")}</h4>
-                    <div>{getClearDate(date).format("ddd")}, <span className={classes.boldText}>{getClearDate(date).format('MMM DD')}</span></div>
+                    <div>{getClearSVDate(date).format("ddd")}, <span className={classes.boldText}>{getClearSVDate(date).format('MMM DD')}</span></div>
                 </div>
                 {!loading
                         ? <PickUpSlotsWrapper>
