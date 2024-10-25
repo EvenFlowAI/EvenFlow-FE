@@ -68,12 +68,15 @@ const AskChangesCompleted = () => {
         const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes("time slot");
         const transportationUnavailable = e.response?.data?.message?.toLowerCase().includes("transportation option");
         const dateForZoneUnavailable = e.response?.data?.message?.toLowerCase().includes("is not available for this geographic zone or for the date");
+        const internalError = e.response?.data?.message?.toLowerCase().includes("internal server");
         if (timeSlotUnavailable || dateForZoneUnavailable) {
             dispatch(setChangesCompletedOpen(false))
             currentScreen !== "appointmentSelection" && dispatch(setSlotsWarningOpen(true))
         } else if (transportationUnavailable) {
             dispatch(setChangesCompletedOpen(false))
             currentScreen !== "transportationNeeds" && dispatch(setSlotsWarningOpen(true))
+        } else if (internalError) {
+            showError(`We’re sorry. Something went wrong on our end. Please try again shortly. Error identifier: ${e.response?.data?.id ?? 'unknown'}`)
         } else {
             showError(e)
         }
