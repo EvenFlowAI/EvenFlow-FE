@@ -1019,7 +1019,6 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         acceptedConsentIds,
     } = getState().appointmentFrame;
     const {allCategories} = getState().categories;
-
     if (scProfile && selectedVehicle) {
         const settingsEnabled = Boolean(waitListSettings?.isEnabled)
         const isWaitListSlotSelected = appointment?.isOverbookingApplied && settingsEnabled;
@@ -1032,7 +1031,6 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
         const date = appointment?.appointmentDate
             ?? `${dayjs(serviceValetAppointment?.date).format("YYYY-MM-DD")}T00:00:00.000Z`
             ?? ""
-   // todo check transportation logic
         const data: ISearchConsentsData = {
             serviceCenterId: scProfile.id,
             podId: slotPodId,

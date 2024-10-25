@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {TArgCallback, TScreen} from "../../../../../types/types";
 import {AppointmentSlots} from "../../Screens/AppointmentSlots/AppointmentSlots";
 import {searchForCustomerConsents} from "../../../../../store/reducers/appointmentFrameReducer/actions";
@@ -25,9 +25,9 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({handleSet
 
     const onEmptyConsents = () => handleSetScreen("appointmentConfirmation")
 
-    const handleNext = useCallback((): void => {
+    const handleNext = (): void => {
         dispatch(searchForCustomerConsents(onEmptyConsents))
-    }, [onEmptyConsents])
+    }
 
     return (
         <AppointmentSlots
