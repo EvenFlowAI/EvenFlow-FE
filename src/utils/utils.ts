@@ -652,3 +652,8 @@ export const getClearDate = (d: TParsableDate) => {
     const utcOffset = dayjs().utcOffset();
     return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
 }
+
+export const getClearSVDate = (d: TParsableDate) => {
+    const utcOffset = dayjs(d).utcOffset();
+    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
+}
