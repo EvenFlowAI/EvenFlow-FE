@@ -12,7 +12,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {
     collectServiceRequestIds,
     decodeSCID,
-    getClearDate,
+    getClearDate, getClearSVDate,
     mapRecallsForRequest,
     sortAppointments,
     sortSVAppointments
@@ -196,7 +196,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             if (serviceOption?.type === EServiceType.PickUpDropOff) {
                 const sorted = [...serviceValetSlots].sort(sortSVAppointments)
                 firstAvailableSlot = sorted.find(slot => {
-                    const formatted = getClearDate(slot?.date)
+                    const formatted = getClearSVDate(slot?.date)
                     return dayjs(formatted).isSame(dayjs.utc(dateWithOffset), 'date')
                         || dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
                 })
