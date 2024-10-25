@@ -101,7 +101,12 @@ export const AppointmentConfirmation: React.FC<React.PropsWithChildren<React.Pro
     }
 
     const handleError = (e: any) => {
-        showError(e);
+        const internalError = e.response?.data?.message?.toLowerCase().includes("internal server");
+        if (internalError) {
+            showError(`We’re sorry. Something went wrong on our end. Please try again shortly. Error identifier: ${e.response?.data?.id ?? 'unknown'}`)
+        } else {
+            showError(e);
+        }
         if (e.response?.data?.errors) {
             const data = [...e.response.data.errors]
             setErrors(() => {
