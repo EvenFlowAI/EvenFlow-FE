@@ -125,6 +125,7 @@ export const loadAppointmentSlots = (
         onLoadedCb && onLoadedCb(true)
         dispatch(setSlotsServiceTypeOptionId(null))
         dispatch(setSlotsSearchDate(null))
+        dispatch(setSlotPodId(null))
         return dispatch(getAppointmentSlots([]));
     } finally {
         dispatch(setSlotsLoading(false))
@@ -260,5 +261,8 @@ export const loadServiceValetSlots = (
             dispatch(getServiceValetSlots([]));
             console.log('get service valet slots err', err)
         })
-        .finally(() => loadCB && loadCB())
+        .finally(() => {
+            loadCB && loadCB()
+            dispatch(setSlotPodId(null));
+        })
 }

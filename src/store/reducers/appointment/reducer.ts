@@ -116,7 +116,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, personalInformation: {...state.personalInformation, ...payload}};
     })
     .addCase(selectAppointment, (state, {payload}) => {
-        return {...state, appointment: payload, slotPodId: payload ? state.slotPodId : null};
+        return {...state, appointment: payload};
     })
     .addCase(setLoadedDateRange, (state, {payload}) => {
         return {...state, searchedDateRange: payload};
@@ -192,7 +192,7 @@ export const appointmentReducer = createReducer(initialState, builder => builder
         return {...state, serviceValetSlots: payload};
     })
     .addCase(selectServiceValetAppointment, (state, {payload}) => {
-        return {...state, serviceValetAppointment: payload, slotPodId: payload ? state.slotPodId : null};
+        return {...state, serviceValetAppointment: payload};
     })
     .addCase(getDropOffSettings, (state, {payload}) => {
         return {...state, dropOffSettings: payload};
