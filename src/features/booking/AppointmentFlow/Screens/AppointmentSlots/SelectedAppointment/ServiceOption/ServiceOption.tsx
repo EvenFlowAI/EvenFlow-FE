@@ -64,6 +64,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
             && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
     }, [serviceTypeOption, firstScreenOptions, config]);
+    let isTransportationAvailable = true;
 
     const getServiceName = () => {
         if (serviceTypeOption?.name) return serviceTypeOption.name
@@ -85,14 +86,25 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     }
 
     const handleSideBar = (showAdvisorScreen: boolean) => {
-        const index = sideBarSteps.indexOf(showAdvisorScreen ? "consultantSelection" : "appointmentSelection");
+        let screenToSearchFor: TScreen = "appointmentSelection";
+        if (isTransportationAvailable) {
+            if (sideBarSteps.includes("transportationNeeds")) {
+                screenToSearchFor =  "transportationNeeds";
+            } else if (sideBarSteps.includes("consultantSelection")) {
+                screenToSearchFor =  "consultantSelection";
+            } else if (sideBarSteps.includes("serviceNeeds")) {
+                screenToSearchFor =  "serviceNeeds";
+            } else if (sideBarSteps.includes("location")) {
+                screenToSearchFor =  "location";
+            }
+        } else {
+            if (showAdvisorScreen && sideBarSteps.includes("consultantSelection")) {
+                screenToSearchFor =  "consultantSelection";
+            }
+        }
+        const index = sideBarSteps.indexOf(screenToSearchFor);
         if (index > -1) {
             sliceSteps(index)
-        } else {
-            if (showAdvisorScreen) {
-                const index = sideBarSteps.indexOf("appointmentSelection")
-                sliceSteps(index)
-            }
         }
     }
 
@@ -198,9 +210,9 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
 
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable) {
-            let index = sideBarSteps.indexOf("serviceNeeds");
-            if (index < 0 ) index = sideBarSteps.indexOf("location");
-            sliceSteps(index)
+            // let index = sideBarSteps.indexOf("serviceNeeds");
+            // if (index < 0 ) index = sideBarSteps.indexOf("location");
+            // sliceSteps(index)
             handleSetScreen("transportationNeeds")
         } else if (transportation) {
             dispatch(setTransportation(null));
@@ -221,7 +233,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
             const newConfig = config.find(item => item.serviceType === newOption.type);
-            const isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+            isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
             if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
             handleTransportation(isTransportationAvailable);
             dispatch(setServiceTypeOption(newOption));
