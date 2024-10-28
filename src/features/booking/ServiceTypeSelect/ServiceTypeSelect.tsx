@@ -213,6 +213,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                     onClick={() => handleSelectOption(card)}
                                     isTaglinePresent={isMobile ? !!card.taglineText?.length : isTagLinePresent}>
                                     {card.description ? <HtmlTooltip
+                                        onClick={e => e.stopPropagation()}
                                         enterTouchDelay={0}
                                         placement="right-end"
                                         title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
