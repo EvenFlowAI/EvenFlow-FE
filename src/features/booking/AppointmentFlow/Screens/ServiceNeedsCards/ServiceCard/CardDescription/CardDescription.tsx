@@ -6,11 +6,13 @@ type TProps = {
     description?: string;
     active?: boolean;
     isSM?: boolean;
+    onClick: (e: any) => any;
 }
 
-const CardDescription: React.FC<TProps> = ({description, active, isSM}) => {
+const CardDescription: React.FC<TProps> = ({description, active, isSM, onClick}) => {
     return description
         ? <HtmlTooltip
+            onClick={onClick}
             enterTouchDelay={0}
             placement="top-end"
             title={<div>{description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
