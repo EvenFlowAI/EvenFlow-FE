@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TableRowDataType, TParsableDate} from "../../../../types/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import dayjs from "dayjs";
 import {Switch, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
@@ -23,6 +23,7 @@ import {compareName} from "./utils";
 import {initialFilters} from "./constants";
 import TimeBlock from "./TimeBlock/TimeBlock";
 import EmployeeScheduleTableMobile from "../EmployeeScheduleMobile/EmployeeScheduleTableMobile";
+import {OneRowButtonsWrapper} from "../../../../components/styled/OneRowButtonsWrapper";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
@@ -263,27 +264,44 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                 {/*    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>*/}
 
             </DialogContent>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <LoadingButton
-                            loading={employeesLoading || loading}
-                            onClick={onCancel}
-                            variant="text"
-                            style={{marginRight: 20}}
-                            color="info">
-                            Close
-                        </LoadingButton>
-                        <LoadingButton
-                            loading={employeesLoading || loading}
-                            onClick={onSave}
-                            disabled={disabledDate}
-                            className={classes.saveButton}>
-                            Save
-                        </LoadingButton>
-                    </div>
-                </div>
-            </DialogActions>
+            <OneRowButtonsWrapper>
+                <LoadingButton
+                    loading={employeesLoading || loading}
+                    onClick={onCancel}
+                    variant="text"
+                    style={{marginRight: 20}}
+                    color="info">
+                    Close
+                </LoadingButton>
+                <LoadingButton
+                    loading={employeesLoading || loading}
+                    onClick={onSave}
+                    disabled={disabledDate}
+                    className={classes.saveButton}>
+                    Save
+                </LoadingButton>
+            </OneRowButtonsWrapper>
+            {/*<DialogActions>*/}
+            {/*    <div className={classes.wrapper}>*/}
+            {/*        <div className={classes.buttonsWrapper}>*/}
+            {/*            <LoadingButton*/}
+            {/*                loading={employeesLoading || loading}*/}
+            {/*                onClick={onCancel}*/}
+            {/*                variant="text"*/}
+            {/*                style={{marginRight: 20}}*/}
+            {/*                color="info">*/}
+            {/*                Close*/}
+            {/*            </LoadingButton>*/}
+            {/*            <LoadingButton*/}
+            {/*                loading={employeesLoading || loading}*/}
+            {/*                onClick={onSave}*/}
+            {/*                disabled={disabledDate}*/}
+            {/*                className={classes.saveButton}>*/}
+            {/*                Save*/}
+            {/*            </LoadingButton>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</DialogActions>*/}
         </BaseModal>
     );
 };

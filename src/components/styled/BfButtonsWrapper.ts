@@ -1,7 +1,6 @@
 import {styled} from "@mui/material";
-import theme from "../../theme/theme";
 
-export const BfButtonsWrapper = styled('div')({
+export const BfButtonsWrapper = styled('div')(({theme}) => ({
     padding: "10px 25px 25px",
     display: 'flex',
     alignItems: 'center',
@@ -21,11 +20,11 @@ export const BfButtonsWrapper = styled('div')({
             marginRight: 0,
         }
     }
-})
+}))
 
-export const CenteredButtonsWrapper = styled(BfButtonsWrapper)({
+export const CenteredButtonsWrapper = styled(BfButtonsWrapper)(({theme}) =>({
     justifyContent: 'center',
     [theme.breakpoints.down('mdl')]: {
         justifyContent: 'space-around'
     }
-})
+}))
