@@ -22,6 +22,7 @@ import {TFilters} from "../types";
 import {compareName} from "./utils";
 import {initialFilters} from "./constants";
 import TimeBlock from "./TimeBlock/TimeBlock";
+import EmployeeScheduleTableMobile from "../EmployeeScheduleMobile/EmployeeScheduleTableMobile";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
@@ -46,6 +47,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const showError = useException()
     const theme = useTheme();
     const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
     const {classes} = useActionButtonsStyles();
 
     const schedule = useMemo(() => {
@@ -222,8 +224,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
 
     return (
         <BaseModal open={open} onClose={onCancel} width={isTablet ? 987 : 1050}>
-            <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
-            <DialogContent style={{padding: "12px 32px"}}>
+            <DialogTitle onClose={onCancel}>Employee Schedule: {isMobile ? <br/> : null}{dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
+            <DialogContent style={{padding: isMobile ? 16 : "12px 32px"}}>
                 {loading || isLoading || employeesLoading
                     ? <Loading/>
                     :  <>
@@ -231,13 +233,22 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                             isLoading={employeesLoading || loading || isLoading}
                             filters={filters}
                             setFilters={setFilters}/>
-                        <Table<IScheduleByDate>
-                            data={currentSchedule}
-                            verticalAlign="top"
-                            index={"id"}
-                            isLoading={employeesLoading || loading || isLoading}
-                            hidePagination
-                            rowData={rowData}/>
+                        {isMobile
+                            ? <EmployeeScheduleTableMobile
+                                currentSchedule={currentSchedule}
+                                disabledDate={disabledDate}
+                                handleSwitch={handleSwitch}
+                                onTimeChange={onTimeChange}
+                                schedule={schedule}
+                                formIsChecked={formIsChecked}
+                            />
+                            : <Table<IScheduleByDate>
+                                data={currentSchedule}
+                                verticalAlign="top"
+                                index={"id"}
+                                isLoading={employeesLoading || loading || isLoading}
+                                hidePagination
+                                rowData={rowData}/>}
                     </>}
                 {/*<FormControlLabel*/}
                 {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
