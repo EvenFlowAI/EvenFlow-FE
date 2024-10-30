@@ -3,7 +3,7 @@ import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TableRowDataType, TParsableDate} from "../../../../types/types";
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import dayjs from "dayjs";
-import {Switch} from "@mui/material";
+import {Switch, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/schedules/types";
@@ -44,6 +44,8 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException()
+    const theme = useTheme();
+    const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
     const {classes} = useActionButtonsStyles();
 
     const schedule = useMemo(() => {
@@ -120,18 +122,22 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const rowData: TableRowDataType<IScheduleByDate>[] = [
         {
             header: "Employee",
-            val: el => el.employeeName
+            val: el => el.employeeName,
+            verticalAlign: isTablet ? "top" : "middle",
         },
         {
             header: "Role",
-            val: el => el.role
+            val: el => el.role,
+            verticalAlign: isTablet ? "top" : "middle",
         },
         {
-            header: "Service Books",
-            val: el => el.serviceBooks.join(', ')
+            header: "Service Book",
+            val: el => el.serviceBooks.join(', '),
+            verticalAlign: isTablet ? "top" : "middle",
         },
         {
             header: "On Schedule",
+            verticalAlign: isTablet ? "top" : "middle",
             val: el => {
                 return <SwitcherWrapper>
                     <SwitcherLabel>NO</SwitcherLabel>
@@ -147,6 +153,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         },
         {
             header: "Scheduled Hours",
+            verticalAlign: isTablet ? "top" : "middle",
             val: el => <TimeBlock
                 onTimeChange={onTimeChange}
                 el={el}
@@ -214,7 +221,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }
 
     return (
-        <BaseModal open={open} onClose={onCancel} width={1050}>
+        <BaseModal open={open} onClose={onCancel} width={isTablet ? 987 : 1050}>
             <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
             <DialogContent style={{padding: "12px 32px"}}>
                 {loading || isLoading || employeesLoading
@@ -226,6 +233,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                             setFilters={setFilters}/>
                         <Table<IScheduleByDate>
                             data={currentSchedule}
+                            verticalAlign="top"
                             index={"id"}
                             isLoading={employeesLoading || loading || isLoading}
                             hidePagination
