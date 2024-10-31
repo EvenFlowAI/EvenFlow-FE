@@ -24,7 +24,7 @@ export const useStyles = makeStyles()(() => ({
 
 export const Row = styled('div')({
     display: 'grid',
-    gridTemplateColumns: '4fr 4fr 1fr',
+    gridTemplateColumns: '6fr 4fr 2fr',
     fontSize: 16,
 })
 

@@ -74,7 +74,7 @@ export const MenuItem = styled('div')({
 
 export const TitleRow = styled('div')({
     display: 'grid',
-    gridTemplateColumns: '1fr 2fr',
+    gridTemplateColumns: '1fr 1fr',
     color: "#858585",
     '& > div': {
         fontWeight: 700,
