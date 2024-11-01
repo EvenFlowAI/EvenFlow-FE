@@ -24,13 +24,23 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
 
     const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {
         setDemandSlots(prev => {
-            let data = [...prev];
-            const prevItem = data.find(el => el.start === item.start)
+            const prevItem = prev.find(el => {
+                return el.id && item.id
+                    ? el.id === item.id
+                    : el.start === item.start && el.end === item.end
+            })
             if (prevItem) {
                 const updated = {...prevItem, amount: +value};
-                data = data.filter(el => el.start !== item.start).concat(updated);
+                return prev
+                    .filter(el => {
+                        return el.id && item.id
+                            ? el.id !== item.id
+                            : el.start !== item.start && el.end !== item.end
+                    })
+                    .concat(updated)
+                    .sort(sortSlots)
             }
-            return sortSlots(data);
+           return prev;
         })
     }
 
