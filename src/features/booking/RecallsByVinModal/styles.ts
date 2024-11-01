@@ -2,7 +2,7 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { withStyles } from 'tss-react/mui';
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles()(() => ({
+export const useStyles = makeStyles()((theme) => ({
     mainTitle: {
         fontSize: 24,
         fontWeight: "bold",
@@ -10,6 +10,9 @@ export const useStyles = makeStyles()(() => ({
     vinData: {
         fontSize: 20,
         marginBottom: 24,
+        [theme.breakpoints.down("sm")]: {
+            fontSize: 16
+        }
     },
     title: {
         fontSize: 20,
@@ -25,6 +28,17 @@ export const useStyles = makeStyles()(() => ({
         justifyContent: 'flex-end',
         textTransform: 'uppercase',
         fontWeight: 'bold',
+        [theme.breakpoints.down("sm")]: {
+            width: "100%",
+            marginBottom: 40,
+            justifyContent: 'space-between',
+            '& > .MuiFormControlLabel-root': {
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginRight: 0
+            }
+        }
     },
     recallComponent: {
         fontSize: 16,
@@ -33,10 +47,12 @@ export const useStyles = makeStyles()(() => ({
         textTransform: 'uppercase',
     },
     label: {
-        fontWeight: "bold",
+        fontWeight: 600,
+        fontSize: 16,
     },
     data: {
         fontWeight: "normal",
+        fontSize: 16,
     },
     status: {
         color: "red",
@@ -46,15 +62,25 @@ export const useStyles = makeStyles()(() => ({
         justifyContent: "space-between",
         alignItems: "flex-start",
         marginBottom: 20,
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+            gap: 9
+        }
     },
     recallDetailsWrapper: {
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
         gap: 10,
         marginBottom: 20,
+        [theme.breakpoints.down('sm')]: {
+            gridTemplateColumns: "1fr",
+            gap: 6
+        }
     },
     textBox: {
         marginBottom: 20,
+        fontSize: 16,
+        lineHeight: 'normal',
     },
     actionsWrapper: {
         display: "flex",
@@ -71,6 +97,19 @@ export const useStyles = makeStyles()(() => ({
     },
     button: {
         width: 144,
+    },
+    serviceAddedMobile: {
+        width: "100%",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        marginBottom: 40,
+        fontSize: 16,
+    },
+    mobileLabel: {
+        position: 'relative',
     }
 }));
 

@@ -1,12 +1,12 @@
-import React, {useMemo} from 'react';
-import {CustomSwitch, Label, useStyles} from "../styles";
+import React from 'react';
+import {useStyles} from "../styles";
 import dayjs from "dayjs";
-import {Divider} from "@mui/material";
-import {Icon} from "../InfoIcon/InfoIcon";
+import {Divider, useMediaQuery, useTheme} from "@mui/material";
 import {IRecallByVin, TArgCallback} from "../../../../types/types";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
+import AddDeclineSwitcher from "../AddDeclineSwitcher/AddDeclineSwitcher";
 
 type TProps = {
     item: IRecallByVin;
@@ -17,27 +17,11 @@ type TProps = {
 
 const Recall: React.FC<TProps> = ({item, recalls, onAddService, index}) => {
     const {recallsByVin} = useSelector((state: RootState) => state.recalls);
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
-
-    const label =  useMemo(() => !item.isRemedyAvailable
-        ? <>{t("Remedy Not Available")}
-            {item.rolloverMessage?.length ? <Icon item={item}/> : null}
-        </>
-        : recalls.find(el => item.campaignNumber ? el.campaignNumber === item.campaignNumber : el.oemProgram === item.oemProgram)
-            ? <>
-                {t("Service Added")}
-                {item.rolloverMessage?.length ? <Icon item={item}/> : null}
-            </>
-            : <>
-                {t("Service Declined")}
-                {item.rolloverMessage?.length ? <Icon item={item}/> : null}
-            </>, [item, recalls, t])
-
-    const checked = item.isRemedyAvailable && Boolean(recalls.find(el => {
-        return item.campaignNumber ? el.campaignNumber === item.campaignNumber : el.oemProgram === item.oemProgram
-    }))
 
     return (
         <React.Fragment key={item.campaignNumber ?? item.oemProgram}>
@@ -47,35 +31,26 @@ const Recall: React.FC<TProps> = ({item, recalls, onAddService, index}) => {
                         <div className={classes.title}>{index + 1} {t("Recall")}</div>
                         <div className={classes.recallComponent}>{item.shortDescription}</div>
                     </div>
-                    <div className={classes.serviceAddedBtn}>
-                        <Label
-                            style={!item.isRemedyAvailable ? {color: '#FF0000'} : {}}
-                            checked={checked}
-                            onChange={() => item.isRemedyAvailable && onAddService(item)}
-                            label={label}
-                            labelPlacement="start"
-                            control={<CustomSwitch color="primary"/>}
-                        />
-                    </div>
+                    <AddDeclineSwitcher item={item} onAddService={onAddService} recalls={recalls}/>
                 </div>
                 <div className={classes.recallDetailsWrapper}>
                     {item.recallOpenDate
-                        ? <div>
+                        ? <div style={isSm ? {order: -1} : {}}>
                             <div className={classes.label}>{t("Recall Open Date")}</div>
                             <div className={classes.data}>
                                 {dayjs(item.recallOpenDate).format("MMM DD, YYYY")}
                             </div>
                         </div>
                         : null}
-                    <div>
+                    <div style={isSm ? {order: 2} : {}}>
                         <div className={classes.label}>{item.campaignNumber ? t("Campaign Number") : t("Manufacturer Program")}</div>
                         <div className={classes.data}>{item.campaignNumber ?? item.oemProgram ?? ''}</div>
                     </div>
-                    <div>
+                    <div style={isSm ? {order: 1} : {}}>
                         <div className={classes.label}>{t("Recall Component")}</div>
                         <div className={classes.data}>{item.recallComponent}</div>
                     </div>
-                    <div>
+                    <div style={isSm ? {order: 3} : {}}>
                         <div className={classes.label}>{t("Recall Status")}</div>
                         <div className={classes.data}
                              style={{color: 'red'}}>{item.recallStatus}</div>
