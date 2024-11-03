@@ -25,18 +25,12 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
     const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {
         setDemandSlots(prev => {
             const prevItem = prev.find(el => {
-                return el.id && item.id
-                    ? el.id === item.id
-                    : el.start === item.start && el.end === item.end
+                return el.localId === item.localId
             })
             if (prevItem) {
                 const updated = {...prevItem, amount: +value};
                 return prev
-                    .filter(el => {
-                        return el.id && item.id
-                            ? el.id !== item.id
-                            : el.start !== item.start && el.end !== item.end
-                    })
+                    .filter(el => el.localId !== item.localId)
                     .concat(updated)
                     .sort(sortSlots)
             }
@@ -98,4 +92,4 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
     </Table>
 }
 
-export default UnplannedDemandSlots;
+export default React.memo(UnplannedDemandSlots);

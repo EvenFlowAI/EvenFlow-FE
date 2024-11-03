@@ -36,7 +36,9 @@ const DemandInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDem
         }
     }
 
-    const onInputBlur = () => onBlur(item, value)
+    const onInputBlur = () => {
+
+    }
 
     return (
         <TextField
@@ -45,7 +47,7 @@ const DemandInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDem
             inputProps={{
                 min: 0,
             }}
-            // onBlur={onInputBlur}
+            onBlur={onInputBlur}
             onChange={onInputChange}
             className={classes.inputWrapper}/>
     );

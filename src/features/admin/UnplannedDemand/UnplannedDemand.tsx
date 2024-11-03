@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {TableBody, TableHead, Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {loadUnplannedDemand} from "../../../store/reducers/demandSegments/actions";
+import {loadUnplannedDemand, loadUnplannedSlots} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
-import {EDay, IUnplannedDemand} from "../../../store/reducers/demandSegments/types";
+import {EDay, IUnplannedDemand, IUnplannedDemandSlotsRequest} from "../../../store/reducers/demandSegments/types";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import UnplannedDemandEditing from "./UnplannedDemandEditing/UnplannedDemandEditing";
 import {remapSegments} from "./utils";
@@ -31,6 +31,17 @@ export const UnplannedDemand = () => {
             dispatch(loadUnplannedDemand(selectedSC.id, selectedPod?.id));
         }
     }, [dispatch, selectedSC, selectedPod]);
+
+    useEffect(() => {
+        if (selectedSC && editingElement) {
+            const data: IUnplannedDemandSlotsRequest = {
+                serviceCenterId: selectedSC.id,
+                podId: selectedPod?.id,
+                day: editingElement?.day
+            }
+            dispatch(loadUnplannedSlots(data))
+        }
+    }, [selectedSC, editingElement, selectedPod])
 
     const segments: IUnplannedDemand[] = useMemo(() => {
         return remapSegments(unplannedSegments);
