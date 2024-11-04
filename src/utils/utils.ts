@@ -44,11 +44,12 @@ export const getInitials = (name?: string) => {
 
 const defaultException = "Something went wrong";
 export const getAPIException = (e: any): string => {
+    let showId = e?.response?.status === 500;
     return e
-        ? e.response?.data?.id && e.response?.data?.message
+        ? e.response?.data?.id && showId && e.response?.data?.message
             ? `${e.response?.data?.message}. Error identifier: ${e.response?.data?.id}`
             : e.response?.data?.message
-        : e.message && e.id ? `${e.message}. Error identifier: ${e.id}`
+        : e.message && e.id && showId ? `${e.message}. Error identifier: ${e.id}`
             : e.message || defaultException;
 }
 
