@@ -6,10 +6,7 @@ export const SlotsScreenWrapper = styled('div')(({theme}) => ({
         width: "100%",
         alignItems: "stretch",
         justifyContent: "flex-start",
-        gap: "20px",
-        [theme.breakpoints.down('mdl')]: {
-            gap: "12px",
-        },
+        gap: "8px",
         "&>div": {
             border: "1px solid #DADADA",
             padding: "18px 44px",

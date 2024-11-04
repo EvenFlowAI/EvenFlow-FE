@@ -44,7 +44,12 @@ export const getInitials = (name?: string) => {
 
 const defaultException = "Something went wrong";
 export const getAPIException = (e: any): string => {
-    return e ? e.response?.data?.message || e.message || defaultException : defaultException;
+    return e
+        ? e.response?.data?.id && e.response?.data?.message
+            ? `${e.response?.data?.message}. Error identifier: ${e.response?.data?.id}`
+            : e.response?.data?.message
+        : e.message && e.id ? `${e.message}. Error identifier: ${e.id}`
+            : e.message || defaultException;
 }
 
 export const concatAddress = (address?: IAddress, def?: string): string => address
@@ -645,5 +650,10 @@ export const sortAppointments = (a: IRemappedAppointmentSlot, b: IRemappedAppoin
 }
 export const getClearDate = (d: TParsableDate) => {
     const utcOffset = dayjs().utcOffset();
+    return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
+}
+
+export const getClearSVDate = (d: TParsableDate) => {
+    const utcOffset = dayjs(d).utcOffset();
     return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
 }
