@@ -64,7 +64,8 @@ export const useStyles = makeStyles()((theme) => ({
         marginBottom: 20,
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
-            gap: 9
+            gap: 9,
+            marginBottom: 10,
         }
     },
     recallDetailsWrapper: {
@@ -105,7 +106,7 @@ export const useStyles = makeStyles()((theme) => ({
         justifyContent: 'space-between',
         textTransform: 'uppercase',
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 0,
         fontSize: 16,
     },
     mobileLabel: {
