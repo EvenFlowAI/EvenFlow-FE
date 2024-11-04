@@ -193,6 +193,11 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
 
     const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
         if (scProfile) {
+            if (value.length && filteredZipCodes.includes(value)) {
+                if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
+                setFormChecked(false);
+                setZip(value);
+            }
             dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
         }
     }
