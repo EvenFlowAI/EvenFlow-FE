@@ -105,7 +105,7 @@ export const useStyles = makeStyles()((theme) => ({
         justifyContent: 'space-between',
         textTransform: 'uppercase',
         fontWeight: 'bold',
-        marginBottom: 40,
+        marginBottom: 20,
         fontSize: 16,
     },
     mobileLabel: {
