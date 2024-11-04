@@ -46,8 +46,7 @@ const DemandInput: React.FC<TDemandInputProps> = ({setDemandSlots, item}) => {
 
     return (
         <TextField
-            value={item.amount}
-            type="number"
+            value={+item.amount}
             inputProps={{
                 min: 0,
             }}
