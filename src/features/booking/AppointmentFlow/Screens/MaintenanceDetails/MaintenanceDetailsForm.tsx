@@ -212,9 +212,9 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             setErrors(e => e.filter(err => err !== "engineTypeId"))
         }
 
-        const handleTextChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+        const handleVINChange = (name: TKey) => ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
             dispatch(setRecallsAreShown(false));
-            dispatch(updateVehicle({[name]: value.trim()}));
+            dispatch(updateVehicle({[name]: value.trim().toUpperCase()}));
             setErrors(e => e.filter(err => err !== name));
         }
 
@@ -471,7 +471,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                    className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
                                    style={{...orderMapStyles.vin, display: 'grid'}}>
                                 <TextField
-                                    onChange={handleTextChange("vin")}
+                                    onChange={handleVINChange("vin")}
                                     label={recallsToggledOn && !isRecallsCategorySelected
                                         ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
                                         : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`

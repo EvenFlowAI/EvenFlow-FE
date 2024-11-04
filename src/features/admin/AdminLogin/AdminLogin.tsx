@@ -7,15 +7,14 @@ import {LoginTitle} from "../../../components/wrappers/LoginTitle/LoginTitle";
 import {LoginContainer} from "../../../components/styled/LoginContainer";
 import {LoginButton} from "../../../components/styled/LoginButton";
 import {ICredentials} from "../../../types/types";
-import {useSnackbar} from "notistack";
-import {getAPIException} from "../../../utils/utils";
 import {Routes} from "../../../routes/constants";
 import {authService} from "../../../api/AuthService/AuthService";
+import {useException} from "../../../hooks/useException/useException";
 
 export const AdminLogin = () => {
     const [loading, setLoading] = useState(false);
     const [credentials, setCredentials] = useState<ICredentials>({email: '', password: ''});
-    const {enqueueSnackbar} = useSnackbar();
+    const showError = useException();
     const history = useHistory();
     const {state: locationState} = useLocation<{from: string}>();
 
@@ -25,7 +24,7 @@ export const AdminLogin = () => {
 
     const handleLogin = async () => {
         if (!credentials.email || !credentials.password) {
-            enqueueSnackbar("Please fill your credentials", {variant: "error"});
+            showError("Please fill your credentials");
             return;
         }
         setLoading(true);
@@ -35,7 +34,7 @@ export const AdminLogin = () => {
             setLoading(false);
             history.replace(locationState && locationState.from ? locationState.from : Routes.Admin.Appointments);
         } catch (e) {
-            enqueueSnackbar(getAPIException(e), {variant: "error"});
+            showError(e);
             setLoading(false);
         }
     };
