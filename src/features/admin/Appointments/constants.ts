@@ -47,7 +47,7 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
     {
         header: "Customer Name",
         required: true,
-        val: el => el.customerInformation?.fullName ?? "", orderId: "fullName"
+        val: el => el.customerInformation?.fullName ?? "DMS missing customer information", orderId: "fullName"
     },
     {
         header: "Vehicle",
