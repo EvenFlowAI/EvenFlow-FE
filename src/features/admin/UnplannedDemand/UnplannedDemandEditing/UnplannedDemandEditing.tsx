@@ -38,8 +38,10 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
 
     const setInitialData = useCallback(() => {
         const half = Math.ceil(unplannedSlots.length / 2);
-        setSlots1([...unplannedSlots].sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})).slice(0, half));
-        setSlots2([...unplannedSlots].sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})).slice(half));
+        const firstHalf = unplannedSlots.slice(0, half)
+        const secondHalf = unplannedSlots.slice(half)
+        setSlots1(firstHalf.sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})));
+        setSlots2(secondHalf.sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})));
     }, [unplannedSlots])
 
     useEffect(() => {

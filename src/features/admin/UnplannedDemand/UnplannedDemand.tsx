@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadUnplannedDemand, loadUnplannedSlots} from "../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../store/rootReducer";
 import {EDay, IUnplannedDemand, IUnplannedDemandSlotsRequest} from "../../../store/reducers/demandSegments/types";
-import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import UnplannedDemandEditing from "./UnplannedDemandEditing/UnplannedDemandEditing";
 import {remapSegments} from "./utils";
 import {DemandTable} from "../../../components/styled/DemandTable";
@@ -15,10 +14,7 @@ import {useSelectedPod} from "../../../hooks/useSelectedPod/useSelectedPod";
 import dayjs from "dayjs";
 import {UnplannedTableCell} from "./UnplannedDemandSlots/styles";
 
-type TForm = number[];
-
 export const UnplannedDemand = () => {
-    const [form, setForm] = useState<TForm>([]);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [editingElement, setEditingElement] = useState<IUnplannedDemand|null>(null);
     const {selectedSC} = useSCs();
@@ -46,20 +42,12 @@ export const UnplannedDemand = () => {
         }
     }, [selectedSC, editingElement, selectedPod])
 
-    useEffect(() => {
-        setForm(segments.map(s => s.optimizerSetting || 0));
-    }, [segments]);
-
-    const handleChange = (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-        const nForm = [...form];
-        nForm[idx] = Number.isInteger(+e.target.value) ? Number(e.target.value) : Number(Number(e.target.value).toFixed(2));
-        setForm(nForm);
-    }
-
-    const onEdit = async (d: number) => {
+    const onEdit = (d: number) => {
         const el = unplannedSegments.find(item => item.day === d as EDay);
-        if (el) await setEditingElement(el);
-        await setEdit(true);
+        if (el) {
+            setEditingElement(el)
+            setEdit(true);
+        }
     }
 
     return <div style={{overflowX: "auto"}}>
@@ -82,17 +70,7 @@ export const UnplannedDemand = () => {
                             {segments[idx].historicalWalkInScheduleBlocks}
                         </UnplannedTableCell>
                         <UnplannedTableCell>
-                            {!isEdit
-                                ? (segments[idx].optimizerSetting || 0)
-                                : <TextField
-                                    type="number"
-                                    inputProps={{
-                                        min: 0,
-                                    }}
-                                    value={form[idx]}
-                                    onChange={handleChange(idx)}
-                                />
-                            }
+                            {segments[idx].optimizerSetting || 0}
                         </UnplannedTableCell>
                         <UnplannedTableCell>
                             <Button variant="text" color="primary" onClick={() => onEdit(idx)}>Edit</Button>

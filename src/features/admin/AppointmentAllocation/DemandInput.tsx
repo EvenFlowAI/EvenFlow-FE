@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
 import {IUnplannedDemandBySlot} from "../../../store/reducers/demandSegments/types";
 import { makeStyles } from 'tss-react/mui';
 
 import {useException} from "../../../hooks/useException/useException";
+import {sortSlots} from "../UnplannedDemand/utils";
 
 const useStyles = makeStyles()(theme => ({
     inputWrapper: {
@@ -16,28 +17,31 @@ const useStyles = makeStyles()(theme => ({
 
 type TDemandInputProps = {
     item: IUnplannedDemandBySlot;
-    onBlur: (item: IUnplannedDemandBySlot, value: number|string) => void;
+    setDemandSlots: Dispatch<SetStateAction<IUnplannedDemandBySlot[]>>;
 }
 
-const DemandInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDemandInputProps>>> = ({item,onBlur}) => {
-    const [value, setValue] = useState<number|string>(0);
+const DemandInput: React.FC<TDemandInputProps> = ({setDemandSlots, item}) => {
     const showError = useException();
     const { classes } = useStyles();
-    //
-    // useEffect(() => {
-    //     setValue(item.amount)
-    // }, [item])
 
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!Number.isInteger(+e.target.value)) {
             showError('"Unplanned Demand" must be a whole number');
         } else {
-            onBlur(item, e.target.value)
+            setDemandSlots(prev => {
+                const prevItem = prev.find(el => {
+                    return el.localId === item.localId
+                })
+                if (prevItem) {
+                    const updated = {...prevItem, amount: +e.target.value};
+                    const filtered = [...prev].filter(el => el.localId !== item.localId)
+                    const updatedArray = filtered.concat(updated)
+                    return updatedArray.sort(sortSlots)
+                } else {
+                    return prev;
+                }
+            })
         }
-    }
-
-    const onInputBlur = () => {
-
     }
 
     return (
@@ -47,8 +51,7 @@ const DemandInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDem
             inputProps={{
                 min: 0,
             }}
-            onBlur={onInputBlur}
-            onChange={onInputChange}
+            onChange={onChange}
             className={classes.inputWrapper}/>
     );
 };

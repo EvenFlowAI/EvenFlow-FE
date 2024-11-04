@@ -2,7 +2,6 @@ import React, {Dispatch, SetStateAction} from "react";
 import {IUnplannedDemandBySlot} from "../../../../store/reducers/demandSegments/types";
 import {Table, TableBody, TableHead} from "@mui/material";
 import {timeSpanString, time12HourFormat} from "../../../../utils/constants";
-import {sortSlots} from "../utils";
 import DemandInput from "../../AppointmentAllocation/DemandInput";
 import {UnplannedTableCell, useStyles} from "./styles";
 import {TableRow} from "../../../../components/styled/TableRow";
@@ -15,27 +14,12 @@ type TTableProps = {
     withEmptyRow?: boolean;
 }
 
-const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChildren<TTableProps>>> = ({
+const UnplannedDemandSlots: React.FC<TTableProps> = ({
                                                                                                            withEmptyRow,
                                                                                                            slots,
                                                                                                            setDemandSlots
 }) => {
     const { classes  } = useStyles();
-
-    const onChange = (item: IUnplannedDemandBySlot, value: number|string) => {
-        setDemandSlots(prev => {
-            const prevItem = prev.find(el => {
-                return el.localId === item.localId
-            })
-            if (prevItem) {
-                const updated = {...prevItem, amount: +value};
-                const filtered = [...prev].filter(el => el.localId !== item.localId)
-                const updatedArray = filtered.concat(updated)
-                return updatedArray.sort(sortSlots)
-            }
-           return prev;
-        })
-    }
 
     return <Table>
         <TableHead>
@@ -60,22 +44,22 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
             </TableRow>
         </TableHead>
         <TableBody>
-            {slots.map((item, index) => {
-                return <TableRow key={dayjs().toISOString() + index} className={classes.row}>
+            {slots.map((item) => {
+                return <TableRow key={item.localId} className={classes.row}>
                     <UnplannedTableCell
-                        key={item.start}
+                        key={`${item.start}-${item.end}`}
                         style={{textAlign: 'left', padding: '22px 16px'}}
                         className={classes.cell}>
                         {dayjs.utc(item.start, timeSpanString).format(time12HourFormat)}
                     </UnplannedTableCell>
                     <UnplannedTableCell
-                        key={item.end}
+                        key={`${item.end}-${item.start}`}
                         style={{textAlign: 'left', padding: '22px 16px'}}
                         className={classes.cell}>
                         {dayjs.utc(item.end, timeSpanString).format(time12HourFormat)}
                     </UnplannedTableCell>
-                    <UnplannedTableCell className={classes.cell}>
-                        <DemandInput item={item} onBlur={onChange}/>
+                    <UnplannedTableCell className={classes.cell} key={item.localId}>
+                        <DemandInput item={item} setDemandSlots={setDemandSlots}/>
                     </UnplannedTableCell>
                 </TableRow>
             })}
@@ -91,4 +75,4 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
     </Table>
 }
 
-export default React.memo(UnplannedDemandSlots);
+export default UnplannedDemandSlots;
