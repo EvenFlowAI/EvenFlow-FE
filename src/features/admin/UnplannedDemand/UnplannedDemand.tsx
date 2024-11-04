@@ -25,6 +25,9 @@ export const UnplannedDemand = () => {
     const {selectedPod} = useSelectedPod();
     const dispatch = useDispatch();
     const unplannedSegments = useSelector((state: RootState) => state.demandSegments.unplannedDemands);
+    const segments: IUnplannedDemand[] = useMemo(() => {
+        return remapSegments(unplannedSegments);
+    }, [unplannedSegments]);
 
     useEffect(() => {
         if (selectedSC) {
@@ -42,10 +45,6 @@ export const UnplannedDemand = () => {
             dispatch(loadUnplannedSlots(data))
         }
     }, [selectedSC, editingElement, selectedPod])
-
-    const segments: IUnplannedDemand[] = useMemo(() => {
-        return remapSegments(unplannedSegments);
-    }, [unplannedSegments]);
 
     useEffect(() => {
         setForm(segments.map(s => s.optimizerSetting || 0));

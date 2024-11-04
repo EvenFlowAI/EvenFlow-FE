@@ -29,10 +29,9 @@ const UnplannedDemandSlots: React.FC<React.PropsWithChildren<React.PropsWithChil
             })
             if (prevItem) {
                 const updated = {...prevItem, amount: +value};
-                return prev
-                    .filter(el => el.localId !== item.localId)
-                    .concat(updated)
-                    .sort(sortSlots)
+                const filtered = [...prev].filter(el => el.localId !== item.localId)
+                const updatedArray = filtered.concat(updated)
+                return updatedArray.sort(sortSlots)
             }
            return prev;
         })

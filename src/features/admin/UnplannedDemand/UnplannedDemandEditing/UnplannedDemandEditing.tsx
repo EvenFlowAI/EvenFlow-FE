@@ -38,8 +38,8 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
 
     const setInitialData = useCallback(() => {
         const half = Math.ceil(unplannedSlots.length / 2);
-        setSlots1([...unplannedSlots].sort(sortSlots).map((el, i) => ({...el, localId: i * 123})).slice(0, half));
-        setSlots2([...unplannedSlots].sort(sortSlots).map((el, i) => ({...el, localId: i * 123})).slice(half));
+        setSlots1([...unplannedSlots].sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})).slice(0, half));
+        setSlots2([...unplannedSlots].sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})).slice(half));
     }, [unplannedSlots])
 
     useEffect(() => {
@@ -91,8 +91,16 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
                 ? <Loading/>
                 : unplannedSlots.length
                     ?  <div className={classes.tablesWrapper}>
-                        <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1} withEmptyRow={slots1.length < slots2.length}/>
-                        <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2} withEmptyRow={slots2.length < slots1.length}/>
+                        <UnplannedDemandSlots
+                            slots={slots1}
+                            setDemandSlots={setSlots1}
+                            withEmptyRow={slots1.length < slots2.length}
+                        />
+                        <UnplannedDemandSlots
+                            slots={slots2}
+                            setDemandSlots={setSlots2}
+                            withEmptyRow={slots2.length < slots1.length}
+                        />
                     </div>
                     : <div className={classes.text}>
                         <Divider style={{marginBottom: 36}}/>
