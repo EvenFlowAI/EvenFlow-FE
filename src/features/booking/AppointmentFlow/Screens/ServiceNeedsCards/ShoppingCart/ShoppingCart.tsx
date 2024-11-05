@@ -79,6 +79,7 @@ const ShoppingCart = () => {
     }
 
     const deleteService = (item: IMaintenanceItem) => {
+        debugger
         switch (item.type) {
             case 'service':
                 dispatch(deleteIndService(item));
