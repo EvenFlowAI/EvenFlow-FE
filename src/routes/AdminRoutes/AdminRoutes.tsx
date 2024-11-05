@@ -31,7 +31,7 @@ export const AdminRoutes = () => {
                 ? <PrivateRoute path={Routes.Admin.DealershipGroups} exact component={DealershipGroups}/>
                 : null}
             {currentUser.isSuperUser
-                ? <PrivateRoute path={Routes.Admin.Application} exact component={ApplicationRoutes}/>
+                ? <PrivateRoute path={Routes.Admin.Application} component={ApplicationRoutes}/>
                 : null}
             {currentUser.isSuperUser
                 ? <PrivateRoute path={Routes.Admin.ServiceCenters} exact component={ServiceCenters}/>
