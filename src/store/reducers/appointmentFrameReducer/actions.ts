@@ -61,14 +61,17 @@ import {
     mapRecallsForRequest
 } from "../../../utils/utils";
 import {
-    getAppointmentSlots, getServiceValetSlots,
+    getAppointmentSlots,
+    getServiceValetSlots,
     saveCustomerCache,
     selectAppointment,
     selectServiceValetAppointment,
     selectSR,
     selectSRMultiple,
     setAppointmentWasChanged,
-    setCustomerLoadedData, setSlotsSearchDate, setSlotsServiceTypeOptionId,
+    setCustomerLoadedData,
+    setSlotsSearchDate,
+    setSlotsServiceTypeOptionId,
     setWaitListSettings
 } from "../appointment/actions";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -718,23 +721,26 @@ export const deleteRecall = (item: IMaintenanceItem): AppThunk => (dispatch, get
         sideBarSteps,
         serviceTypeOption
     } = getState().appointmentFrame
+    const {allCategories} = getState().categories;
     const recalls = selectedRecalls.filter(el => el.campaignNumber !== item.campaignNumber)
     const serviceType = serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter
+    const selectedCategories = allCategories.filter(el => categoriesIds.includes(el.id))
     item.campaignNumber && dispatch(setSelectedRecalls(recalls))
 
     if (!recalls.length) {
         dispatch(setRecallsAreShown(false));
-        if (service?.type === EServiceCategoryType.OpenRecalls || subService?.type === EServiceCategoryType.OpenRecalls) {
+        const openRecallCategory = selectedCategories.find(el => el.type === EServiceCategoryType.OpenRecalls)
+        if (openRecallCategory) {
             let filteredCategories = [];
+            if (openRecallCategory) {
+                filteredCategories = categoriesIds.filter(id => id !== openRecallCategory?.id);
+                dispatch(selectCategoriesIds(filteredCategories));
+            }
             if (service?.type === EServiceCategoryType.OpenRecalls) {
                 dispatch(selectService(null));
-                filteredCategories = categoriesIds.filter(id => id !== service?.id);
-                dispatch(selectCategoriesIds(filteredCategories));
             }
             if (subService?.type === EServiceCategoryType.OpenRecalls) {
                 dispatch(selectSubService(null));
-                filteredCategories = categoriesIds.filter(id => id !== subService?.id)
-                dispatch(selectCategoriesIds(filteredCategories));
             }
             if (sideBarSteps?.length) {
                 dispatch(setSideBarSteps(serviceType === EServiceType.VisitCenter ? ["serviceNeeds"] : ["location", "serviceNeeds"]));
