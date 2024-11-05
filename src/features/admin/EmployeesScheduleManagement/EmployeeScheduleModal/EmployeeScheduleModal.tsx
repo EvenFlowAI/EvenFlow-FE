@@ -194,17 +194,26 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                 const utcOffset = dayjs().utcOffset()
                 const start = dayjs(startDate).startOf("day").add(utcOffset, 'minute').format(CALENDAR_FORMAT)
                 const end = dayjs(endDate).endOf("day").subtract(utcOffset, 'minute').format(CALENDAR_FORMAT)
+                const ids = currentSchedule.map(el => el.id);
+                const filtered = sorted.filter(el => !ids.includes(el.id))
+                const filteredData = filtered.map(({isOnSchedule, employeeId, startAt, finishAt}) => ({
+                    isOnSchedule,
+                    employeeId,
+                    startAt,
+                    finishAt
+                }))
+                const currentData = currentSchedule.map(
+                    ({isOnSchedule, employeeId, startAt, finishAt}) => ({
+                        isOnSchedule,
+                        employeeId,
+                        startAt,
+                        finishAt
+                    }))
                 const data: IUpdateByDateRequest = {
                     date: dayjs(date).format(CALENDAR_FORMAT),
                     serviceCenterId: selectedSC.id,
                     isSetForWeek: isForWeek,
-                    employeeScheduledHours: currentSchedule.map(
-                        ({isOnSchedule, employeeId, startAt, finishAt}) => ({
-                            isOnSchedule,
-                            employeeId,
-                            startAt,
-                            finishAt
-                        }))
+                    employeeScheduledHours: [...filteredData, ...currentData],
                 }
                 dispatch(updateScheduleByDate(data, start, end, onCancel, onError))
             }
