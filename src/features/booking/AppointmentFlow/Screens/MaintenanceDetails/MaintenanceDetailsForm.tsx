@@ -43,7 +43,7 @@ type TMaintenanceDetailsProps = {
 const blankOptions: TOptionsState = {};
 
 const checkVin = (vin: string) => {
-    return vin.length === 17 && vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm)
+    return vin && vin.length === 17 && vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm)
 }
 
 export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>> =
