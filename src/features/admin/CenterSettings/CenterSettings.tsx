@@ -58,7 +58,7 @@ const CenterSettings = () => {
         switch (k) {
             case ECenterSettingType.DmsAppointmentTime:
                 return centerSettings?.dmsAppointmentTime
-                    ? dayjs.utc(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('HH:mm a')
+                    ? dayjs.utc(centerSettings?.dmsAppointmentTime, "HH:mm:ss").format('hh:mm a')
                     : 'Not Selected';
             default:
                 return centerSettings?.showDropOffTime ? "Yes" : "No";
