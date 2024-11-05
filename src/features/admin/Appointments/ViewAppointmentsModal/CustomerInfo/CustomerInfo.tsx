@@ -10,7 +10,7 @@ export const CustomerInfo:React.FC<React.PropsWithChildren<React.PropsWithChildr
         <div>
             <TitleWrapper>Customer Information</TitleWrapper>
             <DetailsItem
-                title={payload.customerInformation?.fullName ?? ''}
+                title={payload.customerInformation ? payload.customerInformation?.fullName ?? '' : 'DMS missing Customer Information'}
                 text={`${payload.customerInformation?.email ?? ''} ${payload.customerInformation?.phoneNumber ?? ''}`}/>
             {payload.customerInformation?.dmsId
                 ? <Title>Customer ID: {payload.customerInformation?.dmsId}</Title>
