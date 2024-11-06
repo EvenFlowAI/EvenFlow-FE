@@ -1,11 +1,11 @@
 import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 import {
     IUnplannedDemand,
-    IUnplannedDemandBySlot, IUnplannedDemandSlotsRequest
+    IUnplannedDemandBySlot
 } from "../../../../store/reducers/demandSegments/types";
 import UnplannedDemandSlots from "../UnplannedDemandSlots/UnplannedDemandSlots";
 import {useDispatch, useSelector} from "react-redux";
-import {changeUnplannedSlots, loadUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
+import {changeUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {Divider} from "@mui/material";
@@ -17,6 +17,7 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
 import dayjs from "dayjs";
+import {sortSlots} from "../utils";
 
 type TUnplannedDemandEditingProps = {
     isEdit: boolean;
@@ -35,21 +36,12 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
     const showError = useException();
     const showMessage = useMessage();
 
-    useEffect(() => {
-        if (selectedSC && editingElement) {
-            const data: IUnplannedDemandSlotsRequest = {
-                serviceCenterId: selectedSC.id,
-                podId: selectedPod?.id,
-                day: editingElement?.day
-            }
-            dispatch(loadUnplannedSlots(data))
-        }
-    }, [selectedSC, editingElement, selectedPod])
-
     const setInitialData = useCallback(() => {
         const half = Math.ceil(unplannedSlots.length / 2);
-        setSlots1(unplannedSlots.slice(0, half));
-        setSlots2(unplannedSlots.slice(half));
+        const firstHalf = unplannedSlots.slice(0, half)
+        const secondHalf = unplannedSlots.slice(half)
+        setSlots1(firstHalf.sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})));
+        setSlots2(secondHalf.sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})));
     }, [unplannedSlots])
 
     useEffect(() => {
@@ -99,10 +91,18 @@ const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithCh
             </div>
             {isSlotsLoading
                 ? <Loading/>
-                : slots1.length
+                : unplannedSlots.length
                     ?  <div className={classes.tablesWrapper}>
-                        <UnplannedDemandSlots slots={slots1} setDemandSlots={setSlots1} withEmptyRow={slots1.length < slots2.length}/>
-                        <UnplannedDemandSlots slots={slots2} setDemandSlots={setSlots2} withEmptyRow={slots2.length < slots1.length}/>
+                        <UnplannedDemandSlots
+                            slots={slots1}
+                            setDemandSlots={setSlots1}
+                            withEmptyRow={slots1.length < slots2.length}
+                        />
+                        <UnplannedDemandSlots
+                            slots={slots2}
+                            setDemandSlots={setSlots2}
+                            withEmptyRow={slots2.length < slots1.length}
+                        />
                     </div>
                     : <div className={classes.text}>
                         <Divider style={{marginBottom: 36}}/>
