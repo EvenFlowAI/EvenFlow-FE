@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useMemo} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo} from 'react';
 import {StyledEngineProvider, ThemeProvider, useMediaQuery, useTheme} from "@mui/material";
 import {frameTheme} from "../../../theme/theme";
 import {Container, SidebarWrapper} from "./styles";
@@ -15,7 +15,6 @@ import {TCallback, TScreen} from "../../../types/types";
 import {useTranslation} from "react-i18next";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {
-    checkCarIsValid, loadConsultants,
     loadMakes,
     setCurrentFrameScreen,
     setTrackerCreated,
@@ -54,21 +53,14 @@ const AppointmentFlow: React.FC<TProps> = ({
                                            setNeedToShowServiceTypes,
                                                isManaging
                                        }) => {
-    const {customerLoadedData, selectedSR} = useSelector((state: RootState) => state.appointment);
-    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {
-        selectedVehicle,
         trackerData,
         valueService,
         currentScreen: currentFrameScreen,
         serviceTypeOption,
         hashKey,
-        selectedPackage,
-        selectedRecalls,
-        categoriesIds,
-        address,
-        zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
@@ -92,18 +84,6 @@ const AppointmentFlow: React.FC<TProps> = ({
         dispatch(loadMakes(decodeSCID(id)));
         dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName]))
     }, [id])
-
-    const onCarIsValid = useCallback(() => {
-        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
-        const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
-        if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
-            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
-        }
-    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
-
-    useEffect(() => {
-        dispatch(checkCarIsValid(onCarIsValid, undefined, true))
-    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage])
 
     useEffect(() => {
         if (serviceType === EServiceType.MobileService && !customerLoadedData?.vehicles?.length && !valueService?.selectedService) {
@@ -156,7 +136,7 @@ const AppointmentFlow: React.FC<TProps> = ({
 
     useEffect(() => {
         dispatch(loadMileage(decodeSCID(id)));
-    }, [id, selectedVehicle])
+    }, [id])
 
     useEffect(() => {
         setNeedToShowServiceTypes(Boolean(firstScreenOptions.length) && !onlyVisitCenterOptionExists && !hashKey?.length);
