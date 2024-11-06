@@ -18,8 +18,10 @@ import {EPricingDisplayType} from "../../../../../store/reducers/pricingSettings
 export const dateTimeFormat = "ddd, MMM DD, YYYY h:mm a"
 
 export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWithChildren<{payload: IAppointment}>>> = ({payload}) => {
-    const shouldHidePrice = payload.servicesRequested
-        .find(el => el.pricingDisplayType === EPricingDisplayType.Suppressed);
+    const hasHiddenPrice = payload.detailedPriceList
+        ? payload.detailedPriceList.find(el => el.pricingDisplayType === EPricingDisplayType.Suppressed || !el.priceValue)
+        : payload.servicesRequested.find(el => el.pricingDisplayType === EPricingDisplayType.Suppressed);
+
     return (
             <div>
                     <TitleWrapper>Appointment Details</TitleWrapper>
@@ -52,7 +54,7 @@ export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWit
                     />
                     <DetailsItem
                         title="Total"
-                        text={payload.totalValue && !shouldHidePrice ? `$${payload.totalValue}` : ''}
+                        text={payload.totalValue && !hasHiddenPrice ? `$${payload.totalValue}` : ''}
                         icon={<Price/>}
                         key="Total"
                     />
