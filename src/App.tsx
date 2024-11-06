@@ -30,11 +30,13 @@ const App = () => {
 
     const onFocus = useCallback(() => {
         const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
-        const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day')
+        const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day');
         if (isBefore && itIsTimeToReload) {
             localStorage.setItem('timestamp', dayjs().utc(true).toISOString())
             history.go(0)
         }
+    }, [history, lastLoadingTime])
+
     useEffect(() => {
         try {
             const config: AwsRumConfig = {
