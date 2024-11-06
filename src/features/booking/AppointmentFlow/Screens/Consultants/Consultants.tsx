@@ -3,6 +3,7 @@ import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {ActionButtons} from '../../../ActionButtons/ActionButtons';
 import {IServiceConsultant} from '../../../../../api/types';
 import {
+    checkCarIsValid,
     loadConsultants,
     setSideBarActualSteps,
     setSideBarMenu,
@@ -46,9 +47,13 @@ export const Consultants: React.FC<TProps> = ({isManagingFlow, handleNext, handl
         serviceTypeOption,
         packageEMenuType,
         isConsultantsLoading,
+        selectedRecalls,
+        address,
+        zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {selectedSR} = useSelector((state: RootState) => state.appointment);
+    const {selectedSR, customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {allCategories} = useSelector((state: RootState) => state.categories);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable} = useSelector((state: RootState) => state.bookingFlowConfig);
     const dispatch = useDispatch();
     const {id} = useParams<{id: string}>();
@@ -67,9 +72,21 @@ export const Consultants: React.FC<TProps> = ({isManagingFlow, handleNext, handl
             .map(item => item.id)
     }, [allCategories, EServiceCategoryType, categoriesIds])
 
+    const onCarIsValid = useCallback(() => {
+        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
+        const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
+        if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
+            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+        }
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
+
     useEffect(() => {
-        dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
-    }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
+        dispatch(checkCarIsValid(onCarIsValid, undefined, true))
+    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage])
+
+    // useEffect(() => {
+    //     dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext))
+    // }, [id, serviceRequestIds, selectedVehicle, getCategories, mapRecallsForRequest, packageEMenuType, packagePricingType, selectedPackage, serviceTypeOption])
 
     useEffect(() => {
         dispatch(setSideBarMenu(getCurrentMenu(serviceType, isAdvisorAvailable, isTransportationAvailable, Boolean(isManagingFlow))))
