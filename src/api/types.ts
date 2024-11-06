@@ -262,31 +262,38 @@ export type TServiceRequested = {
     pricingDisplayType?: EPricingDisplayType;
 }
 
+export type TDetailedPrice = {
+    requestName: string;
+    pricingDisplayType: EPricingDisplayType;
+    priceValue?: number;
+}
+
 export interface IAppointment {
     id: number;
     hashKey: string;
+    address?: IAddressData;
+    advisor?: string;
+    ancillaryPrice: number;
     appointmentNumber: string;
     appointmentStatus: AppointmentStatus;
-    reportingStatus: EReportingStatus;
     createdDateTime: TParsableDate;
-    dateTime: TParsableDate;
     customerInformation?: IAppointmentCustomerInfo;
-    vehicle?: IAppointmentVehicle;
-    serviceBook: TServiceBook;
-    servicesRequested: TServiceRequested[];
+    dateTime: TParsableDate;
+    detailedPriceList?: TDetailedPrice[];
+    estimatedMileage?: string;
     isDefaultRecall: boolean;
-    serviceOption?: string;
-    totalValue: number;
-    ancillaryPrice: number;
-    advisor?: string;
-    transportation?: string;
-    address?: IAddressData;
-    notes?: string;
-    scheduler: TScheduler;
     isEditable: boolean;
     modificationInfo: TDateAppointmentData[];
+    notes?: string;
+    reportingStatus: EReportingStatus;
+    scheduler: TScheduler;
+    serviceBook: TServiceBook;
+    serviceOption?: string;
+    servicesRequested: TServiceRequested[];
     technician?: string;
-    estimatedMileage?: string;
+    totalValue: number;
+    transportation?: string;
+    vehicle?: IAppointmentVehicle;
 }
 
 export interface IServiceCategoryShort {
