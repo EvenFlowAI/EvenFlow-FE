@@ -5,7 +5,7 @@ import {
     DialogTitle
 } from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
-import {Autocomplete, Button} from "@mui/material";
+import {Autocomplete, Button, useMediaQuery, useTheme} from "@mui/material";
 import {TCallback} from "../../../../types/types";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,6 +21,8 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
     const {currentAppointment} = useSelector((state: RootState) => state.appointments);
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const theme = useTheme()
+    const isSm = useMediaQuery(theme.breakpoints.down("sm"))
     const [value, setValue] = useState<string>('')
 
     useEffect(() => {
@@ -68,8 +70,15 @@ const MileageModal: React.FC<DialogProps & {onSave: TCallback, isAdminPanel?: bo
                 </div>
             </DialogContent>
             <BfButtonsWrapper>
-                <Button onClick={onCancel} variant="outlined">{t("Cancel")}</Button>
-                <Button onClick={handleSave} variant="contained" color="info" disabled={!value}>{t("Next")}</Button>
+                <Button onClick={onCancel} variant="outlined" style={isSm ? {marginBottom: 0} : {}}>{t("Cancel")}</Button>
+                <Button
+                    onClick={handleSave}
+                    variant="contained"
+                    color="info"
+                    disabled={!value}
+                    style={isSm ? {order: -1, marginBottom: 12} : {}}>
+                    {t("Next")}
+                </Button>
             </BfButtonsWrapper>
         </BaseModal>
     );

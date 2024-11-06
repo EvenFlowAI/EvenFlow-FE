@@ -47,7 +47,7 @@ const AncillaryPriceModal: React.FC<React.PropsWithChildren<React.PropsWithChild
 
     const serviceString = serviceType === EServiceType.MobileService
         ? t("Mobile Service")
-        : t("Pick Up / Drop Off Service");
+        : t("Pick Up / Drop Off");
 
     const restorePrevData = () => {
         if (appointmentByKey?.address) dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
