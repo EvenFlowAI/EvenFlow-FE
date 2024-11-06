@@ -128,6 +128,7 @@ const EmployeesTableMobile:React.FC<React.PropsWithChildren<React.PropsWithChild
                         {employeesList.map((item, idx) => {
                             const isOpened = item.id === expandedItem?.id;
                             return <EmployeeTableRow
+                                key={item.id}
                                 isOpened={isOpened}
                                 item={item}
                                 idx={idx}

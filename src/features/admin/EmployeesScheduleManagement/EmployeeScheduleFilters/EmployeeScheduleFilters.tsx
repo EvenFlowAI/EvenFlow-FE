@@ -45,7 +45,7 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({isLoading, filters, setFilte
             justifyContent="space-between"
             alignItems='flex-start'
             marginBottom={2}>
-            <Grid item xs={4} key="service book">
+            <Grid item xs={12} sm={4} key="service book">
                 <Autocomplete
                     renderInput={autocompleteRender({
                         label: "Service Book",
@@ -58,7 +58,7 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({isLoading, filters, setFilte
                     options={serviceBooksList}
                 />
             </Grid>
-            <Grid item xs={4} key="role">
+            <Grid item xs={12} sm={4} key="role">
                 <Autocomplete
                     renderInput={autocompleteRender({
                         label: "Role",
@@ -71,7 +71,7 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({isLoading, filters, setFilte
                     options={rolesList}
                 />
             </Grid>
-            <Grid item xs={4} key="name">
+            <Grid item xs={12} sm={4} key="name">
                 <SearchDebounced
                     label="Name"
                     fullWidth

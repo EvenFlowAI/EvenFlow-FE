@@ -113,6 +113,7 @@ export function Table<U>({changeRowsPerPageCb, changePageCb, ...props}: ITablePr
                                         {...styleProps}
                                         width={cellData.width}
                                         style={{ width: cellData.width}}
+                                        verticalAlign={cellData.verticalAlign || "middle"}
                                         align={cellData.align || "left"}
                                         key={`${rIdx}_${cIdx}`}>
                                         {cellData.val(row, idx) || '-'}
