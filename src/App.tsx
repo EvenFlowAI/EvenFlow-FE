@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import './App.css';
 import {Container, IconButton, useMediaQuery, useTheme} from '@mui/material';
 import {useHistory} from 'react-router-dom';
@@ -28,6 +28,15 @@ const App = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("mdl"));
     const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
 
+    const onFocus = useCallback(() => {
+        const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
+        const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day');
+        if (isBefore && itIsTimeToReload) {
+            localStorage.setItem('timestamp', dayjs().utc(true).toISOString())
+            history.go(0)
+        }
+    }, [history, lastLoadingTime])
+
     useEffect(() => {
         try {
             const config: AwsRumConfig = {
@@ -55,15 +64,9 @@ const App = () => {
     }, [])
 
     useEffect(() => {
-        window.addEventListener('focus', () => {
-            const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
-            const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day')
-            if (isBefore && itIsTimeToReload) {
-                localStorage.setItem('timestamp', dayjs().utc(true).toISOString())
-                history.go(0)
-            }
-        })
-    }, [lastLoadingTime, history])
+        window.addEventListener('focus', onFocus)
+        window.addEventListener('online', () => history.go(0))
+    }, [lastLoadingTime, history, onFocus])
 
     useEffect(() => {
         const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
