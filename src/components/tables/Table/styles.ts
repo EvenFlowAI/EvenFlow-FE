@@ -16,11 +16,11 @@ export type TStyleProps = {
 export const StyledTableCell = styled(TableCell, {
     shouldForwardProp: (prop) => prop !== "compact" && prop !== "smallHeaderFont"
         && prop !== "superCompact" && prop !== "borderHeader" && prop !== "withBorders"
-    && prop !== "compactBodyPadding" && prop !== "verticalAlign" && prop !== "verticalPadding"
-})<TStyleProps>(({theme, compact, compactBodyPadding, verticalPadding, superCompact, withBorders}) => ({
+    && prop !== "compactBodyPadding" && prop !== "verticalPadding"
+})<TStyleProps>(({theme, compact, compactBodyPadding, verticalPadding, superCompact, withBorders, verticalAlign}) => ({
     fontSize: 16,
     border: withBorders ? '1px solid #DADADA' : "none",
-    // borderBottomColor: "#000000",
+    verticalAlign: verticalAlign,
     padding: compact || compactBodyPadding ? compactPadding : superCompact ? superCompactPadding : verticalPadding ? `${verticalPadding}px 16px`: cellPadding,
     [theme.breakpoints.down('sm')]: {
         fontSize: 12,

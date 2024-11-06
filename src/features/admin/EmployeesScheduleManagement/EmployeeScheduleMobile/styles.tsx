@@ -24,7 +24,7 @@ export const useStyles = makeStyles()(() => ({
 
 export const Row = styled('div')({
     display: 'grid',
-    gridTemplateColumns: '3fr 4fr 2fr',
+    gridTemplateColumns: '6fr 4fr 2fr',
     fontSize: 16,
 })
 
@@ -38,10 +38,17 @@ export const SubCell = styled('div')({
     padding: '8px 8px'
 })
 
+export const SubCellFlex = styled(SubCell)({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+})
+
+
 export const BtnsCell = styled('div')({
     display: 'flex',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     padding: '16px 8px'
 })
 
@@ -59,7 +66,7 @@ export const SubText = styled('div')({
 
 export const SubCellWrapper = styled('div')({
     display: 'grid',
-    gridTemplateColumns: '7fr 2fr'
+    gridTemplateColumns: '1fr'
 })
 
 export const Menu = styled('div')({
@@ -70,22 +77,6 @@ export const Menu = styled('div')({
 export const MenuItem = styled('div')({
     padding: 16,
     fontSize: 18,
-})
-
-export const TitleRow = styled('div')({
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    color: "#858585",
-    '& > div': {
-        fontWeight: 700,
-        fontSize: 14,
-        padding: '16px 8px'
-    },
-    '& > div:first-child': {
-        display: 'flex',
-        alignItems: "center",
-        gap: 4
-    }
 })
 
 export const Wrapper = styled('div')({

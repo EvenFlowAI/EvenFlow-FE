@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useStyles = makeStyles()((theme) => ({
     buttonsWrapper: {
         display: 'flex',
@@ -10,11 +9,17 @@ export const useStyles = makeStyles()((theme) => ({
             marginRight: 20,
         },
         [theme.breakpoints.down('md')]: {
-            flexDirection: "column",
+            width: '100%',
+            flexDirection: "column-reverse",
+            "& > div": {
+                width: '100%'
+            },
+            "& > div:last-child": {
+                marginBottom: 20,
+            },
             "& > div:first-child": {
                 marginRight: 0,
-                marginBottom: 20,
-            }
+            },
         },
     },
     wrapper: {

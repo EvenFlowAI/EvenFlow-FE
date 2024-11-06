@@ -15,8 +15,8 @@ export const remapSegments = (sl: IUnplannedDemand[]): IUnplannedDemand[] => {
     })
 }
 
-export const sortSlots = (slots: IUnplannedDemandBySlot[]): IUnplannedDemandBySlot[] => {
-    return slots.sort((a, b) => {
-        return dayjs(a.start, timeSpanString).diff(dayjs(b.start, timeSpanString)) > 0 ? 1 : -1
-    })
+export const sortSlots = (a: IUnplannedDemandBySlot, b: IUnplannedDemandBySlot): number => {
+    const startDiff = dayjs(a.start, timeSpanString).diff(dayjs(b.start, timeSpanString));
+    const endDiff = dayjs(a.end, timeSpanString).diff(dayjs(b.end, timeSpanString));
+    return startDiff > 0 || endDiff > 0 ? 1 : -1
 }

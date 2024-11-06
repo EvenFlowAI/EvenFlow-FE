@@ -3,7 +3,7 @@ import {BaseModal, DialogTitle} from "../../../../../../components/modals/BaseMo
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {LoadingButton} from "../../../../../../components/buttons/LoadingButton/LoadingButton";
-import {BfButtonsWrapper} from "../../../../../../components/styled/BfButtonsWrapper";
+import {BtnsWrapper} from "./styles";
 
 type TConfirmProps = DialogProps & {
     onSave: () => void;
@@ -20,7 +20,7 @@ const ConfirmChangeOption: React.FC<React.PropsWithChildren<React.PropsWithChild
             <DialogTitle onClose={props.onClose}>
                 {t("Do you want to change the selected Package Option?")}
             </DialogTitle>
-            <BfButtonsWrapper>
+            <BtnsWrapper>
                     <LoadingButton
                         loading={false}
                         onClick={props.onClose}
@@ -35,7 +35,7 @@ const ConfirmChangeOption: React.FC<React.PropsWithChildren<React.PropsWithChild
                         variant="contained">
                         {t("Yes")}
                     </LoadingButton>
-            </BfButtonsWrapper>
+            </BtnsWrapper>
         </BaseModal>
     );
 };

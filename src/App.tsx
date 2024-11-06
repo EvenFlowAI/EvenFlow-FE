@@ -13,6 +13,7 @@ import {TScreen} from "./types/types";
 import AppRoutes from "./routes/AppRoutes/AppRoutes";
 import dayjs from "dayjs";
 import {disableEmotionWarning} from "./utils/utils";
+import {AwsRum, AwsRumConfig} from "aws-rum-web";
 
 const App = () => {
     const {scProfile, isTopAligning} = useSelector((state: RootState) => state.appointment);
@@ -26,6 +27,32 @@ const App = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("mdl"));
     const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
+
+    useEffect(() => {
+        try {
+            const config: AwsRumConfig = {
+                sessionSampleRate: 1,
+                identityPoolId: "us-east-2:1ca03bba-7ffe-45d6-907c-fc07756be173",
+                endpoint: "https://dataplane.rum.us-east-2.amazonaws.com",
+                telemetries: ["performance","errors"],
+                allowCookies: false,
+                enableXRay: false
+            };
+
+            const APPLICATION_ID: string = '732ce6df-a19e-43e4-9638-d5ff3cd49b3b';
+            const APPLICATION_VERSION: string = '1.0.0';
+            const APPLICATION_REGION: string = 'us-east-2';
+
+            const awsRum: AwsRum = new AwsRum(
+                APPLICATION_ID,
+                APPLICATION_VERSION,
+                APPLICATION_REGION,
+                config
+            );
+        } catch (error) {
+            // Ignore errors thrown during CloudWatch RUM web client initialization
+        }
+    }, [])
 
     useEffect(() => {
         window.addEventListener('focus', () => {

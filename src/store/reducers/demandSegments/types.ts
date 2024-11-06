@@ -47,6 +47,7 @@ export interface IUnplannedDemandBySlot {
     start: string;
     end: string;
     amount: number|string;
+    localId?: number;
 }
 
 export interface IUnplannedDemandRequest {

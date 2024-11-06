@@ -19,6 +19,9 @@ export const useStyles = makeStyles()(theme => ({
         display: 'flex',
         justifyContent: 'center',
         marginBottom: 30,
+        '& > div:first-child': {
+            marginRight: 12
+        },
         [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
             flexDirection: 'column',
             '& > div': {
@@ -29,7 +32,8 @@ export const useStyles = makeStyles()(theme => ({
                 }
             },
             '& > div:first-child': {
-                marginBottom: 12
+                marginBottom: 12,
+                marginRight: 0
             },
         }
     }

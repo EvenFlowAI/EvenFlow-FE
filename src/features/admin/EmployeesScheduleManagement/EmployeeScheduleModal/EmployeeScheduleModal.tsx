@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {TableRowDataType, TParsableDate} from "../../../../types/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import dayjs from "dayjs";
-import {Switch} from "@mui/material";
+import {Switch, useMediaQuery, useTheme} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {IScheduleByDate, IUpdateByDateRequest} from "../../../../store/reducers/schedules/types";
@@ -22,6 +22,8 @@ import {TFilters} from "../types";
 import {compareName} from "./utils";
 import {initialFilters} from "./constants";
 import TimeBlock from "./TimeBlock/TimeBlock";
+import EmployeeScheduleTableMobile from "../EmployeeScheduleMobile/EmployeeScheduleTableMobile";
+import {OneRowButtonsWrapper} from "../../../../components/styled/OneRowButtonsWrapper";
 
 type TProps = DialogProps & {date: TParsableDate, disabledDate: boolean, startDate?: TParsableDate, endDate?: TParsableDate}
 
@@ -44,6 +46,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const {selectedSC} = useSCs();
     const dispatch = useDispatch();
     const showError = useException()
+    const theme = useTheme();
+    const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
     const {classes} = useActionButtonsStyles();
 
     const schedule = useMemo(() => {
@@ -120,18 +125,22 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     const rowData: TableRowDataType<IScheduleByDate>[] = [
         {
             header: "Employee",
-            val: el => el.employeeName
+            val: el => el.employeeName,
+            verticalAlign: isTablet ? "top" : "middle",
         },
         {
             header: "Role",
-            val: el => el.role
+            val: el => el.role,
+            verticalAlign: isTablet ? "top" : "middle",
         },
         {
-            header: "Service Books",
-            val: el => el.serviceBooks.join(', ')
+            header: "Service Book",
+            val: el => el.serviceBooks.join(', '),
+            verticalAlign: isTablet ? "top" : "middle",
         },
         {
             header: "On Schedule",
+            verticalAlign: isTablet ? "top" : "middle",
             val: el => {
                 return <SwitcherWrapper>
                     <SwitcherLabel>NO</SwitcherLabel>
@@ -147,6 +156,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         },
         {
             header: "Scheduled Hours",
+            verticalAlign: isTablet ? "top" : "middle",
             val: el => <TimeBlock
                 onTimeChange={onTimeChange}
                 el={el}
@@ -223,9 +233,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     }
 
     return (
-        <BaseModal open={open} onClose={onCancel} width={1050}>
-            <DialogTitle onClose={onCancel}>Employee Schedule: {dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
-            <DialogContent style={{padding: "12px 32px"}}>
+        <BaseModal open={open} onClose={onCancel} width={isTablet ? 987 : 1050}>
+            <DialogTitle onClose={onCancel}>Employee Schedule: {isMobile ? <br/> : null}{dayjs(date).format("dddd, MMMM D, YYYY")}</DialogTitle>
+            <DialogContent style={{padding: isMobile ? 16 : "12px 32px"}}>
                 {loading || isLoading || employeesLoading
                     ? <Loading/>
                     :  <>
@@ -233,12 +243,22 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                             isLoading={employeesLoading || loading || isLoading}
                             filters={filters}
                             setFilters={setFilters}/>
-                        <Table<IScheduleByDate>
-                            data={currentSchedule}
-                            index={"id"}
-                            isLoading={employeesLoading || loading || isLoading}
-                            hidePagination
-                            rowData={rowData}/>
+                        {isMobile
+                            ? <EmployeeScheduleTableMobile
+                                currentSchedule={currentSchedule}
+                                disabledDate={disabledDate}
+                                handleSwitch={handleSwitch}
+                                onTimeChange={onTimeChange}
+                                schedule={schedule}
+                                formIsChecked={formIsChecked}
+                            />
+                            : <Table<IScheduleByDate>
+                                data={currentSchedule}
+                                verticalAlign="top"
+                                index={"id"}
+                                isLoading={employeesLoading || loading || isLoading}
+                                hidePagination
+                                rowData={rowData}/>}
                     </>}
                 {/*<FormControlLabel*/}
                 {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
@@ -253,27 +273,44 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                 {/*    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>*/}
 
             </DialogContent>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <LoadingButton
-                            loading={employeesLoading || loading}
-                            onClick={onCancel}
-                            variant="text"
-                            style={{marginRight: 20}}
-                            color="info">
-                            Close
-                        </LoadingButton>
-                        <LoadingButton
-                            loading={employeesLoading || loading}
-                            onClick={onSave}
-                            disabled={disabledDate}
-                            className={classes.saveButton}>
-                            Save
-                        </LoadingButton>
-                    </div>
-                </div>
-            </DialogActions>
+            <OneRowButtonsWrapper>
+                <LoadingButton
+                    loading={employeesLoading || loading}
+                    onClick={onCancel}
+                    variant="text"
+                    style={{marginRight: 20}}
+                    color="info">
+                    Close
+                </LoadingButton>
+                <LoadingButton
+                    loading={employeesLoading || loading}
+                    onClick={onSave}
+                    disabled={disabledDate}
+                    className={classes.saveButton}>
+                    Save
+                </LoadingButton>
+            </OneRowButtonsWrapper>
+            {/*<DialogActions>*/}
+            {/*    <div className={classes.wrapper}>*/}
+            {/*        <div className={classes.buttonsWrapper}>*/}
+            {/*            <LoadingButton*/}
+            {/*                loading={employeesLoading || loading}*/}
+            {/*                onClick={onCancel}*/}
+            {/*                variant="text"*/}
+            {/*                style={{marginRight: 20}}*/}
+            {/*                color="info">*/}
+            {/*                Close*/}
+            {/*            </LoadingButton>*/}
+            {/*            <LoadingButton*/}
+            {/*                loading={employeesLoading || loading}*/}
+            {/*                onClick={onSave}*/}
+            {/*                disabled={disabledDate}*/}
+            {/*                className={classes.saveButton}>*/}
+            {/*                Save*/}
+            {/*            </LoadingButton>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</DialogActions>*/}
         </BaseModal>
     );
 };
