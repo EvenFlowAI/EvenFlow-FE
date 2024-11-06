@@ -54,7 +54,7 @@ export const AppointmentDetails: React.FC<React.PropsWithChildren<React.PropsWit
                     />
                     <DetailsItem
                         title="Total"
-                        text={payload.totalValue && !hasHiddenPrice ? `$${payload.totalValue}` : ''}
+                        text={payload.totalValue && !hasHiddenPrice ? `$${payload.totalValue}` : 'A full quote will be provided at the dealership'}
                         icon={<Price/>}
                         key="Total"
                     />
