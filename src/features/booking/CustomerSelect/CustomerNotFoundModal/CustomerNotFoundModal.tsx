@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {BaseModal} from "../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {useStyles} from "./styles";
@@ -26,6 +26,7 @@ const CustomerNotFoundModal: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     return (
         <BaseModal open={open} width={700} onClose={onCancel}>
+            <DialogTitle onClose={onCancel} style={{padding: 8}}/>
             <div className={classes.modalWrapper}>
                 <div className={classes.textWrapper}>{t("We cannot find any existing customers that met the search criteria you entered.")}</div>
                 <div className={classes.textWrapper}>{t("Would you like to try different search criteria?")}</div>
