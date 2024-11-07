@@ -61,6 +61,11 @@ export const centerProfileRoot: TTitle = {
     title: "Center Profile"
 }
 
+export const applicationRoot: TTitle = {
+    to: Routes.Admin.Application,
+    title: "Application"
+}
+
 export const SCREENS = {
     carSelection: 'Car Selection',
     serviceNeeds: 'Service Needs',

@@ -272,6 +272,7 @@ export enum Titles {
     OperationalSetUp = "Operational Set Up",
     CapacityOptimization = "Capacity Optimization",
     Reporting = "Reporting",
+    Vehicles = "Vehicles"
 }
 
 export enum LocalItems {
