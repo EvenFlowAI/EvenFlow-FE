@@ -13,6 +13,7 @@ export const useStyles = makeStyles()(theme=> ({
         },
         [theme.breakpoints.down("mdl")]: {
             padding: '16px',
+            gap: 0,
             '& > div, & > button':{
                 width: '100%'
             }

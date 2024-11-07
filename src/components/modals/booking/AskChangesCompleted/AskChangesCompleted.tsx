@@ -96,7 +96,7 @@ const AskChangesCompleted = () => {
             open={isChangesCompletedOpen}
             onClose={onClose}
         >
-            <DialogTitle onClose={onClose}>
+            <DialogTitle onClose={onClose} style={{padding: '16px 8px'}}>
                 {t("Are you satisfied with the appointment changes?")}
             </DialogTitle>
                 <div className={classes.wrapper}>
