@@ -12,6 +12,7 @@ export const useStyles = makeStyles()(theme => ({
             marginBottom: 12
         },
         [theme.breakpoints.down("mdl")]:{
+            gap: 0,
             padding: '16px',
         }
     },

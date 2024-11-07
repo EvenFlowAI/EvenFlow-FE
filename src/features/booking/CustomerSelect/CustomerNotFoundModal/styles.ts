@@ -15,7 +15,7 @@ export const useStyles = makeStyles()((theme) => ({
                 width: '100%'
             },
             "& > div:last-child": {
-                marginBottom: 20,
+                marginBottom: 12,
             },
             "& > div:first-child": {
                 marginRight: 0,
@@ -30,7 +30,7 @@ export const useStyles = makeStyles()((theme) => ({
     modalWrapper: {
         padding: "60px 88px 36px 88px",
         [theme.breakpoints.down('md')]: {
-            padding: "16px",
+            padding: "0 16px 16px 16px",
         },
     },
     textWrapper: {
