@@ -216,7 +216,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
                                         onClick={e => e.stopPropagation()}
                                         enterTouchDelay={0}
                                         placement={isMobile ? "left-start" : "right-end"}
-                                        title={<div>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
+                                        title={<div style={isMobile ? {maxWidth: 280} : {}}>{card.description.split('\n').map(line => <p key={line}>{line}</p>)}</div>}
                                     >
                                         <div className="infoIcon"><InfoOutlined style={{ color: "#828282" }}/></div>
                                     </HtmlTooltip> : null}
