@@ -466,7 +466,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             })}
                             value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
                         />
-                        {recallsToggledOn || isRecallsCategorySelected
+                        {recallsToggledOn || isRecallsCategorySelected || selectedVehicle?.vin?.length
                             ? <div key="vin"
                                    className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
                                    style={{...orderMapStyles.vin, display: 'grid'}}>
