@@ -290,27 +290,6 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
                     Save
                 </LoadingButton>
             </OneRowButtonsWrapper>
-            {/*<DialogActions>*/}
-            {/*    <div className={classes.wrapper}>*/}
-            {/*        <div className={classes.buttonsWrapper}>*/}
-            {/*            <LoadingButton*/}
-            {/*                loading={employeesLoading || loading}*/}
-            {/*                onClick={onCancel}*/}
-            {/*                variant="text"*/}
-            {/*                style={{marginRight: 20}}*/}
-            {/*                color="info">*/}
-            {/*                Close*/}
-            {/*            </LoadingButton>*/}
-            {/*            <LoadingButton*/}
-            {/*                loading={employeesLoading || loading}*/}
-            {/*                onClick={onSave}*/}
-            {/*                disabled={disabledDate}*/}
-            {/*                className={classes.saveButton}>*/}
-            {/*                Save*/}
-            {/*            </LoadingButton>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</DialogActions>*/}
         </BaseModal>
     );
 };

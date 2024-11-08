@@ -32,6 +32,7 @@ const EmployeeScheduleTableMobile: React.FC<TProps> = ({
             {currentSchedule.map((item, idx) => {
                 const isOpened = item.id === expandedItem?.id;
                 return <EmployeeTableRow
+                    key={item.id}
                     item={item}
                     expandedItem={expandedItem}
                     idx={idx}
