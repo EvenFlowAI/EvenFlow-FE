@@ -494,7 +494,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                     onNext={handleSubmit}
                     prevDisabled={isLoading}
                     nextDisabled={isNextDisabled || isLoading}
-                    nextLabel={isRecallsCategorySelected ? t("Check for Recalls") : t("Next")}
+                    nextLabel={isRecallsCategorySelected ? isXS ? t("Check Recalls") : t("Check for Recalls") : t("Next")}
                 />
                 <RecallsByVinModal
                     open={isOpen}
