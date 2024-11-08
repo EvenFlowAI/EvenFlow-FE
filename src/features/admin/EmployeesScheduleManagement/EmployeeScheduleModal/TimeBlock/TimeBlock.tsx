@@ -6,6 +6,7 @@ import {PickersWrapper} from "../../../../../components/styled/PickersWrapper";
 import {IHOODataForm} from "../../../../../store/reducers/serviceCenters/types";
 import {IScheduleByDate} from "../../../../../store/reducers/schedules/types";
 import {scClosesText, scOpensText} from "../constants";
+import {useMediaQuery, useTheme} from "@mui/material";
 
 type TProps = {
     formIsChecked: boolean;
@@ -16,6 +17,8 @@ type TProps = {
 }
 
 const TimeBlock: React.FC<TProps> = ({formIsChecked, schedule, onTimeChange, disabledDate, el}) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
     const downArrowString = useMemo(() => {
         return schedule?.from
             ? `${scOpensText} ${dayjs(schedule?.from, timeSpanString).format(time24HourFormat)}`
@@ -31,6 +34,8 @@ const TimeBlock: React.FC<TProps> = ({formIsChecked, schedule, onTimeChange, dis
     return (
         <PickersWrapper>
             <TimeSelect
+                width={isMobile ? 70:86}
+                hideArrows={isMobile}
                 disableClearable
                 error={
                     formIsChecked && el.isOnSchedule
@@ -48,6 +53,8 @@ const TimeBlock: React.FC<TProps> = ({formIsChecked, schedule, onTimeChange, dis
                 onChange={(value) => onTimeChange(el, 'startAt', value)}/>
             <div>TO</div>
             <TimeSelect
+                width={isMobile ? 70:86}
+                hideArrows={isMobile}
                 disableClearable
                 error={
                     formIsChecked && el.isOnSchedule

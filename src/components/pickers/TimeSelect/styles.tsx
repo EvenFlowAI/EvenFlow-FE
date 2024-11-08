@@ -19,9 +19,9 @@ export const ArrowWrapper = styled("div", {
     cursor: 'pointer'
 }))
 
-export const ButtonAmPm = styled(Button, {
+export const ButtonAmPm = styled(Button, ({
     shouldForwardProp: (prop) => prop !== "disabled" && prop !== "selected" && prop !== "isUpper"
-})<{selected: boolean, disabled?: boolean, isUpper?: boolean}>(({selected, disabled, isUpper}) => ({
+}))<{selected: boolean, disabled?: boolean, isUpper?: boolean}>(({selected, disabled, isUpper}) => ({
     minWidth: 0,
     borderRadius: isUpper ? "4px 4px 0 0" : "0 0 4px 4px",
     width: 54,
@@ -30,7 +30,7 @@ export const ButtonAmPm = styled(Button, {
     backgroundColor: selected
         ? disabled
             ? "#B8B9BF"
-            : "#7898FF"
+            : "#7898FF !important"
         : disabled
             ? "#EAEBEE"
             : "#EAEBEE",
@@ -41,5 +41,5 @@ export const ButtonAmPm = styled(Button, {
         : disabled
             ? "#B8B9BF"
             : "#858585",
-    display: 'flex'
+    display: 'flex',
 }))
