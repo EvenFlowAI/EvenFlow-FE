@@ -28,6 +28,7 @@ type TProps = {
     disableClearable: boolean;
     downArrowErrorText?: string;
     upArrowErrorText?: string;
+    hideArrows?: boolean;
 }
 
 const TimeSelect: React.FC<TProps> = ({
@@ -41,7 +42,8 @@ const TimeSelect: React.FC<TProps> = ({
                                           width,
                                           disableClearable,
                                           downArrowErrorText,
-                                          upArrowErrorText}) => {
+                                          upArrowErrorText,
+                                          hideArrows}) => {
     const [period, setPeriod] = useState<TDayPeriod>("am")
     const showError = useException();
 
@@ -118,7 +120,7 @@ const TimeSelect: React.FC<TProps> = ({
                         style: {padding: '2px 5px', borderRadius: 2, fontSize: 14, border: 0 },
                         placeholder: "Select",
                         error,
-                        endAdornment: <div>
+                        endAdornment: hideArrows ? null : <div>
                             <ArrowWrapper disabled={Boolean(disabled || error)} onClick={onClickUp}>
                                 {!disabled ? <CounterUp/> : <CounterUpDisabled/>}
                             </ArrowWrapper>
