@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Titles} from "../../../types/types";
 import {applicationRoot} from "../../../utils/constants";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
@@ -7,11 +7,18 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@mui/material";
 import ApplicationMakes from "../../../features/booking/ApplicationMakes/ApplicationMakes";
 import ApplicationModels from "../../../features/booking/ApplicationModels/ApplicationModels";
+import {loadAllGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
+import {useDispatch} from "react-redux";
 
 const ApplicationVehicles = () => {
     const [tab, setTab] = useState<string>("0")
+    const dispatch = useDispatch();
 
     const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => setTab(tab)
+
+    useEffect(() => {
+        dispatch(loadAllGlobalMakes())
+    }, [])
 
     return (
         <>

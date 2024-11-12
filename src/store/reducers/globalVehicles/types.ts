@@ -7,6 +7,15 @@ export interface IGlobalMake {
     parent?: IGlobalMake;
 }
 
-export type TState = {
-    makes: IGlobalMake[]
+export type TOption = {
+    id: number;
+    name: string;
 }
+
+export type TState = {
+    makes: IGlobalMake[];
+    isLoading: boolean;
+    allMakesOptions: TOption[];
+}
+
+export type TReviewOption = "Not Reviewed" | "Confirmed"| "Override"
