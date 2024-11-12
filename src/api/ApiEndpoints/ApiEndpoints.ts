@@ -172,6 +172,14 @@ export class Api {
             GetById: {route: "/geographic-zones/{id}", method: "get"},
             GetShort: {route: "/geographic-zones/short-by-query", method: "get"},
         },
+        GlobalVehicles: {
+            GetMakes: {route: "/global-vehicle-makes/by-query", method: "post"},
+            GetModels: {route: "/global-vehicle-models/by-query", method: "post"},
+            UpdateMakes: {route: "/global-vehicle-makes", method: "put"},
+            UpdateModels: {route: "/global-vehicle-models", method: "put"},
+            GetMakesStatistic: {route: "/global-vehicle-makes/statistics", method: "get"},
+            GetModelsStatistic: {route: "/global-vehicle-models/statistics", method: "get"},
+        },
         IntervalUpsell: {
             GetUpsellByQuery: {route: "/interval-upsells/by-query", method: "post"},
             EditUpsell: {route: "/interval-upsells/{id}", method: "put"},
