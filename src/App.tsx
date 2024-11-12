@@ -38,30 +38,32 @@ const App = () => {
     }, [history, lastLoadingTime])
 
     useEffect(() => {
-        try {
-            const config: AwsRumConfig = {
-                sessionSampleRate: 1,
-                identityPoolId: "us-east-2:1ca03bba-7ffe-45d6-907c-fc07756be173",
-                endpoint: "https://dataplane.rum.us-east-2.amazonaws.com",
-                telemetries: ["performance","errors"],
-                allowCookies: false,
-                enableXRay: false
-            };
+        if (process.env.REACT_APP_ENV === "production") {
+            try {
+                const config: AwsRumConfig = {
+                    sessionSampleRate: 1,
+                    identityPoolId: "us-east-2:1ca03bba-7ffe-45d6-907c-fc07756be173",
+                    endpoint: "https://dataplane.rum.us-east-2.amazonaws.com",
+                    telemetries: ["performance","errors"],
+                    allowCookies: false,
+                    enableXRay: false
+                };
 
-            const APPLICATION_ID: string = '732ce6df-a19e-43e4-9638-d5ff3cd49b3b';
-            const APPLICATION_VERSION: string = '1.0.0';
-            const APPLICATION_REGION: string = 'us-east-2';
+                const APPLICATION_ID: string = '732ce6df-a19e-43e4-9638-d5ff3cd49b3b';
+                const APPLICATION_VERSION: string = '1.0.0';
+                const APPLICATION_REGION: string = 'us-east-2';
 
-            const awsRum: AwsRum = new AwsRum(
-                APPLICATION_ID,
-                APPLICATION_VERSION,
-                APPLICATION_REGION,
-                config
-            );
-        } catch (error) {
-            // Ignore errors thrown during CloudWatch RUM web client initialization
+                const awsRum: AwsRum = new AwsRum(
+                    APPLICATION_ID,
+                    APPLICATION_VERSION,
+                    APPLICATION_REGION,
+                    config
+                );
+            } catch (error) {
+                // Ignore errors thrown during CloudWatch RUM web client initialization
+            }
         }
-    }, [])
+    }, [process.env.REACT_APP_ENV])
 
     useEffect(() => {
         window.addEventListener('focus', onFocus)
