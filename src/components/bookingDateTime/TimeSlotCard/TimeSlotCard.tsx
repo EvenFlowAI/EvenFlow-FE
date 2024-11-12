@@ -60,7 +60,7 @@ export const TimeSlotCard: React.FC<TProps> =
                !isVisible && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
            }
 
-        }, [selected])
+        }, [selected, slot])
 
 
         const getContent = (timePassed: boolean): string => {
