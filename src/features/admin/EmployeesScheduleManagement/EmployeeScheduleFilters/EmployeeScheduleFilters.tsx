@@ -5,7 +5,6 @@ import {TFilters} from "../types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {SearchDebounced} from "../../../../components/formControls/SearchDebounced/SearchDebounced";
-import {SelectWrapper} from "../../../booking/AppointmentFlow/Screens/MaintenanceDetails/styles";
 
 type TProps = {
     isLoading: boolean;
@@ -38,87 +37,51 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({isLoading, filters, setFilte
     }
 
     const onSearch = () => setFilters(prev => ({...prev, name: search}))
-    return (
-        <SelectWrapper>
-            <Autocomplete
-                key="service book"
-                renderInput={autocompleteRender({
-                    label: "Service Book",
-                    placeholder: 'Not selected'
-                })}
-                fullWidth
-                disabled={isLoading}
-                onChange={onServiceBookChange}
-                value={filters.serviceBook}
-                options={serviceBooksList}
-            />
-            <Autocomplete
-                key="role"
-                renderInput={autocompleteRender({
-                    label: "Role",
-                    placeholder: 'Not selected'
-                })}
-                fullWidth
-                disabled={isLoading}
-                onChange={onRoleChange}
-                value={filters.role}
-                options={rolesList}
-            />
-            <SearchDebounced
-                label="Name"
-                key="name"
-                fullWidth
-                onSearch={onSearch}
-                onChange={handleSearchChange}
-                value={search}
-                placeholder="Search..."/>
-        </SelectWrapper>
-    )
 
-    // return (
-    //     <Grid
-    //         container
-    //         spacing={2}
-    //         justifyContent="space-between"
-    //         alignItems='flex-start'
-    //         marginBottom={2}>
-    //         <Grid item xs={12} sm={4} key="service book">
-    //             <Autocomplete
-    //                 renderInput={autocompleteRender({
-    //                     label: "Service Book",
-    //                     placeholder: 'Not selected'
-    //                 })}
-    //                 fullWidth
-    //                 disabled={isLoading}
-    //                 onChange={onServiceBookChange}
-    //                 value={filters.serviceBook}
-    //                 options={serviceBooksList}
-    //             />
-    //         </Grid>
-    //         <Grid item xs={12} sm={4} key="role">
-    //             <Autocomplete
-    //                 renderInput={autocompleteRender({
-    //                     label: "Role",
-    //                     placeholder: 'Not selected'
-    //                 })}
-    //                 fullWidth
-    //                 disabled={isLoading}
-    //                 onChange={onRoleChange}
-    //                 value={filters.role}
-    //                 options={rolesList}
-    //             />
-    //         </Grid>
-    //         <Grid item xs={12} sm={4} key="name">
-    //             <SearchDebounced
-    //                 label="Name"
-    //                 fullWidth
-    //                 onSearch={onSearch}
-    //                 onChange={handleSearchChange}
-    //                 value={search}
-    //                 placeholder="Search..."/>
-    //         </Grid>
-    //     </Grid>
-    // );
+    return (
+        <Grid
+            container
+            spacing={2}
+            justifyContent="space-between"
+            alignItems='flex-start'
+            marginBottom={2}>
+            <Grid item xs={12} sm={4} key="service book">
+                <Autocomplete
+                    renderInput={autocompleteRender({
+                        label: "Service Book",
+                        placeholder: 'Not selected'
+                    })}
+                    fullWidth
+                    disabled={isLoading}
+                    onChange={onServiceBookChange}
+                    value={filters.serviceBook}
+                    options={serviceBooksList}
+                />
+            </Grid>
+            <Grid item xs={12} sm={4} key="role">
+                <Autocomplete
+                    renderInput={autocompleteRender({
+                        label: "Role",
+                        placeholder: 'Not selected'
+                    })}
+                    fullWidth
+                    disabled={isLoading}
+                    onChange={onRoleChange}
+                    value={filters.role}
+                    options={rolesList}
+                />
+            </Grid>
+            <Grid item xs={12} sm={4} key="name">
+                <SearchDebounced
+                    label="Name"
+                    fullWidth
+                    onSearch={onSearch}
+                    onChange={handleSearchChange}
+                    value={search}
+                    placeholder="Search..."/>
+            </Grid>
+        </Grid>
+    );
 };
 
 export default EmployeeScheduleFilters;
