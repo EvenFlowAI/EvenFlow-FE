@@ -14,7 +14,7 @@ import {IGlobalMake, TOption, TReviewOption} from "../../../store/reducers/globa
 export const reviewOptions: TReviewOption[] = ["Not Reviewed", "Confirmed", "Override"];
 
 const ApplicationMakes = () => {
-    const {isLoading} = useSelector((state: RootState) => state.globalVehicles);
+    const {isLoading, makes} = useSelector((state: RootState) => state.globalVehicles);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [selectedMake, setSelectedMake] = useState<TOption|null>(null);
     const [selectedStatus, setSelectedStatus] = useState<TReviewOption|null>(null);
@@ -26,6 +26,10 @@ const ApplicationMakes = () => {
     useEffect(() => {
         dispatch(loadGlobalMakes(pageData, order, selectedStatus))
     }, [pageData, order, selectedStatus])
+
+    useEffect(() => {
+        setData(makes)
+    }, [makes])
 
     const onCancel = () => {
         setEdit(false)

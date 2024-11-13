@@ -1,11 +1,12 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
-import {IGlobalMake} from "../../../../store/reducers/globalVehicles/types";
+import {IGlobalMake, TOption} from "../../../../store/reducers/globalVehicles/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Autocomplete} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {reviewOptions} from "../ApplicationMakes";
+import {Table} from "../../../../components/tables/Table/Table";
 
 type TProps = {
     isEdit: boolean;
@@ -24,9 +25,13 @@ export const initialOrder = {
 }
 
 const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, onChangePage, data, setData, order, setOrder}) => {
-    const {isLoading, makes} = useSelector((state: RootState) => state.globalVehicles);
+    const {isLoading, makes, allMakesOptions} = useSelector((state: RootState) => state.globalVehicles);
 
     const onReviewChange = (el: IGlobalMake) => (e: React.ChangeEvent<{}>, option: string) => {
+
+    }
+
+    const onMakeChange = (e: React.ChangeEvent<{}>, option: TOption) => {
 
     }
 
@@ -69,18 +74,19 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
         {
             header: "Override Assignment",
             val: el => !isEdit
-                ? el.parent?.vinMake ?? ''
-                : el.accepted
+                ? el.parent?.vinMake ?? el.vinMake
+                : el.accepted && el.parent
                     ? <Autocomplete
                         renderInput={autocompleteRender({
                             label: '',
                             placeholder: '',
                         })}
                         fullWidth
-                        options={reviewOptions}
-                        value={el.accepted ? el.parent ? "Override" : "Confirmed" : "Not Reviewed"}
+                        options={allMakesOptions}
+                        value={allMakesOptions.find(item => item.id === el.parent?.id)}
+                        getOptionLabel={o => o.name}
                         disableClearable
-                        onChange={onReviewChange(el)}
+                        onChange={onMakeChange}
                     />
                     : '',
             align: "left",
@@ -92,9 +98,13 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
     }
 
     return (
-        <div>
-
-        </div>
+        <Table
+            data={data}
+            rowData={RowData}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+            onChangePage={onChangePage}
+            onSort={handleSort}
+            isLoading={isLoading}/>
     );
 };
 
