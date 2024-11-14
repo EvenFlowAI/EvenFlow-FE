@@ -5,10 +5,11 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Autocomplete} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {reviewOptions} from "../ApplicationMakes";
 import {Table} from "../../../../components/tables/Table/Table";
 import {sortMakesById} from "../utils";
 import {useAutocompleteStyles} from "../styles";
+import {reviewOptions} from "../../../../utils/constants";
+import {useException} from "../../../../hooks/useException/useException";
 
 type TProps = {
     isEdit: boolean;
@@ -24,6 +25,8 @@ type TProps = {
 const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, onChangePage, data, setData, order, setOrder}) => {
     const {isLoading, allMakesOptions, makesPagination} = useSelector((state: RootState) => state.globalVehicles);
     const {classes} = useAutocompleteStyles();
+    const showError = useException();
+
     const onReviewChange = (el: IGlobalMake) => (e: React.ChangeEvent<{}>, option: string) => {
         setData(prev => {
             const itemToChange = prev.find(item => item.id === el.id)
@@ -33,7 +36,12 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                     : option === "Override"
                         ? EReviewStatus.Override
                         : EReviewStatus.NotReviewed;
-                const updated = {...itemToChange, accepted: option !== "Not Reviewed", status}
+                const updated = {
+                    ...itemToChange,
+                    accepted: option !== "Not Reviewed",
+                    status,
+                    parent: status === EReviewStatus.Override ? itemToChange.parent : undefined
+                }
                 const filtered = prev.filter(item => item.id !== el.id)
                 return [...filtered, updated].sort(sortMakesById)
             }
@@ -70,7 +78,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
         {
             header: "% of Total",
             val: el => (Math.round(el.vehiclesPercentage * 100) / 100).toFixed(2),
-            orderId: "VehiclesCount",
+            orderId: "VehiclesPercentage",
             align: "left",
         },
         {
@@ -87,7 +95,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                     fullWidth
                     classes={classes}
                     options={reviewOptions}
-                    value={el.accepted ? el.parent ? "Override" : "Confirmed" : "Not Reviewed"}
+                    value={el.status === EReviewStatus.Override ? "Override" : el.status === EReviewStatus.Confirmed ? "Confirmed" : "Not Reviewed"}
                     disableClearable
                     onChange={onReviewChange(el)}
                 />,
@@ -109,7 +117,6 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                         options={allMakesOptions}
                         value={allMakesOptions.find(item => item.id === el.parent?.id)}
                         getOptionLabel={o => o.vinMake}
-                        disableClearable
                         onChange={onMakeChange(el)}
                     />
                     : ' ',
@@ -124,13 +131,19 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
     ]
 
     const handleSort = (data: IOrder<IGlobalMake>) => () => {
-        setOrder(prev => ({...data, isAscending: !prev.isAscending}))
+        if (!isEdit) {
+            setOrder(prev => ({...data, isAscending: !prev.isAscending}))
+        } else {
+            showError("Sorting is not possible in the EDIT mode")
+        }
     }
 
     return (
         <Table<IGlobalMake>
             index="localId"
             data={data}
+            order={order.orderBy}
+            isAscending={order.isAscending}
             rowData={RowData}
             rowsPerPage={pageData.pageSize}
             page={pageData.pageIndex}

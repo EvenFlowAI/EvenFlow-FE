@@ -6,5 +6,5 @@ type TMap = {
 export const ReviewStatusMap: TMap = {
     "Confirmed": "Confirmed",
     "Not Reviewed": "NotReviewed",
-    "Override": "Ovderriden",
+    "Override": "Overriden",
 }

@@ -30,3 +30,9 @@ export enum EReviewStatus {
 }
 
 export type TReviewOption = "Not Reviewed" | "Confirmed"| "Override"
+
+export type TUpdatedMake = {
+    id: number;
+    accepted: boolean;
+    parentId: number|null;
+}

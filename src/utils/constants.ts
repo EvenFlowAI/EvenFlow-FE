@@ -2,6 +2,7 @@ import {TRole} from "../store/reducers/users/types";
 import {EStates, TTitle} from "../types/types";
 import {TGAOptions} from "./types";
 import {Routes} from "../routes/constants";
+import {TReviewOption} from "../store/reducers/globalVehicles/types";
 
 export const states = Object.values(EStates);
 
@@ -93,3 +94,4 @@ export const options: TGAOptions = {
     allowLinker: true,
     storage: 'none',
 }
+export const reviewOptions: TReviewOption[] = ["Not Reviewed", "Confirmed", "Override"];

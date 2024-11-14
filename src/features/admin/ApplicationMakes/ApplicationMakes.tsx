@@ -5,24 +5,25 @@ import Filters from "./Filters/Filters";
 import {IOrder} from "../../../types/types";
 import StatisticBlock from "./StatisticBlock/StatisticBlock";
 import {useDispatch, useSelector} from "react-redux";
-import {loadGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
+import {loadGlobalMakes, updateMakes} from "../../../store/reducers/globalVehicles/actions";
 import {RootState} from "../../../store/rootReducer";
 import MakesTable from "./MakesTable/MakesTable";
 import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
-import {IGlobalMake, TOption, TReviewOption} from "../../../store/reducers/globalVehicles/types";
+import {IGlobalMake, TReviewOption} from "../../../store/reducers/globalVehicles/types";
 import {initialOrder} from "./utils";
-
-export const reviewOptions: TReviewOption[] = ["Not Reviewed", "Confirmed", "Override"];
+import {useException} from "../../../hooks/useException/useException";
+import _ from 'lodash';
 
 const ApplicationMakes = () => {
     const {isLoading, makes} = useSelector((state: RootState) => state.globalVehicles);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [selectedMake, setSelectedMake] = useState<TOption|null>(null);
+    const [selectedMake, setSelectedMake] = useState<IGlobalMake|null>(null);
     const [selectedStatus, setSelectedStatus] = useState<TReviewOption|null>(null);
     const [data, setData] = useState<IGlobalMake[]>([]);
     const [order, setOrder] = useState<IOrder<IGlobalMake>>(initialOrder)
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const dispatch = useDispatch();
+    const showError = useException();
 
     useEffect(() => {
         dispatch(loadGlobalMakes(pageData, order, selectedStatus))
@@ -37,15 +38,27 @@ const ApplicationMakes = () => {
         setEdit(false)
     }
     const onSave = () => {
-        onCancel()
+        const items = data.map(el => ({id: el.id, accepted: el.accepted, parentId: el.parent?.id ?? null}))
+        dispatch(updateMakes(items, pageData, order, selectedStatus, showError, () => setEdit(false)))
     }
 
-    const onMakeChange = (e: React.ChangeEvent<{}>, option: TOption) => {
+    const onMakeChange = (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
         setSelectedMake(option)
     }
 
     const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption) => {
         setSelectedStatus(option)
+    }
+
+    const handlePage = (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
+        const mappedMakes = makes.map(el => ({...el, parent: el.parent ?? undefined}))
+        const mappedData = data.map(el => ({...el, parent: el.parent ?? undefined}))
+        const equalItems = mappedData.filter(el => mappedMakes.find(item => _.isEqual(el, item)))
+        if (equalItems.length === makes.length) {
+            onChangePage(e, pageIndex)
+        } else {
+            showError('Please save the changes first')
+        }
     }
 
     return (
@@ -61,6 +74,7 @@ const ApplicationMakes = () => {
             <WrapperJustify>
                 <StatisticBlock/>
                 <Filters
+                    disabled={isEdit}
                     onMakeChange={onMakeChange}
                     onStatusChange={onStatusChange}
                     isLoading={isLoading}
@@ -73,7 +87,7 @@ const ApplicationMakes = () => {
                 order={order}
                 setOrder={setOrder}
                 isEdit={isEdit}
-                onChangePage={onChangePage}
+                onChangePage={handlePage}
                 pageData={pageData}
                 onChangeRowsPerPage={onChangeRowsPerPage}/>
         </div>

@@ -5,8 +5,8 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import {TabContext, TabPanel} from "@mui/lab";
 import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@mui/material";
-import ApplicationMakes from "../../../features/booking/ApplicationMakes/ApplicationMakes";
-import ApplicationModels from "../../../features/booking/ApplicationModels/ApplicationModels";
+import ApplicationMakes from "../../../features/admin/ApplicationMakes/ApplicationMakes";
+import ApplicationModels from "../../../features/admin/ApplicationModels/ApplicationModels";
 import {loadAllGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
 import {useDispatch} from "react-redux";
 
