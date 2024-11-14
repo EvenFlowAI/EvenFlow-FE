@@ -7,9 +7,10 @@ import StatisticBlock from "./StatisticBlock/StatisticBlock";
 import {useDispatch, useSelector} from "react-redux";
 import {loadGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
 import {RootState} from "../../../store/rootReducer";
-import MakesTable, {initialOrder} from "./MakesTable/MakesTable";
+import MakesTable from "./MakesTable/MakesTable";
 import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
 import {IGlobalMake, TOption, TReviewOption} from "../../../store/reducers/globalVehicles/types";
+import {initialOrder} from "./utils";
 
 export const reviewOptions: TReviewOption[] = ["Not Reviewed", "Confirmed", "Override"];
 
@@ -32,6 +33,7 @@ const ApplicationMakes = () => {
     }, [makes])
 
     const onCancel = () => {
+        setData(makes)
         setEdit(false)
     }
     const onSave = () => {

@@ -1,12 +1,14 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {IOrder, IPageRequest, TableRowDataType} from "../../../../types/types";
-import {IGlobalMake, TOption} from "../../../../store/reducers/globalVehicles/types";
+import {EReviewStatus, IGlobalMake} from "../../../../store/reducers/globalVehicles/types";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 import {Autocomplete} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {reviewOptions} from "../ApplicationMakes";
 import {Table} from "../../../../components/tables/Table/Table";
+import {sortMakesById} from "../utils";
+import {useAutocompleteStyles} from "../styles";
 
 type TProps = {
     isEdit: boolean;
@@ -19,25 +21,42 @@ type TProps = {
     setOrder: Dispatch<SetStateAction<IOrder<IGlobalMake>>>;
 }
 
-export const initialOrder = {
-    orderBy: "VinName",
-    isAscending: true,
-}
-
 const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, onChangePage, data, setData, order, setOrder}) => {
-    const {isLoading, makes, allMakesOptions} = useSelector((state: RootState) => state.globalVehicles);
-
+    const {isLoading, allMakesOptions, makesPagination} = useSelector((state: RootState) => state.globalVehicles);
+    const {classes} = useAutocompleteStyles();
     const onReviewChange = (el: IGlobalMake) => (e: React.ChangeEvent<{}>, option: string) => {
-
+        setData(prev => {
+            const itemToChange = prev.find(item => item.id === el.id)
+            if (itemToChange) {
+                const status = option === "Confirmed"
+                    ? EReviewStatus.Confirmed
+                    : option === "Override"
+                        ? EReviewStatus.Override
+                        : EReviewStatus.NotReviewed;
+                const updated = {...itemToChange, accepted: option !== "Not Reviewed", status}
+                const filtered = prev.filter(item => item.id !== el.id)
+                return [...filtered, updated].sort(sortMakesById)
+            }
+            return prev
+        })
     }
 
-    const onMakeChange = (e: React.ChangeEvent<{}>, option: TOption) => {
-
+    const onMakeChange = (el: IGlobalMake) => (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
+        setData(prev => {
+            const itemToChange = prev.find(item => item.id === el.id)
+            if (itemToChange) {
+                const updated = {...itemToChange, parent: option ?? undefined}
+                const filtered = prev.filter(item => item.id !== el.id)
+                return [...filtered, updated].sort(sortMakesById)
+            }
+            return prev
+        })
     }
 
     const RowData: TableRowDataType<IGlobalMake>[] = [
         {
             header: "VIN Make",
+            width: 370,
             val: el => el.vinMake,
             orderId: "VinName",
             align: "left",
@@ -50,12 +69,13 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
         },
         {
             header: "% of Total",
-            val: el => el.vehiclesPercentage.toString(),
+            val: el => (Math.round(el.vehiclesPercentage * 100) / 100).toFixed(2),
             orderId: "VehiclesCount",
             align: "left",
         },
         {
             header: "Review",
+            width: 180,
             val: el => !isEdit
                 ? el.accepted ? el.parent ? "Override" : "Confirmed" : "Not Reviewed"
                 : <Autocomplete
@@ -63,7 +83,9 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                         label: '',
                         placeholder: '',
                     })}
+                    style={{margin: '-8.5px -4px', height: 40}}
                     fullWidth
+                    classes={classes}
                     options={reviewOptions}
                     value={el.accepted ? el.parent ? "Override" : "Confirmed" : "Not Reviewed"}
                     disableClearable
@@ -74,36 +96,49 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
         {
             header: "Override Assignment",
             val: el => !isEdit
-                ? el.parent?.vinMake ?? el.vinMake
-                : el.accepted && el.parent
+                ? el.accepted && el.parent?.vinMake ? el.parent?.vinMake : " "
+                : el.accepted && el.status === EReviewStatus.Override
                     ? <Autocomplete
                         renderInput={autocompleteRender({
                             label: '',
-                            placeholder: '',
+                            placeholder: 'Not selected',
                         })}
                         fullWidth
+                        classes={classes}
+                        style={{margin: '-6px -4px', height: 40}}
                         options={allMakesOptions}
                         value={allMakesOptions.find(item => item.id === el.parent?.id)}
-                        getOptionLabel={o => o.name}
+                        getOptionLabel={o => o.vinMake}
                         disableClearable
-                        onChange={onMakeChange}
+                        onChange={onMakeChange(el)}
                     />
-                    : '',
+                    : ' ',
             align: "left",
-        }
+        },
+        {
+            header: "Evenflow Make",
+            width: 184,
+            val: el => el.parent?.vinMake ?? el.vinMake,
+            align: "left",
+        },
     ]
 
     const handleSort = (data: IOrder<IGlobalMake>) => () => {
-        console.log(data)
+        setOrder(prev => ({...data, isAscending: !prev.isAscending}))
     }
 
     return (
-        <Table
+        <Table<IGlobalMake>
+            index="localId"
             data={data}
             rowData={RowData}
+            rowsPerPage={pageData.pageSize}
+            page={pageData.pageIndex}
+            count={makesPagination.numberOfRecords}
             onChangeRowsPerPage={onChangeRowsPerPage}
             onChangePage={onChangePage}
             onSort={handleSort}
+            hidePagination={makesPagination.numberOfRecords < 10}
             isLoading={isLoading}/>
     );
 };
