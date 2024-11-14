@@ -133,6 +133,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
     const handleSort = (data: IOrder<IGlobalMake>) => () => {
         if (!isEdit) {
             setOrder(prev => ({...data, isAscending: !prev.isAscending}))
+            onChangePage(null, 0)
         } else {
             showError("Sorting is not possible in the EDIT mode")
         }
