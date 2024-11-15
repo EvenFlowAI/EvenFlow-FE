@@ -7,7 +7,7 @@ import {TabList} from "../../../components/styled/Tabs";
 import {Tab} from "@mui/material";
 import ApplicationMakes from "../../../features/admin/ApplicationMakes/ApplicationMakes";
 import ApplicationModels from "../../../features/admin/ApplicationModels/ApplicationModels";
-import {loadAllGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
+import {loadAllGlobalMakes, loadAllGlobalModels} from "../../../store/reducers/globalVehicles/actions";
 import {useDispatch} from "react-redux";
 
 const ApplicationVehicles = () => {
@@ -18,6 +18,7 @@ const ApplicationVehicles = () => {
 
     useEffect(() => {
         dispatch(loadAllGlobalMakes())
+        dispatch(loadAllGlobalModels())
     }, [])
 
     return (

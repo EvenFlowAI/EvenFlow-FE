@@ -1,29 +1,76 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {WrapperFlexEnd, WrapperJustify} from "../../../components/styled/WrappersFlex";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import StatisticBlock from "./StatisticBlock/StatisticBlock";
 import Filters from "./Filters/Filters";
-import {TArgCallback} from "../../../types/types";
+import {IOrder} from "../../../types/types";
+import {IGlobalMake, IGlobalModel, TReviewOption} from "../../../store/reducers/globalVehicles/types";
+import {initialOrder} from "../ApplicationMakes/utils";
+import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
+import {useDispatch, useSelector} from "react-redux";
+import {useException} from "../../../hooks/useException/useException";
+import {loadGlobalModels, loadModelStatistic} from "../../../store/reducers/globalVehicles/actions";
+import {RootState} from "../../../store/rootReducer";
+import {isEqual} from "lodash";
 
 const ApplicationModels = () => {
+    const {isLoading, models} = useSelector((state: RootState) => state.globalVehicles);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [selectedMake, setSelectedMake] = useState<any>(null);
-    const [selectedModel, setSelectedModel] = useState<any>(null);
-    const [selectedStatus, setSelectedStatus] = useState<any>(null);
+    const [selectedMake, setSelectedMake] = useState<IGlobalMake|null>(null);
+    const [selectedModels, setSelectedModels] = useState<IGlobalModel[]>([]);
+    const [selectedStatus, setSelectedStatus] = useState<TReviewOption|null>(null);
+    const [data, setData] = useState<IGlobalModel[]>([]);
+    const [order, setOrder] = useState<IOrder<IGlobalModel>>(initialOrder)
+    const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
+    const dispatch = useDispatch();
+    const showError = useException();
+
+    useEffect(() => {
+        dispatch(loadModelStatistic())
+    }, [])
+
+    useEffect(() => {
+        const selectedModelsIds = selectedModels.map(el => el.id);
+        dispatch(loadGlobalModels(pageData, order, selectedStatus, selectedMake?.id, selectedModelsIds))
+    }, [pageData, selectedModels, order, selectedStatus, selectedMake])
+
+    useEffect(() => {
+        setData(models)
+    }, [models])
 
     const onCancel = () => {
+        setData(models)
         setEdit(false)
     }
     const onSave = () => {
         onCancel()
     }
 
-    const onMakeChange: TArgCallback<any> = (make) => {}
+    const onMakeChange = (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
+        onChangePage(null, 0)
+        setSelectedMake(option)
+    }
 
-    const onModelChange: TArgCallback<any> = (model) => {}
+    const onModelsChange = (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => {
+        onChangePage(null, 0)
+        setSelectedModels(option)
+    }
 
-    const onStatusChange: TArgCallback<any> = (status) => {}
+    const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption) => {
+        onChangePage(null, 0)
+        setSelectedStatus(option)
+    }
+
+    const handlePage = (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
+        const mappedModels = models.map(el => ({...el, parent: el.parent ?? undefined}))
+        const mappedData = data.map(el => ({...el, parent: el.parent ?? undefined}))
+        const equalItems = mappedData.filter(el => mappedModels.find(item => isEqual(el, item)))
+        if (equalItems.length === models.length) {
+            onChangePage(e, pageIndex)
+        } else {
+            showError('Please save the changes first')
+        }
+    }
 
     return (
         <div>
@@ -38,10 +85,10 @@ const ApplicationModels = () => {
             <WrapperJustify>
                 <StatisticBlock/>
                 <Filters
-                    onModelChange={onModelChange}
+                    onModelsChange={onModelsChange}
                     onMakeChange={onMakeChange}
                     onStatusChange={onStatusChange}
-                    selectedModel={selectedModel}
+                    selectedModel={selectedModels}
                     isLoading={isLoading}
                     selectedMake={selectedMake}
                     selectedStatus={selectedStatus}/>

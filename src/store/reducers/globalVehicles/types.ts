@@ -11,18 +11,33 @@ export interface IGlobalMake {
     status?: EReviewStatus;
 }
 
+export interface IGlobalModel {
+    id: number;
+    vehiclesPercentage: number;
+    vehiclesCount: number;
+    vinModel: string;
+    make: IGlobalMake;
+    accepted: boolean;
+    localId: number;
+    parent?: IGlobalMake;
+    status?: EReviewStatus;
+}
+
 export type TOption = {
     id: number;
     name: string;
 }
 
 export type TState = {
-    makes: IGlobalMake[];
-    isLoading: boolean;
     allMakesOptions: IGlobalMake[];
+    allModelsOptions: IGlobalModel[];
+    isLoading: boolean;
+    makes: IGlobalMake[];
     makesPagination: IPagingResponse;
     makesStatistic: TVehicleStatistic|null;
+    models: IGlobalModel[];
     modelsStatistic: TVehicleStatistic|null;
+    modelsPagination: IPagingResponse;
 }
 
 export enum EReviewStatus {
