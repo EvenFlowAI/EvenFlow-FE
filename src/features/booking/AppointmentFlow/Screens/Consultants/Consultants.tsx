@@ -76,7 +76,7 @@ export const Consultants: React.FC<TProps> = ({isManagingFlow, handleNext, handl
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
         const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
         if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
-            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext));
         }
     }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
 
