@@ -80,8 +80,7 @@ export interface IApiEndpoints {
         | "GetAssignedOverrides" | "AssignMultiple" | "RemoveOverride" | "GetShort"
         | "Eligibility" | "ChangePricingDisplayType"
         | "EditSkills" | "Prioritize", TApiEndpoint>,
-    ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "Retrieve"
-        | "GetByQuery", TApiEndpoint>,
+    ServiceTypes: Record<"Create" | "UpdateIcon" | "Update" | "Remove" | "GetByQuery", TApiEndpoint>,
     SlotScoring: Record<"SetProximity" | "GetProximity" | "SetDesirability" | "GetDesirability"
         | "SetOptimization" | "GetOptimization" | "SetValues" | "GetRange" | "UpdateRange" | "GetSlotsGap", TApiEndpoint>,
     ServiceValet: Record<"GetZoneRouting" | "UpdateZoneRouting" | "GatAllCapacity" | "GetCapacityById" | "CreateCapacity" | "UpdateCapacity"

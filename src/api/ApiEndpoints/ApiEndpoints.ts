@@ -385,10 +385,9 @@ export class Api {
         },
         ServiceTypes: {
             Create: {route: "/service-type-options", method: "post"},
-            UpdateIcon: {route: "/service-type-options/{id}/icon", method: "patch"},
+            UpdateIcon: {route: "/service-type-options/icon", method: "patch"},
             Update: {route: "/service-type-options/{id}", method: "put"},
             Remove: {route: "/service-type-options/{id}", method: "delete"},
-            Retrieve: {route: "/service-type-options/{id}", method: "get"},
             GetByQuery: {route: "/service-type-options/by-query", method: "post"},
         },
         SlotScoring: {
