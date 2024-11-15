@@ -17,7 +17,7 @@ export const getAllMakesOptions = createAction<IGlobalMake[]>("GlobalVehicles/Ge
 export const setLoading = createAction<boolean>("GlobalVehicles/Loading")
 export const setPaging = createAction<IPagingResponse>("GlobalVehicles/SetPaging");
 
-export const loadGlobalMakes = (pageData: IPageRequest, order: IOrder<IGlobalMake>, reviewStatus: TReviewOption|null): AppThunk => (dispatch) => {
+export const loadGlobalMakes = (pageData: IPageRequest, order: IOrder<IGlobalMake>, reviewStatus: TReviewOption|null, makeIds: number[]): AppThunk => (dispatch) => {
     dispatch(setLoading(true))
     const {pageIndex, pageSize} = pageData;
     Api.call<PaginatedAPIResponse<IGlobalMake>>(Api.endpoints.GlobalVehicles.GetMakes, {
@@ -27,6 +27,7 @@ export const loadGlobalMakes = (pageData: IPageRequest, order: IOrder<IGlobalMak
             reviewStatus: reviewStatus ? ReviewStatusMap[reviewStatus] : null,
             orderBy: order.orderBy,
             isAscending: order.isAscending,
+            makeIds
         }
     })
         .then(res => {
@@ -61,11 +62,19 @@ export const loadAllGlobalMakes = (): AppThunk => (dispatch) => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateMakes = (items: TUpdatedMake[], pageData: IPageRequest, order: IOrder<IGlobalMake>, reviewStatus: TReviewOption|null, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk => dispatch => {
+export const updateMakes = (
+    items: TUpdatedMake[],
+    pageData: IPageRequest,
+    order: IOrder<IGlobalMake>,
+    reviewStatus: TReviewOption|null,
+    makeIds: number[],
+    onError: TArgCallback<any>,
+    onSuccess: TCallback
+): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.GlobalVehicles.UpdateMakes, {data: {items}})
         .then(res => {
-            if (res) dispatch(loadGlobalMakes(pageData, order, reviewStatus))
+            if (res) dispatch(loadGlobalMakes(pageData, order, reviewStatus, makeIds))
             onSuccess()
         })
         .catch(err => {

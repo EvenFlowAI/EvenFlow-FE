@@ -7,9 +7,10 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/rootReducer";
 
 import {reviewOptions} from "../../../../utils/constants";
+import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteStyles";
 
 type TProps = {
-    onMakeChange: (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => void;
+    onMakesChange: (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => void;
     onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption) => void;
     isLoading: boolean;
     selectedMake: any;
@@ -17,19 +18,22 @@ type TProps = {
     disabled: boolean;
 }
 
-const Filters: React.FC<TProps> = ({onMakeChange, onStatusChange, isLoading, selectedMake, selectedStatus, disabled}) => {
+const Filters: React.FC<TProps> = ({onMakesChange, onStatusChange, isLoading, selectedMake, selectedStatus, disabled}) => {
     const {allMakesOptions} = useSelector((state: RootState) => state.globalVehicles);
+    const { classes  } = useAutocompleteStyles()
     return (
         <FiltersWrapper>
             <Autocomplete
-                style={{width: 180}}
+                classes={classes}
+                style={{width: 400}}
                 loading={isLoading}
                 value={selectedMake}
                 disabled={isLoading || disabled}
                 options={allMakesOptions}
+                multiple
                 isOptionEqualToValue={(o, v) => o.id === v.id}
                 getOptionLabel={o => o.vinMake}
-                onChange={onMakeChange}
+                onChange={onMakesChange}
                 renderInput={autocompleteRender({
                     label: "Make",
                     placeholder: 'Not selected'

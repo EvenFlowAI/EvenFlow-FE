@@ -17,7 +17,7 @@ import _ from 'lodash';
 const ApplicationMakes = () => {
     const {isLoading, makes} = useSelector((state: RootState) => state.globalVehicles);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [selectedMake, setSelectedMake] = useState<IGlobalMake|null>(null);
+    const [selectedMakes, setSelectedMakes] = useState<IGlobalMake[]>([]);
     const [selectedStatus, setSelectedStatus] = useState<TReviewOption|null>(null);
     const [data, setData] = useState<IGlobalMake[]>([]);
     const [order, setOrder] = useState<IOrder<IGlobalMake>>(initialOrder)
@@ -26,8 +26,9 @@ const ApplicationMakes = () => {
     const showError = useException();
 
     useEffect(() => {
-        dispatch(loadGlobalMakes(pageData, order, selectedStatus))
-    }, [pageData, order, selectedStatus])
+        const selectedMakesIds = selectedMakes.map(el => el.id);
+        dispatch(loadGlobalMakes(pageData, order, selectedStatus, selectedMakesIds))
+    }, [pageData, order, selectedStatus, selectedMakes])
 
     useEffect(() => {
         setData(makes)
@@ -39,14 +40,17 @@ const ApplicationMakes = () => {
     }
     const onSave = () => {
         const items = data.map(el => ({id: el.id, accepted: el.accepted, parentId: el.parent?.id ?? null}))
-        dispatch(updateMakes(items, pageData, order, selectedStatus, showError, () => setEdit(false)))
+        const selectedMakesIds = selectedMakes.map(el => el.id);
+        dispatch(updateMakes(items, pageData, order, selectedStatus, selectedMakesIds, showError, () => setEdit(false)))
     }
 
-    const onMakeChange = (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
-        setSelectedMake(option)
+    const onMakesChange = (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => {
+        onChangePage(null, 0)
+        setSelectedMakes(option)
     }
 
     const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption) => {
+        onChangePage(null, 0)
         setSelectedStatus(option)
     }
 
@@ -75,10 +79,10 @@ const ApplicationMakes = () => {
                 <StatisticBlock/>
                 <Filters
                     disabled={isEdit}
-                    onMakeChange={onMakeChange}
+                    onMakesChange={onMakesChange}
                     onStatusChange={onStatusChange}
                     isLoading={isLoading}
-                    selectedMake={selectedMake}
+                    selectedMake={selectedMakes}
                     selectedStatus={selectedStatus}/>
             </WrapperJustify>
             <MakesTable

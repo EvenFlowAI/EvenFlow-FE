@@ -1,7 +1,7 @@
 import {styled} from "@mui/material";
 
 export const FiltersWrapper = styled("div")({
-    width: "35%",
+    width: "55%",
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
