@@ -5,14 +5,14 @@ import Filters from "./Filters/Filters";
 import {IOrder} from "../../../types/types";
 import StatisticBlock from "./StatisticBlock/StatisticBlock";
 import {useDispatch, useSelector} from "react-redux";
-import {loadGlobalMakes, updateMakes} from "../../../store/reducers/globalVehicles/actions";
+import {loadGlobalMakes, loadMakeStatistic, updateMakes} from "../../../store/reducers/globalVehicles/actions";
 import {RootState} from "../../../store/rootReducer";
 import MakesTable from "./MakesTable/MakesTable";
 import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
 import {IGlobalMake, TReviewOption} from "../../../store/reducers/globalVehicles/types";
 import {initialOrder} from "./utils";
 import {useException} from "../../../hooks/useException/useException";
-import _ from 'lodash';
+import {isEqual} from 'lodash';
 
 const ApplicationMakes = () => {
     const {isLoading, makes} = useSelector((state: RootState) => state.globalVehicles);
@@ -24,6 +24,10 @@ const ApplicationMakes = () => {
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
     const dispatch = useDispatch();
     const showError = useException();
+
+    useEffect(() => {
+        dispatch(loadMakeStatistic())
+    }, [])
 
     useEffect(() => {
         const selectedMakesIds = selectedMakes.map(el => el.id);
@@ -57,7 +61,7 @@ const ApplicationMakes = () => {
     const handlePage = (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number): void => {
         const mappedMakes = makes.map(el => ({...el, parent: el.parent ?? undefined}))
         const mappedData = data.map(el => ({...el, parent: el.parent ?? undefined}))
-        const equalItems = mappedData.filter(el => mappedMakes.find(item => _.isEqual(el, item)))
+        const equalItems = mappedData.filter(el => mappedMakes.find(item => isEqual(el, item)))
         if (equalItems.length === makes.length) {
             onChangePage(e, pageIndex)
         } else {

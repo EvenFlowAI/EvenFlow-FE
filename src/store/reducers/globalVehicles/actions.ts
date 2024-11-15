@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {EReviewStatus, IGlobalMake, TReviewOption, TUpdatedMake} from "./types";
+import {EReviewStatus, IGlobalMake, TReviewOption, TUpdatedMake, TVehicleStatistic} from "./types";
 import {
     AppThunk,
     IOrder,
@@ -16,6 +16,7 @@ export const getMakes = createAction<IGlobalMake[]>("GlobalVehicles/GetMakes")
 export const getAllMakesOptions = createAction<IGlobalMake[]>("GlobalVehicles/GetAllMakesOptions")
 export const setLoading = createAction<boolean>("GlobalVehicles/Loading")
 export const setPaging = createAction<IPagingResponse>("GlobalVehicles/SetPaging");
+export const getMakesStatistics = createAction<TVehicleStatistic>("GlobalVehicles/GetMakesStatistics");
 
 export const loadGlobalMakes = (pageData: IPageRequest, order: IOrder<IGlobalMake>, reviewStatus: TReviewOption|null, makeIds: number[]): AppThunk => (dispatch) => {
     dispatch(setLoading(true))
@@ -82,6 +83,20 @@ export const updateMakes = (
             onError(err)
             console.log(err)
         })
+}
 
-
+export const loadMakeStatistic = (): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.GlobalVehicles.GetMakesStatistic)
+        .then(res => {
+            if (res?.data) {
+                dispatch(getMakesStatistics(res.data))
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        .finally(() => {
+            dispatch(setLoading(false))
+        })
 }

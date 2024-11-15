@@ -6,7 +6,7 @@ import {RootState} from "../../../../store/rootReducer";
 import {Autocomplete} from "@mui/material";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {Table} from "../../../../components/tables/Table/Table";
-import {sortMakesById} from "../utils";
+import {sortByLocalId} from "../utils";
 import {useAutocompleteStyles} from "../styles";
 import {reviewOptions} from "../../../../utils/constants";
 import {useException} from "../../../../hooks/useException/useException";
@@ -43,7 +43,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                     parent: status === EReviewStatus.Override ? itemToChange.parent : undefined
                 }
                 const filtered = prev.filter(item => item.id !== el.id)
-                return [...filtered, updated].sort(sortMakesById)
+                return [...filtered, updated].sort(sortByLocalId)
             }
             return prev
         })
@@ -55,7 +55,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
             if (itemToChange) {
                 const updated = {...itemToChange, parent: option ?? undefined}
                 const filtered = prev.filter(item => item.id !== el.id)
-                return [...filtered, updated].sort(sortMakesById)
+                return [...filtered, updated].sort(sortByLocalId)
             }
             return prev
         })

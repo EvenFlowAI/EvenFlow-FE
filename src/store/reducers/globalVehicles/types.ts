@@ -21,6 +21,8 @@ export type TState = {
     isLoading: boolean;
     allMakesOptions: IGlobalMake[];
     makesPagination: IPagingResponse;
+    makesStatistic: TVehicleStatistic|null;
+    modelsStatistic: TVehicleStatistic|null;
 }
 
 export enum EReviewStatus {
@@ -35,4 +37,16 @@ export type TUpdatedMake = {
     id: number;
     accepted: boolean;
     parentId: number|null;
+}
+
+export type TVehicleStatistic = {
+    notReviewed: number;
+    confirmed: number;
+    overriden: number;
+}
+
+export type TStatisticPercentage = {
+    notReviewed: string;
+    confirmed: string;
+    overriden: string;
 }

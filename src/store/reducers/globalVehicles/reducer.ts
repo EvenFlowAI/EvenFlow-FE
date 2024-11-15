@@ -1,6 +1,6 @@
 import {TState} from "./types";
 import {createReducer} from "@reduxjs/toolkit";
-import {getAllMakesOptions, getMakes, setLoading, setPaging} from "./actions";
+import {getAllMakesOptions, getMakes, getMakesStatistics, setLoading, setPaging} from "./actions";
 import {defaultPaging} from "../constants";
 
 const initialState: TState = {
@@ -8,6 +8,8 @@ const initialState: TState = {
     isLoading: false,
     allMakesOptions: [],
     makesPagination: defaultPaging,
+    makesStatistic: null,
+    modelsStatistic: null,
 }
 
 export const globalVehiclesReducer = createReducer(initialState, builder => builder
@@ -22,5 +24,8 @@ export const globalVehiclesReducer = createReducer(initialState, builder => buil
     })
     .addCase(getAllMakesOptions, (state, {payload}) => {
         return {...state, allMakesOptions: payload};
+    })
+    .addCase(getMakesStatistics, (state, {payload}) => {
+        return {...state, makesStatistic: payload};
     })
 )
