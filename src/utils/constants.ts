@@ -2,6 +2,7 @@ import {TRole} from "../store/reducers/users/types";
 import {EStates, TTitle} from "../types/types";
 import {TGAOptions} from "./types";
 import {Routes} from "../routes/constants";
+import {TReviewOption} from "../store/reducers/globalVehicles/types";
 
 export const states = Object.values(EStates);
 
@@ -61,6 +62,11 @@ export const centerProfileRoot: TTitle = {
     title: "Center Profile"
 }
 
+export const applicationRoot: TTitle = {
+    to: Routes.Admin.Application,
+    title: "Application"
+}
+
 export const SCREENS = {
     carSelection: 'Car Selection',
     serviceNeeds: 'Service Needs',
@@ -88,3 +94,4 @@ export const options: TGAOptions = {
     allowLinker: true,
     storage: 'none',
 }
+export const reviewOptions: TReviewOption[] = ["Not Reviewed", "Confirmed", "Override"];

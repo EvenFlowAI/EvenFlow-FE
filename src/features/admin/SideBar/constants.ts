@@ -1,9 +1,26 @@
-import {LinkType, LinkTypeWithSub} from "../../../types/types";
+import {LinkTypeWithSub} from "../../../types/types";
 import {Routes} from "../../../routes/constants";
 
-export const SULinks: LinkType[] = [
+export const SULinks: LinkTypeWithSub[] = [
     {to: Routes.Admin.DealershipGroups, name: "Dealership Groups", roles: ["Super Admin"]},
     {to: Routes.Admin.ServiceCenters, name: "Service Centers", roles: ["Super Admin"]},
+    {to: Routes.Admin.Application,
+        name: "Application",
+        roles: ["Super Admin"],
+        subLinks: [
+            {
+                to: Routes.Admin.Vehicles,
+                name: "Vehicles",
+                roles: ["Super Admin"],
+                sub: true,
+            },
+            {
+                to: Routes.Admin.OpCodeCategory,
+                name: "Op Code Category",
+                roles: ["Super Admin"],
+                sub: true,
+            },
+        ]},
 ];
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [

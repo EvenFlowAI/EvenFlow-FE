@@ -9,6 +9,9 @@ export enum AdminRoutes {
     Pricing = "/admin/pricing",
     MobileService = "/admin/pricing/mobile-service",
     Reporting = "/admin/reporting",
+    Application = "/admin/application",
+    Vehicles = "/admin/application/vehicles",
+    OpCodeCategory = "/admin/application/op-code-category",
 }
 
 export enum AdminLogin {
