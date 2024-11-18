@@ -63,12 +63,7 @@ export const UserProfile = () => {
         if (!currentUser) {
             showError("Profile is not loaded");
         } else {
-            try {
-                await dispatch(saveEmployeeAvatar(f, currentUser.id));
-                showMessage("Avatar updated");
-            } catch (e) {
-                showError(e);
-            }
+            await dispatch(saveEmployeeAvatar(f, currentUser.id, showError, () => showMessage("Avatar updated")));
         }
     }
 
