@@ -119,7 +119,7 @@ const ModelsTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, o
                         fullWidth
                         classes={classes}
                         style={{margin: '-6px -4px', height: 40}}
-                        options={allModelsOptions}
+                        options={allModelsOptions.filter(item => item.make.id === el.make.id)}
                         value={allModelsOptions.find(item => item.id === el.parent?.id)}
                         getOptionLabel={o => o.vinModel}
                         onChange={onModelChange(el)}

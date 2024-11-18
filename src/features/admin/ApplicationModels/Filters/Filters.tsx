@@ -12,14 +12,15 @@ type TProps = {
     onMakeChange: (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => void;
     onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption) => void;
     onModelsChange: (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => void;
+    modelsOptions: IGlobalModel[];
     isLoading: boolean;
     selectedMake: any;
     selectedModel: any;
     selectedStatus: any;
 }
 
-const Filters: React.FC<TProps> = ({selectedModel, onModelsChange, onMakeChange, onStatusChange, isLoading, selectedMake, selectedStatus}) => {
-    const {allMakesOptions, allModelsOptions} = useSelector((state: RootState) => state.globalVehicles);
+const Filters: React.FC<TProps> = ({modelsOptions, selectedModel, onModelsChange, onMakeChange, onStatusChange, isLoading, selectedMake, selectedStatus}) => {
+    const {allMakesOptions} = useSelector((state: RootState) => state.globalVehicles);
     const { classes  } = useAutocompleteStyles()
     return (
         <FiltersWrapper>
@@ -40,7 +41,7 @@ const Filters: React.FC<TProps> = ({selectedModel, onModelsChange, onMakeChange,
                 style={{width: 180}}
                 loading={isLoading}
                 value={selectedModel}
-                options={allModelsOptions}
+                options={modelsOptions}
                 multiple
                 classes={classes}
                 isOptionEqualToValue={(o, v) => o.id === v.id}

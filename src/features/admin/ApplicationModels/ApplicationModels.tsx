@@ -15,11 +15,12 @@ import {isEqual} from "lodash";
 import ModelsTable from "./ModelsTable/ModelsTable";
 
 const ApplicationModels = () => {
-    const {isLoading, models} = useSelector((state: RootState) => state.globalVehicles);
+    const {isLoading, models, allModelsOptions} = useSelector((state: RootState) => state.globalVehicles);
     const [isEdit, setEdit] = useState<boolean>(false);
     const [selectedMake, setSelectedMake] = useState<IGlobalMake|null>(null);
     const [selectedModels, setSelectedModels] = useState<IGlobalModel[]>([]);
     const [selectedStatus, setSelectedStatus] = useState<TReviewOption|null>(null);
+    const [filteredModels, setFilteredModels] = useState<IGlobalModel[]>([]);
     const [data, setData] = useState<IGlobalModel[]>([]);
     const [order, setOrder] = useState<IOrder<IGlobalModel>>(initialOrder)
     const {pageData, onChangePage, onChangeRowsPerPage} = useStatePagination();
@@ -60,6 +61,8 @@ const ApplicationModels = () => {
     const onMakeChange = (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
         onChangePage(null, 0)
         setSelectedMake(option)
+        setFilteredModels(option ? allModelsOptions.filter(el => el.make.id === option?.id) : allModelsOptions)
+        setSelectedModels([]);
     }
 
     const onModelsChange = (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => {
@@ -96,6 +99,7 @@ const ApplicationModels = () => {
             <WrapperJustify>
                 <StatisticBlock/>
                 <Filters
+                    modelsOptions={filteredModels}
                     onModelsChange={onModelsChange}
                     onMakeChange={onMakeChange}
                     onStatusChange={onStatusChange}
