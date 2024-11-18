@@ -32,6 +32,10 @@ const ApplicationModels = () => {
     }, [])
 
     useEffect(() => {
+        setFilteredModels(allModelsOptions)
+    }, [allModelsOptions])
+
+    useEffect(() => {
         const selectedModelsIds = selectedModels.map(el => el.id);
         dispatch(loadGlobalModels(pageData, order, selectedStatus, selectedMake?.id, selectedModelsIds))
     }, [pageData, selectedModels, order, selectedStatus, selectedMake])
