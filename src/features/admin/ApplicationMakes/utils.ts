@@ -18,7 +18,7 @@ export const getPercentage = (statistic: TVehicleStatistic): TStatisticPercentag
         const total = (statistic.overriden + statistic.confirmed + statistic.notReviewed)
         const overriden = roundToHundredth(total / 100 * statistic.overriden);
         const confirmed = roundToHundredth(total / 100 * statistic.confirmed);
-        const notReviewed = roundToHundredth(total / 100 * statistic.notReviewed);
+        const notReviewed = total === statistic.notReviewed ? "100.00" : roundToHundredth(total / 100 * statistic.notReviewed);
         return {overriden, confirmed, notReviewed}
     }
     return null

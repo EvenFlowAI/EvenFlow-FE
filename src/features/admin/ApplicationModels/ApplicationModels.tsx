@@ -9,9 +9,10 @@ import {initialOrder} from "../ApplicationMakes/utils";
 import {useStatePagination} from "../../../hooks/usePaginations/usePaginations";
 import {useDispatch, useSelector} from "react-redux";
 import {useException} from "../../../hooks/useException/useException";
-import {loadGlobalModels, loadModelStatistic} from "../../../store/reducers/globalVehicles/actions";
+import {loadGlobalModels, loadModelStatistic, updateModels} from "../../../store/reducers/globalVehicles/actions";
 import {RootState} from "../../../store/rootReducer";
 import {isEqual} from "lodash";
+import ModelsTable from "./ModelsTable/ModelsTable";
 
 const ApplicationModels = () => {
     const {isLoading, models} = useSelector((state: RootState) => state.globalVehicles);
@@ -43,7 +44,17 @@ const ApplicationModels = () => {
         setEdit(false)
     }
     const onSave = () => {
-        onCancel()
+        const items = data.map(el => ({id: el.id, accepted: el.accepted, parentId: el.parent?.id ?? null}))
+        const selectedModelsIds = selectedModels.map(el => el.id);
+        dispatch(updateModels(
+            items,
+            pageData,
+            order,
+            selectedStatus,
+            selectedMake?.id,
+            selectedModelsIds,
+            showError,
+            () => setEdit(false)))
     }
 
     const onMakeChange = (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
@@ -93,6 +104,15 @@ const ApplicationModels = () => {
                     selectedMake={selectedMake}
                     selectedStatus={selectedStatus}/>
             </WrapperJustify>
+            <ModelsTable
+                order={order}
+                setOrder={setOrder}
+                onChangePage={handlePage}
+                onChangeRowsPerPage={onChangeRowsPerPage}
+                data={data}
+                pageData={pageData}
+                setData={setData}
+                isEdit={isEdit}/>
         </div>
     );
 };

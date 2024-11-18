@@ -19,7 +19,7 @@ export interface IGlobalModel {
     make: IGlobalMake;
     accepted: boolean;
     localId: number;
-    parent?: IGlobalMake;
+    parent?: IGlobalModel;
     status?: EReviewStatus;
 }
 

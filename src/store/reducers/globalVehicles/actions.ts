@@ -156,7 +156,7 @@ export const updateModels = (
     pageData: IPageRequest,
     order: IOrder<IGlobalModel>,
     reviewStatus: TReviewOption|null,
-    makeId: number,
+    makeId: number|undefined,
     modelIds: number[],
     onError: TArgCallback<any>,
     onSuccess: TCallback
