@@ -1,5 +1,5 @@
 import {ICurrentUser, IUserForm, TUserActions} from "./types";
-import {AppThunk} from "../../../types/types";
+import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
 import {IEmployee} from "../employees/types";
 import {loadByFilters} from "../employees/actions";
 import {setShowServiceCentersList, setWelcomeScreenView} from "../appointmentFrameReducer/actions";
@@ -31,13 +31,15 @@ export const getCurrentUser = (keepWelcomeScreen?: boolean): AppThunk => async (
         dispatch(loading(false));
     }
 }
-export const saveEmployeeAvatar = (avatar: File, id: string): AppThunk => async dispatch => {
+export const saveEmployeeAvatar = (avatar: File, id: string, onError?: TArgCallback<any>, onSuccess?: TCallback): AppThunk => async dispatch => {
     try {
         const fd = new FormData();
         fd.append("file", avatar, avatar.name);
         await Api.call(Api.endpoints.Users.Avatar, {urlParams: {id}, data: fd});
         dispatch(getCurrentUser());
+        onSuccess && onSuccess()
     } catch (err) {
+        onError && onError(err)
         console.log('save employee avatar err', err)
     }
 }
@@ -47,7 +49,7 @@ export const createUser = (payload: IUserForm, onSuccess: () => void, onError: (
     try {
         const {data} = await Api.call<IEmployee|string>(Api.endpoints.Users.Create, {data: payload})
         if (avatar) {
-            await dispatch(saveEmployeeAvatar(avatar, typeof data === "string" ? data : data.id));
+            await dispatch(saveEmployeeAvatar(avatar, typeof data === "string" ? data : data.id, onError));
         }
         dispatch(loadByFilters())
         dispatch(saving(false))
@@ -63,7 +65,7 @@ export const updateUser = (payload: IUserForm, id: string, onSuccess: () => void
     try {
         await Api.call(Api.endpoints.Users.Update, {urlParams: {id}, data: payload});
         if (avatar) {
-            await dispatch(saveEmployeeAvatar(avatar, id));
+            await dispatch(saveEmployeeAvatar(avatar, id, onError));
         }
         dispatch(saving(false));
         dispatch(getCurrentUser());
