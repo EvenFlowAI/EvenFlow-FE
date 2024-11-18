@@ -67,28 +67,6 @@ export const loadAllGlobalMakes = (): AppThunk => (dispatch) => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateMakes = (
-    items: TUpdatedMake[],
-    pageData: IPageRequest,
-    order: IOrder<IGlobalMake>,
-    reviewStatus: TReviewOption|null,
-    makeIds: number[],
-    onError: TArgCallback<any>,
-    onSuccess: TCallback
-): AppThunk => dispatch => {
-    dispatch(setLoading(true))
-    Api.call(Api.endpoints.GlobalVehicles.UpdateMakes, {data: {items}})
-        .then(res => {
-            if (res) dispatch(loadGlobalMakes(pageData, order, reviewStatus, makeIds))
-            onSuccess()
-        })
-        .catch(err => {
-            dispatch(setLoading(false))
-            onError(err)
-            console.log(err)
-        })
-}
-
 export const loadMakeStatistic = (): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.GlobalVehicles.GetMakesStatistic)
@@ -102,6 +80,31 @@ export const loadMakeStatistic = (): AppThunk => dispatch => {
         })
         .finally(() => {
             dispatch(setLoading(false))
+        })
+}
+
+export const updateMakes = (
+    items: TUpdatedMake[],
+    pageData: IPageRequest,
+    order: IOrder<IGlobalMake>,
+    reviewStatus: TReviewOption|null,
+    makeIds: number[],
+    onError: TArgCallback<any>,
+    onSuccess: TCallback
+): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.GlobalVehicles.UpdateMakes, {data: {items}})
+        .then(res => {
+            if (res) {
+                dispatch(loadGlobalMakes(pageData, order, reviewStatus, makeIds))
+                dispatch(loadMakeStatistic())
+            }
+            onSuccess()
+        })
+        .catch(err => {
+            dispatch(setLoading(false))
+            onError(err)
+            console.log(err)
         })
 }
 
@@ -151,29 +154,6 @@ export const loadAllGlobalModels = (): AppThunk => (dispatch) => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-export const updateModels = (
-    items: TUpdatedMake[],
-    pageData: IPageRequest,
-    order: IOrder<IGlobalModel>,
-    reviewStatus: TReviewOption|null,
-    makeId: number|undefined,
-    modelIds: number[],
-    onError: TArgCallback<any>,
-    onSuccess: TCallback
-): AppThunk => dispatch => {
-    dispatch(setLoading(true))
-    Api.call(Api.endpoints.GlobalVehicles.UpdateModels, {data: {items}})
-        .then(res => {
-            if (res) dispatch(loadGlobalModels(pageData, order, reviewStatus, makeId, modelIds))
-            onSuccess()
-        })
-        .catch(err => {
-            dispatch(setLoading(false))
-            onError(err)
-            console.log(err)
-        })
-}
-
 export const loadModelStatistic = (): AppThunk => dispatch => {
     dispatch(setLoading(true))
     Api.call(Api.endpoints.GlobalVehicles.GetModelsStatistic)
@@ -187,5 +167,31 @@ export const loadModelStatistic = (): AppThunk => dispatch => {
         })
         .finally(() => {
             dispatch(setLoading(false))
+        })
+}
+
+export const updateModels = (
+    items: TUpdatedMake[],
+    pageData: IPageRequest,
+    order: IOrder<IGlobalModel>,
+    reviewStatus: TReviewOption|null,
+    makeId: number|undefined,
+    modelIds: number[],
+    onError: TArgCallback<any>,
+    onSuccess: TCallback
+): AppThunk => dispatch => {
+    dispatch(setLoading(true))
+    Api.call(Api.endpoints.GlobalVehicles.UpdateModels, {data: {items}})
+        .then(res => {
+            if (res) {
+                dispatch(loadGlobalModels(pageData, order, reviewStatus, makeId, modelIds))
+                dispatch(loadModelStatistic())
+            }
+            onSuccess()
+        })
+        .catch(err => {
+            dispatch(setLoading(false))
+            onError(err)
+            console.log(err)
         })
 }
