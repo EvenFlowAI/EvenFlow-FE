@@ -79,7 +79,7 @@ const ApplicationMakes = () => {
                     isEdit={isEdit}
                     isSaving={isLoading}/>
             </WrapperFlexEnd>
-            <WrapperJustify>
+            <WrapperJustify style={{marginBottom: 44}}>
                 <StatisticBlock/>
                 <Filters
                     disabled={isEdit}
