@@ -20,7 +20,8 @@ const AppointmentVehicleInfo = () => {
             {valueService?.selectedService ? <>
                 {valueService?.year?.year} <span style={{textTransform: 'uppercase'}}>{valueService?.series?.name}</span> {valueService?.model?.name}
             </> : <>
-                {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model} {engine?.name ?? ""}
+                {selectedVehicle?.year} <span style={{textTransform: 'uppercase'}}>{selectedVehicle?.make}</span> {selectedVehicle?.model}
+                {engine?.name ? <div style={{marginTop: 8}}>{engine.name}</div> : null}
                 {selectedVehicle?.vin ? <div style={{marginTop: 8}}>{selectedVehicle.vin}</div> : null}
                 {selectedVehicle?.mileage ? <div style={{marginTop: 8}}>{selectedVehicle?.mileage} {t("miles")}</div> : null}
             </>}

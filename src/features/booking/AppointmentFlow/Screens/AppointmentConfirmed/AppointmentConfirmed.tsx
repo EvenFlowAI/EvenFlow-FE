@@ -92,7 +92,11 @@ export const AppointmentConfirmed: React.FC<React.PropsWithChildren<React.PropsW
     const serviceName = useMemo(() => getServiceName(serviceTypeOption, serviceType), [serviceTypeOption, serviceType])
 
     const vehicleData = selectedVehicle?.year
-        ? `${selectedVehicle.year} ${selectedVehicle.make} ${selectedVehicle.model} ${engine?.name ?? ""}  ${selectedVehicle.vin ? `\n${selectedVehicle.vin}` : null}`
+        ? [
+            <div>{selectedVehicle.year} {selectedVehicle.make} {selectedVehicle.model}</div>,
+            engine?.name ? <div>{engine.name}</div> : <div/>,
+            selectedVehicle.vin ? <div>{selectedVehicle.vin}</div> : <div/>
+]
         : valueService?.year
             ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
             : ''
