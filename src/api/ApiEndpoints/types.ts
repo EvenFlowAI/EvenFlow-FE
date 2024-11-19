@@ -43,6 +43,7 @@ export interface IApiEndpoints {
     GeneralSettings: Record<"Get" | "Update", TApiEndpoint>,
     GeographicZones: Record<"Create" | "Update" | "GetZones" | "ReassignZipCode"
         | "RemoveZipCode" | "Remove" | "GetById" | "GetShort", TApiEndpoint>,
+    GlobalVehicles: Record<"GetMakes" | "GetModels" | "UpdateMakes" | "UpdateModels" | "GetMakesStatistic" | "GetModelsStatistic", TApiEndpoint>,
     Holidays: Record<"Create" | "Update" | "Remove" | "Retrieve" | "GetAll", TApiEndpoint>,
     IntervalUpsell: Record<"GetUpsellByQuery" | "EditUpsell" | "RemoveUpsell" | "AddUpsell" | "GetUpsellById", TApiEndpoint>,
     MaintenancePackages: Record<"Create" | "Update" | "Remove" | "Retrieve" | "SetPricingOptimization"

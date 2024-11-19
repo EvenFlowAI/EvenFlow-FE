@@ -96,7 +96,7 @@ export const createEmployee = (payload: IEmployeeForm, onSuccess: () => void, on
     try {
         const {data} = await Api.call<IEmployee|string>(Api.endpoints.Employees.Create, {data: payload});
         if (avatar) {
-            await dispatch(saveEmployeeAvatar(avatar, typeof data === 'string' ? data : data.id));
+            await dispatch(saveEmployeeAvatar(avatar, typeof data === 'string' ? data : data.id, onError));
         }
         dispatch(saving(false));
         dispatch(loadByFilters())
@@ -123,7 +123,7 @@ export const updateEmployee = (data: IEmployeeForm, id: string, onSuccess: () =>
     try {
         await Api.call(Api.endpoints.Employees.Update, {urlParams: {id}, data});
         if (avatar) {
-            await dispatch(saveEmployeeAvatar(avatar, id));
+            await dispatch(saveEmployeeAvatar(avatar, id, onError));
         }
         dispatch(saving(false));
         dispatch(loadByFilters())
