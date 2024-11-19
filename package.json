@@ -30,6 +30,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
+    "react-error-boundary": "^4.1.2",
     "react-ga": "^3.3.0",
     "react-ga4": "^1.4.1",
     "react-google-autocomplete": "^2.6.1",
