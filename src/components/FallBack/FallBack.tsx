@@ -2,7 +2,7 @@ import React from 'react';
 import {LogoWrapper, MainCard, Wrapper} from "./styles";
 import {ReactComponent as Evenflow} from '../../assets/img/evenflow.svg';
 import {ReactComponent as Ai} from '../../assets/img/ai.svg';
-import {ReactComponent as Picture} from '../../assets/img/fallback.svg';
+import {ReactComponent as Picture} from '../../assets/img/fallback1.svg';
 
 const FallBack = () => {
     return (
