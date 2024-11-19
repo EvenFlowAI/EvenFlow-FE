@@ -86,7 +86,7 @@ export const deleteRecall = (id: number, serviceCenterId: number,onError: (err: 
 
 export const loadRecallsByVin = (serviceCenterId: number, vin: string, make: string, model: string, year: number): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, make, model, year}})
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin: vin.toUpperCase(), make, model, year}})
         .then(result => {
             if (result.data) dispatch(getRecallsByVin(result.data))
         })
@@ -98,7 +98,7 @@ export const loadRecallsByVin = (serviceCenterId: number, vin: string, make: str
 
 export const updateSelectedRecalls = (serviceCenterId: number, vin: string, make: string, model: string, year: number, recallsNumbers: string[]): AppThunk => dispatch => {
     dispatch(setLoading(true))
-    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin, make, model, year}})
+    Api.call(Api.endpoints.Recalls.GetByVin, {data: {serviceCenterId, vin: vin.toUpperCase(), make, model, year}})
         .then(result => {
             if (result.data) {
                 const data: IRecallByVin[] = result.data
