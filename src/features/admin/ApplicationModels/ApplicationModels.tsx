@@ -74,7 +74,7 @@ const ApplicationModels = () => {
         setSelectedModels(option)
     }
 
-    const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption) => {
+    const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption|null) => {
         onChangePage(null, 0)
         setSelectedStatus(option)
     }
@@ -107,6 +107,7 @@ const ApplicationModels = () => {
                     onModelsChange={onModelsChange}
                     onMakeChange={onMakeChange}
                     onStatusChange={onStatusChange}
+                    disabled={isEdit}
                     selectedModel={selectedModels}
                     isLoading={isLoading}
                     selectedMake={selectedMake}
