@@ -323,7 +323,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                         setLoading(true);
                         try {
                             const {data} = await Api.call(Api.endpoints.Recalls.GetByVin,
-                                {data: {serviceCenterId: decodeSCID(id), vin: vin, make, year: +year, model}})
+                                {data: {serviceCenterId: decodeSCID(id), vin: vin.toUpperCase(), make, year: +year, model}})
                             dispatch(setRecallsAreShown(true));
                             if (data.length) {
                                 await onOpen()
