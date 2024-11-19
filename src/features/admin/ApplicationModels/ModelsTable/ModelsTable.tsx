@@ -82,7 +82,7 @@ const ModelsTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, o
         },
         {
             header: "% of Total",
-            val: el => (Math.round(el.vehiclesPercentage * 100) / 100).toFixed(2),
+            val: el =>`${(Math.round(el.vehiclesPercentage * 100) / 100).toFixed(2)}%`,
             orderId: "VehiclesPercentage",
             align: "left",
         },
