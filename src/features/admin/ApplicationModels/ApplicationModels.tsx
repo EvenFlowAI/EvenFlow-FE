@@ -100,7 +100,7 @@ const ApplicationModels = () => {
                     isEdit={isEdit}
                     isSaving={isLoading}/>
             </WrapperFlexEnd>
-            <WrapperJustify>
+            <WrapperJustify style={{marginBottom: 44}}>
                 <StatisticBlock/>
                 <Filters
                     modelsOptions={filteredModels}
