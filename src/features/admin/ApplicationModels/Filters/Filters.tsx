@@ -23,6 +23,13 @@ type TProps = {
 const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onModelsChange, onMakeChange, onStatusChange, isLoading, selectedMake, selectedStatus}) => {
     const {allMakesOptions} = useSelector((state: RootState) => state.globalVehicles);
     const { classes  } = useAutocompleteStyles()
+
+    const renderOption =(props: any, option: IGlobalModel) => {
+        return <li style={{height: 'fit-content'}} key={option} {...props}>
+            {option.vinModel}
+        </li>
+    }
+
     return (
         <FiltersWrapper>
             <Autocomplete
@@ -46,6 +53,7 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
                 value={selectedModel}
                 options={modelsOptions}
                 multiple
+                renderOption={renderOption}
                 classes={classes}
                 isOptionEqualToValue={(o, v) => o.id === v.id}
                 getOptionLabel={o => o.vinModel}
