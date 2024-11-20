@@ -142,6 +142,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
     return (
         <Table<IGlobalMake>
             index="localId"
+            noDataTitle="No makes"
             data={data}
             order={order.orderBy}
             isAscending={order.isAscending}

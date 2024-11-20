@@ -147,6 +147,7 @@ const ModelsTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, o
     return (
         <Table<IGlobalModel>
             index="localId"
+            noDataTitle="No models"
             data={data}
             order={order.orderBy}
             isAscending={order.isAscending}
