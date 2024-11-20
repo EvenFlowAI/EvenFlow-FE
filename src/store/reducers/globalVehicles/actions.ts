@@ -118,7 +118,7 @@ export const loadGlobalModels = (pageData: IPageRequest, order: IOrder<IGlobalMo
             reviewStatus: reviewStatus ? ReviewStatusMap[reviewStatus] : null,
             orderBy: order.orderBy,
             isAscending: order.isAscending,
-            makeId,
+            makeIds: makeId ? [makeId] : [],
             modelIds,
         }
     })
