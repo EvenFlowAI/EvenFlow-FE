@@ -64,13 +64,13 @@ const ModelsTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, o
         {
             header: "VIN Make",
             width: 185,
-            val: el => el.vinModel,
+            val: el => el.make?.vinMake ?? '',
             align: "left",
         },
         {
             header: "VIN Model",
             width: 185,
-            val: el => el.make?.vinMake ?? '',
+            val: el => el.vinModel,
             orderId: "VinName",
             align: "left",
         },

@@ -42,7 +42,7 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
             <Autocomplete
                 style={{width: 180}}
                 loading={isLoading}
-                disabled={disabled || isLoading}
+                disabled={disabled || isLoading || !selectedMake}
                 value={selectedModel}
                 options={modelsOptions}
                 multiple
