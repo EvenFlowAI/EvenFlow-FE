@@ -23,11 +23,12 @@ import {useParams} from "react-router-dom";
 import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
 import {setAdvisorAvailable} from "../../../../../../../store/reducers/bookingFlowConfig/actions";
 import {IServiceConsultant} from "../../../../../../../api/types";
-import {useSelectedAppointmentStyles} from "../../../../../../../hooks/styling/useSelectedAppointmentStyles";
 import {useException} from "../../../../../../../hooks/useException/useException";
 import {setUnavailableServiceOpen} from "../../../../../../../store/reducers/modals/actions";
 import {TArgCallback, TScreen} from "../../../../../../../types/types";
 import {TServiceTypeSettings} from "../../../../../../../store/reducers/bookingFlowConfig/types";
+import {useStyles} from "./styles";
+import clsx from "clsx";
 
 type TProps = {
     isSm: boolean;
@@ -51,7 +52,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
-    const { classes  } = useSelectedAppointmentStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {id} = useParams<{id: string}>();
@@ -210,9 +211,6 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
 
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable) {
-            // let index = sideBarSteps.indexOf("serviceNeeds");
-            // if (index < 0 ) index = sideBarSteps.indexOf("location");
-            // sliceSteps(index)
             handleSetScreen("transportationNeeds")
         } else if (transportation) {
             dispatch(setTransportation(null));
@@ -246,15 +244,15 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     return serviceValetIsPossibleToUse
         ? <div
             className={classes.selectWrapper}
-            style={isMobile ? appointment || serviceValetAppointment ? {marginBottom: 8} : {} : {marginTop: 10}}>
-            <div className={classes.selectWrapper}>
-                <span style={{whiteSpace: 'nowrap'}}>{t("Service Option")}: {isSm ? <br/> : null}</span>
+            style={isMobile ? appointment || serviceValetAppointment ? {marginBottom: 8} : {} : {}}>
+            <div className={classes.selectWrapper} style={{display: 'block'}}>
+                <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div>
                 <Select
                     value={serviceTypeOption?.id}
                     className={classes.select}
                     variant="standard"
                     disableUnderline
-                    fullWidth={isMobile}
+                    fullWidth
                     onChange={handleServiceOptionChange}>
                     {firstScreenOptions
                         .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
