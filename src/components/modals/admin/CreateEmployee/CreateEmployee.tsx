@@ -73,7 +73,7 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                     technicianLevel: payload.employeeInfo?.skillLevel as TTechnicianLevel || 1 as TTechnicianLevel
                 }
             } else {
-                data.showOnBooking = payload.showOnBooking
+                data.displayOnBookingTypes = payload.displayOnBookingTypes
             }
             setEmployeeForm(data)
         } else {
@@ -140,7 +140,8 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                         hourlyRate: employeeForm.hourlyRate || 0,
                         overtimeRate: employeeForm.overtimeRate || 0,
                         skillLevel: employeeForm.technicianLevel
-                    }
+                    },
+                    type: employeeForm.type
                 } as IEmployeeForm;
             }
             try {

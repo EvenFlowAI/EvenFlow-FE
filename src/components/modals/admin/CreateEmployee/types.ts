@@ -9,6 +9,14 @@ export type TConsultantOption = {
     name: string;
 }
 
+export enum EDisplayOnBookingType {
+    SelfService, Employee
+}
+
+export enum EEmployeeType {
+    Individual, Team
+}
+
 export type TEmployeeForm = {
     firstName: string;
     email: string;
@@ -17,7 +25,8 @@ export type TEmployeeForm = {
     serviceCenter?: IServiceCenter | null;
     dmsId?: string | null;
     position: string;
-    showOnBooking?: boolean;
+    displayOnBookingTypes?: EDisplayOnBookingType[];
+    type?: EEmployeeType|null;
     hourlyRate?: number | '';
     overtimeRate?: number | '';
     technicianLevel?: TTechnicianLevel;
