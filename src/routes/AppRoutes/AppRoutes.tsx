@@ -18,6 +18,7 @@ import {useAnalyticsForParentSite} from "../../hooks/useAnalyticsBySCId/useAnaly
 import {RootState} from "../../store/rootReducer";
 import AppointmentFlow from "../../pages/booking/AppointmentFlow/AppointmentFlow";
 import {setTransportationAvailable} from "../../store/reducers/bookingFlowConfig/actions";
+import FallBack from "../../components/FallBack/FallBack";
 
 type TProps = {
     valueServicePreviousScreen: TScreen;
@@ -46,6 +47,7 @@ const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps
     return (
         <Switch>
             <Route path={Routes.EndUser.AppointmentFrame} exact component={AppointmentFlow} />
+            <Route path={'/welcome/fallback-example'} exact component={FallBack}/>
             <Route path={Routes.EndUser.ManageAppointmentFrame} exact component={AppointmentFlow} />
             <Route path={Routes.EndUser.CancelAppointment} exact component={BookingFlow} />
             <Route path={Routes.EndUser.CancelAppointmentFromEmail} exact component={BookingFlow} />
