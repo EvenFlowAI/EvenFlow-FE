@@ -56,25 +56,12 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const showError = useException();
     const {id} = useParams<{id: string}>();
 
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceValetIsPossibleToUse = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
             && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
             && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
     }, [serviceTypeOption, firstScreenOptions, config]);
     let isTransportationAvailable = true;
-
-    const getServiceName = () => {
-        if (serviceTypeOption?.name) return serviceTypeOption.name
-        switch (serviceType) {
-            case EServiceType.MobileService:
-                return t("Mobile Service");
-            case EServiceType.PickUpDropOff:
-                return t("Pick Up / Drop Off Service");
-            default:
-                return t("Visit Center");
-        }
-    }
 
     const sliceSteps = (index: number) => {
         if (index > -1) {
@@ -238,14 +225,15 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return serviceValetIsPossibleToUse
-        ? <div
+    return (
+        <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
                 <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div>
                 <Select
                     value={serviceTypeOption?.id}
                     className={classes.select}
+                    disabled={!serviceValetIsPossibleToUse}
                     variant="standard"
                     disableUnderline
                     fullWidth
@@ -256,9 +244,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                 </Select>
             </div>
         </div>
-        : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
-            <div>{t("Service Option")}: {getServiceName()}</div>
-        </div>
+    )
 };
 
 export default ServiceOption;
