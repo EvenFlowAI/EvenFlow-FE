@@ -17,7 +17,7 @@ import ModelsTable from "./ModelsTable/ModelsTable";
 const ApplicationModels = () => {
     const {isLoading, models, allModelsOptions} = useSelector((state: RootState) => state.globalVehicles);
     const [isEdit, setEdit] = useState<boolean>(false);
-    const [selectedMake, setSelectedMake] = useState<IGlobalMake|null>(null);
+    const [selectedMakes, setSelectedMakes] = useState<IGlobalMake[]>([]);
     const [selectedModels, setSelectedModels] = useState<IGlobalModel[]>([]);
     const [selectedStatus, setSelectedStatus] = useState<TReviewOption|null>(null);
     const [filteredModels, setFilteredModels] = useState<IGlobalModel[]>([]);
@@ -37,8 +37,9 @@ const ApplicationModels = () => {
 
     useEffect(() => {
         const selectedModelsIds = selectedModels.map(el => el.id);
-        dispatch(loadGlobalModels(pageData, order, selectedStatus, selectedMake?.id, selectedModelsIds))
-    }, [pageData, selectedModels, order, selectedStatus, selectedMake])
+        const selectedMakesIds = selectedMakes.map(el => el.id);
+        dispatch(loadGlobalModels(pageData, order, selectedStatus, selectedMakesIds, selectedModelsIds))
+    }, [pageData, selectedModels, order, selectedStatus, selectedMakes])
 
     useEffect(() => {
         setData(models)
@@ -51,21 +52,22 @@ const ApplicationModels = () => {
     const onSave = () => {
         const items = data.map(el => ({id: el.id, accepted: el.accepted, parentId: el.parent?.id ?? null}))
         const selectedModelsIds = selectedModels.map(el => el.id);
+        const selectedMakesIds = selectedMakes.map(el => el.id);
         dispatch(updateModels(
             items,
             pageData,
             order,
             selectedStatus,
-            selectedMake?.id,
+            selectedMakesIds,
             selectedModelsIds,
             showError,
             () => setEdit(false)))
     }
 
-    const onMakeChange = (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => {
+    const onMakesChange = (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => {
         onChangePage(null, 0)
-        setSelectedMake(option)
-        setFilteredModels(option ? allModelsOptions.filter(el => el.make.id === option?.id) : allModelsOptions)
+        setSelectedMakes(options)
+        setFilteredModels(options ? allModelsOptions.filter(el => options.find(item => item.id === el.make.id)) : allModelsOptions)
         setSelectedModels([]);
     }
 
@@ -105,12 +107,12 @@ const ApplicationModels = () => {
                 <Filters
                     modelsOptions={filteredModels}
                     onModelsChange={onModelsChange}
-                    onMakeChange={onMakeChange}
+                    onMakesChange={onMakesChange}
                     onStatusChange={onStatusChange}
                     disabled={isEdit}
                     selectedModel={selectedModels}
                     isLoading={isLoading}
-                    selectedMake={selectedMake}
+                    selectedMakes={selectedMakes}
                     selectedStatus={selectedStatus}/>
             </WrapperJustify>
             <ModelsTable
