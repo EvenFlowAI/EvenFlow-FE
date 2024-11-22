@@ -478,6 +478,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                         appointments={
                             groupedAppointments[dayjs(date).startOf('day').toISOString().replace('.000', '')]
                         }
+                        selectFirstSlot={selectFirstSlot}
                         date={date}
                         loading={loading || isConsentsLoading}/>}
             </SlotsScreenWrapper>
