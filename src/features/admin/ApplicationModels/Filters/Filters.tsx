@@ -39,7 +39,7 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
     return (
         <FiltersWrapper>
             <Autocomplete
-                style={{width: 180}}
+                style={{width: 465}}
                 loading={isLoading}
                 multiple
                 classes={classes}
@@ -51,12 +51,12 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
                 getOptionLabel={o => o.vinMake}
                 onChange={onMakesChange}
                 renderInput={autocompleteRender({
-                    label: "Make",
+                    label: "Makes",
                     placeholder: 'Not selected'
                 })}
             />
             <Autocomplete
-                style={{width: 180}}
+                style={{width: 465}}
                 loading={isLoading}
                 disabled={disabled || isLoading || !selectedMakes.length}
                 value={selectedModel}
@@ -68,7 +68,7 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
                 getOptionLabel={o => o.vinModel}
                 onChange={onModelsChange}
                 renderInput={autocompleteRender({
-                    label: "Model",
+                    label: "Models",
                     placeholder: 'Not selected'
                 })}
             />

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {WrapperFlexEnd, WrapperJustify} from "../../../components/styled/WrappersFlex";
+import {WrapperJustify} from "../../../components/styled/WrappersFlex";
 import {SaveEditBlock} from "../../../components/buttons/SaveEditBlock/SaveEditBlock";
 import StatisticBlock from "./StatisticBlock/StatisticBlock";
 import Filters from "./Filters/Filters";
@@ -67,8 +67,10 @@ const ApplicationModels = () => {
     const onMakesChange = (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => {
         onChangePage(null, 0)
         setSelectedMakes(options)
-        setFilteredModels(options ? allModelsOptions.filter(el => options.find(item => item.id === el.make.id)) : allModelsOptions)
-        setSelectedModels([]);
+        const filteredAll = allModelsOptions.filter(el => options.find(item => item.id === el.make.id))
+        const filteredSelected = selectedModels.filter(el => options.find(item => item.id === el.make.id))
+        setFilteredModels(options.length ? filteredAll : allModelsOptions)
+        setSelectedModels(filteredSelected);
     }
 
     const onModelsChange = (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => {
@@ -94,16 +96,16 @@ const ApplicationModels = () => {
 
     return (
         <div>
-            <WrapperFlexEnd style={{marginBottom: 16}}>
+            <WrapperJustify style={{marginBottom: 16}}>
+                <StatisticBlock/>
                 <SaveEditBlock
                     onSave={onSave}
                     onEdit={() => setEdit(true)}
                     onCancel={onCancel}
                     isEdit={isEdit}
                     isSaving={isLoading}/>
-            </WrapperFlexEnd>
-            <WrapperJustify style={{marginBottom: 44}}>
-                <StatisticBlock/>
+            </WrapperJustify>
+            <WrapperJustify style={{marginBottom: 24}}>
                 <Filters
                     modelsOptions={filteredModels}
                     onModelsChange={onModelsChange}
