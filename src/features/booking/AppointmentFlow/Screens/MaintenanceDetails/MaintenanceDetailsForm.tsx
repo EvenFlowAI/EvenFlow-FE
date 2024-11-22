@@ -89,7 +89,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
 
         const isExistingVin = useMemo(() => {
             return Boolean(customerLoadedData?.vehicles.find(v => {
-                return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)}));
+                return (v.vin && selectedVehicle?.vin && v.vin.toUpperCase() === selectedVehicle?.vin.toUpperCase())}));
         }, [selectedVehicle, customerLoadedData])
 
         const isExistingVehicle = useMemo(() => {
@@ -130,6 +130,10 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             const selectedMileage = mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
             const mileageIsValid = selectedMileage && selectedMileage?.value.toString() === selectedVehicle?.mileage?.toString();
             if (selectedVehicle) {
+                if (selectedVehicle.vin && !checkVin(selectedVehicle.vin)) {
+                    const vin = selectedVehicle.vin.toUpperCase()
+                    if (checkVin(vin)) dispatch(updateVehicle({vin}))
+                }
                 if (selectedMileage?.value) {
                     const theSameMileageSelected = selectedVehicle?.mileage === selectedMileage?.value
                     if (mileageIsValid && !theSameMileageSelected) {

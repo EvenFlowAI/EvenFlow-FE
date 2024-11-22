@@ -47,7 +47,7 @@ export const loadFirstScreenOptionsList = (id: number): AppThunk => (dispatch) =
 
 
 export const deleteFirstScreenOptionById = (id: number, serviceCenterId: number): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ServiceTypes.Remove, {urlParams: {id}})
+    Api.call(Api.endpoints.ServiceTypes.Remove, {params: {id, serviceCenterId}})
         .then(result => {
             if (result) {
                 dispatch(loadFirstScreenOptionsList(serviceCenterId))
@@ -59,7 +59,7 @@ export const deleteFirstScreenOptionById = (id: number, serviceCenterId: number)
 }
 
 export const updateFirstScreenOption = (id: number, serviceCenterId: number, data: TUpdateFirstScreenOption, onSuccess: (id: number) => void, onError: (err: string) => void): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ServiceTypes.Update, {urlParams: {id}, data})
+    Api.call(Api.endpoints.ServiceTypes.Update, {urlParams: {id}, data: {...data, serviceCenterId}})
         .then(result => {
             if (result) {
                 dispatch(loadFirstScreenOptionsList(serviceCenterId))
@@ -89,7 +89,7 @@ export const createFirstScreenOption = (data: TNewFirstScreenOption, serviceCent
 export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number, file: File): AppThunk => dispatch => {
     const data = new FormData();
     data.append("file", file, file.name);
-    Api.call(Api.endpoints.ServiceTypes.UpdateIcon, {urlParams: {id}, data})
+    Api.call(Api.endpoints.ServiceTypes.UpdateIcon, {params: {id, serviceCenterId}, data})
         .then(result => {
             if (result) {
                 dispatch(loadFirstScreenOptionsList(serviceCenterId))
