@@ -5,6 +5,7 @@ import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/
 import ServiceOption from "./ServiceOption/ServiceOption";
 import SelectedConsultant from "./SelectedConsultant/SelectedConsultant";
 import {ReactComponent as Arrow} from "../../../../../../assets/img/arrow_small.svg";
+import SelectedTransportation from "./SelectedTransportation/SelectedTransportation";
 
 type TProps = {
     isSm: boolean;
@@ -28,6 +29,7 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, handleSetScreen, onChangeSe
             </TitleWrapper>
             {isFiltersOpen ? <FiltersWrapper>
                 <ServiceOption handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
+                <SelectedTransportation/>
                 <SelectedConsultant/>
             </FiltersWrapper> : null}
         </Wrapper>

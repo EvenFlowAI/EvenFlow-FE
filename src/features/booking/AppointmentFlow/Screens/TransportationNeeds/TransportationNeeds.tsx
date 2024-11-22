@@ -1,22 +1,20 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useEffect} from 'react';
 import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {ActionButtons} from '../../../ActionButtons/ActionButtons';
-import {collectServiceRequestIds, decodeSCID, mapRecallsForRequest} from "../../../../../utils/utils";
+import {decodeSCID} from "../../../../../utils/utils";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {ITransportation} from '../../../../../api/types';
 import {
+    loadActiveTransportations,
     setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import ReactGA from "react-ga4";
 import {useTranslation} from "react-i18next";
-import {EServiceCategoryType} from "../../../../../store/reducers/categories/types";
 import {TextWrapper} from "./styles";
-import {TTransportationData} from "./types";
 import {TActionProps, TCallback} from "../../../../../types/types";
-import {Api} from "../../../../../api/ApiEndpoints/ApiEndpoints";
 import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
 import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
@@ -27,75 +25,19 @@ export type TProps = TActionProps & {
 
 export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleConsentsAccepted}) => {
     const {
-        subService,
-        service,
-        categoriesIds,
-        hashKey,
-        selectedRecalls,
         transportation,
-        packagePricingType,
-        selectedPackage,
-        selectedVehicle,
-        packageEMenuType,
         isConsentsLoading,
         trackerData,
+        transportations,
+        isTransportationsLoading,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
-    const {selectedSR} = useSelector(({appointment}: RootState) => appointment)
-    const {allCategories} = useSelector(({categories}: RootState) => categories)
-    const [transportations, setTransportations] = useState<ITransportation[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
-    const serviceRequestIds = useMemo(() => {
-        return collectServiceRequestIds(service, subService, null, selectedSR);
-    }, [service, subService, selectedSR]);
-
-    const getCategories = useCallback((): number[] => {
-        return allCategories
-            .filter(category => {
-                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
-            })
-            .map(item => item.id)
-    }, [allCategories, EServiceCategoryType, categoriesIds])
-
     useEffect(() => {
-        if (selectedVehicle) {
-            const maintenancePackageOption = selectedPackage
-                ? {id: selectedPackage?.id, priceType: packagePricingType}
-                : packageEMenuType !== null
-                    ? {optionType: packageEMenuType}
-                    : null;
-
-            const data: TTransportationData = {
-                serviceCenterId: decodeSCID(id),
-                serviceRequestIds,
-                serviceCategoryIds: getCategories(),
-                recalls: mapRecallsForRequest(selectedRecalls),
-                maintenancePackageOption,
-                vehicle: {
-                    vin: selectedVehicle.vin,
-                    year: selectedVehicle.year,
-                    make: selectedVehicle.make,
-                    model: selectedVehicle.model,
-                    mileage: selectedVehicle.mileage,
-                    engineTypeId: selectedVehicle.engineTypeId,
-                },
-            }
-            if (hashKey) data.appointmentHashKey = hashKey;
-            Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
-                .then(({data}) => {
-                    setTransportations(data);
-                })
-                .finally(() => {
-                    setLoading(false)
-                })
-        } else {
-            setTimeout(() => setLoading(false), 500)
-        }
-    }, [id, serviceRequestIds, selectedVehicle, selectedPackage, selectedRecalls,
-        packagePricingType, packageEMenuType, selectedPackage, categoriesIds, hashKey]);
+        dispatch(loadActiveTransportations(decodeSCID(id)))
+    }, [id]);
 
     const handleGA = (transportation: ITransportation|null) => {
         ReactGA.event({
@@ -116,7 +58,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     }
 
     return <StepWrapper>
-        {loading || isConsentsLoading
+        {isTransportationsLoading || isConsentsLoading
             ? <Loading/>
             : transportations.length
                 ? <CardsWrapper>
@@ -138,7 +80,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
             nextLabel={t("Next")}
             onNext={() => handleNext(transportation)}
             hideNext={!transportation && !!transportations.length}
-            nextDisabled={loading || isConsentsLoading}
+            nextDisabled={isTransportationsLoading || isConsentsLoading}
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>

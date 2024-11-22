@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {EServiceType, IAncillaryByZipRequest,} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -47,7 +47,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         transportation
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { scProfile, appointment, serviceValetAppointment } = useSelector(({appointment}: RootState) => appointment);
+    const { scProfile } = useSelector(({appointment}: RootState) => appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
@@ -55,8 +55,6 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const dispatch = useDispatch();
     const showError = useException();
     const {id} = useParams<{id: string}>();
-    const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"))
 
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceValetIsPossibleToUse = useMemo(() => {
@@ -242,8 +240,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
 
     return serviceValetIsPossibleToUse
         ? <div
-            className={classes.selectWrapper}
-            style={isMobile ? appointment || serviceValetAppointment ? {marginBottom: 8} : {} : {}}>
+            className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
                 <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div>
                 <Select

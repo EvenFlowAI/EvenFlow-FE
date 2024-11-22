@@ -210,6 +210,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 }
             } else {
                 const sorted = [...appointmentSlots].sort(sortAppointments)
+                console.log(dateWithOffset)
                 firstAvailableSlot = sorted.find(slot => {
                     const formatted = getClearDate(slot?.date)
                     return dayjs(formatted).isAfter(dateWithOffset)
@@ -232,7 +233,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     : getClearDate(slotsSearchedDate as TParsableDate);
             if (currentAppointment?.date) {
                 const sameSearchDate = getClearDate(currentAppointment.searchDate).isSame(dateWithOffset, 'date')
-                if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate) {
+                const slotTimeIsValid = dayjs(getClearDate(currentAppointment.date)).isAfter(dateWithOffset);
+                if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate && slotTimeIsValid) {
                     setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
                     selectedTime

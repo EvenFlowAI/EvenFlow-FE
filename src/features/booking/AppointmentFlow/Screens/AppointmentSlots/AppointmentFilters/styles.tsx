@@ -20,7 +20,9 @@ export const FiltersWrapper = styled("div")(({theme}) => ({
     gridTemplateColumns: "1fr 1fr 1fr",
     alignItems: 'center',
     gap: 16,
+    marginTop: 8,
     [theme.breakpoints.down('md')]: {
         gridTemplateColumns: "1fr",
+        gap: 8,
     }
 }))

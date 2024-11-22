@@ -6,8 +6,6 @@ export const useStyles = makeStyles()(() => ({
     label: {
         whiteSpace: 'nowrap',
         fontSize: 14,
-        marginBottom: 4,
-        marginTop: 10
     },
     select: {
         width: '100%',
