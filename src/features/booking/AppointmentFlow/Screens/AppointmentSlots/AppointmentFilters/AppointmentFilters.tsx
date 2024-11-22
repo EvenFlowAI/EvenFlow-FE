@@ -19,12 +19,10 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, handleSetScreen, onChangeSe
 
     return (
         <Wrapper>
-            <TitleWrapper>
+            <TitleWrapper onClick={isSm ? onArrowClick : undefined}>
                 <div>Appointment Options</div>
                 {isSm
-                    ? <Arrow
-                        style={{transform: !isFiltersOpen ? 'rotate(180deg) translate(0px, 3px)' : 'none', transition: '0.6s ease'}}
-                        onClick={onArrowClick}/>
+                    ? <Arrow style={{transform: !isFiltersOpen ? 'rotate(180deg) translate(0px, 3px)' : 'none', transition: '0.6s ease'}} />
                     : null}
             </TitleWrapper>
             {isFiltersOpen ? <FiltersWrapper>
