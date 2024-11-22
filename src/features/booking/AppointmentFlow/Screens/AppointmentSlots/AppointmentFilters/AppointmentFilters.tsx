@@ -27,8 +27,7 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, handleSetScreen, onChangeSe
                     : null}
             </TitleWrapper>
             {isFiltersOpen ? <FiltersWrapper>
-                <ServiceOption isSm={isSm} handleSetScreen={handleSetScreen}
-                               onChangeServiceOption={onChangeServiceOption}/>
+                <ServiceOption handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
                 <SelectedConsultant/>
             </FiltersWrapper> : null}
         </Wrapper>

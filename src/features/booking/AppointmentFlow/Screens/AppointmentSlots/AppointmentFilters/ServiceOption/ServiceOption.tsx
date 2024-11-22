@@ -31,12 +31,11 @@ import {useStyles} from "./styles";
 import clsx from "clsx";
 
 type TProps = {
-    isSm: boolean;
     handleSetScreen: TArgCallback<TScreen>;
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isSm, handleSetScreen, onChangeServiceOption}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleSetScreen, onChangeServiceOption}) => {
     const {
         serviceTypeOption,
         sideBarSteps,
