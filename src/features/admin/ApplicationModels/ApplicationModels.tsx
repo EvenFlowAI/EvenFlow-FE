@@ -98,12 +98,14 @@ const ApplicationModels = () => {
         <div>
             <WrapperJustify style={{marginBottom: 16}}>
                 <StatisticBlock/>
-                <SaveEditBlock
-                    onSave={onSave}
-                    onEdit={() => setEdit(true)}
-                    onCancel={onCancel}
-                    isEdit={isEdit}
-                    isSaving={isLoading}/>
+                <div>
+                    <SaveEditBlock
+                        onSave={onSave}
+                        onEdit={() => setEdit(true)}
+                        onCancel={onCancel}
+                        isEdit={isEdit}
+                        isSaving={isLoading}/>
+                </div>
             </WrapperJustify>
             <WrapperJustify style={{marginBottom: 24}}>
                 <Filters

@@ -39,7 +39,6 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
     return (
         <FiltersWrapper>
             <Autocomplete
-                style={{width: 465}}
                 loading={isLoading}
                 multiple
                 classes={classes}
@@ -56,7 +55,6 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
                 })}
             />
             <Autocomplete
-                style={{width: 465}}
                 loading={isLoading}
                 disabled={disabled || isLoading || !selectedMakes.length}
                 value={selectedModel}
@@ -73,7 +71,6 @@ const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onMo
                 })}
             />
             <Autocomplete
-                style={{width: 180}}
                 loading={isLoading}
                 value={selectedStatus}
                 options={reviewOptions}

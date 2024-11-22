@@ -73,12 +73,14 @@ const ApplicationMakes = () => {
         <div>
             <WrapperJustify style={{marginBottom: 16}}>
                 <StatisticBlock/>
-                <SaveEditBlock
-                    onSave={onSave}
-                    onEdit={() => setEdit(true)}
-                    onCancel={onCancel}
-                    isEdit={isEdit}
-                    isSaving={isLoading}/>
+                <div>
+                    <SaveEditBlock
+                        onSave={onSave}
+                        onEdit={() => setEdit(true)}
+                        onCancel={onCancel}
+                        isEdit={isEdit}
+                        isSaving={isLoading}/>
+                </div>
             </WrapperJustify>
             <WrapperFlexEnd style={{marginBottom: 24}}>
                 <Filters
