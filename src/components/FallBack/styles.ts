@@ -15,15 +15,6 @@ export const LogoWrapper = styled("div")({
     display: "flex",
     alignItems: 'flex-end',
     padding: 12,
-    ".mainText": {
-        borderBottom: '2px solid #252733',
-        paddingBottom: 13,
-        marginRight: 12,
-    },
-    ".secondaryText": {
-        padding: '13px 15px 13px 13px',
-        border: '2px solid #7898FF',
-    }
 })
 
 export const MainCard = styled("div")({
