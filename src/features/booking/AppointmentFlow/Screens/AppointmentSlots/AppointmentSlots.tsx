@@ -210,7 +210,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 }
             } else {
                 const sorted = [...appointmentSlots].sort(sortAppointments)
-                console.log(dateWithOffset)
                 firstAvailableSlot = sorted.find(slot => {
                     const formatted = getClearDate(slot?.date)
                     return dayjs(formatted).isAfter(dateWithOffset)
