@@ -19,6 +19,8 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import localeData from "dayjs/plugin/localeData";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import weekday from "dayjs/plugin/weekday";
+import { ErrorBoundary } from "react-error-boundary";
+import FallBack from "./components/FallBack/FallBack";
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
@@ -34,18 +36,20 @@ const root = createRoot(container!);
 
 root.render(
     <React.StrictMode>
-        <Provider store={store}>
+        <ErrorBoundary fallback={<FallBack/>}>
+            <Provider store={store}>
                 <StyledEngineProvider injectFirst>
                     <ThemeProvider theme={theme}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <CssBaseline />
                             <BrowserRouter>
-                                <App />
+                                <App/>
                             </BrowserRouter>
                         </LocalizationProvider>
                     </ThemeProvider>
                 </StyledEngineProvider>
-        </Provider>
+            </Provider>
+        </ErrorBoundary>
     </React.StrictMode>
 );
 
