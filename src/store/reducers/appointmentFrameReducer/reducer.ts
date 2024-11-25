@@ -1,6 +1,6 @@
 import {createReducer} from "@reduxjs/toolkit";
 import {
-    deleteLastScreen,
+    deleteLastScreen, getActiveTransportations,
     getAppointmentRequestsPrices, getCustomerConsentsBooking,
     getMakes,
     getModels,
@@ -60,7 +60,7 @@ import {
     setTime,
     setTiming,
     setTrackerCreated,
-    setTransportation,
+    setTransportation, setTransportationsLoading,
     setUpdateAppointment,
     setUserType,
     setUsualFlowNeeded,
@@ -94,6 +94,8 @@ const initialState: TState = {
     },
     reminders: [],
     transportation: null,
+    transportations: [],
+    isTransportationsLoading: false,
     maintenanceDetails: {},
     packages: [],
     isPackagesLoading: false,
@@ -428,5 +430,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setConsentsLoading, (state,  {payload}) => {
         return {...state, isConsentsLoading: payload}
+    })
+    .addCase(getActiveTransportations, (state,  {payload}) => {
+        return {...state, transportations: payload}
+    })
+    .addCase(setTransportationsLoading, (state,  {payload}) => {
+        return {...state, isTransportationsLoading: payload}
     })
 )

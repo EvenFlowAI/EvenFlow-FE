@@ -57,6 +57,8 @@ import MileageModal from "../../../../../components/modals/booking/MileageModal/
 import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
 import utc from "dayjs/plugin/utc";
 import {useException} from "../../../../../hooks/useException/useException";
+import AppointmentFilters from "./AppointmentFilters/AppointmentFilters";
+import {useMediaQuery, useTheme} from "@mui/material";
 
 dayjs.extend(utc)
 
@@ -134,6 +136,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const history = useHistory();
     const showError = useException();
     const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
+    const theme = useTheme();
+    const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
@@ -228,7 +232,8 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     : getClearDate(slotsSearchedDate as TParsableDate);
             if (currentAppointment?.date) {
                 const sameSearchDate = getClearDate(currentAppointment.searchDate).isSame(dateWithOffset, 'date')
-                if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate) {
+                const slotTimeIsValid = dayjs(getClearDate(currentAppointment.date)).isAfter(dateWithOffset);
+                if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate && slotTimeIsValid) {
                     setDate(dayjs.utc(currentAppointment.date).startOf('day'))
                 } else {
                     selectedTime
@@ -445,7 +450,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     return (
         <StepWrapper>
             <SlotsScreenWrapper>
-                <SelectedAppointment handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
+                <SelectedAppointment/>
                 <ActionButtons
                     removeTopMargin
                     onBack={handleBack}
@@ -453,6 +458,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     nextDisabled={nextDisabled}
                     nextLabel={t("Next")}
                     loading={isConsultantsLoading || isConsentsLoading}/>
+                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} handleSetScreen={handleSetScreen} isSm={isSm}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

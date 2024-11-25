@@ -118,6 +118,8 @@ export type TState = {
     customer: ICustomer;
     reminders: EReminderType[];
     transportation: ITransportation | null;
+    transportations: ITransportation[];
+    isTransportationsLoading: boolean;
     maintenanceDetails: TMaintenanceDetails;
     packages: IPackage[];
     isPackagesLoading: boolean;
