@@ -245,7 +245,7 @@ export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.P
                     <Autocomplete
                         options={enabledTransportationOptions}
                         isOptionEqualToValue={(option) => option.id === defaultTransportation?.id}
-                        getOptionLabel={o => getTransportationOptionString(o.type)}
+                        getOptionLabel={o => getTransportationOptionString(o.type.toString())}
                         value={defaultTransportation}
                         onChange={onTransportationChange}
                         disabled={isTransportationDisabled}
