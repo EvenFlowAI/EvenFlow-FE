@@ -18,6 +18,7 @@ import {TActionProps, TCallback} from "../../../../../types/types";
 import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
 import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
+import {ETransportationType} from "../../../../../store/reducers/transportationNeeds/types";
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;
@@ -49,7 +50,11 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
 
     const handleNext = (transportation: ITransportation|null): void => {
         handleGA(transportation);
-        onNext();
+        if (transportation?.type === ETransportationType.PickUpDelivery) {
+
+        } else {
+            onNext();
+        }
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
