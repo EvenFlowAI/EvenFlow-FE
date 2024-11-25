@@ -9,62 +9,68 @@ import {useAutocompleteStyles} from "../../../../hooks/styling/useAutocompleteSt
 import {reviewOptions} from "../../../../utils/constants";
 
 type TProps = {
-    onMakeChange: (e: React.ChangeEvent<{}>, option: IGlobalMake|null) => void;
+    onMakesChange: (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => void;
     onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption|null) => void;
     onModelsChange: (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => void;
     modelsOptions: IGlobalModel[];
     isLoading: boolean;
-    selectedMake: IGlobalMake|null
+    selectedMakes: IGlobalMake[];
     selectedModel: IGlobalModel[];
     selectedStatus: TReviewOption|null;
     disabled: boolean;
 }
 
-const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onModelsChange, onMakeChange, onStatusChange, isLoading, selectedMake, selectedStatus}) => {
+const Filters: React.FC<TProps> = ({disabled, modelsOptions, selectedModel, onModelsChange, onMakesChange, onStatusChange, isLoading, selectedMakes, selectedStatus}) => {
     const {allMakesOptions} = useSelector((state: RootState) => state.globalVehicles);
     const { classes  } = useAutocompleteStyles()
 
-    const renderOption =(props: any, option: IGlobalModel) => {
+    const renderModelOption =(props: any, option: IGlobalModel) => {
         return <li style={{height: 'fit-content'}} key={option} {...props}>
             {option.vinModel}
+        </li>
+    }
+
+    const renderMakeOption =(props: any, option: IGlobalMake) => {
+        return <li style={{height: 'fit-content'}} key={option} {...props}>
+            {option.vinMake}
         </li>
     }
 
     return (
         <FiltersWrapper>
             <Autocomplete
-                style={{width: 180}}
                 loading={isLoading}
-                value={selectedMake}
+                multiple
+                classes={classes}
+                value={selectedMakes}
                 disabled={disabled || isLoading}
                 options={allMakesOptions}
+                renderOption={renderMakeOption}
                 isOptionEqualToValue={(o, v) => o.id === v.id}
                 getOptionLabel={o => o.vinMake}
-                onChange={onMakeChange}
+                onChange={onMakesChange}
                 renderInput={autocompleteRender({
-                    label: "Make",
+                    label: "Makes",
                     placeholder: 'Not selected'
                 })}
             />
             <Autocomplete
-                style={{width: 180}}
                 loading={isLoading}
-                disabled={disabled || isLoading || !selectedMake}
+                disabled={disabled || isLoading || !selectedMakes.length}
                 value={selectedModel}
                 options={modelsOptions}
                 multiple
-                renderOption={renderOption}
+                renderOption={renderModelOption}
                 classes={classes}
                 isOptionEqualToValue={(o, v) => o.id === v.id}
                 getOptionLabel={o => o.vinModel}
                 onChange={onModelsChange}
                 renderInput={autocompleteRender({
-                    label: "Model",
+                    label: "Models",
                     placeholder: 'Not selected'
                 })}
             />
             <Autocomplete
-                style={{width: 180}}
                 loading={isLoading}
                 value={selectedStatus}
                 options={reviewOptions}

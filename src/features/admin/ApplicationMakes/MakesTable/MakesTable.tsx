@@ -95,6 +95,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                     fullWidth
                     classes={classes}
                     options={reviewOptions}
+                    disabled={el.isReadOnly}
                     value={el.status === EReviewStatus.Override ? "Override" : el.status === EReviewStatus.Confirmed ? "Confirmed" : "Not Reviewed"}
                     disableClearable
                     onChange={onReviewChange(el)}
@@ -115,6 +116,7 @@ const MakesTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, on
                         classes={classes}
                         style={{margin: '-6px -4px', height: 40}}
                         options={allMakesOptions}
+                        disabled={el.isReadOnly}
                         value={allMakesOptions.find(item => item.id === el.parent?.id)}
                         getOptionLabel={o => o.vinMake}
                         onChange={onMakeChange(el)}
