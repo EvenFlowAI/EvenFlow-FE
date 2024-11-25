@@ -8,6 +8,6 @@ export const WrapperFlexEnd = styled('div')({
 
 export const WrapperJustify = styled('div')({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between'
 })
