@@ -19,6 +19,9 @@ import CustomerConsents from "../../../../../components/modals/booking/CustomerC
 import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
 import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
 import {ETransportationType} from "../../../../../store/reducers/transportationNeeds/types";
+import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {useChangeServiceOption} from "../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
+import {selectAppointment} from "../../../../../store/reducers/appointment/actions";
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;
@@ -32,9 +35,12 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         transportations,
         isTransportationsLoading,
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {firstScreenOptions} = useSelector(({serviceTypes}: RootState) => serviceTypes)
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const dispatch = useDispatch();
+
+    const handleServiceOptionChange = useChangeServiceOption()
 
     useEffect(() => {
         dispatch(loadActiveTransportations(decodeSCID(id)))
@@ -48,10 +54,18 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         }, trackerData.ids)
     }
 
+    const switchToServiceValet = () => {
+        const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
+        if (serviceValetOption) {
+            dispatch(selectAppointment(null));
+            handleServiceOptionChange(serviceValetOption)
+        }
+    }
+
     const handleNext = (transportation: ITransportation|null): void => {
         handleGA(transportation);
         if (transportation?.type === ETransportationType.PickUpDelivery) {
-
+            switchToServiceValet()
         } else {
             onNext();
         }
@@ -89,4 +103,4 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>
-};
+}

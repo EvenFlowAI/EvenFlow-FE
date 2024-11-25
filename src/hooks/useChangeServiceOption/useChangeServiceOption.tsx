@@ -1,0 +1,182 @@
+import {TScreen} from "../../types/types";
+import {IFirstScreenOption} from "../../store/reducers/serviceTypes/types";
+import {useException} from "../useException/useException";
+import {useParams} from "react-router-dom";
+import {
+    checkCarIsValid,
+    loadAncillaryPriceByZip,
+    loadConsultants,
+    setAdvisor,
+    setCurrentFrameScreen,
+    setServiceOptionChanged,
+    setServiceTypeOption,
+    setSideBarSteps,
+    setTime,
+    setTransportation
+} from "../../store/reducers/appointmentFrameReducer/actions";
+import {setUnavailableServiceOpen} from "../../store/reducers/modals/actions";
+import {EServiceType, IAncillaryByZipRequest} from "../../store/reducers/appointmentFrameReducer/types";
+import {setAdvisorAvailable} from "../../store/reducers/bookingFlowConfig/actions";
+import {IServiceConsultant} from "../../api/types";
+import {TServiceTypeSettings} from "../../store/reducers/bookingFlowConfig/types";
+import {decodeSCID} from "../../utils/utils";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/rootReducer";
+
+export const useChangeServiceOption = () => {
+    const showError = useException();
+    const {id} = useParams<{id: string}>();
+    const dispatch = useDispatch();
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
+    const {sideBarSteps, serviceOptionChangedFromSlotPage, address, zipCode, selectedServiceOptions, advisor, transportation} = useSelector((state: RootState) => state.appointmentFrame)
+    let isTransportationAvailable = true;
+
+    const sliceSteps = (index: number) => {
+        if (index > -1) {
+            const slicedSteps = sideBarSteps.slice(0, index + 1);
+            dispatch(setSideBarSteps(slicedSteps))
+        }
+    }
+
+    const handleSideBar = (showAdvisorScreen: boolean) => {
+        let screenToSearchFor: TScreen = "appointmentSelection";
+        if (isTransportationAvailable) {
+            if (sideBarSteps.includes("transportationNeeds")) {
+                screenToSearchFor =  "transportationNeeds";
+            } else if (sideBarSteps.includes("consultantSelection")) {
+                screenToSearchFor =  "consultantSelection";
+            } else if (sideBarSteps.includes("serviceNeeds")) {
+                screenToSearchFor =  "serviceNeeds";
+            } else if (sideBarSteps.includes("location")) {
+                screenToSearchFor =  "location";
+            }
+        } else {
+            if (showAdvisorScreen && sideBarSteps.includes("consultantSelection")) {
+                screenToSearchFor =  "consultantSelection";
+            }
+        }
+        const index = sideBarSteps.indexOf(screenToSearchFor);
+        if (index > -1) {
+            sliceSteps(index)
+        }
+    }
+
+    const handleAdvisorSelection = (showAdvisorScreen: boolean) => {
+        handleSideBar(showAdvisorScreen);
+        if (showAdvisorScreen) dispatch(setCurrentFrameScreen('consultantSelection'))
+    }
+
+    const redirectToLocation = () => {
+        dispatch(setCurrentFrameScreen("location"))
+        dispatch(setSideBarSteps([]))
+    }
+
+    const onUnavailableService = () => {
+        redirectToLocation()
+        dispatch(setUnavailableServiceOpen(true))
+    }
+
+    const onValidZip = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
+        if (!serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously) {
+            redirectToLocation()
+        }
+        handleAdvisorSelection(showAdvisorScreen)
+    }
+
+    const checkAncillaryPriceByZip = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        if (id && address && zipCode){
+            const data: IAncillaryByZipRequest = {
+                address: typeof address === 'string' ? address : address.label,
+                zipCode: zipCode,
+                serviceCenterId: decodeSCID(id),
+                serviceTypeOptionId: option.id,
+            }
+            dispatch(loadAncillaryPriceByZip(data, () => onValidZip(option, showAdvisorScreen), showError, onUnavailableService))
+        }
+    }
+
+    const onRedirectToLocation = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        const optionWasSelectedPreviously = selectedServiceOptions.find(el => el.id === option.id);
+        const shouldRedirectToLocation = !address || !zipCode || !serviceOptionChangedFromSlotPage || !optionWasSelectedPreviously;
+        if (address && zipCode) {
+            checkAncillaryPriceByZip(option, showAdvisorScreen)
+        } else {
+            if (shouldRedirectToLocation) {
+                redirectToLocation();
+            } else {
+                handleAdvisorSelection(showAdvisorScreen)
+            }
+        }
+    }
+
+    const redirectToNextScreen = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        if (option?.type === EServiceType.PickUpDropOff) {
+            onRedirectToLocation(option, showAdvisorScreen);
+        } else {
+            handleAdvisorSelection(showAdvisorScreen)
+        }
+    }
+
+    const clearAdvisor = () => dispatch(setAdvisor(null));
+
+    const onEmptyList = (option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        dispatch(setAdvisorAvailable(false))
+        if (option?.type === EServiceType.PickUpDropOff) {
+            onRedirectToLocation(option, showAdvisorScreen);
+        }
+    }
+
+    const onFullList = (data: IServiceConsultant[], option: IFirstScreenOption, showAdvisorScreen: boolean) => {
+        const prevAdvisor = advisor && data.map(el => el.id).includes(advisor?.id);
+        if (prevAdvisor) {
+            redirectToNextScreen(option, false)
+        } else {
+            clearAdvisor();
+            redirectToNextScreen(option, showAdvisorScreen)
+        }
+    }
+
+    const onCarIsValid = (option: IFirstScreenOption, shouldLoadAdvisors: boolean, showAdvisorScreen: boolean) => {
+        const requestDataIsValid = option?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
+        if (shouldLoadAdvisors && requestDataIsValid) {
+            dispatch(loadConsultants(
+                id,
+                option.id,
+                () => onEmptyList(option, showAdvisorScreen),
+                (data) => onFullList(data, option, showAdvisorScreen)
+            ));
+        } else {
+            if (!showAdvisorScreen) dispatch(setAdvisor(null));
+            redirectToNextScreen(option, showAdvisorScreen)
+        }
+    }
+
+    const handleTransportation = (isTransportationAvailable: boolean)=> {
+        if (isTransportationAvailable) {
+            dispatch(setCurrentFrameScreen("transportationNeeds"))
+        } else if (transportation) {
+            dispatch(setTransportation(null));
+        }
+    }
+
+    const handleAdvisors = (newOption: IFirstScreenOption, newConfig?: TServiceTypeSettings) => {
+        const shouldLoadAdvisors = newConfig?.advisorSelection && newOption?.type === EServiceType.VisitCenter
+            || Boolean(newOption?.type === EServiceType.PickUpDropOff && address && zipCode);
+        let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === newOption.type)?.advisorSelection);
+        dispatch(checkCarIsValid(
+            () => onCarIsValid(newOption, shouldLoadAdvisors, isAdvisorSelectionOn),
+            undefined,
+            true))
+    }
+
+    return (newOption: IFirstScreenOption) => {
+        const newConfig = config.find(item => item.serviceType === newOption.type);
+        isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+        if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
+        handleTransportation(isTransportationAvailable);
+        dispatch(setServiceTypeOption(newOption));
+        handleAdvisors(newOption, newConfig);
+        dispatch(setServiceOptionChanged(true))
+    }
+}

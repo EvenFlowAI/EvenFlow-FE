@@ -458,7 +458,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     nextDisabled={nextDisabled}
                     nextLabel={t("Next")}
                     loading={isConsultantsLoading || isConsentsLoading}/>
-                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} handleSetScreen={handleSetScreen} isSm={isSm}/>
+                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} isSm={isSm}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

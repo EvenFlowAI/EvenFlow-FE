@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FiltersWrapper, TitleWrapper, Wrapper} from "./styles";
-import {TArgCallback, TScreen} from "../../../../../../types/types";
+import {TArgCallback} from "../../../../../../types/types";
 import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 import ServiceOption from "./ServiceOption/ServiceOption";
 import SelectedConsultant from "./SelectedConsultant/SelectedConsultant";
@@ -9,11 +9,10 @@ import SelectedTransportation from "./SelectedTransportation/SelectedTransportat
 
 type TProps = {
     isSm: boolean;
-    handleSetScreen: TArgCallback<TScreen>;
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
 }
 
-const AppointmentFilters: React.FC<TProps> = ({isSm, handleSetScreen, onChangeServiceOption }) => {
+const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption }) => {
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm)
     const onArrowClick = () => setFiltersOpen(prev => !prev);
 
@@ -26,7 +25,7 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, handleSetScreen, onChangeSe
                     : null}
             </TitleWrapper>
             {isFiltersOpen ? <FiltersWrapper>
-                <ServiceOption handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
+                <ServiceOption onChangeServiceOption={onChangeServiceOption}/>
                 <SelectedTransportation/>
                 <SelectedConsultant/>
             </FiltersWrapper> : null}
