@@ -17,15 +17,17 @@ import {TimeSlotsWrapper} from "./styles";
 import {TParsableDate} from "../../../types/types";
 import dayjs from "dayjs";
 import {useTimeSelectorStyles} from "../../../hooks/styling/useTmeSelectorStyles";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 
 type TProps = {
     date: TParsableDate;
     loading: boolean;
     appointments?: TGroupedAppointment;
+    selectFirstSlot?: (date?: TParsableDate, newSeviceOption?: IFirstScreenOption) => void;
 }
 
 export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
-    ({date, loading, appointments}) => {
+    ({date, loading, appointments, selectFirstSlot}) => {
         const {
             appointment: selectedAppointment,
             scProfile,
@@ -118,6 +120,7 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                             );
                             return <TimeSlotCard
                                 date={date}
+                                selectFirstSlot={selectFirstSlot}
                                 slot={appointment}
                                 onSelect={handleSelect}
                                 selected={Boolean(

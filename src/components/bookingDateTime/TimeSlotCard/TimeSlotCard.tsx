@@ -9,6 +9,7 @@ import {RootState} from "../../../store/rootReducer";
 import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 
 type TProps = {
     timeSlot: TSlot;
@@ -16,6 +17,7 @@ type TProps = {
     selected: boolean;
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
     date: TParsableDate;
+    selectFirstSlot?: (date?: TParsableDate, newSeviceOption?: IFirstScreenOption) => void;
 }
 
 export const TimeSlotCard: React.FC<TProps> =
@@ -24,7 +26,8 @@ export const TimeSlotCard: React.FC<TProps> =
          slot,
          onSelect,
          selected,
-         date}) => {
+         date,
+         selectFirstSlot}) => {
         const {waitListSettings} = useSelector((state: RootState) => state.appointment);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
@@ -37,9 +40,13 @@ export const TimeSlotCard: React.FC<TProps> =
             if (slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day') && dayjs(date).isSame(dayjs.utc(), 'day')) {
                 const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
                 if (differenceInMSeconds > 0) {
-                    setTimeout(() => setTimePassed(true), differenceInMSeconds);
+                    setTimeout(() => {
+                        setTimePassed(true)
+                        selectFirstSlot && selectFirstSlot(date)
+                    }, differenceInMSeconds);
                 } else {
                     setTimePassed(true);
+                    selectFirstSlot && selectFirstSlot(date)
                 }
             } else {
                 setTimePassed(false);

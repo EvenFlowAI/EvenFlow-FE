@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {EServiceType, IAncillaryByZipRequest,} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
+import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -23,19 +23,19 @@ import {useParams} from "react-router-dom";
 import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
 import {setAdvisorAvailable} from "../../../../../../../store/reducers/bookingFlowConfig/actions";
 import {IServiceConsultant} from "../../../../../../../api/types";
-import {useSelectedAppointmentStyles} from "../../../../../../../hooks/styling/useSelectedAppointmentStyles";
 import {useException} from "../../../../../../../hooks/useException/useException";
 import {setUnavailableServiceOpen} from "../../../../../../../store/reducers/modals/actions";
 import {TArgCallback, TScreen} from "../../../../../../../types/types";
 import {TServiceTypeSettings} from "../../../../../../../store/reducers/bookingFlowConfig/types";
+import {useStyles} from "./styles";
+import clsx from "clsx";
 
 type TProps = {
-    isSm: boolean;
     handleSetScreen: TArgCallback<TScreen>;
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({isSm, handleSetScreen, onChangeServiceOption}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({handleSetScreen, onChangeServiceOption}) => {
     const {
         serviceTypeOption,
         sideBarSteps,
@@ -47,36 +47,21 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         transportation
     } = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { scProfile, appointment, serviceValetAppointment } = useSelector(({appointment}: RootState) => appointment);
+    const { scProfile } = useSelector(({appointment}: RootState) => appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
     const {t} = useTranslation();
-    const { classes  } = useSelectedAppointmentStyles();
+    const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {id} = useParams<{id: string}>();
-    const theme = useTheme()
-    const isMobile = useMediaQuery(theme.breakpoints.down("mdl"))
 
-    const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
     const serviceValetIsPossibleToUse = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
             && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
             && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
     }, [serviceTypeOption, firstScreenOptions, config]);
     let isTransportationAvailable = true;
-
-    const getServiceName = () => {
-        if (serviceTypeOption?.name) return serviceTypeOption.name
-        switch (serviceType) {
-            case EServiceType.MobileService:
-                return t("Mobile Service");
-            case EServiceType.PickUpDropOff:
-                return t("Pick Up / Drop Off Service");
-            default:
-                return t("Visit Center");
-        }
-    }
 
     const sliceSteps = (index: number) => {
         if (index > -1) {
@@ -210,9 +195,6 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
 
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable) {
-            // let index = sideBarSteps.indexOf("serviceNeeds");
-            // if (index < 0 ) index = sideBarSteps.indexOf("location");
-            // sliceSteps(index)
             handleSetScreen("transportationNeeds")
         } else if (transportation) {
             dispatch(setTransportation(null));
@@ -243,18 +225,18 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return serviceValetIsPossibleToUse
-        ? <div
-            className={classes.selectWrapper}
-            style={isMobile ? appointment || serviceValetAppointment ? {marginBottom: 8} : {} : {marginTop: 10}}>
-            <div className={classes.selectWrapper}>
-                <span style={{whiteSpace: 'nowrap'}}>{t("Service Option")}: {isSm ? <br/> : null}</span>
+    return (
+        <div
+            className={classes.selectWrapper}>
+            <div className={classes.selectWrapper} style={{display: 'block'}}>
+                <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div>
                 <Select
                     value={serviceTypeOption?.id}
                     className={classes.select}
+                    disabled={!serviceValetIsPossibleToUse}
                     variant="standard"
                     disableUnderline
-                    fullWidth={isMobile}
+                    fullWidth
                     onChange={handleServiceOptionChange}>
                     {firstScreenOptions
                         .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
@@ -262,9 +244,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                 </Select>
             </div>
         </div>
-        : <div className="service-list" style={{marginBottom: 10, marginTop: 20}}>
-            <div>{t("Service Option")}: {getServiceName()}</div>
-        </div>
+    )
 };
 
 export default ServiceOption;
