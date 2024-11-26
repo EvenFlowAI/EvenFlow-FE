@@ -88,6 +88,7 @@ import {setLoading} from "../slotScoring/actions";
 import {setConsentOpen, setSlotsWarningShowed} from "../modals/actions";
 import {API} from "../../../api/api";
 import {Dispatch, SetStateAction} from "react";
+import {TTransportationData} from "../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -1249,5 +1250,64 @@ export const handleAppointmentUpdate = (
             setLoadingCar(false);
             dispatch(setAppointmentSaving(false))
         })
+    }
+}
+
+export const getActiveTransportations = createAction<ITransportation[]>("fAppointment/GetActiveTransportations")
+export const setTransportationsLoading = createAction<boolean>("fAppointment/SetTransportationsLoading")
+
+export const loadActiveTransportations = (serviceCenterId: number): AppThunk => (dispatch, getState) => {
+    const {
+        categoriesIds,
+        selectedVehicle,
+        selectedPackage,
+        packagePricingType,
+        packageEMenuType,
+        selectedRecalls,
+        hashKey,
+        service,
+        subService,
+    } = getState().appointmentFrame;
+    const {allCategories} = getState().categories;
+    const {selectedSR} = getState().appointment;
+    if (selectedVehicle) {
+        dispatch(setTransportationsLoading(true))
+        const maintenancePackageOption = selectedPackage
+            ? {id: selectedPackage?.id, priceType: packagePricingType}
+            : packageEMenuType !== null
+                ? {optionType: packageEMenuType}
+                : null;
+
+        const serviceCategoryIds = allCategories
+            .filter(category => {
+                return category.type === EServiceCategoryType.GeneralCategory && categoriesIds.includes(category.id)
+            })
+            .map(item => item.id)
+
+        const data: TTransportationData = {
+            serviceCenterId,
+            serviceRequestIds: collectServiceRequestIds(service, subService, null, selectedSR),
+            serviceCategoryIds,
+            recalls: mapRecallsForRequest(selectedRecalls),
+            maintenancePackageOption,
+            vehicle: {
+                vin: selectedVehicle.vin,
+                year: selectedVehicle.year,
+                make: selectedVehicle.make,
+                model: selectedVehicle.model,
+                mileage: selectedVehicle.mileage,
+                engineTypeId: selectedVehicle.engineTypeId,
+            },
+        }
+        if (hashKey) data.appointmentHashKey = hashKey;
+        Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
+            .then(({data}) => {
+                dispatch(getActiveTransportations(data));
+            })
+            .finally(() => {
+                dispatch(setTransportationsLoading(false))
+            })
+    } else {
+        setTimeout(() =>  dispatch(setTransportationsLoading(false)), 500)
     }
 }

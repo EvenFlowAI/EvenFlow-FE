@@ -9,7 +9,8 @@ import {setAdvisor, setAnyAdvisorSelected} from "../../../../../../../store/redu
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {EServiceCenterName} from "../../../../../../../api/types";
-import {useSelectedAppointmentStyles} from "../../../../../../../hooks/styling/useSelectedAppointmentStyles";
+import clsx from "clsx";
+import {useStyles} from "../ServiceOption/styles";
 
 const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
@@ -17,7 +18,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
     const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
-    const { classes  } = useSelectedAppointmentStyles();
+    const { classes  } = useStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
     const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
@@ -34,9 +35,9 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
     }
 
     return isAdvisorAvailable && consultants?.length
-        ? <div className={classes.selectWrapper} style={isSm ? {marginBottom: 8} : {}}>
-            <div className={classes.selectWrapper}>
-                {t("Advisor")}: {isSm ? <br/> : null}
+        ? <div style={isSm ? {marginBottom: 4} : {}}>
+            <div>
+                <div className={clsx("uppercase", classes.label)}>{t("Advisor")}</div>
                 <Select
                     value={advisor?.id ?? "Any"}
                     className={classes.select}

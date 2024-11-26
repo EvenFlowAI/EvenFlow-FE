@@ -4,11 +4,9 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import SelectedConsultant from "./SelectedConsultant/SelectedConsultant";
 import ServiceValetDateTime from "./ServiceValetDateTime/ServiceValetDateTime";
 import ServicesList from "./ServicesWithPrices/ServicesWithPrices";
 import Prices from "./Prices/Prices";
-import ServiceOption from "./ServiceOption/ServiceOption";
 import Address from "./Address/Address";
 import Info from "./Info/Info";
 import {useSelectedAppointmentStyles} from "../../../../../../hooks/styling/useSelectedAppointmentStyles";
@@ -16,15 +14,8 @@ import {DateWrapper} from "../../../../../../components/styled/DateWrapper";
 import {List, PriceWrapper, Wrapper} from "./styles";
 import {WaitListLabel} from "../WaitListLabel/WaitListLabel";
 import dayjs from "dayjs";
-import {TArgCallback, TScreen} from "../../../../../../types/types";
-import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 
-type TProps = {
-    handleSetScreen: TArgCallback<TScreen>;
-    onChangeServiceOption: TArgCallback<IFirstScreenOption>
-}
-
-export const SelectedAppointment: React.FC<TProps> = ({handleSetScreen, onChangeServiceOption}) => {
+export const SelectedAppointment = () => {
     const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const { appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
     const { classes  } = useSelectedAppointmentStyles();
@@ -49,9 +40,7 @@ export const SelectedAppointment: React.FC<TProps> = ({handleSetScreen, onChange
                        <ServicesList/>
                     </li>
                     <li key="advisor" style={isSm ? {width: '100%'} : {}}>
-                        <SelectedConsultant />
                         <Address />
-                        <ServiceOption isSm={isSm} handleSetScreen={handleSetScreen} onChangeServiceOption={onChangeServiceOption}/>
                         {appointment && isSm
                             ? <DateWrapper>
                                 {t("Date & Time")}: {dayjs.utc(appointment.date).format('MMMM D, h:mm A')}
