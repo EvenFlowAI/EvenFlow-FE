@@ -17,6 +17,7 @@ import {useHistory, useParams} from "react-router-dom";
 import {checkPodChanged} from "../../../../../store/reducers/appointments/actions";
 import {setServiceWarningOpen, setSlotsWarningOpen} from "../../../../../store/reducers/modals/actions";
 import {useException} from "../../../../../hooks/useException/useException";
+import {ETransportationType} from "../../../../../store/reducers/transportationNeeds/types";
 
 type TYourLocationProps = {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
@@ -35,7 +36,8 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
         serviceTypeOption,
         selectedVehicle,
         zipCode: zipCodeValue,
-        serviceOptionChangedFromSlotPage
+        serviceOptionChangedFromSlotPage,
+        transportation,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile} = useSelector((state: RootState) => state.appointment);
     const {wasWarningShowed} = useSelector((state: RootState) => state.modals);
@@ -52,8 +54,9 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
     const managedToPickUp = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         && appointmentByKey?.serviceTypeOption
         && appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff, [serviceTypeOption, appointmentByKey]);
-    const changedToPickUpFromSlots = useMemo(() => serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff,
-        [serviceOptionChangedFromSlotPage, serviceTypeOption]);
+    const changedToPickUpFromSlots = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
+            && (serviceOptionChangedFromSlotPage || transportation?.type === ETransportationType.PickUpDelivery),
+        [serviceOptionChangedFromSlotPage, serviceTypeOption, transportation]);
 
     const setPrevServiceType = () => {
         if (mobileServiceSelected || mobileServiceChanged) {

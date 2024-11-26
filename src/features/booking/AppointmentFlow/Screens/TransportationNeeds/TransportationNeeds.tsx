@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {ITransportation} from '../../../../../api/types';
 import {
-    loadActiveTransportations,
+    loadActiveTransportations, setSideBarSteps,
     setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -34,6 +34,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         trackerData,
         transportations,
         isTransportationsLoading,
+        sideBarSteps
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {firstScreenOptions} = useSelector(({serviceTypes}: RootState) => serviceTypes)
     const {id} = useParams<{id: string}>();
@@ -45,6 +46,13 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     useEffect(() => {
         dispatch(loadActiveTransportations(decodeSCID(id)))
     }, [id]);
+
+    useEffect(() => {
+        const index = sideBarSteps.indexOf("transportationNeeds")
+        if (!transportation && index > -1 && sideBarSteps.length > index + 1) {
+            dispatch(setSideBarSteps(sideBarSteps.slice(0, index + 1)))
+        }
+    }, [transportation])
 
     const handleGA = (transportation: ITransportation|null) => {
         ReactGA.event({
