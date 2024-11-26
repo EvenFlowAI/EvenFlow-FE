@@ -22,13 +22,23 @@ import {TServiceTypeSettings} from "../../store/reducers/bookingFlowConfig/types
 import {decodeSCID} from "../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
+import {ETransportationType} from "../../store/reducers/transportationNeeds/types";
 
-export const useChangeServiceOption = () => {
-    const showError = useException();
+export const useChangeServiceOption = (optionType: "serviceType"|"transportation") => {
+    const {
+        sideBarSteps,
+        serviceOptionChangedFromSlotPage,
+        address,
+        zipCode,
+        selectedServiceOptions,
+        advisor,
+        transportation,
+    } = useSelector((state: RootState) => state.appointmentFrame)
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
     const {id} = useParams<{id: string}>();
     const dispatch = useDispatch();
-    const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
-    const {sideBarSteps, serviceOptionChangedFromSlotPage, address, zipCode, selectedServiceOptions, advisor, transportation} = useSelector((state: RootState) => state.appointmentFrame)
+    const showError = useException();
+
     let isTransportationAvailable = true;
 
     const sliceSteps = (index: number) => {
@@ -58,12 +68,22 @@ export const useChangeServiceOption = () => {
         const index = sideBarSteps.indexOf(screenToSearchFor);
         if (index > -1) {
             sliceSteps(index)
+        } else {
+            if (transportation?.type === ETransportationType.PickUpDelivery) {
+
+            }
         }
     }
 
     const handleAdvisorSelection = (showAdvisorScreen: boolean) => {
         handleSideBar(showAdvisorScreen);
-        if (showAdvisorScreen) dispatch(setCurrentFrameScreen('consultantSelection'))
+        if (showAdvisorScreen) {
+            dispatch(setCurrentFrameScreen('consultantSelection'))
+        } else {
+            if (transportation?.type === ETransportationType.PickUpDelivery) {
+                dispatch(setCurrentFrameScreen('appointmentSelection'))
+            }
+        }
     }
 
     const redirectToLocation = () => {
@@ -155,27 +175,30 @@ export const useChangeServiceOption = () => {
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable) {
             dispatch(setCurrentFrameScreen("transportationNeeds"))
-        } else if (transportation) {
+            // if (transportation?.type === ETransportationType.PickUpDelivery) {
+            //     dispatch(setTransportation(null))
+            // }
+        } else if (optionType !== "transportation") {
             dispatch(setTransportation(null));
         }
     }
 
     const handleAdvisors = (newOption: IFirstScreenOption, newConfig?: TServiceTypeSettings) => {
-        const shouldLoadAdvisors = newConfig?.advisorSelection && newOption?.type === EServiceType.VisitCenter
-            || Boolean(newOption?.type === EServiceType.PickUpDropOff && address && zipCode);
+        const shouldLoadAdvisors = newConfig?.advisorSelection && (newOption?.type === EServiceType.VisitCenter
+            || Boolean(newOption?.type === EServiceType.PickUpDropOff && address && zipCode));
         let isAdvisorSelectionOn = Boolean(config.find(item => item.serviceType === newOption.type)?.advisorSelection);
         dispatch(checkCarIsValid(
-            () => onCarIsValid(newOption, shouldLoadAdvisors, isAdvisorSelectionOn),
+            () => onCarIsValid(newOption, Boolean(shouldLoadAdvisors), isAdvisorSelectionOn),
             undefined,
             true))
     }
 
     return (newOption: IFirstScreenOption) => {
+        dispatch(setServiceTypeOption(newOption));
         const newConfig = config.find(item => item.serviceType === newOption.type);
         isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
         if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
         handleTransportation(isTransportationAvailable);
-        dispatch(setServiceTypeOption(newOption));
         handleAdvisors(newOption, newConfig);
         dispatch(setServiceOptionChanged(true))
     }

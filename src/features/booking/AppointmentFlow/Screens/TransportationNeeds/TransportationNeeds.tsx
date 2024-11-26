@@ -40,7 +40,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
-    const handleServiceOptionChange = useChangeServiceOption()
+    const handleServiceOptionChange = useChangeServiceOption("transportation")
 
     useEffect(() => {
         dispatch(loadActiveTransportations(decodeSCID(id)))

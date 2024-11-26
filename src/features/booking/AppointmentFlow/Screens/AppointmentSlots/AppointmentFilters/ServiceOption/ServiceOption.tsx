@@ -27,7 +27,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const { classes  } = useStyles();
     const dispatch = useDispatch();
 
-    const handleServiceOptionChange = useChangeServiceOption()
+    const handleServiceOptionChange = useChangeServiceOption("serviceType")
 
     const serviceValetIsPossibleToUse = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
@@ -58,7 +58,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             <div className={classes.selectWrapper} style={{display: 'block'}}>
                 <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div>
                 <Select
-                    value={serviceTypeOption?.id}
+                    value={serviceTypeOption?.id ?? undefined}
                     className={classes.select}
                     disabled={!serviceValetIsPossibleToUse}
                     variant="standard"
