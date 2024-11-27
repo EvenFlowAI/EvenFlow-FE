@@ -25,7 +25,7 @@ const Filters: React.FC<TProps> = ({onMakesChange, onStatusChange, isLoading, se
         <FiltersWrapper>
             <Autocomplete
                 classes={classes}
-                style={{width: 400}}
+                style={{width: 465}}
                 loading={isLoading}
                 value={selectedMake}
                 disabled={isLoading || disabled}
@@ -35,7 +35,7 @@ const Filters: React.FC<TProps> = ({onMakesChange, onStatusChange, isLoading, se
                 getOptionLabel={o => o.vinMake}
                 onChange={onMakesChange}
                 renderInput={autocompleteRender({
-                    label: "Make",
+                    label: "Makes",
                     placeholder: 'Not selected'
                 })}
             />

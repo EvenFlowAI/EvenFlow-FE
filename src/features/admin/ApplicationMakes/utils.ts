@@ -16,9 +16,9 @@ export const roundToHundredth = (number: number): string => {
 export const getPercentage = (statistic: TVehicleStatistic): TStatisticPercentage | null => {
     if (statistic) {
         const total = (statistic.overriden + statistic.confirmed + statistic.notReviewed)
-        const overriden = roundToHundredth(100 * statistic.overriden / total);
-        const confirmed = roundToHundredth(100 * statistic.confirmed / total);
-        const notReviewed = roundToHundredth(100 * statistic.notReviewed / total);
+        const overriden = statistic.overriden > 0 ? roundToHundredth(100 * statistic.overriden / total) : '0.00';
+        const confirmed = statistic.confirmed > 0 ?roundToHundredth(100 * statistic.confirmed / total) : '0.00';
+        const notReviewed = statistic.notReviewed > 0 ? roundToHundredth(100 * statistic.notReviewed / total) : '0.00';
         return {overriden, confirmed, notReviewed}
     }
     return null

@@ -6,6 +6,7 @@ export interface IGlobalMake {
     vehiclesCount: number;
     vinMake: string;
     accepted: boolean;
+    isReadOnly: boolean;
     localId: number;
     parent?: IGlobalMake;
     status?: EReviewStatus;
@@ -18,6 +19,7 @@ export interface IGlobalModel {
     vinModel: string;
     make: IGlobalMake;
     accepted: boolean;
+    isReadOnly: boolean;
     localId: number;
     parent?: IGlobalModel;
     status?: EReviewStatus;

@@ -71,16 +71,18 @@ const ApplicationMakes = () => {
 
     return (
         <div>
-            <WrapperFlexEnd style={{marginBottom: 16}}>
-                <SaveEditBlock
-                    onSave={onSave}
-                    onEdit={() => setEdit(true)}
-                    onCancel={onCancel}
-                    isEdit={isEdit}
-                    isSaving={isLoading}/>
-            </WrapperFlexEnd>
-            <WrapperJustify style={{marginBottom: 44}}>
+            <WrapperJustify style={{marginBottom: 16}}>
                 <StatisticBlock/>
+                <div>
+                    <SaveEditBlock
+                        onSave={onSave}
+                        onEdit={() => setEdit(true)}
+                        onCancel={onCancel}
+                        isEdit={isEdit}
+                        isSaving={isLoading}/>
+                </div>
+            </WrapperJustify>
+            <WrapperFlexEnd style={{marginBottom: 24}}>
                 <Filters
                     disabled={isEdit}
                     onMakesChange={onMakesChange}
@@ -88,7 +90,7 @@ const ApplicationMakes = () => {
                     isLoading={isLoading}
                     selectedMake={selectedMakes}
                     selectedStatus={selectedStatus}/>
-            </WrapperJustify>
+            </WrapperFlexEnd>
             <MakesTable
                 data={data}
                 setData={setData}
