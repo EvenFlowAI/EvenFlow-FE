@@ -26,7 +26,7 @@ const SelectedTransportation: React.FC<{disabled?: boolean}> = ({disabled}) => {
             <div>
                 <div className={clsx("uppercase", classes.label)}>{t("Transportation")}</div>
                 <Select
-                    value={transportation?.id ?? null}
+                    value={transportation?.id ?? ""}
                     className={classes.select}
                     variant="standard"
                     disableUnderline
