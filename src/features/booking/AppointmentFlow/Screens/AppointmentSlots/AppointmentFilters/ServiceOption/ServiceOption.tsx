@@ -16,7 +16,8 @@ import {
     setCurrentFrameScreen,
     setServiceOptionChanged,
     setServiceTypeOption,
-    setSideBarSteps, setTime,
+    setSideBarSteps,
+    setTime,
     setTransportation
 } from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useParams} from "react-router-dom";
@@ -49,18 +50,19 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { scProfile } = useSelector(({appointment}: RootState) => appointment);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-
     const {t} = useTranslation();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
     const showError = useException();
     const {id} = useParams<{id: string}>();
-
-    const serviceValetIsPossibleToUse = useMemo(() => {
+    const options = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
-            && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
-            && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
-    }, [serviceTypeOption, firstScreenOptions, config]);
+            ? firstScreenOptions
+                .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
+                .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
+            : firstScreenOptions.map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
+    }, [firstScreenOptions, serviceTypeOption])
+
     let isTransportationAvailable = true;
 
     const sliceSteps = (index: number) => {
@@ -225,7 +227,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return (
+    return firstScreenOptions?.length > 1 ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
@@ -233,18 +235,16 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                 <Select
                     value={serviceTypeOption?.id}
                     className={classes.select}
-                    disabled={!serviceValetIsPossibleToUse}
                     variant="standard"
                     disableUnderline
                     fullWidth
+                    disabled={serviceTypeOption?.type === EServiceType.MobileService}
                     onChange={handleServiceOptionChange}>
-                    {firstScreenOptions
-                        .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
-                        .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
+                    {options}
                 </Select>
             </div>
         </div>
-    )
+    ) : null
 };
 
 export default ServiceOption;
