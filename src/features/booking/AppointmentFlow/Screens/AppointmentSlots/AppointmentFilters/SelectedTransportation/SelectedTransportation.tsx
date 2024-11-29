@@ -37,7 +37,8 @@ const SelectedTransportation = () => {
         dispatch(setTransportation(selected ?? null))
     }
 
-    return (someServicesHaveDefaultTransportation || (noOneServiceHasTransportation && isTransportationAvailable))
+    return ((someServicesHaveDefaultTransportation && (serviceTypeOption?.transportationOption || isTransportationAvailable))
+        || (noOneServiceHasTransportation && isTransportationAvailable))
     && serviceTypeOption?.type !== EServiceType.MobileService
     && transportations.length
             ? <div style={isSm ? {marginBottom: 4} : {}}>
