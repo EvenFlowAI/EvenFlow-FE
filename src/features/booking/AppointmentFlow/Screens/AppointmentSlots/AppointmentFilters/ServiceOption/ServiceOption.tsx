@@ -227,7 +227,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return firstScreenOptions?.length > 1 ? (
+    return options.length > 1 || serviceTypeOption?.type === EServiceType.MobileService ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
