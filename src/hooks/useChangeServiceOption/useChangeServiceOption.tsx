@@ -69,9 +69,6 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
         if (index > -1) {
             sliceSteps(index)
         } else {
-            if (transportation?.type === ETransportationType.PickUpDelivery) {
-
-            }
         }
     }
 
@@ -80,7 +77,7 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
         if (showAdvisorScreen) {
             dispatch(setCurrentFrameScreen('consultantSelection'))
         } else {
-            if (transportation?.type === ETransportationType.PickUpDelivery) {
+            if (optionType === "transportation") {
                 dispatch(setCurrentFrameScreen('appointmentSelection'))
             }
         }
@@ -173,11 +170,8 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     }
 
     const handleTransportation = (isTransportationAvailable: boolean)=> {
-        if (isTransportationAvailable) {
+        if (isTransportationAvailable && transportation?.type !== ETransportationType.PickUpDelivery) {
             dispatch(setCurrentFrameScreen("transportationNeeds"))
-            // if (transportation?.type === ETransportationType.PickUpDelivery) {
-            //     dispatch(setTransportation(null))
-            // }
         } else if (optionType !== "transportation") {
             dispatch(setTransportation(null));
         }
