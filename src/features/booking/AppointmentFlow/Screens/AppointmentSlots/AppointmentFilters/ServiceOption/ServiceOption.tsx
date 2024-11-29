@@ -60,7 +60,9 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             ? firstScreenOptions
                 .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
                 .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
-            : firstScreenOptions.map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
+            : firstScreenOptions
+                .filter(option => option.type === EServiceType.MobileService)
+                .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
     }, [firstScreenOptions, serviceTypeOption])
 
     let isTransportationAvailable = true;
@@ -227,7 +229,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return firstScreenOptions?.length > 1 ? (
+    return options.length > 1 || serviceTypeOption?.type !== EServiceType.VisitCenter ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
@@ -238,7 +240,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                     variant="standard"
                     disableUnderline
                     fullWidth
-                    disabled={serviceTypeOption?.type === EServiceType.MobileService}
+                    disabled={options.length === 1}
                     onChange={handleServiceOptionChange}>
                     {options}
                 </Select>
