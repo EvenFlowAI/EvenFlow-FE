@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {setTransportation} from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
@@ -11,15 +11,29 @@ import {ETransportationType} from "../../../../../../../store/reducers/transport
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
 import {selectAppointment} from "../../../../../../../store/reducers/appointment/actions";
 
-const SelectedTransportation: React.FC<{disabled?: boolean}> = ({disabled}) => {
-    const { transportation, transportations, isTransportationsLoading } = useSelector((state: RootState) => state.appointmentFrame);
-    const { currentConfig, isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
-    const {firstScreenOptions} = useSelector(({serviceTypes}: RootState) => serviceTypes)
+const SelectedTransportation = () => {
+    const { transportation, transportations, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+   const { isTransportationAvailable, currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const { classes  } = useStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
+    const value = transportation
+        ? transportation.id
+        : serviceTypeOption?.transportationOption
+            ? serviceTypeOption.transportationOption.id
+            : ""
+
+    const someServicesHaveDefaultTransportation = useMemo(() => {
+        const someOptionHasDefaultTransportation = firstScreenOptions.some(el => el.transportationOption)
+        const someOptionHasNotDefaultTransportation = firstScreenOptions.some(el => !el.transportationOption)
+        return someOptionHasDefaultTransportation && someOptionHasNotDefaultTransportation
+    }, [firstScreenOptions])
+
+    const noOneServiceHasTransportation = firstScreenOptions
+        .filter(el => !el.transportationOption).length === firstScreenOptions.length
 
     const handleServiceOptionChange = useChangeServiceOption("transportation")
 
@@ -39,23 +53,25 @@ const SelectedTransportation: React.FC<{disabled?: boolean}> = ({disabled}) => {
         dispatch(setTransportation(selected ?? null))
     }
 
-    return isTransportationAvailable && transportations?.length && transportation
-        ? <div style={isSm ? {marginBottom: 4} : {}}>
-            <div>
-                <div className={clsx("uppercase", classes.label)}>{t("Transportation")}</div>
-                <Select
-                    value={transportation?.id ?? ''}
-                    className={classes.select}
-                    variant="standard"
-                    disableUnderline
-                    fullWidth={isSm}
-                    disabled={disabled || (!!currentConfig && !transportations.length) || isTransportationsLoading}
-                    onChange={handleChange}>`
-                    {transportations.map(item => <MenuItem value={item.id} key={item.name}>{item.name}</MenuItem>)}
-                </Select>
+    return (someServicesHaveDefaultTransportation || (noOneServiceHasTransportation && isTransportationAvailable))
+    && serviceTypeOption?.type !== EServiceType.MobileService
+    && transportations.length
+            ? <div style={isSm ? {marginBottom: 4} : {}}>
+                <div>
+                    <div className={clsx("uppercase", classes.label)}>{t("Transportation")}</div>
+                    <Select
+                        value={value}
+                        className={classes.select}
+                        variant="standard"
+                        disableUnderline
+                        fullWidth={isSm}
+                        disabled={!isTransportationAvailable || isTransportationsLoading}
+                        onChange={handleChange}>`
+                        {transportations.map(item => <MenuItem value={item.id} key={item.name}>{item.name}</MenuItem>)}
+                    </Select>
+                </div>
             </div>
-        </div>
-        : null
+            : null
 };
 
 export default SelectedTransportation;

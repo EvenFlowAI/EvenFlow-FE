@@ -108,7 +108,7 @@ export const updateMakes = (
         })
 }
 
-export const loadGlobalModels = (pageData: IPageRequest, order: IOrder<IGlobalModel>, reviewStatus: TReviewOption|null, makeId?: number, modelIds?: number[]): AppThunk => (dispatch) => {
+export const loadGlobalModels = (pageData: IPageRequest, order: IOrder<IGlobalModel>, reviewStatus: TReviewOption|null, makeIds?: number[], modelIds?: number[]): AppThunk => (dispatch) => {
     dispatch(setLoading(true))
     const {pageIndex, pageSize} = pageData;
     Api.call<PaginatedAPIResponse<IGlobalModel>>(Api.endpoints.GlobalVehicles.GetModels, {
@@ -118,7 +118,7 @@ export const loadGlobalModels = (pageData: IPageRequest, order: IOrder<IGlobalMo
             reviewStatus: reviewStatus ? ReviewStatusMap[reviewStatus] : null,
             orderBy: order.orderBy,
             isAscending: order.isAscending,
-            makeIds: makeId ? [makeId] : [],
+            makeIds: makeIds,
             modelIds,
         }
     })
@@ -175,7 +175,7 @@ export const updateModels = (
     pageData: IPageRequest,
     order: IOrder<IGlobalModel>,
     reviewStatus: TReviewOption|null,
-    makeId: number|undefined,
+    makeIds: number[],
     modelIds: number[],
     onError: TArgCallback<any>,
     onSuccess: TCallback
@@ -184,7 +184,7 @@ export const updateModels = (
     Api.call(Api.endpoints.GlobalVehicles.UpdateModels, {data: {items}})
         .then(res => {
             if (res) {
-                dispatch(loadGlobalModels(pageData, order, reviewStatus, makeId, modelIds))
+                dispatch(loadGlobalModels(pageData, order, reviewStatus, makeIds, modelIds))
                 dispatch(loadModelStatistic())
             }
             onSuccess()

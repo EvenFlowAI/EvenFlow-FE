@@ -48,6 +48,10 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     }, [id]);
 
     useEffect(() => {
+        if (transportations.length === 1) dispatch(setTransportation(transportations[0]))
+    }, [transportations])
+
+    useEffect(() => {
         const index = sideBarSteps.indexOf("transportationNeeds")
         if (!transportation && index > -1 && sideBarSteps.length > index + 1) {
             dispatch(setSideBarSteps(sideBarSteps.slice(0, index + 1)))

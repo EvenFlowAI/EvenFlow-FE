@@ -100,6 +100,7 @@ const ModelsTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, o
                     fullWidth
                     classes={classes}
                     options={reviewOptions}
+                    disabled={el.isReadOnly}
                     value={el.status === EReviewStatus.Override ? "Override" : el.status === EReviewStatus.Confirmed ? "Confirmed" : "Not Reviewed"}
                     disableClearable
                     onChange={onReviewChange(el)}
@@ -118,6 +119,7 @@ const ModelsTable: React.FC<TProps> = ({isEdit, pageData, onChangeRowsPerPage, o
                         })}
                         fullWidth
                         classes={classes}
+                        disabled={el.isReadOnly}
                         style={{margin: '-6px -4px', height: 40}}
                         options={allModelsOptions.filter(item => item.make.id === el.make.id)}
                         value={allModelsOptions.find(item => item.id === el.parent?.id)}

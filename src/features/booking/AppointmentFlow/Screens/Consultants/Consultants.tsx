@@ -56,7 +56,7 @@ export const Consultants: React.FC<TProps> = ({isManagingFlow, handleNext, handl
 
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
-        const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode)
+        const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption || Boolean(address && zipCode)
         if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext));
         }
