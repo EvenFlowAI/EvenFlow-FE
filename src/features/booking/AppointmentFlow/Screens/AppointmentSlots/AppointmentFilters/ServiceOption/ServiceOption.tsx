@@ -26,7 +26,9 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
             ? firstScreenOptions
                 .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
                 .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
-            : firstScreenOptions.map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
+            : firstScreenOptions
+                .filter(option => option.type === EServiceType.MobileService)
+                .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
     }, [firstScreenOptions, serviceTypeOption])
 
     const {t} = useTranslation();
@@ -52,7 +54,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return options.length > 1 || serviceTypeOption?.type === EServiceType.MobileService ? (
+    return options.length > 1 || serviceTypeOption?.type !== EServiceType.VisitCenter ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
@@ -60,10 +62,10 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                 <Select
                     value={serviceTypeOption?.id ?? undefined}
                     className={classes.select}
-                    disabled={serviceTypeOption?.type === EServiceType.MobileService}
                     variant="standard"
                     disableUnderline
                     fullWidth
+                    disabled={options.length === 1}
                     onChange={onServiceOptionChange}>
                     {options}
                 </Select>
