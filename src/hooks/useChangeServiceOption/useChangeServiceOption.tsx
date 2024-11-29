@@ -23,6 +23,7 @@ import {decodeSCID} from "../../utils/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {ETransportationType} from "../../store/reducers/transportationNeeds/types";
+import {setSlotsLoading} from "../../store/reducers/appointment/actions";
 
 export const useChangeServiceOption = (optionType: "serviceType"|"transportation") => {
     const {
@@ -188,12 +189,19 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     }
 
     return (newOption: IFirstScreenOption) => {
-        dispatch(setServiceTypeOption(newOption));
-        const newConfig = config.find(item => item.serviceType === newOption.type);
-        isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
-        if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
-        handleTransportation(isTransportationAvailable);
-        handleAdvisors(newOption, newConfig);
-        dispatch(setServiceOptionChanged(true))
+        dispatch(setSlotsLoading(true))
+        try {
+            dispatch(setServiceTypeOption(newOption));
+            const newConfig = config.find(item => item.serviceType === newOption.type);
+            isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
+            if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
+            handleTransportation(isTransportationAvailable);
+            handleAdvisors(newOption, newConfig);
+            dispatch(setServiceOptionChanged(true))
+        } catch (e) {
+            console.log(e)
+        } finally {
+            dispatch(setSlotsLoading(false))
+        }
     }
 }
