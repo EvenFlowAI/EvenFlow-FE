@@ -21,7 +21,6 @@ type TProps = {
 const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
     const options = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
             ? firstScreenOptions
@@ -35,12 +34,6 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const dispatch = useDispatch();
 
     const handleServiceOptionChange = useChangeServiceOption("serviceType")
-
-    const serviceValetIsPossibleToUse = useMemo(() => {
-        return serviceTypeOption?.type !== EServiceType.MobileService
-            && firstScreenOptions.find(op => op.type === EServiceType.PickUpDropOff)
-            && config.find(item => item.serviceType === EServiceType.PickUpDropOff && item.available)
-    }, [serviceTypeOption, firstScreenOptions, config]);
 
     const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
         onChangeServiceOption(newOption)
@@ -59,7 +52,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return options.length > 1 ? (
+    return options.length > 1 || serviceTypeOption?.type === EServiceType.MobileService ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
@@ -67,7 +60,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                 <Select
                     value={serviceTypeOption?.id ?? undefined}
                     className={classes.select}
-                    disabled={!serviceValetIsPossibleToUse}
+                    disabled={serviceTypeOption?.type === EServiceType.MobileService}
                     variant="standard"
                     disableUnderline
                     fullWidth
