@@ -39,6 +39,10 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         dispatch(loadActiveTransportations(decodeSCID(id)))
     }, [id]);
 
+    useEffect(() => {
+        if (transportations.length === 1) dispatch(setTransportation(transportations[0]))
+    }, [transportations])
+
     const handleGA = (transportation: ITransportation|null) => {
         ReactGA.event({
             category: 'EvenFlow User',
