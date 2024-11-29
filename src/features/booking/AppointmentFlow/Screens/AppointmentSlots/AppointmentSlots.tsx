@@ -42,7 +42,7 @@ import {
     SVAppointmentTimeSelector
 } from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps,
+    clearAppointmentSteps, loadActiveTransportations,
     setServiceTypeOption,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
@@ -396,6 +396,10 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         subService, selectedPackage, selectedSR, advisor, valueService, serviceType, selectedTime, zipCode, address, mileage,
         transportation
     ]);
+
+    useEffect(() => {
+        dispatch(loadActiveTransportations(decodeSCID(id)))
+    }, [id]);
 
     const handleGANext = useCallback(() => {
         if (appointment) {

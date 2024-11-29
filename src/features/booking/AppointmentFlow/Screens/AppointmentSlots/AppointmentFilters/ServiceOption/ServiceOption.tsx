@@ -22,6 +22,13 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const options = useMemo(() => {
+        return serviceTypeOption?.type !== EServiceType.MobileService
+            ? firstScreenOptions
+                .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
+                .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
+            : firstScreenOptions.map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
+    }, [firstScreenOptions, serviceTypeOption])
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
@@ -52,7 +59,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return (
+    return options.length > 1 ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
@@ -65,13 +72,11 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                     disableUnderline
                     fullWidth
                     onChange={onServiceOptionChange}>
-                    {firstScreenOptions
-                        .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
-                        .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)}
+                    {options}
                 </Select>
             </div>
         </div>
-    )
+    ) : null
 };
 
 export default ServiceOption;

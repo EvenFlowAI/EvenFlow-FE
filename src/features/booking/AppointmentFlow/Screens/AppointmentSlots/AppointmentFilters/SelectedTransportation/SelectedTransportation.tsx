@@ -13,7 +13,7 @@ import {selectAppointment} from "../../../../../../../store/reducers/appointment
 
 const SelectedTransportation = () => {
     const { transportation, transportations, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
-   const { isTransportationAvailable, currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
+   const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -53,7 +53,8 @@ const SelectedTransportation = () => {
         dispatch(setTransportation(selected ?? null))
     }
 
-    return (someServicesHaveDefaultTransportation || (noOneServiceHasTransportation && isTransportationAvailable))
+    return ((someServicesHaveDefaultTransportation && (serviceTypeOption?.transportationOption || isTransportationAvailable))
+        || (noOneServiceHasTransportation && isTransportationAvailable))
     && serviceTypeOption?.type !== EServiceType.MobileService
     && transportations.length
             ? <div style={isSm ? {marginBottom: 4} : {}}>
