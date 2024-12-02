@@ -33,7 +33,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           serviceBook,
                                                                           advisor,
                                                                           technician,
-    dateRangeType,
+                                                                          dateRangeType,
                                                                       }) => {
     const {schedulerList,
         serviceBookList,
@@ -99,8 +99,10 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
 
     const handleDateChange = (field: "dateFrom"|"dateTo") => (date: TParsableDate) => {
         setFilters(prev => {
-          if (field === "dateFrom" && dayjs(date).isAfter(prev.dateTo)) {
-                return {...prev, [field]: dayjs(date), dateTo: null, pageData: initialPaging}
+            if (field === "dateFrom" && (dayjs(date).isAfter(prev.dateTo) || !prev.dateTo)) {
+                return {...prev, [field]: dayjs(date), dateTo: dayjs(date).add(1, 'month'), pageData: initialPaging}
+            } else if (field === "dateTo" && (dayjs(date).isBefore(prev.dateFrom) || !prev.dateFrom)) {
+                return {...prev, [field]: dayjs(date), dateFrom: dayjs(date).subtract(1, 'month'), pageData: initialPaging}
             } else {
                 return {...prev, [field]: dayjs(date), pageData: initialPaging}
             }
@@ -109,7 +111,9 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
 
     const handleClear = (e: any, field: "dateFrom"|"dateTo") => {
         e.stopPropagation();
-        setFilters(prev => ({...prev, [field]: null, pageData: initialPaging}))
+        setFilters(prev => {
+            return {...prev, [field]: null, pageData: initialPaging}
+        })
     }
 
     const onSchedulerChange = (e: React.SyntheticEvent, value: TScheduler|null) => {
@@ -166,7 +170,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                 </RadioGroup>
             </RadioBlock>
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-start'>
-                <Grid item xs={3} key="datepickerFrom">
+                <Grid item xs={12} sm={3} key="datepickerFrom">
                     <CustomDatePicker
                         onOpen={handleOpenFrom(true)}
                         onClose={handleOpenFrom(false)}
@@ -190,7 +194,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         onAccept={handleDateChange("dateFrom")}
                     />
                 </Grid>
-                <Grid item xs={3} key="datepickerTo">
+                <Grid item xs={12} sm={3} key="datepickerTo">
                     <CustomDatePicker
                         onOpen={handleOpenTo(true)}
                         onClose={handleOpenTo(false)}
@@ -215,7 +219,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         onAccept={handleDateChange('dateTo')}
                     />
                 </Grid>
-                <Grid item xs={3} key="service advisor">
+                <Grid item xs={12} sm={3} key="service advisor">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Service Advisor",
@@ -229,7 +233,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         options={serviceAdvisors}
                     />
                 </Grid>
-                <Grid item xs={3} key="technician">
+                <Grid item xs={12} sm={3} key="technician">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Technician",
@@ -243,7 +247,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         options={technicians}
                     />
                 </Grid>
-                <Grid item xs={3} key="scheduler">
+                <Grid item xs={12} sm={3} key="scheduler">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Scheduler",
@@ -256,10 +260,10 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         getOptionLabel={o => o.fullName}
                         isOptionEqualToValue={(o, v) => o.id && v.id ? o.id === v.id : o.fullName === v.fullName}
                         options={[...schedulerList]
-                        .sort((a, b) => a.fullName.localeCompare(b.fullName))}
+                            .sort((a, b) => a.fullName.localeCompare(b.fullName))}
                     />
                 </Grid>
-                <Grid item xs={3} key="serviceBook">
+                <Grid item xs={12} sm={3} key="serviceBook">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Service Book",
@@ -275,7 +279,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             .sort((a, b) => a.name.localeCompare(b.name))}
                     />
                 </Grid>
-                <Grid item xs={6} key="status">
+                <Grid item xs={12} sm={6} key="status">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Status",
