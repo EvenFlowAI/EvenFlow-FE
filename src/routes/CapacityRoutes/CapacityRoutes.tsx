@@ -4,7 +4,6 @@ import {Switch, Redirect} from "react-router-dom";
 import {PrivateRoute} from "../PrivateRoute/PrivateRoute";
 import {CapacitySettings} from "../../pages/admin/CapacitySettings/CapacitySettings";
 import {AppointmentAllocation} from "../../pages/admin/AppointmentAllocation/AppointmentAllocation";
-import ManageExEFAppointments from "../../features/admin/ManageExEFAppointments/ManageExEFAppointments";
 import {Routes} from "../constants";
 import RequestDifferentiation from "../../pages/admin/RequestDifferentiation/RequestDifferentiation";
 import TimeDifferentiation from "../../pages/admin/TimeDifferentiation/TimeDifferentiation";
@@ -20,7 +19,6 @@ export const CapacityRoutes = () => {
             <PrivateRoute path={Routes.CapacityManagement.PartsAvailability} component={PartsAvailabilityPage} />
             <PrivateRoute path={Routes.CapacityManagement.AppointmentAllocation} component={AppointmentAllocation} />
             <PrivateRoute path={Routes.CapacityManagement.Pods} component={ServiceBooks} />
-            <PrivateRoute path={Routes.CapacityManagement.ManageEXEvenFlowAppointments} component={ManageExEFAppointments} />
             <PrivateRoute path={Routes.CapacityManagement.RequestDifferentiation} component={RequestDifferentiation} />
             <PrivateRoute path={Routes.CapacityManagement.TimeDifferentiation} component={TimeDifferentiation} />
             <Redirect to={Routes.CapacityManagement.Pods} />
