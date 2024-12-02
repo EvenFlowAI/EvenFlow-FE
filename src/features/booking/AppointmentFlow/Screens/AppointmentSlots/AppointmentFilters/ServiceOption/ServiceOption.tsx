@@ -1,6 +1,6 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
-import {MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
@@ -16,20 +16,13 @@ import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServic
 
 type TProps = {
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
+    isVisible: boolean;
+    options: React.JSX.Element[];
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption, isVisible, options}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const options = useMemo(() => {
-        return serviceTypeOption?.type !== EServiceType.MobileService
-            ? firstScreenOptions
-                .filter(option => option.type === EServiceType.PickUpDropOff || option.type === EServiceType.VisitCenter)
-                .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
-            : firstScreenOptions
-                .filter(option => option.type === EServiceType.MobileService)
-                .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
-    }, [firstScreenOptions, serviceTypeOption])
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
@@ -54,7 +47,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         }
     }
 
-    return options.length > 1 || serviceTypeOption?.type !== EServiceType.VisitCenter ? (
+    return isVisible ? (
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
