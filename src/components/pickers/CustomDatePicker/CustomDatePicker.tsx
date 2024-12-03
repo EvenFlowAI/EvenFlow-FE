@@ -69,10 +69,12 @@ export const CustomDatePicker: React.FC<TProps> = ({
                     backgroundColor: 'red'
                 },
                 '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid #C7C8CD',
+                    borderColor: "#C7C8CD !important",
+                    borderWidth: "1px !important"
                 },
                 '& .Mui-error .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid #FF0000',
+                    borderColor: "#FF0000 !important",
+                    borderWidth: "1px !important"
                 },
             }}
         />
