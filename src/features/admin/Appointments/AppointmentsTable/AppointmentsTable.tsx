@@ -16,6 +16,7 @@ import {getAppointmentDate} from "./utils";
 import dayjs from "dayjs";
 
 import {AppointmentsColumns} from "../constants";
+import NoAppointments from "../NoAppointments/NoAppointments";
 
 type TAppointmentsTable = {
     refresh: TCallback;
@@ -125,13 +126,12 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
         setOrder(data);
     }
 
-    return <>
+    return appointments.length ? <>
         <Table<IAppointment>
             data={appointments}
             onSort={handleSort}
             order={order.orderBy}
             isAscending={order.isAscending}
-            noDataTitle="No upcoming appointments scheduled"
             isLoading={isLoading}
             rowData={AppointmentsColumns.filter(col => selectedColumns.includes(col.header.toString()))}
             hidePagination={count < 11}
@@ -165,5 +165,5 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
             refresh={refresh}
             payload={viewItem}
             onClose={onClose} />
-    </>
+    </> : <NoAppointments/>
 };
