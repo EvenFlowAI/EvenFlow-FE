@@ -184,7 +184,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
                 <Grid item xs={6}>
                     <TextField
                         fullWidth
-                        label="Parts Price"
+                        label="Parts Amount"
                         startAdornment="$"
                         name="partsUnitCost"
                         id="partsUnitCost"
