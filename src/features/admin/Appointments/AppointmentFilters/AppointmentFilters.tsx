@@ -17,7 +17,6 @@ import {TOption, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {RadioBlock, RadioGroupLabel, useAutocompleteClasses} from "./styles";
-import {initialPaging} from "../constants";
 import {statusOptions} from "./constants";
 import {TAppointmentFilterProps} from "./types";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
@@ -100,11 +99,11 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const handleDateChange = (field: "dateFrom"|"dateTo") => (date: TParsableDate) => {
         setFilters(prev => {
             if (field === "dateFrom" && (dayjs(date).isAfter(prev.dateTo) || !prev.dateTo)) {
-                return {...prev, [field]: dayjs(date), dateTo: dayjs(date).add(1, 'month'), pageData: initialPaging}
+                return {...prev, [field]: dayjs(date), dateTo: dayjs(date).add(1, 'month'), pageData: {...prev.pageData, pageIndex: 0}}
             } else if (field === "dateTo" && (dayjs(date).isBefore(prev.dateFrom) || !prev.dateFrom)) {
-                return {...prev, [field]: dayjs(date), dateFrom: dayjs(date).subtract(1, 'month'), pageData: initialPaging}
+                return {...prev, [field]: dayjs(date), dateFrom: dayjs(date).subtract(1, 'month'), pageData: {...prev.pageData, pageIndex: 0}}
             } else {
-                return {...prev, [field]: dayjs(date), pageData: initialPaging}
+                return {...prev, [field]: dayjs(date), pageData: {...prev.pageData, pageIndex: 0}}
             }
         })
     }
@@ -112,35 +111,35 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const handleClear = (e: any, field: "dateFrom"|"dateTo") => {
         e.stopPropagation();
         setFilters(prev => {
-            return {...prev, [field]: null, pageData: initialPaging}
+            return {...prev, [field]: null, pageData: {...prev.pageData, pageIndex: 0}}
         })
     }
 
     const onSchedulerChange = (e: React.SyntheticEvent, value: TScheduler|null) => {
-        setFilters(prev => ({...prev, scheduler: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, scheduler: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onServiceBookChange = (e: React.SyntheticEvent, value: TServiceBook |null) => {
-        setFilters(prev => ({...prev, serviceBook: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, serviceBook: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onStatusChange = (e: React.SyntheticEvent, value: TOption[]) => {
-        setFilters(prev => ({...prev, reportingStatus: value.map(el => +el.value as EReportingStatus), pageData: initialPaging}))
+        setFilters(prev => ({...prev, reportingStatus: value.map(el => +el.value as EReportingStatus), pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onAdvisorChange = (e: React.SyntheticEvent, value: TServiceConsultant|null) => {
-        setFilters(prev => ({...prev, advisor: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, advisor: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onTechnicianChange = (e: React.SyntheticEvent, value: TServiceConsultant|null) => {
-        setFilters(prev => ({...prev, technician: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, technician: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const handleType = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
         setFilters(prev => ({
             ...prev,
             dateRangeFilterBy: value === "AppointmentDate" ? EDate.AppointmentDate : EDate.CreatedDate,
-            pageData: {pageIndex: 0, pageSize: 10}
+            pageData: {...prev.pageData, pageIndex: 0}
         }))
     }
 

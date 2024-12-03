@@ -19,7 +19,6 @@ import {
     allColumns,
     initialFilters,
     initialOrder,
-    initialPaging,
     localStorageItemName,
     requiredColumns,
 } from "./constants";
@@ -129,7 +128,7 @@ export const Appointments = () => {
     }
 
     const onSearch = useCallback(() => {
-        setFilters(prev => ({...prev, searchTerm: search, pageData: initialPaging}))
+        setFilters(prev => ({...prev, searchTerm: search, pageData: {...prev.pageData, pageIndex: 0}}))
     }, [search])
 
     return <>
