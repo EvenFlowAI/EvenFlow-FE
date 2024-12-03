@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Autocomplete, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup} from "@mui/material";
 import {Clear, DateRange} from '@mui/icons-material';
 import {useDispatch, useSelector} from "react-redux";
@@ -47,6 +47,9 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const dispatch = useDispatch();
     const showError = useException();
     const { classes: autocompleteClasses } = useAutocompleteClasses();
+    const rangeIsWrong = useMemo(() => {
+        return dateTo && dateFrom && Math.round(dayjs(dateTo).diff(dateFrom) / (1000 * 60 * 60 * 24)) > 90
+    }, [dateTo, dateFrom])
 
     useEffect(() => {
         if (selectedSC) {
@@ -183,13 +186,13 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
-                            error: !dateFrom,
+                            error: !dateFrom || !!rangeIsWrong,
                             endAdornment:
                                 dateFrom
                                     ? (<IconButton onClick={(e) => handleClear(e, "dateFrom")} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" htmlColor={!dateFrom ? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
+                                    : <DateRange cursor="pointer" htmlColor={!dateFrom || rangeIsWrong? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
                         }}
                         value={dateFrom}
                         onAccept={handleDateChange("dateFrom")}
@@ -210,13 +213,13 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
-                            error: !dateTo,
+                            error: !dateTo || !!rangeIsWrong,
                             endAdornment:
                                 dateTo
                                     ? (<IconButton onClick={(e) => handleClear(e, "dateTo")} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" htmlColor={!dateTo ? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
+                                    : <DateRange cursor="pointer" htmlColor={!dateTo || rangeIsWrong ? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
                         }}
                         value={dateTo}
                         onAccept={handleDateChange('dateTo')}
