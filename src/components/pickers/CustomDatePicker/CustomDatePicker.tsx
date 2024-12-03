@@ -10,18 +10,20 @@ type TProps = MobileDatePickerProps<TParsableDate> & {
     fullWidth?: boolean;
     InputProps?: TextInputProps;
     label?: string;
+    required?: boolean;
 }
 
 export const CustomDatePicker: React.FC<TProps> = ({
-                                                             fullWidth,
-                                                             InputProps,
-                                                             label,
-                                                             ...props
+                                                       fullWidth,
+                                                       InputProps,
+                                                       label,
+                                                       required,
+                                                       ...props
                                                          }) => {
     const { classes  } = useDatePickerStyles();
 
     return <>
-        {label ? <InputLabel shrink className={classes.label}>{label}</InputLabel> : null}
+        {label ? <InputLabel shrink className={classes.label} required={required}>{label}</InputLabel> : null}
         <MobileDatePicker
             {...props}
             slotProps={{
@@ -54,16 +56,24 @@ export const CustomDatePicker: React.FC<TProps> = ({
             }}
             sx={{
                 "& .MuiOutlinedInput-root": {
-                    "&:hover > fieldset": {borderColor: "#C7C8CD"},
                     borderRadius: 0,
-                    border: 0
+                    border: 0,
+                    "&:hover > fieldset": {
+                        borderColor: "#C7C8CD",
+                    },
                 },
                 "& .MuiOutlinedInput-input": {
                     padding: '9px'
                 },
                 "& .MuiPickersToolbar-root": {
                     backgroundColor: 'red'
-                }
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    border: '1px solid #C7C8CD',
+                },
+                '& .Mui-error .MuiOutlinedInput-notchedOutline': {
+                    border: '1px solid #FF0000',
+                },
             }}
         />
     </>
