@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Autocomplete, FormControlLabel, Grid, IconButton, Paper, Radio, RadioGroup} from "@mui/material";
 import {Clear, DateRange} from '@mui/icons-material';
 import {useDispatch, useSelector} from "react-redux";
@@ -17,7 +17,6 @@ import {TOption, TParsableDate} from "../../../../types/types";
 import dayjs from "dayjs";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 import {RadioBlock, RadioGroupLabel, useAutocompleteClasses} from "./styles";
-import {initialPaging} from "../constants";
 import {statusOptions} from "./constants";
 import {TAppointmentFilterProps} from "./types";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
@@ -33,7 +32,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                                                                           serviceBook,
                                                                           advisor,
                                                                           technician,
-    dateRangeType,
+                                                                          dateRangeType,
                                                                       }) => {
     const {schedulerList,
         serviceBookList,
@@ -48,6 +47,9 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     const dispatch = useDispatch();
     const showError = useException();
     const { classes: autocompleteClasses } = useAutocompleteClasses();
+    const rangeIsWrong = useMemo(() => {
+        return dateTo && dateFrom && Math.round(dayjs(dateTo).diff(dateFrom) / (1000 * 60 * 60 * 24)) > 90
+    }, [dateTo, dateFrom])
 
     useEffect(() => {
         if (selectedSC) {
@@ -99,44 +101,48 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
 
     const handleDateChange = (field: "dateFrom"|"dateTo") => (date: TParsableDate) => {
         setFilters(prev => {
-          if (field === "dateFrom" && dayjs(date).isAfter(prev.dateTo)) {
-                return {...prev, [field]: dayjs(date), dateTo: null, pageData: initialPaging}
+            if (field === "dateFrom" && (dayjs(date).isAfter(prev.dateTo) || !prev.dateTo)) {
+                return {...prev, [field]: dayjs(date), dateTo: dayjs(date).add(1, 'month'), pageData: {...prev.pageData, pageIndex: 0}}
+            } else if (field === "dateTo" && (dayjs(date).isBefore(prev.dateFrom) || !prev.dateFrom)) {
+                return {...prev, [field]: dayjs(date), dateFrom: dayjs(date).subtract(1, 'month'), pageData: {...prev.pageData, pageIndex: 0}}
             } else {
-                return {...prev, [field]: dayjs(date), pageData: initialPaging}
+                return {...prev, [field]: dayjs(date), pageData: {...prev.pageData, pageIndex: 0}}
             }
         })
     }
 
     const handleClear = (e: any, field: "dateFrom"|"dateTo") => {
         e.stopPropagation();
-        setFilters(prev => ({...prev, [field]: null, pageData: initialPaging}))
+        setFilters(prev => {
+            return {...prev, [field]: null, pageData: {...prev.pageData, pageIndex: 0}}
+        })
     }
 
     const onSchedulerChange = (e: React.SyntheticEvent, value: TScheduler|null) => {
-        setFilters(prev => ({...prev, scheduler: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, scheduler: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onServiceBookChange = (e: React.SyntheticEvent, value: TServiceBook |null) => {
-        setFilters(prev => ({...prev, serviceBook: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, serviceBook: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onStatusChange = (e: React.SyntheticEvent, value: TOption[]) => {
-        setFilters(prev => ({...prev, reportingStatus: value.map(el => +el.value as EReportingStatus), pageData: initialPaging}))
+        setFilters(prev => ({...prev, reportingStatus: value.map(el => +el.value as EReportingStatus), pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onAdvisorChange = (e: React.SyntheticEvent, value: TServiceConsultant|null) => {
-        setFilters(prev => ({...prev, advisor: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, advisor: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const onTechnicianChange = (e: React.SyntheticEvent, value: TServiceConsultant|null) => {
-        setFilters(prev => ({...prev, technician: value, pageData: initialPaging}))
+        setFilters(prev => ({...prev, technician: value, pageData: {...prev.pageData, pageIndex: 0}}))
     }
 
     const handleType = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
         setFilters(prev => ({
             ...prev,
             dateRangeFilterBy: value === "AppointmentDate" ? EDate.AppointmentDate : EDate.CreatedDate,
-            pageData: {pageIndex: 0, pageSize: 10}
+            pageData: {...prev.pageData, pageIndex: 0}
         }))
     }
 
@@ -166,7 +172,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                 </RadioGroup>
             </RadioBlock>
             <Grid container spacing={2} justifyContent="space-between" alignItems='flex-start'>
-                <Grid item xs={3} key="datepickerFrom">
+                <Grid item xs={12} sm={3} key="datepickerFrom">
                     <CustomDatePicker
                         onOpen={handleOpenFrom(true)}
                         onClose={handleOpenFrom(false)}
@@ -174,28 +180,31 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         format="MMMM Do"
                         fullWidth
                         maxDate={dateTo}
+                        required
                         label="Date From"
                         InputProps={{
                             placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
+                            error: !dateFrom || !!rangeIsWrong,
                             endAdornment:
                                 dateFrom
                                     ? (<IconButton onClick={(e) => handleClear(e, "dateFrom")} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
+                                    : <DateRange cursor="pointer" htmlColor={!dateFrom || rangeIsWrong? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
                         }}
                         value={dateFrom}
                         onAccept={handleDateChange("dateFrom")}
                     />
                 </Grid>
-                <Grid item xs={3} key="datepickerTo">
+                <Grid item xs={12} sm={3} key="datepickerTo">
                     <CustomDatePicker
                         onOpen={handleOpenTo(true)}
                         onClose={handleOpenTo(false)}
                         open={isOpenTo}
                         minDate={dateFrom}
+                        required
                         format="MMMM Do"
                         fullWidth
                         shouldDisableDate={day => dayjs(day).isBefore(dateFrom)}
@@ -204,18 +213,19 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
+                            error: !dateTo || !!rangeIsWrong,
                             endAdornment:
                                 dateTo
                                     ? (<IconButton onClick={(e) => handleClear(e, "dateTo")} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
+                                    : <DateRange cursor="pointer" htmlColor={!dateTo || rangeIsWrong ? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
                         }}
                         value={dateTo}
                         onAccept={handleDateChange('dateTo')}
                     />
                 </Grid>
-                <Grid item xs={3} key="service advisor">
+                <Grid item xs={12} sm={3} key="service advisor">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Service Advisor",
@@ -229,7 +239,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         options={serviceAdvisors}
                     />
                 </Grid>
-                <Grid item xs={3} key="technician">
+                <Grid item xs={12} sm={3} key="technician">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Technician",
@@ -243,7 +253,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         options={technicians}
                     />
                 </Grid>
-                <Grid item xs={3} key="scheduler">
+                <Grid item xs={12} sm={3} key="scheduler">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Scheduler",
@@ -256,10 +266,10 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         getOptionLabel={o => o.fullName}
                         isOptionEqualToValue={(o, v) => o.id && v.id ? o.id === v.id : o.fullName === v.fullName}
                         options={[...schedulerList]
-                        .sort((a, b) => a.fullName.localeCompare(b.fullName))}
+                            .sort((a, b) => a.fullName.localeCompare(b.fullName))}
                     />
                 </Grid>
-                <Grid item xs={3} key="serviceBook">
+                <Grid item xs={12} sm={3} key="serviceBook">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Service Book",
@@ -275,7 +285,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             .sort((a, b) => a.name.localeCompare(b.name))}
                     />
                 </Grid>
-                <Grid item xs={6} key="status">
+                <Grid item xs={12} sm={6} key="status">
                     <Autocomplete
                         renderInput={autocompleteRender({
                             label: "Status",

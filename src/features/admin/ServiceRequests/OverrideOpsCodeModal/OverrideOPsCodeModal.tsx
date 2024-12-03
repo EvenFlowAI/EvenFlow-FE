@@ -28,7 +28,7 @@ const initialForm: TForm = {
     numberOfParts: "",
 };
 
-const levels: TOption[] = [{value: 1, name: 'Level 1'}, {value: 2, name: 'Level 2'}, {value: 2, name: 'Level 3'}]
+const levels: TOption[] = [{value: 1, name: 'Level 1'}, {value: 2, name: 'Level 2'}, {value: 3, name: 'Level 3'}]
 
 export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAssignedServiceRequest>>>> = ({onAction, payload, ...props}) => {
     const [form, setForm] = useState<TForm>(initialForm);
@@ -101,7 +101,7 @@ export const OverrideOPsCodeModal: React.FC<React.PropsWithChildren<React.PropsW
     }
 
     return <BaseModal {...props} maxWidth="xs">
-        <DialogTitle onClose={props.onClose}>Edit Service Request</DialogTitle>
+        <DialogTitle onClose={props.onClose}>Edit Op Code</DialogTitle>
         <DialogContent>
             <Grid container spacing={3} alignItems="flex-end">
                 <Grid item xs={12}>

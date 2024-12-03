@@ -17,7 +17,7 @@ export const initialFilters: TFilters = {
     scheduler: null,
     reportingStatus: [],
     dateFrom: dayjs().startOf('day'),
-    dateTo: null,
+    dateTo: dayjs().add(1, 'month').endOf('day'),
     scId: null,
     pageData: initialPaging,
     advisor: null,
