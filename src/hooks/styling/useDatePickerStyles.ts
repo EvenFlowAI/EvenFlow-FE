@@ -7,7 +7,4 @@ export const useDatePickerStyles = makeStyles()(theme => ({
         fontWeight: 'bold',
         color: theme.palette.text.primary,
     },
-    '& .MuiOutlinedInput-notchedOutline': {
-        border: 'none',
-    }
 }));

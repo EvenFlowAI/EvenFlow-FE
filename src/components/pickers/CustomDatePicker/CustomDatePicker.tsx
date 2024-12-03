@@ -56,16 +56,24 @@ export const CustomDatePicker: React.FC<TProps> = ({
             }}
             sx={{
                 "& .MuiOutlinedInput-root": {
-                    "&:hover > fieldset": {borderColor: "#C7C8CD"},
                     borderRadius: 0,
-                    border: 0
+                    border: 0,
+                    "&:hover > fieldset": {
+                        borderColor: "#C7C8CD",
+                    },
                 },
                 "& .MuiOutlinedInput-input": {
                     padding: '9px'
                 },
                 "& .MuiPickersToolbar-root": {
                     backgroundColor: 'red'
-                }
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    border: '1px solid #C7C8CD',
+                },
+                '& .Mui-error .MuiOutlinedInput-notchedOutline': {
+                    border: '1px solid #FF0000',
+                },
             }}
         />
     </>
