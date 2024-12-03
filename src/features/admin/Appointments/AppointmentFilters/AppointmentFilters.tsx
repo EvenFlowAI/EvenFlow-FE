@@ -178,17 +178,19 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         format="MMMM Do"
                         fullWidth
                         maxDate={dateTo}
+                        required
                         label="Date From"
                         InputProps={{
                             placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
+                            error: !dateFrom,
                             endAdornment:
                                 dateFrom
                                     ? (<IconButton onClick={(e) => handleClear(e, "dateFrom")} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
+                                    : <DateRange cursor="pointer" htmlColor={!dateFrom ? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
                         }}
                         value={dateFrom}
                         onAccept={handleDateChange("dateFrom")}
@@ -200,6 +202,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                         onClose={handleOpenTo(false)}
                         open={isOpenTo}
                         minDate={dateFrom}
+                        required
                         format="MMMM Do"
                         fullWidth
                         shouldDisableDate={day => dayjs(day).isBefore(dateFrom)}
@@ -208,12 +211,13 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
                             placeholder: "Not selected",
                             disabled: isLoading,
                             fullWidth: true,
+                            error: !dateTo,
                             endAdornment:
                                 dateTo
                                     ? (<IconButton onClick={(e) => handleClear(e, "dateTo")} size="large">
                                         <Clear />
                                     </IconButton>)
-                                    : <DateRange cursor="pointer" htmlColor="rgba(0, 0, 0, 0.54)"/>
+                                    : <DateRange cursor="pointer" htmlColor={!dateTo ? "#FF0000" : "rgba(0, 0, 0, 0.54)"}/>
                         }}
                         value={dateTo}
                         onAccept={handleDateChange('dateTo')}

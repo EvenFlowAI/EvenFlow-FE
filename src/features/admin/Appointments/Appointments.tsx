@@ -43,9 +43,9 @@ export const Appointments = () => {
     const showError = useException();
 
     const getAppointments = useCallback(() => {
-        if (!filters.dateTo || !filters.dateFrom) {
+        if (!filters.dateTo && !filters.dateFrom) {
             showError("Please select either a “Date From” or a “Date To” value in the appointment filters")
-        } else if (filters.dateTo && filters.dateFrom && dayjs(filters.dateTo).diff(filters.dateFrom) / (1000 * 60 * 60 * 24) > 90) {
+        } else if (filters.dateTo && filters.dateFrom && Math.round(dayjs(filters.dateTo).diff(filters.dateFrom) / (1000 * 60 * 60 * 24)) > 90) {
             showError("The “Date From” and “Date To” range is too large. Please adjust your selections so the range is less than 90 days")
         } else {
             if (filters.scId && selectedView === 'list' && (filters.initialFiltersSet || !isFiltersOpen)) {
