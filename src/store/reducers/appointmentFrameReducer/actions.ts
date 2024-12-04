@@ -31,7 +31,7 @@ import {
     IValueService,
     TAncillaryPriceByZip,
     TDriverForRequest,
-    TEditingPosition,
+    TEditingPosition, TFiltersVisibility,
     TLanguage,
     TMaintenanceDetails,
     TMaintenanceOption,
@@ -89,6 +89,7 @@ import {setConsentOpen, setSlotsWarningShowed} from "../modals/actions";
 import {API} from "../../../api/api";
 import {Dispatch, SetStateAction} from "react";
 import {TTransportationData} from "../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types";
+import {ETransportationType} from "../transportationNeeds/types";
 
 export const selectService = createAction<IServiceCategory|null>("fAppointment/selectService");
 export const selectSubService = createAction<IServiceCategory | null>("fAppointment/selectSubService");
@@ -163,6 +164,7 @@ export const getTransactionValue = createAction<number>('fAppointment/GetTransac
 export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedScreens');
 export const deleteLastScreen = createAction('fAppointment/DeleteLastScreen')
 export const setConsentsLoading = createAction<boolean>('fAppointment/SetConsentsLoading')
+export const setFiltersVisibility = createAction<Partial<TFiltersVisibility>>("fAppointment/SetFiltersVisibility");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;
@@ -1274,6 +1276,7 @@ export const loadActiveTransportations = (serviceCenterId: number): AppThunk => 
     } = getState().appointmentFrame;
     const {allCategories} = getState().categories;
     const {selectedSR} = getState().appointment;
+    const {firstScreenOptions} = getState().serviceTypes;
     if (selectedVehicle) {
         dispatch(setTransportationsLoading(true))
         const maintenancePackageOption = selectedPackage
@@ -1306,7 +1309,10 @@ export const loadActiveTransportations = (serviceCenterId: number): AppThunk => 
         if (hashKey) data.appointmentHashKey = hashKey;
         Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, {data})
             .then(({data}) => {
-                dispatch(getActiveTransportations(data));
+                const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
+                dispatch(getActiveTransportations(serviceValetOption
+                    ? data
+                    : data.filter(el => el.type !== ETransportationType.PickUpDelivery)));
             })
             .finally(() => {
                 dispatch(setTransportationsLoading(false))

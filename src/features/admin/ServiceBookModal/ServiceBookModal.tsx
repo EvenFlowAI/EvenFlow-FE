@@ -572,7 +572,7 @@ export const ServiceBookModal: React.FC<DialogProps & {editingItemId: number|und
                                 }}
                                 disableCloseOnSelect
                                 onChange={handleTransportationsChange}
-                                getOptionLabel={i => getTransportationOptionString(i.type)}
+                                getOptionLabel={i => getTransportationOptionString(i.type.toString())}
                                 isOptionEqualToValue={(o, v) => o.id === v.id}
                                 renderOption={autocompleteOptionsRender((e) => getTransportationOptionString(e.type))}
                                 loading={isTransportationLoading}

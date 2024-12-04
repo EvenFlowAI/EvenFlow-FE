@@ -5,17 +5,20 @@ import {
     selectAppointment,
     selectServiceValetAppointment,
 } from "../../../../../../../store/reducers/appointment/actions";
-import {setAdvisor, setAnyAdvisorSelected} from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setAdvisor,
+    setAnyAdvisorSelected,
+} from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {EServiceCenterName} from "../../../../../../../api/types";
 import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
 
-const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
+const SelectedConsultant: React.FC<{disabled?: boolean, isVisible: boolean}> = ({disabled, isVisible}) => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
-    const { currentConfig, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const { classes  } = useStyles();
@@ -34,7 +37,7 @@ const SelectedConsultant: React.FC<{disabled?: boolean}> = ({disabled}) => {
         dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
     }
 
-    return isAdvisorAvailable && consultants?.length
+    return isVisible
         ? <div style={isSm ? {marginBottom: 4} : {}}>
             <div>
                 <div className={clsx("uppercase", classes.label)}>{t("Advisor")}</div>

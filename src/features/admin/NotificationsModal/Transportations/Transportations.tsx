@@ -256,7 +256,7 @@ const Transportations: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                             fullWidth
                             isOptionEqualToValue={(option, value) => option.id === value.id}
                             disabled={loading || isSaving || isLoading}
-                            getOptionLabel={i => getTransportationOptionString(i.type)}
+                            getOptionLabel={i => getTransportationOptionString(i.type.toString())}
                             value={selectedTransportation}
                             onChange={onTransportationChange}
                             style={{marginBottom: 24}}
