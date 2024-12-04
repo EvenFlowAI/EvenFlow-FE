@@ -12,7 +12,8 @@ import {useHistory, useParams} from "react-router-dom";
 import {
     collectServiceRequestIds,
     decodeSCID,
-    getClearDate, getClearSVDate,
+    getClearDate,
+    getClearSVDate,
     mapRecallsForRequest,
     sortAppointments,
     sortSVAppointments
@@ -42,7 +43,8 @@ import {
     SVAppointmentTimeSelector
 } from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps, loadActiveTransportations,
+    clearAppointmentSteps,
+    loadActiveTransportations,
     setServiceTypeOption,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
@@ -136,6 +138,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const history = useHistory();
     const showError = useException();
     const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
+    const {isOpen: isServiceOptionOpen, onClose: onServiceOptionClose, onOpen: onServiceOptionOpen} = useModal();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -301,6 +304,10 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }
 
+    const onLoadSlots = (isEmptyList: boolean) => {
+        if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) onServiceOptionOpen()
+    }
+
     const loadData = async () => {
         if (id) {
             const utcOffset = dayjs().utcOffset()
@@ -362,13 +369,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (hashKey) data.appointmentHashKey = hashKey;
                 if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
                 if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, undefined, handleError));
+                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, onLoadSlots, handleError));
                 } else {
                     await dispatch(loadAppointmentSlots(
                         data,
                         currentAppointment ? () => {} : setDateCallback,
                         () => handleDateRangeSet(false),
-                        undefined,
+                        onLoadSlots,
                         handleError
                     ));
                 }
@@ -462,7 +469,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     nextDisabled={nextDisabled}
                     nextLabel={t("Next")}
                     loading={isConsultantsLoading || isConsentsLoading}/>
-                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} isSm={isSm}/>
+                <AppointmentFilters
+                    onChangeServiceOption={onChangeServiceOption}
+                    isSm={isSm}
+                    isServiceOptionOpen={isServiceOptionOpen}
+                    onServiceOptionClose={onServiceOptionClose}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
