@@ -16,11 +16,12 @@ import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServic
 
 type TProps = {
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
+    hideLabel?: boolean;
     isVisible: boolean;
     options: React.JSX.Element[];
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption, isVisible, options}) => {
+const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
@@ -51,7 +52,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
         <div
             className={classes.selectWrapper}>
             <div className={classes.selectWrapper} style={{display: 'block'}}>
-                <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div>
+                {!hideLabel ? <div className={clsx("uppercase", classes.label)}>{t("Service Option")}</div> : null}
                 <Select
                     value={serviceTypeOption?.id ?? undefined}
                     className={classes.select}

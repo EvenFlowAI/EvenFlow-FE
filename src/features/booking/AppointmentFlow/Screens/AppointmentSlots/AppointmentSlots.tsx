@@ -59,6 +59,7 @@ import utc from "dayjs/plugin/utc";
 import {useException} from "../../../../../hooks/useException/useException";
 import AppointmentFilters from "./AppointmentFilters/AppointmentFilters";
 import {useMediaQuery, useTheme} from "@mui/material";
+import ChangeServiceTypeModal from "./ChangeServiceTypeModal/ChangeServiceTypeModal";
 
 dayjs.extend(utc)
 
@@ -136,6 +137,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     const history = useHistory();
     const showError = useException();
     const {isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen} = useModal();
+    const {isOpen: isServiceOptionOpen, onClose: onServiceOptionClose, onOpen: onServiceOptionOpen} = useModal();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('md'));
     const nextDisabled = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -301,6 +303,10 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }
 
+    const onLoadSlots = (isEmptyList: boolean) => {
+        if (isEmptyList) onServiceOptionOpen()
+    }
+
     const loadData = async () => {
         if (id) {
             const utcOffset = dayjs().utcOffset()
@@ -362,13 +368,13 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                 if (hashKey) data.appointmentHashKey = hashKey;
                 if (userType === EUserType.Existing && customerEnteredEmail) data.searchTerm = customerEnteredEmail;
                 if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, undefined, handleError));
+                    if (data.address && data.zipCode) await dispatch(loadServiceValetSlots(data, undefined, undefined, onLoadSlots, handleError));
                 } else {
                     await dispatch(loadAppointmentSlots(
                         data,
                         currentAppointment ? () => {} : setDateCallback,
                         () => handleDateRangeSet(false),
-                        undefined,
+                        onLoadSlots,
                         handleError
                     ));
                 }
@@ -494,6 +500,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             </SlotsScreenWrapper>
             <CustomerConsents onNext={handleConsents}/>
             <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={loadDataForMileage}/>
+            <ChangeServiceTypeModal open={isServiceOptionOpen} onClose={onServiceOptionClose}/>
         </StepWrapper>
     );
 };
