@@ -42,7 +42,7 @@ import {
     SVAppointmentTimeSelector
 } from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps,
+    clearAppointmentSteps, loadActiveTransportations,
     setServiceTypeOption,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
@@ -397,6 +397,10 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         transportation
     ]);
 
+    useEffect(() => {
+        dispatch(loadActiveTransportations(decodeSCID(id)))
+    }, [id]);
+
     const handleGANext = useCallback(() => {
         if (appointment) {
             ReactGA.event({
@@ -458,7 +462,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     nextDisabled={nextDisabled}
                     nextLabel={t("Next")}
                     loading={isConsultantsLoading || isConsentsLoading}/>
-                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} handleSetScreen={handleSetScreen} isSm={isSm}/>
+                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} isSm={isSm}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}

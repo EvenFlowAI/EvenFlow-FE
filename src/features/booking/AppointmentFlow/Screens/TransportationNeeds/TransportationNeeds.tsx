@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {ITransportation} from '../../../../../api/types';
 import {
-    loadActiveTransportations,
+    loadActiveTransportations, setSideBarSteps,
     setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -18,6 +18,10 @@ import {TActionProps, TCallback} from "../../../../../types/types";
 import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
 import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/CardsWrapper";
 import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
+import {ETransportationType} from "../../../../../store/reducers/transportationNeeds/types";
+import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
+import {useChangeServiceOption} from "../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
+import {selectAppointment} from "../../../../../store/reducers/appointment/actions";
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;
@@ -30,10 +34,14 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         trackerData,
         transportations,
         isTransportationsLoading,
+        sideBarSteps
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
+    const {firstScreenOptions} = useSelector(({serviceTypes}: RootState) => serviceTypes)
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const dispatch = useDispatch();
+
+    const handleServiceOptionChange = useChangeServiceOption("transportation")
 
     useEffect(() => {
         dispatch(loadActiveTransportations(decodeSCID(id)))
@@ -43,6 +51,13 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         if (transportations.length === 1) dispatch(setTransportation(transportations[0]))
     }, [transportations])
 
+    useEffect(() => {
+        const index = sideBarSteps.indexOf("transportationNeeds")
+        if (!transportation && index > -1 && sideBarSteps.length > index + 1) {
+            dispatch(setSideBarSteps(sideBarSteps.slice(0, index + 1)))
+        }
+    }, [transportation])
+
     const handleGA = (transportation: ITransportation|null) => {
         ReactGA.event({
             category: 'EvenFlow User',
@@ -51,9 +66,21 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         }, trackerData.ids)
     }
 
+    const switchToServiceValet = () => {
+        const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
+        if (serviceValetOption) {
+            dispatch(selectAppointment(null));
+            handleServiceOptionChange(serviceValetOption)
+        }
+    }
+
     const handleNext = (transportation: ITransportation|null): void => {
         handleGA(transportation);
-        onNext();
+        if (transportation?.type === ETransportationType.PickUpDelivery) {
+            switchToServiceValet()
+        } else {
+            onNext();
+        }
     }
 
     const handleSelectOption = (o: ITransportation|null) => {
@@ -88,4 +115,4 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
     </StepWrapper>
-};
+}
