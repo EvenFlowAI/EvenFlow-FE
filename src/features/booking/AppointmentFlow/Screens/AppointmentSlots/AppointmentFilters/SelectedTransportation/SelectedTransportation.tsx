@@ -22,7 +22,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
     const { classes  } = useStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
-    const value = transportation
+    const value = transportation?.id
         ? transportation.id
         : serviceTypeOption?.transportationOption
             ? serviceTypeOption.transportationOption.id
