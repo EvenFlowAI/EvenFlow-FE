@@ -1,6 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {FiltersWrapper, TitleWrapper, Wrapper} from "./styles";
-import {TArgCallback} from "../../../../../../types/types";
+import {TArgCallback, TCallback} from "../../../../../../types/types";
 import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 import ServiceOption from "./ServiceOption/ServiceOption";
 import SelectedConsultant from "./SelectedConsultant/SelectedConsultant";
@@ -10,13 +10,16 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem} from "@mui/material";
+import ChangeServiceTypeModal from "../ChangeServiceTypeModal/ChangeServiceTypeModal";
 
 type TProps = {
     isSm: boolean;
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
+    isServiceOptionOpen: boolean;
+    onServiceOptionClose: TCallback;
 }
 
-const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption }) => {
+const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isServiceOptionOpen, onServiceOptionClose }) => {
     const { serviceTypeOption, transportations, consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { isTransportationAvailable, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -76,6 +79,7 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption }) =>
                 <SelectedTransportation isVisible={!!isTransportationsVisible}/>
                 <SelectedConsultant isVisible={!!isAdvisorVisible}/>
             </FiltersWrapper> : null}
+            <ChangeServiceTypeModal open={isServiceOptionOpen} onClose={onServiceOptionClose} options={serviceOptions}/>
         </Wrapper>
     ) : null;
 };

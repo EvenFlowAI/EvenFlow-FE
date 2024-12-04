@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import ServiceOption from "../AppointmentFilters/ServiceOption/ServiceOption";
 import {useStyles} from "./styles";
 
-const ChangeServiceTypeModal: React.FC<DialogProps> = ({open, onClose}) => {
+const ChangeServiceTypeModal: React.FC<DialogProps & {options: React.JSX.Element[]}> = ({open, onClose, options}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame)
     const {t} = useTranslation();
     const {classes} = useStyles();
@@ -24,7 +24,7 @@ const ChangeServiceTypeModal: React.FC<DialogProps> = ({open, onClose}) => {
                 </div>
                 <div className={classes.selectWrapper}>
                     <div className={classes.label}>Service Option</div>
-                    <ServiceOption onChangeServiceOption={onClose} hideLabel/>
+                    <ServiceOption onChangeServiceOption={onClose} hideLabel options={options} isVisible/>
                 </div>
             </DialogContent>
             <BfButtonsWrapper>

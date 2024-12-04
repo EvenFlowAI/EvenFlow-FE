@@ -59,7 +59,6 @@ import utc from "dayjs/plugin/utc";
 import {useException} from "../../../../../hooks/useException/useException";
 import AppointmentFilters from "./AppointmentFilters/AppointmentFilters";
 import {useMediaQuery, useTheme} from "@mui/material";
-import ChangeServiceTypeModal from "./ChangeServiceTypeModal/ChangeServiceTypeModal";
 
 dayjs.extend(utc)
 
@@ -468,7 +467,11 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     nextDisabled={nextDisabled}
                     nextLabel={t("Next")}
                     loading={isConsultantsLoading || isConsentsLoading}/>
-                <AppointmentFilters onChangeServiceOption={onChangeServiceOption} isSm={isSm}/>
+                <AppointmentFilters
+                    onChangeServiceOption={onChangeServiceOption}
+                    isSm={isSm}
+                    isServiceOptionOpen={isServiceOptionOpen}
+                    onServiceOptionClose={onServiceOptionClose}/>
                 {serviceTypeOption?.type === EServiceType.PickUpDropOff
                     ? <SVAppointmentDateSelector
                         onDateRangeSet={handleDateRangeSet}
@@ -500,7 +503,6 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             </SlotsScreenWrapper>
             <CustomerConsents onNext={handleConsents}/>
             <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={loadDataForMileage}/>
-            <ChangeServiceTypeModal open={isServiceOptionOpen} onClose={onServiceOptionClose}/>
         </StepWrapper>
     );
 };
