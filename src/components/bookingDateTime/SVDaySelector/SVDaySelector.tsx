@@ -36,10 +36,10 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     const theme = useTheme();
     const dispatch = useDispatch();
     const {onOpen, isOpen, onClose} = useModal();
-    const isSm = useMediaQuery(theme.breakpoints.down('md'));
-    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
-    const isMds = useMediaQuery(theme.breakpoints.down("mds"));
     const isMd = useMediaQuery(theme.breakpoints.down('md'));
+    const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+    const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+    const isMds = useMediaQuery(theme.breakpoints.down("mds"));
     const history = useHistory();
     const utcOffset = dayjs().utcOffset();
 
