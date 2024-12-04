@@ -15,10 +15,12 @@ import {LoadingButton} from "../../../components/buttons/LoadingButton/LoadingBu
 import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {ETransportationType} from "../../../store/reducers/transportationNeeds/types";
 
 export const BookingFlowConfig = () => {
-    const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);
     const {config, isLoading} = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { options } = useSelector((state: RootState) => state.transportation);
+    const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);
     const {selectedSC} = useSCs();
     const showError = useException();
     const showMessage = useMessage();
@@ -60,11 +62,15 @@ export const BookingFlowConfig = () => {
                 if (optionType === 'valueService' && !checked) {
                     updated.productPageForValueService = false;
                 }
-                setConfiguration(prev => {
-                    const filtered = prev.filter(el => el.serviceType !== serviceType);
-                    return [...filtered, updated]
-                })
-
+                const pickUpTransportationIsOn = options.find(el => el.type === ETransportationType.PickUpDelivery)?.state
+                if (optionType === "available" && serviceType === EServiceType.PickUpDropOff && pickUpTransportationIsOn && !checked) {
+                    showError('Other Transportation Pick Up delivery must be "OFF"')
+                } else {
+                    setConfiguration(prev => {
+                        const filtered = prev.filter(el => el.serviceType !== serviceType);
+                        return [...filtered, updated]
+                    })
+                }
                 if (optionType === 'valueService' || optionType === 'productPageForValueService') {
                     if (currentServiceType?.serviceType === EServiceType.VisitCenter) {
                         analogServiceType = configuration.find(item => item.serviceType === EServiceType.PickUpDropOff);

@@ -21,7 +21,7 @@ type TProps = {
 
 export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> =
     ({date, loading}) => {
-        const {serviceValetAppointment: selectedAppointment, serviceValetSlots} = useSelector((state: RootState) => state.appointment);
+        const {serviceValetAppointment: selectedAppointment, serviceValetSlots, isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
         const {selectedTiming, sideBarSteps, trackerData} = useSelector((state : RootState) => state.appointmentFrame);
         const dispatch = useDispatch();
         const { classes  } = useTimeSelectorStyles();
@@ -61,7 +61,7 @@ export const SVAppointmentTimeSelector: React.FC<React.PropsWithChildren<React.P
                     <h4 className={classes.title}>{t("Select Time")}</h4>
                     <div>{getClearSVDate(date).format("ddd")}, <span className={classes.boldText}>{getClearSVDate(date).format('MMM DD')}</span></div>
                 </div>
-                {!loading
+                {!loading && !isAppointmentSlotsLoading
                         ? <PickUpSlotsWrapper>
                             {currentSlots?.length ? currentSlots.map(timeSlot => {
                                     return <PickUpSlotCard

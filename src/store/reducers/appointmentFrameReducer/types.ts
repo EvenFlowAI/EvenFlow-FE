@@ -105,6 +105,12 @@ export enum EPackagePricingType {
 
 export type TEditingPosition = 'address' | 'serviceOption' | 'slot' | 'serviceRequests' | 'advisor' | 'transportation'
 
+export type TFiltersVisibility = {
+    transportations: boolean;
+    serviceType: boolean;
+    advisor: boolean;
+}
+
 export type TState = {
     service: IServiceCategory | null;
     subService: IServiceCategory | null;
@@ -183,6 +189,7 @@ export type TState = {
     consents: ICustomerConsentBooking[];
     acceptedConsentIds: number[];
     isConsentsLoading: boolean;
+    filtersVisibility: TFiltersVisibility;
 }
 
 type TPackageOptionRequestData = {

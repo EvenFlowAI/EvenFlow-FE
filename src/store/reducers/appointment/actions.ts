@@ -244,6 +244,7 @@ export const loadServiceValetSlots = (
     onLoadedCb?: (isEmptyList: boolean) => void,
     onError?: TArgCallback<any>,
 ): AppThunk => dispatch => {
+    dispatch(setSlotsLoading(true))
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, {data})
         .then(result => {
             const {items, searchedDateRange, dropOffSettings} = result.data;
@@ -264,5 +265,6 @@ export const loadServiceValetSlots = (
         .finally(() => {
             loadCB && loadCB()
             dispatch(setSlotPodId(null));
+            dispatch(setSlotsLoading(false))
         })
 }

@@ -28,7 +28,7 @@ import {
     setCurrentFrameScreen,
     setCustomer,
     setEditingPosition,
-    setFilteredZipCodes,
+    setFilteredZipCodes, setFiltersVisibility,
     setFrameDescription,
     setHashKey,
     setHoursOfOperations,
@@ -157,6 +157,11 @@ const initialState: TState = {
     consents: [],
     acceptedConsentIds: [],
     isConsentsLoading: false,
+    filtersVisibility: {
+        transportations: true,
+        serviceType: true,
+        advisor: true,
+    }
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder => builder
@@ -436,5 +441,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setTransportationsLoading, (state,  {payload}) => {
         return {...state, isTransportationsLoading: payload}
+    })
+    .addCase(setFiltersVisibility, (state,  {payload}) => {
+        return {...state, filtersVisibility: {...state.filtersVisibility, ...payload}}
     })
 )

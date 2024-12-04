@@ -1,14 +1,19 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import {setTransportation} from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
+import {
+    setTransportation
+} from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
+import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
+import {ETransportationType} from "../../../../../../../store/reducers/transportationNeeds/types";
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
+import {selectAppointment} from "../../../../../../../store/reducers/appointment/actions";
 
-const SelectedTransportation = () => {
+const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => {
     const { transportation, transportations, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
    const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
@@ -23,24 +28,25 @@ const SelectedTransportation = () => {
             ? serviceTypeOption.transportationOption.id
             : ""
 
-    const someServicesHaveDefaultTransportation = useMemo(() => {
-        const someOptionHasDefaultTransportation = firstScreenOptions.some(el => el.transportationOption)
-        const someOptionHasNotDefaultTransportation = firstScreenOptions.some(el => !el.transportationOption)
-        return someOptionHasDefaultTransportation && someOptionHasNotDefaultTransportation
-    }, [firstScreenOptions])
+    const handleServiceOptionChange = useChangeServiceOption("transportation")
 
-    const noOneServiceHasTransportation = firstScreenOptions
-        .filter(el => !el.transportationOption).length === firstScreenOptions.length
+    const switchToServiceValet = () => {
+        const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
+        if (serviceValetOption) {
+            dispatch(selectAppointment(null));
+            handleServiceOptionChange(serviceValetOption)
+        }
+    }
 
     const handleChange = (e: SelectChangeEvent<unknown>) => {
         const selected = transportations.find(item => item.id === e.target.value);
+        if (selected?.type === ETransportationType.PickUpDelivery) {
+            switchToServiceValet()
+        }
         dispatch(setTransportation(selected ?? null))
     }
 
-    return ((someServicesHaveDefaultTransportation && (serviceTypeOption?.transportationOption || isTransportationAvailable))
-        || (noOneServiceHasTransportation && isTransportationAvailable))
-    && serviceTypeOption?.type !== EServiceType.MobileService
-    && transportations.length
+    return isVisible
             ? <div style={isSm ? {marginBottom: 4} : {}}>
                 <div>
                     <div className={clsx("uppercase", classes.label)}>{t("Transportation")}</div>

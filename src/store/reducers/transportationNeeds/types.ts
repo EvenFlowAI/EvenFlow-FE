@@ -38,7 +38,7 @@ export interface ITransportationOptionRule {
 }
 
 export interface INewTransportationOption {
-    type: string;
+    type: ETransportationType;
     state: number;
     serviceCenterId: number;
 }
