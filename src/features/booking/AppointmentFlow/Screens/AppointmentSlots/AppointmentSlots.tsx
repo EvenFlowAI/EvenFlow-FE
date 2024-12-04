@@ -12,7 +12,8 @@ import {useHistory, useParams} from "react-router-dom";
 import {
     collectServiceRequestIds,
     decodeSCID,
-    getClearDate, getClearSVDate,
+    getClearDate,
+    getClearSVDate,
     mapRecallsForRequest,
     sortAppointments,
     sortSVAppointments
@@ -42,7 +43,8 @@ import {
     SVAppointmentTimeSelector
 } from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
 import {
-    clearAppointmentSteps, loadActiveTransportations,
+    clearAppointmentSteps,
+    loadActiveTransportations,
     setServiceTypeOption,
     setWelcomeScreenView
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
@@ -303,7 +305,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }
 
     const onLoadSlots = (isEmptyList: boolean) => {
-        if (isEmptyList) onServiceOptionOpen()
+        if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) onServiceOptionOpen()
     }
 
     const loadData = async () => {
