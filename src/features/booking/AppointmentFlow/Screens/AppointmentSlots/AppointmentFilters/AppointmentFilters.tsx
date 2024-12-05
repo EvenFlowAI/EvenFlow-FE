@@ -54,8 +54,8 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
     }, [firstScreenOptions, serviceTypeOption])
 
     const isServiceOptionVisible = useMemo(() => {
-        return serviceOptions.length > 1 || serviceTypeOption?.type !== EServiceType.VisitCenter
-    }, [serviceOptions, serviceTypeOption])
+        return serviceOptions.length > 1
+    }, [serviceOptions])
 
     const isAdvisorVisible = useMemo(() => {
         return isAdvisorAvailable && consultants?.length
