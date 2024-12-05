@@ -20,7 +20,7 @@ type TProps = {
 }
 
 const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isServiceOptionOpen, onServiceOptionClose }) => {
-    const { serviceTypeOption, transportations, consultants} = useSelector((state: RootState) => state.appointmentFrame);
+    const { serviceTypeOption, transportations, consultants, transportation} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { isTransportationAvailable, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm)
@@ -39,7 +39,8 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
                 || (noOneServiceHasTransportation && isTransportationAvailable))
             && serviceTypeOption?.type !== EServiceType.MobileService
             && transportations.length
-    }, [someServicesHaveDefaultTransportation, serviceTypeOption, isTransportationAvailable, noOneServiceHasTransportation, transportations])
+        && (transportation || serviceTypeOption?.transportationOption)
+    }, [someServicesHaveDefaultTransportation, serviceTypeOption, isTransportationAvailable, noOneServiceHasTransportation, transportations, transportation])
 
     const serviceOptions = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
