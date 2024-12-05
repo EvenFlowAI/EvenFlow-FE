@@ -35,10 +35,11 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
         .filter(el => !el.transportationOption).length === firstScreenOptions.length
 
     const isTransportationsVisible = useMemo(() => {
+        const transportationIsAvailable = transportations.find(el => el.id === transportation?.id || el.id === serviceTypeOption?.transportationOption?.id)
         return ((someServicesHaveDefaultTransportation && (serviceTypeOption?.transportationOption || isTransportationAvailable))
                 || (noOneServiceHasTransportation && isTransportationAvailable))
             && serviceTypeOption?.type !== EServiceType.MobileService
-            && transportations.length
+            && transportationIsAvailable
         && (transportation || serviceTypeOption?.transportationOption)
     }, [someServicesHaveDefaultTransportation, serviceTypeOption, isTransportationAvailable, noOneServiceHasTransportation, transportations, transportation])
 
