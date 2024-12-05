@@ -142,6 +142,8 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
         dispatch(setAdvisorAvailable(false))
         if (option?.type === EServiceType.PickUpDropOff) {
             onRedirectToLocation(option, showAdvisorScreen);
+        } else {
+            handleSideBar(false)
         }
     }
 
@@ -173,7 +175,7 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable && transportation?.type !== ETransportationType.PickUpDelivery) {
             dispatch(setCurrentFrameScreen("transportationNeeds"))
-        } else if (optionType !== "transportation") {
+        } else  {
             dispatch(setTransportation(null));
         }
     }
