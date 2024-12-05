@@ -48,7 +48,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
         dispatch(setTransportation(selected ?? null))
     }
 
-    return isVisible && transportations.length
+    return isVisible
             ? <div style={isSm ? {marginBottom: 4} : {}}>
                 <div>
                     <div className={clsx("uppercase", classes.label)}>{t("Transportation")}</div>
