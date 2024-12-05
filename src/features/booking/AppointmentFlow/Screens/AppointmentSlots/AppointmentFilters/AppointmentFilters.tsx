@@ -35,12 +35,15 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
         .filter(el => !el.transportationOption).length === firstScreenOptions.length
 
     const isTransportationsVisible = useMemo(() => {
-        const transportationIsAvailable = transportations.find(el => el.id === transportation?.id || el.id === serviceTypeOption?.transportationOption?.id)
+        const transportationExists = transportations.find(el => el.id === transportation?.id || el.id === serviceTypeOption?.transportationOption?.id)
+        const isDefaultTransportationOfTheUniqueServiceOption = firstScreenOptions.length === 1
+            && serviceTypeOption?.transportationOption
         return ((someServicesHaveDefaultTransportation && (serviceTypeOption?.transportationOption || isTransportationAvailable))
                 || (noOneServiceHasTransportation && isTransportationAvailable))
             && serviceTypeOption?.type !== EServiceType.MobileService
-            && transportationIsAvailable
+            && transportationExists
         && (transportation || serviceTypeOption?.transportationOption)
+        && !isDefaultTransportationOfTheUniqueServiceOption
     }, [someServicesHaveDefaultTransportation, serviceTypeOption, isTransportationAvailable, noOneServiceHasTransportation, transportations, transportation])
 
     const serviceOptions = useMemo(() => {
@@ -54,8 +57,8 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
     }, [firstScreenOptions, serviceTypeOption])
 
     const isServiceOptionVisible = useMemo(() => {
-        return serviceOptions.length > 1 || serviceTypeOption?.type !== EServiceType.VisitCenter
-    }, [serviceOptions, serviceTypeOption])
+        return serviceOptions.length > 1
+    }, [serviceOptions])
 
     const isAdvisorVisible = useMemo(() => {
         return isAdvisorAvailable && consultants?.length
