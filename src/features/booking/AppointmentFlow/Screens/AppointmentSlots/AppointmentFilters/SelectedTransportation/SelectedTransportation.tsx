@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {
@@ -22,11 +22,13 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
     const { classes  } = useStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
-    const value = transportation?.id
-        ? transportation.id
-        : serviceTypeOption?.transportationOption
-            ? serviceTypeOption.transportationOption.id
-            : ""
+    const value = useMemo(() => {
+        return transportation && transportation.id
+            ? transportation.id
+            : serviceTypeOption && serviceTypeOption.transportationOption
+                ? serviceTypeOption.transportationOption.id
+                : ""
+    }, [transportation, serviceTypeOption])
 
     const handleServiceOptionChange = useChangeServiceOption("transportation")
 
@@ -46,7 +48,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
         dispatch(setTransportation(selected ?? null))
     }
 
-    return isVisible
+    return isVisible && transportations.length
             ? <div style={isSm ? {marginBottom: 4} : {}}>
                 <div>
                     <div className={clsx("uppercase", classes.label)}>{t("Transportation")}</div>
