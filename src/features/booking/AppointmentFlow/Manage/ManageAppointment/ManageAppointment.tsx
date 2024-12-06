@@ -56,6 +56,7 @@ import OpenModalLink from "../../../../../components/wrappers/OpenModalLink/Open
 import CommentModal from "../../../../../components/modals/booking/CommentModal/CommentModal";
 import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
 import usePopState from "../../../../../hooks/usePopState/usePopState";
+import serviceType from "../../Create/AppointmentConfirmation/ServiceType/ServiceType";
 
 type TProps = {
     onChangeSlot: TCallback;
@@ -82,6 +83,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame);
     const {isLoading} = useSelector(({recalls}: RootState) => recalls);
     const {mileage} = useSelector(({vehicleDetails}: RootState) => vehicleDetails);
+    const {firstScreenOptions} = useSelector(({serviceTypes}: RootState) => serviceTypes);
 
     const [errors, setErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -126,8 +128,8 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
     }, [scProfile])
 
     useEffect(() => {
-        if (currentConfig && scProfile) dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
-    }, [currentConfig, scProfile])
+        if (currentConfig && scProfile && !firstScreenOptions.length) dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
+    }, [currentConfig, scProfile, firstScreenOptions])
 
     useEffect(() => {
         if (scProfile && appointmentWasChanged) {
