@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {DialogProps} from "../../BaseModal/types";
-import {Editor} from "react-draft-wysiwyg";
+import {default as _Editor} from "react-draft-wysiwyg";
+import {EditorProps} from "react-draft-wysiwyg";
 import {convertToRaw, EditorState} from "draft-js";
 import {convertToHTML, convertFromHTML} from "draft-convert";
 import {Button} from "@mui/material";
@@ -9,6 +10,9 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { makeStyles } from 'tss-react/mui';
 import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../hooks/useException/useException";
+
+// workaround because of typescript error
+const Editor = (_Editor as unknown) as React.FC<EditorProps>;
 
 type THTMLEditor = DialogProps & {
     onSave: (value: string) => void;
