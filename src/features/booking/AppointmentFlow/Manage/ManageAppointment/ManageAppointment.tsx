@@ -23,7 +23,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {useHistory, useParams} from "react-router-dom";
 import {
-    loadAllServiceCategories,
     loadSRs,
     setCustomerLoadedData,
 } from "../../../../../store/reducers/appointment/actions";
@@ -124,13 +123,7 @@ export const ManageAppointment: React.FC<React.PropsWithChildren<React.PropsWith
             dispatch(loadCategoriesByQuery(scProfile.id))
             dispatch(loadSRs(scProfile.id))
         }
-    }, [scProfile, serviceTypeOption])
-
-    useEffect(() => {
-        if (scProfile) {
-            dispatch(loadAllServiceCategories(scProfile.id));
-        }
-    }, [scProfile, id])
+    }, [scProfile])
 
     useEffect(() => {
         if (currentConfig && scProfile) dispatch(loadFirstScreenOptionsByQuery(scProfile.id))
