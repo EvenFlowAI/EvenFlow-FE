@@ -12,7 +12,7 @@ import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
 import {useException} from "../../../../hooks/useException/useException";
 
 // workaround because of typescript error
-const Editor = (_Editor as unknown) as React.FC<React.PropsWithChildren<EditorProps>>;
+const Editor = (_Editor as unknown) as React.FC<EditorProps>;
 
 type THTMLEditor = DialogProps & {
     onSave: (value: string) => void;
