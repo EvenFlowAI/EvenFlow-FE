@@ -61,7 +61,9 @@ export const Transportations = () => {
         if (selectedSC && option) {
             const pickUpConfig = config.find(el => el.serviceType === EServiceType.PickUpDropOff)
             const pickUpOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff);
-            const isValid = option?.type === ETransportationType.PickUpDelivery ? pickUpConfig?.available && pickUpOption : true;
+            const isValid = value && option?.type === ETransportationType.PickUpDelivery
+                ? pickUpConfig?.available && pickUpOption
+                : true;
             if (isValid) {
                 try {
                     dispatch(updateTransportationOption({
