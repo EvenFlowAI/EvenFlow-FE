@@ -16,6 +16,7 @@ import {useMessage} from "../../../hooks/useMessage/useMessage";
 import {useException} from "../../../hooks/useException/useException";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
 import {ETransportationType} from "../../../store/reducers/transportationNeeds/types";
+import {loadTransportationOptions} from "../../../store/reducers/transportationNeeds/actions";
 
 export const BookingFlowConfig = () => {
     const {config, isLoading} = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -33,6 +34,7 @@ export const BookingFlowConfig = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadBookingFlowConfig(selectedSC.id))
+            dispatch(loadTransportationOptions(selectedSC.id))
         }
     }, [dispatch, selectedSC]);
 
