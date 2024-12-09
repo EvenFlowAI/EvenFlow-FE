@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
-import {Autocomplete, useMediaQuery, useTheme} from '@mui/material';
+import {Autocomplete, Select, useMediaQuery, useTheme} from '@mui/material';
 import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
@@ -191,7 +191,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
         }, [makes, selectedVehicle])
 
         const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
-            if (isXS) e.preventDefault();
+            // if (isXS) e.preventDefault();
             if (option && !skip) {
                 if (["year", "model", "make", "mileage"].includes(name)) {
                     dispatch(updateVehicle({[name]: option}))
