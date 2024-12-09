@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
-import {Autocomplete, Select, useMediaQuery, useTheme} from '@mui/material';
+import {Autocomplete, useMediaQuery, useTheme} from '@mui/material';
 import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {ActionButtons} from "../../../ActionButtons/ActionButtons";
 import {useDispatch, useSelector} from "react-redux";
@@ -385,7 +385,8 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             onChange={handleChange('year', false)}
                             fullWidth
                             disableClearable
-                            ListboxProps={{style: {maxHeight: 200, overflow: 'auto'}}}
+                            getOptionLabel={o => o}
+                            getOptionKey={o => o}
                             isOptionEqualToValue={(o, v) => o === v}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
@@ -400,6 +401,8 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             key="mileage"
                             style={orderMapStyles.mileage}
                             isOptionEqualToValue={(o, v) => o === v}
+                            getOptionLabel={o => o}
+                            getOptionKey={o => o}
                             options={mileage.map(item => item.value.toString())}
                             onChange={handleChange('mileage', false)}
                             fullWidth
@@ -418,6 +421,8 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             options={loadedOptions.make ?? []}
                             onChange={handleChange('make', false)}
                             fullWidth
+                            getOptionLabel={o => o}
+                            getOptionKey={o => o}
                             isOptionEqualToValue={(o, v) => o === v}
                             disableClearable
                             disabled={isExistingVehicle}
@@ -437,6 +442,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 onChange={handleEngineTypeChange}
                                 fullWidth
                                 getOptionLabel={o => o.name}
+                                getOptionKey={o => o.id}
                                 isOptionEqualToValue={o => o.id === selectedEngine?.id}
                                 disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
                                 renderInput={autocompleteRender({
@@ -458,6 +464,8 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             fullWidth
                             disableClearable
                             autoComplete={false}
+                            getOptionLabel={o => o}
+                            getOptionKey={o => o}
                             isOptionEqualToValue={(o, v) => o === v}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
