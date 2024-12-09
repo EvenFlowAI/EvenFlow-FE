@@ -386,6 +386,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             fullWidth
                             disableClearable
                             autoComplete={true}
+                            onInputChange={e => e.preventDefault()}
                             isOptionEqualToValue={(o, v) => o === v}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
@@ -404,6 +405,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             onChange={handleChange('mileage', false)}
                             fullWidth
                             disableClearable
+                            onInputChange={e => e.preventDefault()}
                             autoComplete={true}
                             renderInput={autocompleteRender({
                                 label: t("Estimated mileage"),
@@ -421,6 +423,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             fullWidth
                             isOptionEqualToValue={(o, v) => o === v}
                             disableClearable
+                            onInputChange={e => e.preventDefault()}
                             autoComplete={true}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
@@ -438,6 +441,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 options={engineTypes}
                                 onChange={handleEngineTypeChange}
                                 fullWidth
+                                onInputChange={e => e.preventDefault()}
                                 getOptionLabel={o => o.name}
                                 isOptionEqualToValue={o => o.id === selectedEngine?.id}
                                 disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
@@ -460,7 +464,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             fullWidth
                             disableClearable
                             isOptionEqualToValue={(o, v) => o === v}
-                            autoComplete={true}
+                            onInputChange={e => e.preventDefault()}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
                                 label: t("Model"),
