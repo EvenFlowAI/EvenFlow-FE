@@ -385,7 +385,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             onChange={handleChange('year', false)}
                             fullWidth
                             disableClearable
-                            autoComplete={false}
+                            ListboxProps={{style: {maxHeight: 200, overflow: 'auto'}}}
                             isOptionEqualToValue={(o, v) => o === v}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
@@ -404,7 +404,6 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             onChange={handleChange('mileage', false)}
                             fullWidth
                             disableClearable
-                            autoComplete={false}
                             renderInput={autocompleteRender({
                                 label: t("Estimated mileage"),
                                 placeholder: errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`,
@@ -421,7 +420,6 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             fullWidth
                             isOptionEqualToValue={(o, v) => o === v}
                             disableClearable
-                            autoComplete={false}
                             disabled={isExistingVehicle}
                             renderInput={autocompleteRender({
                                 label: t("Make"),
@@ -438,7 +436,6 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 options={engineTypes}
                                 onChange={handleEngineTypeChange}
                                 fullWidth
-                                autoComplete={false}
                                 getOptionLabel={o => o.name}
                                 isOptionEqualToValue={o => o.id === selectedEngine?.id}
                                 disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
