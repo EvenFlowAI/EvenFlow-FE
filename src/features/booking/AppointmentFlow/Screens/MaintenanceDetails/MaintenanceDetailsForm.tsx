@@ -28,7 +28,7 @@ import {TArgCallback, TCallback, TScreen} from "../../../../../types/types";
 import RecallsByVinModal from "../../../RecallsByVinModal/RecallsByVinModal";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import NoRecallsModal from "../../../NoRecallsModal/NoRecallsModal";
-import {SelectWrapper, useStyles} from "./styles";
+import {useStyles} from "./styles";
 import {TKey, TOptionsState} from "./types";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {useException} from "../../../../../hooks/useException/useException";
@@ -377,9 +377,8 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
             <StepWrapper>
                 {isLoading
                     ? <Loading/>
-                    : <SelectWrapper>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12} key="year" style={orderMapStyles.year}>
+                    : <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6} key="year" style={orderMapStyles.year}>
                                 <Autocomplete
                                     key="year"
                                     // style={{...orderMapStyles.year}}
@@ -400,7 +399,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                     value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
                                 />
                             </Grid>
-                            <Grid item xs={12} key="mileage" style={orderMapStyles.mileage}>
+                            <Grid item xs={12} sm={6} key="mileage" style={orderMapStyles.mileage}>
                                 <Autocomplete
                                     key="mileage"
                                     // style={orderMapStyles.mileage}
@@ -421,7 +420,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 />
                             </Grid>
 
-                        <Grid item xs={12} key="make" style={orderMapStyles.make}>
+                        <Grid item xs={12} sm={6} key="make" style={orderMapStyles.make}>
                             <Autocomplete
                                 key="make"
                                 // style={orderMapStyles.make}
@@ -445,7 +444,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
 
 
                         {currentConfig?.engineType
-                            ?            <Grid item xs={12} key="Engine Type" style={orderMapStyles.engineType}>
+                            ?            <Grid item xs={12} sm={6} key="Engine Type" style={orderMapStyles.engineType}>
                                 <Autocomplete
                                 key="Engine Type"
                                 // style={orderMapStyles.engineType}
@@ -467,7 +466,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 value={selectedEngine}
                                 /></Grid>
                             : null}
-                        <Grid item xs={12} key="modele" order={orderMapStyles.model.order}>
+                        <Grid item xs={12} sm={6} key="modele" order={orderMapStyles.model.order}>
                         <Autocomplete
                             key="model"
                             options={loadedOptions.model ?? []}
@@ -491,7 +490,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                         </Grid>
 
                         {recallsToggledOn || isRecallsCategorySelected || selectedVehicle?.vin?.length
-                            ?        <Grid item xs={12} key="vin" order={orderMapStyles.vin.order} style={{display: 'grid'}}>
+                            ?        <Grid item xs={12} sm={6} key="vin" order={orderMapStyles.vin.order} style={{display: 'grid'}}>
                                 <div key="vin"
                                    className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
                                    // style={{...orderMapStyles.vin, display: 'grid'}}
@@ -514,7 +513,6 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 />
                                 </div></Grid> : null}
                         </Grid>
-                    </SelectWrapper>
                 }
                 <ActionButtons
                     onBack={handleBack}
