@@ -191,7 +191,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
         }, [makes, selectedVehicle])
 
         const handleChange = (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string|null) => {
-            // if (isXS) e.preventDefault();
+            if (isXS) e.preventDefault();
             if (option && !skip) {
                 if (["year", "model", "make", "mileage"].includes(name)) {
                     dispatch(updateVehicle({[name]: option}))
@@ -378,52 +378,52 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 {isLoading
                     ? <Loading/>
                     : <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6} key="year" style={orderMapStyles.year}>
-                                <Autocomplete
-                                    key="year"
-                                    // style={{...orderMapStyles.year}}
-                                    options={getYearOptions()}
-                                    onChange={handleChange('year', false)}
-                                    fullWidth
-                                    disableClearable
-                                    getOptionLabel={o => o}
-                                    getOptionKey={o => o}
-                                    isOptionEqualToValue={(o, v) => o === v}
-                                    disabled={isExistingVehicle}
-                                    renderInput={autocompleteRender({
-                                        label: t("Year"),
-                                        placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
-                                        error: errors.includes("year"),
-                                        required: requiredFields.includes('year')
-                                    })}
-                                    value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6} key="mileage" style={orderMapStyles.mileage}>
-                                <Autocomplete
-                                    key="mileage"
-                                    // style={orderMapStyles.mileage}
-                                    isOptionEqualToValue={(o, v) => o === v}
-                                    getOptionLabel={o => o}
-                                    getOptionKey={o => o}
-                                    options={mileage.map(item => item.value.toString())}
-                                    onChange={handleChange('mileage', false)}
-                                    fullWidth
-                                    disableClearable
-                                    renderInput={autocompleteRender({
-                                        label: t("Estimated mileage"),
-                                        placeholder: errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`,
-                                        error: errors.includes("mileage"),
-                                        required: requiredFields.includes('mileage')
-                                    })}
-                                    value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
-                                />
-                            </Grid>
+
+                        <Grid item xs={12} sm={6} key="year" style={orderMapStyles.year}>
+                            <Autocomplete
+                                key="year"
+                                options={getYearOptions()}
+                                onChange={handleChange('year', false)}
+                                fullWidth
+                                disablePortal
+                                disableClearable
+                                getOptionLabel={o => o}
+                                getOptionKey={o => o}
+                                isOptionEqualToValue={(o, v) => o === v}
+                                disabled={isExistingVehicle}
+                                renderInput={autocompleteRender({
+                                    label: t("Year"),
+                                    placeholder: errors.includes("year") ? `${t("Year")} ${t("required")}` : `${t("Select")} ${t("Year")}`,
+                                    error: errors.includes("year"),
+                                    required: requiredFields.includes('year')
+                                })}
+                                value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} key="mileage" style={orderMapStyles.mileage}>
+                            <Autocomplete
+                                key="mileage"
+                                isOptionEqualToValue={(o, v) => o === v}
+                                getOptionLabel={o => o}
+                                getOptionKey={o => o}
+                                options={mileage.map(item => item.value.toString())}
+                                onChange={handleChange('mileage', false)}
+                                fullWidth
+                                disableClearable
+                                renderInput={autocompleteRender({
+                                    label: t("Estimated mileage"),
+                                    placeholder: errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`,
+                                    error: errors.includes("mileage"),
+                                    required: requiredFields.includes('mileage')
+                                })}
+                                value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
+                            />
+                        </Grid>
 
                         <Grid item xs={12} sm={6} key="make" style={orderMapStyles.make}>
                             <Autocomplete
                                 key="make"
-                                // style={orderMapStyles.make}
                                 options={loadedOptions.make ?? []}
                                 onChange={handleChange('make', false)}
                                 fullWidth
@@ -442,77 +442,73 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                             />
                         </Grid>
 
-
                         {currentConfig?.engineType
-                            ?            <Grid item xs={12} sm={6} key="Engine Type" style={orderMapStyles.engineType}>
+                            ?  <Grid item xs={12} sm={6} key="Engine Type" style={orderMapStyles.engineType}>
                                 <Autocomplete
-                                key="Engine Type"
-                                // style={orderMapStyles.engineType}
-                                options={engineTypes}
-                                onChange={handleEngineTypeChange}
-                                fullWidth
-                                getOptionLabel={o => o.name}
-                                getOptionKey={o => o.id}
-                                isOptionEqualToValue={o => o.id === selectedEngine?.id}
-                                disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
-                                renderInput={autocompleteRender({
-                                    label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
-                                    placeholder: errors.includes("engineTypeId")
-                                        ? `${scProfile?.engineTypeFieldName ?? t("Engine Type")} ${t("required")}`
-                                        : `${t("Select")} ${scProfile?.engineTypeFieldName ?? t("Engine Type")}`,
-                                    error: errors.includes("engineTypeId"),
-                                    required: true,
-                                })}
-                                value={selectedEngine}
+                                    key="Engine Type"
+                                    options={engineTypes}
+                                    onChange={handleEngineTypeChange}
+                                    fullWidth
+                                    getOptionLabel={o => o.name}
+                                    getOptionKey={o => o.id}
+                                    isOptionEqualToValue={o => o.id === selectedEngine?.id}
+                                    disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
+                                    renderInput={autocompleteRender({
+                                        label: scProfile?.engineTypeFieldName ?? t("Engine Type"),
+                                        placeholder: errors.includes("engineTypeId")
+                                            ? `${scProfile?.engineTypeFieldName ?? t("Engine Type")} ${t("required")}`
+                                            : `${t("Select")} ${scProfile?.engineTypeFieldName ?? t("Engine Type")}`,
+                                        error: errors.includes("engineTypeId"),
+                                        required: true,
+                                    })}
+                                    value={selectedEngine}
                                 /></Grid>
                             : null}
                         <Grid item xs={12} sm={6} key="modele" order={orderMapStyles.model.order}>
-                        <Autocomplete
-                            key="model"
-                            options={loadedOptions.model ?? []}
-                            onChange={handleChange('model', false)}
-                            // style={orderMapStyles.model}
-                            fullWidth
-                            disableClearable
-                            autoComplete={false}
-                            getOptionLabel={o => o}
-                            getOptionKey={o => o}
-                            isOptionEqualToValue={(o, v) => o === v}
-                            disabled={isExistingVehicle}
-                            renderInput={autocompleteRender({
-                                label: t("Model"),
-                                placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
-                                error: errors.includes("model"),
-                                required: requiredFields.includes('model')
-                            })}
-                            value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
-                        />
+                            <Autocomplete
+                                key="model"
+                                options={loadedOptions.model ?? []}
+                                onChange={handleChange('model', false)}
+                                fullWidth
+                                disableClearable
+                                autoComplete={false}
+                                getOptionLabel={o => o}
+                                getOptionKey={o => o}
+                                isOptionEqualToValue={(o, v) => o === v}
+                                disabled={isExistingVehicle}
+                                renderInput={autocompleteRender({
+                                    label: t("Model"),
+                                    placeholder: errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`,
+                                    error: errors.includes("model"),
+                                    required: requiredFields.includes('model')
+                                })}
+                                value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
+                            />
                         </Grid>
 
                         {recallsToggledOn || isRecallsCategorySelected || selectedVehicle?.vin?.length
-                            ?        <Grid item xs={12} sm={6} key="vin" order={orderMapStyles.vin.order} style={{display: 'grid'}}>
-                                <div key="vin"
-                                   className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}
-                                   // style={{...orderMapStyles.vin, display: 'grid'}}
-                                >
-                                <TextField
-                                    onChange={handleVINChange("vin")}
-                                    label={recallsToggledOn && !isRecallsCategorySelected
-                                        ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
-                                        : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
-                                    }
-                                    name={"vin"}
-                                    error={errors.includes("vin")}
-                                    required={requiredFields.includes("vin") || isRecallsCategorySelected}
-                                    fullWidth
-                                    disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
-                                    value={selectedVehicle ? selectedVehicle.vin : ""}
-                                    placeholder={errors.includes("vin")
-                                        ? `${t("VIN")} ${t("required")}`
-                                        : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
-                                />
-                                </div></Grid> : null}
+                            ? <Grid item xs={12} sm={6} key="vin" order={orderMapStyles.vin.order} style={{display: 'grid'}}>
+                                <div key="vin" className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}>
+                                    <TextField
+                                        onChange={handleVINChange("vin")}
+                                        label={recallsToggledOn && !isRecallsCategorySelected
+                                            ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
+                                            : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
+                                        }
+                                        name={"vin"}
+                                        error={errors.includes("vin")}
+                                        required={requiredFields.includes("vin") || isRecallsCategorySelected}
+                                        fullWidth
+                                        disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
+                                        value={selectedVehicle ? selectedVehicle.vin : ""}
+                                        placeholder={errors.includes("vin")
+                                            ? `${t("VIN")} ${t("required")}`
+                                            : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
+                                    />
+                                </div>
                         </Grid>
+                            : null}
+                    </Grid>
                 }
                 <ActionButtons
                     onBack={handleBack}
