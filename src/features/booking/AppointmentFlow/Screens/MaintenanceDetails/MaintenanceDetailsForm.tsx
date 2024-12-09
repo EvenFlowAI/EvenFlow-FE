@@ -407,6 +407,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 isOptionEqualToValue={(o, v) => o === v}
                                 getOptionLabel={o => o}
                                 getOptionKey={o => o}
+                                disablePortal
                                 options={mileage.map(item => item.value.toString())}
                                 onChange={handleChange('mileage', false)}
                                 fullWidth
@@ -429,6 +430,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 fullWidth
                                 getOptionLabel={o => o}
                                 getOptionKey={o => o}
+                                disablePortal
                                 isOptionEqualToValue={(o, v) => o === v}
                                 disableClearable
                                 disabled={isExistingVehicle}
@@ -449,6 +451,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                     options={engineTypes}
                                     onChange={handleEngineTypeChange}
                                     fullWidth
+                                    disablePortal
                                     getOptionLabel={o => o.name}
                                     getOptionKey={o => o.id}
                                     isOptionEqualToValue={o => o.id === selectedEngine?.id}
@@ -471,7 +474,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                                 onChange={handleChange('model', false)}
                                 fullWidth
                                 disableClearable
-                                autoComplete={false}
+                                disablePortal
                                 getOptionLabel={o => o}
                                 getOptionKey={o => o}
                                 isOptionEqualToValue={(o, v) => o === v}
