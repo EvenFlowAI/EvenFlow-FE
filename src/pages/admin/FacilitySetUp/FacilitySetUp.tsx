@@ -17,7 +17,6 @@ import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
 import {centerProfileRoot} from "../../../utils/constants";
 import {useDashboardStyles} from "../../../hooks/styling/useDashboardStyles";
 import {TDashboardItem} from "../../../types/types";
-import DnDExample from "../../../components/DragAndDrop/dnDExample";
 
 export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
     const {selectedSC} = useSCs();
@@ -86,7 +85,6 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
                     </Paper>
                 </Grid>
             )}
-            <DnDExample/>
         </Grid>
         <HourOfOperationsModal viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
         <HolidaysModal viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
