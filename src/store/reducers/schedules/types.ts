@@ -79,7 +79,7 @@ export interface IScheduleByDate extends IBaseEmployeeSchedule {
     employeeName: string;
     role: string;
     serviceBooks: string[];
-    id?: string;
+    id: number;
 }
 
 export type TTimePeriod = {

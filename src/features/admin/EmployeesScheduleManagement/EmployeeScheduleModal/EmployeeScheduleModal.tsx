@@ -55,7 +55,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
         return hoursOfOperations.find(el => el.dayOfWeek === dayjs(date).day());
     }, [hoursOfOperations, date])
 
-    const sorted = useMemo(() => scheduleByDate.map(el => ({...el, id: `${Math.random()}`})).sort(compareName),
+    const sorted = useMemo(() => [...scheduleByDate].sort(compareName),
         [scheduleByDate])
 
     useEffect(() => {
