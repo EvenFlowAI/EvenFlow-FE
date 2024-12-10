@@ -3,15 +3,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadMakes} from "../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../store/rootReducer";
 import {Button} from "@mui/material";
-import {AddMakeModelModal} from "./AddMakeModelModal/AddMakeModelModal";
 import {useStyles} from "./styles";
-import {DefaultMake} from "./DefaultMake/DefaultMake";
 import {MakesModelsTable} from "./MakesModelsTable/MakesModelsTable";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
+import {loadGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
 
 export const MakesModels = () => {
-    const {currentMake} = useSelector((state: RootState) => state.vehicleDetails);
+    const {makes} = useSelector((state: RootState) => state.vehicleDetails);
     const {selectedSC} = useSCs();
     const {onOpen, onClose, isOpen} = useModal();
     const dispatch = useDispatch();
@@ -20,23 +19,22 @@ export const MakesModels = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id))
+            dispatch(loadGlobalMakes({pageIndex: 0, pageSize: 0}, {isAscending: false, orderBy: "VinName"}, null, []))
         }
     }, [selectedSC])
 
     return (
         <div>
             <div className={classes.wrapper}>
-                <DefaultMake/>
                 <Button
                     style={{marginLeft: 16}}
                     color="primary"
                     onClick={onOpen}
                     variant="contained">
-                    Add Make And Model
+                    {makes.length ? 'Edit Makes' : 'Add Makes'}
                 </Button>
             </div>
             <MakesModelsTable onOpen={onOpen}/>
-            <AddMakeModelModal open={isOpen} onClose={onClose} isEditing={Boolean(currentMake)}/>
         </div>
     );
 };

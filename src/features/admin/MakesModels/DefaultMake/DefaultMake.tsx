@@ -2,7 +2,7 @@ import React, {ChangeEvent, useEffect, useState} from 'react';
 import { Autocomplete } from '@mui/material';
 import {useStyles} from "./styles";
 import {useDispatch, useSelector} from "react-redux";
-import {IMake} from "../../../../api/types";
+import {TMakeOrder} from "../../../../api/types";
 import {RootState} from "../../../../store/rootReducer";
 import {updateDefaultMake} from "../../../../store/reducers/serviceCenters/actions";
 import {autocompleteRender} from "../../../../utils/autocompleteRenders";
@@ -11,7 +11,7 @@ import {useSCs} from "../../../../hooks/useSCs/useSCs";
 
 export const DefaultMake = () => {
     const { makes, isLoading } = useSelector((state: RootState) => state.vehicleDetails);
-    const [selectedMake, setSelectedMake] = useState<IMake|null>(null);
+    const [selectedMake, setSelectedMake] = useState<TMakeOrder|null>(null);
     const {selectedSC} = useSCs();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ export const DefaultMake = () => {
         }
     }, [selectedSC, makes])
 
-    const onMakeChange = (e: ChangeEvent<{}>, value: IMake|null) => {
+    const onMakeChange = (e: ChangeEvent<{}>, value: TMakeOrder|null) => {
         if (selectedSC) dispatch(updateDefaultMake(selectedSC.id, value?.id ?? null, showError))
     }
 

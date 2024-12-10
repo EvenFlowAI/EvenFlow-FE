@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {deleteMake, setCurrentMake} from "../../../../store/reducers/vehicleDetails/actions";
 import {RootState} from "../../../../store/rootReducer";
 import {IconButton, Menu, MenuItem} from "@mui/material";
-import {IMake} from "../../../../api/types";
+import {TMakeOrder} from "../../../../api/types";
 import {Table} from "../../../../components/tables/Table/Table";
 import {MoreHoriz} from "@mui/icons-material";
 import {TableRowDataType, TCallback} from "../../../../types/types";
@@ -14,15 +14,16 @@ import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {truncateMakes} from "./utils";
 
-const RowData: TableRowDataType<IMake>[] = [
-    {val: (el: IMake) => <span style={{fontWeight: 'bold'}}>{el.name}</span>, header: "Make"},
-    {val: (el: IMake) => el.models.join(', '), header: "Model"},
+const RowData: TableRowDataType<TMakeOrder>[] = [
+    {val: (el: TMakeOrder) => <span style={{fontWeight: 'bold'}}>{el.name}</span>, header: "Make"},
+    {val: (el: TMakeOrder) => el.order >=0 ? el.order.toString() : '-', header: "Order", width: 76},
+    {val: (el: TMakeOrder) => el.models.map(el => el.name).join(', '), header: "Model"},
 ];
 
 export const MakesModelsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<{onOpen: TCallback}>>> = ({onOpen}) => {
     const {makes, currentMake, isLoading} = useSelector((state: RootState) => state.vehicleDetails);
     const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
-    const [tableData, setTableData] = useState<IMake[]>([]);
+    const [tableData, setTableData] = useState<TMakeOrder[]>([]);
 
     const dispatch = useDispatch();
     const showMessage = useMessage();
@@ -34,12 +35,12 @@ export const MakesModelsTable: React.FC<React.PropsWithChildren<React.PropsWithC
         if (makes) setTableData(truncateMakes(makes))
     }, [makes])
 
-    const openMenu = (el: IMake) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const openMenu = (el: TMakeOrder) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         dispatch(setCurrentMake(el));
         setAnchorEl(e.currentTarget);
     }
 
-    const tableActions = (el: IMake) => {
+    const tableActions = (el: TMakeOrder) => {
         return (
             <IconButton onClick={openMenu(el)} size="large">
                 <MoreHoriz />
@@ -100,7 +101,7 @@ export const MakesModelsTable: React.FC<React.PropsWithChildren<React.PropsWithC
                 onClose={onMenuClose}
                 anchorEl={anchorEl}
             >
-                <MenuItem onClick={openEdit}>Edit</MenuItem>
+                <MenuItem onClick={openEdit}>Edit Models</MenuItem>
                 <MenuItem onClick={askRemove}>Remove</MenuItem>
             </Menu>
         </div>

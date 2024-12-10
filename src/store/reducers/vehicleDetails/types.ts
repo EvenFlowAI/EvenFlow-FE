@@ -1,4 +1,4 @@
-import {IMake, IMakeExtended} from "../../../api/types";
+import {IMake, IMakeExtended, TMakeOrder} from "../../../api/types";
 
 export interface ICreateMake extends IMake {
    serviceCenterId: number;
@@ -28,8 +28,8 @@ export type TCreateEngineType = {
 }
 
 export type TState = {
-    makes: IMake[];
-    currentMake: IMake | null;
+    makes: TMakeOrder[];
+    currentMake: TMakeOrder | null;
     isLoading: boolean;
     mileage: IMileage[];
     makesModels: IMakeExtended[];

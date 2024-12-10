@@ -1,7 +1,7 @@
-import {IMake} from "../../../../api/types";
+import {TMakeOrder} from "../../../../api/types";
 
-export const truncateMakes = (makes: IMake[]): IMake[] => {
-    const formattedData: IMake[] = [];
+export const truncateMakes = (makes: TMakeOrder[]): TMakeOrder[] => {
+    const formattedData: TMakeOrder[] = [];
     makes.forEach(make => {
         const formattedMake = {...make};
 
@@ -9,8 +9,8 @@ export const truncateMakes = (makes: IMake[]): IMake[] => {
             formattedMake.name = formattedMake.name.slice(0, 26).concat('...');
         }
         formattedMake.models = formattedMake.models
-            .map(model => model.length > 30
-                ? model.slice(0, 26).concat('...')
+            .map(model => model.name?.length > 30
+                ? {...model, name: model.name.slice(0, 26).concat('...')}
                 : model)
         formattedData.push(formattedMake);
     })

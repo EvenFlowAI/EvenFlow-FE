@@ -472,6 +472,19 @@ export type TModelCode = {
     name: string;
 }
 
+export type TModelOrder = {
+    id: number;
+    name: string;
+    order: number;
+}
+
+export type TMakeOrder = {
+    id: number;
+    name: string;
+    order: number;
+    models: TModelOrder[];
+}
+
 export interface IMake {
     name: string;
     models: string[];

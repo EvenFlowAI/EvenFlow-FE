@@ -31,7 +31,7 @@ export const AddMakeModelModal:React.FC<React.PropsWithChildren<React.PropsWithC
     useEffect(() => {
         if (isEditing && currentMake) {
             setMake(currentMake?.name);
-            setModels(currentMake?.models);
+            // setModels(currentMake?.models);
         } else {
             setMake('')
             setModels([])
