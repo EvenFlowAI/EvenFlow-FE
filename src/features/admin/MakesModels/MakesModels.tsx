@@ -7,7 +7,7 @@ import {useStyles} from "./styles";
 import {MakesModelsTable} from "./MakesModelsTable/MakesModelsTable";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {loadGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
+import {loadAllGlobalMakes} from "../../../store/reducers/globalVehicles/actions";
 
 export const MakesModels = () => {
     const {makes} = useSelector((state: RootState) => state.vehicleDetails);
@@ -19,7 +19,7 @@ export const MakesModels = () => {
     useEffect(() => {
         if (selectedSC) {
             dispatch(loadMakes(selectedSC.id))
-            dispatch(loadGlobalMakes({pageIndex: 0, pageSize: 0}, {isAscending: false, orderBy: "VinName"}, null, []))
+            dispatch(loadAllGlobalMakes())
         }
     }, [selectedSC])
 
