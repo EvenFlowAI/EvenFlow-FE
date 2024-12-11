@@ -29,6 +29,7 @@ export const TimeSlotCard: React.FC<TProps> =
          date,
          selectFirstSlot}) => {
         const {waitListSettings} = useSelector((state: RootState) => state.appointment);
+        const {isConsentOpen} = useSelector((state: RootState) => state.modals);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
         const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
@@ -64,10 +65,10 @@ export const TimeSlotCard: React.FC<TProps> =
                 rect.right <= parentWidth
             )
            if (slotRef.current && selected) {
-               !isVisible && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+               !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
            }
 
-        }, [selected, slot])
+        }, [selected, slot, isConsentOpen])
 
 
         const getContent = (timePassed: boolean): string => {
