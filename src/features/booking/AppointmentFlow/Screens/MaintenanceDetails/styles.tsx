@@ -11,7 +11,6 @@ export const SelectWrapper = styled('div')(({theme}) => ({
     }
 }));
 
-// 
 export const useStyles = makeStyles()(() => ({
     vinWrapper: {
         '& > label': {
@@ -20,5 +19,25 @@ export const useStyles = makeStyles()(() => ({
             color: "#142EA1",
             fontWeight: "normal",
         }
-    }
+    },
+    label: {
+        whiteSpace: 'nowrap',
+        fontSize: 16,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        transformOrigin: "top left",
+        transform: "translate(0, -1.5px) scale(0.75)"
+    },
+    select: {
+        width: '100%',
+        borderRadius: 0,
+        '&:before': {
+            display: 'none',
+        },
+        '& > div': {
+            '&:focus': {
+                backgroundColor: 'transparent'
+            }
+        },
+    },
 }));

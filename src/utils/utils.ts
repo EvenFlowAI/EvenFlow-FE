@@ -658,3 +658,6 @@ export const getClearSVDate = (d: TParsableDate) => {
     const utcOffset = dayjs(d).utcOffset();
     return utcOffset > 0 ? dayjs(d).subtract(utcOffset, 'minutes') : dayjs(d).add(Math.abs(utcOffset), 'minutes')
 }
+export const checkVin = (vin: string) => {
+    return vin && vin.length === 17 && (vin.includes('~') || vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm))
+}
