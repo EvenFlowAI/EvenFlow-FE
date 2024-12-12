@@ -25,9 +25,11 @@ import {RootState} from "../../store/rootReducer";
 import {ETransportationType} from "../../store/reducers/transportationNeeds/types";
 import {setSlotsLoading} from "../../store/reducers/appointment/actions";
 
+const pickUpSteps: TScreen[] = ["location", "serviceNeeds", "consultantSelection", "appointmentSelection"]
+const visitCenterSteps: TScreen[] = ["serviceNeeds", "consultantSelection", "transportationNeeds", "appointmentSelection"]
+
 export const useChangeServiceOption = (optionType: "serviceType"|"transportation") => {
     const {
-        sideBarSteps,
         serviceOptionChangedFromSlotPage,
         address,
         zipCode,
@@ -41,35 +43,20 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     const showError = useException();
 
     let isTransportationAvailable = true;
-
-    const sliceSteps = (index: number) => {
-        if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index + 1);
-            dispatch(setSideBarSteps(slicedSteps))
-        }
-    }
+    let optionToSwitchTo: IFirstScreenOption|null = null;
 
     const handleSideBar = (showAdvisorScreen: boolean) => {
-        let screenToSearchFor: TScreen = "appointmentSelection";
-        if (isTransportationAvailable) {
-            if (sideBarSteps.includes("transportationNeeds")) {
-                screenToSearchFor =  "transportationNeeds";
-            } else if (sideBarSteps.includes("consultantSelection")) {
-                screenToSearchFor =  "consultantSelection";
-            } else if (sideBarSteps.includes("serviceNeeds")) {
-                screenToSearchFor =  "serviceNeeds";
-            } else if (sideBarSteps.includes("location")) {
-                screenToSearchFor =  "location";
-            }
+        if (optionToSwitchTo?.type === EServiceType.PickUpDropOff) {
+           dispatch(setSideBarSteps(pickUpSteps
+               .filter(el => showAdvisorScreen ? el !== "consultantSelection" : el !== "appointmentSelection")))
         } else {
-            if (showAdvisorScreen && sideBarSteps.includes("consultantSelection")) {
-                screenToSearchFor =  "consultantSelection";
-            }
-        }
-        const index = sideBarSteps.indexOf(screenToSearchFor);
-        if (index > -1) {
-            sliceSteps(index)
-        } else {
+            const steps = visitCenterSteps
+                .filter(el => showAdvisorScreen
+                    ? el !== "consultantSelection" && el !== "transportationNeeds"
+                    : isTransportationAvailable
+                        ? el !== "transportationNeeds" && el !== "appointmentSelection"
+                        : el !== "appointmentSelection")
+            dispatch(setSideBarSteps(steps))
         }
     }
 
@@ -78,6 +65,7 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
         if (showAdvisorScreen) {
             dispatch(setCurrentFrameScreen('consultantSelection'))
         } else {
+            handleTransportation(isTransportationAvailable)
             if (optionType === "transportation") {
                 dispatch(setCurrentFrameScreen('appointmentSelection'))
             }
@@ -193,12 +181,13 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     return (newOption: IFirstScreenOption) => {
         dispatch(setSlotsLoading(true))
         try {
+            optionToSwitchTo = newOption;
             dispatch(setServiceTypeOption(newOption));
             const newConfig = config.find(item => item.serviceType === newOption.type);
             isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
             if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
-            handleTransportation(isTransportationAvailable);
             handleAdvisors(newOption, newConfig);
+            // handleTransportation(isTransportationAvailable);
             dispatch(setServiceOptionChanged(true))
         } catch (e) {
             console.log(e)

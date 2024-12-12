@@ -65,7 +65,7 @@ const AppointmentFlow = () => {
 
     useEffect(() => {
         dispatch(checkCarIsValid(onCarIsValid, undefined, true))
-    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage])
+    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage, address, zipCode])
 
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
