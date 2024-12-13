@@ -60,7 +60,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
                         fullWidth={isSm}
                         disabled={!isTransportationAvailable || isTransportationsLoading}
                         onChange={handleChange}>`
-                        {transportations.map(item => <MenuItem value={item.id} key={item.name}>{item.name}</MenuItem>)}
+                        {transportations.map(item => <MenuItem value={item.id} key={item.name}>{item.description}</MenuItem>)}
                     </Select>
                 </div>
             </div>

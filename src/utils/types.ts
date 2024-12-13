@@ -60,3 +60,14 @@ export type TReactGATracker = {
     trackingId: string;
     gaOptions: TGAOptions
 }
+
+export type IServiceCenterFlag = {
+    Dealerbuilt: number[];
+    Fremont: number[];
+    LakePowellFord: number[];
+    BmwSchererville: number[];
+    Dominion: number[];
+    RiverViewFord: number[];
+    Bountiful: number[];
+    Walser: number[];
+}

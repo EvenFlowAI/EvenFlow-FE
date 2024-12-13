@@ -24,7 +24,6 @@ import {
     TParsableDate
 } from "../../../types/types";
 import {
-    EServiceCenterName,
     ICreateAppointmentResp,
     ICustomerLoadedData,
     ILoadedVehicle, IServiceCategory, IServiceCategoryShort,
@@ -33,6 +32,7 @@ import {getSlotsGap} from "../appointmentFrameReducer/actions";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 import {v4 as uuidv4} from "uuid";
+import {DealershipsIds} from "../../../utils/constants";
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const setTopAligning = createAction<boolean>("Appointment/SetTopAligning");
@@ -45,10 +45,13 @@ export const loadSCProfile = (id: number): AppThunk => async dispatch => {
             {urlParams: {id}}
         )
         dispatch(getServiceCenterProfile(data));
-        dispatch(setTopAligning(data?.serviceCenterFlag === EServiceCenterName.Fremont
-            || data?.serviceCenterFlag === EServiceCenterName.LakePowellFord
-            || data?.serviceCenterFlag === EServiceCenterName.DealerBuilt
-            || data?.serviceCenterFlag === EServiceCenterName.Bountiful))
+        const shouldBeTopAligned = DealershipsIds.Fremont.includes(data?.dealershipId) ||
+            DealershipsIds.LakePowellFord.includes(data?.dealershipId) ||
+            DealershipsIds.Dealerbuilt.includes(data?.dealershipId) ||
+            DealershipsIds.Bountiful.includes(data?.dealershipId) ||
+            DealershipsIds.Walser.includes(data?.dealershipId)
+
+        dispatch(setTopAligning(shouldBeTopAligned))
     } catch (err) {
         console.log('load sc profile err', err)
     } finally {
