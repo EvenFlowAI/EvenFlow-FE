@@ -48,7 +48,8 @@ export const loadSCProfile = (id: number): AppThunk => async dispatch => {
         const shouldBeTopAligned = DealershipsIds.Fremont.includes(data?.dealershipId) ||
             DealershipsIds.LakePowellFord.includes(data?.dealershipId) ||
             DealershipsIds.Dealerbuilt.includes(data?.dealershipId) ||
-            DealershipsIds.Bountiful.includes(data?.dealershipId);
+            DealershipsIds.Bountiful.includes(data?.dealershipId) ||
+            DealershipsIds.Walser.includes(data?.dealershipId)
 
         dispatch(setTopAligning(shouldBeTopAligned))
     } catch (err) {
