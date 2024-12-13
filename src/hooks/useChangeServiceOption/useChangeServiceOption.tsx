@@ -27,7 +27,6 @@ import {setSlotsLoading} from "../../store/reducers/appointment/actions";
 
 export const useChangeServiceOption = (optionType: "serviceType"|"transportation") => {
     const {
-        sideBarSteps,
         serviceOptionChangedFromSlotPage,
         address,
         zipCode,
@@ -41,36 +40,16 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     const showError = useException();
 
     let isTransportationAvailable = true;
-
-    const sliceSteps = (index: number) => {
-        if (index > -1) {
-            const slicedSteps = sideBarSteps.slice(0, index + 1);
-            dispatch(setSideBarSteps(slicedSteps))
-        }
-    }
+    let optionToSwitchTo: IFirstScreenOption|null = null;
 
     const handleSideBar = (showAdvisorScreen: boolean) => {
-        let screenToSearchFor: TScreen = "appointmentSelection";
-        if (isTransportationAvailable) {
-            if (sideBarSteps.includes("transportationNeeds")) {
-                screenToSearchFor =  "transportationNeeds";
-            } else if (sideBarSteps.includes("consultantSelection")) {
-                screenToSearchFor =  "consultantSelection";
-            } else if (sideBarSteps.includes("serviceNeeds")) {
-                screenToSearchFor =  "serviceNeeds";
-            } else if (sideBarSteps.includes("location")) {
-                screenToSearchFor =  "location";
-            }
+        let steps: TScreen[];
+        if (optionToSwitchTo?.type === EServiceType.PickUpDropOff) {
+            steps = showAdvisorScreen ? ["location", "serviceNeeds"] : ["location", "serviceNeeds", "consultantSelection"]
         } else {
-            if (showAdvisorScreen && sideBarSteps.includes("consultantSelection")) {
-                screenToSearchFor =  "consultantSelection";
-            }
+            steps = showAdvisorScreen ? ['serviceNeeds'] : ['serviceNeeds', 'consultantSelection']
         }
-        const index = sideBarSteps.indexOf(screenToSearchFor);
-        if (index > -1) {
-            sliceSteps(index)
-        } else {
-        }
+        dispatch(setSideBarSteps(steps))
     }
 
     const handleAdvisorSelection = (showAdvisorScreen: boolean) => {
@@ -78,6 +57,7 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
         if (showAdvisorScreen) {
             dispatch(setCurrentFrameScreen('consultantSelection'))
         } else {
+            handleTransportation(isTransportationAvailable)
             if (optionType === "transportation") {
                 dispatch(setCurrentFrameScreen('appointmentSelection'))
             }
@@ -175,7 +155,7 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable && transportation?.type !== ETransportationType.PickUpDelivery) {
             dispatch(setCurrentFrameScreen("transportationNeeds"))
-        } else  {
+        } else {
             dispatch(setTransportation(null));
         }
     }
@@ -193,12 +173,13 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     return (newOption: IFirstScreenOption) => {
         dispatch(setSlotsLoading(true))
         try {
+            optionToSwitchTo = newOption;
             dispatch(setServiceTypeOption(newOption));
             const newConfig = config.find(item => item.serviceType === newOption.type);
             isTransportationAvailable = Boolean(newConfig?.transportationNeeds) && !newOption?.transportationOption;
             if (newOption?.type === EServiceType.PickUpDropOff || !newConfig?.appointmentSelection) dispatch(setTime(null))
-            handleTransportation(isTransportationAvailable);
             handleAdvisors(newOption, newConfig);
+            // handleTransportation(isTransportationAvailable);
             dispatch(setServiceOptionChanged(true))
         } catch (e) {
             console.log(e)
