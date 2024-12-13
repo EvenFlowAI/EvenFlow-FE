@@ -1,5 +1,5 @@
 import {createAction} from "@reduxjs/toolkit";
-import {AppThunk, PaginatedAPIResponse} from "../../../types/types";
+import {AppThunk, PaginatedAPIResponse, TArgCallback} from "../../../types/types";
 import {IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption} from "./types";
 import {EServiceType} from "../appointmentFrameReducer/types";
 import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
@@ -86,7 +86,7 @@ export const createFirstScreenOption = (data: TNewFirstScreenOption, serviceCent
         })
 }
 
-export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number, file: File): AppThunk => dispatch => {
+export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number, file: File, onError: TArgCallback<any>): AppThunk => dispatch => {
     const data = new FormData();
     data.append("file", file, file.name);
     Api.call(Api.endpoints.ServiceTypes.UpdateIcon, {params: {id, serviceCenterId}, data})
@@ -96,6 +96,7 @@ export const updateFirstScreenOptionIcon = (id: number, serviceCenterId: number,
             }
         })
         .catch(err => {
+            onError(err)
             console.log('update service type icon error', err)
         })
 }
