@@ -105,10 +105,10 @@ export const AddFirstScreenOptionModal: React.FC<React.PropsWithChildren<React.P
 
     const onSuccessCreate = useCallback((serviceTypeId: number) => {
         if (fileState.file && selectedSC) {
-            dispatch(updateFirstScreenOptionIcon(serviceTypeId, selectedSC.id, fileState.file));
+            dispatch(updateFirstScreenOptionIcon(serviceTypeId, selectedSC.id, fileState.file, showError));
         }
         onCancel();
-    }, [fileState])
+    }, [fileState, selectedSC])
 
 
     const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {

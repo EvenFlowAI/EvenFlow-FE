@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Redirect, Route, Switch, useHistory, useParams} from "react-router-dom";
 import {Routes} from "../../../routes/constants";
 import {CreateAppointmentFlow} from "../CreateAppointmentFlow/CreateAppointmentFlow";
@@ -6,7 +6,8 @@ import {ManageAppointmentFlow} from "../ManageAppointmentFlow/ManageAppointmentF
 import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle} from "../../../api/types";
 import {clearCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {
-    handleAppointmentUpdate,
+    checkCarIsValid,
+    handleAppointmentUpdate, loadConsultants,
     setCurrentFrameScreen, setServiceTypeOption, setWelcomeScreenView, updatePackageOption,
     updateRecalls
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -18,16 +19,23 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {useException} from "../../../hooks/useException/useException";
 import {useCurrentUser} from "../../../hooks/useCurrentUser/useCurrentUser";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 const AppointmentFlow = () => {
     const {
         selectedVehicle,
         makes,
         serviceTypeOption,
+        selectedPackage,
+        categoriesIds,
+        selectedRecalls,
+        address,
+        zipCode,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData, scProfile} = useSelector((state: RootState) => state.appointment);
+    const {customerLoadedData, scProfile, selectedSR} = useSelector((state: RootState) => state.appointment);
     const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const {engineTypes} = useSelector((state: RootState) => state.vehicleDetails);
+    const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
     const {
         isTransportationAvailable,
         isAppointmentTimingAvailable,
@@ -46,6 +54,18 @@ const AppointmentFlow = () => {
     const currentUser = useCurrentUser();
 
     const isAuth = useMemo(() => currentUser?.dealershipId === scProfile?.dealershipId, [currentUser, scProfile]);
+
+    const onCarIsValid = useCallback(() => {
+        const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
+        const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption || Boolean(address && zipCode)
+        if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
+            dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+        }
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
+
+    useEffect(() => {
+        dispatch(checkCarIsValid(onCarIsValid, undefined, true))
+    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage, address, zipCode])
 
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
