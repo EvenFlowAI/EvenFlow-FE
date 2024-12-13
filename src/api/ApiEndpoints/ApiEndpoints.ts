@@ -492,7 +492,7 @@ export class Api {
     static async call<RValue = any>(r: TApiEndpoint, options?: TOptions) {
         const path = pathReplace(r.route, options?.urlParams);
         if (r.method === "post" || r.method === "put" || r.method === "patch") {
-            return request[r.method]<RValue, AxiosResponse<RValue>>(path, options?.data);
+            return request[r.method]<RValue, AxiosResponse<RValue>>(path, options?.data, {params: options?.params});
         } else {
             return request[r.method]<RValue, AxiosResponse<RValue>>(path, {params: options?.params});
         }
