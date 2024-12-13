@@ -25,9 +25,6 @@ import {RootState} from "../../store/rootReducer";
 import {ETransportationType} from "../../store/reducers/transportationNeeds/types";
 import {setSlotsLoading} from "../../store/reducers/appointment/actions";
 
-const pickUpSteps: TScreen[] = ["location", "serviceNeeds", "consultantSelection", "appointmentSelection"]
-const visitCenterSteps: TScreen[] = ["serviceNeeds", "consultantSelection", "transportationNeeds", "appointmentSelection"]
-
 export const useChangeServiceOption = (optionType: "serviceType"|"transportation") => {
     const {
         serviceOptionChangedFromSlotPage,
@@ -46,18 +43,13 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     let optionToSwitchTo: IFirstScreenOption|null = null;
 
     const handleSideBar = (showAdvisorScreen: boolean) => {
+        let steps: TScreen[];
         if (optionToSwitchTo?.type === EServiceType.PickUpDropOff) {
-           dispatch(setSideBarSteps(pickUpSteps
-               .filter(el => showAdvisorScreen ? el !== "consultantSelection" : el !== "appointmentSelection")))
+            steps = showAdvisorScreen ? ["location", "serviceNeeds"] : ["location", "serviceNeeds", "consultantSelection"]
         } else {
-            const steps = visitCenterSteps
-                .filter(el => showAdvisorScreen
-                    ? el !== "consultantSelection" && el !== "transportationNeeds"
-                    : isTransportationAvailable
-                        ? el !== "transportationNeeds" && el !== "appointmentSelection"
-                        : el !== "appointmentSelection")
-            dispatch(setSideBarSteps(steps))
+            steps = showAdvisorScreen ? ['serviceNeeds'] : ['serviceNeeds', 'consultantSelection']
         }
+        dispatch(setSideBarSteps(steps))
     }
 
     const handleAdvisorSelection = (showAdvisorScreen: boolean) => {
@@ -163,7 +155,7 @@ export const useChangeServiceOption = (optionType: "serviceType"|"transportation
     const handleTransportation = (isTransportationAvailable: boolean)=> {
         if (isTransportationAvailable && transportation?.type !== ETransportationType.PickUpDelivery) {
             dispatch(setCurrentFrameScreen("transportationNeeds"))
-        } else  {
+        } else {
             dispatch(setTransportation(null));
         }
     }
