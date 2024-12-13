@@ -1,6 +1,6 @@
 import {TRole} from "../store/reducers/users/types";
 import {EStates, TTitle} from "../types/types";
-import {TGAOptions} from "./types";
+import {IServiceCenterFlag, TGAOptions} from "./types";
 import {Routes} from "../routes/constants";
 import {TReviewOption} from "../store/reducers/globalVehicles/types";
 
@@ -95,3 +95,14 @@ export const options: TGAOptions = {
     storage: 'none',
 }
 export const reviewOptions: TReviewOption[] = ["Not Reviewed", "Confirmed", "Override"];
+
+export const DealershipsIds: IServiceCenterFlag = {
+    Dealerbuilt: [16, 184],
+    Fremont: [10, 150],
+    LakePowellFord: [13],
+    BmwSchererville: [7],
+    Dominion: [11],
+    RiverViewFord: [5],
+    Bountiful: [118],
+    Walser: [150]
+}
