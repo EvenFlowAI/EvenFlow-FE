@@ -42,7 +42,7 @@ const AppointmentFlow = () => {
         isAdvisorAvailable
     } = useSelector((state: RootState) => state.bookingFlowConfig);
 
-    const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("carSelection");
+    const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("serviceNeeds");
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const [needToShowServiceTypes, setNeedToShowServiceTypes] = useState<boolean>(false)
     const [serviceCategoryPage, setServiceCategoryPage] = useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);
