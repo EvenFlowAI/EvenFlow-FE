@@ -25,7 +25,7 @@ const VinCodeInput: React.FC<TProps> = ({
                                             setErrors,
                                             requiredFields,
                                             recallsToggledOn
-}) => {
+                                        }) => {
     const {selectedVehicle, userType} = useSelector((state: RootState) => state.appointmentFrame);
     const { classes  } = useStyles();
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
@@ -44,25 +44,33 @@ const VinCodeInput: React.FC<TProps> = ({
     }
 
     return recallsToggledOn || isRecallsCategorySelected || selectedVehicle?.vin?.length
-        ? <Grid item xs={12} sm={6} key="vin" order={orderMapStyles.vin.order} style={{display: 'grid'}}>
-            <div key="vin" className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}>
-                <TextField
-                    onChange={handleVINChange("vin")}
-                    label={recallsToggledOn && !isRecallsCategorySelected
-                        ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
-                        : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
-                    }
-                    name={"vin"}
-                    error={errors.includes("vin")}
-                    required={requiredFields.includes("vin") || isRecallsCategorySelected}
-                    fullWidth
-                    disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
-                    value={selectedVehicle ? selectedVehicle.vin : ""}
-                    placeholder={errors.includes("vin")
-                        ? `${t("VIN")} ${t("required")}`
-                        : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
-                />
-            </div>
+        ? <Grid
+            item
+            xs={12}
+            sm={6}
+            key="vin"
+            order={orderMapStyles.vin.order}
+            style={{display: 'grid'}}
+            className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}>
+            <TextField
+                onChange={handleVINChange("vin")}
+                label={recallsToggledOn && !isRecallsCategorySelected
+                    ? t("OPTIONAL: Please enter your VIN to check for open Safety Recalls")
+                    : `${t("VIN")}${isRecallsCategorySelected ? "" : `(${ t("Optional")})`}`
+                }
+                name={"vin"}
+                error={errors.includes("vin")}
+                required={requiredFields.includes("vin") || isRecallsCategorySelected}
+                fullWidth
+                disabled={(userType === EUserType.Existing && !!selectedVehicle?.vin?.length && isExistingVin)}
+                value={selectedVehicle ? selectedVehicle.vin : ""}
+                placeholder={errors.includes("vin")
+                    ? `${t("VIN")} ${t("required")}`
+                    : `${t("Type")} ${t("VIN")} ${isRecallsCategorySelected ? "" : `(${t("Optional")})`}`}
+            />
+            {/*<div className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}>*/}
+            {/*    */}
+            {/*</div>*/}
         </Grid>
         : null
 };
