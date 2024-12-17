@@ -18,6 +18,7 @@ export const useStyles = makeStyles()(() => ({
             fontSize: 14,
             color: "#142EA1",
             fontWeight: "normal",
+            textOverflow: "unset"
         }
     },
     label: {
