@@ -103,7 +103,7 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
                         <MenuItem disabled value="">
                             {errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`}
                         </MenuItem>
-                        {mileage.map(item => <MenuItem value={item.id} key={item.id}>{item.value}</MenuItem>)}
+                        {mileage.map(el => el.value).map(item => <MenuItem value={item} key={item}>{item}</MenuItem>)}
                     </Select>
                 </Grid>
 
