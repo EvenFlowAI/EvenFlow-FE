@@ -21,7 +21,7 @@ type TProps = {
 }
 
 export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) => {
-    const {appointment} = useSelector((state: RootState) => state.appointment)
+    const {appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment)
     const {
         selectedTiming,
         selectedTime,
@@ -44,8 +44,8 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
     }, [])
 
     const clearAppointmentSlots = () => {
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
+        appointment && dispatch(selectAppointment(null));
+        serviceValetAppointment && dispatch(selectServiceValetAppointment(null));
     }
 
     const handleChangeTime = useCallback((t: unknown) => {
