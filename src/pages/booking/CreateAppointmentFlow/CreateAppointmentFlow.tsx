@@ -10,7 +10,7 @@ import {
     MaintenancePackages
 } from "../../../features/booking/AppointmentFlow/Screens/MaintenancePackages/MaintenancePackages";
 import {SelectOpsCode} from "../../../features/booking/AppointmentFlow/Screens/ServiceOpsCodes/SelectOpsCode";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../store/rootReducer";
 import {
     AppointmentConfirmed
@@ -36,6 +36,7 @@ import YourLocationCreate from "../../../features/booking/AppointmentFlow/Create
 import AppointmentFlow from "../../../features/booking/AppointmentFlow/AppointmentFlow";
 import {TFlowProps} from "../types";
 import {useHistory, useParams} from "react-router-dom";
+import {clearAppointmentSlots} from "../../../store/reducers/appointment/actions";
 
 export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                                                           onUpdateAppointment,
@@ -58,11 +59,17 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
 
     const {id} = useParams<{id: string}>();
     const history = useHistory();
+    const dispatch = useDispatch();
     const serviceType = useMemo(() => serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter, [serviceTypeOption]);
 
     const onBackFromServiceNeeds = () => {
         if (customerLoadedData?.isUpdating) history.push( "/f/appointment-manage/" + id);
         handleSetScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location')
+    }
+
+    const onChangeSlot = () => {
+        dispatch(clearAppointmentSlots())
+        handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")
     }
 
     const component = useMemo(() => {
@@ -119,7 +126,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
             />,
             appointmentConfirmation: <AppointmentConfirmation
                 onBack={() => handleSetScreen('appointmentSelection')}
-                onChangeSlot={() => handleSetScreen(isAppointmentTimingAvailable ? 'appointmentTiming' : "appointmentSelection")}
+                onChangeSlot={onChangeSlot}
                 onNext={() => handleSetScreen('appointmentConfirmed')}
             />,
             appointmentConfirmed: <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment} isManagingFlow={false}/>,

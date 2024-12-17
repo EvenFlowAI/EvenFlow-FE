@@ -144,29 +144,7 @@ export const clearStorage = () => {
     localStorage.removeItem(APPOINTMENT_STATE_KEY);
     localStorage.removeItem(APPOINTMENT_STATE_SAVED_KEY);
 }
-export const loadAppointmentReducer = (): AppThunk => async (dispatch) => {
-    const date = localStorage.getItem(APPOINTMENT_STATE_SAVED_KEY);
-    if (!date) {
-        clearStorage();
-    } else {
-        if (dayjs().diff(dayjs(date), "hours") >= 1) {
-            clearStorage();
-        } else {
-            try {
-                const i = localStorage.getItem(APPOINTMENT_STATE_KEY);
-                if (!i) {
-                    clearStorage();
-                } else {
-                    const data: TAppointmentState = JSON.parse(i);
-                    await dispatch(setLoadedReducer(data));
-                    localStorage.setItem(APPOINTMENT_STATE_SAVED_KEY, dayjs().toISOString());
-                }
-            } catch {
-                clearStorage();
-            }
-        }
-    }
-}
+
 export const setOldAppointmentId = createAction<ICreateAppointmentResp&{updated: boolean}>("Appointments/SetAppointmentId");
 export const setAppointmentFilters = createAction<Partial<IAppointmentFilters>>("Appointment/SetFilters");
 export const setCustomerEnteredEmail = createAction<string>("Appointment/SetCustomerEnteredEmail");
@@ -215,18 +193,6 @@ export const getCustomerCache = (): ICustomerLoadedData|null => {
     }
 }
 
-export const loadServiceCategories = (serviceCenterId: number, page: number): AppThunk => dispatch => {
-    Api.call<IServiceCategory[]>(
-        Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId, page}}
-    )
-        .then(({data}) => {
-            if (data) dispatch(getServiceCategories(data))
-        })
-        .catch(err => {
-            console.log('load all service categories error', err)
-        })
-}
-
 export const loadAllServiceCategories = (serviceCenterId: number): AppThunk => dispatch => {
     Api.call(
         Api.endpoints.ServiceCategories.GetShortByQuery, {data: {serviceCenterId, pageSize: 0, pageIndex: 0}}
@@ -270,4 +236,10 @@ export const loadServiceValetSlots = (
             dispatch(setSlotPodId(null));
             dispatch(setSlotsLoading(false))
         })
+}
+
+export const clearAppointmentSlots = (): AppThunk => (dispatch, getState) => {
+    const {appointment, serviceValetAppointment} = getState().appointment;
+    appointment && dispatch(selectAppointment(null));
+    serviceValetAppointment && dispatch(selectServiceValetAppointment(null));
 }
