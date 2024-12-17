@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {setSideBarSteps, setTime, setTiming,} from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {EAppointmentTimingType,} from "../../../../../store/reducers/appointment/types";
-import {selectAppointment, selectServiceValetAppointment,} from "../../../../../store/reducers/appointment/actions";
+import {clearAppointmentSlots} from "../../../../../store/reducers/appointment/actions";
 import ReactGA from "react-ga4";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
 import AppointmentTimingCard from "./AppointmentTimingCard/AppointmentTimingCard";
@@ -43,16 +43,13 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
         if (t === EAppointmentTimingType.FirstAvailable) dispatch(setTime(null))
     }, [])
 
-    const clearAppointmentSlots = () => {
-        dispatch(selectAppointment(null));
-        dispatch(selectServiceValetAppointment(null));
-    }
-
     const handleChangeTime = useCallback((t: unknown) => {
         const date = dayjs(t as TParsableDate)
         dispatch(setTiming(EAppointmentTimingType.PreferredDate))
         dispatch(setTime(date));
-        if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) clearAppointmentSlots()
+        if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) {
+            dispatch(clearAppointmentSlots())
+        }
     }, [selectedTime])
 
     const isTimingValid = Boolean(
@@ -80,7 +77,9 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
 
     const onSubmit = useCallback((): void => {
         handleGA();
-        if (appointment?.timingType !== selectedTiming) clearAppointmentSlots()
+        if (appointment?.timingType !== selectedTiming) {
+            dispatch(clearAppointmentSlots())
+        }
         handleSideBar();
         onNext();
     }, [appointment, dispatch, onNext, selectedTiming, handleGA])
