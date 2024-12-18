@@ -76,9 +76,9 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
 
         const isExistingVehicle = useMemo(() => {
             return Boolean(customerLoadedData?.vehicles.find(v => {
-                return (v.vin && selectedVehicle?.vin && v.vin === selectedVehicle?.vin)
-                    || (v.make === selectedVehicle?.make
-                        && v.model === selectedVehicle?.model
+                return (v.vin && selectedVehicle?.vin && v.vin?.toUpperCase() === selectedVehicle?.vin?.toUpperCase())
+                    || (v.make?.toLowerCase() === selectedVehicle?.make?.toLowerCase()
+                        && v.model?.toLowerCase() === selectedVehicle?.model?.toLowerCase()
                         && v.year
                         && v.year?.toString() === selectedVehicle?.year?.toString())
             }));
@@ -155,7 +155,7 @@ export const MaintenanceDetailsForm: React.FC<React.PropsWithChildren<React.Prop
                 setLoadedOptions(prevOptions => ({...prevOptions, make: [t('Other')]}));
             }
             if (selectedVehicle?.make) {
-                const currentMake = makes.find(item => item.name === selectedVehicle.make);
+                const currentMake = makes.find(item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase());
                 if (currentMake) setLoadedOptions(prevOptions => ({...prevOptions, model: currentMake.models }));
             } else {
                 setCurrentModels(() => makes.map(item => item.models).flat());

@@ -34,6 +34,18 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
         const {t} = useTranslation();
         const { classes  } = useStyles();
 
+        const modelIsInTheList = loadedOptions.model?.find(el => el.toLowerCase() === selectedVehicle?.model?.toLowerCase());
+        const makeIsInTheList = loadedOptions.make?.find(el => el.toLowerCase() === selectedVehicle?.make?.toLowerCase());
+        const modelOptions = !modelIsInTheList && !isExistingVehicle && selectedVehicle?.model
+            ? loadedOptions.model?.map(item => <MenuItem value={item.toLowerCase()} key={item}>{item}</MenuItem>).concat(
+                <MenuItem
+                    disabled
+                    value={selectedVehicle?.model?.toLowerCase() ?? ''}
+                    key={selectedVehicle?.model}>
+                    {selectedVehicle?.model}
+                </MenuItem>)
+            : loadedOptions.model?.map(item => <MenuItem value={item.toLowerCase()} key={item}>{item}</MenuItem>)
+
         const handleSelectChange = (name: TKey, skip?: boolean) => (e: SelectChangeEvent<unknown>) => {
             if (e.target.value && !skip) {
                 if (["year", "model", "make", "mileage"].includes(name)) {
@@ -98,7 +110,6 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
                         style={{color: selectedVehicle?.mileage ? "inherit" : '#858585'}}
                         error={errors.includes("mileage")}
                         required={requiredFields.includes('mileage')}
-                        disabled={isExistingVehicle}
                         onChange={handleSelectChange('mileage', false)}>
                         <MenuItem disabled value="">
                             {errors.includes("mileage") ? `${t("Estimated mileage")} ${t("required")}` : `${t("Select")} ${t("Estimated mileage")}`}
@@ -110,7 +121,7 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
                 <Grid item xs={12} sm={6} key="make" style={orderMapStyles.make}>
                     <div className={classes.label}>{t("Make")}{requiredFields.includes('make') ? '*' : ""}</div>
                     <Select
-                        value={selectedVehicle?.make ? selectedVehicle.make?.toString() : ''}
+                        value={selectedVehicle?.make ? selectedVehicle.make?.toLowerCase() : ''}
                         className={classes.select}
                         variant="standard"
                         disableUnderline
@@ -126,7 +137,9 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
                         <MenuItem disabled value="">
                             {errors.includes("make") ? `${t("Make")} ${t("required")}` : `${t("Select")} ${t("Make")}`}
                         </MenuItem>
-                        {loadedOptions.make?.map(item => <MenuItem value={item} key={item}>{item}</MenuItem>)}
+                        {makeIsInTheList || !isExistingVehicle
+                            ? loadedOptions.make?.map(item => <MenuItem value={item.toLowerCase()} key={item}>{item}</MenuItem>)
+                            : <MenuItem disabled value={selectedVehicle?.make?.toLowerCase() ?? ''}>{selectedVehicle?.make}</MenuItem>}
                     </Select>
                 </Grid>
 
@@ -160,7 +173,7 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
                 <Grid item xs={12} sm={6} key="model" order={orderMapStyles.model.order}>
                     <div className={classes.label}>{t("Model")}{requiredFields.includes('model') ? '*' : ''}</div>
                     <Select
-                        value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
+                        value={selectedVehicle?.model ? selectedVehicle.model.toLowerCase() : ''}
                         className={classes.select}
                         variant="standard"
                         disableUnderline
@@ -174,7 +187,9 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
                         <MenuItem disabled value="">
                             {errors.includes("model") ? `${t("Model")} ${t("required")}` : `${t("Select")} ${t("Model")}`}
                         </MenuItem>
-                        {loadedOptions.model?.map(item => <MenuItem value={item} key={item}>{item}</MenuItem>)}
+                        {modelIsInTheList || !isExistingVehicle
+                            ? modelOptions
+                            : <MenuItem disabled value={selectedVehicle?.model?.toLowerCase() ?? ''}>{selectedVehicle?.model}</MenuItem>}
                     </Select>
                 </Grid>
         </>
