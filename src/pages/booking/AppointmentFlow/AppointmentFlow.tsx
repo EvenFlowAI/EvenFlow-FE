@@ -58,14 +58,14 @@ const AppointmentFlow = () => {
     const onCarIsValid = useCallback(() => {
         const someRequestsSelected = selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
         const requestDataIsValid = serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption || Boolean(address && zipCode)
-        if (someRequestsSelected && requestDataIsValid && !customerLoadedData?.isUpdating) {
+        if (someRequestsSelected && requestDataIsValid) {
             dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
         }
-    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode, customerLoadedData])
+    }, [selectedSR, selectedPackage, categoriesIds, selectedRecalls, serviceTypeOption, id, address, zipCode])
 
     useEffect(() => {
         dispatch(checkCarIsValid(onCarIsValid, undefined, true))
-    }, [serviceTypeOption, id, selectedSR, selectedPackage, categoriesIds, selectedRecalls, selectedVehicle, mileage, address, zipCode])
+    }, [onCarIsValid, selectedVehicle, mileage])
 
     const onGoToFirstScreen = useCallback((screen: TView) => {
         dispatch(setWelcomeScreenView(screen))
