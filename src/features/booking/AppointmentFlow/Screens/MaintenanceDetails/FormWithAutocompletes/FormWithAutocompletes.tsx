@@ -151,7 +151,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
                         value={selectedEngine}
                     /></Grid>
                 : null}
-            <Grid item xs={12} sm={6} key="modele" order={orderMapStyles.model.order}>
+            <Grid item xs={12} sm={6} key="model" order={orderMapStyles.model.order}>
                 <Autocomplete
                     key="model"
                     options={loadedOptions.model ?? []}
