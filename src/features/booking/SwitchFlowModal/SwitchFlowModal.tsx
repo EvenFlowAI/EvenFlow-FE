@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {DialogProps} from "../../../components/modals/BaseModal/types";
-import {BaseModal, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
 import {useTranslation} from "react-i18next";
 import {TextWrapper} from "./styles";
 import SelectedConsultant
@@ -13,7 +13,7 @@ import {RootState} from "../../../store/rootReducer";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 import {EAppointmentTimingType} from "../../../store/reducers/appointment/types";
 import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {setTiming,} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {setTiming} from "../../../store/reducers/appointmentFrameReducer/actions";
 import UserLocation from "../../../components/UserLocation/UserLocation";
 
 const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
@@ -45,6 +45,14 @@ const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
 
     const onTimingChange = (e: SelectChangeEvent<number>) => {
         dispatch(setTiming(e.target.value as EAppointmentTimingType))
+    }
+
+    const onNext = () => {
+        if (selectedTiming === EAppointmentTimingType.PreferredDate) {
+            // todo open calendar
+        } else {
+            onClose();
+        }
     }
 
     return (
@@ -80,6 +88,7 @@ const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
                             <Select
                                 fullWidth
                                 input={<TextField label="Appointment Search"/>}
+                                disabled={!address || !zipCode}
                                 id="timing"
                                 name="timing"
                                 value={selectedTiming ?? ""}
@@ -90,6 +99,9 @@ const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
                         </>
                         : null}
             </DialogContent>
+            <DialogActions>
+
+            </DialogActions>
         </BaseModal>
     );
 };

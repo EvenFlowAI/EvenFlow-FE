@@ -1,17 +1,12 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import {
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../../../../../store/reducers/appointment/actions";
 import {
     setAdvisor,
     setAnyAdvisorSelected,
 } from "../../../../../../../store/reducers/appointmentFrameReducer/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
-import {EServiceCenterName} from "../../../../../../../api/types";
 import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
 import {Loading} from "../../../../../../../components/wrappers/Loading/Loading";
@@ -31,15 +26,9 @@ const SelectedConsultant: React.FC<TProps> = ({disabled, isVisible, loading}) =>
     const { classes  } = useStyles();
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
-    const isBmWService = useMemo(() => scProfile?.serviceCenterFlag === EServiceCenterName.BMWSchererville
-        || scProfile?.serviceCenterFlag === EServiceCenterName.DealertrackTest, [scProfile]);
 
     const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
         const consultant = consultants.find(item => item.id === e.target.value);
-        if (isBmWService && e.target.value !== advisor?.id) {
-            dispatch(selectAppointment(null));
-            dispatch(selectServiceValetAppointment(null));
-        }
         dispatch(setAdvisor(consultant ? consultant : null))
         dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
     }
