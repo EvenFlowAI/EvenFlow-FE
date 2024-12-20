@@ -1,15 +1,15 @@
 import React, {Dispatch, SetStateAction, useMemo} from 'react';
-import {DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
+import {DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {Button, Dialog} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/rootReducer";
-import {useDialogStyles} from "../../../../../../hooks/styling/useDialogStyles";
+import {RootState} from "../../../../store/rootReducer";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
-import {setAddress, setCurrentFrameScreen, setZipCode} from "../../../../../../store/reducers/appointmentFrameReducer/actions";
-import {TCallback} from "../../../../../../types/types";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {setAddress, setCurrentFrameScreen, setZipCode} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {TCallback} from "../../../../types/types";
 import {useStyles} from "./styles";
-import {setUnavailableServiceOpen} from "../../../../../../store/reducers/modals/actions";
+import {setUnavailableServiceOpen} from "../../../../store/reducers/modals/actions";
 
 type TUnavailableServiceProps = {
     setFormChecked: Dispatch<SetStateAction<boolean>>;

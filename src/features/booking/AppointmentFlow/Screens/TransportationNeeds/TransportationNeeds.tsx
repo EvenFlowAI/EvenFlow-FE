@@ -20,7 +20,7 @@ import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/Card
 import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
 import {ETransportationType} from "../../../../../store/reducers/transportationNeeds/types";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {useChangeServiceOption} from "../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
+import {useServiceOption} from "../../../../../hooks/useServiceOption/useServiceOption";
 import {selectAppointment} from "../../../../../store/reducers/appointment/actions";
 
 export type TProps = TActionProps & {
@@ -41,7 +41,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     const {t} = useTranslation();
     const dispatch = useDispatch();
 
-    const handleServiceOptionChange = useChangeServiceOption("transportation")
+    const handleServiceOptionChange = useServiceOption("transportation")
 
     useEffect(() => {
         dispatch(loadActiveTransportations(decodeSCID(id)))

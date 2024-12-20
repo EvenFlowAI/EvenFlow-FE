@@ -12,7 +12,7 @@ import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTyp
 import {TArgCallback} from "../../../../../../../types/types";
 import {useStyles} from "./styles";
 import clsx from "clsx";
-import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
+import {useServiceOption} from "../../../../../../../hooks/useServiceOption/useServiceOption";
 
 type TProps = {
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
@@ -29,7 +29,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const { classes  } = useStyles();
     const dispatch = useDispatch();
 
-    const handleServiceOptionChange = useChangeServiceOption("serviceType")
+    const handleServiceOptionChange = useServiceOption("serviceType")
 
     const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
         onChangeServiceOption(newOption)

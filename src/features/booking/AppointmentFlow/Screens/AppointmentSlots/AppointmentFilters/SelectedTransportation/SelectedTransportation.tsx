@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
-import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
+import {useServiceOption} from "../../../../../../../hooks/useServiceOption/useServiceOption";
 import {ETransportationType} from "../../../../../../../store/reducers/transportationNeeds/types";
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
 import {selectAppointment} from "../../../../../../../store/reducers/appointment/actions";
@@ -30,7 +30,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
                 : ""
     }, [transportation, serviceTypeOption])
 
-    const handleServiceOptionChange = useChangeServiceOption("transportation")
+    const handleServiceOptionChange = useServiceOption("transportation")
 
     const switchToServiceValet = () => {
         const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)

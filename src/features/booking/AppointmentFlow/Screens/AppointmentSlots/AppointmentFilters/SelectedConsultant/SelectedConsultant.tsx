@@ -14,8 +14,15 @@ import {RootState} from "../../../../../../../store/rootReducer";
 import {EServiceCenterName} from "../../../../../../../api/types";
 import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
+import {Loading} from "../../../../../../../components/wrappers/Loading/Loading";
 
-const SelectedConsultant: React.FC<{disabled?: boolean, isVisible: boolean}> = ({disabled, isVisible}) => {
+type TProps = {
+    disabled?: boolean;
+    isVisible: boolean;
+    loading?: boolean;
+}
+
+const SelectedConsultant: React.FC<TProps> = ({disabled, isVisible, loading}) => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
     const { scProfile } = useSelector((state: RootState) => state.appointment);
     const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -41,18 +48,20 @@ const SelectedConsultant: React.FC<{disabled?: boolean, isVisible: boolean}> = (
         ? <div style={isSm ? {marginBottom: 4} : {}}>
             <div>
                 <div className={clsx("uppercase", classes.label)}>{t("Advisor")}</div>
-                <Select
-                    value={advisor?.id ?? "Any"}
-                    className={classes.select}
-                    variant="standard"
-                    disableUnderline
-                    fullWidth={isSm}
-                    disabled={disabled || (!!currentConfig && !consultants.length)}
-                    onChange={handleConsultantChange}>`
-                    {consultants
-                        .map(consultant => <MenuItem value={consultant.id} key={consultant.name}>{consultant.name}</MenuItem>)
-                        .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}
-                </Select>
+                {loading ? <Loading/>
+                    : <Select
+                        value={advisor?.id ?? "Any"}
+                        className={classes.select}
+                        variant="standard"
+                        disableUnderline
+                        fullWidth={isSm}
+                        disabled={disabled || (!!currentConfig && !consultants.length)}
+                        onChange={handleConsultantChange}>`
+                        {consultants
+                            .map(consultant => <MenuItem value={consultant.id}
+                                                         key={consultant.name}>{consultant.name}</MenuItem>)
+                            .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}
+                    </Select>}
             </div>
         </div>
         : null

@@ -29,8 +29,8 @@ import {
     TAncillaryPriceByZip
 } from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
-import AncillaryPriceModal from "./AncillaryPriceModal/AncillaryPriceModal";
-import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
+import AncillaryPriceModal from "../../../../../components/modals/booking/AncillaryPriceModal/AncillaryPriceModal";
+import UnavailableServiceModal from "../../../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal";
 import {KeyboardArrowDown} from "@mui/icons-material";
 import {TActionProps, TArgCallback, TCallback, TView} from "../../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
@@ -39,7 +39,8 @@ import {parseGeoCode} from "./utils";
 import {useModal} from "../../../../../hooks/useModal/useModal";
 import {useException} from "../../../../../hooks/useException/useException";
 import {Routes} from "../../../../../routes/constants";
-import {SelectWrapper, useAutocompleteStyles, useStyles} from "./styles";
+import {SelectWrapper, useAutocompleteStyles} from "./styles";
+import {useLocationStyles} from "../../../../../hooks/styling/useLocationStyles";
 
 type TYourLocationProps = TActionProps & {
     setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
@@ -71,7 +72,7 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     const {isOpen, onClose, onOpen} = useModal();
     const dispatch = useDispatch();
     const showError = useException();
-    const { classes  } = useStyles();
+    const { classes  } = useLocationStyles();
     const error = isFormChecked && !zip;
     const { classes: autocompleteClasses } = useAutocompleteStyles({"error": error});
     const {t} = useTranslation();

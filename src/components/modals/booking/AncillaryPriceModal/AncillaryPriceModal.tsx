@@ -1,18 +1,18 @@
 import React, {useMemo} from 'react';
-import {useDialogStyles} from "../../../../../../hooks/styling/useDialogStyles";
-import {BaseModal, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
-import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
+import {BaseModal, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
+import {DialogProps} from "../../BaseModal/types";
 import {useTranslation} from "react-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/rootReducer";
-import {EAncillaryType, EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
-import {TCallback} from "../../../../../../types/types";
+import {RootState} from "../../../../store/rootReducer";
+import {EAncillaryType, EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {TCallback} from "../../../../types/types";
 import {
     setAddress,
     setZipCode
-} from "../../../../../../store/reducers/appointmentFrameReducer/actions";
+} from "../../../../store/reducers/appointmentFrameReducer/actions";
 import {useStyles} from "./styles";
-import {CenteredButtonsWrapper} from "../../../../../../components/styled/BfButtonsWrapper";
+import {CenteredButtonsWrapper} from "../../../styled/BfButtonsWrapper";
 import {Button} from "@mui/material";
 
 type TDisplayAncillaryPriceProps = DialogProps & {
