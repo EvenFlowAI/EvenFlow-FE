@@ -1,4 +1,5 @@
 import {styled} from "@mui/material";
+import {makeStyles} from "tss-react/mui";
 
 export const TextWrapper = styled('div')({
     fontSize: 20,
@@ -18,3 +19,24 @@ export const Label = styled("div")({
     textTransform: 'uppercase',
     fontSize: 12,
 })
+
+export const useStyles = makeStyles()(() => ({
+    label: {
+        whiteSpace: 'nowrap',
+        fontSize: 14,
+        textTransform: 'uppercase',
+        fontWeight: 'bold'
+    },
+    select: {
+        width: '100%',
+        borderRadius: 0,
+        '&:before': {
+            display: 'none',
+        },
+        '& > div': {
+            '&:focus': {
+                backgroundColor: 'transparent'
+            }
+        },
+    },
+}));

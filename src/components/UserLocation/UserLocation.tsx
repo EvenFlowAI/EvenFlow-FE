@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {SelectWrapper, useAutocompleteStyles} from "../../features/booking/AppointmentFlow/Screens/YourLocation/styles";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from "react-google-places-autocomplete";
 import {Autocomplete} from "@mui/material";
@@ -18,7 +18,16 @@ import {RootState} from "../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {useLocationStyles} from "../../hooks/styling/useLocationStyles";
 
-const UserLocation = () => {
+type TProps = {
+    zip: string;
+    setZip: Dispatch<SetStateAction<string>>;
+    userAddress: any;
+    setUserAddress: Dispatch<SetStateAction<any>>;
+}
+
+const UserLocation: React.FC<TProps> = ({
+                                            zip, setZip, userAddress, setUserAddress
+                                        }) => {
     const {
         serviceTypeOption,
         address,
@@ -26,7 +35,6 @@ const UserLocation = () => {
         filteredZipCodes,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {scProfile, customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const [zip, setZip] = useState<string>("");
     const [isFormChecked, setFormChecked] = useState<boolean>(false);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -42,7 +50,10 @@ const UserLocation = () => {
         if (!zip && zipCodeValue) {
             setZip(zipCodeValue)
         }
-    }, [zipCodeValue])
+        if (!userAddress && address) {
+            setUserAddress(address)
+        }
+    }, [zipCodeValue, address])
 
     useEffect(() => {
         if (customerLoadedData?.address && !address) {
@@ -69,8 +80,8 @@ const UserLocation = () => {
 
     const handleChangeAddress = async (e: any) => {
         setFormChecked(false);
-        dispatch(setAddress(e ?? null))
-        dispatch(setZipCode(''))
+        setUserAddress(e ?? null)
+        setZip('');
         if (e?.value?.place_id && e?.label) {
             geocodeByPlaceId(e.value.place_id).then(res => {
                 const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
@@ -83,6 +94,7 @@ const UserLocation = () => {
             })
         }
     }
+
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         setFormChecked(false);
         setZip(option ?? "");

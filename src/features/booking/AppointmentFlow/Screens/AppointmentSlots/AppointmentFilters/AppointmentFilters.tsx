@@ -25,6 +25,7 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
     const { serviceTypeOption, consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm)
     const {isTransportationsVisible} = useTransportationVisibility();
 

@@ -13,6 +13,8 @@ import {TArgCallback} from "../../../../../../../types/types";
 import {useStyles} from "./styles";
 import clsx from "clsx";
 import {useServiceOption} from "../../../../../../../hooks/useServiceOption/useServiceOption";
+import SwitchFlowModal from "../../../../../SwitchFlowModal/SwitchFlowModal";
+import {useModal} from "../../../../../../../hooks/useModal/useModal";
 
 type TProps = {
     onChangeServiceOption: TArgCallback<IFirstScreenOption>;
@@ -28,6 +30,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const {t} = useTranslation();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
+    const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
 
     const handleServiceOptionChange = useServiceOption("serviceType")
 
@@ -43,8 +46,9 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
-            handleServiceOptionChange(newOption)
-            clearAppointmentSlot(newOption);
+            onSwitchFlowOpen()
+           //  handleServiceOptionChange(newOption)
+           // clearAppointmentSlot(newOption);
         }
     }
 
@@ -64,6 +68,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                     {options}
                 </Select>
             </div>
+            <SwitchFlowModal open={isSwitchFlowOpen} onClose={onSwitchFlowClose}/>
         </div>
     ) : null
 };
