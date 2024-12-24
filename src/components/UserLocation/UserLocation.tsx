@@ -8,8 +8,6 @@ import {EServiceType} from "../../store/reducers/appointmentFrameReducer/types";
 import {
     loadFilteredZip,
     setAddress,
-    setCity,
-    setPoliticalState, setStreetName,
     setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
 import {parseGeoCode} from "../../features/booking/AppointmentFlow/Screens/YourLocation/utils";
@@ -85,9 +83,6 @@ const UserLocation: React.FC<TProps> = ({
         if (e?.value?.place_id && e?.label) {
             geocodeByPlaceId(e.value.place_id).then(res => {
                 const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
-                if (data.city) dispatch(setCity(data.city))
-                if (data.state) dispatch(setPoliticalState(data.state))
-                if (data.address) dispatch(setStreetName(data.address))
                 if (data.postalCode && scProfile) {
                     dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: data.postalCode}, onGetZipCodesList))
                 }

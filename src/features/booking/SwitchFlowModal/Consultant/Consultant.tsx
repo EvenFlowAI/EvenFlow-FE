@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
@@ -6,32 +6,57 @@ import {RootState} from "../../../../store/rootReducer";
 import {Loading} from "../../../../components/wrappers/Loading/Loading";
 import {useStyles} from "../styles";
 import {IServiceConsultant} from "../../../../api/types";
+import {IFirstScreenOption} from "../../../../store/reducers/serviceTypes/types";
+import useGetConsultantsData from "../../../../hooks/useGetConsultantsData/useGetConsultantsData";
+import {Api} from "../../../../api/ApiEndpoints/ApiEndpoints";
+import {PaginatedAPIResponse} from "../../../../types/types";
 
 type TProps = {
     disabled?: boolean;
     isVisible: boolean;
-    loading?: boolean;
     consultant: IServiceConsultant|null;
     setConsultant: Dispatch<SetStateAction<IServiceConsultant|null>>;
+    newOption: IFirstScreenOption|null;
+    address?: any;
+    zipCode?: string;
 }
 
-const Consultant: React.FC<TProps> = ({disabled, isVisible, loading, consultant, setConsultant}) => {
-    const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
-    const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
+const Consultant: React.FC<TProps> = ({
+                                          disabled,
+                                          isVisible,
+                                          consultant,
+                                          setConsultant,
+                                          newOption,
+                                          address,
+                                          zipCode
+                                      }) => {
+    const { advisor } = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
     const { classes  } = useStyles();
+    const [advisors, setAdvisors] = useState<IServiceConsultant[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
+    const data = useGetConsultantsData(newOption, address, zipCode)
 
     useEffect(() => {
-        setConsultant(advisor)
-    }, [advisor])
+        if (data) {
+            setLoading(true)
+            Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+                Api.endpoints.ServiceConsultants.GetByQuery, {data})
+                .then(({data: {result}}) => {
+                    if (result.length) setAdvisors(result)
+                    const currentAdvisor = result.find(el => el.id === advisor?.id);
+                    setConsultant(currentAdvisor ?? null)
+                })
+                .catch(err => console.log(err))
+                .finally(() => setLoading(false))
+        }
+    }, [data, advisor])
 
     const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
-        const selected = consultants.find(item => item.id === e.target?.value);
+        const selected = advisors.find(item => item.id === e.target?.value);
         setConsultant(selected ?? null)
-        // dispatch(setAdvisor(consultant ? consultant : null))
-        // dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)))
     }
 
     return isVisible
@@ -45,9 +70,9 @@ const Consultant: React.FC<TProps> = ({disabled, isVisible, loading, consultant,
                         variant="standard"
                         disableUnderline
                         fullWidth={isSm}
-                        disabled={disabled || (!!currentConfig && !consultants.length)}
-                        onChange={handleConsultantChange}>`
-                        {consultants
+                        disabled={disabled || !advisors.length}
+                        onChange={handleConsultantChange}>
+                        {advisors
                             .map(consultant => <MenuItem value={consultant.id}
                                                          key={consultant.name}>{consultant.name}</MenuItem>)
                             .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}

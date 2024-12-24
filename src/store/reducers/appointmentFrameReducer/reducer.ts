@@ -69,7 +69,7 @@ import {
     setVehicle,
     setWelcomeScreenView,
     setZipCode,
-    switchLanguage,
+    switchLanguage, updateAppointmentDetails,
     updateVehicle,
 } from "./actions";
 import {EAppointmentTimingType} from "../appointment/types";
@@ -444,5 +444,17 @@ export const appointmentFrameReducer = createReducer(initialState, builder => bu
     })
     .addCase(setFiltersVisibility, (state,  {payload}) => {
         return {...state, filtersVisibility: {...state.filtersVisibility, ...payload}}
+    })
+    .addCase(updateAppointmentDetails, (state,  {payload}) => {
+        return {...state,
+            address: payload.address,
+            zipCode: payload.zip,
+            selectedTiming: payload.timing,
+            advisor: payload.advisor,
+            isAnyAdvisorSelected: !Boolean(payload.advisor),
+            transportation: payload.transportation,
+            selectedTime: payload.date,
+            serviceTypeOption: payload.serviceTypeOption,
+        }
     })
 )

@@ -14,51 +14,86 @@ import UserLocation from "../../../components/UserLocation/UserLocation";
 import {IServiceConsultant, ITransportation} from "../../../api/types";
 import Timing from "./Timing/Timing";
 import {TParsableDate} from "../../../types/types";
+import Calendar from "./Calendar/Calendar";
+import {
+    setCity,
+    setPoliticalState,
+    setServiceTypeOption,
+    setStreetName, setTime, setTiming,
+    updateAppointmentDetails
+} from "../../../store/reducers/appointmentFrameReducer/actions";
+import {geocodeByPlaceId} from "react-google-places-autocomplete";
+import {parseGeoCode} from "../AppointmentFlow/Screens/YourLocation/utils";
+import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 
-const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
+const SwitchFlowModal: React.FC<DialogProps&{selectedOption: IFirstScreenOption|null}> = ({open, onClose, selectedOption}) => {
     const {
-        consultants,
         serviceTypeOption,
         selectedTiming,
-        transportations,
-        address,
-        zipCode,
         isConsultantsLoading,
         advisor,
-        transportation
+        transportation,
+        prevSelectedOption,
     } = useSelector((state: RootState) => state.appointmentFrame);
-    const { isAppointmentTimingAvailable, isAdvisorAvailable, isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
     const [consultant, setConsultant] = useState<IServiceConsultant|null>(null)
     const [transportationOption, setTransportationOption] = useState<ITransportation|null>(null);
     const [timingType, setTimingType] = useState<EAppointmentTimingType>(EAppointmentTimingType.FirstAvailable);
     const [zip, setZip] = useState<string>("");
     const [userAddress, setUserAddress] = useState<any>(null);
-    const [time, setTime] = useState<TParsableDate>(null);
+    const [selectedTime, setSelectedTime] = useState<TParsableDate>(null);
     const [isCalendarOpen, setCalendarOpen] = useState<boolean>(false);
     const {t} = useTranslation();
     const {classes} = useStyles();
     const dispatch = useDispatch();
 
-    const isAdvisorVisible = Boolean(isAdvisorAvailable && consultants.length);
-    const isDateSelectionOn = isAppointmentTimingAvailable && serviceTypeOption?.type !== EServiceType.PickUpDropOff;
-    const isTransportationsVisible = Boolean(isTransportationAvailable && transportations.length)
-    const isAddressVisible = serviceTypeOption?.type === EServiceType.PickUpDropOff
+    const newConfig = config.find(item => item.serviceType === selectedOption?.type);
+
+    const isAdvisorVisible = newConfig?.advisorSelection;
+    const isDateSelectionOn = newConfig?.appointmentSelection && selectedOption?.type !== EServiceType.PickUpDropOff
+    const isTransportationsVisible = Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
+    const isAddressVisible = selectedOption?.type === EServiceType.PickUpDropOff
 
     useEffect(() => {
         if (advisor) setConsultant(advisor)
         if (transportation) setTransportationOption(transportation)
-    }, [advisor, transportation])
+        if (!isDateSelectionOn) {
+            dispatch(setTiming(EAppointmentTimingType.FirstAvailable))
+            dispatch(setTime(null))
+        }
+    }, [advisor, transportation, isDateSelectionOn])
 
     const onCancel = () => {
+        dispatch(setServiceTypeOption(prevSelectedOption))
         onClose();
     }
 
+    const handleNextStep = () => {
+        if (userAddress?.place_id && userAddress?.label) {
+            geocodeByPlaceId(userAddress.place_id).then(res => {
+                const data = parseGeoCode(res[0].address_components, userAddress.label, userAddress?.structured_formatting?.main_text, userAddress?.structured_formatting?.secondary_text)
+                if (data.city) dispatch(setCity(data.city))
+                if (data.state) dispatch(setPoliticalState(data.state))
+                if (data.address) dispatch(setStreetName(data.address))
+            })
+        }
+        dispatch(updateAppointmentDetails({
+            address: userAddress,
+            advisor: consultant,
+            date: selectedTime,
+            timing: timingType,
+            transportation: transportationOption,
+            zip,
+            serviceTypeOption: selectedOption,
+        }))
+        onClose();
+    }
 
-    const onNext = () => {
+    const onClickNext = () => {
         if (selectedTiming === EAppointmentTimingType.PreferredDate) {
-            // todo open calendar
+            setCalendarOpen(true)
         } else {
-            onClose();
+            handleNextStep()
         }
     }
 
@@ -86,11 +121,13 @@ const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Consultant
+                                    newOption={selectedOption}
                                     consultant={consultant}
                                     setConsultant={setConsultant}
-                                    loading={isConsultantsLoading}
                                     isVisible
-                                    disabled={serviceTypeOption?.type === EServiceType.PickUpDropOff && (!address || !zipCode)}/>
+                                    address={userAddress}
+                                    zipCode={zip}
+                                    disabled={serviceTypeOption?.type === EServiceType.PickUpDropOff && (!userAddress || !zip)}/>
                             </Grid>
                         </>
                         : null}
@@ -114,14 +151,9 @@ const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Timing
-                                    address={userAddress}
-                                    zipCode={zip}
+                                    disabled={serviceTypeOption?.type === EServiceType.PickUpDropOff && (!userAddress || !zip)}
                                     timingType={timingType}
                                     setTimingType={setTimingType}
-                                    time={time}
-                                    setTime={setTime}
-                                    isCalendarOpen={isCalendarOpen}
-                                    setCalendarOpen={setCalendarOpen}
                                 />
                             </Grid>
                         </>
@@ -132,10 +164,16 @@ const SwitchFlowModal: React.FC<DialogProps> = ({open, onClose}) => {
                 <Button variant="outlined" onClick={onCancel} style={{width: 145}}>
                     {t("Cancel")}
                 </Button>
-                <Button variant="contained" onClick={onNext} style={{width: 145, marginLeft: 16}}>
+                <Button variant="contained" onClick={onClickNext} style={{width: 145, marginLeft: 16}}>
                     {t("Next")}
                 </Button>
             </DialogActions>
+            <Calendar
+                time={selectedTime}
+                setTime={setSelectedTime}
+                isCalendarOpen={isCalendarOpen}
+                setCalendarOpen={setCalendarOpen}
+                onAccept={handleNextStep}/>
         </BaseModal>
     );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
 import {Select, SelectChangeEvent} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
@@ -26,11 +26,16 @@ type TProps = {
 const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+    const [selectedOption, setSelectedOption] = useState<IFirstScreenOption|null>(null);
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
     const dispatch = useDispatch();
     const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
+
+    useEffect(() => {
+        setSelectedOption(serviceTypeOption)
+    }, [serviceTypeOption])
 
     const handleServiceOptionChange = useServiceOption("serviceType")
 
@@ -46,6 +51,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
+            setSelectedOption(newOption)
             onSwitchFlowOpen()
            //  handleServiceOptionChange(newOption)
            // clearAppointmentSlot(newOption);
@@ -68,7 +74,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                     {options}
                 </Select>
             </div>
-            <SwitchFlowModal open={isSwitchFlowOpen} onClose={onSwitchFlowClose}/>
+            <SwitchFlowModal open={isSwitchFlowOpen} onClose={onSwitchFlowClose} selectedOption={selectedOption}/>
         </div>
     ) : null
 };
