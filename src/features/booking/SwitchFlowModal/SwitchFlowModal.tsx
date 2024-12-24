@@ -18,7 +18,6 @@ import Calendar from "./Calendar/Calendar";
 import {
     setCity,
     setPoliticalState,
-    setServiceTypeOption,
     setStreetName, setTime, setTiming,
     updateAppointmentDetails
 } from "../../../store/reducers/appointmentFrameReducer/actions";
@@ -30,10 +29,7 @@ const SwitchFlowModal: React.FC<DialogProps&{selectedOption: IFirstScreenOption|
     const {
         serviceTypeOption,
         selectedTiming,
-        isConsultantsLoading,
-        advisor,
         transportation,
-        prevSelectedOption,
     } = useSelector((state: RootState) => state.appointmentFrame);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
     const [consultant, setConsultant] = useState<IServiceConsultant|null>(null)
@@ -55,16 +51,13 @@ const SwitchFlowModal: React.FC<DialogProps&{selectedOption: IFirstScreenOption|
     const isAddressVisible = selectedOption?.type === EServiceType.PickUpDropOff
 
     useEffect(() => {
-        if (advisor) setConsultant(advisor)
-        if (transportation) setTransportationOption(transportation)
         if (!isDateSelectionOn) {
             dispatch(setTiming(EAppointmentTimingType.FirstAvailable))
             dispatch(setTime(null))
         }
-    }, [advisor, transportation, isDateSelectionOn])
+    }, [transportation])
 
     const onCancel = () => {
-        dispatch(setServiceTypeOption(prevSelectedOption))
         onClose();
     }
 

@@ -33,10 +33,6 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
     const dispatch = useDispatch();
     const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
 
-    useEffect(() => {
-        setSelectedOption(serviceTypeOption)
-    }, [serviceTypeOption])
-
     const handleServiceOptionChange = useServiceOption("serviceType")
 
     const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
