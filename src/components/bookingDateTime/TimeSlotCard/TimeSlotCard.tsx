@@ -10,7 +10,6 @@ import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/Appointme
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     timeSlot: TSlot;
@@ -29,43 +28,60 @@ export const TimeSlotCard: React.FC<TProps> =
          selected,
          date,
          selectFirstSlot,
-    }) => {
-        const {waitListSettings, appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
+     }) => {
+        const {waitListSettings} = useSelector((state: RootState) => state.appointment);
         const {isConsentOpen} = useSelector((state: RootState) => state.modals);
-        const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
         const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
         const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
         const slotRef = useRef<HTMLDivElement|null>(null);
-        const currentAppointment = useMemo(() => {
-            return serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment
-        }, [serviceTypeOption, serviceValetAppointment, appointment]);
+        const isTodaySlot = useMemo(() => slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day')
+            && dayjs(date).isSame(dayjs.utc(), 'day'), [slot, date])
+        const isMount = useRef(true);
+        let timoutForEverySlotId: any = null;
+        let timoutForSelectedSlotId: any = null;
 
         const changeSlot = () => {
             setTimePassed(true)
-            selectFirstSlot && !currentAppointment && selectFirstSlot(date)
+            selectFirstSlot && selectFirstSlot(date)
         }
 
         useEffect(() => {
-            let timoutId: any;
-            if (slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day') && dayjs(date).isSame(dayjs.utc(), 'day')) {
+            if (isTodaySlot) {
                 const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
                 if (differenceInMSeconds > 0) {
-                    timoutId = setTimeout(() => {
-                        changeSlot()
-                    }, differenceInMSeconds);
+                    timoutForEverySlotId = setTimeout(() => setTimePassed(true), differenceInMSeconds);
+                    if (selected && isTodaySlot && !timoutForSelectedSlotId) {
+                        timoutForSelectedSlotId = setTimeout(() => {
+                            changeSlot()
+                        }, differenceInMSeconds)
+                        console.log('created', timoutForSelectedSlotId)
+                    }
                 } else {
-                    changeSlot()
+                    setTimePassed(true)
                 }
             } else {
                 setTimePassed(false);
             }
-            return () => {
-                clearTimeout(timoutId)
+        }, [date, selected, isTodaySlot, isMount, timoutForSelectedSlotId])
+
+        useEffect(() => {
+            if ((!selected || !isTodaySlot) && timoutForSelectedSlotId) {
+                console.log('cleared', timoutForSelectedSlotId)
+                clearTimeout(timoutForSelectedSlotId);
             }
-        }, [slot, date])
+            return () => {
+                if (timoutForEverySlotId) {
+                    clearTimeout(timoutForEverySlotId)
+                }
+                if (timoutForSelectedSlotId) {
+                    console.log('cleared', timoutForSelectedSlotId)
+                    clearTimeout(timoutForSelectedSlotId)
+                }
+            }
+        }, [selected, timoutForSelectedSlotId, timoutForEverySlotId, isTodaySlot])
 
         useEffect(() => {
             const rect = slotRef?.current?.getBoundingClientRect()
@@ -77,9 +93,9 @@ export const TimeSlotCard: React.FC<TProps> =
                 rect.bottom <= parentHeight &&
                 rect.right <= parentWidth
             )
-           if (slotRef.current && selected) {
-               !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
-           }
+            if (slotRef.current && selected) {
+                !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+            }
 
         }, [selected, slot, isConsentOpen])
 
