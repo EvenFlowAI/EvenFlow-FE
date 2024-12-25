@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TArgCallback, TParsableDate} from "../../../types/types";
 import {useTranslation} from "react-i18next";
@@ -10,6 +10,7 @@ import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/Appointme
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
+import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     timeSlot: TSlot;
@@ -27,19 +28,24 @@ export const TimeSlotCard: React.FC<TProps> =
          onSelect,
          selected,
          date,
-         selectFirstSlot}) => {
-        const {waitListSettings} = useSelector((state: RootState) => state.appointment);
+         selectFirstSlot,
+    }) => {
+        const {waitListSettings, appointment, serviceValetAppointment} = useSelector((state: RootState) => state.appointment);
         const {isConsentOpen} = useSelector((state: RootState) => state.modals);
+        const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
         const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
         const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
         const slotRef = useRef<HTMLDivElement|null>(null);
+        const currentAppointment = useMemo(() => {
+            return serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment
+        }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
         const changeSlot = () => {
             setTimePassed(true)
-            selectFirstSlot && selectFirstSlot(date)
+            selectFirstSlot && !currentAppointment && selectFirstSlot(date)
         }
 
         useEffect(() => {
