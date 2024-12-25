@@ -57,7 +57,6 @@ export const TimeSlotCard: React.FC<TProps> =
                         timoutForSelectedSlotId = setTimeout(() => {
                             changeSlot()
                         }, differenceInMSeconds)
-                        console.log('created', timoutForSelectedSlotId)
                     }
                 } else {
                     setTimePassed(true)
@@ -69,16 +68,17 @@ export const TimeSlotCard: React.FC<TProps> =
 
         useEffect(() => {
             if ((!selected || !isTodaySlot) && timoutForSelectedSlotId) {
-                console.log('cleared', timoutForSelectedSlotId)
                 clearTimeout(timoutForSelectedSlotId);
+                timoutForSelectedSlotId = null;
             }
             return () => {
                 if (timoutForEverySlotId) {
                     clearTimeout(timoutForEverySlotId)
+                    timoutForEverySlotId = null;
                 }
                 if (timoutForSelectedSlotId) {
-                    console.log('cleared', timoutForSelectedSlotId)
                     clearTimeout(timoutForSelectedSlotId)
+                    timoutForSelectedSlotId = null;
                 }
             }
         }, [selected, timoutForSelectedSlotId, timoutForEverySlotId, isTodaySlot])
