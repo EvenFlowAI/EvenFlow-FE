@@ -226,7 +226,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [serviceValetSlots, appointmentSlots, currentSlots])
 
     useEffect(() => {
-        if (currentSlots.length) {
+        if (currentSlots.length && isMount.current) {
             const utcOffset = dayjs().utcOffset();
             const dateWithOffset = dayjs(slotsSearchedDate as TParsableDate).isSame(dayjs(), 'date')
                 ? dayjs()

@@ -344,7 +344,7 @@ export const collectServiceRequestIds = (
     return Array.from(set);
 }
 
-export const collectServiceRequestsForSearch = (
+export const collectServiceRequestsForConsents = (
     s: IServiceCategory | null,
     sub: IServiceCategory | null,
     categoriesIds: number[],

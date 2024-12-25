@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {IRemappedAppointmentSlot} from "../../../store/reducers/appointment/types";
 import {TArgCallback, TParsableDate} from "../../../types/types";
 import {useTranslation} from "react-i18next";
@@ -27,7 +27,8 @@ export const TimeSlotCard: React.FC<TProps> =
          onSelect,
          selected,
          date,
-         selectFirstSlot}) => {
+         selectFirstSlot,
+     }) => {
         const {waitListSettings} = useSelector((state: RootState) => state.appointment);
         const {isConsentOpen} = useSelector((state: RootState) => state.modals);
         const [timePassed, setTimePassed] = useState<boolean>(false);
@@ -36,6 +37,11 @@ export const TimeSlotCard: React.FC<TProps> =
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
         const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
         const slotRef = useRef<HTMLDivElement|null>(null);
+        const isTodaySlot = useMemo(() => slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day')
+            && dayjs(date).isSame(dayjs.utc(), 'day'), [slot, date])
+        const isMount = useRef(true);
+        let timoutForEverySlotId: any = null;
+        let timoutForSelectedSlotId: any = null;
 
         const changeSlot = () => {
             setTimePassed(true)
@@ -43,23 +49,39 @@ export const TimeSlotCard: React.FC<TProps> =
         }
 
         useEffect(() => {
-            let timoutId: any;
-            if (slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day') && dayjs(date).isSame(dayjs.utc(), 'day')) {
+            if (isTodaySlot) {
                 const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
                 if (differenceInMSeconds > 0) {
-                    timoutId = setTimeout(() => {
-                        changeSlot()
-                    }, differenceInMSeconds);
+                    timoutForEverySlotId = setTimeout(() => setTimePassed(true), differenceInMSeconds);
+                    if (selected && isTodaySlot && !timoutForSelectedSlotId) {
+                        timoutForSelectedSlotId = setTimeout(() => {
+                            changeSlot()
+                        }, differenceInMSeconds)
+                    }
                 } else {
-                    changeSlot()
+                    setTimePassed(true)
                 }
             } else {
                 setTimePassed(false);
             }
-            return () => {
-                clearTimeout(timoutId)
+        }, [date, selected, isTodaySlot, isMount, timoutForSelectedSlotId])
+
+        useEffect(() => {
+            if ((!selected || !isTodaySlot) && timoutForSelectedSlotId) {
+                clearTimeout(timoutForSelectedSlotId);
+                timoutForSelectedSlotId = null;
             }
-        }, [slot, date])
+            return () => {
+                if (timoutForEverySlotId) {
+                    clearTimeout(timoutForEverySlotId)
+                    timoutForEverySlotId = null;
+                }
+                if (timoutForSelectedSlotId) {
+                    clearTimeout(timoutForSelectedSlotId)
+                    timoutForSelectedSlotId = null;
+                }
+            }
+        }, [selected, timoutForSelectedSlotId, timoutForEverySlotId, isTodaySlot])
 
         useEffect(() => {
             const rect = slotRef?.current?.getBoundingClientRect()
@@ -71,9 +93,9 @@ export const TimeSlotCard: React.FC<TProps> =
                 rect.bottom <= parentHeight &&
                 rect.right <= parentWidth
             )
-           if (slotRef.current && selected) {
-               !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
-           }
+            if (slotRef.current && selected) {
+                !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+            }
 
         }, [selected, slot, isConsentOpen])
 
