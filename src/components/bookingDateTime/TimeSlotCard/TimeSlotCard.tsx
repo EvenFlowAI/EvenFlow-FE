@@ -9,7 +9,6 @@ import {RootState} from "../../../store/rootReducer";
 import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
-import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 
 type TProps = {
     timeSlot: TSlot;
@@ -17,7 +16,6 @@ type TProps = {
     selected: boolean;
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
     date: TParsableDate;
-    selectFirstSlot?: (date?: TParsableDate, newServiceOption?: IFirstScreenOption) => void;
 }
 
 export const TimeSlotCard: React.FC<TProps> =
@@ -27,7 +25,6 @@ export const TimeSlotCard: React.FC<TProps> =
          onSelect,
          selected,
          date,
-         selectFirstSlot,
      }) => {
         const {waitListSettings} = useSelector((state: RootState) => state.appointment);
         const {isConsentOpen} = useSelector((state: RootState) => state.modals);
@@ -39,49 +36,28 @@ export const TimeSlotCard: React.FC<TProps> =
         const slotRef = useRef<HTMLDivElement|null>(null);
         const isTodaySlot = useMemo(() => slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day')
             && dayjs(date).isSame(dayjs.utc(), 'day'), [slot, date])
-        const isMount = useRef(true);
-        let timoutForEverySlotId: any = null;
-        let timoutForSelectedSlotId: any = null;
-
-        const changeSlot = () => {
-            setTimePassed(true)
-            selectFirstSlot && selectFirstSlot(date)
-        }
+        let everySlotTimoutId: any = null;
 
         useEffect(() => {
             if (isTodaySlot) {
                 const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
                 if (differenceInMSeconds > 0) {
-                    timoutForEverySlotId = setTimeout(() => setTimePassed(true), differenceInMSeconds);
-                    if (selected && isTodaySlot && !timoutForSelectedSlotId) {
-                        timoutForSelectedSlotId = setTimeout(() => {
-                            changeSlot()
-                        }, differenceInMSeconds)
-                    }
+                    everySlotTimoutId = setTimeout(() => setTimePassed(true), differenceInMSeconds);
                 } else {
                     setTimePassed(true)
                 }
             } else {
                 setTimePassed(false);
             }
-        }, [date, selected, isTodaySlot, isMount, timoutForSelectedSlotId])
+        }, [date, selected, isTodaySlot])
 
         useEffect(() => {
-            if ((!selected || !isTodaySlot) && timoutForSelectedSlotId) {
-                clearTimeout(timoutForSelectedSlotId);
-                timoutForSelectedSlotId = null;
-            }
             return () => {
-                if (timoutForEverySlotId) {
-                    clearTimeout(timoutForEverySlotId)
-                    timoutForEverySlotId = null;
-                }
-                if (timoutForSelectedSlotId) {
-                    clearTimeout(timoutForSelectedSlotId)
-                    timoutForSelectedSlotId = null;
+                if (everySlotTimoutId) {
+                    clearTimeout(everySlotTimoutId)
                 }
             }
-        }, [selected, timoutForSelectedSlotId, timoutForEverySlotId, isTodaySlot])
+        }, [selected, everySlotTimoutId])
 
         useEffect(() => {
             const rect = slotRef?.current?.getBoundingClientRect()
