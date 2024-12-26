@@ -226,7 +226,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }, [serviceValetSlots, appointmentSlots, currentSlots])
 
     useEffect(() => {
-        if (currentSlots.length && isMount.current) {
+        if (currentSlots.length) {
             const utcOffset = dayjs().utcOffset();
             const dateWithOffset = dayjs(slotsSearchedDate as TParsableDate).isSame(dayjs(), 'date')
                 ? dayjs()
@@ -251,6 +251,22 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             isMount.current = false;
         }
     }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption, slotsServiceTypeOptionId, slotsSearchedDate]);
+
+    useEffect(() => {
+        let timeoutId: any = null;
+        const isTodaySlot = dayjs(appointment?.date).isSame(dayjs.utc(), 'day')
+        const differenceInMSeconds = dayjs(dayjs(appointment?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
+        if (isTodaySlot && differenceInMSeconds > 0) {
+            timeoutId = setTimeout(() => {
+                selectFirstSlot(date)
+            }, differenceInMSeconds)
+        } else {
+            clearTimeout(timeoutId)
+        }
+        return () => {
+            clearTimeout(timeoutId)
+        }
+    }, [appointment, date])
 
     const clearData = () => {
         dispatch(selectAppointment(null));
