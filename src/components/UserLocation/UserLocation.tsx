@@ -95,10 +95,10 @@ const UserLocation: React.FC<TProps> = ({
                         },
                     }}
                     selectProps={{
-                        addressValue: typeof address === 'string' && address.length ? address : address?.label ?? null,
-                        className: typeof address === 'string' && address.length
+                        addressValue: typeof userAddress === 'string' && userAddress.length ? userAddress : userAddress?.label ?? null,
+                        className: typeof userAddress === 'string' && userAddress.length
                             ? classes.select
-                            : !address?.label ?
+                            : !userAddress?.label ?
                                 isFormChecked
                                     ? classes.errorSelect
                                     : classes.emptySelect
@@ -107,7 +107,7 @@ const UserLocation: React.FC<TProps> = ({
                         placeholder: placeholderLabel,
                         isClearable: true,
                         isSearchable: true,
-                        key: address?.label || 'label',
+                        key: userAddress?.label || 'label',
                     }}
                 />
             </div>
@@ -134,7 +134,7 @@ const UserLocation: React.FC<TProps> = ({
                     required: true,
                     key: zipCodeValue || "zipcode",
                 })}
-                value={zip}
+                value={zip ?? ''}
             />
         </SelectWrapper>
     );

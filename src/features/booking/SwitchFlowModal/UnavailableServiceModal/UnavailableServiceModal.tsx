@@ -10,6 +10,7 @@ import {DialogProps} from "../../../../components/modals/BaseModal/types";
 type TUnavailableServiceProps = DialogProps & {
     serviceString: string;
     onVisitCenter: TCallback;
+    onTryAnotherLocation: TCallback;
 }
 
 const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
@@ -18,6 +19,7 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
                                                                          onVisitCenter,
                                                                          open,
                                                                          onClose,
+                                                                         onTryAnotherLocation,
                                                                      }) => {
     const { classes: dialogClasses } = useDialogStyles();
     const { classes  } = useStyles();
@@ -47,7 +49,7 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
             <div className={classes.buttonWrapper}>
                 <Button
                     className={classes.linkButton}
-                    onClick={onClose}
+                    onClick={onTryAnotherLocation}
                     variant="text">
                     {t("Try another location")}
                 </Button>

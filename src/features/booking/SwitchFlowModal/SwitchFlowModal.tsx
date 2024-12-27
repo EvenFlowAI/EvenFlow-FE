@@ -172,6 +172,13 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         onAncillaryPriceClose()
     }
 
+    const onTryAnotherLocation = () => {
+        setUserAddress(null);
+        setZip(null);
+        setAddressValid(false);
+        onUnavailableServiceClose();
+    }
+
     return (
         <BaseModal open={open} onClose={onCancel} width={700}>
             <DialogTitle onClose={onCancel} style={{fontSize: 24, padding: "16px 36px 0 36px"}}>
@@ -262,6 +269,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
                 serviceString={t("Pick Up / Drop Off")}
                 onBack={onBackFromAncillaryPrice}/>
             <UnavailableServiceModal
+                onTryAnotherLocation={onTryAnotherLocation}
                 open={isUnavailableServiceOpen}
                 onClose={onUnavailableServiceClose}
                 onVisitCenter={onBackFromAncillaryPrice}
