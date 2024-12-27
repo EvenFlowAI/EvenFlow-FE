@@ -9,8 +9,6 @@ import {RootState} from "../../../store/rootReducer";
 import {TSlot} from "../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types";
 import {HtmlTooltip, Wrapper} from "./styles";
 import dayjs from "dayjs";
-import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
-import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
 
 type TProps = {
     timeSlot: TSlot;
@@ -18,7 +16,6 @@ type TProps = {
     selected: boolean;
     onSelect: TArgCallback<IRemappedAppointmentSlot|null>;
     date: TParsableDate;
-    selectFirstSlot?: (date?: TParsableDate, newServiceOption?: IFirstScreenOption) => void;
 }
 
 export const TimeSlotCard: React.FC<TProps> =
@@ -28,39 +25,39 @@ export const TimeSlotCard: React.FC<TProps> =
          onSelect,
          selected,
          date,
-         selectFirstSlot}) => {
-        const {waitListSettings, appointment, serviceValetAppointment,} = useSelector((state: RootState) => state.appointment);
+     }) => {
+        const {waitListSettings} = useSelector((state: RootState) => state.appointment);
         const {isConsentOpen} = useSelector((state: RootState) => state.modals);
-        const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
         const [timePassed, setTimePassed] = useState<boolean>(false);
         const {t} = useTranslation();
         const title = t("Expected completion time for your vehicle cannot be provided with Waitlist Only appointments");
         const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
         const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
         const slotRef = useRef<HTMLDivElement|null>(null);
-        const currentAppointment = useMemo(() => {
-            return serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment
-        }, [serviceTypeOption, serviceValetAppointment, appointment]);
-
-        const changeSlot = () => {
-            setTimePassed(true)
-            selectFirstSlot && !currentAppointment && selectFirstSlot(date)
-        }
+        const isTodaySlot = useMemo(() => slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day')
+            && dayjs(date).isSame(dayjs.utc(), 'day'), [slot, date])
+        let everySlotTimoutId: any = null;
 
         useEffect(() => {
-            if (slot?.date && dayjs(slot?.date).isSame(dayjs.utc(), 'day') && dayjs(date).isSame(dayjs.utc(), 'day')) {
+            if (isTodaySlot) {
                 const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
                 if (differenceInMSeconds > 0) {
-                    setTimeout(() => {
-                        changeSlot()
-                    }, differenceInMSeconds);
+                    everySlotTimoutId = setTimeout(() => setTimePassed(true), differenceInMSeconds);
                 } else {
-                    changeSlot()
+                    setTimePassed(true)
                 }
             } else {
                 setTimePassed(false);
             }
-        }, [slot, date])
+        }, [date, selected, isTodaySlot])
+
+        useEffect(() => {
+            return () => {
+                if (everySlotTimoutId) {
+                    clearTimeout(everySlotTimoutId)
+                }
+            }
+        }, [selected, everySlotTimoutId])
 
         useEffect(() => {
             const rect = slotRef?.current?.getBoundingClientRect()
@@ -72,9 +69,9 @@ export const TimeSlotCard: React.FC<TProps> =
                 rect.bottom <= parentHeight &&
                 rect.right <= parentWidth
             )
-           if (slotRef.current && selected) {
-               !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
-           }
+            if (slotRef.current && selected) {
+                !isVisible && !isConsentOpen && slotRef.current?.scrollIntoView({behavior: "smooth", block: "center"});
+            }
 
         }, [selected, slot, isConsentOpen])
 

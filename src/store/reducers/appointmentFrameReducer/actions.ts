@@ -52,7 +52,7 @@ import {
 } from "../../../types/types";
 import {
     collectServiceRequestIds,
-    collectServiceRequestsForSearch,
+    collectServiceRequestsForConsents,
     decodeSCID,
     getCategories,
     getCategoriesForAppointment,
@@ -1046,7 +1046,7 @@ export const searchForCustomerConsents = (onEmptyList: TCallback): AppThunk => (
             podId: slotPodId,
             make: selectedVehicle.make ?? null,
             model: selectedVehicle.model ?? null,
-            serviceRequestIds: collectServiceRequestsForSearch(service, subService, categoriesIds, allCategories, selectedSR, selectedRecalls),
+            serviceRequestIds: collectServiceRequestsForConsents(service, subService, categoriesIds, allCategories, selectedSR, selectedRecalls),
             modelYear: selectedVehicle.year,
             customerType: userType ?? EUserType.New,
             serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter,

@@ -252,6 +252,22 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption, slotsServiceTypeOptionId, slotsSearchedDate]);
 
+    useEffect(() => {
+        let timeoutId: any = null;
+        const isTodaySlot = dayjs(appointment?.date).isSame(dayjs.utc(), 'day')
+        const differenceInMSeconds = dayjs(dayjs(appointment?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(dayjs.utc());
+        if (isTodaySlot && differenceInMSeconds > 0) {
+            timeoutId = setTimeout(() => {
+                selectFirstSlot(date)
+            }, differenceInMSeconds)
+        } else {
+            clearTimeout(timeoutId)
+        }
+        return () => {
+            clearTimeout(timeoutId)
+        }
+    }, [appointment, date])
+
     const clearData = () => {
         dispatch(selectAppointment(null));
         dispatch(selectServiceValetAppointment(null));

@@ -120,7 +120,6 @@ export const AppointmentTimeSelector: React.FC<React.PropsWithChildren<React.Pro
                             );
                             return <TimeSlotCard
                                 date={date}
-                                selectFirstSlot={selectFirstSlot}
                                 slot={appointment}
                                 onSelect={handleSelect}
                                 selected={Boolean(
