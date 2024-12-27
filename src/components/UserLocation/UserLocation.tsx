@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {SelectWrapper, useAutocompleteStyles} from "../../features/booking/AppointmentFlow/Screens/YourLocation/styles";
-import GooglePlacesAutocomplete, {geocodeByPlaceId} from "react-google-places-autocomplete";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import {Autocomplete} from "@mui/material";
 import {KeyboardArrowDown} from "@mui/icons-material";
 import {autocompleteRender} from "../../utils/autocompleteRenders";
@@ -10,21 +10,25 @@ import {
     setAddress,
     setZipCode
 } from "../../store/reducers/appointmentFrameReducer/actions";
-import {parseGeoCode} from "../../features/booking/AppointmentFlow/Screens/YourLocation/utils";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {useLocationStyles} from "../../hooks/styling/useLocationStyles";
 
 type TProps = {
-    zip: string;
-    setZip: Dispatch<SetStateAction<string>>;
+    zip: string|null;
+    setZip: Dispatch<SetStateAction<string|null>>;
     userAddress: any;
     setUserAddress: Dispatch<SetStateAction<any>>;
+    loadAncillaryPrice: (zip: string|null, address: any) => void;
 }
 
 const UserLocation: React.FC<TProps> = ({
-                                            zip, setZip, userAddress, setUserAddress
+                                            zip,
+                                            setZip,
+                                            userAddress,
+                                            setUserAddress,
+                                            loadAncillaryPrice
                                         }) => {
     const {
         serviceTypeOption,
@@ -40,18 +44,11 @@ const UserLocation: React.FC<TProps> = ({
     const {classes} = useLocationStyles();
     const { classes: autocompleteClasses } = useAutocompleteStyles({"error": error});
 
-    const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
-        ? t('Enter pick up address')
-        : t('Enter your requested location'), [serviceTypeOption])
-
-    useEffect(() => {
-        if (!zip && zipCodeValue) {
-            setZip(zipCodeValue)
-        }
-        if (!userAddress && address) {
-            setUserAddress(address)
-        }
-    }, [zipCodeValue, address])
+    const placeholderLabel = useMemo(() => {
+        if (typeof userAddress === 'string' && userAddress.length) return address;
+        if (userAddress?.label) return userAddress?.label;
+        return isFormChecked ? t('Address is required') : t('Enter pick up address')
+    }, [userAddress, isFormChecked])
 
     useEffect(() => {
         if (customerLoadedData?.address && !address) {
@@ -62,44 +59,29 @@ const UserLocation: React.FC<TProps> = ({
         }
     }, [customerLoadedData, address, zipCodeValue])
 
-    const onGetZipCodesList = (list: string[], postalCode: string) => {
-        if (list.includes(postalCode)) setZip(postalCode)
-    }
-
-    const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
+    const onInputChange = (e: React.ChangeEvent<{}>, value: string, reason: string) => {
         if (scProfile) {
-            if (value.length && filteredZipCodes.includes(value)) {
+            if (value.length && reason === 'input') {
                 setFormChecked(false);
                 setZip(value);
+                dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
+                loadAncillaryPrice(value, userAddress);
             }
-            dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
         }
     }
 
     const handleChangeAddress = async (e: any) => {
         setFormChecked(false);
         setUserAddress(e ?? null)
-        setZip('');
-        if (e?.value?.place_id && e?.label) {
-            geocodeByPlaceId(e.value.place_id).then(res => {
-                const data = parseGeoCode(res[0].address_components, e.label, e.value?.structured_formatting?.main_text, e.value?.structured_formatting?.secondary_text)
-                if (data.postalCode && scProfile) {
-                    dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: data.postalCode}, onGetZipCodesList))
-                }
-            })
-        }
+        e?.label && loadAncillaryPrice(zip, e?.label);
     }
 
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         setFormChecked(false);
-        setZip(option ?? "");
+        setZip(option);
+        loadAncillaryPrice(option, userAddress);
     }
 
-    const getPlaceholderLabel = (): string => {
-        if (typeof address === 'string' && address.length) return address;
-        if (address?.label) return address?.label;
-        return isFormChecked ? t('Address is required') : placeholder
-    }
     return (
         <SelectWrapper>
             <div style={{width: '100%'}}>
@@ -122,7 +104,7 @@ const UserLocation: React.FC<TProps> = ({
                                     : classes.emptySelect
                                 : classes.select,
                         onChange: handleChangeAddress,
-                        placeholder: getPlaceholderLabel(),
+                        placeholder: placeholderLabel,
                         isClearable: true,
                         isSearchable: true,
                         key: address?.label || 'label',
@@ -133,6 +115,7 @@ const UserLocation: React.FC<TProps> = ({
             <Autocomplete
                 options={filteredZipCodes}
                 freeSolo
+                autoSelect
                 isOptionEqualToValue={(o, v) => o === v}
                 onChange={handleChangeZip}
                 fullWidth

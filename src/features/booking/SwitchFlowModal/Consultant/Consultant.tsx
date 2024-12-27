@@ -18,7 +18,7 @@ type TProps = {
     setConsultant: Dispatch<SetStateAction<IServiceConsultant|null>>;
     newOption: IFirstScreenOption|null;
     address?: any;
-    zipCode?: string;
+    zipCode?: string|null;
 }
 
 const Consultant: React.FC<TProps> = ({
@@ -37,7 +37,7 @@ const Consultant: React.FC<TProps> = ({
     const [loading, setLoading] = useState<boolean>(false);
     const theme = useTheme();
     const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
-    const data = useGetConsultantsData(newOption, address, zipCode)
+    const data = useGetConsultantsData(newOption, address, zipCode ?? "")
 
     useEffect(() => {
         if (data) {
@@ -69,13 +69,16 @@ const Consultant: React.FC<TProps> = ({
                         className={classes.select}
                         variant="standard"
                         disableUnderline
+                        displayEmpty
                         fullWidth={isSm}
                         disabled={disabled || !advisors.length}
                         onChange={handleConsultantChange}>
-                        {advisors
-                            .map(consultant => <MenuItem value={consultant.id}
-                                                         key={consultant.name}>{consultant.name}</MenuItem>)
-                            .concat([<MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>])}
+                        <MenuItem value="Any" key="any">{t("Any Available")}</MenuItem>
+                        {advisors.map(consultant => <MenuItem
+                            value={consultant.id}
+                            key={consultant.name}>
+                            {consultant.name}
+                        </MenuItem>)}
                     </Select>}
             </div>
         </div>

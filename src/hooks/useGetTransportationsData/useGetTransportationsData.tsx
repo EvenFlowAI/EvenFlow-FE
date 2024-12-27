@@ -19,7 +19,6 @@ const useGetTransportationsData = () => {
     } =  useSelector((state: RootState) => state.appointmentFrame);
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {selectedSR, scProfile} = useSelector((state: RootState) => state.appointment);
-    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
     const [data, setData] = useState<TTransportationData|null>(null)
 
     useEffect(() => {
@@ -36,7 +35,7 @@ const useGetTransportationsData = () => {
                 })
                 .map(item => item.id)
 
-            const data: TTransportationData = {
+            const request: TTransportationData = {
                 serviceCenterId: scProfile.id,
                 serviceRequestIds: collectServiceRequestIds(service, subService, null, selectedSR),
                 serviceCategoryIds,
@@ -51,7 +50,8 @@ const useGetTransportationsData = () => {
                     engineTypeId: selectedVehicle.engineTypeId,
                 },
             }
-            if (hashKey) data.appointmentHashKey = hashKey;
+            if (hashKey) request.appointmentHashKey = hashKey;
+            setData(request)
         }
     }, [])
     return data;

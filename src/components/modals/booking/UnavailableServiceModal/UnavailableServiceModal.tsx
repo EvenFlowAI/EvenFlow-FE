@@ -19,11 +19,11 @@ type TUnavailableServiceProps = {
 }
 
 const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUnavailableServiceProps>>> = ({
-                                                                    setFormChecked,
-                                                                    onBackToSelectSlotsForVisitCenter,
-                                                                    onBackToServiceOption,
-                                                                    onVisitCenter
-}) => {
+                                                                                                                           setFormChecked,
+                                                                                                                           onBackToSelectSlotsForVisitCenter,
+                                                                                                                           onBackToServiceOption,
+                                                                                                                           onVisitCenter
+                                                                                                                       }) => {
     const {serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isUnavailableServiceOpen} = useSelector((state: RootState) => state.modals);
@@ -43,9 +43,9 @@ const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithC
     const backLabel = serviceOptionChangedFromSlotPage
         ? t("Back to Visit Center")
         : customerLoadedData?.isUpdating
-        ? isSameServiceTypeOption
-            ? t("Keep Original Location")
-            : t("Back") : t("Visit Center")
+            ? isSameServiceTypeOption
+                ? t("Keep Original Location")
+                : t("Back") : t("Visit Center")
 
 
     const onClose = () => dispatch(setUnavailableServiceOpen(false))

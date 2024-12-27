@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {autocompleteRender} from "../../../../../utils/autocompleteRenders";
 import {Autocomplete} from '@mui/material';
@@ -8,7 +8,8 @@ import {RootState} from "../../../../../store/rootReducer";
 import GooglePlacesAutocomplete, {geocodeByPlaceId} from 'react-google-places-autocomplete';
 import {
     clearAddress,
-    clearAppointmentData, goToSlotsSelection,
+    clearAppointmentData,
+    goToSlotsSelection,
     loadAncillaryPriceByZip,
     loadFilteredZip,
     setAddress,
@@ -30,9 +31,9 @@ import {
 } from "../../../../../store/reducers/appointmentFrameReducer/types";
 import {useTranslation} from "react-i18next";
 import AncillaryPriceModal from "../../../../../components/modals/booking/AncillaryPriceModal/AncillaryPriceModal";
-import UnavailableServiceModal from "../../../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal";
+import UnavailableServiceModal
+    from "../../../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal";
 import {KeyboardArrowDown} from "@mui/icons-material";
-import {TActionProps, TArgCallback, TCallback, TView} from "../../../../../types/types";
 import {useHistory, useParams} from "react-router-dom";
 import {setUnavailableServiceOpen} from "../../../../../store/reducers/modals/actions";
 import {parseGeoCode} from "./utils";
@@ -41,13 +42,7 @@ import {useException} from "../../../../../hooks/useException/useException";
 import {Routes} from "../../../../../routes/constants";
 import {SelectWrapper, useAutocompleteStyles} from "./styles";
 import {useLocationStyles} from "../../../../../hooks/styling/useLocationStyles";
-
-type TYourLocationProps = TActionProps & {
-    setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
-    onGoToFirstScreen: TArgCallback<TView>;
-    isManagingFlow?: boolean;
-    restoreAddress?: TCallback;
-}
+import {TYourLocationProps} from "./types";
 
 const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>> = ({
                                                                                                           onBack,
@@ -84,6 +79,14 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
     const placeholder = useMemo(() => serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? t('Enter pick up address')
         : t('Enter your requested location'), [serviceTypeOption])
+
+    const isSameServiceTypeOption = useMemo(() => {
+        return appointmentByKey?.serviceTypeOption?.id === serviceTypeOption?.id
+    }, [appointmentByKey, serviceTypeOption])
+
+    const serviceString = serviceType === EServiceType.MobileService
+        ? t("Mobile Service")
+        : t("Pick Up / Drop Off");
 
     useEffect(() => {
         if (!zip && zipCodeValue) {
@@ -215,6 +218,23 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
         await dispatch(setSideBarSteps([]));
     }
 
+    const restorePrevData = () => {
+        if (appointmentByKey?.address) dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null))
+        if (appointmentByKey?.address?.zipCode) dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ''))
+    }
+
+    const onBackFromAncillaryModal = () => {
+        if (serviceOptionChangedFromSlotPage) {
+            onGoToSlotsForVisitCenter()
+        } else {
+            customerLoadedData?.isUpdating
+                ? isSameServiceTypeOption
+                    ? restorePrevData()
+                    : onClose()
+                : setDefaultVisitCenter()
+        }
+    }
+
     return (
         <StepWrapper>
             <SelectWrapper>
@@ -273,11 +293,12 @@ const YourLocation: React.FC<React.PropsWithChildren<React.PropsWithChildren<TYo
             </SelectWrapper>
             <ActionButtons onBack={handleBack} onNext={handleNext} nextLabel={t("Next")} loading={ancillaryPriceLoading}/>
             <AncillaryPriceModal
+                backButtonText={customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage ? t("Back") : t("Visit Center instead")}
                 onNext={onNext}
                 open={isOpen}
                 onClose={onClose}
-                onBackToSelectSlotsForVisitCenter={onGoToSlotsForVisitCenter}
-                onVisitCenter={setDefaultVisitCenter}/>
+                serviceString={serviceString}
+                onBack={onBackFromAncillaryModal}/>
             <UnavailableServiceModal
                 setFormChecked={setFormChecked}
                 onBackToServiceOption={goToFirstScreen}

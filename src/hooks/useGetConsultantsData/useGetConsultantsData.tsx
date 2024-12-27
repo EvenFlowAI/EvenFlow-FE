@@ -39,7 +39,7 @@ const useGetConsultantsData = (serviceTypeOption: IFirstScreenOption|null, addre
                     : null;
             const recalls = mapRecallsForRequest(selectedRecalls);
             const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR)
-            const isValidForServiceType = serviceTypeOption?.type !== EServiceType.PickUpDropOff || (address && zipCode)
+            const isValidForServiceType = serviceTypeOption?.type !== EServiceType.PickUpDropOff || (address && zipCode?.length === 5)
             const someRequestSelected = serviceRequestIds.length || maintenancePackageOption || serviceCategoryIds.length || recalls.length
             if (isValidForServiceType && someRequestSelected) {
                 const requestData: IConsultantsRequestData = {

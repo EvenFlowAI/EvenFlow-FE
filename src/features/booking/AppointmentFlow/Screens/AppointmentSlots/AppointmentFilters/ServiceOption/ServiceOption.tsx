@@ -1,18 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
+import React, {useState} from 'react';
 import {Select, SelectChangeEvent} from "@mui/material";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../../../../../store/reducers/appointment/actions";
 import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
 import {TArgCallback} from "../../../../../../../types/types";
 import {useStyles} from "./styles";
 import clsx from "clsx";
-import {useServiceOption} from "../../../../../../../hooks/useServiceOption/useServiceOption";
 import SwitchFlowModal from "../../../../../SwitchFlowModal/SwitchFlowModal";
 import {useModal} from "../../../../../../../hooks/useModal/useModal";
 
@@ -23,34 +17,20 @@ type TProps = {
     options: React.JSX.Element[];
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
+const ServiceOption: React.FC<TProps> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const [selectedOption, setSelectedOption] = useState<IFirstScreenOption|null>(null);
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
-    const dispatch = useDispatch();
     const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
-
-    const handleServiceOptionChange = useServiceOption("serviceType")
-
-    const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
-        onChangeServiceOption(newOption)
-        if (newOption?.type === EServiceType.PickUpDropOff) {
-            dispatch(selectAppointment(null));
-        } else {
-            dispatch(selectServiceValetAppointment(null));
-        }
-    }
 
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
             setSelectedOption(newOption)
             onSwitchFlowOpen()
-           //  handleServiceOptionChange(newOption)
-           // clearAppointmentSlot(newOption);
         }
     }
 
