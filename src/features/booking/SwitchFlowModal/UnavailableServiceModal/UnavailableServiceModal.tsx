@@ -1,10 +1,10 @@
 import React from 'react';
-import {Button, Dialog} from "@mui/material";
+import {Button} from "@mui/material";
 import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../../types/types";
 import {useStyles} from "./styles";
-import {DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
+import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 
 type TUnavailableServiceProps = DialogProps & {
@@ -31,7 +31,7 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
     }
 
     return (
-        <Dialog open={open} fullWidth onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
+        <BaseModal open={open} width={525} onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
@@ -54,7 +54,7 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
                     {t("Try another location")}
                 </Button>
             </div>
-        </Dialog>
+        </BaseModal>
     );
 };
 

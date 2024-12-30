@@ -34,7 +34,7 @@ import {
 import {geocodeByPlaceId} from "react-google-places-autocomplete";
 import {parseGeoCode} from "../AppointmentFlow/Screens/YourLocation/utils";
 import {useException} from "../../../hooks/useException/useException";
-import AncillaryPriceModal from "../../../components/modals/booking/AncillaryPriceModal/AncillaryPriceModal";
+import AncillaryPriceModal from "./AncillaryPriceModal/AncillaryPriceModal";
 import {useModal} from "../../../hooks/useModal/useModal";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
@@ -286,7 +286,6 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
                 setCalendarOpen={setCalendarOpen}
                 onNext={handleNextStep}/>
             <AncillaryPriceModal
-                backButtonText={t("Visit Center instead")}
                 onNext={onAncillaryPriceAccepted}
                 open={isAncillaryPriceOpen}
                 onClose={onAncillaryPriceClose}
