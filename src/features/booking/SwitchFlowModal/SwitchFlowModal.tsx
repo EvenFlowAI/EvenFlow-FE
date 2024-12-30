@@ -22,8 +22,10 @@ import {TParsableDate} from "../../../types/types";
 import Calendar from "./Calendar/Calendar";
 import {
     loadAncillaryPriceByZip,
-    setCity, setFilteredZipCodes,
-    setPoliticalState, setServiceTypeOption,
+    setCity,
+    setFilteredZipCodes,
+    setPoliticalState,
+    setServiceTypeOption,
     setStreetName,
     setTime,
     setTiming,
@@ -90,6 +92,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         if (!isDateSelectionOn) {
             dispatch(setTiming(EAppointmentTimingType.FirstAvailable))
             dispatch(setTime(null))
+            setTimingType(EAppointmentTimingType.FirstAvailable)
         }
     }, [isDateSelectionOn])
 
@@ -209,6 +212,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Consultant
+                                    open={open}
                                     newOption={selectedOption}
                                     consultant={consultant}
                                     setConsultant={setConsultant}

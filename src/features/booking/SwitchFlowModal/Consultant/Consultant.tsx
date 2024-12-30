@@ -19,6 +19,7 @@ type TProps = {
     newOption: IFirstScreenOption|null;
     address?: any;
     zipCode?: string|null;
+    open: boolean;
 }
 
 const Consultant: React.FC<TProps> = ({
@@ -28,7 +29,8 @@ const Consultant: React.FC<TProps> = ({
                                           setConsultant,
                                           newOption,
                                           address,
-                                          zipCode
+                                          zipCode,
+                                          open
                                       }) => {
     const { advisor } = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
@@ -51,8 +53,10 @@ const Consultant: React.FC<TProps> = ({
                 })
                 .catch(err => console.log(err))
                 .finally(() => setLoading(false))
+        } else {
+            setConsultant(null)
         }
-    }, [data, advisor])
+    }, [data, advisor, open])
 
     const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
         const selected = advisors.find(item => item.id === e.target?.value);
