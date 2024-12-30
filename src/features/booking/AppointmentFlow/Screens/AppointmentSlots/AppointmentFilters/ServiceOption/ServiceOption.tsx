@@ -35,7 +35,6 @@ const ServiceOption: React.FC<TProps> = ({
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
-            onChangeServiceOption()
             setSelectedOption(newOption)
             onSwitchFlowOpen()
         }

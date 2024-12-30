@@ -7,8 +7,12 @@ import {EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle} from "../../../
 import {clearCustomerCache, setCustomerLoadedData} from "../../../store/reducers/appointment/actions";
 import {
     checkCarIsValid,
-    handleAppointmentUpdate, loadConsultants,
-    setCurrentFrameScreen, setServiceTypeOption, setWelcomeScreenView, updatePackageOption,
+    handleAppointmentUpdate,
+    loadConsultants,
+    setCurrentFrameScreen,
+    setServiceTypeOption,
+    setWelcomeScreenView,
+    updatePackageOption,
     updateRecalls
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {TMobileScreen, TScreen, TView} from "../../../types/types";
@@ -42,7 +46,9 @@ const AppointmentFlow = () => {
         isAdvisorAvailable
     } = useSelector((state: RootState) => state.bookingFlowConfig);
 
-    const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>("serviceNeeds");
+    const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>(
+        serviceTypeOption?.type !== EServiceType.VisitCenter ? "location" : "serviceNeeds"
+);
     const [loadingCar, setLoadingCar] = useState<boolean>(false);
     const [needToShowServiceTypes, setNeedToShowServiceTypes] = useState<boolean>(false)
     const [serviceCategoryPage, setServiceCategoryPage] = useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);

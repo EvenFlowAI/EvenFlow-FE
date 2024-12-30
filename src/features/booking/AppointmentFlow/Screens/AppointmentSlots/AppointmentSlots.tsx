@@ -89,6 +89,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         serviceValetAppointment,
         customerEnteredEmail,
         slotsServiceTypeOptionId,
+        slotsTransportationId,
         slotsSearchedDate,
     } = useSelector((state: RootState) => state.appointment)
 
@@ -236,8 +237,16 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             if (currentAppointment?.date) {
                 const sameSearchDate = getClearDate(currentAppointment.searchDate).isSame(dateWithOffset, 'date')
                 const slotTimeIsValid = dayjs(getClearDate(currentAppointment.date)).isAfter(dateWithOffset);
-                if (slotsServiceTypeOptionId === serviceTypeOption?.id && sameSearchDate && slotTimeIsValid) {
-                    setDate(dayjs.utc(currentAppointment.date).startOf('day'))
+                const theSameServiceOption = slotsServiceTypeOptionId === serviceTypeOption?.id
+                const theSameTransportation = slotsTransportationId === transportation?.id;
+                if (theSameServiceOption && sameSearchDate && slotTimeIsValid) {
+                    if (theSameTransportation) {
+                        selectedTime
+                            ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
+                            : selectFirstSlot()
+                    } else {
+                        setDate(dayjs.utc(currentAppointment.date).startOf('day'))
+                    }
                 } else {
                     selectedTime
                         ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
@@ -250,7 +259,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
             }
             isMount.current = false;
         }
-    }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption, slotsServiceTypeOptionId, slotsSearchedDate]);
+    }, [selectedTime, selectFirstSlot, currentSlots, serviceTypeOption, slotsServiceTypeOptionId, slotsSearchedDate, slotsTransportationId, transportation]);
 
     useEffect(() => {
         let timeoutId: any = null;
