@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {BaseModal, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
 import {useSelector} from "react-redux";
@@ -8,8 +8,23 @@ import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import ServiceOption from "../AppointmentFilters/ServiceOption/ServiceOption";
 import {useStyles} from "./styles";
+import {TCallback} from "../../../../../../types/types";
+import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 
-const ChangeServiceTypeModal: React.FC<DialogProps & {options: React.JSX.Element[]}> = ({open, onClose, options}) => {
+type TProps = DialogProps & {
+    options: React.JSX.Element[],
+    onChangeServiceOption: TCallback;
+    setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption|null>>;
+    onSwitchFlowOpen: TCallback;
+}
+
+const ChangeServiceTypeModal: React.FC<TProps> = ({
+                                                      setSelectedOption,
+                                                      onSwitchFlowOpen,
+                                                      open,
+                                                      onClose,
+                                                      options,
+                                                      onChangeServiceOption}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame)
     const {t} = useTranslation();
     const {classes} = useStyles();
@@ -24,7 +39,14 @@ const ChangeServiceTypeModal: React.FC<DialogProps & {options: React.JSX.Element
                 </div>
                 <div className={classes.selectWrapper}>
                     <div className={classes.label}>Service Option</div>
-                    <ServiceOption onChangeServiceOption={onClose} hideLabel options={options} isVisible/>
+                    <ServiceOption
+                        hideLabel
+                        options={options}
+                        isVisible
+                        onChangeServiceOption={onChangeServiceOption}
+                        setSelectedOption={setSelectedOption}
+                        onSwitchFlowOpen={onSwitchFlowOpen}
+                    />
                 </div>
             </DialogContent>
             <BfButtonsWrapper>

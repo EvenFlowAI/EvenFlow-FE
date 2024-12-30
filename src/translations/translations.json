@@ -364,7 +364,14 @@
       "Remedy Not Available": "Remedy Not Available",
       "Manufacturer Program": "Manufacturer Program",
       "Book Another Vehicle": "Book Another Vehicle",
-      "Transportation": "Transportation"
+      "Transportation": "Transportation",
+      "We need additional information to schedule your appointment": "We need additional information to schedule your {{serviceName}} appointment",
+      "Do you have a preferred Service Advisor?": "Do you have a preferred Service Advisor?",
+      "First Available": "First Available",
+      "Preferred Date": "Preferred Date",
+      "Where do you want to be picked up?": "Where do you want to be picked up?",
+      "For the pick up location, a convenience fee of": "For the pick up location, a convenience fee of",
+      "will be added to your service bill": "will be added to your service bill"
     }
   },
   "es": {

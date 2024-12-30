@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {FiltersWrapper, TitleWrapper, Wrapper} from "./styles";
-import {TArgCallback, TCallback} from "../../../../../../types/types";
-import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
+import {TCallback} from "../../../../../../types/types";
 import ServiceOption from "./ServiceOption/ServiceOption";
 import SelectedConsultant from "./SelectedConsultant/SelectedConsultant";
 import {ReactComponent as Arrow} from "../../../../../../assets/img/arrow_small.svg";
@@ -11,40 +10,28 @@ import {RootState} from "../../../../../../store/rootReducer";
 import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
 import {MenuItem} from "@mui/material";
 import ChangeServiceTypeModal from "../ChangeServiceTypeModal/ChangeServiceTypeModal";
+import useTransportationVisibility
+    from "../../../../../../hooks/useTransportationVisibility/useTransportationVisibility";
+import SwitchFlowModal from "../../../../SwitchFlowModal/SwitchFlowModal";
+import {useModal} from "../../../../../../hooks/useModal/useModal";
+import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
 
 type TProps = {
     isSm: boolean;
-    onChangeServiceOption: TArgCallback<IFirstScreenOption>;
+    onChangeServiceOption: TCallback;
     isServiceOptionOpen: boolean;
     onServiceOptionClose: TCallback;
 }
 
 const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isServiceOptionOpen, onServiceOptionClose }) => {
-    const { serviceTypeOption, transportations, consultants, transportation} = useSelector((state: RootState) => state.appointmentFrame);
+    const { serviceTypeOption, consultants} = useSelector((state: RootState) => state.appointmentFrame);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const { isTransportationAvailable, isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+    const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+
+    const [selectedOption, setSelectedOption] = useState<IFirstScreenOption|null>(null);
     const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm)
-
-    const someServicesHaveDefaultTransportation = useMemo(() => {
-        const someOptionHasDefaultTransportation = firstScreenOptions.some(el => el.transportationOption)
-        const someOptionHasNotDefaultTransportation = firstScreenOptions.some(el => !el.transportationOption)
-        return someOptionHasDefaultTransportation && someOptionHasNotDefaultTransportation
-    }, [firstScreenOptions])
-
-    const noOneServiceHasTransportation = firstScreenOptions
-        .filter(el => !el.transportationOption).length === firstScreenOptions.length
-
-    const isTransportationsVisible = useMemo(() => {
-        const transportationExists = transportations.find(el => el.id === transportation?.id || el.id === serviceTypeOption?.transportationOption?.id)
-        const isDefaultTransportationOfTheUniqueServiceOption = firstScreenOptions.length === 1
-            && serviceTypeOption?.transportationOption
-        return ((someServicesHaveDefaultTransportation && (serviceTypeOption?.transportationOption || isTransportationAvailable))
-                || (noOneServiceHasTransportation && isTransportationAvailable))
-            && serviceTypeOption?.type !== EServiceType.MobileService
-            && transportationExists
-        && (transportation || serviceTypeOption?.transportationOption)
-        && !isDefaultTransportationOfTheUniqueServiceOption
-    }, [someServicesHaveDefaultTransportation, serviceTypeOption, isTransportationAvailable, noOneServiceHasTransportation, transportations, transportation])
+    const {isTransportationsVisible} = useTransportationVisibility();
+    const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
 
     const serviceOptions = useMemo(() => {
         return serviceTypeOption?.type !== EServiceType.MobileService
@@ -56,20 +43,17 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
                 .map(option => <MenuItem value={option.id} key={option.name}>{option.name}</MenuItem>)
     }, [firstScreenOptions, serviceTypeOption])
 
-    const isServiceOptionVisible = useMemo(() => {
-        return serviceOptions.length > 1
-    }, [serviceOptions])
-
-    const isAdvisorVisible = useMemo(() => {
-        return isAdvisorAvailable && consultants?.length
-    }, [isAdvisorAvailable, consultants])
-
-
-    const isVisible = useMemo(() => {
-        return isAdvisorVisible || isServiceOptionVisible || isTransportationsVisible
-    }, [isAdvisorVisible, isServiceOptionVisible, isTransportationsVisible])
+    const isServiceOptionVisible = serviceOptions.length > 1
+        && Boolean(firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
+    const isAdvisorVisible = Boolean(isAdvisorAvailable && consultants?.length)
+    const isVisible = isAdvisorVisible || isServiceOptionVisible || isTransportationsVisible
 
     const onArrowClick = () => setFiltersOpen(prev => !prev);
+
+    const onChangeServiceOptionInPopup = () => {
+        onChangeServiceOption();
+        onServiceOptionClose()
+    }
 
     return isVisible ? (
         <Wrapper>
@@ -80,11 +64,29 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
                     : null}
             </TitleWrapper>
             {isFiltersOpen ? <FiltersWrapper>
-                <ServiceOption onChangeServiceOption={onChangeServiceOption} isVisible={isServiceOptionVisible} options={serviceOptions}/>
-                <SelectedTransportation isVisible={!!isTransportationsVisible}/>
-                <SelectedConsultant isVisible={!!isAdvisorVisible}/>
+                <ServiceOption
+                    onChangeServiceOption={onChangeServiceOption}
+                    isVisible={isServiceOptionVisible}
+                    options={serviceOptions}
+                    setSelectedOption={setSelectedOption}
+                    onSwitchFlowOpen={onSwitchFlowOpen}
+                />
+                <SelectedTransportation
+                    isVisible={!!isTransportationsVisible}
+                    setSelectedOption={setSelectedOption}
+                    onChangeServiceOption={onChangeServiceOption}
+                    onSwitchFlowOpen={onSwitchFlowOpen}
+                />
+                <SelectedConsultant isVisible={isAdvisorVisible}/>
             </FiltersWrapper> : null}
-            <ChangeServiceTypeModal open={isServiceOptionOpen} onClose={onServiceOptionClose} options={serviceOptions}/>
+            <ChangeServiceTypeModal
+                open={isServiceOptionOpen}
+                onClose={onServiceOptionClose}
+                options={serviceOptions}
+                onSwitchFlowOpen={onSwitchFlowOpen}
+                setSelectedOption={setSelectedOption}
+                onChangeServiceOption={onChangeServiceOptionInPopup}/>
+            <SwitchFlowModal open={isSwitchFlowOpen} onClose={onSwitchFlowClose} selectedOption={selectedOption}/>
         </Wrapper>
     ) : null;
 };

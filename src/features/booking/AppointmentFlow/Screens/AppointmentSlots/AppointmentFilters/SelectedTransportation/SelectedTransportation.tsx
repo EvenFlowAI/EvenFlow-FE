@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {Dispatch, SetStateAction, useMemo} from 'react';
 import {MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {
@@ -8,15 +8,24 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
-import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
 import {ETransportationType} from "../../../../../../../store/reducers/transportationNeeds/types";
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
 import {selectAppointment} from "../../../../../../../store/reducers/appointment/actions";
+import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
+import {TCallback} from "../../../../../../../types/types";
 
-const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => {
+type TProps = {
+    isVisible: boolean
+    setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption|null>>;
+    onChangeServiceOption: TCallback;
+    onSwitchFlowOpen: TCallback;
+}
+
+const SelectedTransportation: React.FC<TProps> = ({isVisible, setSelectedOption, onChangeServiceOption, onSwitchFlowOpen}) => {
     const { transportation, transportations, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
    const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+    const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const { classes  } = useStyles();
@@ -30,13 +39,13 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
                 : ""
     }, [transportation, serviceTypeOption])
 
-    const handleServiceOptionChange = useChangeServiceOption("transportation")
-
     const switchToServiceValet = () => {
         const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
         if (serviceValetOption) {
             dispatch(selectAppointment(null));
-            handleServiceOptionChange(serviceValetOption)
+            onChangeServiceOption()
+            setSelectedOption(serviceValetOption)
+            onSwitchFlowOpen()
         }
     }
 
@@ -58,7 +67,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
                         variant="standard"
                         disableUnderline
                         fullWidth={isSm}
-                        disabled={!isTransportationAvailable || isTransportationsLoading}
+                        disabled={!isTransportationAvailable || isTransportationsLoading || isAppointmentSlotsLoading}
                         onChange={handleChange}>`
                         {transportations.map(item => <MenuItem value={item.id} key={item.name}>{item.description}</MenuItem>)}
                     </Select>

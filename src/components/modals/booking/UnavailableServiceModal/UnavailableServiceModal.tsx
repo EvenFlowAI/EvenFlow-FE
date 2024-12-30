@@ -1,15 +1,15 @@
 import React, {Dispatch, SetStateAction, useMemo} from 'react';
-import {DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
+import {DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
 import {Button, Dialog} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../../store/rootReducer";
-import {useDialogStyles} from "../../../../../../hooks/styling/useDialogStyles";
+import {RootState} from "../../../../store/rootReducer";
+import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {useTranslation} from "react-i18next";
-import {EServiceType} from "../../../../../../store/reducers/appointmentFrameReducer/types";
-import {setAddress, setCurrentFrameScreen, setZipCode} from "../../../../../../store/reducers/appointmentFrameReducer/actions";
-import {TCallback} from "../../../../../../types/types";
+import {EServiceType} from "../../../../store/reducers/appointmentFrameReducer/types";
+import {setAddress, setCurrentFrameScreen, setZipCode} from "../../../../store/reducers/appointmentFrameReducer/actions";
+import {TCallback} from "../../../../types/types";
 import {useStyles} from "./styles";
-import {setUnavailableServiceOpen} from "../../../../../../store/reducers/modals/actions";
+import {setUnavailableServiceOpen} from "../../../../store/reducers/modals/actions";
 
 type TUnavailableServiceProps = {
     setFormChecked: Dispatch<SetStateAction<boolean>>;
@@ -19,11 +19,11 @@ type TUnavailableServiceProps = {
 }
 
 const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUnavailableServiceProps>>> = ({
-                                                                    setFormChecked,
-                                                                    onBackToSelectSlotsForVisitCenter,
-                                                                    onBackToServiceOption,
-                                                                    onVisitCenter
-}) => {
+                                                                                                                           setFormChecked,
+                                                                                                                           onBackToSelectSlotsForVisitCenter,
+                                                                                                                           onBackToServiceOption,
+                                                                                                                           onVisitCenter
+                                                                                                                       }) => {
     const {serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage} = useSelector((state: RootState) => state.appointmentFrame);
     const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
     const {isUnavailableServiceOpen} = useSelector((state: RootState) => state.modals);
@@ -43,9 +43,9 @@ const UnavailableServiceModal: React.FC<React.PropsWithChildren<React.PropsWithC
     const backLabel = serviceOptionChangedFromSlotPage
         ? t("Back to Visit Center")
         : customerLoadedData?.isUpdating
-        ? isSameServiceTypeOption
-            ? t("Keep Original Location")
-            : t("Back") : t("Visit Center")
+            ? isSameServiceTypeOption
+                ? t("Keep Original Location")
+                : t("Back") : t("Visit Center")
 
 
     const onClose = () => dispatch(setUnavailableServiceOpen(false))

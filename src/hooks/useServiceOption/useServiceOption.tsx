@@ -25,7 +25,7 @@ import {RootState} from "../../store/rootReducer";
 import {ETransportationType} from "../../store/reducers/transportationNeeds/types";
 import {setSlotsLoading} from "../../store/reducers/appointment/actions";
 
-export const useChangeServiceOption = (optionType: "serviceType"|"transportation") => {
+export const useServiceOption = (optionType: "serviceType"|"transportation") => {
     const {
         serviceOptionChangedFromSlotPage,
         address,
