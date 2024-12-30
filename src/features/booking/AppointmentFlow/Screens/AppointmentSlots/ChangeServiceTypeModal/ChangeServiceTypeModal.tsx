@@ -8,8 +8,14 @@ import {Button} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import ServiceOption from "../AppointmentFilters/ServiceOption/ServiceOption";
 import {useStyles} from "./styles";
+import {TCallback} from "../../../../../../types/types";
 
-const ChangeServiceTypeModal: React.FC<DialogProps & {options: React.JSX.Element[]}> = ({open, onClose, options}) => {
+type TProps = DialogProps & {
+    options: React.JSX.Element[],
+    onChangeServiceOption: TCallback;
+}
+
+const ChangeServiceTypeModal: React.FC<TProps> = ({open, onClose, options, onChangeServiceOption}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame)
     const {t} = useTranslation();
     const {classes} = useStyles();
@@ -24,7 +30,7 @@ const ChangeServiceTypeModal: React.FC<DialogProps & {options: React.JSX.Element
                 </div>
                 <div className={classes.selectWrapper}>
                     <div className={classes.label}>Service Option</div>
-                    <ServiceOption onChangeServiceOption={onClose} hideLabel options={options} isVisible/>
+                    <ServiceOption hideLabel options={options} isVisible onChangeServiceOption={onChangeServiceOption}/>
                 </div>
             </DialogContent>
             <BfButtonsWrapper>

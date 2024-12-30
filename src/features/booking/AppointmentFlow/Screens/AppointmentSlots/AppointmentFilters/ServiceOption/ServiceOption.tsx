@@ -4,14 +4,14 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
-import {TArgCallback} from "../../../../../../../types/types";
+import {TCallback} from "../../../../../../../types/types";
 import {useStyles} from "./styles";
 import clsx from "clsx";
 import SwitchFlowModal from "../../../../../SwitchFlowModal/SwitchFlowModal";
 import {useModal} from "../../../../../../../hooks/useModal/useModal";
 
 type TProps = {
-    onChangeServiceOption: TArgCallback<IFirstScreenOption>;
+    onChangeServiceOption: TCallback;
     hideLabel?: boolean;
     isVisible: boolean;
     options: React.JSX.Element[];
@@ -29,6 +29,7 @@ const ServiceOption: React.FC<TProps> = ({onChangeServiceOption, isVisible, opti
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
+            onChangeServiceOption()
             setSelectedOption(newOption)
             onSwitchFlowOpen()
         }

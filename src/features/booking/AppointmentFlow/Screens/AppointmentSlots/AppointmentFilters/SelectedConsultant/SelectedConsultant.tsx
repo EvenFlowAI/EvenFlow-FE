@@ -19,7 +19,6 @@ type TProps = {
 
 const SelectedConsultant: React.FC<TProps> = ({disabled, isVisible, loading}) => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
-    const { scProfile } = useSelector((state: RootState) => state.appointment);
     const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -41,6 +40,7 @@ const SelectedConsultant: React.FC<TProps> = ({disabled, isVisible, loading}) =>
                     : <Select
                         value={advisor?.id ?? "Any"}
                         className={classes.select}
+                        displayEmpty
                         variant="standard"
                         disableUnderline
                         fullWidth={isSm}

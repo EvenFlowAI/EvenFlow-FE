@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {FiltersWrapper, TitleWrapper, Wrapper} from "./styles";
-import {TArgCallback, TCallback} from "../../../../../../types/types";
-import {IFirstScreenOption} from "../../../../../../store/reducers/serviceTypes/types";
+import {TCallback} from "../../../../../../types/types";
 import ServiceOption from "./ServiceOption/ServiceOption";
 import SelectedConsultant from "./SelectedConsultant/SelectedConsultant";
 import {ReactComponent as Arrow} from "../../../../../../assets/img/arrow_small.svg";
@@ -16,7 +15,7 @@ import useTransportationVisibility
 
 type TProps = {
     isSm: boolean;
-    onChangeServiceOption: TArgCallback<IFirstScreenOption>;
+    onChangeServiceOption: TCallback;
     isServiceOptionOpen: boolean;
     onServiceOptionClose: TCallback;
 }
@@ -40,10 +39,16 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
     }, [firstScreenOptions, serviceTypeOption])
 
     const isServiceOptionVisible = serviceOptions.length > 1
+        && Boolean(firstScreenOptions.find(el => el.id === serviceTypeOption?.id))
     const isAdvisorVisible = Boolean(isAdvisorAvailable && consultants?.length)
     const isVisible = isAdvisorVisible || isServiceOptionVisible || isTransportationsVisible
 
     const onArrowClick = () => setFiltersOpen(prev => !prev);
+
+    const onChangeServiceOptionInPopup = () => {
+        onChangeServiceOption();
+        onServiceOptionClose()
+    }
 
     return isVisible ? (
         <Wrapper>
@@ -54,11 +59,15 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
                     : null}
             </TitleWrapper>
             {isFiltersOpen ? <FiltersWrapper>
-                <ServiceOption onChangeServiceOption={onChangeServiceOption} isVisible={isServiceOptionVisible} options={serviceOptions}/>
+                <ServiceOption isVisible={isServiceOptionVisible} options={serviceOptions} onChangeServiceOption={onChangeServiceOption}/>
                 <SelectedTransportation isVisible={!!isTransportationsVisible}/>
                 <SelectedConsultant isVisible={isAdvisorVisible}/>
             </FiltersWrapper> : null}
-            <ChangeServiceTypeModal open={isServiceOptionOpen} onClose={onServiceOptionClose} options={serviceOptions}/>
+            <ChangeServiceTypeModal
+                open={isServiceOptionOpen}
+                onClose={onServiceOptionClose}
+                options={serviceOptions}
+                onChangeServiceOption={onChangeServiceOptionInPopup}/>
         </Wrapper>
     ) : null;
 };

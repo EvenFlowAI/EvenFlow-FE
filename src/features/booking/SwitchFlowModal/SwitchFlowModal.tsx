@@ -68,16 +68,18 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
     const isTransportationsVisible = Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
     const isAddressVisible = selectedOption?.type === EServiceType.PickUpDropOff;
     const nextButtonIsDisabled = useMemo(() => {
-        return !isAddressValid
-            || (isAdvisorVisible && !consultant)
-            || (isTransportationsVisible && !transportationOption)
-    }, [isAddressValid, isAdvisorVisible, consultant, isTransportationsVisible, transportationOption])
+        return !isAddressValid || (isTransportationsVisible && !transportationOption)
+    }, [isAddressValid, isTransportationsVisible, transportationOption])
 
     useEffect(() => {
-        if (!isAddressVisible && !isDateSelectionOn && !isTransportationsVisible && !isAdvisorVisible) {
-            dispatch(setServiceTypeOption(selectedOption))
+        if (open && selectedOption) {
+            debugger
+            const someFilterIsAvailable = isAddressVisible || isDateSelectionOn || isTransportationsVisible || isAdvisorVisible
+            if (!someFilterIsAvailable) {
+                dispatch(setServiceTypeOption(selectedOption))
+            }
         }
-    }, [isAddressVisible, isDateSelectionOn, isTransportationsVisible, isAdvisorVisible, selectedOption])
+    }, [isAddressVisible, isDateSelectionOn, isTransportationsVisible, isAdvisorVisible, selectedOption, open])
 
     useEffect(() => {
         if (userAddress && zip?.length === 5 && open) {
