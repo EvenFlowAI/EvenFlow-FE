@@ -3,13 +3,14 @@ import dayjs from "dayjs";
 import {TCallback, TParsableDate} from "../../../../types/types";
 import {pickersLayoutClasses} from "@mui/x-date-pickers/PickersLayout";
 import {MobileDatePicker} from "@mui/x-date-pickers";
+import {CustomActionBar} from "./CustomActionBar/CustomActionBar";
 
 type TProps = {
     time: TParsableDate;
     setTime: Dispatch<SetStateAction<TParsableDate>>;
     isCalendarOpen: boolean;
     setCalendarOpen: Dispatch<SetStateAction<boolean>>;
-    onAccept: TCallback;
+    onNext: TCallback;
 }
 
 const Calendar: React.FC<TProps> = ({
@@ -17,15 +18,10 @@ const Calendar: React.FC<TProps> = ({
                                         setTime,
                                         isCalendarOpen,
                                         setCalendarOpen,
-                                        onAccept,
+                                        onNext,
 }) => {
     const onTimeChange = (value: TParsableDate) => {
         setTime(value);
-    }
-
-    const handleAccept = () => {
-        onAccept()
-        // todo find a way to call the function if the date is unchanged
     }
 
     return (
@@ -33,11 +29,14 @@ const Calendar: React.FC<TProps> = ({
             value={time}
             onChange={onTimeChange}
             disablePast
-            onAccept={handleAccept}
+            onAccept={() => {}}
             open={isCalendarOpen}
             onClose={() => setCalendarOpen(false)}
             format="MMMM, DD"
             dayOfWeekFormatter={(day, date) => dayjs(date as TParsableDate).format("ddd")}
+            slots={{
+                actionBar: (props) => <CustomActionBar {...props} onNext={onNext}/>
+            }}
             slotProps={{
                 textField: {
                     variant: 'standard',

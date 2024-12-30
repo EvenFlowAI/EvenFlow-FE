@@ -106,14 +106,24 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         }
     }, [open])
 
-    const onCancel = () => {
+    const clearData = () => {
         setConsultant(null)
         setTransportationOption(null)
-        setTimingType(EAppointmentTimingType.FirstAvailable)
         setUserAddress(null)
         setZip(null)
-        setSelectedTime(null)
         dispatch(setFilteredZipCodes([]));
+        setCalendarOpen(false);
+    }
+
+    const onCancel = () => {
+        clearData()
+        setTimingType(EAppointmentTimingType.FirstAvailable)
+        setSelectedTime(null)
+        onClose();
+    }
+
+    const handleClose = () => {
+        clearData();
         onClose();
     }
 
@@ -137,7 +147,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         }))
         dispatch(selectAppointment(null))
         dispatch(selectServiceValetAppointment(null))
-        onClose();
+        handleClose();
     }
 
     const onClickNext = () => {
@@ -268,7 +278,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
                 setTime={setSelectedTime}
                 isCalendarOpen={isCalendarOpen}
                 setCalendarOpen={setCalendarOpen}
-                onAccept={handleNextStep}/>
+                onNext={handleNextStep}/>
             <AncillaryPriceModal
                 backButtonText={t("Visit Center instead")}
                 onNext={onAncillaryPriceAccepted}
