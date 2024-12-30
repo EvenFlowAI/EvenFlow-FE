@@ -27,8 +27,6 @@ import {
     setPoliticalState,
     setServiceTypeOption,
     setStreetName,
-    setTime,
-    setTiming,
     updateAppointmentDetails
 } from "../../../store/reducers/appointmentFrameReducer/actions";
 import {geocodeByPlaceId} from "react-google-places-autocomplete";
@@ -92,8 +90,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
 
     useEffect(() => {
         if (!isDateSelectionOn) {
-            dispatch(setTiming(EAppointmentTimingType.FirstAvailable))
-            dispatch(setTime(null))
+            setSelectedTime(null);
             setTimingType(EAppointmentTimingType.FirstAvailable)
         }
     }, [isDateSelectionOn])
