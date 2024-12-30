@@ -73,7 +73,6 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
 
     useEffect(() => {
         if (open && selectedOption) {
-            debugger
             const someFilterIsAvailable = isAddressVisible || isDateSelectionOn || isTransportationsVisible || isAdvisorVisible
             if (!someFilterIsAvailable) {
                 dispatch(setServiceTypeOption(selectedOption))
