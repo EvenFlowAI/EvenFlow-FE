@@ -25,7 +25,7 @@ import {
     IAncillaryByZipRequest,
     IAppointmentId,
     ICreateAppointmentRequest,
-    ICustomerConsentBooking,
+    ICustomerConsentBooking, ILoadSlotsRequestData,
     ISearchConsentsData,
     IServiceOffer,
     IValueService,
@@ -165,6 +165,7 @@ export const setPassedScreens = createAction<TScreen[]>('fAppointment/SetPassedS
 export const deleteLastScreen = createAction('fAppointment/DeleteLastScreen')
 export const setConsentsLoading = createAction<boolean>('fAppointment/SetConsentsLoading')
 export const setFiltersVisibility = createAction<Partial<TFiltersVisibility>>("fAppointment/SetFiltersVisibility");
+export const updateAppointmentDetails = createAction<ILoadSlotsRequestData>("fAppointment/UpdateAppointmentDetails");
 
 export const setValueServicePartial = (data: Partial<IValueService>): AppThunk => (dispatch, getState) => {
     const service = getState().appointmentFrame.valueService;

@@ -283,3 +283,13 @@ export type TTrackerState = {
     isCreated: boolean;
     ids: string[];
 }
+
+export interface ILoadSlotsRequestData {
+    timing: EAppointmentTimingType;
+    date: TParsableDate;
+    advisor: IServiceConsultant|null;
+    transportation: ITransportation|null;
+    address: any;
+    zip: string;
+    serviceTypeOption: IFirstScreenOption|null;
+}

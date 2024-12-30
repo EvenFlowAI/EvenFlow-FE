@@ -1,50 +1,43 @@
-import React from 'react';
-import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
+import React, {Dispatch, SetStateAction} from 'react';
 import {Select, SelectChangeEvent} from "@mui/material";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
 import {useTranslation} from "react-i18next";
-import {
-    selectAppointment,
-    selectServiceValetAppointment,
-} from "../../../../../../../store/reducers/appointment/actions";
 import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
-import {TArgCallback} from "../../../../../../../types/types";
+import {TCallback} from "../../../../../../../types/types";
 import {useStyles} from "./styles";
 import clsx from "clsx";
-import {useChangeServiceOption} from "../../../../../../../hooks/useChangeServiceOption/useChangeServiceOption";
 
 type TProps = {
-    onChangeServiceOption: TArgCallback<IFirstScreenOption>;
     hideLabel?: boolean;
     isVisible: boolean;
     options: React.JSX.Element[];
+    setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption|null>>;
+    onChangeServiceOption: TCallback;
+    onSwitchFlowOpen: TCallback;
 }
 
-const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
+const ServiceOption: React.FC<TProps> = ({
+                                             onChangeServiceOption,
+                                             isVisible,
+                                             options,
+                                             hideLabel,
+                                             setSelectedOption,
+                                             onSwitchFlowOpen
+                                         }) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
-    const dispatch = useDispatch();
-
-    const handleServiceOptionChange = useChangeServiceOption("serviceType")
-
-    const clearAppointmentSlot = (newOption: IFirstScreenOption) => {
-        onChangeServiceOption(newOption)
-        if (newOption?.type === EServiceType.PickUpDropOff) {
-            dispatch(selectAppointment(null));
-        } else {
-            dispatch(selectServiceValetAppointment(null));
-        }
-    }
 
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
         if (newOption) {
-            handleServiceOptionChange(newOption)
-            clearAppointmentSlot(newOption);
+            onChangeServiceOption()
+            setSelectedOption(newOption)
+            onSwitchFlowOpen()
         }
     }
 
@@ -59,7 +52,7 @@ const ServiceOption: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
                     variant="standard"
                     disableUnderline
                     fullWidth
-                    disabled={options.length === 1}
+                    disabled={options.length === 1 || isAppointmentSlotsLoading}
                     onChange={onServiceOptionChange}>
                     {options}
                 </Select>

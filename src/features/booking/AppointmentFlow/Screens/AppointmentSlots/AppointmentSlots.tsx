@@ -286,7 +286,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [month, selectedTiming, selectFirstSlot]);
 
-    const onChangeServiceOption = (newOption: IFirstScreenOption) => {
+    const onChangeServiceOption = () => {
         updateDate(dayjs(), true)
     }
 
@@ -321,7 +321,9 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }
 
     const onLoadSlots = (isEmptyList: boolean) => {
-        if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) onServiceOptionOpen()
+        if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) {
+            onServiceOptionOpen()
+        }
     }
 
     const loadData = async () => {
