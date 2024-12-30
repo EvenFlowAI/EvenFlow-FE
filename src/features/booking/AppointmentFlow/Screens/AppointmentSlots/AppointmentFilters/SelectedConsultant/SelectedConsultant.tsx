@@ -19,6 +19,7 @@ type TProps = {
 
 const SelectedConsultant: React.FC<TProps> = ({disabled, isVisible, loading}) => {
     const { advisor, consultants } = useSelector((state: RootState) => state.appointmentFrame);
+    const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const SelectedConsultant: React.FC<TProps> = ({disabled, isVisible, loading}) =>
                         variant="standard"
                         disableUnderline
                         fullWidth={isSm}
-                        disabled={disabled || (!!currentConfig && !consultants.length)}
+                        disabled={disabled || (!!currentConfig && !consultants.length) || isAppointmentSlotsLoading}
                         onChange={handleConsultantChange}>`
                         {consultants
                             .map(consultant => <MenuItem value={consultant.id}

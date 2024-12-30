@@ -17,6 +17,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
     const { transportation, transportations, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
    const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+    const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const {t} = useTranslation();
     const dispatch = useDispatch();
     const { classes  } = useStyles();
@@ -58,7 +59,7 @@ const SelectedTransportation: React.FC<{isVisible: boolean}> = ({isVisible}) => 
                         variant="standard"
                         disableUnderline
                         fullWidth={isSm}
-                        disabled={!isTransportationAvailable || isTransportationsLoading}
+                        disabled={!isTransportationAvailable || isTransportationsLoading || isAppointmentSlotsLoading}
                         onChange={handleChange}>`
                         {transportations.map(item => <MenuItem value={item.id} key={item.name}>{item.description}</MenuItem>)}
                     </Select>

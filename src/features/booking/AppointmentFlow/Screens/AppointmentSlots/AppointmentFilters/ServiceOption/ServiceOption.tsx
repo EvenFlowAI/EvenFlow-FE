@@ -19,6 +19,7 @@ type TProps = {
 
 const ServiceOption: React.FC<TProps> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
+    const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const [selectedOption, setSelectedOption] = useState<IFirstScreenOption|null>(null);
 
@@ -46,7 +47,7 @@ const ServiceOption: React.FC<TProps> = ({onChangeServiceOption, isVisible, opti
                     variant="standard"
                     disableUnderline
                     fullWidth
-                    disabled={options.length === 1}
+                    disabled={options.length === 1 || isAppointmentSlotsLoading}
                     onChange={onServiceOptionChange}>
                     {options}
                 </Select>

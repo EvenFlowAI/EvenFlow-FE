@@ -321,7 +321,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }
 
     const onLoadSlots = (isEmptyList: boolean) => {
-        if (!isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) {
+        if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) {
             onServiceOptionOpen()
         }
     }
