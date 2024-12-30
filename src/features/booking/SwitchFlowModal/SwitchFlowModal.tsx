@@ -115,16 +115,25 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         setCalendarOpen(false);
     }
 
-    const onCancel = () => {
-        clearData()
+    const clearDate = () => {
         setTimingType(EAppointmentTimingType.FirstAvailable)
         setSelectedTime(null)
+    }
+
+    const onCancel = () => {
+        clearData()
+        clearDate();
         onClose();
     }
 
     const handleClose = () => {
         clearData();
         onClose();
+    }
+
+    const clearPrevAppointments = () => {
+        dispatch(selectAppointment(null))
+        dispatch(selectServiceValetAppointment(null))
     }
 
     const handleNextStep = () => {
@@ -145,8 +154,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
             zip: zip ?? '',
             serviceTypeOption: selectedOption,
         }))
-        dispatch(selectAppointment(null))
-        dispatch(selectServiceValetAppointment(null))
+        clearPrevAppointments();
         handleClose();
     }
 
