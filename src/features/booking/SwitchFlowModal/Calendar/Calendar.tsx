@@ -22,12 +22,18 @@ const Calendar: React.FC<TProps> = ({
     const onTimeChange = (value: TParsableDate) => {
         setTime(value);
     }
+
+    const handleAccept = () => {
+        onAccept()
+        // todo find a way to call the function if the date is unchanged
+    }
+
     return (
         <MobileDatePicker
             value={time}
             onChange={onTimeChange}
             disablePast
-            onAccept={onAccept}
+            onAccept={handleAccept}
             open={isCalendarOpen}
             onClose={() => setCalendarOpen(false)}
             format="MMMM, DD"

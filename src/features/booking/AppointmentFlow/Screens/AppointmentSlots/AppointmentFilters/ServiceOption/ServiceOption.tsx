@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {Select, SelectChangeEvent} from "@mui/material";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../../../../store/rootReducer";
@@ -7,25 +7,30 @@ import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTyp
 import {TCallback} from "../../../../../../../types/types";
 import {useStyles} from "./styles";
 import clsx from "clsx";
-import SwitchFlowModal from "../../../../../SwitchFlowModal/SwitchFlowModal";
-import {useModal} from "../../../../../../../hooks/useModal/useModal";
 
 type TProps = {
-    onChangeServiceOption: TCallback;
     hideLabel?: boolean;
     isVisible: boolean;
     options: React.JSX.Element[];
+    setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption|null>>;
+    onChangeServiceOption: TCallback;
+    onSwitchFlowOpen: TCallback;
 }
 
-const ServiceOption: React.FC<TProps> = ({onChangeServiceOption, isVisible, options, hideLabel}) => {
+const ServiceOption: React.FC<TProps> = ({
+                                             onChangeServiceOption,
+                                             isVisible,
+                                             options,
+                                             hideLabel,
+                                             setSelectedOption,
+                                             onSwitchFlowOpen
+                                         }) => {
     const {serviceTypeOption} = useSelector((state: RootState) => state.appointmentFrame);
     const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-    const [selectedOption, setSelectedOption] = useState<IFirstScreenOption|null>(null);
 
     const {t} = useTranslation();
     const { classes  } = useStyles();
-    const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
 
     const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
         const newOption = firstScreenOptions.find(item => item.id === e.target.value);
@@ -52,7 +57,6 @@ const ServiceOption: React.FC<TProps> = ({onChangeServiceOption, isVisible, opti
                     {options}
                 </Select>
             </div>
-            <SwitchFlowModal open={isSwitchFlowOpen} onClose={onSwitchFlowClose} selectedOption={selectedOption}/>
         </div>
     ) : null
 };

@@ -286,7 +286,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
         }
     }, [month, selectedTiming, selectFirstSlot]);
 
-    const onChangeServiceOptionIn = () => {
+    const onChangeServiceOption = () => {
         updateDate(dayjs(), true)
     }
 
@@ -488,7 +488,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
                     nextLabel={t("Next")}
                     loading={isConsultantsLoading || isConsentsLoading}/>
                 <AppointmentFilters
-                    onChangeServiceOption={onChangeServiceOptionIn}
+                    onChangeServiceOption={onChangeServiceOption}
                     isSm={isSm}
                     isServiceOptionOpen={isServiceOptionOpen}
                     onServiceOptionClose={onServiceOptionClose}/>

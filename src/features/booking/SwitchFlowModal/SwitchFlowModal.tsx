@@ -38,6 +38,7 @@ import AncillaryPriceModal from "../../../components/modals/booking/AncillaryPri
 import {useModal} from "../../../hooks/useModal/useModal";
 import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
 import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServiceModal";
+import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 
 type TProps = DialogProps & {
     selectedOption: IFirstScreenOption|null
@@ -128,12 +129,14 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         dispatch(updateAppointmentDetails({
             address: userAddress,
             advisor: consultant,
-            date: selectedTime,
+            date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
             timing: timingType,
             transportation: transportationOption,
             zip: zip ?? '',
             serviceTypeOption: selectedOption,
         }))
+        dispatch(selectAppointment(null))
+        dispatch(selectServiceValetAppointment(null))
         onClose();
     }
 
