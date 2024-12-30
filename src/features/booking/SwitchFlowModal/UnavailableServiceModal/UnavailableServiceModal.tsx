@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button} from "@mui/material";
-import {useDialogStyles} from "../../../../hooks/styling/useDialogStyles";
 import {useTranslation} from "react-i18next";
 import {TCallback} from "../../../../types/types";
 import {useStyles} from "./styles";
 import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
+import {BfButtonsWrapper} from "../../../../components/styled/BfButtonsWrapper";
 
 type TUnavailableServiceProps = DialogProps & {
     serviceString: string;
@@ -21,7 +21,6 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
                                                                          onClose,
                                                                          onTryAnotherLocation,
                                                                      }) => {
-    const { classes: dialogClasses } = useDialogStyles();
     const { classes  } = useStyles();
     const {t} = useTranslation();
 
@@ -31,29 +30,28 @@ const UnavailableServiceModal: React.FC<TUnavailableServiceProps> = ({
     }
 
     return (
-        <BaseModal open={open} width={525} onClose={onClose} classes={{root: dialogClasses.root, paper: dialogClasses.dialogPaper}}>
+        <BaseModal open={open} width={525} onClose={onClose}>
             <DialogTitle onClose={onClose}/>
             <DialogContent>
                 <div className={classes.info}>
-                    {t("We are sorry but we do not offer")} {serviceString} {t("to your area")}
+                    {t("We are sorry but we do not offer")} {serviceString} {t("to your area")}. {t("Would you like to book an appointment to visit our service center?")}
                 </div>
             </DialogContent>
-            <div className={classes.buttonWrapper}>
+            <BfButtonsWrapper>
                 <Button
+                    className={classes.button}
+                    onClick={onTryAnotherLocation}
+                    variant="outlined">
+                    {t("Try another location")}
+                </Button>
+                <Button
+                    className={classes.button}
                     onClick={onVisitCenterClick}
                     color={'primary'}
                     variant='contained'>
-                    {t("Back to Visit Center")}
+                    {t("Visit Center")}
                 </Button>
-            </div>
-            <div className={classes.buttonWrapper}>
-                <Button
-                    className={classes.linkButton}
-                    onClick={onTryAnotherLocation}
-                    variant="text">
-                    {t("Try another location")}
-                </Button>
-            </div>
+            </BfButtonsWrapper>
         </BaseModal>
     );
 };
