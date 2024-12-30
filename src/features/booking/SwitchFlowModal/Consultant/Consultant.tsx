@@ -20,6 +20,7 @@ type TProps = {
     address?: any;
     zipCode?: string|null;
     open: boolean;
+    setAdvisorVisible: Dispatch<SetStateAction<boolean>>;
 }
 
 const Consultant: React.FC<TProps> = ({
@@ -30,7 +31,8 @@ const Consultant: React.FC<TProps> = ({
                                           newOption,
                                           address,
                                           zipCode,
-                                          open
+                                          open,
+                                          setAdvisorVisible,
                                       }) => {
     const { advisor } = useSelector((state: RootState) => state.appointmentFrame);
     const {t} = useTranslation();
@@ -47,6 +49,7 @@ const Consultant: React.FC<TProps> = ({
             Api.call<PaginatedAPIResponse<IServiceConsultant>>(
                 Api.endpoints.ServiceConsultants.GetByQuery, {data})
                 .then(({data: {result}}) => {
+                    setAdvisorVisible(Boolean(result.length))
                     if (result.length) {
                         setAdvisors(result)
                     }

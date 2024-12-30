@@ -56,6 +56,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
     const [selectedTime, setSelectedTime] = useState<TParsableDate>(null);
     const [isCalendarOpen, setCalendarOpen] = useState<boolean>(false);
     const [isAddressValid, setAddressValid] = useState<boolean>(selectedOption?.type !== EServiceType.PickUpDropOff)
+    const [isAdvisorVisible, setAdvisorVisible] = useState<boolean>(false);
 
     const {t} = useTranslation();
     const dispatch = useDispatch();
@@ -65,7 +66,6 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
 
     const newConfig = config.find(item => item.serviceType === selectedOption?.type);
 
-    const isAdvisorVisible = newConfig?.advisorSelection;
     const isDateSelectionOn = newConfig?.appointmentSelection && selectedOption?.type !== EServiceType.PickUpDropOff
     const isTransportationsVisible = Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
     const isAddressVisible = selectedOption?.type === EServiceType.PickUpDropOff;
@@ -87,6 +87,10 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             loadAncillaryPrice(zip, userAddress)
         }
     }, [open])
+
+    useEffect(() => {
+        setAdvisorVisible(!!newConfig?.advisorSelection)
+    }, [newConfig])
 
     useEffect(() => {
         if (!isDateSelectionOn) {
@@ -233,6 +237,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
                                     consultant={consultant}
                                     setConsultant={setConsultant}
                                     isVisible
+                                    setAdvisorVisible={setAdvisorVisible}
                                     address={userAddress}
                                     zipCode={zip}
                                     disabled={selectedOption?.type === EServiceType.PickUpDropOff && !isAddressValid}/>
