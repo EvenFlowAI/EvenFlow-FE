@@ -47,7 +47,9 @@ const Consultant: React.FC<TProps> = ({
             Api.call<PaginatedAPIResponse<IServiceConsultant>>(
                 Api.endpoints.ServiceConsultants.GetByQuery, {data})
                 .then(({data: {result}}) => {
-                    if (result.length) setAdvisors(result)
+                    if (result.length) {
+                        setAdvisors(result)
+                    }
                     const currentAdvisor = result.find(el => el.id === advisor?.id);
                     setConsultant(currentAdvisor ?? null)
                 })

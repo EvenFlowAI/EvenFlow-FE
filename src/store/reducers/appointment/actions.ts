@@ -93,6 +93,7 @@ export const setWaitListSettings = createAction<IWaitListData|null>("Appointment
 export const setSlotPodId = createAction<number|null>("Appointment/SetSlotPodId");
 export const setSlotsLoading = createAction<boolean>("Appointment/setSlotsLoading");
 export const setSlotsServiceTypeOptionId = createAction<number|null>("Appointment/SetSlotsServiceTypeOptionId");
+export const setSlotsTransportationId = createAction<number|null>("Appointment/SetSlotsTransportationId");
 export const setSlotsSearchDate = createAction<ParsableDate>("Appointment/SetSlotsServiceSearchDate");
 
 export const loadAppointmentSlots = (
@@ -118,6 +119,7 @@ export const loadAppointmentSlots = (
         if (onLoadedCb) onLoadedCb(!Boolean(items.length))
         searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)))
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null))
+        dispatch(setSlotsTransportationId(data.transportationOptionId ?? null))
         dispatch(setSlotsSearchDate(data.fromDate))
         if (cb && data.appointmentTimingType === EAppointmentTimingType.FirstAvailable && searchedDateRange) {
             return cb(dayjs.utc(searchedDateRange.from));
@@ -127,6 +129,7 @@ export const loadAppointmentSlots = (
         onError && onError(err);
         onLoadedCb && onLoadedCb(true)
         dispatch(setSlotsServiceTypeOptionId(null))
+        dispatch(setSlotsTransportationId(null))
         dispatch(setSlotsSearchDate(null))
         dispatch(setSlotPodId(null))
         return dispatch(getAppointmentSlots([]));

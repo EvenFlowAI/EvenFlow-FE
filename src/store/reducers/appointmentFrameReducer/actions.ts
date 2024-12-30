@@ -71,7 +71,7 @@ import {
     setAppointmentWasChanged,
     setCustomerLoadedData,
     setSlotsSearchDate,
-    setSlotsServiceTypeOptionId,
+    setSlotsServiceTypeOptionId, setSlotsTransportationId,
     setWaitListSettings
 } from "../appointment/actions";
 import {IHOODataForm} from "../serviceCenters/types";
@@ -448,6 +448,7 @@ export const clearAppointmentData = (keepCategories?: boolean): AppThunk => (dis
     dispatch(getServiceValetSlots([]));
     dispatch(setSlotsSearchDate(null));
     dispatch(setSlotsServiceTypeOptionId(null));
+    dispatch(setSlotsTransportationId(null));
     dispatch(setPassedScreens([]));
 }
 
