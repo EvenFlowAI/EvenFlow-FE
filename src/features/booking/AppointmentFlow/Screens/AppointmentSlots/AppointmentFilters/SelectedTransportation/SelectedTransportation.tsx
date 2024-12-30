@@ -22,7 +22,12 @@ type TProps = {
 }
 
 const SelectedTransportation: React.FC<TProps> = ({isVisible, setSelectedOption, onChangeServiceOption, onSwitchFlowOpen}) => {
-    const { transportation, transportations, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+    const {
+        transportation,
+        transportations,
+        isTransportationsLoading,
+        serviceTypeOption,
+    } = useSelector((state: RootState) => state.appointmentFrame);
    const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const {isAppointmentSlotsLoading} = useSelector((state: RootState) => state.appointment);
@@ -55,6 +60,7 @@ const SelectedTransportation: React.FC<TProps> = ({isVisible, setSelectedOption,
             switchToServiceValet()
         } else {
             dispatch(setTransportation(selected ?? null))
+
         }
     }
 

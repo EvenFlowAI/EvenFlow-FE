@@ -218,6 +218,7 @@ export type TAppointmentState = {
     isAppointmentSlotsLoading: boolean;
     isTopAligning: boolean;
     slotsServiceTypeOptionId: number|null;
+    slotsTransportationId: number|null;
     slotsSearchedDate: ParsableDate;
 };
 
