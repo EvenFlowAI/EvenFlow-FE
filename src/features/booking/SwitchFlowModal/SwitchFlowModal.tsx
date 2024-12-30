@@ -100,13 +100,22 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
     }, [isDateSelectionOn])
 
     useEffect(() => {
-        if (!zip && zipCodeValue) {
-            setZip(zipCodeValue)
+        if (open) {
+            if (!zip && zipCodeValue) {
+                setZip(zipCodeValue)
+            }
+            if (!userAddress && address) {
+                setUserAddress(address)
+            }
+            if (zipCodeValue?.length === 5 && address) {
+                loadAncillaryPrice(zipCodeValue, address)
+            }
         }
-        if (!userAddress && address) {
-            setUserAddress(address)
+        return () => {
+            setZip(null)
+            setUserAddress(null)
         }
-    }, [open])
+    }, [open, zipCodeValue, address])
 
     const clearData = () => {
         setConsultant(null)
