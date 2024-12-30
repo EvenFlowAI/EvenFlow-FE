@@ -18,7 +18,7 @@ import {EAppointmentTimingType} from "../../../store/reducers/appointment/types"
 import UserLocation from "../../../components/UserLocation/UserLocation";
 import {IServiceConsultant, ITransportation} from "../../../api/types";
 import Timing from "./Timing/Timing";
-import {TParsableDate} from "../../../types/types";
+import {TCallback, TParsableDate} from "../../../types/types";
 import Calendar from "./Calendar/Calendar";
 import {
     loadAncillaryPriceByZip,
@@ -41,10 +41,11 @@ import UnavailableServiceModal from "./UnavailableServiceModal/UnavailableServic
 import {selectAppointment, selectServiceValetAppointment} from "../../../store/reducers/appointment/actions";
 
 type TProps = DialogProps & {
-    selectedOption: IFirstScreenOption|null
+    selectedOption: IFirstScreenOption|null;
+    onNext?: TCallback;
 }
 
-const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
+const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNext}) => {
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
     const {address, zipCode: zipCodeValue} = useSelector((state: RootState) => state.appointmentFrame)
     const {scProfile} = useSelector((state: RootState) => state.appointment)
@@ -156,6 +157,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
         }))
         clearPrevAppointments();
         handleClose();
+        onNext && onNext();
     }
 
     const onClickNext = () => {
@@ -186,10 +188,6 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
                 dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onUnavailableServiceOpen))
             }
         }
-    }
-
-    const onBackFromAncillaryPrice = () => {
-        onCancel()
     }
 
     const onAncillaryPriceAccepted = () => {
@@ -293,12 +291,12 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption}) => {
                 open={isAncillaryPriceOpen}
                 onClose={onAncillaryPriceClose}
                 serviceString={t("Pick Up / Drop Off")}
-                onBack={onBackFromAncillaryPrice}/>
+                onBack={onCancel}/>
             <UnavailableServiceModal
                 onTryAnotherLocation={onTryAnotherLocation}
                 open={isUnavailableServiceOpen}
                 onClose={onUnavailableServiceClose}
-                onVisitCenter={onBackFromAncillaryPrice}
+                onVisitCenter={onCancel}
                 serviceString={t("Pick Up / Drop Off")}
             />
         </BaseModal>

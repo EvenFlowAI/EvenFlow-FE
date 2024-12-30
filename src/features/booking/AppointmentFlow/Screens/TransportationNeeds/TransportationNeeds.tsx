@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StepWrapper} from "../../../../../components/styled/StepWrapper";
 import {ActionButtons} from '../../../ActionButtons/ActionButtons';
 import {decodeSCID} from "../../../../../utils/utils";
@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {ITransportation} from '../../../../../api/types';
 import {
-    loadActiveTransportations, setSideBarSteps,
+    loadActiveTransportations, setCurrentFrameScreen, setSideBarSteps,
     setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -20,8 +20,10 @@ import {CardsWrapper} from "../../../../../components/wrappers/CardsWrapper/Card
 import {TransportationOptionCard} from "./TransportationCard/TransportationOptionCard";
 import {ETransportationType} from "../../../../../store/reducers/transportationNeeds/types";
 import {EServiceType} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {useServiceOption} from "../../../../../hooks/useServiceOption/useServiceOption";
 import {selectAppointment} from "../../../../../store/reducers/appointment/actions";
+import SwitchFlowModal from "../../../SwitchFlowModal/SwitchFlowModal";
+import {IFirstScreenOption} from "../../../../../store/reducers/serviceTypes/types";
+import {useModal} from "../../../../../hooks/useModal/useModal";
 
 export type TProps = TActionProps & {
     handleConsentsAccepted: TCallback;
@@ -37,11 +39,11 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         sideBarSteps
     } = useSelector(({appointmentFrame}: RootState) => appointmentFrame)
     const {firstScreenOptions} = useSelector(({serviceTypes}: RootState) => serviceTypes)
+    const [selectedOption, setSelectedOption] = useState<IFirstScreenOption|null>(null);
     const {id} = useParams<{id: string}>();
     const {t} = useTranslation();
     const dispatch = useDispatch();
-
-    const handleServiceOptionChange = useServiceOption("transportation")
+    const {isOpen: isSwitchFlowOpen, onClose: onSwitchFlowClose, onOpen: onSwitchFlowOpen} = useModal();
 
     useEffect(() => {
         dispatch(loadActiveTransportations(decodeSCID(id)))
@@ -70,7 +72,8 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
         if (serviceValetOption) {
             dispatch(selectAppointment(null));
-            handleServiceOptionChange(serviceValetOption)
+            setSelectedOption(serviceValetOption)
+            onSwitchFlowOpen()
         }
     }
 
@@ -86,6 +89,10 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
     const handleSelectOption = (o: ITransportation|null) => {
         dispatch(setTransportation(o));
         handleNext(o)
+    }
+
+    const onNextFromSwitchFlow = () => {
+        dispatch(setCurrentFrameScreen("appointmentSelection"))
     }
 
     return <StepWrapper>
@@ -114,5 +121,10 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
             nextDisabled={isTransportationsLoading || isConsentsLoading}
         />
         <CustomerConsents onNext={handleConsentsAccepted}/>
+        <SwitchFlowModal
+            open={isSwitchFlowOpen}
+            onClose={onSwitchFlowClose}
+            selectedOption={selectedOption}
+            onNext={onNextFromSwitchFlow}/>
     </StepWrapper>
 }
