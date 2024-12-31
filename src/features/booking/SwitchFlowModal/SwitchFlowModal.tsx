@@ -79,7 +79,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             if (!someFilterIsAvailable) {
                 dispatch(setServiceTypeOption(selectedOption))
             }
-            setAddressValid(selectedOption?.type !== EServiceType.PickUpDropOff)
+            setAddressValid(selectedOption.type !== EServiceType.PickUpDropOff)
         }
     }, [isAddressVisible, isDateSelectionOn, isTransportationsVisible, isAdvisorVisible, selectedOption, open])
 
@@ -91,7 +91,6 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
 
     useEffect(() => {
         setAdvisorVisible(!!newConfig?.advisorSelection)
-
     }, [newConfig])
 
     useEffect(() => {
@@ -166,7 +165,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
             timing: timingType,
             transportation: selectedOption?.transportationOption ?? transportationOption,
-            zip: zip ?? '',
+            zip: zip ? zip.substring(0, 5) : '',
             serviceTypeOption: selectedOption,
         }))
         clearPrevAppointments();
@@ -239,6 +238,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
                                         zip={zip}
                                         setZip={setZip}
                                         userAddress={userAddress}
+                                        disabled={isAncillaryPriceOpen}
                                         setUserAddress={setUserAddress}/>
                                 </Grid>
                             </>
