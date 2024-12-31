@@ -55,7 +55,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
     const [userAddress, setUserAddress] = useState<any>(null);
     const [selectedTime, setSelectedTime] = useState<TParsableDate>(null);
     const [isCalendarOpen, setCalendarOpen] = useState<boolean>(false);
-    const [isAddressValid, setAddressValid] = useState<boolean>(selectedOption?.type !== EServiceType.PickUpDropOff)
+    const [isAddressValid, setAddressValid] = useState<boolean>(false);
     const [isAdvisorVisible, setAdvisorVisible] = useState<boolean>(false);
 
     const {t} = useTranslation();
@@ -79,6 +79,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             if (!someFilterIsAvailable) {
                 dispatch(setServiceTypeOption(selectedOption))
             }
+            setAddressValid(selectedOption?.type !== EServiceType.PickUpDropOff)
         }
     }, [isAddressVisible, isDateSelectionOn, isTransportationsVisible, isAdvisorVisible, selectedOption, open])
 
@@ -90,6 +91,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
 
     useEffect(() => {
         setAdvisorVisible(!!newConfig?.advisorSelection)
+
     }, [newConfig])
 
     useEffect(() => {
@@ -112,6 +114,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             }
         }
         return () => {
+            setAddressValid(false)
             setZip(null)
             setUserAddress(null)
         }
@@ -124,6 +127,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
         setZip(null)
         dispatch(setFilteredZipCodes([]));
         setCalendarOpen(false);
+        setAddressValid(selectedOption?.type !== EServiceType.PickUpDropOff);
     }
 
     const clearDate = () => {
@@ -161,7 +165,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             advisor: consultant,
             date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
             timing: timingType,
-            transportation: transportationOption,
+            transportation: selectedOption?.transportationOption ?? transportationOption,
             zip: zip ?? '',
             serviceTypeOption: selectedOption,
         }))
@@ -186,6 +190,11 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
         }
     }
 
+    const onServiceIsUnavailable = () => {
+        setAddressValid(false)
+        onUnavailableServiceOpen()
+    }
+
     const loadAncillaryPrice = (zipCode: string|null, address: any) => {
         if (scProfile) {
             if (address && zipCode?.length === 5 && selectedOption?.type === EServiceType.PickUpDropOff) {
@@ -195,7 +204,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
                     serviceCenterId: scProfile.id,
                     serviceTypeOptionId: selectedOption.id,
                 }
-                dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onUnavailableServiceOpen))
+                dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onServiceIsUnavailable))
             }
         }
     }

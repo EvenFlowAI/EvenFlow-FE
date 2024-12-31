@@ -21,7 +21,7 @@ const Transportation: React.FC<TProps> = ({
                                               setSelectedTransportation,
                                               isTransportationAvailable,
                                           }) => {
-    const { transportation, isTransportationsLoading } = useSelector((state: RootState) => state.appointmentFrame);
+    const { transportation, isTransportationsLoading, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
     const [transportationsList, setTransportationsList] = useState<ITransportation[]>([])
     const [isLoading, setLoading] = useState<boolean>(false);
     const {t} = useTranslation();
@@ -38,13 +38,13 @@ const Transportation: React.FC<TProps> = ({
                     const list = data.filter(el => el.type !== ETransportationType.PickUpDelivery)
                     setTransportationsList(list);
                     const currentTransportation = list.find(el => el.id === transportation?.id);
-                    if (currentTransportation) setSelectedTransportation(currentTransportation)
+                    if (currentTransportation && !serviceTypeOption?.transportationOption) setSelectedTransportation(currentTransportation)
                 })
                 .finally(() => {
                     setLoading(false)
                 })
         }
-    }, [requestData, transportation])
+    }, [requestData, transportation, serviceTypeOption])
 
     const handleChange = (e: SelectChangeEvent<unknown>) => {
         const selected = transportationsList.find(item => item.id === e.target.value);
