@@ -32,7 +32,7 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     const [avatar, setAvatar] = useState<File | undefined>();
     const [employeeForm, setEmployeeForm] = useState<TEmployeeForm>(initialEmployeeForm);
-    console.log(employeeForm);
+
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const {selectedSC} = useSCs();
