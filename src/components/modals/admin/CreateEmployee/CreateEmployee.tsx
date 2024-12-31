@@ -32,6 +32,7 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
 
     const [avatar, setAvatar] = useState<File | undefined>();
     const [employeeForm, setEmployeeForm] = useState<TEmployeeForm>(initialEmployeeForm);
+    console.log(employeeForm);
     const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
     const {selectedSC} = useSCs();
@@ -73,6 +74,7 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                     technicianLevel: payload.employeeInfo?.skillLevel as TTechnicianLevel || 1 as TTechnicianLevel
                 }
             } else {
+                data.type = payload.type
                 data.displayOnBookingTypes = payload.displayOnBookingTypes
             }
             setEmployeeForm(data)
@@ -141,7 +143,8 @@ export const CreateEmployee: React.FC<React.PropsWithChildren<React.PropsWithChi
                         overtimeRate: employeeForm.overtimeRate || 0,
                         skillLevel: employeeForm.technicianLevel
                     },
-                    type: employeeForm.type
+                    type: employeeForm.type,
+                    displayOnBookingTypes: employeeForm.displayOnBookingTypes
                 } as IEmployeeForm;
             }
             try {

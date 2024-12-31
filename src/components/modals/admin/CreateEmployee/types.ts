@@ -10,11 +10,13 @@ export type TConsultantOption = {
 }
 
 export enum EDisplayOnBookingType {
-    SelfService, Employee
+    SelfService,
+    Employee
 }
 
 export enum EEmployeeType {
-    Individual, Team
+    Individual,
+    Team
 }
 
 export type TEmployeeForm = {

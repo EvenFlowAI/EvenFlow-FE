@@ -47,8 +47,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
         [dmsAdvisors, form.role])
     const dmsAdvisor = useMemo(() => form?.dmsId && dmsAdvisors.length ? dmsAdvisors.find(item => item.dmsId === form.dmsId) : null,
         [form?.dmsId, dmsAdvisors])
-    const employeeTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))), []);
-
+        const employeeTypeOptions: TOption[] = useMemo(() => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))), []);
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}})  => {
         setFormIsChecked(false);
         if (name === "phoneNumber") {
@@ -117,9 +116,12 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
         }
     }
 
-    const handleTypeChange = (e: React.ChangeEvent<{}>, value: TOption | null) => {
+    const handleTypeChange = (
+        e: React.SyntheticEvent<Element, Event>,
+        value: TOption | null,
+    ) => {
         setFormIsChecked(false);
-        setEmployeeForm(prev => ({...prev, type: value?.value ?? null}))
+        setEmployeeForm(prev => ({...prev, type: value?.value as EEmployeeType ?? null}));
     }
 
     return (
@@ -287,7 +289,8 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                         />
                     </Grid>
                 </>
-                : <>
+                : null} 
+                {form.role === Roles.Advisor ?<>
                 <Grid item xs={12} sm={6} container>
                     <Grid item xs={12}>
                         <div className={classes.switchersTitle}>Display On Booking Flow</div>
@@ -322,9 +325,7 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                             label={<span>Employee</span>}/>
                     </Grid>
                 </Grid>
-                </>
-            }
-            <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={6}>
                 <Autocomplete
                     options={employeeTypeOptions}
                     isOptionEqualToValue={(option, value) => option.value === value.value}
@@ -335,6 +336,9 @@ export const CreateEmployeeForm: React.FC<React.PropsWithChildren<React.PropsWit
                     renderInput={autocompleteRender({label: "Type", fullWidth: true, placeholder: "Select Type"})}
                 />
             </Grid>
+                </> : null}
+            
+
         </Grid>
     );
 }
