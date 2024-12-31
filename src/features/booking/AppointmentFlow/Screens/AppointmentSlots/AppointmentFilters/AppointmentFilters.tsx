@@ -86,7 +86,11 @@ const AppointmentFilters: React.FC<TProps> = ({isSm, onChangeServiceOption, isSe
                 onSwitchFlowOpen={onSwitchFlowOpen}
                 setSelectedOption={setSelectedOption}
                 onChangeServiceOption={onChangeServiceOptionInPopup}/>
-            <SwitchFlowModal open={isSwitchFlowOpen} onClose={onSwitchFlowClose} selectedOption={selectedOption}/>
+            <SwitchFlowModal
+                open={isSwitchFlowOpen}
+                onClose={onSwitchFlowClose}
+                selectedOption={selectedOption}
+                onNext={onServiceOptionClose}/>
         </Wrapper>
     ) : null;
 };
