@@ -91,6 +91,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
 
     useEffect(() => {
         setAdvisorVisible(!!newConfig?.advisorSelection)
+
     }, [newConfig])
 
     useEffect(() => {

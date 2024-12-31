@@ -118,6 +118,7 @@ const UserLocation: React.FC<TProps> = ({
                         isClearable: true,
                         isSearchable: true,
                         key: userAddress?.label || 'label',
+                        disabled,
                     }}
                 />
             </div>
