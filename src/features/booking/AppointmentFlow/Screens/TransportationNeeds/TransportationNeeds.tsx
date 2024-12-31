@@ -68,12 +68,20 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         }, trackerData.ids)
     }
 
+    const clearSteps = () => {
+        const index = sideBarSteps.indexOf("transportationNeeds")
+        if (index > -1 && sideBarSteps.length > index + 1) {
+            dispatch(setSideBarSteps(sideBarSteps.slice(0, index + 1)))
+        }
+    }
+
     const switchToServiceValet = () => {
         const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
         if (serviceValetOption) {
             dispatch(selectAppointment(null));
             setSelectedOption(serviceValetOption)
             onSwitchFlowOpen()
+            clearSteps()
         }
     }
 
