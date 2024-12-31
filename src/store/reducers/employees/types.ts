@@ -5,6 +5,7 @@ import {TChangePageDataGeneric, TChangePagingGeneric} from "../types";
 import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
 import {EDayOfWeek} from "../offers/types";
 import {TServiceConsultant} from "../appointments/types";
+import {EDisplayOnBookingType, EEmployeeType} from "../../../components/modals/admin/CreateEmployee/types";
 
 export interface IEmployeeInfo {
     hourlyRate: number;
@@ -30,9 +31,10 @@ export interface IEmployee {
     phoneNumber: string;
     avatarPath?: string;
     position?: string;
-    showOnBooking?: boolean;
     dmsId?: string | number;
     emailConfirmed: boolean;
+    displayOnBookingTypes?: EDisplayOnBookingType[];
+    type?: EEmployeeType;
 }
 
 export interface IEmployeeFilters {

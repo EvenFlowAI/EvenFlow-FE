@@ -22,9 +22,10 @@ import {useMessage} from "../../../../hooks/useMessage/useMessage";
 import {useException} from "../../../../hooks/useException/useException";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
-import {getServiceCentersNames} from "./utils";
 import {useModal} from "../../../../hooks/useModal/useModal";
 import ResendEmailModal from "../ResendEmailModal/ResendEmailModal";
+import {EEmployeeType} from "../../../../components/modals/admin/CreateEmployee/types";
+import {getDisplayData} from "./utils";
 
 // todo uncomment multiple centers fucntionality
 // todo add multiple centers field to all requests
@@ -43,8 +44,17 @@ const AdminRowData: TableRowDataType<IEmployee>[] = [
     //     header: "Service Centers",
     //     width: 170},
     {val: el => el.role === Roles.Technician ? `${el.role} (${el.employeeInfo?.skillLevel || 1})` : el.role, header: "Role", orderId: "role"},
+    {
+        val: el => el.type === EEmployeeType.Individual
+            ? 'Individual'
+            : el.type === EEmployeeType.Team
+                ? "Team"
+                : '',
+        header: "Type"
+    },
     {val: el => el.email, header: "Email Address", width: 170},
-    {val: el => el.dmsId ? el.dmsId.toString() : '-' , header: "Employee ID"}
+    {val: el => el.dmsId ? el.dmsId.toString() : '-' , header: "Employee ID"},
+    {header: "Booking Display", val: el => getDisplayData(el)}
 ];
 
 type TProps = {
