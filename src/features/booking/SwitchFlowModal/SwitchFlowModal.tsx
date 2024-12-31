@@ -45,7 +45,7 @@ type TProps = DialogProps & {
 
 const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNext}) => {
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig)
-    const {address, zipCode: zipCodeValue} = useSelector((state: RootState) => state.appointmentFrame)
+    const {address, zipCode: zipCodeValue, ancillaryPriceLoading} = useSelector((state: RootState) => state.appointmentFrame)
     const {scProfile} = useSelector((state: RootState) => state.appointment)
 
     const [consultant, setConsultant] = useState<IServiceConsultant|null>(null)
@@ -79,7 +79,6 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
             if (!someFilterIsAvailable) {
                 dispatch(setServiceTypeOption(selectedOption))
             }
-            setAddressValid(selectedOption?.type !== EServiceType.PickUpDropOff)
         }
     }, [isAddressVisible, isDateSelectionOn, isTransportationsVisible, isAdvisorVisible, selectedOption, open])
 
@@ -90,8 +89,13 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
     }, [open])
 
     useEffect(() => {
-        setAdvisorVisible(!!newConfig?.advisorSelection)
+        if (open && selectedOption) {
+            setAddressValid(selectedOption.type !== EServiceType.PickUpDropOff || (userAddress && zip?.length === 5))
+        }
+    }, [open, selectedOption, userAddress, zip])
 
+    useEffect(() => {
+        setAdvisorVisible(!!newConfig?.advisorSelection)
     }, [newConfig])
 
     useEffect(() => {
@@ -239,6 +243,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
                                         zip={zip}
                                         setZip={setZip}
                                         userAddress={userAddress}
+                                        disabled={ancillaryPriceLoading || isAncillaryPriceOpen}
                                         setUserAddress={setUserAddress}/>
                                 </Grid>
                             </>

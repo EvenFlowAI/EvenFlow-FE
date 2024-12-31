@@ -14,6 +14,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/rootReducer";
 import {useTranslation} from "react-i18next";
 import {useLocationStyles} from "../../hooks/styling/useLocationStyles";
+import {useException} from "../../hooks/useException/useException";
 
 type TProps = {
     zip: string|null;
@@ -21,6 +22,7 @@ type TProps = {
     userAddress: any;
     setUserAddress: Dispatch<SetStateAction<any>>;
     loadAncillaryPrice: (zip: string|null, address: any) => void;
+    disabled: boolean;
 }
 
 const UserLocation: React.FC<TProps> = ({
@@ -28,7 +30,8 @@ const UserLocation: React.FC<TProps> = ({
                                             setZip,
                                             userAddress,
                                             setUserAddress,
-                                            loadAncillaryPrice
+                                            loadAncillaryPrice,
+                                            disabled
                                         }) => {
     const {
         serviceTypeOption,
@@ -43,6 +46,7 @@ const UserLocation: React.FC<TProps> = ({
     const error = isFormChecked && !zip;
     const {classes} = useLocationStyles();
     const { classes: autocompleteClasses } = useAutocompleteStyles({"error": error});
+    const showError = useException();
 
     const placeholderLabel = useMemo(() => {
         if (typeof userAddress === 'string' && userAddress.length) return address;
@@ -65,7 +69,11 @@ const UserLocation: React.FC<TProps> = ({
                 setFormChecked(false);
                 setZip(value);
                 dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
-                loadAncillaryPrice(value, userAddress);
+                if (value.length > 6) {
+                    showError("ZIP should include 5 digits")
+                } else {
+                    loadAncillaryPrice(value, userAddress);
+                }
             }
         }
     }
@@ -108,6 +116,7 @@ const UserLocation: React.FC<TProps> = ({
                         isClearable: true,
                         isSearchable: true,
                         key: userAddress?.label || 'label',
+                        disabled,
                     }}
                 />
             </div>
@@ -122,6 +131,7 @@ const UserLocation: React.FC<TProps> = ({
                 classes={autocompleteClasses}
                 autoComplete={true}
                 onInputChange={onInputChange}
+                disabled={disabled}
                 popupIcon={<KeyboardArrowDown htmlColor="#CCCCCC" />}
                 renderInput={autocompleteRender({
                     label: t('Your ZIP'),
