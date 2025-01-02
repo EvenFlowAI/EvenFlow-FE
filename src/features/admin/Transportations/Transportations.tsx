@@ -25,12 +25,15 @@ import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleC
 import {loadFirstScreenOptionsList} from "../../../store/reducers/serviceTypes/actions";
 import {loadBookingFlowConfig} from "../../../store/reducers/bookingFlowConfig/actions";
 import {EServiceType} from "../../../store/reducers/appointmentFrameReducer/types";
+import { useHistory } from 'react-router-dom';
+import { Routes } from '../../../routes/constants';
+import {QueryTypes, ServiceValetRoutes} from '../../../routes/types';
 
 export const Transportations = () => {
+    const {push} = useHistory();
     const { options, isLoading } = useSelector((state: RootState) => state.transportation);
     const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
     const {config} = useSelector((state: RootState) => state.bookingFlowConfig);
-    const [initialOptions, setInitialOptions] = useState<ITransportationOptionFull[]>([]);
     const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
     const [anchorEl, setAnchorEl] = useState<EventTarget&HTMLButtonElement|null>(null);
     const {selectedSC} = useSCs();
@@ -46,10 +49,6 @@ export const Transportations = () => {
             dispatch(loadBookingFlowConfig(selectedSC.id))
         }
     }, [selectedSC])
-
-    useEffect(() => {
-        setInitialOptions(options)
-    }, [options])
 
     const closeMenu = () => {
         setEditingElement(null);
@@ -96,28 +95,38 @@ export const Transportations = () => {
         onOptionOpen();
     }
 
+    const handleServiceValetRedirection = () => {
+        push(`${Routes.Services.ServiceValet}?${QueryTypes.selectedTab}=${ServiceValetRoutes.CenterSettings}`);
+    }
+
     return (
         <>
             <TitleContainer title="Other Transportation" pad parent={servicesRoot}/>
             <div style={{padding: 16, width: "100%"}}>
                 <NoItemsLoading items={options} loading={isLoading} />
-                {initialOptions.length ? <TableWrapper>
+                {options.length ? <TableWrapper>
                     <DemandTable>
                         <TableHead>
                             <TableRow>
                                 <HeaderCell
                                     key="1"
                                     style={{textTransform: 'capitalize'}}
-                                    align="left">
-                                    Service Needs
+                                    align="left"
+                                    width={200}
+                                    >
+                                        
+                                    Transportation Option
                                 </HeaderCell>
-                                <HeaderCell key="3" align="left" style={{textTransform: 'capitalize'}}>
+                                <HeaderCell width={200} key="3" align="left" style={{textTransform: 'capitalize'}}>
                                     Description
                                 </HeaderCell>
-                                <HeaderCell key="2" align="left" style={{textTransform: 'capitalize'}}>
+                                <HeaderCell width={150} key="2" align="left" style={{textTransform: 'capitalize'}}>
                                     Order Index
                                 </HeaderCell>
-                                <HeaderCell key="4" align="left" style={{textTransform: 'capitalize'}}>
+                                <HeaderCell width={150} key="6" align="left" style={{textTransform: 'capitalize'}}>
+                                    OP Code
+                                </HeaderCell>
+                                <HeaderCell width={150} key="4" align="left" style={{textTransform: 'capitalize'}}>
                                     Manage
                                 </HeaderCell>
                                 <HeaderCell key="5" align="left" width={150} style={{textTransform: 'capitalize'}}>
@@ -126,7 +135,7 @@ export const Transportations = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {initialOptions.map(el => {
+                            {options.map(el => {
                                 return <TableRow key={el.type}>
                                     <TableCell key="1" align="left">{getTransportationOptionString(el.type.toString())}</TableCell>
                                     <TableCell key="3" align="left">
@@ -135,11 +144,15 @@ export const Transportations = () => {
                                     <TableCell key="2" align="left">
                                         {el.orderIndex}
                                     </TableCell>
+                                    <TableCell onClick={() => handleServiceValetRedirection()} key="6" align="left">
+                                        OP text
+                                    </TableCell>
                                     <TableCell key="4" align="left">
                                         <IconButton size="small" onClick={openMenu(el)} >
                                             <MoreHoriz />
                                         </IconButton>
                                     </TableCell>
+                                   
                                     <TableCell key="5" align="left">
                                         <Switch
                                             disabled={isLoading}

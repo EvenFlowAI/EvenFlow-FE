@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Tab} from "@mui/material";
 import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
 import {TabContext, TabPanel} from "@mui/lab";
@@ -12,31 +12,36 @@ import {useModal} from "../../../hooks/useModal/useModal";
 import CenterSettings from "../../../features/admin/CenterSettings/CenterSettings";
 import ZoneRouting from "../../../features/admin/ZoneRouting/ZoneRouting";
 import TimeRangesAndCapacity from "../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity";
+import {ServiceValetRoutes, QueryTypes} from '../../../routes/types';
+import {useQueryParams} from '../../../hooks/useQueryParams/useQueryParams';
 
 type TTab = {
-    id: string;
+    route: ServiceValetRoutes;
     label: string;
     component: JSX.Element
 }
 
+
+
 const ServiceValet = () => {
-    const [selectedTab, selectTab] = useState<string>("0");
+    const {setQuery, getQuery} = useQueryParams();
+    const currentTab = getQuery(QueryTypes.selectedTab) ?? ServiceValetRoutes.GeographicZones;
     const {onOpen: onAddZoneOpen, onClose: onAddZoneClose, isOpen: isAddZoneOpen} = useModal();
 
     const tabs: TTab[] = [
-        {id: "0", label: "Geographic Zones", component: <GeographicZones onAddZoneOpen={onAddZoneOpen}/>},
-        {id: "1", label: "Geographic Zones Map", component: <GeographicZonesMap />},
-        {id: "2", label: "Center Settings", component: <CenterSettings />},
-        {id: "3", label: "Zone Routing", component: <ZoneRouting />},
-        {id: "4", label: "Time Ranges & Capacity", component: <TimeRangesAndCapacity />},
-        {id: "5", label: "Convenience Fees", component: <AncillaryPrice />},
+        {route: ServiceValetRoutes.GeographicZones, label: "Geographic Zones", component: <GeographicZones onAddZoneOpen={onAddZoneOpen}/>},
+        {route: ServiceValetRoutes.GeographicZonesMap, label: "Geographic Zones Map", component: <GeographicZonesMap />},
+        {route: ServiceValetRoutes.CenterSettings, label: "Center Settings", component: <CenterSettings />},
+        {route: ServiceValetRoutes.ZoneRouting, label: "Zone Routing", component: <ZoneRouting />},
+        {route: ServiceValetRoutes.TimeRangesCapacity, label: "Time Ranges & Capacity", component: <TimeRangesAndCapacity />},
+        {route: ServiceValetRoutes.ConvinienceFees, label: "Convenience Fees", component: <AncillaryPrice />},
     ]
 
     const handleTabChange = (e: any, value: string) => {
-        selectTab(value);
+        setQuery(QueryTypes.selectedTab, value);
     }
 
-    return <TabContext value={selectedTab}>
+    return <TabContext value={currentTab}>
             <TitleContainer title="Service Valet" pad parent={servicesRoot}/>
             <TabList
                 variant="scrollable"
@@ -45,14 +50,14 @@ const ServiceValet = () => {
                 indicatorColor="primary"
             >
                 {tabs.map(t => {
-                    return <Tab label={t.label} value={t.id} key={t.id} />;
+                    return <Tab label={t.label} value={t.route} key={t.route} />;
                 })}
             </TabList>
             {tabs.map(t => {
                 return <TabPanel
                     style={{width: "100%"}}
-                    key={t.id}
-                    value={t.id}>
+                    key={t.route}
+                    value={t.route}>
                     {t.component}
                 </TabPanel>
             })}

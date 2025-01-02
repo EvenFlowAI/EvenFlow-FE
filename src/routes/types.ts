@@ -107,10 +107,23 @@ export enum ServicesRoutes {
     OtherTransportation = "/admin/services/other-transportation",
 }
 
+export enum ServiceValetRoutes {
+    GeographicZones = 'geographiczones',
+    GeographicZonesMap = 'geographiczonesmap',
+    CenterSettings = 'centersettings',
+    ZoneRouting = 'zonerouting',
+    TimeRangesCapacity = 'timerangescapacity',
+    ConvinienceFees = 'conviniencefees'
+}
+
 export enum CenterProfileRoutes {
     Base = "/admin/center-profile",
     ServiceCenters = "/admin/center-profile/service-centers",
     FacilitySetUp = "/admin/center-profile/facility-set-up",
     Vehicles = "/admin/center-profile/vehicles",
     Integrations = "/admin/center-profile/integrations",
+}
+
+export enum QueryTypes {
+    selectedTab = 'selectedTab'
 }

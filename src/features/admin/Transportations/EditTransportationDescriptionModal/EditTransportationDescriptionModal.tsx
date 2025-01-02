@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
 import {DialogProps} from "../../../../components/modals/BaseModal/types";
 import {
@@ -17,8 +17,15 @@ import {FileInput} from "../../../../components/formControls/FileInput/FileInput
 import {IIconState} from "../../ServiceCategories/AddServiceCategoryModal/types";
 import {useSCs} from "../../../../hooks/useSCs/useSCs";
 import {useMessage} from "../../../../hooks/useMessage/useMessage";
+import {Autocomplete} from '@mui/material';
+import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
+import {CheckBoxOutlineBlank, CheckBoxOutlined} from "@mui/icons-material";
+import {useAutocompleteStyles} from '../../../../hooks/styling/useAutocompleteStyles';
+import {autocompleteRender} from "../../../../utils/autocompleteRenders";
 
 const initialFileState = {file: null, dataUrl: undefined};
+
+type Option = { id: number; name: string };
 
 export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {editingElement: ITransportationOptionFull|null}>>> = ({editingElement, ...props}) => {
     const [description, setDescription] = useState<string>('')
@@ -30,6 +37,7 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
     const dispatch = useDispatch();
     const showError = useException();
     const showMessage = useMessage();
+    const { classes: autocompleteClasses  } = useAutocompleteStyles();
 
     useEffect(() => {
         if (editingElement && props.open) {
@@ -102,6 +110,22 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
         saveIcon();
     }
 
+    const renderCodeOption = useCallback((props: any, option: any) => {
+        const checked = false;
+        return <li style={{display: 'flex', alignItems: 'center'}} {...props} key={option.id} >
+            <Checkbox
+                color="primary"
+                icon={checked
+                    ? <CheckBoxOutlined htmlColor="#3855FE"/>
+                    : <CheckBoxOutlineBlank htmlColor="#DADADA"/>}
+                checked={checked}
+            />
+            {option.name}
+        </li>
+    }, []);
+
+    const options = [{id: 123, name: '123'}, {id: 456, name: '456'}]
+
     return (
         <BaseModal {...props} width={600} onClose={onCancel}>
             <DialogTitle onClose={onCancel}>Manage Option</DialogTitle>
@@ -123,13 +147,37 @@ export const EditTransportationDescriptionModal: React.FC<React.PropsWithChildre
                         label={`${fileState.file || editingElement?.iconPath ? 'Update' : 'Upload' } Transportation Icon`}
                     />
                 </div>
-                <TextField
-                    fullWidth
+                <div  className={classes.bottomRowWrapper}>
+                    <div>                
+                        <TextField
+                        fullWidth
                     label='Description'
                     placeholder='Type Description'
                     error={formIsChecked && !description.length}
                     onChange={onDescriptionChange}
                     value={description}/>
+    </div>
+                    <Autocomplete<Option, true>
+                    style={{ marginBottom: 10 }}
+                    disabled={false}
+                    options={options}
+                    isOptionEqualToValue={(o, v) => o.id === v.id}
+                    getOptionLabel={(o) => o.name}
+                    
+                    value={[{id: 123, name: '123'}]}
+                    onChange={() => {}}
+                    renderOption={renderCodeOption}
+                    multiple
+                    disableCloseOnSelect
+                    classes={autocompleteClasses}
+                    renderInput={autocompleteRender({
+                        label: "OP Code",
+                        error: formIsChecked,
+                        placeholder: 'Select OP Code'
+                    })}
+                />
+                </div>
+              
             </DialogContent>
             <DialogActions>
                 <div className={classes.actionsWrapper}>

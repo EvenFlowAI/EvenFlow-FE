@@ -34,5 +34,13 @@ export const useStyles = makeStyles()(() => ({
         "& > div": {
             width: '100%'
         }
+    },
+    bottomRowWrapper: {
+        display: 'flex',
+        justifyContent: "space-between",
+        gap: 20,
+        "& > div": {
+            width: '100%'
+        }
     }
 }));
