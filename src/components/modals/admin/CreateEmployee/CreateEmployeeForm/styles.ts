@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
 export const useMultipleAutocompleteStyles = makeStyles()(() => ({
     tag: {
         display: 'flex',
@@ -24,3 +23,20 @@ export const useMultipleAutocompleteStyles = makeStyles()(() => ({
         paddingRight: 0,
     },
 }));
+
+export const useStyles = makeStyles()(() => ({
+    switchersTitle: {
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        fontSize: 12,
+        marginBottom: 4,
+    },
+    switcher: {
+        marginLeft: 0,
+        '& > span': {
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            fontSize: 13
+        }
+    }
+}))

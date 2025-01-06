@@ -49,6 +49,8 @@ export interface ITransportationOptionFull extends INewTransportationOption {
     orderIndex: number;
     iconPath?: string;
     rules?: ITransportationOptionRule;
+    serviceRequestId?: number
+    opCode?: string;
 }
 
 export enum ECustomerSegment {

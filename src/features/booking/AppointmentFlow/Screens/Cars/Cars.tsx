@@ -29,7 +29,7 @@ import {Loading} from "../../../../../components/wrappers/Loading/Loading";
 import usePopState from "../../../../../hooks/usePopState/usePopState";
 import {useCurrentUser} from "../../../../../hooks/useCurrentUser/useCurrentUser";
 import {BookNewVehicle, NewVehicleCard} from "./CarCard/styles";
-import {ReactComponent as CarIcon} from '../../../../../assets/img/Car_icon.svg';
+import {ReactComponent as CarIcon} from '../../../../../assets/img/caricon.svg';
 
 type TProps = {
     onBack: TCallback;

@@ -1,3 +1,5 @@
+import {EDisplayOnBookingType, EEmployeeType} from "../../../components/modals/admin/CreateEmployee/types";
+
 export interface ICurrentUser {
     id: string;
     fullName: string;
@@ -21,9 +23,11 @@ export interface IUserForm {
     email: string;
     phoneNumber: string;
     role: TRole;
+    displayOnBookingTypes?: EDisplayOnBookingType[];
+    type?: EEmployeeType;
     serviceCenterId?: number;
     dmsId?: string|null;
-    showOnBookingFlow?: boolean;
+    dis?: boolean;
     position?: string;
 }
 export interface IAdvisorShort {
