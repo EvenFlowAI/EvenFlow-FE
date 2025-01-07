@@ -52,6 +52,8 @@ export interface IEmployeeForm {
     phoneNumber?: string;
     employeeInfo?: IEmployeeInfo,
     dmsId: string | null;
+    displayOnBookingTypes?: EDisplayOnBookingType[];
+    type?: EEmployeeType|null;
 }
 
 export type TGetAll = {type: "Employees/GetAll"; payload: IEmployee[]};
