@@ -65,17 +65,21 @@ const UserLocation: React.FC<TProps> = ({
 
     const onInputChange = (e: React.ChangeEvent<{}>, value: string, reason: string) => {
         if (scProfile) {
-            if (value.length && reason === 'input') {
-                setFormChecked(false);
-                if (value.length > 5) {
-                    showError("ZIP should include 5 digits")
-                } else {
-                    setZip(value);
-                    dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
-                    if (value.length === 5) {
-                        loadAncillaryPrice(value, userAddress);
+            if (reason === 'input') {
+                if (value.length) {
+                    setFormChecked(false);
+                    if (value.length > 5) {
+                        showError("ZIP should include 5 digits")
+                    } else {
+                        setZip(value);
+                        dispatch(loadFilteredZip({serviceCenterId: scProfile.id, search: value}))
+                        if (value.length === 5) {
+                            loadAncillaryPrice(value, userAddress);
+                        }
                     }
                 }
+            } else if (reason === "clear") {
+                setZip(null)
             }
         }
     }
@@ -88,7 +92,7 @@ const UserLocation: React.FC<TProps> = ({
 
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
         setFormChecked(false);
-        if (option?.length === 5) {
+        if (option?.length === 5 && e.type !== "blur") {
             loadAncillaryPrice(option, userAddress);
             setZip(option);
         }

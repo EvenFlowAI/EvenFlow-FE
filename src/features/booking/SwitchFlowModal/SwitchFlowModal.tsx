@@ -101,15 +101,20 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
     }, [isDateSelectionOn])
 
     useEffect(() => {
+        const addressIsSelectedByUser = userAddress?.label === address?.label;
+        const zipIsSelectedByUser = zip === zipCodeValue && zipCodeValue?.length === 5;
+        if (open && zipIsSelectedByUser && addressIsSelectedByUser) {
+            loadAncillaryPrice(zipCodeValue, address)
+        }
+    }, [open, zipCodeValue, address, zip, userAddress])
+
+    useEffect(() => {
         if (open) {
             if (!zip && zipCodeValue) {
                 setZip(zipCodeValue)
             }
             if (!userAddress && address) {
                 setUserAddress(address)
-            }
-            if (zipCodeValue?.length === 5 && address) {
-                loadAncillaryPrice(zipCodeValue, address)
             }
         }
         return () => {
