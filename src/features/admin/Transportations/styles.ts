@@ -1,4 +1,9 @@
-import {styled, TableCell} from "@mui/material";
+import { TableCell} from "@mui/material";
+import { styled } from '@mui/system';
+
+interface OpCodeInterface {
+    serviceValet: boolean;
+}
 
 export const TableWrapper = styled("div")(({theme}) => ({
     "& .MuiTableCell-root": {
@@ -18,3 +23,10 @@ export const HeaderCell = styled(TableCell)({
 export const headCellStyles = {
 
 }
+
+export const OpCodeValue = styled('div')<OpCodeInterface>(({serviceValet}) => ({
+    color: serviceValet ? "#7898FF" : "#000000",
+    '&:hover': {
+        cursor: serviceValet ? "pointer" : "default",
+      },
+  }));

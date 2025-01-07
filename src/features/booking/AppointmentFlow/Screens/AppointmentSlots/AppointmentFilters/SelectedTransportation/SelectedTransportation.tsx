@@ -10,7 +10,6 @@ import clsx from "clsx";
 import {useStyles} from "../ServiceOption/styles";
 import {ETransportationType} from "../../../../../../../store/reducers/transportationNeeds/types";
 import {EServiceType} from "../../../../../../../store/reducers/appointmentFrameReducer/types";
-import {selectAppointment} from "../../../../../../../store/reducers/appointment/actions";
 import {IFirstScreenOption} from "../../../../../../../store/reducers/serviceTypes/types";
 import {TCallback} from "../../../../../../../types/types";
 
@@ -47,8 +46,6 @@ const SelectedTransportation: React.FC<TProps> = ({isVisible, setSelectedOption,
     const switchToServiceValet = () => {
         const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
         if (serviceValetOption) {
-            dispatch(selectAppointment(null));
-            // onChangeServiceOption()
             setSelectedOption(serviceValetOption)
             onSwitchFlowOpen()
         }
