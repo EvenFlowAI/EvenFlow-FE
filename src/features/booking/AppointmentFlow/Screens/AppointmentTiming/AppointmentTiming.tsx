@@ -105,7 +105,11 @@ export const AppointmentTiming: React.FC<TProps> = ({handleSetScreen, onBack}) =
                         key={card.name}/>
                 })}
             </TimingWrapper>
-            <ActionButtons onBack={onBack} onNext={onSubmit} nextDisabled={!isTimingValid} nextLabel={t("Next")}/>
+            <ActionButtons
+                onBack={onBack}
+                onNext={onSubmit}
+                nextDisabled={!isTimingValid}
+                nextLabel={t("Next")}/>
         </StepWrapper>
     );
 };

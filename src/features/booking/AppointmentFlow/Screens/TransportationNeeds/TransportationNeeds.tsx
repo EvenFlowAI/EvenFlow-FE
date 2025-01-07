@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../../store/rootReducer";
 import {ITransportation} from '../../../../../api/types';
 import {
-    loadActiveTransportations, setCurrentFrameScreen, setSideBarSteps,
+    loadActiveTransportations, setCurrentFrameScreen, setSideBarSteps, setTiming,
     setTransportation
 } from "../../../../../store/reducers/appointmentFrameReducer/actions";
 import {Loading} from "../../../../../components/wrappers/Loading/Loading";
@@ -57,6 +57,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         const index = sideBarSteps.indexOf("transportationNeeds")
         if (!transportation && index > -1 && sideBarSteps.length > index + 1) {
             dispatch(setSideBarSteps(sideBarSteps.slice(0, index + 1)))
+            dispatch(setTiming(null))
         }
     }, [transportation])
 
@@ -79,6 +80,7 @@ export const TransportationNeeds: React.FC<TProps> = ({onNext, onBack, handleCon
         const serviceValetOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff)
         if (serviceValetOption) {
             dispatch(selectAppointment(null));
+            dispatch(setTransportation(null));
             setSelectedOption(serviceValetOption)
             onSwitchFlowOpen()
             clearSteps()
