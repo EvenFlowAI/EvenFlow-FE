@@ -120,6 +120,7 @@ const UserLocation: React.FC<TProps> = ({
                         isClearable: true,
                         isSearchable: true,
                         key: userAddress?.label || 'label',
+                        menuPosition: "fixed"
                     }}
                 />
             </div>
