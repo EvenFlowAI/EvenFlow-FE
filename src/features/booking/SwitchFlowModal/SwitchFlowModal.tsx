@@ -242,6 +242,7 @@ const SwitchFlowModal: React.FC<TProps> = ({open, onClose, selectedOption, onNex
                                         loadAncillaryPrice={loadAncillaryPrice}
                                         zip={zip}
                                         setZip={setZip}
+                                        setAddressValid={setAddressValid}
                                         userAddress={userAddress}
                                         disabled={isAncillaryPriceOpen}
                                         setUserAddress={setUserAddress}/>
