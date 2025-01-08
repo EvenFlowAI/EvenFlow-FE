@@ -23,6 +23,7 @@ type TProps = {
     setUserAddress: Dispatch<SetStateAction<any>>;
     loadAncillaryPrice: (zip: string|null, address: any) => void;
     disabled: boolean;
+    setAddressValid: Dispatch<SetStateAction<boolean>>;
 }
 
 const UserLocation: React.FC<TProps> = ({
@@ -31,7 +32,8 @@ const UserLocation: React.FC<TProps> = ({
                                             userAddress,
                                             setUserAddress,
                                             loadAncillaryPrice,
-                                            disabled
+                                            disabled,
+                                            setAddressValid,
                                         }) => {
     const {
         serviceTypeOption,
@@ -80,6 +82,7 @@ const UserLocation: React.FC<TProps> = ({
                 }
             } else if (reason === "clear") {
                 setZip(null)
+                setAddressValid(false)
             }
         }
     }
@@ -87,7 +90,11 @@ const UserLocation: React.FC<TProps> = ({
     const handleChangeAddress = async (e: any) => {
         setFormChecked(false);
         setUserAddress(e ?? null)
-        e?.label && loadAncillaryPrice(zip, e?.label);
+        if (e?.label) {
+            loadAncillaryPrice(zip, e?.label);
+        } else {
+            setAddressValid(false)
+        }
     }
 
     const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
