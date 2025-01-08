@@ -125,6 +125,7 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
 
     const {allCategories} = useSelector((state: RootState) => state.categories);
     const {mileage} = useSelector((state: RootState) => state.vehicleDetails);
+    const {firstScreenOptions} = useSelector((state: RootState) => state.serviceTypes);
 
     const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
     const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
@@ -330,7 +331,10 @@ export const AppointmentSlots: React.FC<React.PropsWithChildren<React.PropsWithC
     }
 
     const onLoadSlots = (isEmptyList: boolean) => {
-        if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) {
+        const isPossibleToChangeType = firstScreenOptions
+            .filter(item => item.type !== EServiceType.MobileService)?.length > 1;
+        const isMobileServiceType = serviceTypeOption?.type === EServiceType.MobileService
+        if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
             onServiceOptionOpen()
         }
     }
