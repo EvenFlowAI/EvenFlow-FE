@@ -222,7 +222,7 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
             maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
             serviceRequestIds: currentAppointment.serviceRequests
-                ? currentAppointment.serviceRequests.map(el => el.id)
+                ? currentAppointment.serviceRequests.map(el => ({id: el.id, comment: null}))
                 : [],
             serviceCategoryIds: currentAppointment.serviceCategories
                 ? currentAppointment.serviceCategories.map(el => el.id)

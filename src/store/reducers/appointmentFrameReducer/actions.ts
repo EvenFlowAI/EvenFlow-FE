@@ -190,7 +190,7 @@ export const loadConsultantsForCloning = (serviceCenterId: string, appointment: 
         serviceCenterId: decodeSCID(serviceCenterId),
         pageIndex: 0,
         pageSize: 0,
-        serviceRequestIds: serviceRequests ? serviceRequests.map(el => el.id) : [],
+        serviceRequestIds: serviceRequests ? serviceRequests.map(el => ({id: el.id, comment: null})) : [],
         recalls: mapRecallsForRequest(selectedRecalls),
         serviceCategoryIds: serviceCategories ? serviceCategories.map(el => el.id) : [],
         maintenancePackageOption: maintenancePackageOption,
@@ -245,7 +245,7 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
                 pageSize: 0,
-                serviceRequestIds: serviceRequests.map(item => item.id),
+                serviceRequestIds: serviceRequests.map(item => ({id: item.id, comment: null})),
                 recalls,
                 serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
                 maintenancePackageOption,
@@ -1115,7 +1115,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
         const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
         const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
         const serviceRequestIds = currentAppointment?.serviceRequests
-            ? currentAppointment?.serviceRequests.map(el => el.id)
+            ? currentAppointment?.serviceRequests.map(el => ({id: el.id, comment: null}))
             : [];
         const maintenancePackageOption = currentAppointment.maintenancePackageOption
             ? {id: currentAppointment.maintenancePackageOption.id, priceType: currentAppointment.maintenancePackageOption.priceType ?? null}

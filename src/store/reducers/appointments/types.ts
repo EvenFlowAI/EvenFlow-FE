@@ -5,7 +5,8 @@ import {
     IListAppointment,
     IPackageAppointments,
     IVehicle,
-    TAppointmentAdvisor
+    TAppointmentAdvisor,
+    IServiceRequestIds
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {EAppointmentTimingType, TRecallForRequest} from "../appointment/types";
@@ -38,7 +39,7 @@ type TPackageOptionRequest = {
 }
 
 export interface ICheckPodRequest {
-    serviceRequestIds: number[];
+    serviceRequestIds: IServiceRequestIds[];
     serviceCategoryIds: number[];
     valueServiceOfferIds: number[];
     recalls: TRecallForRequest[];

@@ -1,8 +1,9 @@
 import {IVehicleForSlots, MPOptionShort, TRecallForRequest} from "../../../../../store/reducers/appointment/types";
+import {IServiceRequestIds} from '../../../../../api/types';
 
 export type TTransportationData = {
     serviceCenterId: number;
-    serviceRequestIds: number[];
+    serviceRequestIds: IServiceRequestIds[];
     serviceCategoryIds: number[];
     appointmentHashKey?: string;
     recalls: TRecallForRequest[];

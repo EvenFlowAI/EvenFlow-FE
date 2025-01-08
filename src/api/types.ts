@@ -331,12 +331,17 @@ export interface IServiceConsultant {
     iconPath: string;
 }
 
+export interface IServiceRequestIds {
+    id: number;
+    comment: string | null;
+}
+
 export interface IConsultantsRequestData {
     serviceCenterId: number;
     pageIndex: 0;
     pageSize: 0;
     searchTerm: string;
-    serviceRequestIds: number[];
+    serviceRequestIds: IServiceRequestIds[];
     serviceCategoryIds: number[];
     maintenancePackageOption: MPOptionShort|null;
     recalls: TRecallForRequest[];

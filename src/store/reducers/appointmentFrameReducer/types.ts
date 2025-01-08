@@ -8,7 +8,8 @@ import {
     IPackageOptions,
     IServiceCategory,
     IServiceConsultant,
-    ITransportation
+    ITransportation,
+    IServiceRequestIds
 } from "../../../api/types";
 import {EAppointmentTimingType, EReminderType, IServiceRequestPrice, TRecallForRequest} from "../appointment/types";
 import {IRecallByVin, ParsableDate, TParsableDate, TScreen, TView} from "../../../types/types";
@@ -237,7 +238,7 @@ export interface ICreateAppointmentRequest {
     },
     transportationOptionId: number|null,
     slot: string;
-    serviceRequestIds: number[];
+    serviceRequestIds: IServiceRequestIds[];
     date: ParsableDate;
     serviceCategoryIds: number[];
     maintenancePackageOption: TMaintenanceOption|null;

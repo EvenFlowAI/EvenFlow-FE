@@ -6,7 +6,7 @@ import {
     ICreateAppointmentResp,
     ICustomerLoadedData,
     IOfferForCategory,
-    IServiceCategory, IServiceCategoryShort,
+    IServiceCategory, IServiceCategoryShort,IServiceRequestIds
 } from "../../../api/types";
 import {EPackagePricingType} from "../appointmentFrameReducer/types";
 import {TEmailRequirement} from "../screenSettings/types";
@@ -160,7 +160,7 @@ export interface IAppointmentSlotsRequest {
     serviceCategoryIds?: number[],
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
-    serviceRequestIds: number[];
+    serviceRequestIds: IServiceRequestIds[];
     customerId?: string;
     warrantyExpiration?: ParsableDate;
     advisorId?: string | null;
