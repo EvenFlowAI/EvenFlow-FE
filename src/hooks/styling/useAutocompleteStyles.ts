@@ -14,7 +14,9 @@ export const useAutocompleteStyles = makeStyles()(() => ({
         }
     },
     option: {
-        height: 28,
+        height: 'auto',
+        maxHeight:'none',
+        minHeight: 28,
         display: 'flex',
         alignItems: 'center',
         padding: 0,
