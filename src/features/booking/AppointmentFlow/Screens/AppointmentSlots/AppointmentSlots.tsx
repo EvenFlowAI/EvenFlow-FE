@@ -136,6 +136,9 @@ export const AppointmentSlots: React.FC<
 
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
+  const { firstScreenOptions } = useSelector(
+    (state: RootState) => state.serviceTypes
+  );
 
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf("day"));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
