@@ -3,7 +3,7 @@ import {IServiceRequestIds} from '../../../../../api/types';
 
 export type TTransportationData = {
     serviceCenterId: number;
-    serviceRequestIds: IServiceRequestIds[];
+    serviceRequests: IServiceRequestIds[];
     serviceCategoryIds: number[];
     appointmentHashKey?: string;
     recalls: TRecallForRequest[];

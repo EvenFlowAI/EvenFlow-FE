@@ -238,7 +238,7 @@ export interface ICreateAppointmentRequest {
     },
     transportationOptionId: number|null,
     slot: string;
-    serviceRequestIds: IServiceRequestIds[];
+    serviceRequests: IServiceRequestIds[];
     date: ParsableDate;
     serviceCategoryIds: number[];
     maintenancePackageOption: TMaintenanceOption|null;

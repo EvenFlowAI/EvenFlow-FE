@@ -114,7 +114,7 @@ export const checkPodChanged = (serviceCenterId: number, onError: TArgCallback<a
             : null;
 
     const data: ICheckPodRequest = {
-        serviceRequestIds,
+        serviceRequests:serviceRequestIds,
         serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
         valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
             ? [appointmentFrame?.valueService?.selectedService.id]
@@ -221,7 +221,7 @@ const loadSlotsForCloning = (serviceCenterId: number, onEmptyList: (isEmpty: boo
             advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
             fromDate:dayjs().startOf("day").add(utcOffset, 'minute').toISOString(),
             maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
-            serviceRequestIds: currentAppointment.serviceRequests
+            serviceRequests: currentAppointment.serviceRequests
                 ? currentAppointment.serviceRequests.map(el => ({id: el.id, comment: null}))
                 : [],
             serviceCategoryIds: currentAppointment.serviceCategories

@@ -39,7 +39,7 @@ type TPackageOptionRequest = {
 }
 
 export interface ICheckPodRequest {
-    serviceRequestIds: IServiceRequestIds[];
+    serviceRequests: IServiceRequestIds[];
     serviceCategoryIds: number[];
     valueServiceOfferIds: number[];
     recalls: TRecallForRequest[];

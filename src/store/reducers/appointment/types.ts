@@ -160,7 +160,7 @@ export interface IAppointmentSlotsRequest {
     serviceCategoryIds?: number[],
     onlyOffers?: boolean;
     shorterWaitTime?: boolean;
-    serviceRequestIds: IServiceRequestIds[];
+    serviceRequests: IServiceRequestIds[];
     customerId?: string;
     warrantyExpiration?: ParsableDate;
     advisorId?: string | null;
