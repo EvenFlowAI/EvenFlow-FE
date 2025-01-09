@@ -31,7 +31,7 @@ import {GATrackers, TOption} from "./types";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import {IAdvisorCapacity, ITechnicianCapacity} from "../store/reducers/employeeCapacity/types";
-
+import {IServiceRequestIds} from '../api/types';
 dayjs.extend(utc);
 
 export const getInitials = (name?: string) => {
@@ -329,7 +329,7 @@ export const collectServiceRequestIds = (
     sub: IServiceCategory | null,
     selectedPackage?: IPackageOptions | null,
     individualOpsCodes?: number[],
-    selectedRecalls?: IRecallByVin[]): number[] => {
+    selectedRecalls?: IRecallByVin[]): IServiceRequestIds[] => {
     let ids = [];
 
     if (selectedRecalls?.length) {
@@ -340,8 +340,8 @@ export const collectServiceRequestIds = (
             ids.push(c);
         }
     }
-    const set = new Set(ids)
-    return Array.from(set);
+    const set = new Set(ids);
+    return Array.from(set).map(i => ({id: i, comment: null}));
 }
 
 export const collectServiceRequestsForConsents = (

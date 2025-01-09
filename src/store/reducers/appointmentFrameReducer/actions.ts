@@ -190,7 +190,7 @@ export const loadConsultantsForCloning = (serviceCenterId: string, appointment: 
         serviceCenterId: decodeSCID(serviceCenterId),
         pageIndex: 0,
         pageSize: 0,
-        serviceRequestIds: serviceRequests ? serviceRequests.map(el => el.id) : [],
+        serviceRequests: serviceRequests ? serviceRequests.map(el => ({id: el.id, comment: null})) : [],
         recalls: mapRecallsForRequest(selectedRecalls),
         serviceCategoryIds: serviceCategories ? serviceCategories.map(el => el.id) : [],
         maintenancePackageOption: maintenancePackageOption,
@@ -245,7 +245,7 @@ export const loadConsultantsForUpdating = (id: string, serviceTypeOptionId: numb
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
                 pageSize: 0,
-                serviceRequestIds: serviceRequests.map(item => item.id),
+                serviceRequests: serviceRequests.map(item => ({id: item.id, comment: null})),
                 recalls,
                 serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
                 maintenancePackageOption,
@@ -325,7 +325,7 @@ export const loadConsultants = (id: string, serviceTypeOptionId: number|null, on
                 serviceCenterId: decodeSCID(id),
                 pageIndex: 0,
                 pageSize: 0,
-                serviceRequestIds,
+                serviceRequests:serviceRequestIds,
                 recalls,
                 serviceCategoryIds,
                 maintenancePackageOption,
@@ -819,7 +819,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         ? appointmentFrame.transportation?.id
         : null;
 
-    const serviceRequestIds = collectServiceRequestIds(
+    const serviceRequests = collectServiceRequestIds(
         appointmentFrame.service,
         appointmentFrame.subService,
         appointmentFrame.selectedPackage,
@@ -871,7 +871,7 @@ export const createOrUpdateAppointment = (id: number, onNext: () => void, onErro
         },
         transportationOptionId,
         slot,
-        serviceRequestIds,
+        serviceRequests,
         date,
         serviceCategoryIds: getCategoriesForAppointment(categories.allCategories, appointmentFrame.categoriesIds),
         maintenancePackageOption,
@@ -1114,8 +1114,8 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
 
         const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
         const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
-        const serviceRequestIds = currentAppointment?.serviceRequests
-            ? currentAppointment?.serviceRequests.map(el => el.id)
+        const serviceRequests = currentAppointment?.serviceRequests
+            ? currentAppointment?.serviceRequests.map(el => ({id: el.id, comment: null}))
             : [];
         const maintenancePackageOption = currentAppointment.maintenancePackageOption
             ? {id: currentAppointment.maintenancePackageOption.id, priceType: currentAppointment.maintenancePackageOption.priceType ?? null}
@@ -1153,7 +1153,7 @@ export const cloneAppointment = (id: number, onNext: TArgCallback<string>, onErr
             },
             transportationOptionId,
             slot,
-            serviceRequestIds,
+            serviceRequests,
             date,
             serviceCategoryIds: currentAppointment.serviceCategories ? currentAppointment.serviceCategories.map(el => el.id) : [],
             maintenancePackageOption,
@@ -1295,7 +1295,7 @@ export const loadActiveTransportations = (serviceCenterId: number): AppThunk => 
 
         const data: TTransportationData = {
             serviceCenterId,
-            serviceRequestIds: collectServiceRequestIds(service, subService, null, selectedSR),
+            serviceRequests: collectServiceRequestIds(service, subService, null, selectedSR),
             serviceCategoryIds,
             recalls: mapRecallsForRequest(selectedRecalls),
             maintenancePackageOption,
