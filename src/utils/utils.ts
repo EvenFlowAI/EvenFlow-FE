@@ -151,6 +151,14 @@ const ServiceCenters = {
   PerformanceFordLincolnBountiful: 164,
   PerformanceFordTruckCountry: 165,
   PerformanceToyotaBountiful: 166,
+  Dominion: 130,
+  DealerBuilt: 328,
+  DealertrackTeamHondaMerrillville: 430,
+  DealertrackTomWoodVolkswagenIndianapolis: 427,
+  DealertrackTomWoodVolkswagenNoblesville: 428,
+  DealertrackTomWoodToyota: 429,
+  DealertrackCovinaKia: 460,
+  TekionWalserBuickGMCofBloomington: 461,
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
@@ -248,6 +256,31 @@ export const getTrackersForParentSite = (id: string): GATrackers[] => {
     if (decodedId === ServiceCenters.FremontLanderFord) {
       return [{ measurementId: 'G-VSQ7H51M2D' }];
     }
+
+    if (decodedId === ServiceCenters.Dominion) {
+      return [{ measurementId: 'G-N0HF9JRRD5' }];
+    }
+    if (decodedId === ServiceCenters.DealerBuilt) {
+      return [{ measurementId: 'G-NWSJ2GDBV1' }];
+    }
+    if (decodedId === ServiceCenters.DealertrackTeamHondaMerrillville) {
+      return [{ measurementId: 'G-7LJXRM8J7P' }];
+    }
+    if (decodedId === ServiceCenters.DealertrackTomWoodVolkswagenIndianapolis) {
+      return [{ measurementId: 'G-M6RLKFX5GG' }];
+    }
+    if (decodedId === ServiceCenters.DealertrackTomWoodVolkswagenNoblesville) {
+      return [{ measurementId: 'G-7TTKL8BB54' }];
+    }
+    if (decodedId === ServiceCenters.DealertrackTomWoodToyota) {
+      return [{ measurementId: 'G-2PH56MCDS2' }];
+    }
+    if (decodedId === ServiceCenters.DealertrackCovinaKia) {
+      return [{ measurementId: 'G-PQGQVFH16R' }];
+    }
+    if (decodedId === ServiceCenters.TekionWalserBuickGMCofBloomington) {
+      return [{ measurementId: 'G-BMDLQ8PS7X' }];
+    }
     return [{ measurementId: 'G-DWX0X9CBTT' }];
   } else {
     return [{ measurementId: 'G-LS5EEY1SRM' }];
@@ -285,6 +318,15 @@ export const getTrackerById = (id: string): string => {
     if (decodedId === ServiceCenters.PerformanceFordLincolnBountiful) return 'G-TT0L0LN92Z';
     if (decodedId === ServiceCenters.PerformanceFordTruckCountry) return 'G-S3Y40YJ5T1';
     if (decodedId === ServiceCenters.PerformanceToyotaBountiful) return 'G-YEYXB53XXG';
+    if (decodedId === ServiceCenters.Dominion) return 'G-N0HF9JRRD5';
+    if (decodedId === ServiceCenters.DealerBuilt) return 'G-NWSJ2GDBV1';
+    if (decodedId === ServiceCenters.DealertrackTeamHondaMerrillville) return 'G-7LJXRM8J7P';
+    if (decodedId === ServiceCenters.DealertrackTomWoodVolkswagenIndianapolis)
+      return 'G-M6RLKFX5GG';
+    if (decodedId === ServiceCenters.DealertrackTomWoodVolkswagenNoblesville) return 'G-7TTKL8BB54';
+    if (decodedId === ServiceCenters.DealertrackTomWoodToyota) return 'G-2PH56MCDS2';
+    if (decodedId === ServiceCenters.DealertrackCovinaKia) return 'G-PQGQVFH16R';
+    if (decodedId === ServiceCenters.TekionWalserBuickGMCofBloomington) return 'G-BMDLQ8PS7X';
     return 'G-DWX0X9CBTT';
   } else {
     return 'G-LS5EEY1SRM';
