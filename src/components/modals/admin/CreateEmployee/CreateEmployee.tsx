@@ -75,6 +75,7 @@ export const CreateEmployee: React.FC<
           overtimeRate: payload.employeeInfo?.overtimeRate || '',
           technicianLevel:
             (payload.employeeInfo?.skillLevel as TTechnicianLevel) || (1 as TTechnicianLevel),
+          type: payload.type,
         };
       } else {
         data.type = payload.type;
@@ -90,7 +91,8 @@ export const CreateEmployee: React.FC<
     let err: string[] = [];
     if (!employeeForm.firstName.length) err = [...err, '"First Name" must not be empty'];
     if (!employeeForm.lastName.length) err = [...err, '"Last Name" must not be empty'];
-    if (!employeeForm.serviceCenter) err = [...err, '"Service Center" must not be empty'];
+    if (employeeForm.role !== Roles.ServiceDirector && !employeeForm.serviceCenter)
+      err = [...err, '"Service Center" must not be empty'];
     if (!employeeForm.email?.length) {
       err = [...err, '"Email" must not be empty'];
     } else {
