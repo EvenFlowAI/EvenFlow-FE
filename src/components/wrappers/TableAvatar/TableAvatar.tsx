@@ -1,17 +1,21 @@
 import React from "react";
-import {Avatar} from "@mui/material";
-import {getInitials} from "../../../utils/utils";
-import {useStyles} from "./styles";
+import { Avatar } from "@mui/material";
+import { getInitials } from "../../../utils/utils";
+import { useStyles } from "./styles";
 
 type Props = {
-    name: string;
-    src?: string;
-}
+  name: string;
+  src?: string;
+};
 
-export const TableAvatar: React.FC<React.PropsWithChildren<React.PropsWithChildren<Props>>> = props => {
-    const { classes  } = useStyles();
+export const TableAvatar: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<Props>>
+> = (props) => {
+  const { classes } = useStyles();
 
-    return <Avatar src={props.src} className={classes.root}>
-        {getInitials(props.name)}
-    </Avatar>;
-}
+  return (
+    <Avatar src={props.src} className={classes.root}>
+      {getInitials(props.name)}
+    </Avatar>
+  );
+};

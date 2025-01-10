@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useMemo } from "react";
 import {
   Autocomplete,
   Divider,
@@ -30,8 +30,7 @@ import { loadDMSAdvisors } from "../../../../../store/reducers/employees/actions
 import { TRole } from "../../../../../store/reducers/users/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../store/rootReducer";
-import { IServiceCenter } from "../../../../../store/reducers/serviceCenters/types";
-import { useMultipleAutocompleteStyles, useStyles } from "./styles";
+import { useStyles } from "./styles";
 import { TOption } from "../../../../../features/admin/ServiceBookModal/types";
 
 type TTFormProps = {
@@ -45,6 +44,7 @@ type TTFormProps = {
 export const CreateEmployeeForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
 > = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isEdit }) => {
+  const dispatch = useDispatch();
   const { shortSC, shortLoading } = useSelector(
     (state: RootState) => state.serviceCenters
   );
@@ -54,13 +54,8 @@ export const CreateEmployeeForm: React.FC<
   const { loadingDMSAdvisors } = useSelector(
     (state: RootState) => state.employees
   );
-
-  const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
   const currentUser = useCurrentUser();
-  const dispatch = useDispatch();
 
-  // todo multiple service centers
-  const { classes: autocompleteClasses } = useMultipleAutocompleteStyles();
   const { classes } = useStyles();
   const dmsOptions = useMemo(
     () =>
@@ -99,13 +94,6 @@ export const CreateEmployeeForm: React.FC<
       dispatch(loadDMSAdvisors(value.id));
     }
     setEmployeeForm((prev) => ({ ...prev, serviceCenter: value ?? null }));
-  };
-
-  const handleServiceCentersChange = (
-    e: React.ChangeEvent<{}>,
-    options: IServiceCenter[]
-  ) => {
-    setServiceCenters(options);
   };
 
   const handleSelfServiceChange = (
@@ -207,21 +195,31 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12}>
-        <Autocomplete
-          disabled={isEdit}
-          options={shortSC}
-          onChange={handleSelectChange}
-          getOptionLabel={(i) => i.name}
-          isOptionEqualToValue={(o, s) => o.id === s.id}
-          loading={shortLoading}
-          value={form.serviceCenter || null}
-          renderInput={autocompleteRender({
-            label: "Service center",
-            fullWidth: true,
-            placeholder: "Select Service Center",
-            error: !form.serviceCenter && formIsChecked,
-          })}
-        />
+        {form.role === Roles.ServiceDirector ? (
+          <TextField
+            disabled
+            value={null}
+            fullWidth
+            label="Service Center"
+            placeholder="Select Service Center"
+          />
+        ) : (
+          <Autocomplete
+            disabled={isEdit}
+            options={shortSC}
+            onChange={handleSelectChange}
+            getOptionLabel={(i) => i.name}
+            isOptionEqualToValue={(o, s) => o.id === s.id}
+            loading={shortLoading}
+            value={form.serviceCenter || null}
+            renderInput={autocompleteRender({
+              label: "Service center",
+              fullWidth: true,
+              placeholder: "Select Service Center",
+              error: !form.serviceCenter && formIsChecked,
+            })}
+          />
+        )}
       </Grid>
       {/*<Grid item xs={12}>*/}
       {/*    <Autocomplete*/}
@@ -248,7 +246,6 @@ export const CreateEmployeeForm: React.FC<
           id="email"
           name="email"
           fullWidth
-          disabled={isEdit}
           placeholder="Type Email"
           value={form.email}
           error={
@@ -261,10 +258,11 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        {isEdit ||
-        (form.role && currentUser && superRoles.includes(currentUser?.role)
-          ? !widerUserRoles.includes(form.role)
-          : form.role && !userRoles.includes(form.role)) ? (
+        {(
+          form.role && currentUser && superRoles.includes(currentUser?.role)
+            ? !widerUserRoles.includes(form.role)
+            : form.role && !userRoles.includes(form.role)
+        ) ? (
           <TextField disabled value={form.role} fullWidth label="Role" />
         ) : (
           <Autocomplete

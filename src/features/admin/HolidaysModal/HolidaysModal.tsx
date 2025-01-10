@@ -1,161 +1,191 @@
-import React, {useEffect, useState} from "react";
-import {DialogProps, TViewMode} from "../../../components/modals/BaseModal/types";
-import {BaseModal, DialogActions, DialogTitle} from "../../../components/modals/BaseModal/BaseModal";
-import {Button, IconButton, Menu, MenuItem} from "@mui/material";
-import {Table} from "../../../components/tables/Table/Table";
-import {MoreHoriz} from "@mui/icons-material";
-import {AddHolidayModal} from "./AddHolidayModal/AddHolidayModal";
-import {IHoliday} from "../../../store/reducers/holidays/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
-import {loadAllHolidays} from "../../../store/reducers/holidays/actions";
-import {setHolidayPageData} from "../../../store/reducers/holidays/actions";
-import {useStyles} from "./styles";
-import {Roles, TableRowDataType} from "../../../types/types";
-import {useModal} from "../../../hooks/useModal/useModal";
-import {useConfirm} from "../../../hooks/useConfirm/useConfirm";
-import {usePagination} from "../../../hooks/usePaginations/usePaginations";
+import React, { useEffect, useState } from "react";
+import {
+  DialogProps,
+  TViewMode,
+} from "../../../components/modals/BaseModal/types";
+import {
+  BaseModal,
+  DialogActions,
+  DialogTitle,
+} from "../../../components/modals/BaseModal/BaseModal";
+import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import { Table } from "../../../components/tables/Table/Table";
+import { MoreHoriz } from "@mui/icons-material";
+import { AddHolidayModal } from "./AddHolidayModal/AddHolidayModal";
+import { IHoliday } from "../../../store/reducers/holidays/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store/rootReducer";
+import { loadAllHolidays } from "../../../store/reducers/holidays/actions";
+import { setHolidayPageData } from "../../../store/reducers/holidays/actions";
+import { useStyles } from "./styles";
+import { Roles, TableRowDataType } from "../../../types/types";
+import { useModal } from "../../../hooks/useModal/useModal";
+import { useConfirm } from "../../../hooks/useConfirm/useConfirm";
+import { usePagination } from "../../../hooks/usePaginations/usePaginations";
 
-import {useMessage} from "../../../hooks/useMessage/useMessage";
-import {useException} from "../../../hooks/useException/useException";
-import {useSCs} from "../../../hooks/useSCs/useSCs";
-import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import { useMessage } from "../../../hooks/useMessage/useMessage";
+import { useException } from "../../../hooks/useException/useException";
+import { useSCs } from "../../../hooks/useSCs/useSCs";
+import { Api } from "../../../api/ApiEndpoints/ApiEndpoints";
 import dayjs from "dayjs";
 
 const rowData: TableRowDataType<IHoliday>[] = [
-    {header: "Description Title", val: v => v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description},
-    {header: "Date", val: v => dayjs.utc(v.date).format("MMMM D")},
-    {header: "Recurring", val: v => v.isRecurring ? "Repeat" : "No Repeat"}
-]
+  {
+    header: "Description Title",
+    val: (v) =>
+      v.description.length > 40
+        ? v.description.slice(0, 39).concat("...")
+        : v.description,
+  },
+  { header: "Date", val: (v) => dayjs.utc(v.date).format("MMMM D") },
+  { header: "Recurring", val: (v) => (v.isRecurring ? "Repeat" : "No Repeat") },
+];
 
-export const HolidaysModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps&TViewMode>>> = ({viewMode, ...props}) => {
-    const {holidaysList, loading, pageData, paging} = useSelector(({holidays}: RootState) => holidays);
-    const {currentUser} = useSelector(({users}: RootState) => users);
-    const [editedItem, setEditedItem] = useState<IHoliday|undefined>();
-    const [anchorEl, setAnchorEl] = useState<HTMLElement|null>(null);
+export const HolidaysModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps & TViewMode>>
+> = ({ viewMode, ...props }) => {
+  const { holidaysList, loading, pageData, paging } = useSelector(
+    ({ holidays }: RootState) => holidays,
+  );
+  const { currentUser } = useSelector(({ users }: RootState) => users);
+  const [editedItem, setEditedItem] = useState<IHoliday | undefined>();
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-    const {selectedSC} = useSCs();
-    const {askConfirm, closeConfirm} = useConfirm();
-    const {onOpen, onClose, isOpen} = useModal();
-    const {changeRowsPerPage,changePage,pageIndex,pageSize} = usePagination(
-        (s: RootState) => s.holidays.pageData,
-        setHolidayPageData
+  const { selectedSC } = useSCs();
+  const { askConfirm, closeConfirm } = useConfirm();
+  const { onOpen, onClose, isOpen } = useModal();
+  const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
+    (s: RootState) => s.holidays.pageData,
+    setHolidayPageData,
+  );
+  const dispatch = useDispatch();
+  const showMessage = useMessage();
+  const showError = useException();
+  const { classes } = useStyles();
+
+  useEffect(() => {
+    if (props.open && selectedSC) {
+      dispatch(loadAllHolidays(selectedSC.id));
+    }
+  }, [dispatch, props.open, selectedSC, pageData]);
+
+  const reloadHolidays = () => {
+    if (selectedSC) {
+      dispatch(loadAllHolidays(selectedSC.id));
+    }
+  };
+
+  const openMenu =
+    (el: IHoliday) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      setEditedItem(el);
+      setAnchorEl(e.currentTarget);
+    };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRemove = async () => {
+    if (editedItem && selectedSC) {
+      try {
+        await Api.call(Api.endpoints.Holidays.Remove, {
+          urlParams: { id: editedItem.id },
+        }).then((res) => {
+          if (res) {
+            showMessage("Holiday removed");
+            dispatch(setHolidayPageData({ pageIndex: 0 }));
+            dispatch(loadAllHolidays(selectedSC.id));
+          }
+        });
+      } catch (e) {
+        showError(e);
+      }
+    }
+    closeConfirm();
+    reloadHolidays();
+  };
+
+  const askRemove = () => {
+    closeMenu();
+    if (editedItem) {
+      askConfirm({
+        isRemove: true,
+        title: `Please confirm you want to remove Holiday ${editedItem.description}?`,
+        onConfirm: handleRemove,
+      });
+    }
+  };
+
+  const openEdit = () => {
+    closeMenu();
+    onOpen();
+  };
+
+  const actions = (el: IHoliday) => {
+    return (
+      <IconButton
+        onClick={openMenu(el)}
+        disabled={currentUser?.role === Roles.Manager}
+        size="large"
+      >
+        <MoreHoriz />
+      </IconButton>
     );
-    const dispatch = useDispatch();
-    const showMessage = useMessage();
-    const showError = useException()
-    const { classes  } = useStyles();
+  };
 
-    useEffect(() => {
-        if (props.open && selectedSC) {
-            dispatch(loadAllHolidays(selectedSC.id));
-        }
-    }, [dispatch, props.open, selectedSC, pageData]);
+  const handleOpenCreate = () => {
+    setEditedItem(undefined);
+    onOpen();
+  };
 
-    const reloadHolidays = () => {
-        if (selectedSC) {
-            dispatch(loadAllHolidays(selectedSC.id));
-        }
-    }
+  const onCloseModal = () => {
+    dispatch(setHolidayPageData({ pageSize: 10, pageIndex: 0 }));
+    props.onClose();
+  };
 
-    const openMenu = (el: IHoliday) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        setEditedItem(el);
-        setAnchorEl(e.currentTarget);
-    }
-
-    const closeMenu = () => {
-        setAnchorEl(null);
-    }
-
-    const handleRemove = async () => {
-        if (editedItem && selectedSC) {
-            try {
-                await Api.call(
-                    Api.endpoints.Holidays.Remove,
-                    {urlParams: {id: editedItem.id}}
-                ).then(res => {
-                    if (res) {
-                        showMessage("Holiday removed");
-                        dispatch(setHolidayPageData({pageIndex: 0}))
-                        dispatch(loadAllHolidays(selectedSC.id));
-                    }
-                })
-            } catch (e) {
-                showError(e);
-            }
-        }
-        closeConfirm();
-        reloadHolidays();
-    }
-
-    const askRemove = () => {
-        closeMenu();
-        if (editedItem) {
-            askConfirm({
-                isRemove: true,
-                title: `Please confirm you want to remove Holiday ${editedItem.description}?`,
-                onConfirm: handleRemove
-            })
-        }
-    }
-
-    const openEdit = () => {
-        closeMenu();
-        onOpen();
-    }
-
-    const actions = (el: IHoliday) => {
-        return (
-            <IconButton
-                onClick={openMenu(el)}
-                disabled={currentUser?.role === Roles.Manager}
-                size="large">
-                <MoreHoriz />
-            </IconButton>
-        );
-    }
-
-    const handleOpenCreate = () => {
-        setEditedItem(undefined);
-        onOpen();
-    }
-
-    const onCloseModal = () => {
-        dispatch(setHolidayPageData({pageSize: 10, pageIndex: 0}))
-        props.onClose()
-    }
-
-    return <BaseModal {...props} onClose={onCloseModal} width={720}>
-        <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
-        {!viewMode && currentUser?.role !== Roles.Manager ? <div className={classes.addHoliday}>
-            <Button variant="contained" color="primary" onClick={handleOpenCreate}>Add Holiday</Button>
-        </div> : null}
-        <Table<IHoliday>
-            onChangePage={changePage}
-            page={pageIndex}
-            viewMode={viewMode}
-            rowsPerPage={pageSize}
-            onChangeRowsPerPage={changeRowsPerPage}
-            compact
-            count={paging.numberOfRecords}
-            isLoading={loading}
-            data={holidaysList}
-            index={"id"}
-            rowData={rowData}
-            actions={actions}
-        />
-        <DialogActions>
-            <Button onClick={onCloseModal} variant="contained" color="primary">
-                Close
-            </Button>
-        </DialogActions>
-        <Menu
-            onClose={closeMenu}
-            open={Boolean(anchorEl)}
-            anchorEl={anchorEl}>
-            <MenuItem onClick={openEdit}>Edit</MenuItem>
-            <MenuItem onClick={askRemove}>Remove</MenuItem>
-        </Menu>
-        <AddHolidayModal open={isOpen} payload={editedItem} onAction={reloadHolidays} onClose={onClose} />
+  return (
+    <BaseModal {...props} onClose={onCloseModal} width={720}>
+      <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
+      {!viewMode && currentUser?.role !== Roles.Manager ? (
+        <div className={classes.addHoliday}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenCreate}
+          >
+            Add Holiday
+          </Button>
+        </div>
+      ) : null}
+      <Table<IHoliday>
+        onChangePage={changePage}
+        page={pageIndex}
+        viewMode={viewMode}
+        rowsPerPage={pageSize}
+        onChangeRowsPerPage={changeRowsPerPage}
+        compact
+        count={paging.numberOfRecords}
+        isLoading={loading}
+        data={holidaysList}
+        index={"id"}
+        rowData={rowData}
+        actions={actions}
+      />
+      <DialogActions>
+        <Button onClick={onCloseModal} variant="contained" color="primary">
+          Close
+        </Button>
+      </DialogActions>
+      <Menu onClose={closeMenu} open={Boolean(anchorEl)} anchorEl={anchorEl}>
+        <MenuItem onClick={openEdit}>Edit</MenuItem>
+        <MenuItem onClick={askRemove}>Remove</MenuItem>
+      </Menu>
+      <AddHolidayModal
+        open={isOpen}
+        payload={editedItem}
+        onAction={reloadHolidays}
+        onClose={onClose}
+      />
     </BaseModal>
-}
+  );
+};

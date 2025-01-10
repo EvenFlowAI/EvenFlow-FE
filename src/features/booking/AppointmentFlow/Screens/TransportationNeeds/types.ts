@@ -1,12 +1,16 @@
-import {IVehicleForSlots, MPOptionShort, TRecallForRequest} from "../../../../../store/reducers/appointment/types";
-import {IServiceRequestIds} from '../../../../../api/types';
+import {
+  IVehicleForSlots,
+  MPOptionShort,
+  TRecallForRequest,
+} from "../../../../../store/reducers/appointment/types";
+import { IServiceRequestIds } from "../../../../../api/types";
 
 export type TTransportationData = {
-    serviceCenterId: number;
-    serviceRequests: IServiceRequestIds[];
-    serviceCategoryIds: number[];
-    appointmentHashKey?: string;
-    recalls: TRecallForRequest[];
-    maintenancePackageOption: MPOptionShort | null;
-    vehicle: IVehicleForSlots;
-}
+  serviceCenterId: number;
+  serviceRequests: IServiceRequestIds[];
+  serviceCategoryIds: number[];
+  appointmentHashKey?: string;
+  recalls: TRecallForRequest[];
+  maintenancePackageOption: MPOptionShort | null;
+  vehicle: IVehicleForSlots;
+};

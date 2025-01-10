@@ -1,11 +1,11 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
 //
-export const useStyles = makeStyles()(theme => ({
-    root: {
-        backgroundColor: theme.palette.primary.main,
-        fontSize: 12,
-        width: 30,
-        height: 30
-    }
+export const useStyles = makeStyles()((theme) => ({
+  root: {
+    backgroundColor: theme.palette.primary.main,
+    fontSize: 12,
+    width: 30,
+    height: 30,
+  },
 }));

@@ -1,464 +1,621 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {AddCircleOutline} from "@mui/icons-material";
-import {Autocomplete, Button, Divider, IconButton} from "@mui/material";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "../../../../components/modals/BaseModal/BaseModal";
+import { TextField } from "../../../../components/formControls/TextFieldStyled/TextField";
+import { AddCircleOutline } from "@mui/icons-material";
+import { Autocomplete, Button, Divider, IconButton } from "@mui/material";
 import OpsCode from "./parts/OpsCodeLabel/OpsCodeLabel";
-import {autocompleteRender} from "../../../../utils/autocompleteRenders";
+import { autocompleteRender } from "../../../../utils/autocompleteRenders";
 import AssignOpsCode from "./parts/AssignOpsCodeModal/AssignOpsCodeModal";
 import AddOpsCode from "../../../../components/modals/admin/AddOpsCode/AddOpsCode";
 import {
-    IAssignedServiceRequest,
-    IServiceRequest,
-    IUpsellServiceRequest
+  IAssignedServiceRequest,
+  IServiceRequest,
+  IUpsellServiceRequest,
 } from "../../../../store/reducers/serviceRequests/types";
 import ExistingPackagesModal from "./parts/ExistingPackagesModal/ExistingPackagesModal";
-import {ECustomerCriteria, IPackageByQuery} from "../../../../api/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
+import { ECustomerCriteria, IPackageByQuery } from "../../../../api/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../store/rootReducer";
 import PackageLabel from "./parts/PackageLabel/PackageLabel";
-import {createPackage, loadMakes, updatePackage} from "../../../../store/reducers/packages/actions";
+import {
+  createPackage,
+  loadMakes,
+  updatePackage,
+} from "../../../../store/reducers/packages/actions";
 import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
-import {INewPackage, IUpdatedPackage, TAssignedRequest} from "../../../../store/reducers/packages/types";
+import {
+  INewPackage,
+  IUpdatedPackage,
+  TAssignedRequest,
+} from "../../../../store/reducers/packages/types";
 import AddComplimentary from "./parts/AddComplimentaryModal/AddComplimentaryModal";
 import MakeAndModel from "./parts/MakeAndModel/MakeAndModel";
 import {
-    loadAllAssignedServiceRequests,
-    loadUpsellServiceRequests,
+  loadAllAssignedServiceRequests,
+  loadUpsellServiceRequests,
 } from "../../../../store/reducers/serviceRequests/actions";
-import {loadEngineType, loadMileage} from "../../../../store/reducers/vehicleDetails/actions";
+import {
+  loadEngineType,
+  loadMileage,
+} from "../../../../store/reducers/vehicleDetails/actions";
 import Mileage from "./parts/Mileage/Mileage";
 import AssignedOpsCodes from "./parts/AssignedOpsCodes/AssignedOpsCodes";
-import {IEngineType} from "../../../../store/reducers/vehicleDetails/types";
+import { IEngineType } from "../../../../store/reducers/vehicleDetails/types";
 import EngineTypes from "./parts/EngineTypes/EngineTypes";
 import AddUpsellToPackageModal from "./parts/AddUpsellToPackageModal/AddUpsellToPackageModal";
-import {useModal} from "../../../../hooks/useModal/useModal";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useAutocompleteStyles, useStyles} from "./styles";
-import {IVehiclesData, TModalProps} from "./types";
-import {criteriaOptions, initialValues, yearOptions} from "./constants";
+import { useModal } from "../../../../hooks/useModal/useModal";
+import { useException } from "../../../../hooks/useException/useException";
+import { useSCs } from "../../../../hooks/useSCs/useSCs";
+import { useAutocompleteStyles, useStyles } from "./styles";
+import { IVehiclesData, TModalProps } from "./types";
+import { criteriaOptions, initialValues, yearOptions } from "./constants";
 
-const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TModalProps>>> = ({ isEditing, ...props}) => {
-    const { packages, currentPackage, isPackageLoading } = useSelector((state: RootState) => state.packages);
-    const { allAssignedList, intervalUpsellList } = useSelector((state: RootState) => state.serviceRequests);
-    const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
-    const { selectedSC } = useSCs();
+const AddPackageModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TModalProps>>
+> = ({ isEditing, ...props }) => {
+  const { packages, currentPackage, isPackageLoading } = useSelector(
+    (state: RootState) => state.packages
+  );
+  const { allAssignedList, intervalUpsellList } = useSelector(
+    (state: RootState) => state.serviceRequests
+  );
+  const { engineTypes } = useSelector(
+    (state: RootState) => state.vehicleDetails
+  );
+  const { selectedSC } = useSCs();
 
-    const [packageName, setPackageName] = useState<string>('');
-    const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
-    const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
-    const [upsellCodes, setUpsellCodes] = useState<IUpsellServiceRequest[]>([]);
-    const [assignedOpsCodes, setAssignedOpsCodes] = useState<TAssignedRequest[]>([]);
-    const [complimentary, setComplimentary] = useState<number[]>([]);
-    const [vehiclesData, setVehiclesData] = useState<IVehiclesData>(initialValues);
-    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const [isApplyBusinessRules, setApplyBusinessRules] = useState<boolean>(false);
-    const [selectedMakes, setSelectedMakes] = useState<string[]>([]);
-    const [selectedModels, setSelectedModels] = useState<string[]>([]);
-    const [selectedMileages, setSelectedMileages] = useState<string[]>([]);
-    const [optionError, setOptionError] = useState<boolean>(false);
-    const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>([]);
+  const [packageName, setPackageName] = useState<string>("");
+  const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
+  const [opsCodes, setOpsCodes] = useState<IAssignedServiceRequest[]>([]);
+  const [upsellCodes, setUpsellCodes] = useState<IUpsellServiceRequest[]>([]);
+  const [assignedOpsCodes, setAssignedOpsCodes] = useState<TAssignedRequest[]>(
+    []
+  );
+  const [complimentary, setComplimentary] = useState<number[]>([]);
+  const [vehiclesData, setVehiclesData] =
+    useState<IVehiclesData>(initialValues);
+  const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const [isApplyBusinessRules, setApplyBusinessRules] =
+    useState<boolean>(false);
+  const [selectedMakes, setSelectedMakes] = useState<string[]>([]);
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const [selectedMileages, setSelectedMileages] = useState<string[]>([]);
+  const [optionError, setOptionError] = useState<boolean>(false);
+  const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>(
+    []
+  );
 
-    const {isOpen: isAssignOpsCodeOpen, onOpen: onAssignOpsCodeOpen, onClose: onAssignOpsCodeClose} = useModal();
-    const {isOpen: isAddOpsCodeOpen, onOpen: onAddOpsCodeOpen, onClose: onAddOpsCodeClose} = useModal();
-    const {isOpen: isUpsellOpen, onOpen: onUpsellOpen, onClose: onUpsellClose} = useModal();
-    const {isOpen: isComplimentaryOpen, onOpen: onComplimentaryOpen, onClose: onComplimentaryClose} = useModal();
-    const {isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose} = useModal();
+  const {
+    isOpen: isAssignOpsCodeOpen,
+    onOpen: onAssignOpsCodeOpen,
+    onClose: onAssignOpsCodeClose,
+  } = useModal();
+  const {
+    isOpen: isAddOpsCodeOpen,
+    onOpen: onAddOpsCodeOpen,
+    onClose: onAddOpsCodeClose,
+  } = useModal();
+  const {
+    isOpen: isUpsellOpen,
+    onOpen: onUpsellOpen,
+    onClose: onUpsellClose,
+  } = useModal();
+  const {
+    isOpen: isComplimentaryOpen,
+    onOpen: onComplimentaryOpen,
+    onClose: onComplimentaryClose,
+  } = useModal();
+  const {
+    isOpen: isExistingOpen,
+    onOpen: onExistingOpen,
+    onClose: onExistingClose,
+  } = useModal();
 
-    const { classes } = useStyles();
-    const { classes: autoCompleteStyles } = useAutocompleteStyles();
-    const dispatch = useDispatch();
-    const showError = useException();
+  const { classes } = useStyles();
+  const { classes: autoCompleteStyles } = useAutocompleteStyles();
+  const dispatch = useDispatch();
+  const showError = useException();
 
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadMakes(selectedSC.id));
-            dispatch(loadMileage(selectedSC.id))
-            dispatch(loadEngineType(selectedSC.id))
-            isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
-            dispatch(loadUpsellServiceRequests(selectedSC.id));
-        }
-    }, [dispatch, selectedSC, isEditing])
-
-    useEffect(() => {
-        if (isEditing && currentPackage) {
-            setPackageName(currentPackage.name);
-            setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
-            setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
-            setApplyBusinessRules(currentPackage.isApplyBusinessRules);
-            setUpsellCodes(() => {
-                const selectedServices = currentPackage.intervalUpsells.map(item => item.id);
-                return intervalUpsellList.filter(item => selectedServices.includes(item.id));
-            });
-            if (allAssignedList) {
-                setOpsCodes(() => {
-                    const selectedServices = currentPackage.serviceRequests.map(item => item.id);
-                    return allAssignedList.filter(item => selectedServices.includes(item.id));
-                })
-            }
-            if (currentPackage.businessRules) {
-                setSelectedMakes(currentPackage.businessRules.vehicleMakes);
-                setSelectedModels(currentPackage.businessRules.vehicleModels);
-                setSelectedMileages(currentPackage.businessRules.vehicleMileageValues.map(item => item.toString()));
-                setVehiclesData({
-                    yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
-                    yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
-                    customerCriteria: currentPackage.businessRules.customerCriteria,
-                    isApplyBusinessRules: currentPackage.isApplyBusinessRules,
-                })
-            }
-            if (currentPackage.engineTypes) {
-                const engineData = engineTypes.filter(item => currentPackage.engineTypes?.find(el => el.id === item.id))
-                engineData && setSelectedEngineTypes(engineData);
-            }
-        }
-    }, [currentPackage, isEditing, allAssignedList, intervalUpsellList])
-
-    const onCancel = useCallback(() => {
-        setFormIsChecked(false);
-        setVehiclesData(initialValues);
-        setPackageName('');
-        setSelectedPackages([]);
-        setAssignedOpsCodes([]);
-        setComplimentary([]);
-        setOpsCodes([]);
-        setSelectedModels([]);
-        setSelectedMakes([]);
-        setApplyBusinessRules(false);
-        setSelectedMileages([]);
-        setSelectedEngineTypes([]);
-        setUpsellCodes([]);
-        props.onClose();
-    }, [initialValues, props.onClose])
-
-    const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void  => {
-        setFormIsChecked(false);
-        setPackageName(e.target.value);
-    }, [])
-
-    const onFormFieldChange = useCallback(
-        (fieldName: keyof IVehiclesData) =>
-        (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
-            setFormIsChecked(false);
-            if (fieldName === 'customerCriteria') {
-                // @ts-ignore
-                setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: ECustomerCriteria[value]}))
-            } else {
-                setVehiclesData((prevData: IVehiclesData) => ({...prevData, [fieldName]: value}))
-            }
-    }, [])
-
-    const onDelete = useCallback((serviceRequest: IServiceRequest): void => {
-        setFormIsChecked(false);
-        setOpsCodes(prev => prev.filter(item => serviceRequest.id !== item.serviceRequest.id));
-    }, [])
-
-    const onPackageDelete = useCallback((pack: IPackageByQuery) => {
-        setFormIsChecked(false);
-        setSelectedPackages(prev => prev.includes(pack.id) ? prev.filter(el => el !== pack.id) : [...prev, pack.id]);
-    }, [])
-
-    const onApplyBusinessRulesChange = (e: ChangeEvent<HTMLInputElement>) => setApplyBusinessRules(e.target.checked);
-
-    const getRequestsFromSelectedPackages = useCallback((selectedPackages: number[]): number[] => {
-        let serviceRequests = opsCodes.map(item => item.id);
-        if (selectedPackages.length) {
-            selectedPackages.forEach(id => {
-                const packData = packages.find(item => item.id === id);
-                if (packData?.serviceRequests) {
-                    serviceRequests = serviceRequests.concat(packData.serviceRequests.map(request => request.id))
-                }
-            })
-        }
-        return Array.from(new Set(serviceRequests));
-    }, [opsCodes, packages])
-
-    const isBusinessRulesValid = () => {
-        const { yearFrom, yearTo } = vehiclesData;
-        if (yearFrom && yearTo && (+yearFrom > +yearTo)) {
-            showError('"From" must be less than or equal to "To"')
-            return false
-        }
-        const atLeastOneRule = selectedModels.length
-            || selectedMakes.length
-            || selectedMileages.length
-            || (yearFrom && yearTo)
-            || selectedEngineTypes.length
-        if (!atLeastOneRule) showError('At least one Business Rule is required')
-        return atLeastOneRule;
+  useEffect(() => {
+    if (selectedSC) {
+      dispatch(loadMakes(selectedSC.id));
+      dispatch(loadMileage(selectedSC.id));
+      dispatch(loadEngineType(selectedSC.id));
+      isEditing && dispatch(loadAllAssignedServiceRequests(selectedSC.id));
+      dispatch(loadUpsellServiceRequests(selectedSC.id));
     }
+  }, [dispatch, selectedSC, isEditing]);
 
-    const isValid = () => {
-        const mainData = packageName && opsCodes.length && assignedOpsCodes.length;
-        const businessRules = isApplyBusinessRules ? isBusinessRulesValid() : true;
-        return Boolean(mainData && businessRules);
-    }
-
-    const onSave = () => {
-        if (isValid()) {
-            if (selectedSC) {
-                const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
-                const data: INewPackage | IUpdatedPackage = {
-                    name: packageName,
-                    serviceRequests,
-                    complimentaryServices: complimentary,
-                    serviceRequestsAssigned: assignedOpsCodes,
-                    serviceCenterId: selectedSC.id,
-                    isApplyBusinessRules: isApplyBusinessRules,
-                    engineTypes: selectedEngineTypes.map(item => item.id),
-                    intervalUpsells: upsellCodes.map(item => item.id),
-                }
-                if (isApplyBusinessRules && isBusinessRulesValid()) {
-                    data.businessRules = {
-                        vehicleMakes: selectedMakes,
-                            vehicleModels: selectedModels,
-                            vehicleYearRange: {
-                                from: +vehiclesData.yearFrom,
-                                to: +vehiclesData.yearTo
-                        },
-                        vehicleMileageValues: selectedMileages,
-                        customerCriteria: vehiclesData.customerCriteria,
-                        engineTypeIds:[]
-                    }
-                } else {
-                    if (isEditing) data.businessRules = currentPackage?.businessRules;
-                }
-                try {
-                    isEditing && currentPackage
-                        ? dispatch(updatePackage(currentPackage.id, data, selectedSC.id, onCancel, (e) => showError(e)))
-                        : dispatch(createPackage(selectedSC.id, data, onCancel, (e) => showError(e)))
-                } catch (e) {
-                }
-            }
-        } else setFormIsChecked(true);
-    }
-
-    const handleOpsCodeSelect = useCallback((el: IAssignedServiceRequest) => {
-        setOpsCodes(prev => {
-            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+  useEffect(() => {
+    if (isEditing && currentPackage) {
+      setPackageName(currentPackage.name);
+      setComplimentary(
+        currentPackage.complimentaryServices.map((item) => item.id)
+      );
+      setAssignedOpsCodes(currentPackage.serviceRequestsAssigned);
+      setApplyBusinessRules(currentPackage.isApplyBusinessRules);
+      setUpsellCodes(() => {
+        const selectedServices = currentPackage.intervalUpsells.map(
+          (item) => item.id
+        );
+        return intervalUpsellList.filter((item) =>
+          selectedServices.includes(item.id)
+        );
+      });
+      if (allAssignedList) {
+        setOpsCodes(() => {
+          const selectedServices = currentPackage.serviceRequests.map(
+            (item) => item.id
+          );
+          return allAssignedList.filter((item) =>
+            selectedServices.includes(item.id)
+          );
         });
-    }, [setOpsCodes])
-
-    const handleUpsellCodeSelect = useCallback((el: IUpsellServiceRequest) => {
-        setUpsellCodes(prev => {
-            return prev.find(item => item.id === el.id) ? prev.filter(item => item.id !== el.id) : [...prev, el]
+      }
+      if (currentPackage.businessRules) {
+        setSelectedMakes(currentPackage.businessRules.vehicleMakes);
+        setSelectedModels(currentPackage.businessRules.vehicleModels);
+        setSelectedMileages(
+          currentPackage.businessRules.vehicleMileageValues.map((item) =>
+            item.toString()
+          )
+        );
+        setVehiclesData({
+          yearFrom:
+            currentPackage.businessRules.vehicleYearRange?.from?.toString(),
+          yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
+          customerCriteria: currentPackage.businessRules.customerCriteria,
+          isApplyBusinessRules: currentPackage.isApplyBusinessRules,
         });
-    }, [setUpsellCodes])
+      }
+      if (currentPackage.engineTypes) {
+        const engineData = engineTypes.filter((item) =>
+          currentPackage.engineTypes?.find((el) => el.id === item.id)
+        );
+        engineData && setSelectedEngineTypes(engineData);
+      }
+    }
+  }, [currentPackage, isEditing, allAssignedList, intervalUpsellList]);
 
-    return (
-        <BaseModal {...props} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>{isEditing ? 'Edit': 'Add'} Maintenance Package</DialogTitle>
-            <DialogContent>
-                <div className={classes.contentWrapper}>
-                    <div className={classes.fullWidth}>
-                        <TextField
-                            label='Maintenance Package Name'
-                            placeholder='Type Package Name'
-                            error={!packageName && formIsChecked}
-                            onChange={onNameChange}
-                            value={packageName}/>
-                    </div>
-                    {selectedPackages.map(item => {
-                        const pack = packages.find(el => el.id === item)
-                        return pack ? <PackageLabel pack={pack} onDelete={onPackageDelete} key={pack.name}/> : null
-                    })}
+  const onCancel = useCallback(() => {
+    setFormIsChecked(false);
+    setVehiclesData(initialValues);
+    setPackageName("");
+    setSelectedPackages([]);
+    setAssignedOpsCodes([]);
+    setComplimentary([]);
+    setOpsCodes([]);
+    setSelectedModels([]);
+    setSelectedMakes([]);
+    setApplyBusinessRules(false);
+    setSelectedMileages([]);
+    setSelectedEngineTypes([]);
+    setUpsellCodes([]);
+    props.onClose();
+  }, [initialValues, props.onClose]);
 
-                    <div className={classes.addExisting}>
-                        <IconButton onClick={onExistingOpen} className={classes.iconPlus} size="large">
-                            <AddCircleOutline/>
-                        </IconButton>
-                        <span> Add Existing Maintenance Package</span>
-                    </div>
+  const onNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      setFormIsChecked(false);
+      setPackageName(e.target.value);
+    },
+    []
+  );
 
-                    <div className={classes.label}>Assigned Op Codes</div>
-                    <div className={
-                        assignedOpsCodes?.length
-                            ? classes.opsCodesWrapper
-                            : formIsChecked
-                                ? classes.errorOpsCodes
-                                : classes.emptyOpsCodes
-                    }>
-                    { assignedOpsCodes?.length
-                        ? <AssignedOpsCodes codes={assignedOpsCodes}/>
-                        : <p>There are no Op Codes in this list yet</p>
-                    }
-                    </div>
+  const onFormFieldChange = useCallback(
+    (fieldName: keyof IVehiclesData) =>
+      (e: React.ChangeEvent<{}>, value: string[] | string | null): void => {
+        setFormIsChecked(false);
+        if (fieldName === "customerCriteria") {
+          setVehiclesData((prevData: IVehiclesData) => ({
+            ...prevData,
+            // @ts-ignore
+            [fieldName]: ECustomerCriteria[value],
+          }));
+        } else {
+          setVehiclesData((prevData: IVehiclesData) => ({
+            ...prevData,
+            [fieldName]: value,
+          }));
+        }
+      },
+    []
+  );
 
-                    <Button
-                        className={classes.wideButton}
-                        color="primary"
-                        style={{width: '100%'}}
-                        onClick={onAssignOpsCodeOpen}>
-                        Assign Op Code To Package
-                    </Button>
-
-                    <div className={classes.label}>Op Codes</div>
-                    <div className={opsCodes?.length
-                        ? classes.opsCodesWrapper
-                        : formIsChecked
-                            ? classes.errorOpsCodes
-                            : classes.emptyOpsCodes}>
-                        { opsCodes?.length
-                            ? opsCodes.map((item, index) => <OpsCode
-                                serviceRequest={item.serviceRequest}
-                                onDelete={onDelete}
-                                key={`${item.serviceRequest.id}+${index}`}/>)
-                            : <p>There are no Op Codes in this list yet</p>
-                        }
-                    </div>
-
-                    <div className={classes.btnsWrapper}>
-                        <Button
-                            color="primary"
-                            className={classes.wideButton}
-                            onClick={onAddOpsCodeOpen}>
-                            Add Op Codes
-                        </Button>
-                        <Button
-                            color="primary"
-                            className={classes.wideButton}
-                            onClick={onUpsellOpen}>
-                            Add Interval Upsell
-                        </Button>
-                        <Button
-                            color="primary"
-                            className={classes.wideButton}
-                            onClick={onComplimentaryOpen}>
-                            Add Complimentary
-                        </Button>
-                    </div>
-
-                    <div className={classes.applyRulesWrapper}>
-                        <Checkbox
-                            className={classes.checkbox}
-                            color="primary"
-                            checked={isApplyBusinessRules}
-                            onChange={onApplyBusinessRulesChange}
-                        />
-                        <span className={classes.applyText}>Apply Business Rules To Package</span>
-                    </div>
-
-                    <MakeAndModel
-                        selectedMakes={selectedMakes}
-                        selectedModels={selectedModels}
-                        setSelectedMakes={setSelectedMakes}
-                        setSelectedModels={setSelectedModels}
-                        setFormIsChecked={setFormIsChecked}
-                        disabled={!isApplyBusinessRules}
-                    />
-                    <Mileage
-                        disabled={!isApplyBusinessRules}
-                        selectedMileages={selectedMileages}
-                        setFormIsChecked={setFormIsChecked}
-                        setSelectedMileages={setSelectedMileages}
-                    />
-                    <div style={{ marginBottom: 16}}>
-                        <div className={classes.label}>Vehicle Year</div>
-                        <div className={classes.twoFieldsWrapper}>
-                            <Autocomplete
-                                disabled={!isApplyBusinessRules}
-                                classes={autoCompleteStyles}
-                                disableClearable
-                                options={yearOptions}
-                                disableCloseOnSelect
-                                isOptionEqualToValue={(option, value) => option.toLowerCase() === value.toLowerCase()}
-                                value={vehiclesData?.yearFrom}
-                                onChange={onFormFieldChange('yearFrom')}
-                                renderInput={autocompleteRender({
-                                    label: '',
-                                    placeholder: 'From',
-                                })}
-                            />
-                            <Autocomplete
-                                disabled={!isApplyBusinessRules}
-                                classes={autoCompleteStyles}
-                                options={yearOptions}
-                                disableClearable
-                                disableCloseOnSelect
-                                isOptionEqualToValue={(option, value) => option.toLowerCase() === value.toLowerCase()}
-                                value={vehiclesData?.yearTo}
-                                onChange={onFormFieldChange('yearTo')}
-                                renderInput={autocompleteRender({
-                                    label: '',
-                                    placeholder: 'To',
-                                })}
-                            />
-                        </div>
-                    </div>
-                    <div style={{ marginBottom: 16}}>
-                        <Autocomplete
-                            classes={autoCompleteStyles}
-                            disableClearable
-                            options={criteriaOptions}
-                            isOptionEqualToValue={(option, value) => option === value}
-                            disabled={!isApplyBusinessRules}
-                            value={vehiclesData?.customerCriteria ? ECustomerCriteria[vehiclesData.customerCriteria].toString() : ECustomerCriteria[ECustomerCriteria.Any]}
-                            onChange={onFormFieldChange('customerCriteria')}
-                            renderInput={autocompleteRender({label: 'Customer Criteria', placeholder: 'Select Customer Criteria'})}
-                        />
-                    </div>
-                    <EngineTypes
-                        setSelectedEngineTypes={setSelectedEngineTypes}
-                        selectedEngineTypes={selectedEngineTypes}
-                        setFormIsChecked={setFormIsChecked}
-                        isApplyBusinessRules={isApplyBusinessRules}
-                    />
-                </div>
-
-            </DialogContent>
-            <Divider style={{ margin: 0 }}/>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onSave}
-                            disabled={isPackageLoading}
-                            className={classes.saveButton}>
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            </DialogActions>
-
-            <AssignOpsCode
-                title="ASSIGN OP CODES TO MAINTENANCE PACKAGE OPTIONS"
-                open={isAssignOpsCodeOpen}
-                optionError={optionError}
-                setOptionError={setOptionError}
-                onClose={onAssignOpsCodeClose}
-                selectedCodes={assignedOpsCodes}
-                isEditing={isEditing}
-                setSelectedCodes={setAssignedOpsCodes}/>
-            <AddComplimentary
-                title="Add Complimentary"
-                open={isComplimentaryOpen}
-                onClose={onComplimentaryClose}
-                selectedCodes={complimentary}
-                setSelectedCodes={setComplimentary}/>
-            <AddUpsellToPackageModal
-                handleSelect={handleUpsellCodeSelect}
-                open={isUpsellOpen}
-                onClose={onUpsellClose}
-                selectedCodes={upsellCodes}/>
-            <AddOpsCode
-                handleSelect={handleOpsCodeSelect}
-                open={isAddOpsCodeOpen}
-                onClose={onAddOpsCodeClose}
-                selectedCodes={opsCodes}
-                setSelectedCodes={setOpsCodes}/>
-            <ExistingPackagesModal
-                open={isExistingOpen}
-                onClose={onExistingClose}
-                selectedPackages={selectedPackages}
-                setSelectedPackages={setSelectedPackages}/>
-        </BaseModal>
+  const onDelete = useCallback((serviceRequest: IServiceRequest): void => {
+    setFormIsChecked(false);
+    setOpsCodes((prev) =>
+      prev.filter((item) => serviceRequest.id !== item.serviceRequest.id)
     );
+  }, []);
+
+  const onPackageDelete = useCallback((pack: IPackageByQuery) => {
+    setFormIsChecked(false);
+    setSelectedPackages((prev) =>
+      prev.includes(pack.id)
+        ? prev.filter((el) => el !== pack.id)
+        : [...prev, pack.id]
+    );
+  }, []);
+
+  const onApplyBusinessRulesChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setApplyBusinessRules(e.target.checked);
+
+  const getRequestsFromSelectedPackages = useCallback(
+    (selectedPackages: number[]): number[] => {
+      let serviceRequests = opsCodes.map((item) => item.id);
+      if (selectedPackages.length) {
+        selectedPackages.forEach((id) => {
+          const packData = packages.find((item) => item.id === id);
+          if (packData?.serviceRequests) {
+            serviceRequests = serviceRequests.concat(
+              packData.serviceRequests.map((request) => request.id)
+            );
+          }
+        });
+      }
+      return Array.from(new Set(serviceRequests));
+    },
+    [opsCodes, packages]
+  );
+
+  const isBusinessRulesValid = () => {
+    const { yearFrom, yearTo } = vehiclesData;
+    if (yearFrom && yearTo && +yearFrom > +yearTo) {
+      showError('"From" must be less than or equal to "To"');
+      return false;
+    }
+    const atLeastOneRule =
+      selectedModels.length ||
+      selectedMakes.length ||
+      selectedMileages.length ||
+      (yearFrom && yearTo) ||
+      selectedEngineTypes.length;
+    if (!atLeastOneRule) showError("At least one Business Rule is required");
+    return atLeastOneRule;
+  };
+
+  const isValid = () => {
+    const mainData = packageName && opsCodes.length && assignedOpsCodes.length;
+    const businessRules = isApplyBusinessRules ? isBusinessRulesValid() : true;
+    return Boolean(mainData && businessRules);
+  };
+
+  const onSave = () => {
+    if (isValid()) {
+      if (selectedSC) {
+        const serviceRequests =
+          getRequestsFromSelectedPackages(selectedPackages);
+        const data: INewPackage | IUpdatedPackage = {
+          name: packageName,
+          serviceRequests,
+          complimentaryServices: complimentary,
+          serviceRequestsAssigned: assignedOpsCodes,
+          serviceCenterId: selectedSC.id,
+          isApplyBusinessRules: isApplyBusinessRules,
+          engineTypes: selectedEngineTypes.map((item) => item.id),
+          intervalUpsells: upsellCodes.map((item) => item.id),
+        };
+        if (isApplyBusinessRules && isBusinessRulesValid()) {
+          data.businessRules = {
+            vehicleMakes: selectedMakes,
+            vehicleModels: selectedModels,
+            vehicleYearRange: {
+              from: +vehiclesData.yearFrom,
+              to: +vehiclesData.yearTo,
+            },
+            vehicleMileageValues: selectedMileages,
+            customerCriteria: vehiclesData.customerCriteria,
+            engineTypeIds: [],
+          };
+        } else {
+          if (isEditing) data.businessRules = currentPackage?.businessRules;
+        }
+        try {
+          isEditing && currentPackage
+            ? dispatch(
+                updatePackage(
+                  currentPackage.id,
+                  data,
+                  selectedSC.id,
+                  onCancel,
+                  (e) => showError(e)
+                )
+              )
+            : dispatch(
+                createPackage(selectedSC.id, data, onCancel, (e) =>
+                  showError(e)
+                )
+              );
+        } catch (e) {}
+      }
+    } else setFormIsChecked(true);
+  };
+
+  const handleOpsCodeSelect = useCallback(
+    (el: IAssignedServiceRequest) => {
+      setOpsCodes((prev) => {
+        return prev.find((item) => item.id === el.id)
+          ? prev.filter((item) => item.id !== el.id)
+          : [...prev, el];
+      });
+    },
+    [setOpsCodes]
+  );
+
+  const handleUpsellCodeSelect = useCallback(
+    (el: IUpsellServiceRequest) => {
+      setUpsellCodes((prev) => {
+        return prev.find((item) => item.id === el.id)
+          ? prev.filter((item) => item.id !== el.id)
+          : [...prev, el];
+      });
+    },
+    [setUpsellCodes]
+  );
+
+  return (
+    <BaseModal {...props} width={540} onClose={onCancel}>
+      <DialogTitle onClose={onCancel}>
+        {isEditing ? "Edit" : "Add"} Maintenance Package
+      </DialogTitle>
+      <DialogContent>
+        <div className={classes.contentWrapper}>
+          <div className={classes.fullWidth}>
+            <TextField
+              label="Maintenance Package Name"
+              placeholder="Type Package Name"
+              error={!packageName && formIsChecked}
+              onChange={onNameChange}
+              value={packageName}
+            />
+          </div>
+          {selectedPackages.map((item) => {
+            const pack = packages.find((el) => el.id === item);
+            return pack ? (
+              <PackageLabel
+                pack={pack}
+                onDelete={onPackageDelete}
+                key={pack.name}
+              />
+            ) : null;
+          })}
+
+          <div className={classes.addExisting}>
+            <IconButton
+              onClick={onExistingOpen}
+              className={classes.iconPlus}
+              size="large"
+            >
+              <AddCircleOutline />
+            </IconButton>
+            <span> Add Existing Maintenance Package</span>
+          </div>
+
+          <div className={classes.label}>Assigned Op Codes</div>
+          <div
+            className={
+              assignedOpsCodes?.length
+                ? classes.opsCodesWrapper
+                : formIsChecked
+                  ? classes.errorOpsCodes
+                  : classes.emptyOpsCodes
+            }
+          >
+            {assignedOpsCodes?.length ? (
+              <AssignedOpsCodes codes={assignedOpsCodes} />
+            ) : (
+              <p>There are no Op Codes in this list yet</p>
+            )}
+          </div>
+
+          <Button
+            className={classes.wideButton}
+            color="primary"
+            style={{ width: "100%" }}
+            onClick={onAssignOpsCodeOpen}
+          >
+            Assign Op Code To Package
+          </Button>
+
+          <div className={classes.label}>Op Codes</div>
+          <div
+            className={
+              opsCodes?.length
+                ? classes.opsCodesWrapper
+                : formIsChecked
+                  ? classes.errorOpsCodes
+                  : classes.emptyOpsCodes
+            }
+          >
+            {opsCodes?.length ? (
+              opsCodes.map((item, index) => (
+                <OpsCode
+                  serviceRequest={item.serviceRequest}
+                  onDelete={onDelete}
+                  key={`${item.serviceRequest.id}+${index}`}
+                />
+              ))
+            ) : (
+              <p>There are no Op Codes in this list yet</p>
+            )}
+          </div>
+
+          <div className={classes.btnsWrapper}>
+            <Button
+              color="primary"
+              className={classes.wideButton}
+              onClick={onAddOpsCodeOpen}
+            >
+              Add Op Codes
+            </Button>
+            <Button
+              color="primary"
+              className={classes.wideButton}
+              onClick={onUpsellOpen}
+            >
+              Add Interval Upsell
+            </Button>
+            <Button
+              color="primary"
+              className={classes.wideButton}
+              onClick={onComplimentaryOpen}
+            >
+              Add Complimentary
+            </Button>
+          </div>
+
+          <div className={classes.applyRulesWrapper}>
+            <Checkbox
+              className={classes.checkbox}
+              color="primary"
+              checked={isApplyBusinessRules}
+              onChange={onApplyBusinessRulesChange}
+            />
+            <span className={classes.applyText}>
+              Apply Business Rules To Package
+            </span>
+          </div>
+
+          <MakeAndModel
+            selectedMakes={selectedMakes}
+            selectedModels={selectedModels}
+            setSelectedMakes={setSelectedMakes}
+            setSelectedModels={setSelectedModels}
+            setFormIsChecked={setFormIsChecked}
+            disabled={!isApplyBusinessRules}
+          />
+          <Mileage
+            disabled={!isApplyBusinessRules}
+            selectedMileages={selectedMileages}
+            setFormIsChecked={setFormIsChecked}
+            setSelectedMileages={setSelectedMileages}
+          />
+          <div style={{ marginBottom: 16 }}>
+            <div className={classes.label}>Vehicle Year</div>
+            <div className={classes.twoFieldsWrapper}>
+              <Autocomplete
+                disabled={!isApplyBusinessRules}
+                classes={autoCompleteStyles}
+                disableClearable
+                options={yearOptions}
+                disableCloseOnSelect
+                isOptionEqualToValue={(option, value) =>
+                  option.toLowerCase() === value.toLowerCase()
+                }
+                value={vehiclesData?.yearFrom}
+                onChange={onFormFieldChange("yearFrom")}
+                renderInput={autocompleteRender({
+                  label: "",
+                  placeholder: "From",
+                })}
+              />
+              <Autocomplete
+                disabled={!isApplyBusinessRules}
+                classes={autoCompleteStyles}
+                options={yearOptions}
+                disableClearable
+                disableCloseOnSelect
+                isOptionEqualToValue={(option, value) =>
+                  option.toLowerCase() === value.toLowerCase()
+                }
+                value={vehiclesData?.yearTo}
+                onChange={onFormFieldChange("yearTo")}
+                renderInput={autocompleteRender({
+                  label: "",
+                  placeholder: "To",
+                })}
+              />
+            </div>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <Autocomplete
+              classes={autoCompleteStyles}
+              disableClearable
+              options={criteriaOptions}
+              isOptionEqualToValue={(option, value) => option === value}
+              disabled={!isApplyBusinessRules}
+              value={
+                vehiclesData?.customerCriteria
+                  ? ECustomerCriteria[vehiclesData.customerCriteria].toString()
+                  : ECustomerCriteria[ECustomerCriteria.Any]
+              }
+              onChange={onFormFieldChange("customerCriteria")}
+              renderInput={autocompleteRender({
+                label: "Customer Criteria",
+                placeholder: "Select Customer Criteria",
+              })}
+            />
+          </div>
+          <EngineTypes
+            setSelectedEngineTypes={setSelectedEngineTypes}
+            selectedEngineTypes={selectedEngineTypes}
+            setFormIsChecked={setFormIsChecked}
+            isApplyBusinessRules={isApplyBusinessRules}
+          />
+        </div>
+      </DialogContent>
+      <Divider style={{ margin: 0 }} />
+      <DialogActions>
+        <div className={classes.wrapper}>
+          <div className={classes.buttonsWrapper}>
+            <Button onClick={onCancel} className={classes.cancelButton}>
+              Cancel
+            </Button>
+            <Button
+              onClick={onSave}
+              disabled={isPackageLoading}
+              className={classes.saveButton}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+      </DialogActions>
+
+      <AssignOpsCode
+        title="ASSIGN OP CODES TO MAINTENANCE PACKAGE OPTIONS"
+        open={isAssignOpsCodeOpen}
+        optionError={optionError}
+        setOptionError={setOptionError}
+        onClose={onAssignOpsCodeClose}
+        selectedCodes={assignedOpsCodes}
+        isEditing={isEditing}
+        setSelectedCodes={setAssignedOpsCodes}
+      />
+      <AddComplimentary
+        title="Add Complimentary"
+        open={isComplimentaryOpen}
+        onClose={onComplimentaryClose}
+        selectedCodes={complimentary}
+        setSelectedCodes={setComplimentary}
+      />
+      <AddUpsellToPackageModal
+        handleSelect={handleUpsellCodeSelect}
+        open={isUpsellOpen}
+        onClose={onUpsellClose}
+        selectedCodes={upsellCodes}
+      />
+      <AddOpsCode
+        handleSelect={handleOpsCodeSelect}
+        open={isAddOpsCodeOpen}
+        onClose={onAddOpsCodeClose}
+        selectedCodes={opsCodes}
+        setSelectedCodes={setOpsCodes}
+      />
+      <ExistingPackagesModal
+        open={isExistingOpen}
+        onClose={onExistingClose}
+        selectedPackages={selectedPackages}
+        setSelectedPackages={setSelectedPackages}
+      />
+    </BaseModal>
+  );
 };
 
 export default AddPackageModal;

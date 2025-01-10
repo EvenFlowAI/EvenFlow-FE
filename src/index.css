@@ -2,7 +2,9 @@
 
 @font-face {
   font-family: "Proxima Nova";
-  src: local('Proxima Nova'), url('./assets/fonts/ProximaNova-Regular.otf') format('opentype');
+  src:
+    local("Proxima Nova"),
+    url("./assets/fonts/ProximaNova-Regular.otf") format("opentype");
   font-weight: 400;
 }
 
@@ -10,7 +12,9 @@
 
 @font-face {
   font-family: "Proxima Nova";
-  src: local('Proxima Nova'), url('./assets/fonts/Proxima Nova Bold.otf') format('opentype');
+  src:
+    local("Proxima Nova"),
+    url("./assets/fonts/Proxima Nova Bold.otf") format("opentype");
   font-weight: 700;
 }
 
@@ -18,7 +22,9 @@
 
 @font-face {
   font-family: "Proxima Nova";
-  src: local('Proxima Nova'), url('./assets/fonts/Proxima Nova Extrabold.otf') format('opentype');
+  src:
+    local("Proxima Nova"),
+    url("./assets/fonts/Proxima Nova Extrabold.otf") format("opentype");
   font-weight: 900;
 }
 
@@ -26,7 +32,9 @@
 
 @font-face {
   font-family: "Proxima Nova";
-  src: local('Proxima Nova'), url('./assets/fonts/Proxima Nova Thin.otf') format('opentype');
+  src:
+    local("Proxima Nova"),
+    url("./assets/fonts/Proxima Nova Thin.otf") format("opentype");
   font-weight: 100;
 }
 
@@ -39,7 +47,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 .nowrap {

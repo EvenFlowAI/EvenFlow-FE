@@ -30,7 +30,7 @@ const Filters: React.FC<TProps> = ({
   disabled,
 }) => {
   const { allMakesOptions } = useSelector(
-    (state: RootState) => state.globalVehicles
+    (state: RootState) => state.globalVehicles,
   );
   const { classes } = useAutocompleteStyles();
   return (

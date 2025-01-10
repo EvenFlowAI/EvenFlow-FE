@@ -50,13 +50,13 @@ const AppointmentFlow = () => {
     zipCode,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { customerLoadedData, scProfile, selectedSR } = useSelector(
-    (state: RootState) => state.appointment
+    (state: RootState) => state.appointment,
   );
   const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
+    (state: RootState) => state.serviceTypes,
   );
   const { engineTypes } = useSelector(
-    (state: RootState) => state.vehicleDetails
+    (state: RootState) => state.vehicleDetails,
   );
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
   const {
@@ -68,7 +68,7 @@ const AppointmentFlow = () => {
   const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>(
     serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter
       ? "location"
-      : "serviceNeeds"
+      : "serviceNeeds",
   );
   const [loadingCar, setLoadingCar] = useState<boolean>(false);
   const [needToShowServiceTypes, setNeedToShowServiceTypes] =
@@ -84,7 +84,7 @@ const AppointmentFlow = () => {
 
   const isAuth = useMemo(
     () => currentUser?.dealershipId === scProfile?.dealershipId,
-    [currentUser, scProfile]
+    [currentUser, scProfile],
   );
 
   const onCarIsValid = useCallback(() => {
@@ -122,11 +122,11 @@ const AppointmentFlow = () => {
         history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
       } else if (scProfile?.id) {
         history.push(
-          Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1"
+          Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1",
         );
       }
     },
-    [id, history, dispatch, scProfile]
+    [id, history, dispatch, scProfile],
   );
 
   const handleLogin = useCallback(() => {
@@ -152,8 +152,8 @@ const AppointmentFlow = () => {
       if (data.serviceTypeOption) {
         const optionExists = Boolean(
           firstScreenOptions.find(
-            (item) => item.id === data.serviceTypeOption?.id
-          )
+            (item) => item.id === data.serviceTypeOption?.id,
+          ),
         );
         if (optionExists) {
           needToShowService = false;
@@ -163,7 +163,7 @@ const AppointmentFlow = () => {
       }
       setNeedToShowServiceTypes(needToShowService);
     },
-    [needToShowServiceTypes, firstScreenOptions]
+    [needToShowServiceTypes, firstScreenOptions],
   );
 
   const goToServiceTypeSelection = useCallback(() => {
@@ -184,8 +184,8 @@ const AppointmentFlow = () => {
           isAuth,
           id,
           handleServiceTypeOption,
-          showError
-        )
+          showError,
+        ),
       );
     },
     [
@@ -208,13 +208,13 @@ const AppointmentFlow = () => {
       selectedVehicle,
       engineTypes,
       isAuth,
-    ]
+    ],
   );
 
   const onSelectAppointment = async (car: ILoadedVehicle) => {
     customerLoadedData &&
       dispatch(
-        setCustomerLoadedData({ ...customerLoadedData, isUpdating: true })
+        setCustomerLoadedData({ ...customerLoadedData, isUpdating: true }),
       );
     await onUpdateAppointment(car);
     dispatch(setCurrentFrameScreen("manageAppointment"));

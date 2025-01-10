@@ -1,46 +1,46 @@
-import {EServiceType} from "../appointmentFrameReducer/types";
-import {ETransportationType} from "../transportationNeeds/types";
+import { EServiceType } from "../appointmentFrameReducer/types";
+import { ETransportationType } from "../transportationNeeds/types";
 
 export interface IFirstScreenTransportation {
-    id: number;
-    type: ETransportationType;
-    column: string;
-    name: string;
-    description: string;
+  id: number;
+  type: ETransportationType;
+  column: string;
+  name: string;
+  description: string;
 }
 
 export interface IFirstScreenOption {
-    id: number;
-    name: string;
-    iconPath?: string;
-    type: EServiceType;
-    orderIndex: number;
-    description?: string;
-    note?: string;
-    transportationOption?: IFirstScreenTransportation;
-    externalLink?: string;
-    taglineText?: string;
-    taglineFontColorHex?: string;
+  id: number;
+  name: string;
+  iconPath?: string;
+  type: EServiceType;
+  orderIndex: number;
+  description?: string;
+  note?: string;
+  transportationOption?: IFirstScreenTransportation;
+  externalLink?: string;
+  taglineText?: string;
+  taglineFontColorHex?: string;
 }
 
 export type TUpdateFirstScreenOption = {
-    name: string;
-    type: EServiceType|string;
-    orderIndex: number;
-    description?: string;
-    note?: string;
-    transportationOptionId?: number;
-    externalLink?: string;
-    taglineText?: string|null;
-    taglineFontColorHex?: string|null;
-}
+  name: string;
+  type: EServiceType | string;
+  orderIndex: number;
+  description?: string;
+  note?: string;
+  transportationOptionId?: number;
+  externalLink?: string;
+  taglineText?: string | null;
+  taglineFontColorHex?: string | null;
+};
 
 export type TNewFirstScreenOption = TUpdateFirstScreenOption & {
-    serviceCenterId: number;
-}
+  serviceCenterId: number;
+};
 
 export type TState = {
-    firstScreenOptions: IFirstScreenOption[];
-    isLoading: boolean;
-    withoutOptions: boolean;
-}
+  firstScreenOptions: IFirstScreenOption[];
+  isLoading: boolean;
+  withoutOptions: boolean;
+};

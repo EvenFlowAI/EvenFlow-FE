@@ -1,13 +1,13 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
-// 
+//
 export const useOfferInputStyles = makeStyles()(() => ({
-    input: {
-        '& > label': {
-            color: '#FFFFFF'
-        },
-        '& > input': {
-            backgroundColor: "#FFFFFF",
-        },
-    }
+  input: {
+    "& > label": {
+      color: "#FFFFFF",
+    },
+    "& > input": {
+      backgroundColor: "#FFFFFF",
+    },
+  },
 }));

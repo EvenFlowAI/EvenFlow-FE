@@ -1,31 +1,31 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
-export const useStyles = makeStyles()(theme => ({
-    info: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 20,
+export const useStyles = makeStyles()((theme) => ({
+  info: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  question: {
+    marginTop: 20,
+    textAlign: "center",
+  },
+  actionsWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    [`${theme.breakpoints.down("md")} and (orientation: portrait)`]: {
+      "& > div": {
+        flexDirection: "column",
+        padding: "0 16px",
+        "& > button:first-child": {
+          order: 2,
+        },
+      },
     },
-    question: {
-        marginTop: 20,
-        textAlign: "center",
-    },
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'center',
-        [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
-            '& > div': {
-                flexDirection: 'column',
-                padding: '0 16px',
-                '& > button:first-child': {
-                    order: 2
-                }
-            }
-        }
-    }
+  },
 }));

@@ -22,7 +22,7 @@ const useGetTransportationsData = () => {
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { selectedSR, scProfile } = useSelector(
-    (state: RootState) => state.appointment
+    (state: RootState) => state.appointment,
   );
   const [data, setData] = useState<TTransportationData | null>(null);
 
@@ -31,8 +31,8 @@ const useGetTransportationsData = () => {
       const maintenancePackageOption = selectedPackage
         ? { id: selectedPackage?.id, priceType: packagePricingType }
         : packageEMenuType !== null
-        ? { optionType: packageEMenuType }
-        : null;
+          ? { optionType: packageEMenuType }
+          : null;
 
       const serviceCategoryIds = allCategories
         .filter((category) => {
@@ -49,7 +49,7 @@ const useGetTransportationsData = () => {
           service,
           subService,
           null,
-          selectedSR
+          selectedSR,
         ),
         serviceCategoryIds,
         recalls: mapRecallsForRequest(selectedRecalls),

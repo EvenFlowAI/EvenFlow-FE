@@ -1,5 +1,6 @@
-import {IScheduleByDate} from "../../../../store/reducers/schedules/types";
+import { IScheduleByDate } from "../../../../store/reducers/schedules/types";
 
-export const compareName = (a: IScheduleByDate, b: IScheduleByDate) => a.employeeName === b.employeeName
+export const compareName = (a: IScheduleByDate, b: IScheduleByDate) =>
+  a.employeeName === b.employeeName
     ? a.id - b.id
-    : a.employeeName.localeCompare(b.employeeName)
+    : a.employeeName.localeCompare(b.employeeName);

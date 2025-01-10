@@ -1,143 +1,225 @@
-import React, {useState} from 'react';
-import {BaseModal, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {Delete, EditOutlined} from "@mui/icons-material";
-import {Divider, IconButton} from "@mui/material";
-import HtmlEditor from "../../../../components/modals/admin/HTMLEditor/HTMLEditor";
-import {TExtendedComplimentary, TExtendedService} from "../../../../api/types";
-import {Loading} from "../../../../components/wrappers/Loading/Loading";
+import React, { useState } from "react";
 import {
-    updatePackageComplimentaryDescription,
-    updatePackageSRDescription
+  BaseModal,
+  DialogContent,
+  DialogTitle,
+} from "../../../../components/modals/BaseModal/BaseModal";
+import { DialogProps } from "../../../../components/modals/BaseModal/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../store/rootReducer";
+import { Delete, EditOutlined } from "@mui/icons-material";
+import { Divider, IconButton } from "@mui/material";
+import HtmlEditor from "../../../../components/modals/admin/HTMLEditor/HTMLEditor";
+import {
+  TExtendedComplimentary,
+  TExtendedService,
+} from "../../../../api/types";
+import { Loading } from "../../../../components/wrappers/Loading/Loading";
+import {
+  updatePackageComplimentaryDescription,
+  updatePackageSRDescription,
 } from "../../../../store/reducers/packages/actions";
-import {useStyles} from "./styles";
-import {useModal} from "../../../../hooks/useModal/useModal";
-import {useException} from "../../../../hooks/useException/useException";
+import { useStyles } from "./styles";
+import { useModal } from "../../../../hooks/useModal/useModal";
+import { useException } from "../../../../hooks/useException/useException";
 
 type TDescriptionProps = DialogProps;
 
-const DescriptionModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TDescriptionProps>>>  = ({open, onClose}) => {
-    const { isPackageLoading, currentPackage } = useSelector((state: RootState) => state.packages);
-    const [editingElement, setEditingElement] = useState<TExtendedService|TExtendedComplimentary|null>(null);
-    const [editingElementType, setEditingElementType] = useState<"service"|"complimentary"|null>(null);
-    const {onOpen: onEditorOpen, isOpen: isEditorOpen, onClose: onEditorClose} = useModal();
-    const dispatch = useDispatch();
-    const showError = useException();
-    const { classes  } = useStyles();
+const DescriptionModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TDescriptionProps>>
+> = ({ open, onClose }) => {
+  const { isPackageLoading, currentPackage } = useSelector(
+    (state: RootState) => state.packages,
+  );
+  const [editingElement, setEditingElement] = useState<
+    TExtendedService | TExtendedComplimentary | null
+  >(null);
+  const [editingElementType, setEditingElementType] = useState<
+    "service" | "complimentary" | null
+  >(null);
+  const {
+    onOpen: onEditorOpen,
+    isOpen: isEditorOpen,
+    onClose: onEditorClose,
+  } = useModal();
+  const dispatch = useDispatch();
+  const showError = useException();
+  const { classes } = useStyles();
 
-    const onCancel = () => {
-        setEditingElement(null);
-        onClose();
-    }
+  const onCancel = () => {
+    setEditingElement(null);
+    onClose();
+  };
 
-    const onEditSR = async(item: TExtendedService) => {
-        await setEditingElement(item)
-        await setEditingElementType("service");
-        onEditorOpen()
-    }
+  const onEditSR = async (item: TExtendedService) => {
+    await setEditingElement(item);
+    await setEditingElementType("service");
+    onEditorOpen();
+  };
 
-    const onEditComplimentary = async (item: TExtendedComplimentary) => {
-        await setEditingElement(item)
-        await setEditingElementType("complimentary");
-        onEditorOpen()
-    }
+  const onEditComplimentary = async (item: TExtendedComplimentary) => {
+    await setEditingElement(item);
+    await setEditingElementType("complimentary");
+    onEditorOpen();
+  };
 
-    const onDeleteSR = (item: TExtendedService) => {
-        if (currentPackage) dispatch(updatePackageSRDescription(currentPackage.id, item.id, null, showError));
-    }
+  const onDeleteSR = (item: TExtendedService) => {
+    if (currentPackage)
+      dispatch(
+        updatePackageSRDescription(currentPackage.id, item.id, null, showError),
+      );
+  };
 
-    const onDeleteComplimentary = (item: TExtendedComplimentary) => {
-        if (currentPackage) dispatch(updatePackageComplimentaryDescription(currentPackage.id, item.id, null, showError));
-    }
+  const onDeleteComplimentary = (item: TExtendedComplimentary) => {
+    if (currentPackage)
+      dispatch(
+        updatePackageComplimentaryDescription(
+          currentPackage.id,
+          item.id,
+          null,
+          showError,
+        ),
+      );
+  };
 
-    const onSave = (description: string) => {
-        const trimmed = description.trim();
-        if (trimmed.length > 300) return showError("The description can`t include more than 300 characters")
-        if (currentPackage && editingElement) {
-            if (trimmed.length && trimmed !== '<p></p>') {
-                if (editingElementType === "service") {
-                    dispatch(updatePackageSRDescription(currentPackage.id, editingElement.id, trimmed, showError, () => onEditorClose()))
-                } else if (editingElementType === "complimentary") {
-                    dispatch(updatePackageComplimentaryDescription(currentPackage.id, editingElement.id, trimmed, showError, () => onEditorClose()))
-                } else {
-                    return;
-                }
-            } else showError("Please enter the description text")
+  const onSave = (description: string) => {
+    const trimmed = description.trim();
+    if (trimmed.length > 300)
+      return showError(
+        "The description can`t include more than 300 characters",
+      );
+    if (currentPackage && editingElement) {
+      if (trimmed.length && trimmed !== "<p></p>") {
+        if (editingElementType === "service") {
+          dispatch(
+            updatePackageSRDescription(
+              currentPackage.id,
+              editingElement.id,
+              trimmed,
+              showError,
+              () => onEditorClose(),
+            ),
+          );
+        } else if (editingElementType === "complimentary") {
+          dispatch(
+            updatePackageComplimentaryDescription(
+              currentPackage.id,
+              editingElement.id,
+              trimmed,
+              showError,
+              () => onEditorClose(),
+            ),
+          );
+        } else {
+          return;
         }
+      } else showError("Please enter the description text");
     }
+  };
 
-    return (
-        <BaseModal open={open} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Describe Maintenance Package's Op Codes</DialogTitle>
-            {isPackageLoading
-                ? <Loading/>
-                : <DialogContent sx={{fontSize: 14}}>
-                    <h3 className={classes.title}>Op Codes</h3>
-                    <div className={classes.wrapper}>
-                        <h4>Op Code</h4>
-                        <h4>Title</h4>
-                        <h4>Description</h4>
-                        <h4 className={classes.title}>Edit</h4>
-                        <h4 className={classes.title}>Delete</h4>
-                    </div>
-                    {currentPackage?.serviceRequests
-                        .slice()
-                        .sort((a, b) => a.orderIndex - b.orderIndex)
-                        .map(item => <div className={classes.wrapper} key={item.id}>
-                        <p>{item.code}</p>
-                        <p>{item.description}</p>
-                        <div>
-                            {item.detailedDescription ?
-                                <div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>
-                                : <h3>_</h3> }
-                        </div>
-                        <div className={classes.iconWrapper}>
-                            <IconButton size="small" onClick={() => onEditSR(item)}><EditOutlined/></IconButton>
-                        </div>
-                        <div className={classes.iconWrapper}>
-                            <IconButton size="small" onClick={() => onDeleteSR(item)}><Delete/></IconButton>
-                        </div>
-                    </div>)}
-                    <Divider/>
-                    <h3 className={classes.title}>Complimentary Services</h3>
-                    <div className={classes.wrapper}>
-                        <h4/>
-                        <h4>Title</h4>
-                        <h4>Description</h4>
-                        <h4 className={classes.title}>Edit</h4>
-                        <h4 className={classes.title}>Delete</h4>
-                    </div>
-                    {currentPackage?.complimentaryServices
-                        .slice()
-                        .sort((a, b) => a.orderIndex - b.orderIndex)
-                        .map(item => <div className={classes.wrapper} key={item.id}>
-                        <div/>
-                        <p>{item.name}</p>
-                        <div>
-                            {item.detailedDescription
-                                ? <div dangerouslySetInnerHTML={{__html: item.detailedDescription}}/>
-                                : <h3>_</h3>}
-                        </div>
-                        <div className={classes.iconWrapper}>
-                            <IconButton size="small" onClick={() => onEditComplimentary(item)}><EditOutlined/></IconButton>
-                        </div>
-                        <div className={classes.iconWrapper}>
-                            <IconButton size="small" onClick={() => onDeleteComplimentary(item)}><Delete/></IconButton>
-                        </div>
-                    </div>)}
-                </DialogContent>
-            }
-            <HtmlEditor
-                open={isEditorOpen}
-                onSave={onSave}
-                onClose={onEditorClose}
-                title="Edit Request Description"
-                payload={editingElement?.detailedDescription ?? undefined}
-            />
-        </BaseModal>
-    );
+  return (
+    <BaseModal open={open} onClose={onCancel}>
+      <DialogTitle onClose={onCancel}>
+        Describe Maintenance Package's Op Codes
+      </DialogTitle>
+      {isPackageLoading ? (
+        <Loading />
+      ) : (
+        <DialogContent sx={{ fontSize: 14 }}>
+          <h3 className={classes.title}>Op Codes</h3>
+          <div className={classes.wrapper}>
+            <h4>Op Code</h4>
+            <h4>Title</h4>
+            <h4>Description</h4>
+            <h4 className={classes.title}>Edit</h4>
+            <h4 className={classes.title}>Delete</h4>
+          </div>
+          {currentPackage?.serviceRequests
+            .slice()
+            .sort((a, b) => a.orderIndex - b.orderIndex)
+            .map((item) => (
+              <div className={classes.wrapper} key={item.id}>
+                <p>{item.code}</p>
+                <p>{item.description}</p>
+                <div>
+                  {item.detailedDescription ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.detailedDescription,
+                      }}
+                    />
+                  ) : (
+                    <h3>_</h3>
+                  )}
+                </div>
+                <div className={classes.iconWrapper}>
+                  <IconButton size="small" onClick={() => onEditSR(item)}>
+                    <EditOutlined />
+                  </IconButton>
+                </div>
+                <div className={classes.iconWrapper}>
+                  <IconButton size="small" onClick={() => onDeleteSR(item)}>
+                    <Delete />
+                  </IconButton>
+                </div>
+              </div>
+            ))}
+          <Divider />
+          <h3 className={classes.title}>Complimentary Services</h3>
+          <div className={classes.wrapper}>
+            <h4 />
+            <h4>Title</h4>
+            <h4>Description</h4>
+            <h4 className={classes.title}>Edit</h4>
+            <h4 className={classes.title}>Delete</h4>
+          </div>
+          {currentPackage?.complimentaryServices
+            .slice()
+            .sort((a, b) => a.orderIndex - b.orderIndex)
+            .map((item) => (
+              <div className={classes.wrapper} key={item.id}>
+                <div />
+                <p>{item.name}</p>
+                <div>
+                  {item.detailedDescription ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.detailedDescription,
+                      }}
+                    />
+                  ) : (
+                    <h3>_</h3>
+                  )}
+                </div>
+                <div className={classes.iconWrapper}>
+                  <IconButton
+                    size="small"
+                    onClick={() => onEditComplimentary(item)}
+                  >
+                    <EditOutlined />
+                  </IconButton>
+                </div>
+                <div className={classes.iconWrapper}>
+                  <IconButton
+                    size="small"
+                    onClick={() => onDeleteComplimentary(item)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </div>
+              </div>
+            ))}
+        </DialogContent>
+      )}
+      <HtmlEditor
+        open={isEditorOpen}
+        onSave={onSave}
+        onClose={onEditorClose}
+        title="Edit Request Description"
+        payload={editingElement?.detailedDescription ?? undefined}
+      />
+    </BaseModal>
+  );
 };
 
 export default DescriptionModal;

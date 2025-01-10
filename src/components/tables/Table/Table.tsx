@@ -57,7 +57,7 @@ export function Table<U>({
       verticalAlign: props.verticalAlign,
       verticalPadding: props.verticalPadding,
     }),
-    [props]
+    [props],
   );
 
   const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
@@ -125,7 +125,7 @@ export function Table<U>({
                         rE.header
                       )}
                     </StyledTableHead>
-                  )
+                  ),
                 )}
                 {props.actions && !props.viewMode ? (
                   <StyledTableHead {...styleProps} />
@@ -156,7 +156,7 @@ export function Table<U>({
                       >
                         {cellData.val(row, idx) || "-"}
                       </StyledTableCell>
-                    )
+                    ),
                   )}
                   {props.actions && !props.viewMode ? (
                     <StyledTableCell

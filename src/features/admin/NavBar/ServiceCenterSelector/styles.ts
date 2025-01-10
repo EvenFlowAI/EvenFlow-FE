@@ -1,10 +1,10 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
 export const useStyles = makeStyles()({
-    root: {
-        color: "#858585",
-        marginRight: 10,
-        fontSize: 16,
-        textTransform: "none"
-    }
+  root: {
+    color: "#858585",
+    marginRight: 10,
+    fontSize: 16,
+    textTransform: "none",
+  },
 });

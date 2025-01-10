@@ -137,7 +137,7 @@ export const AppointmentSlots: React.FC<
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
   const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
+    (state: RootState) => state.serviceTypes,
   );
 
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf("day"));
@@ -147,7 +147,7 @@ export const AppointmentSlots: React.FC<
   const serviceType = useMemo(
     () =>
       serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter,
-    [serviceTypeOption]
+    [serviceTypeOption],
   );
   const { id } = useParams<{ id: string }>();
   const initRef = useRef<boolean>(false);
@@ -173,7 +173,7 @@ export const AppointmentSlots: React.FC<
       serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? !serviceValetAppointment
         : !appointment,
-    [appointment, serviceValetAppointment]
+    [appointment, serviceValetAppointment],
   );
 
   const groupedAppointments: TGroupedAppointments = useMemo(() => {
@@ -185,7 +185,7 @@ export const AppointmentSlots: React.FC<
       serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? serviceValetSlots
         : appointmentSlots,
-    [serviceTypeOption, serviceValetSlots, appointmentSlots]
+    [serviceTypeOption, serviceValetSlots, appointmentSlots],
   );
 
   const currentAppointment = useMemo(() => {
@@ -203,7 +203,7 @@ export const AppointmentSlots: React.FC<
           label: advisor ? advisor.name : "Any available",
           nonInteraction: true,
         },
-        trackerData.ids
+        trackerData.ids,
       );
     }
     if (appointment) {
@@ -221,7 +221,7 @@ export const AppointmentSlots: React.FC<
                     : ""
                 }`,
         },
-        trackerData.ids
+        trackerData.ids,
       );
     }
   }, [advisor, appointment, consultants, currentConfig, trackerData]);
@@ -247,8 +247,8 @@ export const AppointmentSlots: React.FC<
         const dateWithOffset = dayjs(newDate).isSame(dayjs(), "date")
           ? dayjs()
           : utcOffset > 0
-          ? dayjs(newDate)
-          : getClearDate(newDate);
+            ? dayjs(newDate)
+            : getClearDate(newDate);
         let firstAvailableSlot = null;
         if (serviceOption?.type === EServiceType.PickUpDropOff) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
@@ -276,7 +276,7 @@ export const AppointmentSlots: React.FC<
         }
       }
     },
-    [serviceValetSlots, appointmentSlots, currentSlots]
+    [serviceValetSlots, appointmentSlots, currentSlots],
   );
 
   useEffect(() => {
@@ -284,18 +284,18 @@ export const AppointmentSlots: React.FC<
       const utcOffset = dayjs().utcOffset();
       const dateWithOffset = dayjs(slotsSearchedDate as TParsableDate).isSame(
         dayjs(),
-        "date"
+        "date",
       )
         ? dayjs()
         : utcOffset > 0
-        ? dayjs(slotsSearchedDate as TParsableDate)
-        : getClearDate(slotsSearchedDate as TParsableDate);
+          ? dayjs(slotsSearchedDate as TParsableDate)
+          : getClearDate(slotsSearchedDate as TParsableDate);
       if (currentAppointment?.date) {
         const sameSearchDate = getClearDate(
-          currentAppointment.searchDate
+          currentAppointment.searchDate,
         ).isSame(dateWithOffset, "date");
         const slotTimeIsValid = dayjs(
-          getClearDate(currentAppointment.date)
+          getClearDate(currentAppointment.date),
         ).isAfter(dateWithOffset);
         const theSameServiceOption =
           slotsServiceTypeOptionId === serviceTypeOption?.id;
@@ -307,7 +307,7 @@ export const AppointmentSlots: React.FC<
               ? selectFirstSlot(
                   dayjs(selectedTime).isSame(dayjs(), "date")
                     ? dayjs()
-                    : selectedTime
+                    : selectedTime,
                 )
               : selectFirstSlot();
           } else {
@@ -318,7 +318,7 @@ export const AppointmentSlots: React.FC<
             ? selectFirstSlot(
                 dayjs(selectedTime).isSame(dayjs(), "date")
                   ? dayjs()
-                  : selectedTime
+                  : selectedTime,
               )
             : selectFirstSlot();
         }
@@ -327,7 +327,7 @@ export const AppointmentSlots: React.FC<
           ? selectFirstSlot(
               dayjs(selectedTime).isSame(dayjs(), "date")
                 ? dayjs()
-                : selectedTime
+                : selectedTime,
             )
           : selectFirstSlot();
       }
@@ -348,7 +348,7 @@ export const AppointmentSlots: React.FC<
     let timeoutId: any = null;
     const isTodaySlot = dayjs(appointment?.date).isSame(dayjs.utc(), "day");
     const differenceInMSeconds = dayjs(
-      dayjs(appointment?.date).format("YYYY-MM-DDTHH:mm:ss")
+      dayjs(appointment?.date).format("YYYY-MM-DDTHH:mm:ss"),
     ).diff(dayjs.utc());
     if (isTodaySlot && differenceInMSeconds > 0) {
       timeoutId = setTimeout(() => {
@@ -369,8 +369,8 @@ export const AppointmentSlots: React.FC<
       clearAppointmentSteps(
         isTransportationAvailable
           ? "transportationNeeds"
-          : "appointmentSelection"
-      )
+          : "appointmentSelection",
+      ),
     );
   };
 
@@ -384,7 +384,7 @@ export const AppointmentSlots: React.FC<
         setMonth(d);
       }
     },
-    [month, selectedTiming, selectFirstSlot]
+    [month, selectedTiming, selectFirstSlot],
   );
 
   const onChangeServiceOption = () => {
@@ -397,7 +397,7 @@ export const AppointmentSlots: React.FC<
         setDate(dayjs(d).startOf("day"));
       }
     },
-    [selectedTiming]
+    [selectedTiming],
   );
 
   const handleDateRangeSet = useCallback((v: boolean) => {
@@ -443,8 +443,8 @@ export const AppointmentSlots: React.FC<
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
           ? { id: selectedPackage?.id, priceType: packagePricingType }
           : packageEMenuType !== null
-          ? { optionType: packageEMenuType }
-          : null;
+            ? { optionType: packageEMenuType }
+            : null;
 
         const transportationOptionId: number | null =
           (serviceTypeOption?.type === EServiceType.VisitCenter ||
@@ -470,7 +470,7 @@ export const AppointmentSlots: React.FC<
             service,
             subService,
             selectedPackage,
-            selectedSR
+            selectedSR,
           ),
           serviceCategoryIds: getCategories(),
           customerId: customerLoadedData?.id,
@@ -511,8 +511,8 @@ export const AppointmentSlots: React.FC<
                 undefined,
                 undefined,
                 onLoadSlots,
-                handleError
-              )
+                handleError,
+              ),
             );
         } else {
           await dispatch(
@@ -521,8 +521,8 @@ export const AppointmentSlots: React.FC<
               currentAppointment ? () => {} : setDateCallback,
               () => handleDateRangeSet(false),
               onLoadSlots,
-              handleError
-            )
+              handleError,
+            ),
           );
         }
       } finally {
@@ -535,7 +535,8 @@ export const AppointmentSlots: React.FC<
     const mileageIsValid =
       selectedVehicle?.mileage &&
       mileage.find(
-        (item) => item.value.toString() === selectedVehicle?.mileage?.toString()
+        (item) =>
+          item.value.toString() === selectedVehicle?.mileage?.toString(),
       );
     if (!mileageIsValid) {
       setLoading(true);
@@ -588,7 +589,7 @@ export const AppointmentSlots: React.FC<
             .utc(appointment.date)
             .format("hh:mm A")}`,
         },
-        trackerData.ids
+        trackerData.ids,
       );
     }
   }, [appointment, serviceTypeOption, trackerData]);
@@ -600,7 +601,7 @@ export const AppointmentSlots: React.FC<
         action: "Went back",
         label: "From Selection Date & Time Page",
       },
-      trackerData.ids
+      trackerData.ids,
     );
   }, [trackerData]);
 
@@ -624,14 +625,14 @@ export const AppointmentSlots: React.FC<
       (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)
     ) {
       dispatch(
-        setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null)
+        setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null),
       );
       dispatch(setWelcomeScreenView("serviceSelect"));
       history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
     } else {
       if (editingPosition === "slot" && serviceOptionChangedFromSlotPage) {
         dispatch(
-          setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null)
+          setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null),
         );
       }
       handleSetScreen(prevLogicalScreen);

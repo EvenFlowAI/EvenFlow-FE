@@ -41,10 +41,10 @@ import { QueryTypes, ServiceValetRoutes } from "../../../routes/types";
 export const Transportations = () => {
   const { push } = useHistory();
   const { options, isLoading } = useSelector(
-    (state: RootState) => state.transportation
+    (state: RootState) => state.transportation,
   );
   const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
+    (state: RootState) => state.serviceTypes,
   );
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const [editingElement, setEditingElement] =
@@ -79,10 +79,10 @@ export const Transportations = () => {
     const option = options.find((item) => item.id === id);
     if (selectedSC && option) {
       const pickUpConfig = config.find(
-        (el) => el.serviceType === EServiceType.PickUpDropOff
+        (el) => el.serviceType === EServiceType.PickUpDropOff,
       );
       const pickUpOption = firstScreenOptions.find(
-        (el) => el.type === EServiceType.PickUpDropOff
+        (el) => el.type === EServiceType.PickUpDropOff,
       );
       const isValid =
         value && option?.type === ETransportationType.PickUpDelivery
@@ -95,7 +95,7 @@ export const Transportations = () => {
               ...option,
               state: value ? 1 : 0,
               serviceCenterId: selectedSC.id,
-            })
+            }),
           );
         } catch (e) {
           showError(e);
@@ -103,7 +103,7 @@ export const Transportations = () => {
       } else {
         if (!pickUpConfig?.available)
           showError(
-            'Pick Up / Drop Off booking flow configuration must be "ON"'
+            'Pick Up / Drop Off booking flow configuration must be "ON"',
           );
         if (!pickUpOption)
           showError('"Service Valet" First Screen Option should be added');
@@ -131,7 +131,7 @@ export const Transportations = () => {
   const handleServiceValetRedirection = (opCode: string) => {
     if (opCode.includes("Service valet")) {
       push(
-        `${Routes.Services.ServiceValet}?${QueryTypes.selectedTab}=${ServiceValetRoutes.CenterSettings}`
+        `${Routes.Services.ServiceValet}?${QueryTypes.selectedTab}=${ServiceValetRoutes.CenterSettings}`,
       );
     }
   };

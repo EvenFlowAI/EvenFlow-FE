@@ -46,7 +46,7 @@ export const EditTransportationDescriptionModal: React.FC<
   >
 > = ({ editingElement, ...props }) => {
   const { allAssignedList } = useSelector(
-    (state: RootState) => state.serviceRequests
+    (state: RootState) => state.serviceRequests,
   );
   const [description, setDescription] = useState<string>("");
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -78,7 +78,7 @@ export const EditTransportationDescriptionModal: React.FC<
   };
 
   const onDescriptionChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     setFormIsChecked(false);
     setDescription(e.target.value);
@@ -106,8 +106,8 @@ export const EditTransportationDescriptionModal: React.FC<
           selectedSC.id,
           fileState.file,
           showError,
-          onIconSaved
-        )
+          onIconSaved,
+        ),
       );
     }
   };
@@ -125,8 +125,8 @@ export const EditTransportationDescriptionModal: React.FC<
               serviceRequestId: serviceRequests[0].value ?? undefined,
             },
             onDataSaved,
-            showError
-          )
+            showError,
+          ),
         );
       } else {
         if (+orderIndex <= 0) {
@@ -149,13 +149,13 @@ export const EditTransportationDescriptionModal: React.FC<
       setFormIsChecked(false);
       console.log("here");
     },
-    []
+    [],
   );
 
   const renderRequestOption = useCallback(
     (props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
       const checked = !!serviceRequests.find(
-        (item) => item.value === option.value
+        (item) => item.value === option.value,
       );
       return (
         <li
@@ -179,7 +179,7 @@ export const EditTransportationDescriptionModal: React.FC<
         </li>
       );
     },
-    [serviceRequests, onRequestCheckboxChange]
+    [serviceRequests, onRequestCheckboxChange],
   );
 
   useEffect(() => {
@@ -191,14 +191,14 @@ export const EditTransportationDescriptionModal: React.FC<
             allAssignedList.map((item: any) => ({
               name: item.serviceRequest.code,
               value: item.id,
-            }))
+            })),
           );
         } else {
           setServiceRequests(
             rules.serviceRequests.map((item) => ({
               value: item.id,
               name: item.code,
-            }))
+            })),
           );
         }
       }
@@ -218,7 +218,7 @@ export const EditTransportationDescriptionModal: React.FC<
       setFormIsChecked(false);
       setServiceRequests([value[value.length - 1]]);
     },
-    [allAssignedList]
+    [allAssignedList],
   );
 
   return (

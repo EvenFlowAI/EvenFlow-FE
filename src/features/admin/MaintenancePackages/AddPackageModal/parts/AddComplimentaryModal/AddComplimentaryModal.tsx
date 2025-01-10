@@ -1,95 +1,121 @@
-import React, {useCallback, useEffect, SetStateAction, Dispatch} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {Button} from "@mui/material";
-import {DialogProps} from "../../../../../../components/modals/BaseModal/types";
-import {RootState} from "../../../../../../store/rootReducer";
-import {Table} from "../../../../../../components/tables/Table/Table";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../../../components/modals/BaseModal/BaseModal";
+import React, { useCallback, useEffect, SetStateAction, Dispatch } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@mui/material";
+import { DialogProps } from "../../../../../../components/modals/BaseModal/types";
+import { RootState } from "../../../../../../store/rootReducer";
+import { Table } from "../../../../../../components/tables/Table/Table";
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "../../../../../../components/modals/BaseModal/BaseModal";
 import Checkbox from "../../../../../../components/formControls/Checkbox/Checkbox";
 import {
-    changeComplimentaryPageData,
-    loadComplimentary,
+  changeComplimentaryPageData,
+  loadComplimentary,
 } from "../../../../../../store/reducers/packages/actions";
-import {IComplimentaryServiceByQuery} from "../../../../../../store/reducers/packages/types";
-import {TableRowDataType} from "../../../../../../types/types";
-import {usePagination} from "../../../../../../hooks/usePaginations/usePaginations";
-import {useSCs} from "../../../../../../hooks/useSCs/useSCs";
+import { IComplimentaryServiceByQuery } from "../../../../../../store/reducers/packages/types";
+import { TableRowDataType } from "../../../../../../types/types";
+import { usePagination } from "../../../../../../hooks/usePaginations/usePaginations";
+import { useSCs } from "../../../../../../hooks/useSCs/useSCs";
 
 type TAssignOpsCodeModalProps = DialogProps & {
-    selectedCodes: number[];
-    setSelectedCodes: Dispatch<SetStateAction<number[]>>;
-    isComplimentary?: boolean;
-    title: string;
-}
+  selectedCodes: number[];
+  setSelectedCodes: Dispatch<SetStateAction<number[]>>;
+  isComplimentary?: boolean;
+  title: string;
+};
 
 const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
-    {header: "OP CODE", val: el => el.code},
-    {header: "DESCRIPTION", val: el => el.name, width: '50%'},
-    {header: "DURATION (hours)", val: el => el.durationInHours.toString(), align: 'center'},
-    {header: "REGULAR INVOICE", val: el => el.price.toFixed(2), align: 'center'},
-]
+  { header: "OP CODE", val: (el) => el.code },
+  { header: "DESCRIPTION", val: (el) => el.name, width: "50%" },
+  {
+    header: "DURATION (hours)",
+    val: (el) => el.durationInHours.toString(),
+    align: "center",
+  },
+  {
+    header: "REGULAR INVOICE",
+    val: (el) => el.price.toFixed(2),
+    align: "center",
+  },
+];
 
-const AddComplimentaryModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>> =
-    ({selectedCodes, setSelectedCodes, isComplimentary, title, ...props}) => {
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const {
-        complimentary,
-        isComplimentaryLoading,
-        complimentaryPaging: {numberOfRecords}
-    } = useSelector((state: RootState) => state.packages)
+const AddComplimentaryModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>
+> = ({ selectedCodes, setSelectedCodes, isComplimentary, title, ...props }) => {
+  const { selectedSC } = useSCs();
+  const dispatch = useDispatch();
+  const {
+    complimentary,
+    isComplimentaryLoading,
+    complimentaryPaging: { numberOfRecords },
+  } = useSelector((state: RootState) => state.packages);
 
-    const {changeRowsPerPage, changePage, pageIndex, pageSize} = usePagination(
-        (s: RootState) => s.packages.complimentaryPageData,
-        changeComplimentaryPageData
-    );
+  const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
+    (s: RootState) => s.packages.complimentaryPageData,
+    changeComplimentaryPageData,
+  );
 
-    useEffect(() => {
-        if (props.open && selectedSC) {
-            dispatch(loadComplimentary(selectedSC.id))
-        }
-    }, [props.open, dispatch, selectedSC]);
+  useEffect(() => {
+    if (props.open && selectedSC) {
+      dispatch(loadComplimentary(selectedSC.id));
+    }
+  }, [props.open, dispatch, selectedSC]);
 
-    const handleClose = useCallback((): void => {
-        props.onClose();
-    }, [props.onClose])
+  const handleClose = useCallback((): void => {
+    props.onClose();
+  }, [props.onClose]);
 
-    const handleSelect = useCallback((el: IComplimentaryServiceByQuery) => {
-        setSelectedCodes(prev => {
-            return  prev.includes(+el.id) ? prev.filter(item => item !== el.id) : [...prev, el.id]
-        });
-    }, [setSelectedCodes])
+  const handleSelect = useCallback(
+    (el: IComplimentaryServiceByQuery) => {
+      setSelectedCodes((prev) => {
+        return prev.includes(+el.id)
+          ? prev.filter((item) => item !== el.id)
+          : [...prev, el.id];
+      });
+    },
+    [setSelectedCodes],
+  );
 
-    const preActions = useCallback((el: IComplimentaryServiceByQuery) => {
-        return <Checkbox color="primary" checked={selectedCodes.includes(+el.id)} onChange={() => handleSelect(el)} />
-    }, [selectedCodes, handleSelect])
+  const preActions = useCallback(
+    (el: IComplimentaryServiceByQuery) => {
+      return (
+        <Checkbox
+          color="primary"
+          checked={selectedCodes.includes(+el.id)}
+          onChange={() => handleSelect(el)}
+        />
+      );
+    },
+    [selectedCodes, handleSelect],
+  );
 
-    return (
-        <BaseModal {...props}>
-            <DialogTitle onClose={handleClose}>{title}</DialogTitle>
-            <DialogContent>
-                <Table<IComplimentaryServiceByQuery>
-                    data={complimentary}
-                    index="id"
-                    startActions={preActions}
-                    compact
-                    hidePagination={numberOfRecords < 11}
-                    rowData={tableData}
-                    isLoading={isComplimentaryLoading}
-                    page={pageIndex}
-                    rowsPerPage={pageSize}
-                    onChangePage={changePage}
-                    onChangeRowsPerPage={changeRowsPerPage}
-                    count={numberOfRecords}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>
-                    Close
-                </Button>
-            </DialogActions>
-        </BaseModal>
-    );
+  return (
+    <BaseModal {...props}>
+      <DialogTitle onClose={handleClose}>{title}</DialogTitle>
+      <DialogContent>
+        <Table<IComplimentaryServiceByQuery>
+          data={complimentary}
+          index="id"
+          startActions={preActions}
+          compact
+          hidePagination={numberOfRecords < 11}
+          rowData={tableData}
+          isLoading={isComplimentaryLoading}
+          page={pageIndex}
+          rowsPerPage={pageSize}
+          onChangePage={changePage}
+          onChangeRowsPerPage={changeRowsPerPage}
+          count={numberOfRecords}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+      </DialogActions>
+    </BaseModal>
+  );
 };
 
 export default AddComplimentaryModal;

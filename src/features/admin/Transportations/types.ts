@@ -1,11 +1,11 @@
-import {TParsableDate} from "../../../types/types";
+import { TParsableDate } from "../../../types/types";
 
 export type TTimeObject = {
-    start?: TParsableDate;
-    end?: TParsableDate;
-}
+  start?: TParsableDate;
+  end?: TParsableDate;
+};
 
 export type TOption = {
-    value: number;
-    name: string;
-}
+  value: number;
+  name: string;
+};

@@ -1,40 +1,40 @@
-import { makeStyles } from 'tss-react/mui';
-import {Theme} from "@mui/material";
+import { makeStyles } from "tss-react/mui";
+import { Theme } from "@mui/material";
 
 const titleSt = {
-    fontSize: 24,
-    lineHeight: "29px",
-    margin: 0
-}
+  fontSize: 24,
+  lineHeight: "29px",
+  margin: 0,
+};
 
 export const useStyles = makeStyles()((theme: Theme) => ({
-    title: {
-        ...titleSt,
-        fontWeight: "bold",
-        [theme.breakpoints.down('mdl')]: {
-            fontSize: 16
-        },
+  title: {
+    ...titleSt,
+    fontWeight: "bold",
+    [theme.breakpoints.down("mdl")]: {
+      fontSize: 16,
     },
-    subtitle: {},
-    titleContainer: {
-        display: "flex",
-        flexDirection: "column",
-        [theme.breakpoints.down('mdl')]: {
-            marginBottom: 8
-        }
+  },
+  subtitle: {},
+  titleContainer: {
+    display: "flex",
+    flexDirection: "column",
+    [theme.breakpoints.down("mdl")]: {
+      marginBottom: 8,
     },
-    rootTitle: {
-        ...titleSt,
-        "&>a": {
-            fontWeight: "normal",
-            textDecoration: "none",
-            color: theme.palette.text.primary,
-            "&:hover": {
-                textDecoration: "underline"
-            }
-        },
-        [theme.breakpoints.down('mdl')]: {
-            fontSize: 16
-        },
-    }
+  },
+  rootTitle: {
+    ...titleSt,
+    "&>a": {
+      fontWeight: "normal",
+      textDecoration: "none",
+      color: theme.palette.text.primary,
+      "&:hover": {
+        textDecoration: "underline",
+      },
+    },
+    [theme.breakpoints.down("mdl")]: {
+      fontSize: 16,
+    },
+  },
 }));

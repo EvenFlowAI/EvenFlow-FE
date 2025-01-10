@@ -1,13 +1,14 @@
-import {TParsableDate} from "../../../types/types";
+import { TParsableDate } from "../../../types/types";
 
 export enum Directions {
-    Next, Prev
+  Next,
+  Prev,
 }
 
-export type TDayType = "prev" | "cur" | "next"
+export type TDayType = "prev" | "cur" | "next";
 
 export type TDay = {
-    date: TParsableDate,
-    day: number,
-    type: TDayType
-}
+  date: TParsableDate;
+  day: number;
+  type: TDayType;
+};

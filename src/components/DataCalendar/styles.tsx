@@ -1,114 +1,114 @@
-import { makeStyles } from 'tss-react/mui';
-import {lighten} from "@mui/material";
+import { makeStyles } from "tss-react/mui";
+import { lighten } from "@mui/material";
 
-export const useStyles = makeStyles()(theme => ({
-    title: {
-        textAlign: "center",
-        position: "absolute",
-        top: 8,
-        left: 0,
-        right: 0,
-        margin: 0,
-        [theme.breakpoints.down('sm')]: {
-            position: "static",
-            marginBottom: theme.spacing(1)
-        }
+export const useStyles = makeStyles()((theme) => ({
+  title: {
+    textAlign: "center",
+    position: "absolute",
+    top: 8,
+    left: 0,
+    right: 0,
+    margin: 0,
+    [theme.breakpoints.down("sm")]: {
+      position: "static",
+      marginBottom: theme.spacing(1),
     },
-    paper: {
-        borderRadius: 0,
-        position: "relative",
-        padding: 24,
-        color: "#252733"
+  },
+  paper: {
+    borderRadius: 0,
+    position: "relative",
+    padding: 24,
+    color: "#252733",
+  },
+  weekDay: {
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: 0.2,
+    textTransform: "uppercase",
+    textAlign: "center",
+    background: theme.palette.common.white,
+    padding: "4px 0",
+    borderBottom: "1px solid #B8B9BF",
+  },
+  dayNumber: {
+    position: "absolute",
+    top: 4,
+    left: 4,
+    fontSize: 12,
+    fontWeight: 700,
+    color: "#7898FF",
+  },
+  prevMonth: {
+    color: theme.palette.text.secondary,
+    "& svg, & > span": {
+      color: "#B8B9BF !important",
     },
-    weekDay: {
-        fontSize: 12,
-        fontWeight: 700,
-        letterSpacing: 0.2,
-        textTransform: 'uppercase',
-        textAlign: "center",
-        background: theme.palette.common.white,
-        padding: '4px 0',
-        borderBottom: '1px solid #B8B9BF',
+    "& > span > svg > g > path, & > span > svg, & > svg": {
+      fill: "#B8B9BF",
+      color: "#B8B9BF",
     },
-    dayNumber: {
-        position: "absolute",
-        top: 4,
-        left: 4,
-        fontSize: 12,
-        fontWeight: 700,
-        color: "#7898FF",
+  },
+  dayCell: {
+    background: theme.palette.common.white,
+    minHeight: 54,
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "20px 24px",
+    transition: theme.transitions.create(["background"]),
+  },
+  iconBlock: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 12,
+    margin: 3,
+    "& > svg": {
+      marginRight: 2,
     },
-    prevMonth: {
-        color: theme.palette.text.secondary,
-        "& svg, & > span": {
-            color: '#B8B9BF !important',
-        },
-        "& > span > svg > g > path, & > span > svg, & > svg": {
-            fill: '#B8B9BF',
-            color: '#B8B9BF',
-        }
+  },
+  today: {
+    color: `${theme.palette.success.dark} !important`,
+    "& > span > svg > g > path, & > span > svg, & > svg": {
+      fill: theme.palette.success.dark,
+      color: theme.palette.success.dark,
     },
-    dayCell: {
-        background: theme.palette.common.white,
-        minHeight: 54,
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px 24px",
-        transition: theme.transitions.create(["background"]),
+  },
+  currentMonth: {
+    color: theme.palette.text.primary,
+    cursor: "pointer",
+    "&:hover": {
+      background: lighten(theme.palette.primary.light, 0.9),
     },
-    iconBlock: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: 12,
-        margin: 3,
-        "& > svg": {
-          marginRight: 2
-        },
+  },
+  nonWorking: {
+    color: theme.palette.error.light,
+    "& svg, & > span": {
+      color: "#ef5350 !important",
     },
-    today: {
-        color: `${theme.palette.success.dark} !important`,
-        "& > span > svg > g > path, & > span > svg, & > svg": {
-            fill: theme.palette.success.dark,
-            color: theme.palette.success.dark,
-        },
+    "& > span > svg > g > path, & > span > svg, & > svg": {
+      fill: "#ef5350",
+      color: "#ef5350",
     },
-    currentMonth: {
-        color: theme.palette.text.primary,
-        cursor: "pointer",
-        "&:hover": {
-            background: lighten(theme.palette.primary.light, .9),
-        },
+  },
+  nonWorkingGrey: {
+    color: theme.palette.text.secondary,
+    "& svg, & > span": {
+      color: "#B8B9BF !important",
     },
-    nonWorking: {
-        color: theme.palette.error.light,
-        "& svg, & > span": {
-            color: '#ef5350 !important',
-        },
-        "& > span > svg > g > path, & > span > svg, & > svg": {
-            fill: '#ef5350',
-            color: '#ef5350',
-        }
+    "& > span > svg > g > path, & > span > svg, & > svg": {
+      fill: "#B8B9BF",
+      color: "#B8B9BF",
     },
-    nonWorkingGrey: {
-        color: theme.palette.text.secondary,
-        "& svg, & > span": {
-            color: '#B8B9BF !important',
-        },
-        "& > span > svg > g > path, & > span > svg, & > svg": {
-            fill: '#B8B9BF',
-            color: '#B8B9BF',
-        }
-    },
-    calendarWrapper: {
-        marginTop: 11,
-        overflowX: "auto",
-        gap: 1,
-        background: theme.palette.divider,
-        border: `1px solid #B8B9BF`,
-        display: "grid",
-        gridTemplateColumns: "repeat(7, 1fr)"
-    }
+  },
+  calendarWrapper: {
+    marginTop: 11,
+    overflowX: "auto",
+    gap: 1,
+    background: theme.palette.divider,
+    border: `1px solid #B8B9BF`,
+    display: "grid",
+    gridTemplateColumns: "repeat(7, 1fr)",
+  },
 }));

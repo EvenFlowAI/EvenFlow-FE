@@ -1,105 +1,137 @@
-import React, {useEffect, useState} from 'react';
-import {Button} from "@mui/material";
-import {Table} from "../../../../components/tables/Table/Table";
+import React, { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import { Table } from "../../../../components/tables/Table/Table";
 import EditPricingLevelModal from "../EditPricingLevelModal/EditPricingLevelModal";
-import {useDispatch, useSelector} from "react-redux";
-import {loadAssignedServiceRequests, setAssignedPageData} from "../../../../store/reducers/serviceRequests/actions";
-import {RootState} from "../../../../store/rootReducer";
-import {loadRequestsPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
-import {EDemandCategory} from "../../../../store/reducers/pricingSettings/types";
-import {useStyles} from "./styles";
-import {TPricingLevel} from "../types";
-import {TableRowDataType} from "../../../../types/types";
-import {useModal} from "../../../../hooks/useModal/useModal";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loadAssignedServiceRequests,
+  setAssignedPageData,
+} from "../../../../store/reducers/serviceRequests/actions";
+import { RootState } from "../../../../store/rootReducer";
+import { loadRequestsPricingLevels } from "../../../../store/reducers/pricingSettings/actions";
+import { EDemandCategory } from "../../../../store/reducers/pricingSettings/types";
+import { useStyles } from "./styles";
+import { TPricingLevel } from "../types";
+import { TableRowDataType } from "../../../../types/types";
+import { useModal } from "../../../../hooks/useModal/useModal";
+import { useSCs } from "../../../../hooks/useSCs/useSCs";
 
 const RowData: TableRowDataType<TPricingLevel>[] = [
-    {val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#"},
-    {val: (el: TPricingLevel) => el.serviceRequest, header: "Individual Service", width: '55%'},
-    {val: (el: TPricingLevel) => el.opsCode, header: "Op Code"},
-    {val: (el: TPricingLevel) => el.discount ? `${el.discount}%` : 'Default', header: "Discount"},
-    {val: (el: TPricingLevel) => el.premium ? `${el.premium}%` : 'Default', header: "Premium"},
+  { val: (el: TPricingLevel, index: number) => `${index + 1}`, header: "#" },
+  {
+    val: (el: TPricingLevel) => el.serviceRequest,
+    header: "Individual Service",
+    width: "55%",
+  },
+  { val: (el: TPricingLevel) => el.opsCode, header: "Op Code" },
+  {
+    val: (el: TPricingLevel) => (el.discount ? `${el.discount}%` : "Default"),
+    header: "Discount",
+  },
+  {
+    val: (el: TPricingLevel) => (el.premium ? `${el.premium}%` : "Default"),
+    header: "Premium",
+  },
 ];
 
 const PricingLevelsByOpsCode = () => {
-    const { assignedList } = useSelector((state: RootState) => state.serviceRequests);
-    const { srPricingLevels, isLoading } = useSelector((state: RootState) => state.pricingSettings);
-    const [editElement, setEditElement] = useState<TPricingLevel | null>(null);
-    const [data, setData] = useState<TPricingLevel[]>([]);
+  const { assignedList } = useSelector(
+    (state: RootState) => state.serviceRequests,
+  );
+  const { srPricingLevels, isLoading } = useSelector(
+    (state: RootState) => state.pricingSettings,
+  );
+  const [editElement, setEditElement] = useState<TPricingLevel | null>(null);
+  const [data, setData] = useState<TPricingLevel[]>([]);
 
-    const {onOpen, onClose, isOpen} = useModal();
-    const dispatch = useDispatch();
-    const {selectedSC} = useSCs();
-    const { classes  } = useStyles();
+  const { onOpen, onClose, isOpen } = useModal();
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+  const { classes } = useStyles();
 
-    const onEditClick = async (el: TPricingLevel) => {
-        await setEditElement(el);
-        await onOpen();
+  const onEditClick = async (el: TPricingLevel) => {
+    await setEditElement(el);
+    await onOpen();
+  };
+
+  const getData = async (id: number) => {
+    await dispatch(setAssignedPageData({ pageSize: 0, pageIndex: 0 }));
+    await dispatch(loadAssignedServiceRequests(id, true));
+    dispatch(loadRequestsPricingLevels(id));
+  };
+
+  useEffect(() => {
+    if (selectedSC) {
+      getData(selectedSC.id).then();
     }
+  }, [selectedSC]);
 
-    const getData = async (id: number) => {
-        await dispatch(setAssignedPageData({pageSize: 0, pageIndex: 0}));
-        await dispatch(loadAssignedServiceRequests(id, true));
-        dispatch(loadRequestsPricingLevels(id));
+  useEffect(() => {
+    if (assignedList && srPricingLevels) {
+      setData(() => {
+        return assignedList.map((item) => {
+          const levelsItem = srPricingLevels.find(
+            (el) => el.serviceRequestId === item.id,
+          );
+          let discount = null;
+          let premium = null;
+          if (levelsItem?.values) {
+            const low = levelsItem.values.find(
+              (el) => el.demandCategory === EDemandCategory.Low,
+            );
+            const high = levelsItem.values.find(
+              (el) => el.demandCategory === EDemandCategory.High,
+            );
+            if (low) discount = low.value.toString();
+            if (high) premium = high.value.toString();
+          }
+          return {
+            id: item.id,
+            serviceRequest: item.serviceRequestOverride?.description?.length
+              ? item.serviceRequestOverride?.description
+              : item.serviceRequest.description,
+            opsCode: item.serviceRequest.code,
+            discount,
+            premium,
+          };
+        });
+      });
     }
+  }, [assignedList, srPricingLevels]);
 
-    useEffect(() => {
-        if (selectedSC) {
-            getData(selectedSC.id).then();
-        }
-    }, [selectedSC])
+  const tableActions = (el: TPricingLevel) => {
+    return (
+      <Button
+        className={classes.button}
+        key={el.opsCode}
+        variant="text"
+        color="primary"
+        onClick={() => onEditClick(el)}
+      >
+        Edit
+      </Button>
+    );
+  };
 
-    useEffect(() => {
-        if (assignedList && srPricingLevels) {
-            setData(() => {
-                return assignedList.map(item => {
-                    const levelsItem = srPricingLevels.find(el => el.serviceRequestId === item.id);
-                    let discount = null;
-                    let premium = null;
-                    if (levelsItem?.values) {
-                        const low = levelsItem.values.find(el => el.demandCategory === EDemandCategory.Low);
-                        const high = levelsItem.values.find(el => el.demandCategory === EDemandCategory.High);
-                        if (low) discount = low.value.toString();
-                        if (high) premium = high.value.toString();
-                    }
-                    return {
-                        id: item.id,
-                        serviceRequest: item.serviceRequestOverride?.description?.length
-                            ? item.serviceRequestOverride?.description
-                            : item.serviceRequest.description,
-                        opsCode: item.serviceRequest.code,
-                        discount,
-                        premium,
-                    }
-                })
-            })
-        }
-    }, [assignedList, srPricingLevels])
-
-    const tableActions = (el: TPricingLevel) => {
-        return <Button
-            className={classes.button}
-            key={el.opsCode}
-            variant="text"
-            color="primary"
-            onClick={() => onEditClick(el)}>
-            Edit
-        </Button>
-    }
-
-    return <div className={classes.tableWrapper}>
-        <Table
-            data={data}
-            index="id"
-            rowData={RowData}
-            actions={tableActions}
-            isLoading={isLoading}
-            hidePagination
-            withBorders
-            compactBodyPadding
-        />
-        <EditPricingLevelModal open={isOpen} prisingLevel={editElement} onClose={onClose}/>
+  return (
+    <div className={classes.tableWrapper}>
+      <Table
+        data={data}
+        index="id"
+        rowData={RowData}
+        actions={tableActions}
+        isLoading={isLoading}
+        hidePagination
+        withBorders
+        compactBodyPadding
+      />
+      <EditPricingLevelModal
+        open={isOpen}
+        prisingLevel={editElement}
+        onClose={onClose}
+      />
     </div>
+  );
 };
 
 export default PricingLevelsByOpsCode;

@@ -1,5 +1,5 @@
-import {styled} from "@mui/material";
+import { styled } from "@mui/material";
 
-export const TableContainer = styled('div')({
-    marginBottom: 20,
-})
+export const TableContainer = styled("div")({
+  marginBottom: 20,
+});

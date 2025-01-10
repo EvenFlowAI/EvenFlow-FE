@@ -80,8 +80,8 @@ const AdminRowData: TableRowDataType<IEmployee>[] = [
       el.type === EEmployeeType.Individual
         ? "Individual"
         : el.type === EEmployeeType.Team
-        ? "Team"
-        : "",
+          ? "Team"
+          : "",
     header: "Type",
   },
   { val: (el) => el.email, header: "Email Address", width: 170 },
@@ -125,7 +125,7 @@ const EmployeesTable: React.FC<
 
   const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
     (s: RootState) => s.employees.pageData,
-    changePageData
+    changePageData,
   );
 
   const rowData = useMemo<TableRowDataType<IEmployee>[]>(() => {

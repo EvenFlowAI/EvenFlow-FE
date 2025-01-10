@@ -66,10 +66,10 @@ const AppointmentFlow: React.FC<TProps> = ({
   isManaging,
 }) => {
   const { customerLoadedData } = useSelector(
-    (state: RootState) => state.appointment
+    (state: RootState) => state.appointment,
   );
   const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
+    (state: RootState) => state.serviceTypes,
   );
   const {
     trackerData,
@@ -88,13 +88,13 @@ const AppointmentFlow: React.FC<TProps> = ({
   const serviceType = useMemo(
     () =>
       serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter,
-    [serviceTypeOption]
+    [serviceTypeOption],
   );
   const onlyVisitCenterOptionExists = useMemo(
     () =>
       firstScreenOptions.length === 1 &&
       firstScreenOptions[0].type === EServiceType.VisitCenter,
-    [firstScreenOptions]
+    [firstScreenOptions],
   );
 
   const setTracker = (ids: string[]) =>
@@ -155,7 +155,7 @@ const AppointmentFlow: React.FC<TProps> = ({
             label: `From Page ${SCREENS[currentScreen]}`,
             nonInteraction: true,
           },
-          trackerData.ids
+          trackerData.ids,
         );
       };
     } else {
@@ -176,7 +176,7 @@ const AppointmentFlow: React.FC<TProps> = ({
     setNeedToShowServiceTypes(
       Boolean(firstScreenOptions.length) &&
         !onlyVisitCenterOptionExists &&
-        !hashKey?.length
+        !hashKey?.length,
     );
   }, [firstScreenOptions, onlyVisitCenterOptionExists, hashKey]);
 

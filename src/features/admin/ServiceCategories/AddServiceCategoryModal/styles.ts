@@ -1,55 +1,55 @@
 import { FormControlLabel } from "@mui/material";
-import { withStyles } from 'tss-react/mui';
-import { makeStyles } from 'tss-react/mui';
+import { withStyles } from "tss-react/mui";
+import { makeStyles } from "tss-react/mui";
 
 export const Label = withStyles(FormControlLabel, {
-    root: {
-        justifyContent: "flex-end",
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    label: {
-        fontWeight: "bold",
-        fontSize: 14,
-        textTransform: "uppercase",
-    }
+  root: {
+    justifyContent: "flex-end",
+    marginLeft: 0,
+    marginRight: 0,
+  },
+  label: {
+    fontWeight: "bold",
+    fontSize: 14,
+    textTransform: "uppercase",
+  },
 });
 
 export const useStyles = makeStyles()(() => ({
-    inputsWrapper: {
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr",
-        gap: 18,
-        marginBottom: 18,
-    },
-    uploadBtn: {
-        width: '100%',
-        textTransform: 'none',
-        padding: 10,
-        border: 'none',
-        borderRadius: 4,
-        color: 'white',
-        fontWeight: 'bold',
-        backgroundColor: '#7898FF',
-        cursor: 'pointer',
-    },
-    label: {
-        textTransform: "uppercase",
-        fontWeight: 'bold',
-        marginBottom: 4,
-        fontSize: 12,
-    },
-    buttonWrapper: {
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'stretch',
-    },
-    inputWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    radioGroup: {
-        display: 'flex',
-        justifyContent: 'flex-end'
-    },
+  inputsWrapper: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 18,
+    marginBottom: 18,
+  },
+  uploadBtn: {
+    width: "100%",
+    textTransform: "none",
+    padding: 10,
+    border: "none",
+    borderRadius: 4,
+    color: "white",
+    fontWeight: "bold",
+    backgroundColor: "#7898FF",
+    cursor: "pointer",
+  },
+  label: {
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    marginBottom: 4,
+    fontSize: 12,
+  },
+  buttonWrapper: {
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "stretch",
+  },
+  inputWrapper: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  radioGroup: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
 }));

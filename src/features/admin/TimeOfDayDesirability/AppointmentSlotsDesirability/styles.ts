@@ -1,56 +1,56 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
-export const useStyles = makeStyles()(theme => ({
-    paper: {
-        marginBottom: 20,
-        borderRadius: 0,
-        padding: '16px 0 16px 32px',
-        position: "relative"
+export const useStyles = makeStyles()((theme) => ({
+  paper: {
+    marginBottom: 20,
+    borderRadius: 0,
+    padding: "16px 0 16px 32px",
+    position: "relative",
+  },
+  controlButtons: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column-reverse",
     },
-    controlButtons: {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        [theme.breakpoints.down('sm')]: {
-            display: "flex",
-            flexDirection: "column-reverse"
-        }
+  },
+  progress: {
+    padding: 10,
+  },
+  editButton: {
+    fontSize: 14,
+  },
+  gridContainer: {
+    margin: "0 -16px",
+  },
+  row: {
+    borderRight: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down("sm")]: {
+      borderRight: "none",
     },
-    progress: {
-        padding: 10,
+  },
+  checkRow: {
+    display: "flex",
+    justifyContent: "space-around",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
     },
-    editButton: {
-        fontSize: 14
+  },
+  title: {
+    fontSize: 16,
+    paddingRight: 32,
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
+    margin: "0 0 16px",
+  },
+  upLineWrapper: {
+    display: "flex",
+    alignItems: "flex-start",
+    "& > h2": {
+      marginLeft: "10%",
     },
-    gridContainer: {
-        margin: "0 -16px"
-    },
-    row: {
-        borderRight: `1px solid ${theme.palette.divider}`,
-        [theme.breakpoints.down('sm')]: {
-            borderRight: "none"
-        }
-    },
-    checkRow: {
-        display: "flex",
-        justifyContent: "space-around",
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: "column"
-        }
-    },
-    title: {
-        fontSize: 16,
-        paddingRight: 32,
-        fontWeight: "bold",
-        textAlign: "center",
-        textTransform: "uppercase",
-        margin: "0 0 16px",
-    },
-    upLineWrapper: {
-        display: 'flex',
-        alignItems: 'flex-start',
-        "& > h2": {
-            marginLeft: "10%"
-        }
-    }
+  },
 }));

@@ -1,120 +1,120 @@
-import { makeStyles } from 'tss-react/mui';
-import {styled, TableCell} from "@mui/material";
+import { makeStyles } from "tss-react/mui";
+import { styled, TableCell } from "@mui/material";
 
 export const useStyles = makeStyles()((theme) => ({
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
+  actionsWrapper: {
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: 14,
+  },
+  buttonsWrapper: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  cancelButton: {
+    marginRight: 20,
+    border: "none",
+    outline: "none",
+    [theme.breakpoints.down("mdl")]: {
+      width: 150,
     },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
+  },
+  saveButton: {
+    background: "#7898FF",
+    color: "white",
+    border: "1px solid #7898FF",
+    outline: "none",
+    "&:hover": {
+      color: "#7898FF",
     },
-    cancelButton: {
-        marginRight: 20,
-        border: 'none',
-        outline: 'none',
-        [theme.breakpoints.down('mdl')]: {
-            width: 150
-        }
+    [theme.breakpoints.down("mdl")]: {
+      width: 150,
     },
-    saveButton: {
-        background: '#7898FF',
-        color: 'white',
-        border: '1px solid #7898FF',
-        outline: 'none',
-        '&:hover': {
-            color: '#7898FF'
-        },
-        [theme.breakpoints.down('mdl')]: {
-            width: 150
-        }
-    },
+  },
 }));
 
 export const THeadCell = styled(TableCell)({
-    padding: 16,
-    fontSize: 16,
-    fontWeight: 700,
-})
+  padding: 16,
+  fontSize: 16,
+  fontWeight: 700,
+});
 
 export const THeadCellWithSub = styled(TableCell)({
-    padding: 0,
-    paddingTop: 16,
-    fontSize: 16,
-    fontWeight: 700,
-    '& > div': {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    '& > div:first-child': {
-        borderBottom: '1px solid #DADADA',
-    }
-})
+  padding: 0,
+  paddingTop: 16,
+  fontSize: 16,
+  fontWeight: 700,
+  "& > div": {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  "& > div:first-child": {
+    borderBottom: "1px solid #DADADA",
+  },
+});
 
 export const TCellWithSub = styled(TableCell)({
-    '& > div': {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '10px 16px',
-        '&:first-child': {
-            borderBottom: '1px solid #DADADA',
-        }
+  "& > div": {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px 16px",
+    "&:first-child": {
+      borderBottom: "1px solid #DADADA",
     },
-})
+  },
+});
 
 export const TCellData = styled(TableCell)({
-    padding: 0,
-    borderRight: '1px solid #DADADA',
-    '& > div': {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-})
+  padding: 0,
+  borderRight: "1px solid #DADADA",
+  "& > div": {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export const SubCellsWrapper = styled("div")({
-    display: 'flex',
-    justifyContent: "space-between",
-    alignItems: 'center',
-    color: "#858585",
-    fontSize: 16,
-    fontWeight: 700,
-    '& > div': {
-        width: "100%",
-        display: 'flex',
-        justifyContent: "space-evenly",
-        alignItems: 'center',
-        padding: '8px 16px',
-        '&:first-child': {
-            borderRight: '1px solid #DADADA'
-        }
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  color: "#858585",
+  fontSize: 16,
+  fontWeight: 700,
+  "& > div": {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    padding: "8px 16px",
+    "&:first-child": {
+      borderRight: "1px solid #DADADA",
     },
-})
+  },
+});
 
 export const SelectsWrapper = styled("div")({
-    display: 'flex',
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  color: "#858585",
+  fontSize: 16,
+  fontWeight: 700,
+  "& > div": {
+    width: "100%",
+    display: "flex",
     justifyContent: "space-between",
-    alignItems: 'center',
-    color: "#858585",
-    fontSize: 16,
-    fontWeight: 700,
-    '& > div': {
-        width: "100%",
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-        padding: '10px 16px',
-        '&:first-child': {
-            borderRight: '1px solid #DADADA',
-        },
+    alignItems: "center",
+    padding: "10px 16px",
+    "&:first-child": {
+      borderRight: "1px solid #DADADA",
     },
-})
+  },
+});
 
 export const SubCellTitle = styled("div")({
-    paddingBottom: 16,
-})
+  paddingBottom: 16,
+});

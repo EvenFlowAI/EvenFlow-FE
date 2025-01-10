@@ -15,7 +15,7 @@ import { EServiceType } from "../../store/reducers/appointmentFrameReducer/types
 const useGetConsultantsData = (
   serviceTypeOption: IFirstScreenOption | null,
   address?: any,
-  zipCode?: string
+  zipCode?: string,
 ) => {
   const {
     selectedPackage,
@@ -47,14 +47,14 @@ const useGetConsultantsData = (
       const maintenancePackageOption = selectedPackage
         ? { id: selectedPackage?.id, priceType: packagePricingType }
         : packageEMenuType !== null
-        ? { optionType: packageEMenuType }
-        : null;
+          ? { optionType: packageEMenuType }
+          : null;
       const recalls = mapRecallsForRequest(selectedRecalls);
       const serviceRequestIds = collectServiceRequestIds(
         service,
         subService,
         null,
-        selectedSR
+        selectedSR,
       );
       const isValidForServiceType =
         serviceTypeOption?.type !== EServiceType.PickUpDropOff ||
@@ -83,7 +83,8 @@ const useGetConsultantsData = (
             mileage: selectedVehicle.mileage,
             engineTypeId: selectedVehicle.engineTypeId,
           },
-          address: typeof address === "string" ? address : address?.label ?? "",
+          address:
+            typeof address === "string" ? address : (address?.label ?? ""),
           zipCode,
         };
         if (valueService?.selectedService) {

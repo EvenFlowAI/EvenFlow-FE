@@ -1,10 +1,8 @@
-import React from 'react';
-import {Appointments} from "../../../features/admin/Appointments/Appointments";
+import React from "react";
+import { Appointments } from "../../../features/admin/Appointments/Appointments";
 
 const AppointmentsPage = () => {
-    return (
-        <Appointments/>
-    );
+  return <Appointments />;
 };
 
 export default AppointmentsPage;

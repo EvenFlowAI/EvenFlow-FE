@@ -1,89 +1,95 @@
-import {EMaintenanceOptionType, IBusinessRule, IMake, IPackageById, IPackageByQuery} from "../../../api/types";
-import {EPricingDisplayType} from "../pricingSettings/types";
-import {EPackagePricingType} from "../appointmentFrameReducer/types";
-import {IOrder, IPageRequest, IPagingResponse} from "../../../types/types";
+import {
+  EMaintenanceOptionType,
+  IBusinessRule,
+  IMake,
+  IPackageById,
+  IPackageByQuery,
+} from "../../../api/types";
+import { EPricingDisplayType } from "../pricingSettings/types";
+import { EPackagePricingType } from "../appointmentFrameReducer/types";
+import { IOrder, IPageRequest, IPagingResponse } from "../../../types/types";
 
 export type TAssignedRequest = {
-    type: string | number;
-    serviceRequestId: number;
-    code?: string;
-}
+  type: string | number;
+  serviceRequestId: number;
+  code?: string;
+};
 
 export interface IUpdatedPackage {
-    serviceRequestsAssigned: TAssignedRequest[];
-    serviceRequests: number[];
-    complimentaryServices: number[];
-    intervalUpsells: number[];
-    businessRules?: IBusinessRule;
-    name: string,
-    engineTypes: number[];
-    isApplyBusinessRules?: boolean;
+  serviceRequestsAssigned: TAssignedRequest[];
+  serviceRequests: number[];
+  complimentaryServices: number[];
+  intervalUpsells: number[];
+  businessRules?: IBusinessRule;
+  name: string;
+  engineTypes: number[];
+  isApplyBusinessRules?: boolean;
 }
 
 export interface INewPackage {
-    serviceRequestsAssigned: TAssignedRequest[];
-    serviceRequests: number[];
-    complimentaryServices: number[];
-    intervalUpsells: number[];
-    businessRules?: IBusinessRule;
-    name: string,
-    isApplyBusinessRules?: boolean;
-    engineTypes: number[];
-    serviceCenterId?: number;
+  serviceRequestsAssigned: TAssignedRequest[];
+  serviceRequests: number[];
+  complimentaryServices: number[];
+  intervalUpsells: number[];
+  businessRules?: IBusinessRule;
+  name: string;
+  isApplyBusinessRules?: boolean;
+  engineTypes: number[];
+  serviceCenterId?: number;
 }
 
 export interface IComplimentaryServiceByQuery {
-    id: number;
-    name: string;
-    price: number;
-    code: string;
-    durationInHours: number;
-    laborAmount: number;
-    partsAmount: number;
-    serviceRequestId: number;
+  id: number;
+  name: string;
+  price: number;
+  code: string;
+  durationInHours: number;
+  laborAmount: number;
+  partsAmount: number;
+  serviceRequestId: number;
 }
 
 export interface IPackageShort {
-    id: number;
-    name: string;
-    isApplyPricingOptimization: boolean;
-    baseMarketPrice: number;
-    valueMarketPrice: number;
-    preferredMarketPrice: number;
-    pricingDisplayType: EPricingDisplayType;
+  id: number;
+  name: string;
+  isApplyPricingOptimization: boolean;
+  baseMarketPrice: number;
+  valueMarketPrice: number;
+  preferredMarketPrice: number;
+  pricingDisplayType: EPricingDisplayType;
 }
 
 export interface IPackageOptionShort {
-    maintenancePackageOptionId: number;
-    maintenancePackageOptionName: string;
-    maintenancePackageId: number;
-    maintenancePackageName: string;
-    type: EMaintenanceOptionType;
+  maintenancePackageOptionId: number;
+  maintenancePackageOptionName: string;
+  maintenancePackageId: number;
+  maintenancePackageName: string;
+  type: EMaintenanceOptionType;
 }
 
 export type TOrderIndex = {
-    id: number;
-    orderIndex: number;
-}
+  id: number;
+  orderIndex: number;
+};
 
 export type TPackagePrice = {
-    title: string;
-    type: EPackagePricingType;
-}
+  title: string;
+  type: EPackagePricingType;
+};
 
 export type TState = {
-    currentPackage: IPackageById | null;
-    isPackageLoading: boolean;
-    packages: IPackageByQuery[];
-    packagesPageData: IPageRequest;
-    packagesPaging: IPagingResponse;
-    makes: IMake[];
-    complimentary: IComplimentaryServiceByQuery[];
-    isComplimentaryLoading: boolean;
-    complimentaryPaging: IPagingResponse;
-    complimentaryPageData: IPageRequest;
-    complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
-    complimentarySearchTerm: string;
-    allComplimentary: IComplimentaryServiceByQuery[];
-    allPackagesLoading: boolean,
-}
+  currentPackage: IPackageById | null;
+  isPackageLoading: boolean;
+  packages: IPackageByQuery[];
+  packagesPageData: IPageRequest;
+  packagesPaging: IPagingResponse;
+  makes: IMake[];
+  complimentary: IComplimentaryServiceByQuery[];
+  isComplimentaryLoading: boolean;
+  complimentaryPaging: IPagingResponse;
+  complimentaryPageData: IPageRequest;
+  complimentarySortOrder: IOrder<IComplimentaryServiceByQuery>;
+  complimentarySearchTerm: string;
+  allComplimentary: IComplimentaryServiceByQuery[];
+  allPackagesLoading: boolean;
+};

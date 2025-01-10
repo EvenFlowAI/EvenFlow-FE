@@ -1,135 +1,159 @@
-import {IAssignedServiceRequestShort} from "../serviceRequests/types";
-import {ICategory} from "../categories/types";
-import {TEnumKeyLabel, TEnumMap} from "../types";
-import {IPageRequest, IPagingResponse, TParsableDate} from "../../../types/types";
+import { IAssignedServiceRequestShort } from "../serviceRequests/types";
+import { ICategory } from "../categories/types";
+import { TEnumKeyLabel, TEnumMap } from "../types";
+import {
+  IPageRequest,
+  IPagingResponse,
+  TParsableDate,
+} from "../../../types/types";
 
 export enum EOfferType {
-    AmountOff, PercentOff, FreeService
+  AmountOff,
+  PercentOff,
+  FreeService,
 }
 export const offerTypes: TEnumMap<EOfferType>[] = [
-    {id: EOfferType.AmountOff, label: "Off"},
-    {id: EOfferType.PercentOff, label: "% Off"},
-    {id: EOfferType.FreeService, label: "free service"},
+  { id: EOfferType.AmountOff, label: "Off" },
+  { id: EOfferType.PercentOff, label: "% Off" },
+  { id: EOfferType.FreeService, label: "free service" },
 ];
 export enum ECustomerSegment {
-    All, New, LowValue, MediumValue, HighValue, EndOfWarranty
+  All,
+  New,
+  LowValue,
+  MediumValue,
+  HighValue,
+  EndOfWarranty,
 }
 export const customerSegmentsMap: TEnumKeyLabel<ECustomerSegment> = {
-    [ECustomerSegment.All]: "All",
-    [ECustomerSegment.New]: "New",
-    [ECustomerSegment.LowValue]: "Low Value",
-    [ECustomerSegment.MediumValue]: "Medium Value",
-    [ECustomerSegment.HighValue]: "High Value",
-    [ECustomerSegment.EndOfWarranty]: "End of Warranty",
-}
+  [ECustomerSegment.All]: "All",
+  [ECustomerSegment.New]: "New",
+  [ECustomerSegment.LowValue]: "Low Value",
+  [ECustomerSegment.MediumValue]: "Medium Value",
+  [ECustomerSegment.HighValue]: "High Value",
+  [ECustomerSegment.EndOfWarranty]: "End of Warranty",
+};
 export const customerSegments: TEnumMap<ECustomerSegment>[] = [
-    {id: ECustomerSegment.All, label: "All"},
-    {id: ECustomerSegment.New, label: "New"},
-    {id: ECustomerSegment.LowValue, label: "Low Value"},
-    {id: ECustomerSegment.MediumValue, label: "Medium Value"},
-    {id: ECustomerSegment.HighValue, label: "High Value"},
-    {id: ECustomerSegment.EndOfWarranty, label: "End of Warranty"},
+  { id: ECustomerSegment.All, label: "All" },
+  { id: ECustomerSegment.New, label: "New" },
+  { id: ECustomerSegment.LowValue, label: "Low Value" },
+  { id: ECustomerSegment.MediumValue, label: "Medium Value" },
+  { id: ECustomerSegment.HighValue, label: "High Value" },
+  { id: ECustomerSegment.EndOfWarranty, label: "End of Warranty" },
 ];
 
 export enum EOfferStatus {
-    None, Archived, Deleted
+  None,
+  Archived,
+  Deleted,
 }
 export enum EOfferState {
-    Active, Disabled
+  Active,
+  Disabled,
 }
 export enum EDayOfWeek {
-    Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, EveryDay, LastWeekdayInMonth
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  EveryDay,
+  LastWeekdayInMonth,
 }
 export const dayOfWeekMap: TEnumKeyLabel<EDayOfWeek> = {
-    [EDayOfWeek.EveryDay]: "Everyday",
-    [EDayOfWeek.LastWeekdayInMonth]: "Last Weekday in Month",
-    [EDayOfWeek.Sunday]: "Sunday",
-    [EDayOfWeek.Monday]: "Monday",
-    [EDayOfWeek.Tuesday]: "Tuesday",
-    [EDayOfWeek.Wednesday]: "Wednesday",
-    [EDayOfWeek.Thursday]: "Thursday",
-    [EDayOfWeek.Friday]: "Friday",
-    [EDayOfWeek.Saturday]: "Saturday",
-}
+  [EDayOfWeek.EveryDay]: "Everyday",
+  [EDayOfWeek.LastWeekdayInMonth]: "Last Weekday in Month",
+  [EDayOfWeek.Sunday]: "Sunday",
+  [EDayOfWeek.Monday]: "Monday",
+  [EDayOfWeek.Tuesday]: "Tuesday",
+  [EDayOfWeek.Wednesday]: "Wednesday",
+  [EDayOfWeek.Thursday]: "Thursday",
+  [EDayOfWeek.Friday]: "Friday",
+  [EDayOfWeek.Saturday]: "Saturday",
+};
 export const dayOfWeek: TEnumMap<EDayOfWeek>[] = [
-    {id: EDayOfWeek.EveryDay, label: "Everyday"},
-    {id: EDayOfWeek.LastWeekdayInMonth, label: "Last Weekday in Month"},
-    {id: EDayOfWeek.Sunday, label: "Sunday"},
-    {id: EDayOfWeek.Monday, label: "Monday"},
-    {id: EDayOfWeek.Tuesday, label: "Tuesday"},
-    {id: EDayOfWeek.Wednesday, label: "Wednesday"},
-    {id: EDayOfWeek.Thursday, label: "Thursday"},
-    {id: EDayOfWeek.Friday, label: "Friday"},
-    {id: EDayOfWeek.Saturday, label: "Saturday"},
+  { id: EDayOfWeek.EveryDay, label: "Everyday" },
+  { id: EDayOfWeek.LastWeekdayInMonth, label: "Last Weekday in Month" },
+  { id: EDayOfWeek.Sunday, label: "Sunday" },
+  { id: EDayOfWeek.Monday, label: "Monday" },
+  { id: EDayOfWeek.Tuesday, label: "Tuesday" },
+  { id: EDayOfWeek.Wednesday, label: "Wednesday" },
+  { id: EDayOfWeek.Thursday, label: "Thursday" },
+  { id: EDayOfWeek.Friday, label: "Friday" },
+  { id: EDayOfWeek.Saturday, label: "Saturday" },
 ];
 export enum ECustomerPresence {
-    DropOff, Waiters, Both
+  DropOff,
+  Waiters,
+  Both,
 }
 export const customerPresenceMap: TEnumKeyLabel<ECustomerPresence> = {
-    [ECustomerPresence.DropOff]: "Drop Off",
-    [ECustomerPresence.Both]: "Both",
-    [ECustomerPresence.Waiters]: "Waiters"
-}
+  [ECustomerPresence.DropOff]: "Drop Off",
+  [ECustomerPresence.Both]: "Both",
+  [ECustomerPresence.Waiters]: "Waiters",
+};
 export const customerPresence: TEnumMap<ECustomerPresence>[] = [
-    {id: ECustomerPresence.DropOff, label: "Drop Off"},
-    {id: ECustomerPresence.Waiters, label: "Waiters"},
-    {id: ECustomerPresence.Both, label: "Both"},
+  { id: ECustomerPresence.DropOff, label: "Drop Off" },
+  { id: ECustomerPresence.Waiters, label: "Waiters" },
+  { id: ECustomerPresence.Both, label: "Both" },
 ];
 
 export interface IDuration {
-    start: TParsableDate;
-    end: TParsableDate;
+  start: TParsableDate;
+  end: TParsableDate;
 }
 export interface ITimeOfDay {
-    start: TParsableDate;
-    end: TParsableDate;
+  start: TParsableDate;
+  end: TParsableDate;
 }
 export interface IServiceType {
-    name: string;
+  name: string;
 }
 
 export interface IOffer {
-    id: number;
-    title: string;
-    value: number;
-    type: EOfferType;
-    customerSegments: ECustomerSegment[];
-    dayOfWeeks: EDayOfWeek[];
-    duration: IDuration;
-    timeOfDay: ITimeOfDay;
-    serviceType?: IServiceType;
-    status: EOfferStatus;
-    state: EOfferState;
-    customerPresence: ECustomerPresence;
-    isAllServiceRequestsIncluded: boolean;
-    serviceCenterId: number;
-    serviceRequests: IAssignedServiceRequestShort[];
-    serviceCategories: ICategory[];
+  id: number;
+  title: string;
+  value: number;
+  type: EOfferType;
+  customerSegments: ECustomerSegment[];
+  dayOfWeeks: EDayOfWeek[];
+  duration: IDuration;
+  timeOfDay: ITimeOfDay;
+  serviceType?: IServiceType;
+  status: EOfferStatus;
+  state: EOfferState;
+  customerPresence: ECustomerPresence;
+  isAllServiceRequestsIncluded: boolean;
+  serviceCenterId: number;
+  serviceRequests: IAssignedServiceRequestShort[];
+  serviceCategories: ICategory[];
 }
 
 export interface IOfferForm {
-    id?: number;
-    title: string;
-    value: number;
-    type: EOfferType;
-    customerSegments: ECustomerSegment[];
-    dayOfWeeks: EDayOfWeek[];
-    duration: IDuration;
-    timeOfDay: ITimeOfDay;
-    serviceType?: IServiceType;
-    customerPresence: ECustomerPresence;
-    isAllServiceRequestsIncluded: boolean;
-    serviceRequests: number[]|null;
-    serviceCenterId: number;
+  id?: number;
+  title: string;
+  value: number;
+  type: EOfferType;
+  customerSegments: ECustomerSegment[];
+  dayOfWeeks: EDayOfWeek[];
+  duration: IDuration;
+  timeOfDay: ITimeOfDay;
+  serviceType?: IServiceType;
+  customerPresence: ECustomerPresence;
+  isAllServiceRequestsIncluded: boolean;
+  serviceRequests: number[] | null;
+  serviceCenterId: number;
 }
 
 export type TState = {
-    offersLoading: boolean;
-    offersList: IOffer[],
-    offersPaging: IPagingResponse;
-    offersPageData: IPageRequest;
-    archivedOffersLoading: boolean;
-    archivedOffersList: IOffer[],
-    archivedOffersPaging: IPagingResponse;
-    archivedOffersPageData: IPageRequest;
-}
+  offersLoading: boolean;
+  offersList: IOffer[];
+  offersPaging: IPagingResponse;
+  offersPageData: IPageRequest;
+  archivedOffersLoading: boolean;
+  archivedOffersList: IOffer[];
+  archivedOffersPaging: IPagingResponse;
+  archivedOffersPageData: IPageRequest;
+};

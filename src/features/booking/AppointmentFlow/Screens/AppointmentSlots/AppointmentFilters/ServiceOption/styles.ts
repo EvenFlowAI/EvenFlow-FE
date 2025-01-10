@@ -1,28 +1,27 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
 export const useStyles = makeStyles()(() => ({
-    selectWrapper: {
+  selectWrapper: {},
+  label: {
+    whiteSpace: "nowrap",
+    fontSize: 14,
+  },
+  select: {
+    width: "100%",
+    borderRadius: 0,
+    "&:before": {
+      display: "none",
     },
-    label: {
-        whiteSpace: 'nowrap',
-        fontSize: 14,
+    "& > div": {
+      "&:focus": {
+        backgroundColor: "transparent",
+      },
     },
-    select: {
-        width: '100%',
-        borderRadius: 0,
-        '&:before': {
-            display: 'none',
-        },
-        '& > div': {
-            '&:focus': {
-                backgroundColor: 'transparent'
-            }
-        },
-    },
-    title: {
-        fontSize: 16,
-        fontWeight: "bold",
-        margin: '0 0 10px 0',
-        textTransform: 'uppercase'
-    }
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+    margin: "0 0 10px 0",
+    textTransform: "uppercase",
+  },
 }));

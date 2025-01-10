@@ -1,102 +1,155 @@
-import {createAction} from "@reduxjs/toolkit";
-import {AppThunk, TArgCallback, TCallback} from "../../../types/types";
-import {ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData} from "./types";
-import {EServiceType} from "../appointmentFrameReducer/types";
-import {Api} from "../../../api/ApiEndpoints/ApiEndpoints";
+import { createAction } from "@reduxjs/toolkit";
+import { AppThunk, TArgCallback, TCallback } from "../../../types/types";
+import {
+  ICategory,
+  TNewCategory,
+  TSuccessCallback,
+  TUpdateCategoryData,
+} from "./types";
+import { EServiceType } from "../appointmentFrameReducer/types";
+import { Api } from "../../../api/ApiEndpoints/ApiEndpoints";
 
 export const setCategoriesPage = createAction<number>("Categories/SetPage");
-export const setCategoriesFilter = createAction<EServiceType>("Categories/SetFilter");
-export const setCategoriesLoading = createAction<boolean>("Categories/SetLoading");
-export const getCategoriesByPage = createAction<ICategory[]>("Categories/GetCategoriesByPage");
-export const getCategoriesByQuery = createAction<ICategory[]>("Categories/GetCategoriesByQuery");
+export const setCategoriesFilter = createAction<EServiceType>(
+  "Categories/SetFilter",
+);
+export const setCategoriesLoading = createAction<boolean>(
+  "Categories/SetLoading",
+);
+export const getCategoriesByPage = createAction<ICategory[]>(
+  "Categories/GetCategoriesByPage",
+);
+export const getCategoriesByQuery = createAction<ICategory[]>(
+  "Categories/GetCategoriesByQuery",
+);
 
-export const loadCategoriesByPage = (serviceType: EServiceType): AppThunk => (dispatch, getState) => {
+export const loadCategoriesByPage =
+  (serviceType: EServiceType): AppThunk =>
+  (dispatch, getState) => {
     dispatch(setCategoriesLoading(true));
     const { page } = getState().categories;
     const { selectedSC } = getState().serviceCenters;
 
     if (selectedSC) {
-        Api.call(Api.endpoints.ServiceCategories.GetByPage, {data: {serviceCenterId:  selectedSC.id, page, serviceType}})
-            .then(result => {
-                if (result) {
-                    dispatch(getCategoriesByPage(result.data))
-                }
-            })
-            .catch(err => {
-                console.log('get categories by page error', err)
-            })
-            .finally(() => {
-                dispatch(setCategoriesLoading(false));
-            })
+      Api.call(Api.endpoints.ServiceCategories.GetByPage, {
+        data: { serviceCenterId: selectedSC.id, page, serviceType },
+      })
+        .then((result) => {
+          if (result) {
+            dispatch(getCategoriesByPage(result.data));
+          }
+        })
+        .catch((err) => {
+          console.log("get categories by page error", err);
+        })
+        .finally(() => {
+          dispatch(setCategoriesLoading(false));
+        });
     }
-}
+  };
 
-export const deleteCategoryById = (id: number, serviceType: EServiceType): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ServiceCategories.Remove, {urlParams: {id}})
-        .then(result => {
-            if (result) {
-                dispatch(loadCategoriesByPage(serviceType))
-            }
-        })
-        .catch(err => {
-            console.log('delete category error', err)
-        })
-}
+export const deleteCategoryById =
+  (id: number, serviceType: EServiceType): AppThunk =>
+  (dispatch) => {
+    Api.call(Api.endpoints.ServiceCategories.Remove, { urlParams: { id } })
+      .then((result) => {
+        if (result) {
+          dispatch(loadCategoriesByPage(serviceType));
+        }
+      })
+      .catch((err) => {
+        console.log("delete category error", err);
+      });
+  };
 
-export const updateCategory = (id: number, data: TUpdateCategoryData, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ServiceCategories.Update, {urlParams: {id}, data})
-        .then(result => {
-            if (result) {
-                dispatch(loadCategoriesByPage(serviceType))
-                onSuccess && onSuccess()
-            }
-        })
-        .catch(err => {
-            onError(err)
-            console.log('update category error', err)
-        })
-}
+export const updateCategory =
+  (
+    id: number,
+    data: TUpdateCategoryData,
+    serviceType: EServiceType,
+    onError: TArgCallback<any>,
+    onSuccess?: TCallback,
+  ): AppThunk =>
+  (dispatch) => {
+    Api.call(Api.endpoints.ServiceCategories.Update, {
+      urlParams: { id },
+      data,
+    })
+      .then((result) => {
+        if (result) {
+          dispatch(loadCategoriesByPage(serviceType));
+          onSuccess && onSuccess();
+        }
+      })
+      .catch((err) => {
+        onError(err);
+        console.log("update category error", err);
+      });
+  };
 
-export const createCategory = (data: TNewCategory, callback: TSuccessCallback, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
-    Api.call(Api.endpoints.ServiceCategories.Create, {data})
-        .then(result => {
-            if (result) {
-                dispatch(loadCategoriesByPage(serviceType))
-                if (result.data?.id) callback(result.data.id);
-                onSuccess && onSuccess()
-            }
-        })
-        .catch(err => {
-            onError(err)
-            console.log('create category error', err)
-        })
-}
+export const createCategory =
+  (
+    data: TNewCategory,
+    callback: TSuccessCallback,
+    serviceType: EServiceType,
+    onError: TArgCallback<any>,
+    onSuccess?: TCallback,
+  ): AppThunk =>
+  (dispatch) => {
+    Api.call(Api.endpoints.ServiceCategories.Create, { data })
+      .then((result) => {
+        if (result) {
+          dispatch(loadCategoriesByPage(serviceType));
+          if (result.data?.id) callback(result.data.id);
+          onSuccess && onSuccess();
+        }
+      })
+      .catch((err) => {
+        onError(err);
+        console.log("create category error", err);
+      });
+  };
 
-export const updateCategoryIcon = (id: number, file: File, serviceType: EServiceType, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk => dispatch => {
+export const updateCategoryIcon =
+  (
+    id: number,
+    file: File,
+    serviceType: EServiceType,
+    onError: TArgCallback<any>,
+    onSuccess?: TCallback,
+  ): AppThunk =>
+  (dispatch) => {
     const data = new FormData();
     data.append("file", file, file.name);
-    Api.call(Api.endpoints.ServiceCategories.UpdateIcon, {urlParams: {id}, data})
-        .then(result => {
-            if (result) {
-                dispatch(loadCategoriesByPage(serviceType))
-                onSuccess && onSuccess()
-            }
-        })
-        .catch(err => {
-            onError(err)
-            console.log('update category icon error', err)
-        })
-}
+    Api.call(Api.endpoints.ServiceCategories.UpdateIcon, {
+      urlParams: { id },
+      data,
+    })
+      .then((result) => {
+        if (result) {
+          dispatch(loadCategoriesByPage(serviceType));
+          onSuccess && onSuccess();
+        }
+      })
+      .catch((err) => {
+        onError(err);
+        console.log("update category icon error", err);
+      });
+  };
 
-export const loadCategoriesByQuery = (id: number): AppThunk => dispatch => {
+export const loadCategoriesByQuery =
+  (id: number): AppThunk =>
+  (dispatch) => {
     dispatch(setCategoriesLoading(true));
-    Api.call(Api.endpoints.ServiceCategories.GetByQuery, {data: { serviceCenterId: id, pageSize: 0, pageIndex: 0}})
-        .then(result => {
-            if (result?.data) {
-                dispatch(getCategoriesByQuery(result.data.result))
-            }
-        })
-        .catch(err => {
-            console.log('get categories by query', err)
-        })
-}
+    Api.call(Api.endpoints.ServiceCategories.GetByQuery, {
+      data: { serviceCenterId: id, pageSize: 0, pageIndex: 0 },
+    })
+      .then((result) => {
+        if (result?.data) {
+          dispatch(getCategoriesByQuery(result.data.result));
+        }
+      })
+      .catch((err) => {
+        console.log("get categories by query", err);
+      });
+  };

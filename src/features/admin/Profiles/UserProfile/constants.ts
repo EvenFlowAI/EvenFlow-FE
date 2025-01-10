@@ -1,13 +1,13 @@
-import {TForm, TPasswordForm} from "./types";
+import { TForm, TPasswordForm } from "./types";
 
 export const blankProfile: TForm = {
-    firstName: "",
-    lastName: "",
-    phoneNumber: ""
-}
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+};
 
 export const initialPasswordForm: TPasswordForm = {
-    oldPassword: "",
-    newPassword: "",
-    repeatPassword: ""
-}
+  oldPassword: "",
+  newPassword: "",
+  repeatPassword: "",
+};

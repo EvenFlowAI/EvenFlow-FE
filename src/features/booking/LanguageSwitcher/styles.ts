@@ -1,27 +1,27 @@
-import {styled} from "@mui/material";
-import { makeStyles } from 'tss-react/mui';
+import { styled } from "@mui/material";
+import { makeStyles } from "tss-react/mui";
 
-export const Wrapper = styled('div')({
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-})
+export const Wrapper = styled("div")({
+  width: "100%",
+  display: "flex",
+  justifyContent: "flex-end",
+});
 
-// 
+//
 export const useStyles = makeStyles()(() => ({
-    select: {
-        borderRadius: 0,
-        border: 'none',
-        fontWeight: 'bold',
-        textDecoration: 'underline',
-        '&:before': {
-            display: 'none',
-        },
-        '& > div': {
-            '&:focus': {
-                backgroundColor: 'transparent'
-            }
-        },
+  select: {
+    borderRadius: 0,
+    border: "none",
+    fontWeight: "bold",
+    textDecoration: "underline",
+    "&:before": {
+      display: "none",
     },
-    menuItem: {}
+    "& > div": {
+      "&:focus": {
+        backgroundColor: "transparent",
+      },
+    },
+  },
+  menuItem: {},
 }));

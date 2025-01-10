@@ -1,45 +1,45 @@
-import { makeStyles } from 'tss-react/mui';
-import {styled} from "@mui/material";
+import { makeStyles } from "tss-react/mui";
+import { styled } from "@mui/material";
 
 export const useStyles = makeStyles()((theme) => ({
-    info: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 20,
+  info: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  question: {
+    marginTop: 20,
+    textAlign: "center",
+  },
+  actionsWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    [theme.breakpoints.down("md")]: {
+      padding: "0 20px",
     },
-    question: {
-        marginTop: 20,
-        textAlign: "center",
-    },
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'center',
-        [theme.breakpoints.down('md')]: {
-            padding: '0 20px'
-        },
-    }
+  },
 }));
 
-export const ButtonsRow = styled('div')(({theme}) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "22px",
-    marginTop: 20,
+export const ButtonsRow = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "22px",
+  marginTop: 20,
+  "& button": {
+    minWidth: 144,
+  },
+  [theme.breakpoints.down("md")]: {
+    flexDirection: "column-reverse",
+    width: "100%",
+    gap: "12px",
     "& button": {
-        minWidth: 144
+      width: "100%",
     },
-    [theme.breakpoints.down('md')]: {
-        flexDirection: "column-reverse",
-        width: "100%",
-        gap: "12px",
-        "& button": {
-            width: "100%"
-        }
-    }
+  },
 }));

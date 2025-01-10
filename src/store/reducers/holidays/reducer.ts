@@ -1,33 +1,36 @@
-import {THolidayActions, TState} from "./types";
-import {defaultPageData, defaultPaging} from "../constants";
-import {getWeeklyHolidaysList} from "./actions";
+import { THolidayActions, TState } from "./types";
+import { defaultPageData, defaultPaging } from "../constants";
+import { getWeeklyHolidaysList } from "./actions";
 
 const initialState: TState = {
-    holidaysList: [],
-    loading: false,
-    saving: false,
-    paging: {...defaultPaging},
-    pageData: {...defaultPageData},
-    weeklyHolidaysList: []
+  holidaysList: [],
+  loading: false,
+  saving: false,
+  paging: { ...defaultPaging },
+  pageData: { ...defaultPageData },
+  weeklyHolidaysList: [],
 };
-export const holidaysReducer = (state=initialState, action: THolidayActions): TState => {
-    switch (action.type) {
-        case "Holidays/LoadAll":
-            return {...state, holidaysList: action.payload};
-        case "Holidays/ChangePageData":
-            return {...state, pageData: {...state.pageData, ...action.payload}};
-        case "Holidays/ChangePaging":
-            return {...state, paging: action.payload};
-        case "Holidays/Loading":
-            return {...state, loading: action.payload};
-        case "Holidays/Saving":
-            return {...state, saving: action.payload};
-        case getWeeklyHolidaysList.type:
-            if (getWeeklyHolidaysList.match(action)) {
-                return {...state, weeklyHolidaysList: action.payload};
-            }
-            return state;
-        default:
-            return state;
-    }
-}
+export const holidaysReducer = (
+  state = initialState,
+  action: THolidayActions,
+): TState => {
+  switch (action.type) {
+    case "Holidays/LoadAll":
+      return { ...state, holidaysList: action.payload };
+    case "Holidays/ChangePageData":
+      return { ...state, pageData: { ...state.pageData, ...action.payload } };
+    case "Holidays/ChangePaging":
+      return { ...state, paging: action.payload };
+    case "Holidays/Loading":
+      return { ...state, loading: action.payload };
+    case "Holidays/Saving":
+      return { ...state, saving: action.payload };
+    case getWeeklyHolidaysList.type:
+      if (getWeeklyHolidaysList.match(action)) {
+        return { ...state, weeklyHolidaysList: action.payload };
+      }
+      return state;
+    default:
+      return state;
+  }
+};

@@ -1,45 +1,55 @@
-import React from 'react';
-import {Button} from "@mui/material";
-import {Loading} from "../../../components/wrappers/Loading/Loading";
-import {useTranslation} from "react-i18next";
-import {ButtonsRow} from "./styles";
-import {TActionProps} from "../../../types/types";
+import React from "react";
+import { Button } from "@mui/material";
+import { Loading } from "../../../components/wrappers/Loading/Loading";
+import { useTranslation } from "react-i18next";
+import { ButtonsRow } from "./styles";
+import { TActionProps } from "../../../types/types";
 
-export const ActionButtons: React.FC<React.PropsWithChildren<React.PropsWithChildren<TActionProps>>> = (
-    {
-        onBack,
-        onNext,
-        nextDisabled,
-        nextLabel,
-        loading,
-        prevDisabled,
-        prevLabel,
-        hideNext,
-        hidePrev,
-        color,
-        removeTopMargin
-    }
-) => {
-    const {t} = useTranslation();
-    return (
-        <ButtonsRow style={removeTopMargin ? {marginTop: 0} : {}}>
-            {!loading ? <>
-                {!hidePrev && <Button
-                    onClick={onBack}
-                    color={color ?? 'primary'}
-                    variant='outlined'
-                    disabled={prevDisabled}
-                    style={{backgroundColor: '#F7F8FB'}}>
-                    {prevLabel ?? t("Back")}
-                </Button>}
-                {!hideNext && <Button
-                    disabled={nextDisabled}
-                    onClick={onNext}
-                    color={color ?? 'primary'}
-                    variant='contained'>
-                    {nextLabel ?? t("Submit")}
-                </Button>}
-            </> : <Loading />}
-        </ButtonsRow>
-    );
+export const ActionButtons: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TActionProps>>
+> = ({
+  onBack,
+  onNext,
+  nextDisabled,
+  nextLabel,
+  loading,
+  prevDisabled,
+  prevLabel,
+  hideNext,
+  hidePrev,
+  color,
+  removeTopMargin,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <ButtonsRow style={removeTopMargin ? { marginTop: 0 } : {}}>
+      {!loading ? (
+        <>
+          {!hidePrev && (
+            <Button
+              onClick={onBack}
+              color={color ?? "primary"}
+              variant="outlined"
+              disabled={prevDisabled}
+              style={{ backgroundColor: "#F7F8FB" }}
+            >
+              {prevLabel ?? t("Back")}
+            </Button>
+          )}
+          {!hideNext && (
+            <Button
+              disabled={nextDisabled}
+              onClick={onNext}
+              color={color ?? "primary"}
+              variant="contained"
+            >
+              {nextLabel ?? t("Submit")}
+            </Button>
+          )}
+        </>
+      ) : (
+        <Loading />
+      )}
+    </ButtonsRow>
+  );
 };

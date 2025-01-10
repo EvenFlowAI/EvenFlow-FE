@@ -88,11 +88,13 @@ export const CreateEmployee: React.FC<
       if (payload.role === Roles.Technician) {
         data = {
           ...data,
+
           hourlyRate: payload.employeeInfo?.hourlyRate || "",
           overtimeRate: payload.employeeInfo?.overtimeRate || "",
           technicianLevel:
             (payload.employeeInfo?.skillLevel as TTechnicianLevel) ||
             (1 as TTechnicianLevel),
+          type: payload.type,
         };
       } else {
         data.type = payload.type;
@@ -110,7 +112,10 @@ export const CreateEmployee: React.FC<
       err = [...err, '"First Name" must not be empty'];
     if (!employeeForm.lastName.length)
       err = [...err, '"Last Name" must not be empty'];
-    if (!employeeForm.serviceCenter)
+    if (
+      employeeForm.role !== Roles.ServiceDirector &&
+      !employeeForm.serviceCenter
+    )
       err = [...err, '"Service Center" must not be empty'];
     if (!employeeForm.email?.length) {
       err = [...err, '"Email" must not be empty'];
@@ -178,6 +183,7 @@ export const CreateEmployee: React.FC<
         data.type = employeeForm.type;
         data.displayOnBookingTypes = employeeForm.displayOnBookingTypes;
       }
+      console.log("data", data);
       try {
         if (employeeForm.role !== Roles.Technician) {
           if (payload?.id) {

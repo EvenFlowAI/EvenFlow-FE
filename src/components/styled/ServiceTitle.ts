@@ -1,7 +1,7 @@
-import {styled} from "@mui/material";
+import { styled } from "@mui/material";
 
-export const ServiceTitle = styled('span')(() => ({
-    marginBottom: 27,
-    fontSize: 16,
-    fontWeight: 600,
-}))
+export const ServiceTitle = styled("span")(() => ({
+  marginBottom: 27,
+  fontSize: 16,
+  fontWeight: 600,
+}));

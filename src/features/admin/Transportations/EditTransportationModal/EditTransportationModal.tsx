@@ -56,7 +56,7 @@ export const EditTransportationModal: React.FC<
   >
 > = ({ editingElement, ...props }) => {
   const { allAssignedList } = useSelector(
-    (state: RootState) => state.serviceRequests
+    (state: RootState) => state.serviceRequests,
   );
   const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
   const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
@@ -78,10 +78,10 @@ export const EditTransportationModal: React.FC<
     () =>
       allAssignedList.length
         ? !allAssignedList.find(
-            (item) => !serviceRequests.find((el) => el.value === item.id)
+            (item) => !serviceRequests.find((el) => el.value === item.id),
           )
         : false,
-    [allAssignedList, serviceRequests]
+    [allAssignedList, serviceRequests],
   );
 
   const requestsOptions = useMemo(() => {
@@ -96,13 +96,13 @@ export const EditTransportationModal: React.FC<
   useEffect(() => {
     setSegmentOptions(() => {
       const segments = Object.keys(ECustomerSegment).filter((key) =>
-        Number.isNaN(+key)
+        Number.isNaN(+key),
       );
       return getOptions(segments);
     });
     setDayOfWeekOptions(() => {
       const days = Object.keys(ETransportationDays).filter((key) =>
-        Number.isNaN(+key)
+        Number.isNaN(+key),
       );
       return getOptions(days);
     });
@@ -119,21 +119,21 @@ export const EditTransportationModal: React.FC<
       const { rules } = editingElement;
       if (rules) {
         let days = dayOFWeekOptions.filter((item) =>
-          rules.dayOfWeeks.includes(item.value)
+          rules.dayOfWeeks.includes(item.value),
         );
         if (
           rules.dayOfWeeks.find(
-            (item) => +item === ETransportationDays.EveryDay
+            (item) => +item === ETransportationDays.EveryDay,
           )
         ) {
           days = dayOFWeekOptions.filter(
-            (item) => item.value !== ETransportationDays.EveryDay
+            (item) => item.value !== ETransportationDays.EveryDay,
           );
         }
         setDaysOfWeek(days);
 
         const segment = segmentOptions.find(
-          (item) => item.value === +rules.customerSegments[0]
+          (item) => item.value === +rules.customerSegments[0],
         );
         if (segment) setCustomerSegment(segment);
 
@@ -142,14 +142,14 @@ export const EditTransportationModal: React.FC<
             allAssignedList.map((item) => ({
               name: item.serviceRequest.code,
               value: item.id,
-            }))
+            })),
           );
         } else {
           setServiceRequests(
             rules.serviceRequests.map((item) => ({
               value: item.id,
               name: item.code,
-            }))
+            })),
           );
         }
         if (rules.capacity) setCapacity(rules.capacity.toString());
@@ -183,7 +183,7 @@ export const EditTransportationModal: React.FC<
 
   const onCustomerSegmentChange = (
     e: React.ChangeEvent<{}>,
-    value: TOption | null
+    value: TOption | null,
   ): void => {
     setFormIsChecked(false);
     setCustomerSegment(value);
@@ -209,7 +209,7 @@ export const EditTransportationModal: React.FC<
           }
         });
       },
-    []
+    [],
   );
 
   const onDayOfWeekChange = useCallback(
@@ -220,14 +220,14 @@ export const EditTransportationModal: React.FC<
       ) {
         setDaysOfWeek(
           dayOFWeekOptions.filter(
-            (item) => item.value !== ETransportationDays.EveryDay
-          )
+            (item) => item.value !== ETransportationDays.EveryDay,
+          ),
         );
       } else {
         setDaysOfWeek(value);
       }
     },
-    [dayOFWeekOptions]
+    [dayOFWeekOptions],
   );
 
   const onRequestChange = useCallback(
@@ -238,13 +238,13 @@ export const EditTransportationModal: React.FC<
           allAssignedList.map((item) => ({
             name: item.serviceRequest.code,
             value: item.id,
-          }))
+          })),
         );
       } else {
         setServiceRequests(value);
       }
     },
-    [allAssignedList]
+    [allAssignedList],
   );
 
   const onRequestCheckboxChange = useCallback(
@@ -260,12 +260,12 @@ export const EditTransportationModal: React.FC<
                 ? serviceRequests.find((el) => el.value === b.value)
                   ? 0
                   : -1
-                : 1
+                : 1,
             );
         });
       }
     },
-    [serviceRequests]
+    [serviceRequests],
   );
 
   const onDayOfWeekCheckboxChange = useCallback(
@@ -281,18 +281,18 @@ export const EditTransportationModal: React.FC<
                 ? daysOfWeek.find((el) => el.value === b.value)
                   ? 0
                   : -1
-                : 1
+                : 1,
             );
         });
       }
     },
-    [daysOfWeek]
+    [daysOfWeek],
   );
 
   const renderDayOfWeekOption = useCallback(
     (props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
       const allOptionsSelected = Boolean(
-        daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1
+        daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1,
       );
       const checked =
         Boolean(daysOfWeek.find((item) => item.value === option.value)) ||
@@ -319,7 +319,7 @@ export const EditTransportationModal: React.FC<
         </li>
       );
     },
-    [daysOfWeek, dayOFWeekOptions]
+    [daysOfWeek, dayOFWeekOptions],
   );
 
   const renderRequestOption = useCallback(
@@ -349,7 +349,7 @@ export const EditTransportationModal: React.FC<
         </li>
       );
     },
-    [serviceRequests, allAssignedList]
+    [serviceRequests, allAssignedList],
   );
 
   const onCancel = () => {
@@ -404,8 +404,8 @@ export const EditTransportationModal: React.FC<
             selectedSC.id,
             data,
             onCancel,
-            showError
-          )
+            showError,
+          ),
         );
       }
     } else {

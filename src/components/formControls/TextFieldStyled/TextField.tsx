@@ -1,25 +1,38 @@
-import React, {forwardRef} from 'react';
-import {InputBase as DefaultTextField} from "@mui/material";
+import React, { forwardRef } from "react";
+import { InputBase as DefaultTextField } from "@mui/material";
 import theme from "../../../theme/theme";
-import {TextInputProps} from "../types";
+import { TextInputProps } from "../types";
 
-import {CustomInputLabel} from "../../styled/CustomInputLabel";
+import { CustomInputLabel } from "../../styled/CustomInputLabel";
 
 export const TextField = forwardRef<unknown, TextInputProps>(
-    ({label, params, hideLabel, spacing, isLowerCase, ...props}, ref) => {
-    const {InputProps={}, InputLabelProps={}, ...p} = params || {};
+  ({ label, params, hideLabel, spacing, isLowerCase, ...props }, ref) => {
+    const { InputProps = {}, InputLabelProps = {}, ...p } = params || {};
 
-    return <>
-        {label &&
-            <CustomInputLabel
-                shrink
-                htmlFor={props.id}
-                {...InputLabelProps}
-                visible={Boolean(!hideLabel)}
-                lowerCase={Boolean(isLowerCase)}>
-                {label}{props.required ? <span>&#42;</span> : ''}
-            </CustomInputLabel>
-        }
-        <DefaultTextField ref={ref} {...{...p, ...InputProps}} {...props} style={{marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style}} />
-    </>
-});
+    return (
+      <>
+        {label && (
+          <CustomInputLabel
+            shrink
+            htmlFor={props.id}
+            {...InputLabelProps}
+            visible={Boolean(!hideLabel)}
+            lowerCase={Boolean(isLowerCase)}
+          >
+            {label}
+            {props.required ? <span>&#42;</span> : ""}
+          </CustomInputLabel>
+        )}
+        <DefaultTextField
+          ref={ref}
+          {...{ ...p, ...InputProps }}
+          {...props}
+          style={{
+            marginBottom: spacing === "normal" ? theme.spacing(2) : 0,
+            ...props.style,
+          }}
+        />
+      </>
+    );
+  },
+);

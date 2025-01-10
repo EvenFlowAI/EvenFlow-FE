@@ -1,91 +1,107 @@
-import {Checkbox, FormControlLabel, Grid, Link} from "@mui/material";
-import {TextField} from "../../../components/formControls/TextFieldStyled/TextField";
-import {Link as RLink, useHistory, useLocation} from "react-router-dom";
-import {LockOpen} from "@mui/icons-material";
-import React, {useState} from "react";
-import {LoginTitle} from "../../../components/wrappers/LoginTitle/LoginTitle";
-import {LoginContainer} from "../../../components/styled/LoginContainer";
-import {LoginButton} from "../../../components/styled/LoginButton";
-import {ICredentials} from "../../../types/types";
-import {Routes} from "../../../routes/constants";
-import {authService} from "../../../api/AuthService/AuthService";
-import {useException} from "../../../hooks/useException/useException";
+import { Checkbox, FormControlLabel, Grid, Link } from "@mui/material";
+import { TextField } from "../../../components/formControls/TextFieldStyled/TextField";
+import { Link as RLink, useHistory, useLocation } from "react-router-dom";
+import { LockOpen } from "@mui/icons-material";
+import React, { useState } from "react";
+import { LoginTitle } from "../../../components/wrappers/LoginTitle/LoginTitle";
+import { LoginContainer } from "../../../components/styled/LoginContainer";
+import { LoginButton } from "../../../components/styled/LoginButton";
+import { ICredentials } from "../../../types/types";
+import { Routes } from "../../../routes/constants";
+import { authService } from "../../../api/AuthService/AuthService";
+import { useException } from "../../../hooks/useException/useException";
 
 export const AdminLogin = () => {
-    const [loading, setLoading] = useState(false);
-    const [credentials, setCredentials] = useState<ICredentials>({email: '', password: ''});
-    const showError = useException();
-    const history = useHistory();
-    const {state: locationState} = useLocation<{from: string}>();
+  const [loading, setLoading] = useState(false);
+  const [credentials, setCredentials] = useState<ICredentials>({
+    email: "",
+    password: "",
+  });
+  const showError = useException();
+  const history = useHistory();
+  const { state: locationState } = useLocation<{ from: string }>();
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({target: {name, value}}) => {
-        setCredentials({...credentials, [name]: value});
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
+    target: { name, value },
+  }) => {
+    setCredentials({ ...credentials, [name]: value });
+  };
+
+  const handleLogin = async () => {
+    if (!credentials.email || !credentials.password) {
+      showError("Please fill your credentials");
+      return;
     }
+    setLoading(true);
+    try {
+      await authService.login(credentials);
+      // Loading here because of history unmounts component
+      setLoading(false);
+      history.replace(
+        locationState && locationState.from
+          ? locationState.from
+          : Routes.Admin.Appointments,
+      );
+    } catch (e) {
+      showError(e);
+      setLoading(false);
+    }
+  };
 
-    const handleLogin = async () => {
-        if (!credentials.email || !credentials.password) {
-            showError("Please fill your credentials");
-            return;
-        }
-        setLoading(true);
-        try {
-            await authService.login(credentials);
-            // Loading here because of history unmounts component
-            setLoading(false);
-            history.replace(locationState && locationState.from ? locationState.from : Routes.Admin.Appointments);
-        } catch (e) {
-            showError(e);
-            setLoading(false);
-        }
-    };
+  return (
+    <LoginContainer>
+      <LoginTitle title="Welcome to EvenFlow" />
+      <TextField
+        label="Email Address"
+        spacing="normal"
+        fullWidth
+        placeholder="TYPE HERE"
+        name="email"
+        autoComplete={"current-email"}
+        value={credentials.email}
+        onChange={handleChange}
+        id="email"
+        autoFocus
+      />
+      <TextField
+        fullWidth
+        name="password"
+        type="password"
+        label="Password"
+        spacing="normal"
+        placeholder="TYPE HERE"
+        onChange={handleChange}
+        value={credentials.password}
+        id="password"
+        autoComplete="current-password"
+      />
+      <Grid container alignItems="center">
+        <Grid item xs={6}>
+          <FormControlLabel
+            label="Keep me signed in"
+            control={<Checkbox color="primary" />}
+          />
+        </Grid>
+        <Grid item xs={6} style={{ textAlign: "right" }}>
+          <Link
+            style={{ fontWeight: "bold" }}
+            component={RLink}
+            to={Routes.Login.ForgotPassword}
+            underline="hover"
+          >
+            FORGOT PASSWORD?
+          </Link>
+        </Grid>
+      </Grid>
 
-
-    return (
-        <LoginContainer>
-            <LoginTitle title="Welcome to EvenFlow" />
-            <TextField
-                label="Email Address"
-                spacing="normal"
-                fullWidth
-                placeholder="TYPE HERE"
-                name="email"
-                autoComplete={'current-email'}
-                value={credentials.email}
-                onChange={handleChange}
-                id="email"
-                autoFocus
-            />
-            <TextField
-                fullWidth
-                name="password"
-                type="password"
-                label="Password"
-                spacing="normal"
-                placeholder="TYPE HERE"
-                onChange={handleChange}
-                value={credentials.password}
-                id="password"
-                autoComplete="current-password"
-            />
-            <Grid container alignItems="center">
-                <Grid item xs={6}>
-                    <FormControlLabel
-                        label="Keep me signed in"
-                        control={<Checkbox color="primary"/>}
-                    />
-                </Grid>
-                <Grid item xs={6} style={{textAlign: "right"}}>
-                    <Link
-                        style={{fontWeight: "bold"}}
-                        component={RLink}
-                        to={Routes.Login.ForgotPassword}
-                        underline="hover">FORGOT PASSWORD?</Link>
-                </Grid>
-            </Grid>
-
-            <LoginButton startIcon={<LockOpen/>} fullWidth loading={loading} onClick={handleLogin}>
-                Log In
-            </LoginButton>
-        </LoginContainer>
-    );
-}
+      <LoginButton
+        startIcon={<LockOpen />}
+        fullWidth
+        loading={loading}
+        onClick={handleLogin}
+      >
+        Log In
+      </LoginButton>
+    </LoginContainer>
+  );
+};

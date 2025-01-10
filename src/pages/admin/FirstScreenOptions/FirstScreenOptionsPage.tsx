@@ -1,44 +1,50 @@
-import React, {useState} from 'react';
-import {IFirstScreenOption} from "../../../store/reducers/serviceTypes/types";
-import {Button} from "@mui/material";
-import {bookingFlowRoot} from "../../../utils/constants";
-import {TitleContainer} from "../../../components/wrappers/TitleContainer/TitleContainer";
-import {AddFirstScreenOptionModal} from "../../../features/admin/FirstScreenOptions/AddFirstScreenOptionModal/AddFirstScreenOptionModal";
-import {FirstScreenOptionsTable} from "../../../features/admin/FirstScreenOptions/FirstScreenOptionsTable/FirstScreenOptionsTable";
-import {useModal} from "../../../hooks/useModal/useModal";
+import React, { useState } from "react";
+import { IFirstScreenOption } from "../../../store/reducers/serviceTypes/types";
+import { Button } from "@mui/material";
+import { bookingFlowRoot } from "../../../utils/constants";
+import { TitleContainer } from "../../../components/wrappers/TitleContainer/TitleContainer";
+import { AddFirstScreenOptionModal } from "../../../features/admin/FirstScreenOptions/AddFirstScreenOptionModal/AddFirstScreenOptionModal";
+import { FirstScreenOptionsTable } from "../../../features/admin/FirstScreenOptions/FirstScreenOptionsTable/FirstScreenOptionsTable";
+import { useModal } from "../../../hooks/useModal/useModal";
 
 export const FirstScreenOptionsPage = () => {
-    const [currentItem, setCurrentItem] = useState<IFirstScreenOption | null>(null);
-    const {isOpen, onOpen, onClose} = useModal();
+  const [currentItem, setCurrentItem] = useState<IFirstScreenOption | null>(
+    null,
+  );
+  const { isOpen, onOpen, onClose } = useModal();
 
-    const onOpenAdd = async () => {
-        await setCurrentItem(null);
-        await onOpen();
-    }
+  const onOpenAdd = async () => {
+    await setCurrentItem(null);
+    await onOpen();
+  };
 
-    return (
-        <React.Fragment>
-            <TitleContainer
-                title="First Screen Configuration"
-                pad
-                parent={bookingFlowRoot}
-                actions={
-                <Button
-                    style={{marginLeft: 16}}
-                    color="primary"
-                    onClick={onOpenAdd}
-                    variant="contained">
-                    Add Service Option
-                </Button>
-            }/>
-            <FirstScreenOptionsTable
-                setCurrentItem={setCurrentItem}
-                currentItem={currentItem}
-                onOpen={onOpen}/>
-            <AddFirstScreenOptionModal
-                open={isOpen}
-                editingItem={currentItem}
-                onClose={onClose}/>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <TitleContainer
+        title="First Screen Configuration"
+        pad
+        parent={bookingFlowRoot}
+        actions={
+          <Button
+            style={{ marginLeft: 16 }}
+            color="primary"
+            onClick={onOpenAdd}
+            variant="contained"
+          >
+            Add Service Option
+          </Button>
+        }
+      />
+      <FirstScreenOptionsTable
+        setCurrentItem={setCurrentItem}
+        currentItem={currentItem}
+        onOpen={onOpen}
+      />
+      <AddFirstScreenOptionModal
+        open={isOpen}
+        editingItem={currentItem}
+        onClose={onClose}
+      />
+    </React.Fragment>
+  );
 };

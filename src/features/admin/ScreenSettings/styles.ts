@@ -1,20 +1,20 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
 export const useStyles = makeStyles()(() => ({
-    actionsWrapper: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingTop: 14,
-    },
-    buttonsWrapper: {
-        display: 'flex',
-        justifyContent: "space-between",
-        alignItems: 'center',
-    },
-    topBtnWrapper: {
-        display: 'flex',
-        justifyContent: "flex-end",
-        alignItems: 'center',
-        marginBottom: 24
-    }
+  actionsWrapper: {
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingTop: 14,
+  },
+  buttonsWrapper: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  topBtnWrapper: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: 24,
+  },
 }));

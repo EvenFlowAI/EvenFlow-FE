@@ -40,7 +40,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   setNeedToShowServiceTypes,
 }) => {
   const { serviceTypeOption } = useSelector(
-    (state: RootState) => state.appointmentFrame
+    (state: RootState) => state.appointmentFrame,
   );
   const {
     isTransportationAvailable,
@@ -48,7 +48,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
     isAdvisorAvailable,
   } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { customerLoadedData } = useSelector(
-    (state: RootState) => state.appointment
+    (state: RootState) => state.appointment,
   );
   const [lastSelectedCategory, setLastSelectedCategory] =
     useState<IServiceCategory | null>(null);
@@ -59,14 +59,14 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   const serviceType = useMemo(
     () =>
       serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter,
-    [serviceTypeOption]
+    [serviceTypeOption],
   );
 
   const onBackFromServiceNeeds = () => {
     if (customerLoadedData?.isUpdating)
       history.push("/f/appointment-manage/" + id);
     handleSetScreen(
-      serviceType === EServiceType.VisitCenter ? "carSelection" : "location"
+      serviceType === EServiceType.VisitCenter ? "carSelection" : "location",
     );
   };
 
@@ -75,7 +75,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
     handleSetScreen(
       isAppointmentTimingAvailable
         ? "appointmentTiming"
-        : "appointmentSelection"
+        : "appointmentSelection",
     );
   };
 
@@ -140,8 +140,8 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
                 !serviceTypeOption?.transportationOption
                 ? "transportationNeeds"
                 : isAppointmentTimingAvailable
-                ? "appointmentTiming"
-                : "appointmentSelection"
+                  ? "appointmentTiming"
+                  : "appointmentSelection",
             )
           }
         />
@@ -156,14 +156,14 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
         <TransportationsCreate
           onBack={() =>
             handleSetScreen(
-              isAdvisorAvailable ? "consultantSelection" : "serviceNeeds"
+              isAdvisorAvailable ? "consultantSelection" : "serviceNeeds",
             )
           }
           onNext={() =>
             handleSetScreen(
               isAppointmentTimingAvailable
                 ? "appointmentTiming"
-                : "appointmentSelection"
+                : "appointmentSelection",
             )
           }
         />

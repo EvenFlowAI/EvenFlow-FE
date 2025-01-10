@@ -1,157 +1,169 @@
-import {TEnumMap} from "../types";
-import {IAssignedServiceRequest} from "../serviceRequests/types";
-import {IPackageOptionShort, IPackageShort} from "../packages/types";
-import {TParsableDate} from "../../../types/types";
+import { TEnumMap } from "../types";
+import { IAssignedServiceRequest } from "../serviceRequests/types";
+import { IPackageOptionShort, IPackageShort } from "../packages/types";
+import { TParsableDate } from "../../../types/types";
 
 export type TValuePricingLevel = {
-    demandCategory: EDemandCategory;
-    value: number;
-}
+  demandCategory: EDemandCategory;
+  value: number;
+};
 
 export enum EDemandCategory {
-    Low, Average, High
+  Low,
+  Average,
+  High,
 }
 export const demandCategories: TEnumMap<EDemandCategory>[] = [
-    {id: EDemandCategory.Low, label: "Low"},
-    {id: EDemandCategory.Average, label: "Average"},
-    {id: EDemandCategory.High, label: "High"},
+  { id: EDemandCategory.Low, label: "Low" },
+  { id: EDemandCategory.Average, label: "Average" },
+  { id: EDemandCategory.High, label: "High" },
 ];
 export interface IPricingLevel {
-    demandCategory: EDemandCategory;
-    percentage: number;
-    serviceCenterId: number;
+  demandCategory: EDemandCategory;
+  percentage: number;
+  serviceCenterId: number;
 }
 export interface IRequestPricingSettings {
-    serviceCenterId: number;
-    serviceRequestId: number;
-    serviceRequestCode: string;
-    values: TValuePricingLevel[];
+  serviceCenterId: number;
+  serviceRequestId: number;
+  serviceRequestCode: string;
+  values: TValuePricingLevel[];
 }
 
 export enum EWindowType {
-    Window1, Window2, Window3
+  Window1,
+  Window2,
+  Window3,
 }
 export interface ITimeWindowEl {
-    type: EWindowType;
-    startInHours: number;
-    durationInHours?: number;
-    isEligibility: boolean;
-    serviceCenterId: number;
-    podId?: number;
+  type: EWindowType;
+  startInHours: number;
+  durationInHours?: number;
+  isEligibility: boolean;
+  serviceCenterId: number;
+  podId?: number;
 }
 export enum EDay {
-    Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+  Sunday,
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
 }
 
 export interface IPricingSetting {
-    day: EDay;
-    lowPrice: number;
-    averagePrice: number;
-    highPrice: number;
+  day: EDay;
+  lowPrice: number;
+  averagePrice: number;
+  highPrice: number;
 }
 
 export enum EDayDemand {
-    Low = 0,
-    High = 2
+  Low = 0,
+  High = 2,
 }
 
 export const dayDemands: TEnumMap<EDayDemand>[] = [
-    {id: EDayDemand.High, label: "Closest available"},
-    {id: EDayDemand.Low, label: "Earliest available"}
+  { id: EDayDemand.High, label: "Closest available" },
+  { id: EDayDemand.Low, label: "Earliest available" },
 ];
 
 export const yearDemands: TEnumMap<EDayDemand>[] = [
-    {id: EDayDemand.High, label: "High"},
-    {id: EDayDemand.Low, label: "Low"}
+  { id: EDayDemand.High, label: "High" },
+  { id: EDayDemand.Low, label: "Low" },
 ];
 
 export enum EDemandType {
-    TimeOfDay, DayOfWeek, TimeOfYear
+  TimeOfDay,
+  DayOfWeek,
+  TimeOfYear,
 }
 export interface IPricingDemand {
-    demandCategory: EDemandCategory;
-    type: EDemandType;
-    point: number;
-    serviceCenterId: number;
+  demandCategory: EDemandCategory;
+  type: EDemandType;
+  point: number;
+  serviceCenterId: number;
 }
 export interface IDayOfWeekSetting {
-    serviceCenterId: number;
-    demandCategory: EDemandCategory;
-    dayOfWeek: EDay;
+  serviceCenterId: number;
+  demandCategory: EDemandCategory;
+  dayOfWeek: EDay;
 }
 
 export interface ITimeOfYearSetting {
-    serviceCenterId: number;
-    demandCategory: EDemandCategory;
-    id?: number;
-    date: TParsableDate;
-    comment?: string;
+  serviceCenterId: number;
+  demandCategory: EDemandCategory;
+  id?: number;
+  date: TParsableDate;
+  comment?: string;
 }
 
 export type TNewRequestsToPricing = {
-    serviceCenterId: number;
-    serviceRequestIds: number[];
-}
+  serviceCenterId: number;
+  serviceRequestIds: number[];
+};
 
 export type TNewPackagesToPricing = {
-    serviceCenterId: number;
-    maintenancePackageOptionIds: number[];
-}
+  serviceCenterId: number;
+  maintenancePackageOptionIds: number[];
+};
 
 export interface IGetMPListData {
-    serviceCenterId: number;
-    podId?: number;
-    pageIndex: number;
-    pageSize: number;
+  serviceCenterId: number;
+  podId?: number;
+  pageIndex: number;
+  pageSize: number;
 }
 
 export interface IPackagePricingLevels {
-    serviceCenterId: number;
-    maintenancePackageId: number;
-    maintenancePackageName: string;
-    values: TValuePricingLevel[];
-    maintenancePackageOptionId: number;
-    maintenancePackageOptionName: string;
+  serviceCenterId: number;
+  maintenancePackageId: number;
+  maintenancePackageName: string;
+  values: TValuePricingLevel[];
+  maintenancePackageOptionId: number;
+  maintenancePackageOptionName: string;
 }
 
 export interface IPackagePricingSettings {
-    serviceCenterId: number;
-    maintenancePackageId: number;
-    maintenancePackageName: string;
-    maintenancePackageOptionId: number;
-    maintenancePackageOptionName: string;
-    values: TValuePricingLevel[];
+  serviceCenterId: number;
+  maintenancePackageId: number;
+  maintenancePackageName: string;
+  maintenancePackageOptionId: number;
+  maintenancePackageOptionName: string;
+  values: TValuePricingLevel[];
 }
 
 export enum EPricingDisplayType {
-    Suppressed,
-    Static,
-    Dynamic
+  Suppressed,
+  Static,
+  Dynamic,
 }
 
 export type TTimeWindow = {
-    [k in EWindowType]: ITimeWindowEl;
-}
+  [k in EWindowType]: ITimeWindowEl;
+};
 
 export type TPricingLevels = {
-    [k in EDemandCategory]: IPricingLevel;
-}
+  [k in EDemandCategory]: IPricingLevel;
+};
 
 export type TState = {
-    pricingLevels: IPricingLevel[];
-    timeWindows: ITimeWindowEl[];
-    srList: IAssignedServiceRequest[];
-    calculations: IPricingSetting[];
-    pricingDemands: IPricingDemand[];
-    dWeekPricing: IDayOfWeekSetting[];
-    tYearPricing: ITimeOfYearSetting[];
-    srPricingLevels: IRequestPricingSettings[];
-    srPricingSettings: IRequestPricingSettings[];
-    mpList: IPackageShort[];
-    mpPricingSettings: IPackagePricingSettings[];
-    mpOptionsList: IPackageOptionShort[];
-    isLoading: boolean;
-    isRoundPriceLoading: boolean;
-    roundPrice: boolean;
-    mpPricingLevels: IPackagePricingLevels[];
-}
+  pricingLevels: IPricingLevel[];
+  timeWindows: ITimeWindowEl[];
+  srList: IAssignedServiceRequest[];
+  calculations: IPricingSetting[];
+  pricingDemands: IPricingDemand[];
+  dWeekPricing: IDayOfWeekSetting[];
+  tYearPricing: ITimeOfYearSetting[];
+  srPricingLevels: IRequestPricingSettings[];
+  srPricingSettings: IRequestPricingSettings[];
+  mpList: IPackageShort[];
+  mpPricingSettings: IPackagePricingSettings[];
+  mpOptionsList: IPackageOptionShort[];
+  isLoading: boolean;
+  isRoundPriceLoading: boolean;
+  roundPrice: boolean;
+  mpPricingLevels: IPackagePricingLevels[];
+};

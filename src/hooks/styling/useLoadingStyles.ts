@@ -1,9 +1,9 @@
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
 
-export const useLoadingStyles = makeStyles()(theme => ({
-    wrapper: {
-        [theme.breakpoints.down('sm')]: {
-            width: "100%",
-        }
-    }
+export const useLoadingStyles = makeStyles()((theme) => ({
+  wrapper: {
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
 }));

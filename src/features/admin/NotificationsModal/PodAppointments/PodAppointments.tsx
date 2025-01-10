@@ -1,234 +1,319 @@
-import React, {ChangeEvent, useEffect, useMemo, useState} from 'react';
-import { Autocomplete } from '@mui/material';
-import {autocompleteRender} from "../../../../utils/autocompleteRenders";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {Button, Divider, IconButton} from "@mui/material";
-import {DialogActions} from "../../../../components/modals/BaseModal/BaseModal";
-import {IPodShort} from "../../../../store/reducers/pods/types";
-import {ReactComponent as PlusIcon} from "../../../../assets/img/plus.svg";
-import {ReactComponent as DeleteIcon} from "../../../../assets/img/close.svg";
-import {loadPodsShort} from "../../../../store/reducers/pods/actions";
-import {TNotifications} from "../../../../store/reducers/notifications/types";
-import {setLoading, updatePodNotifications} from "../../../../store/reducers/notifications/actions";
-import {TNotificatonsProps} from "../types";
-import {Loading} from "../../../../components/wrappers/Loading/Loading";
-import {checkPodsAreTheSame} from "../utils";
-import {IAdvisorShort} from "../../../../store/reducers/users/types";
-import {useNotificationStyles} from "../../../../hooks/styling/useNotificationStyles";
-import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { Autocomplete } from "@mui/material";
+import { autocompleteRender } from "../../../../utils/autocompleteRenders";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../store/rootReducer";
+import { Button, Divider, IconButton } from "@mui/material";
+import { DialogActions } from "../../../../components/modals/BaseModal/BaseModal";
+import { IPodShort } from "../../../../store/reducers/pods/types";
+import { ReactComponent as PlusIcon } from "../../../../assets/img/plus.svg";
+import { ReactComponent as DeleteIcon } from "../../../../assets/img/close.svg";
+import { loadPodsShort } from "../../../../store/reducers/pods/actions";
+import { TNotifications } from "../../../../store/reducers/notifications/types";
+import {
+  setLoading,
+  updatePodNotifications,
+} from "../../../../store/reducers/notifications/actions";
+import { TNotificatonsProps } from "../types";
+import { Loading } from "../../../../components/wrappers/Loading/Loading";
+import { checkPodsAreTheSame } from "../utils";
+import { IAdvisorShort } from "../../../../store/reducers/users/types";
+import { useNotificationStyles } from "../../../../hooks/styling/useNotificationStyles";
+import { useConfirm } from "../../../../hooks/useConfirm/useConfirm";
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import { useMessage } from "../../../../hooks/useMessage/useMessage";
+import { useException } from "../../../../hooks/useException/useException";
+import { useSCs } from "../../../../hooks/useSCs/useSCs";
 
-const PodAppointments: React.FC<React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>> = ({setChangesState, changesState, onClose}) => {
-    const {usersShort, loading} = useSelector((state: RootState) => state.employees);
-    const {shortPodsList, podsLoading} = useSelector((state: RootState) => state.pods);
-    const {podNotifications, isLoading} = useSelector((state: RootState) => state.notifications);
-    const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort|null>(null);
-    const [allPodData, setAllPodData] = useState<TNotifications[]>([]);
-    const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>([]);
-    const [selectedPod, setSelectedPod] = useState<IPodShort|null>(null);
-    const [formChecked, setFormChecked] = useState<boolean>(false);
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const {askConfirm} = useConfirm();
-    const showError = useException();
-    const showMessage = useMessage();
-    const { classes  } = useNotificationStyles();
-    const currentPodData = useMemo(() => allPodData.find(el => el.id === selectedPod?.id), [allPodData, selectedPod])
+const PodAppointments: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TNotificatonsProps>>
+> = ({ setChangesState, changesState, onClose }) => {
+  const { usersShort, loading } = useSelector(
+    (state: RootState) => state.employees,
+  );
+  const { shortPodsList, podsLoading } = useSelector(
+    (state: RootState) => state.pods,
+  );
+  const { podNotifications, isLoading } = useSelector(
+    (state: RootState) => state.notifications,
+  );
+  const [currentEmployee, setCurrentEmployee] = useState<IAdvisorShort | null>(
+    null,
+  );
+  const [allPodData, setAllPodData] = useState<TNotifications[]>([]);
+  const [selectedEmployees, setSelectedEmployees] = useState<IAdvisorShort[]>(
+    [],
+  );
+  const [selectedPod, setSelectedPod] = useState<IPodShort | null>(null);
+  const [formChecked, setFormChecked] = useState<boolean>(false);
+  const { selectedSC } = useSCs();
+  const dispatch = useDispatch();
+  const { askConfirm } = useConfirm();
+  const showError = useException();
+  const showMessage = useMessage();
+  const { classes } = useNotificationStyles();
+  const currentPodData = useMemo(
+    () => allPodData.find((el) => el.id === selectedPod?.id),
+    [allPodData, selectedPod],
+  );
 
-    useEffect(() => {
-        let changesSaved = true;
-        if (currentEmployee) {
-            changesSaved = false
-        } else {
-            changesSaved = checkPodsAreTheSame(allPodData, podNotifications)
-        }
-        setChangesState(prevState => ({...prevState, podNotificationsSaved: changesSaved}))
-    }, [allPodData, podNotifications, currentEmployee])
-
-    useEffect(() => {
-        setAllPodData(podNotifications)
-    }, [podNotifications])
-
-    useEffect(() => {
-        if (selectedSC) dispatch(loadPodsShort(selectedSC?.id))
-    }, [selectedSC])
-
-    useEffect(() => {
-        dispatch(setLoading(true))
-        if (podNotifications.length) {
-            const pod = shortPodsList.find(el => el.id === podNotifications[0].id)
-            pod && setSelectedPod(pod)
-        }
-        dispatch(setLoading(false))
-    }, [podNotifications, shortPodsList])
-
-    useEffect(() => {
-        if (currentPodData?.usersList) {
-            const selected = usersShort.filter(el => currentPodData?.usersList?.includes(el.id))
-            setSelectedEmployees(selected)
-        }
-    }, [usersShort, currentPodData])
-
-    const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort|null) => {
-        setFormChecked(false)
-        setCurrentEmployee(value)
+  useEffect(() => {
+    let changesSaved = true;
+    if (currentEmployee) {
+      changesSaved = false;
+    } else {
+      changesSaved = checkPodsAreTheSame(allPodData, podNotifications);
     }
+    setChangesState((prevState) => ({
+      ...prevState,
+      podNotificationsSaved: changesSaved,
+    }));
+  }, [allPodData, podNotifications, currentEmployee]);
 
-    const onPodChange = (e: ChangeEvent<{}>, value: IPodShort|null) => {
-        setFormChecked(false)
-        const podData = allPodData.find(el => el.id === value?.id);
-        if (podData) {
-            const selected = usersShort.filter(el => podData.usersList?.includes(el.id))
-            setSelectedEmployees(selected)
-        } else {
-            if (value) {
-                setAllPodData(prevState => ([...prevState, {id: value?.id, usersList: []}]))
-            } else {
-                setAllPodData(prevState => prevState.filter(item => item.id !== selectedPod?.id))
-            }
-            setSelectedEmployees([])
-        }
-        setSelectedPod(value)
+  useEffect(() => {
+    setAllPodData(podNotifications);
+  }, [podNotifications]);
+
+  useEffect(() => {
+    if (selectedSC) dispatch(loadPodsShort(selectedSC?.id));
+  }, [selectedSC]);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+    if (podNotifications.length) {
+      const pod = shortPodsList.find((el) => el.id === podNotifications[0].id);
+      pod && setSelectedPod(pod);
     }
+    dispatch(setLoading(false));
+  }, [podNotifications, shortPodsList]);
 
-    const onCancel = () => {
-        setFormChecked(false)
-        setCurrentEmployee(null);
-        if (changesState?.podNotificationsSaved) {
-            setAllPodData(podNotifications)
-        } else {
-            askConfirm({
-                isRemove: true,
-                confirmContent: "Cancel changes",
-                cancelContent: "Save changes",
-                title: "Cancel Service Book Notifications changes",
-                content: <span>
-                       By clicking Cancel, your entries across all Pods will not be saved.<br />
-                     Click Save Changes to store your inputs.
-                    </span>,
-                onConfirm: () => setAllPodData(podNotifications),
-                onCancel: onSave
-            });
-        }
+  useEffect(() => {
+    if (currentPodData?.usersList) {
+      const selected = usersShort.filter((el) =>
+        currentPodData?.usersList?.includes(el.id),
+      );
+      setSelectedEmployees(selected);
     }
+  }, [usersShort, currentPodData]);
 
-    const onSuccess = () => {
-        showMessage("Notifications for Service Book Appointments updated")
-        setCurrentEmployee(null);
-        setFormChecked(false)
+  const onEmployeeChange = (
+    e: ChangeEvent<{}>,
+    value: IAdvisorShort | null,
+  ) => {
+    setFormChecked(false);
+    setCurrentEmployee(value);
+  };
+
+  const onPodChange = (e: ChangeEvent<{}>, value: IPodShort | null) => {
+    setFormChecked(false);
+    const podData = allPodData.find((el) => el.id === value?.id);
+    if (podData) {
+      const selected = usersShort.filter((el) =>
+        podData.usersList?.includes(el.id),
+      );
+      setSelectedEmployees(selected);
+    } else {
+      if (value) {
+        setAllPodData((prevState) => [
+          ...prevState,
+          { id: value?.id, usersList: [] },
+        ]);
+      } else {
+        setAllPodData((prevState) =>
+          prevState.filter((item) => item.id !== selectedPod?.id),
+        );
+      }
+      setSelectedEmployees([]);
     }
+    setSelectedPod(value);
+  };
 
-    const onSave = () => {
-        setFormChecked(true)
-        if (currentEmployee && !currentPodData?.usersList?.includes(currentEmployee.id)) {
-            showError("Please add or remove Selected Employee")
-        } else {
-            if (selectedSC) dispatch(updatePodNotifications(selectedSC.id, allPodData, onSuccess, showError))
-        }
+  const onCancel = () => {
+    setFormChecked(false);
+    setCurrentEmployee(null);
+    if (changesState?.podNotificationsSaved) {
+      setAllPodData(podNotifications);
+    } else {
+      askConfirm({
+        isRemove: true,
+        confirmContent: "Cancel changes",
+        cancelContent: "Save changes",
+        title: "Cancel Service Book Notifications changes",
+        content: (
+          <span>
+            By clicking Cancel, your entries across all Pods will not be saved.
+            <br />
+            Click Save Changes to store your inputs.
+          </span>
+        ),
+        onConfirm: () => setAllPodData(podNotifications),
+        onCancel: onSave,
+      });
     }
+  };
 
-    const onAddEmployee = () => {
-        setFormChecked(false)
-        if (currentEmployee && selectedPod) {
-            if (currentPodData) {
-                const updated = {...currentPodData, usersList: currentPodData.usersList ? Array.from(new Set([...currentPodData.usersList, currentEmployee.id]))
-                        : [currentEmployee.id]}
-                const data = allPodData.filter(el => el.id !== currentPodData.id)
-                setAllPodData([...data, updated])
-            }
-            setCurrentEmployee(null)
-        }
+  const onSuccess = () => {
+    showMessage("Notifications for Service Book Appointments updated");
+    setCurrentEmployee(null);
+    setFormChecked(false);
+  };
+
+  const onSave = () => {
+    setFormChecked(true);
+    if (
+      currentEmployee &&
+      !currentPodData?.usersList?.includes(currentEmployee.id)
+    ) {
+      showError("Please add or remove Selected Employee");
+    } else {
+      if (selectedSC)
+        dispatch(
+          updatePodNotifications(
+            selectedSC.id,
+            allPodData,
+            onSuccess,
+            showError,
+          ),
+        );
     }
+  };
 
-    const deleteEmployee = (id: string) => {
-        setFormChecked(false)
-        if (currentPodData && currentPodData.usersList){
-            const updated = {...currentPodData, usersList: currentPodData.usersList.filter(el => el !== id)}
-            const data = allPodData.filter(el => el.id !== currentPodData.id)
-            setAllPodData([...data, updated])
-        }
+  const onAddEmployee = () => {
+    setFormChecked(false);
+    if (currentEmployee && selectedPod) {
+      if (currentPodData) {
+        const updated = {
+          ...currentPodData,
+          usersList: currentPodData.usersList
+            ? Array.from(
+                new Set([...currentPodData.usersList, currentEmployee.id]),
+              )
+            : [currentEmployee.id],
+        };
+        const data = allPodData.filter((el) => el.id !== currentPodData.id);
+        setAllPodData([...data, updated]);
+      }
+      setCurrentEmployee(null);
     }
+  };
 
-    return (
-        <div>
-            <div className={classes.tabWrapper}>
-                {loading || isLoading || podsLoading
-                    ? <Loading/>
-                    : <React.Fragment>
-                        <div className={classes.tabTitle}>Service Book Appointments</div>
-                        <Autocomplete
-                            options={shortPodsList}
-                            fullWidth
-                            disabled={loading || podsLoading || isLoading}
-                            isOptionEqualToValue={(option, value) => option.id === value.id}
-                            getOptionLabel={i => i.name}
-                            value={selectedPod}
-                            onChange={onPodChange}
-                            style={{marginBottom: 24}}
-                            renderInput={autocompleteRender({
-                                label: '',
-                                placeholder: 'Select Service Book'
-                            })}
-                        />
-                        <div className={classes.selectWrapper}>
-                            <Autocomplete
-                                className={classes.autocomplete}
-                                options={usersShort}
-                                disabled={loading || podsLoading || isLoading}
-                                fullWidth
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                getOptionLabel={i => i.fullName}
-                                value={currentEmployee}
-                                onChange={onEmployeeChange}
-                                renderInput={autocompleteRender({
-                                    label: "Assign Employee",
-                                    placeholder: 'Select',
-                                    error: Boolean(currentEmployee && !currentPodData?.usersList?.includes(currentEmployee?.id) && formChecked)
-                                })}
-                            />
-                            <Button
-                                variant="text"
-                                startIcon={<PlusIcon/>}
-                                onClick={onAddEmployee}
-                                color="primary"
-                                disabled={loading || podsLoading || isLoading}
-                                className={classes.addButton}
-                            >  Add</Button>
-                        </div>
-                        <div>
-                            {selectedEmployees.sort((a, b) => a.fullName.localeCompare(b.fullName)).map(item => (
-                                <div className={classes.employeeWrapper} key={item.id}>
-                                    <div>{item.fullName}</div>
-                                    <div>{item.email}</div>
-                                    <IconButton
-                                        onClick={() => deleteEmployee(item.id)}
-                                        disabled={loading || podsLoading || isLoading}
-                                        size="large">
-                                        <DeleteIcon/>
-                                    </IconButton>
-                                </div>
-                            ))}
-                        </div>
-                    </React.Fragment>}
+  const deleteEmployee = (id: string) => {
+    setFormChecked(false);
+    if (currentPodData && currentPodData.usersList) {
+      const updated = {
+        ...currentPodData,
+        usersList: currentPodData.usersList.filter((el) => el !== id),
+      };
+      const data = allPodData.filter((el) => el.id !== currentPodData.id);
+      setAllPodData([...data, updated]);
+    }
+  };
+
+  return (
+    <div>
+      <div className={classes.tabWrapper}>
+        {loading || isLoading || podsLoading ? (
+          <Loading />
+        ) : (
+          <React.Fragment>
+            <div className={classes.tabTitle}>Service Book Appointments</div>
+            <Autocomplete
+              options={shortPodsList}
+              fullWidth
+              disabled={loading || podsLoading || isLoading}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(i) => i.name}
+              value={selectedPod}
+              onChange={onPodChange}
+              style={{ marginBottom: 24 }}
+              renderInput={autocompleteRender({
+                label: "",
+                placeholder: "Select Service Book",
+              })}
+            />
+            <div className={classes.selectWrapper}>
+              <Autocomplete
+                className={classes.autocomplete}
+                options={usersShort}
+                disabled={loading || podsLoading || isLoading}
+                fullWidth
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                getOptionLabel={(i) => i.fullName}
+                value={currentEmployee}
+                onChange={onEmployeeChange}
+                renderInput={autocompleteRender({
+                  label: "Assign Employee",
+                  placeholder: "Select",
+                  error: Boolean(
+                    currentEmployee &&
+                      !currentPodData?.usersList?.includes(
+                        currentEmployee?.id,
+                      ) &&
+                      formChecked,
+                  ),
+                })}
+              />
+              <Button
+                variant="text"
+                startIcon={<PlusIcon />}
+                onClick={onAddEmployee}
+                color="primary"
+                disabled={loading || podsLoading || isLoading}
+                className={classes.addButton}
+              >
+                {" "}
+                Add
+              </Button>
             </div>
-            <Divider style={{margin: '24px 0'}}/>
-            <DialogActions style={{padding: '0 24px 0 0'}}>
-                <Button onClick={onClose} variant="text" color="info" disabled={loading || podsLoading || isLoading}>
-                    Close
-                </Button>
-                <Button onClick={onCancel} variant="outlined" color="primary" disabled={loading || podsLoading || isLoading}>
-                    Cancel
-                </Button>
-                <Button onClick={onSave} variant="contained" color="primary" disabled={loading || podsLoading || isLoading}>
-                    Save
-                </Button>
-            </DialogActions>
-        </div>
-    );
+            <div>
+              {selectedEmployees
+                .sort((a, b) => a.fullName.localeCompare(b.fullName))
+                .map((item) => (
+                  <div className={classes.employeeWrapper} key={item.id}>
+                    <div>{item.fullName}</div>
+                    <div>{item.email}</div>
+                    <IconButton
+                      onClick={() => deleteEmployee(item.id)}
+                      disabled={loading || podsLoading || isLoading}
+                      size="large"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                ))}
+            </div>
+          </React.Fragment>
+        )}
+      </div>
+      <Divider style={{ margin: "24px 0" }} />
+      <DialogActions style={{ padding: "0 24px 0 0" }}>
+        <Button
+          onClick={onClose}
+          variant="text"
+          color="info"
+          disabled={loading || podsLoading || isLoading}
+        >
+          Close
+        </Button>
+        <Button
+          onClick={onCancel}
+          variant="outlined"
+          color="primary"
+          disabled={loading || podsLoading || isLoading}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={onSave}
+          variant="contained"
+          color="primary"
+          disabled={loading || podsLoading || isLoading}
+        >
+          Save
+        </Button>
+      </DialogActions>
+    </div>
+  );
 };
 
 export default PodAppointments;

@@ -1,5 +1,7 @@
 import { Paper } from "@mui/material";
 
-import { withStyles } from 'tss-react/mui';
+import { withStyles } from "tss-react/mui";
 
-export const SquarePaper = withStyles(Paper, {root: {borderRadius: 2, width: '100%'}});
+export const SquarePaper = withStyles(Paper, {
+  root: { borderRadius: 2, width: "100%" },
+});

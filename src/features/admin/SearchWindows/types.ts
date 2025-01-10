@@ -1,9 +1,10 @@
-import {TOptContentData} from "../../../store/reducers/optimizationWindows/types";
+import { TOptContentData } from "../../../store/reducers/optimizationWindows/types";
 
 export enum ESearchWindowType {
-    FirstAvailable, SpecificDate
+  FirstAvailable,
+  SpecificDate,
 }
 
 export type TWindowContent = {
-    [k in ESearchWindowType]: TOptContentData;
-}
+  [k in ESearchWindowType]: TOptContentData;
+};

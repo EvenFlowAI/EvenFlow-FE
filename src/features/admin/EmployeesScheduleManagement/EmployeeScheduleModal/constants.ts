@@ -1,10 +1,10 @@
-import {TFilters} from "../types";
+import { TFilters } from "../types";
 
 export const initialFilters: TFilters = {
-    serviceBook: '',
-    name: '',
-    role: ''
-}
+  serviceBook: "",
+  name: "",
+  role: "",
+};
 
-export const scOpensText = 'The Service Center opens at'
-export const scClosesText = 'The Service Center closes at'
+export const scOpensText = "The Service Center opens at";
+export const scClosesText = "The Service Center closes at";

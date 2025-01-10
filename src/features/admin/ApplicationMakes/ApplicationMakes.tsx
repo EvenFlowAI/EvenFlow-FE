@@ -26,12 +26,12 @@ import { isEqual } from "lodash";
 
 const ApplicationMakes = () => {
   const { isLoading, makes } = useSelector(
-    (state: RootState) => state.globalVehicles
+    (state: RootState) => state.globalVehicles,
   );
   const [isEdit, setEdit] = useState<boolean>(false);
   const [selectedMakes, setSelectedMakes] = useState<IGlobalMake[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<TReviewOption | null>(
-    null
+    null,
   );
   const [data, setData] = useState<IGlobalMake[]>([]);
   const [order, setOrder] = useState<IOrder<IGlobalMake>>(initialOrder);
@@ -46,7 +46,7 @@ const ApplicationMakes = () => {
   useEffect(() => {
     const selectedMakesIds = selectedMakes.map((el) => el.id);
     dispatch(
-      loadGlobalMakes(pageData, order, selectedStatus, selectedMakesIds)
+      loadGlobalMakes(pageData, order, selectedStatus, selectedMakesIds),
     );
   }, [pageData, order, selectedStatus, selectedMakes]);
 
@@ -73,8 +73,8 @@ const ApplicationMakes = () => {
         selectedStatus,
         selectedMakesIds,
         showError,
-        () => setEdit(false)
-      )
+        () => setEdit(false),
+      ),
     );
   };
 
@@ -90,7 +90,7 @@ const ApplicationMakes = () => {
 
   const handlePage = (
     e: React.MouseEvent<Element, MouseEvent> | null,
-    pageIndex: number
+    pageIndex: number,
   ): void => {
     const mappedMakes = makes.map((el) => ({
       ...el,
@@ -101,7 +101,7 @@ const ApplicationMakes = () => {
       parent: el.parent ?? undefined,
     }));
     const equalItems = mappedData.filter((el) =>
-      mappedMakes.find((item) => isEqual(el, item))
+      mappedMakes.find((item) => isEqual(el, item)),
     );
     if (equalItems.length === makes.length) {
       onChangePage(e, pageIndex);

@@ -1,1 +1,1 @@
-export const ApplyToAll = "Apply to All"
+export const ApplyToAll = "Apply to All";

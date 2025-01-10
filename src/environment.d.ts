@@ -2,12 +2,12 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       GITHUB_AUTH_TOKEN: string;
-      NODE_ENV: 'development' | 'production' | 'test';
-      REACT_APP_ENV?: 'uat' | 'production' | 'dev' | 'local' | 'QA';
+      NODE_ENV: "development" | "production" | "test";
+      REACT_APP_ENV?: "uat" | "production" | "dev" | "local" | "QA";
       PORT?: string;
       PWD: string;
     }
   }
 }
 
-export default {}
+export default {};
