@@ -1,102 +1,116 @@
-import React, {useEffect, useState} from 'react';
-import EligibleCustomerSegment from "../EligibleCustomerSegment/EligibleCustomerSegment";
-import Zones from "../Zones/Zones";
-import {TZipCode, TZone} from "../../../../store/reducers/mobileService/types";
-import AddEditGeographicZone from "../../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone";
-import RemoveZipCode from "../../../../components/modals/admin/RemoveZipCode/RemoveZipCode";
-import {useDispatch} from "react-redux";
-import {loadMobServiceZones, removeMobServiceZone} from "../../../../store/reducers/mobileService/actions";
-import {setCurrentZone} from "../../../../store/reducers/serviceValet/actions";
-import GeographicZonesButtons from "../../../../components/buttons/GeographicZonesButtons/GeographicZonesButtons";
-import {EligibleTitle} from "../../../../components/styled/EligibleTitle";
-import {GeographicZonesWrapper, TabHeaderWrapper} from "../../../../components/styled/GeographicZonesWrappers";
-import {useModal} from "../../../../hooks/useModal/useModal";
-import {useConfirm} from "../../../../hooks/useConfirm/useConfirm";
+import React, { useEffect, useState } from 'react';
+import EligibleCustomerSegment from '../EligibleCustomerSegment/EligibleCustomerSegment';
+import Zones from '../Zones/Zones';
+import { TZipCode, TZone } from '../../../../store/reducers/mobileService/types';
+import AddEditGeographicZone from '../../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone';
+import RemoveZipCode from '../../../../components/modals/admin/RemoveZipCode/RemoveZipCode';
+import { useDispatch } from 'react-redux';
+import {
+  loadMobServiceZones,
+  removeMobServiceZone,
+} from '../../../../store/reducers/mobileService/actions';
+import { setCurrentZone } from '../../../../store/reducers/serviceValet/actions';
+import GeographicZonesButtons from '../../../../components/buttons/GeographicZonesButtons/GeographicZonesButtons';
+import { EligibleTitle } from '../../../../components/styled/EligibleTitle';
+import {
+  GeographicZonesWrapper,
+  TabHeaderWrapper,
+} from '../../../../components/styled/GeographicZonesWrappers';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../hooks/useException/useException';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 type TGeographicZonesProps = {
-    onAddZoneOpen: () => void;
-}
+  onAddZoneOpen: () => void;
+};
 
-const GeographicZones: React.FC<React.PropsWithChildren<React.PropsWithChildren<TGeographicZonesProps>>> = ({ onAddZoneOpen }) => {
-    const [currentZip, setCurrentZip] = useState<TZipCode|null>(null);
-    const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
-    const {onOpen: onEditZoneOpen, onClose: onEditZoneClose, isOpen: isEditZoneOpen} = useModal();
-    const {onOpen: onRemoveZipOpen, onClose: onRemoveZipClose, isOpen: isRemoveZipOpen} = useModal();
-    const {selectedSC} = useSCs();
-    const {askConfirm} = useConfirm();
-    const dispatch = useDispatch();
-    const showMessage = useMessage();
-    const showError = useException();
+const GeographicZones: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TGeographicZonesProps>>
+> = ({ onAddZoneOpen }) => {
+  const [currentZip, setCurrentZip] = useState<TZipCode | null>(null);
+  const [selectedZone, setSelectedZone] = useState<TZone | null>(null);
+  const { onOpen: onEditZoneOpen, onClose: onEditZoneClose, isOpen: isEditZoneOpen } = useModal();
+  const {
+    onOpen: onRemoveZipOpen,
+    onClose: onRemoveZipClose,
+    isOpen: isRemoveZipOpen,
+  } = useModal();
+  const { selectedSC } = useSCs();
+  const { askConfirm } = useConfirm();
+  const dispatch = useDispatch();
+  const showMessage = useMessage();
+  const showError = useException();
 
-    useEffect(() => {
-        if (selectedSC) dispatch(loadMobServiceZones(selectedSC.id))
-    }, [selectedSC])
+  useEffect(() => {
+    if (selectedSC) dispatch(loadMobServiceZones(selectedSC.id));
+  }, [selectedSC]);
 
-    const onError = (err: string) => showError(err)
+  const onError = (err: string) => showError(err);
 
-    const onSuccess = () => showMessage(`Zone removed`)
+  const onSuccess = () => showMessage(`Zone removed`);
 
-    const onRemove = () => {
-        if (selectedZone?.id && selectedSC) {
-            dispatch(setCurrentZone(null));
-            dispatch(removeMobServiceZone(selectedZone.id, selectedSC.id, onSuccess, onError));
-            setSelectedZone(null);
-        }
+  const onRemove = () => {
+    if (selectedZone?.id && selectedSC) {
+      dispatch(setCurrentZone(null));
+      dispatch(removeMobServiceZone(selectedZone.id, selectedSC.id, onSuccess, onError));
+      setSelectedZone(null);
     }
+  };
 
-    const askRemove = () => {
-        if (selectedZone) {
-            askConfirm({
-                onConfirm: onRemove,
-                isRemove: true,
-                title: `Please confirm you want to remove Zone ${selectedZone.name}`,
-            });
-        }
+  const askRemove = () => {
+    if (selectedZone) {
+      askConfirm({
+        onConfirm: onRemove,
+        isRemove: true,
+        title: `Please confirm you want to remove Zone ${selectedZone.name}`,
+      });
     }
+  };
 
-    return (
-        <div>
-            <TabHeaderWrapper>
-                <GeographicZonesButtons
-                    onEditZoneOpen={onEditZoneOpen}
-                    onAddZoneOpen={onAddZoneOpen}
-                    selectedZone={selectedZone}
-                    askRemove={askRemove}/>
-            </TabHeaderWrapper>
-            <EligibleTitle>Eligible Customer Type</EligibleTitle>
-            <GeographicZonesWrapper>
-                <div style={{width: '33%'}}>
-                    <EligibleCustomerSegment/>
-                </div>
-                <Zones
-                    selectedZone={selectedZone}
-                    setSelectedZone={setSelectedZone}
-                    onRemoveZip={onRemoveZipOpen}
-                    setCurrentZip={setCurrentZip}
-                />
-            </GeographicZonesWrapper>
-            <AddEditGeographicZone
-                serviceType="mobileService"
-                open={isEditZoneOpen}
-                onClose={onEditZoneClose}
-                isEdit
-                zone={selectedZone}
-                onRemoveZipOpen={onRemoveZipOpen}
-                setCurrentZip={setCurrentZip}
-                currentZip={currentZip}
-            />
-            <RemoveZipCode
-                open={isRemoveZipOpen}
-                zone={selectedZone}
-                onClose={onRemoveZipClose}
-                zip={currentZip}
-                serviceType="mobileService"/>
+  return (
+    <div>
+      <TabHeaderWrapper>
+        <GeographicZonesButtons
+          onEditZoneOpen={onEditZoneOpen}
+          onAddZoneOpen={onAddZoneOpen}
+          selectedZone={selectedZone}
+          askRemove={askRemove}
+        />
+      </TabHeaderWrapper>
+      <EligibleTitle>Eligible Customer Type</EligibleTitle>
+      <GeographicZonesWrapper>
+        <div style={{ width: '33%' }}>
+          <EligibleCustomerSegment />
         </div>
-    );
+        <Zones
+          selectedZone={selectedZone}
+          setSelectedZone={setSelectedZone}
+          onRemoveZip={onRemoveZipOpen}
+          setCurrentZip={setCurrentZip}
+        />
+      </GeographicZonesWrapper>
+      <AddEditGeographicZone
+        serviceType="mobileService"
+        open={isEditZoneOpen}
+        onClose={onEditZoneClose}
+        isEdit
+        zone={selectedZone}
+        onRemoveZipOpen={onRemoveZipOpen}
+        setCurrentZip={setCurrentZip}
+        currentZip={currentZip}
+      />
+      <RemoveZipCode
+        open={isRemoveZipOpen}
+        zone={selectedZone}
+        onClose={onRemoveZipClose}
+        zip={currentZip}
+        serviceType="mobileService"
+      />
+    </div>
+  );
 };
 
 export default GeographicZones;

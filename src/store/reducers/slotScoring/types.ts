@@ -1,59 +1,61 @@
-import {EDesirabilityDays} from "../../../features/admin/TimeOfDayDesirability/AppointmentSlotsDesirability/types";
+import { EDesirabilityDays } from '../../../features/admin/TimeOfDayDesirability/AppointmentSlotsDesirability/types';
 
 export enum EProximityType {
-    Closest,
-    Earliest,
+  Closest,
+  Earliest,
 }
 
 export interface IProximity {
-    type: EProximityType;
-    point: number;
-    serviceCenterId?: number;
-    podId?: number;
+  type: EProximityType;
+  point: number;
+  serviceCenterId?: number;
+  podId?: number;
 }
 
 export interface ISlotRange {
-    start: string;
-    end: string;
+  start: string;
+  end: string;
 }
 
 export enum ETimeSlotType {
-    TenMinutes,
-    FifteenMinutes,
-    ThirtyMinutes,
-    SixtyMinutes
+  TenMinutes,
+  FifteenMinutes,
+  ThirtyMinutes,
+  SixtyMinutes,
 }
 export enum EDesirabilityState {
-    Neutral, Desirable, Undesirable
+  Neutral,
+  Desirable,
+  Undesirable,
 }
 
 export interface IDesirability {
-    id: number;
-    serviceCenterId: number;
-    desirability: EDesirabilityState;
-    timeSlotType: ETimeSlotType;
-    podId?: number;
-    index: number;
-    start: string;
-    end: string;
+  id: number;
+  serviceCenterId: number;
+  desirability: EDesirabilityState;
+  timeSlotType: ETimeSlotType;
+  podId?: number;
+  index: number;
+  start: string;
+  end: string;
 }
 export interface IDesirabilityItem {
-    id?: number;
-    index: number;
-    desirability: EDesirabilityState;
+  id?: number;
+  index: number;
+  desirability: EDesirabilityState;
 }
 export interface IDesirabilityForm {
-    serviceCenterId: number;
-    podId?: number;
-    timeSlotType: ETimeSlotType;
-    items: IDesirabilityItem[];
-    dayOfWeek?: EDesirabilityDays;
+  serviceCenterId: number;
+  podId?: number;
+  timeSlotType: ETimeSlotType;
+  items: IDesirabilityItem[];
+  dayOfWeek?: EDesirabilityDays;
 }
 
 export interface IOptimizationSettingsItem {
-    id?: number;
-    from: number;
-    to: number;
+  id?: number;
+  from: number;
+  to: number;
 }
 export interface IOptimizationSettingsCreateForm {
   serviceCenterId: number;
@@ -61,30 +63,31 @@ export interface IOptimizationSettingsCreateForm {
   items: IOptimizationSettingsItem[];
 }
 export enum EOptimizationSettingValueType {
-    LessThanW3, GreaterOrEqualW3
+  LessThanW3,
+  GreaterOrEqualW3,
 }
 export interface IOptimizationSettingValue {
-    desirablePoint: number;
-    undesirablePoint: number;
-    type: EOptimizationSettingValueType;
-    optimizationSettingsId: number;
+  desirablePoint: number;
+  undesirablePoint: number;
+  type: EOptimizationSettingValueType;
+  optimizationSettingsId: number;
 }
 export interface IOptimizationSettingValueForm {
-    items: IOptimizationSettingValue[];
+  items: IOptimizationSettingValue[];
 }
 export interface IOptimizationSetting {
-    id: number;
-    from: number;
-    to: number;
-    values: IOptimizationSettingValue[];
-    serviceCenterId: number;
-    podId?: number;
+  id: number;
+  from: number;
+  to: number;
+  values: IOptimizationSettingValue[];
+  serviceCenterId: number;
+  podId?: number;
 }
 
 export type TState = {
-    isLoading: boolean;
-    proximity: IProximity[];
-    desirability: IDesirability[];
-    optimizationSettings: IOptimizationSetting[];
-    slotRange: ISlotRange | null;
-}
+  isLoading: boolean;
+  proximity: IProximity[];
+  desirability: IDesirability[];
+  optimizationSettings: IOptimizationSetting[];
+  slotRange: ISlotRange | null;
+};

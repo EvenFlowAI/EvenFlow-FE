@@ -20,10 +20,10 @@ import ProximaNovaBoldEot from '../assets/fonts/ProximaNova-Bold.eot';
 import ProximaNovaBoldOtf from '../assets/fonts/Proxima Nova Bold.otf';
 
 export const proximaNovaRegular = {
-    fontFamily: 'Proxima Nova',
-    fontStyle: 'normal',
-    fontWeight: 400,
-    src: `
+  fontFamily: 'Proxima Nova',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  src: `
         local('Proxima Nova'),
         local('ProximaNova-Regular'),
         url('${ProximaNovaRegularWoff}') format('opentype'),
@@ -31,14 +31,14 @@ export const proximaNovaRegular = {
         url('${ProximaNovaRegularTtf}') format('opentype'),
         url('${ProximaNovaRegularOtf}') format('opentype'),
         url('${ProximaNovaRegularEot}') format('opentype'),
-    `
+    `,
 };
 
 export const proximaNovaBold = {
-    fontFamily: 'Proxima Nova',
-    fontStyle: 'normal',
-    fontWeight: 700,
-    src: `
+  fontFamily: 'Proxima Nova',
+  fontStyle: 'normal',
+  fontWeight: 700,
+  src: `
         local('Proxima Nova'),
         local('ProximaNova-Bold'),
         url('${ProximaNovaThinWoff}') format('opentype'),
@@ -46,14 +46,14 @@ export const proximaNovaBold = {
         url('${ProximaNovaThinTtf}') format('opentype'),
         url('${ProximaNovaThinEot}') format('opentype'),
         url('${ProximaNovaThinOtf}') format('opentype'),
-    `
+    `,
 };
 
 export const proximaNovaThin = {
-    fontFamily: 'Proxima Nova',
-    fontStyle: 'normal',
-    fontWeight: 100,
-    src: `
+  fontFamily: 'Proxima Nova',
+  fontStyle: 'normal',
+  fontWeight: 100,
+  src: `
         local('Proxima Nova'),
         local('ProximaNova-Thin'),
         url('${ProximaNovaBoldWoff}') format('opentype'),
@@ -61,13 +61,13 @@ export const proximaNovaThin = {
         url('${ProximaNovaBoldTtf}') format('opentype'),
         url('${ProximaNovaBoldEot}') format('opentype'),
         url('${ProximaNovaBoldOtf}') format('opentype'),
-    `
+    `,
 };
 export const proximaNovaExtraBold = {
-    fontFamily: 'Proxima Nova',
-    fontStyle: 'normal',
-    fontWeight: 900,
-    src: `
+  fontFamily: 'Proxima Nova',
+  fontStyle: 'normal',
+  fontWeight: 900,
+  src: `
         local('Proxima Nova'),
         local('ProximaNova-ExtraBold'),
         url('${ProximaNovaExtraBoldWoff}') format('opentype'),
@@ -75,12 +75,7 @@ export const proximaNovaExtraBold = {
         url('${ProximaNovaExtraBoldTtf}') format('opentype'),
         url('${ProximaNovaExtraBoldOtf}') format('opentype'),
         url('${ProximaNovaExtraBoldEot}') format('opentype'),
-    `
+    `,
 };
 
-export const fonts = [
-    proximaNovaExtraBold,
-    proximaNovaBold,
-    proximaNovaRegular,
-    proximaNovaThin
-];
+export const fonts = [proximaNovaExtraBold, proximaNovaBold, proximaNovaRegular, proximaNovaThin];

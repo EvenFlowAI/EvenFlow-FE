@@ -1,79 +1,98 @@
-import React, {useMemo} from 'react';
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Box, Button, ButtonGroup} from "@mui/material";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {encodeSCID} from "../../../../utils/utils";
-import {TRole} from "../../../../store/reducers/users/types";
+import React, { useMemo } from 'react';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { Box, Button, ButtonGroup } from '@mui/material';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { encodeSCID } from '../../../../utils/utils';
+import { TRole } from '../../../../store/reducers/users/types';
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
-import {copyTextToClipboard} from "./utils";
-import {Routes} from "../../../../routes/constants";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
+import { copyTextToClipboard } from './utils';
+import { Routes } from '../../../../routes/constants';
 
-const restrictedRoles: TRole[] = ["Call Center Rep", "Advisor", "Manager", "Technician"]
+const restrictedRoles: TRole[] = ['Call Center Rep', 'Advisor', 'Manager', 'Technician'];
 
-export const BookingModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({onAction, payload, ...props}) => {
-    const {selectedSC} = useSCs();
-    const showMessage = useMessage();
-    const currentUser = useCurrentUser();
+export const BookingModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
+> = ({ onAction, payload, ...props }) => {
+  const { selectedSC } = useSCs();
+  const showMessage = useMessage();
+  const currentUser = useCurrentUser();
 
-    const [link, frame] = useMemo(() => {
-        const encoded = encodeSCID(selectedSC?.id??0);
-        const url = window.location.origin + Routes.EndUser.Welcome + "/" + encoded + "?frame=1";
-        const f: string = `<iframe id="evenflow-frame" class="booking-frame" src="${url}" width="100%" height="100%" style="border: none;" frameborder="0"></iframe>`;
-        return [
-            url,
-            f
-        ]
-    }, [selectedSC]);
+  const [link, frame] = useMemo(() => {
+    const encoded = encodeSCID(selectedSC?.id ?? 0);
+    const url = window.location.origin + Routes.EndUser.Welcome + '/' + encoded + '?frame=1';
+    const f: string = `<iframe id="evenflow-frame" class="booking-frame" src="${url}" width="100%" height="100%" style="border: none;" frameborder="0"></iframe>`;
+    return [url, f];
+  }, [selectedSC]);
 
-    const success = () => {
-        showMessage("Copied to Clipboard");
-    }
+  const success = () => {
+    showMessage('Copied to Clipboard');
+  };
 
-    const copyUrl = () => {
-        copyTextToClipboard(link);
-        success();
-    }
+  const copyUrl = () => {
+    copyTextToClipboard(link);
+    success();
+  };
 
-    const copyFrame = () => {
-        copyTextToClipboard(frame);
-        success();
-    }
+  const copyFrame = () => {
+    copyTextToClipboard(frame);
+    success();
+  };
 
-    const handleGoTo = () => {
-        window.open(link);
-    }
+  const handleGoTo = () => {
+    window.open(link);
+  };
 
-    return <BaseModal {...props} maxWidth={"sm"}>
-        <DialogTitle onClose={props.onClose}>Open Scheduler</DialogTitle>
-        <DialogContent>
-            <TextField
-                label={"Direct link"}
-                readOnly
-                value={link}
-                endAdornment={<ButtonGroup variant="text">
-                    <Button onClick={copyUrl} color="info">Copy</Button>
-                    <Button color="primary" onClick={handleGoTo}>Open</Button>
-                </ButtonGroup>}
-                fullWidth />
-            <Box p={2} />
-            {currentUser && !restrictedRoles.includes(currentUser.role)
-                ? <TextField
-                label={"Frame"}
-                readOnly
-                fullWidth
-                multiline
-                endAdornment={<Button onClick={copyFrame} color="info">Copy</Button>}
-                value={frame}
-                rows={4}
-            />
-                : null}
-        </DialogContent>
-        <DialogActions>
-            <Button variant="contained" color="primary" onClick={props.onClose}>Close</Button>
-        </DialogActions>
+  return (
+    <BaseModal {...props} maxWidth={'sm'}>
+      <DialogTitle onClose={props.onClose}>Open Scheduler</DialogTitle>
+      <DialogContent>
+        <TextField
+          label={'Direct link'}
+          readOnly
+          value={link}
+          endAdornment={
+            <ButtonGroup variant="text">
+              <Button onClick={copyUrl} color="info">
+                Copy
+              </Button>
+              <Button color="primary" onClick={handleGoTo}>
+                Open
+              </Button>
+            </ButtonGroup>
+          }
+          fullWidth
+        />
+        <Box p={2} />
+        {currentUser && !restrictedRoles.includes(currentUser.role) ? (
+          <TextField
+            label={'Frame'}
+            readOnly
+            fullWidth
+            multiline
+            endAdornment={
+              <Button onClick={copyFrame} color="info">
+                Copy
+              </Button>
+            }
+            value={frame}
+            rows={4}
+          />
+        ) : null}
+      </DialogContent>
+      <DialogActions>
+        <Button variant="contained" color="primary" onClick={props.onClose}>
+          Close
+        </Button>
+      </DialogActions>
     </BaseModal>
+  );
 };

@@ -1,8 +1,10 @@
-import React from "react";
-import {AppointmentSlotsDesirability} from "./AppointmentSlotsDesirability/AppointmentSlotsDesirability";
+import React from 'react';
+import { AppointmentSlotsDesirability } from './AppointmentSlotsDesirability/AppointmentSlotsDesirability';
 
 export const TimeOfDayDesirability = () => {
-    return <div>
-        <AppointmentSlotsDesirability />
+  return (
+    <div>
+      <AppointmentSlotsDesirability />
     </div>
-}
+  );
+};

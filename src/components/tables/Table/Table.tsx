@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from 'react';
 import {
   Table as BaseTable,
   TableBody,
@@ -9,20 +9,12 @@ import {
   TableSortLabel,
   useMediaQuery,
   useTheme,
-} from "@mui/material";
-import {
-  defaultRowsPerPage,
-  defaultRowsPerPageOptions,
-} from "../../../config/config";
-import { NoData } from "../../wrappers/NoData/NoData";
-import { Loading } from "../../wrappers/Loading/Loading";
-import {
-  StyledTableCell,
-  StyledTableHead,
-  TStyleProps,
-  useStyles,
-} from "./styles";
-import { ITableProps } from "../../../types/types";
+} from '@mui/material';
+import { defaultRowsPerPage, defaultRowsPerPageOptions } from '../../../config/config';
+import { NoData } from '../../wrappers/NoData/NoData';
+import { Loading } from '../../wrappers/Loading/Loading';
+import { StyledTableCell, StyledTableHead, TStyleProps, useStyles } from './styles';
+import { ITableProps } from '../../../types/types';
 
 export function Table<U>({
   changeRowsPerPageCb,
@@ -34,7 +26,7 @@ export function Table<U>({
 
   const { classes } = useStyles();
   const theme = useTheme();
-  const isXS = useMediaQuery(theme.breakpoints.down("sm"));
+  const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
   const nPage = useMemo(() => {
     return props.page !== undefined ? props.page : page;
@@ -64,9 +56,7 @@ export function Table<U>({
     props.onChangePage ? props.onChangePage(e, newPage) : setPage(newPage);
   };
   const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChangeRowsPerPage
-      ? props.onChangeRowsPerPage(e)
-      : setRowsPerPage(+e.target.value);
+    props.onChangeRowsPerPage ? props.onChangeRowsPerPage(e) : setRowsPerPage(+e.target.value);
     handleChangePage(null, 0);
   };
 
@@ -85,22 +75,20 @@ export function Table<U>({
     <>
       <TableContainer
         className={classes.root}
-        style={props.withoutOverflow ? { overflowX: "unset" } : {}}
+        style={props.withoutOverflow ? { overflowX: 'unset' } : {}}
       >
         <BaseTable>
           {!props.hideHeader && (
             <TableHead>
               <TableRow>
-                {props.startActions ? (
-                  <StyledTableHead {...styleProps} />
-                ) : null}
+                {props.startActions ? <StyledTableHead {...styleProps} /> : null}
                 {props.rowData.map((rE, idx) =>
                   isXS && rE.xsHidden ? null : (
                     <StyledTableHead
                       {...styleProps}
                       key={`t_${idx}`}
                       width={rE.width}
-                      align={rE.align || "left"}
+                      align={rE.align || 'left'}
                     >
                       {rE.orderId ? (
                         <TableSortLabel
@@ -110,13 +98,12 @@ export function Table<U>({
                                   isAscending:
                                     rE.orderId !== props.order ||
                                     !props.order ||
-                                    (rE.orderId === props.order &&
-                                      !props.isAscending),
+                                    (rE.orderId === props.order && !props.isAscending),
                                   orderBy: rE.orderId,
                                 })
                               : undefined
                           }
-                          direction={props.isAscending ? "desc" : "asc"}
+                          direction={props.isAscending ? 'desc' : 'asc'}
                           active={rE.orderId === props.order}
                         >
                           {rE.header}
@@ -127,9 +114,7 @@ export function Table<U>({
                     </StyledTableHead>
                   )
                 )}
-                {props.actions && !props.viewMode ? (
-                  <StyledTableHead {...styleProps} />
-                ) : null}
+                {props.actions && !props.viewMode ? <StyledTableHead {...styleProps} /> : null}
               </TableRow>
             </TableHead>
           )}
@@ -140,9 +125,7 @@ export function Table<U>({
               return (
                 <TableRow key={`${rIdx}`} className={classes.tableRow}>
                   {props.startActions ? (
-                    <StyledTableCell {...styleProps}>
-                      {props.startActions(row)}
-                    </StyledTableCell>
+                    <StyledTableCell {...styleProps}>{props.startActions(row)}</StyledTableCell>
                   ) : null}
                   {props.rowData.map((cellData, cIdx) =>
                     isXS && cellData.xsHidden ? null : (
@@ -150,19 +133,16 @@ export function Table<U>({
                         {...styleProps}
                         width={cellData.width}
                         style={{ width: cellData.width }}
-                        verticalAlign={cellData.verticalAlign || "middle"}
-                        align={cellData.align || "left"}
+                        verticalAlign={cellData.verticalAlign || 'middle'}
+                        align={cellData.align || 'left'}
                         key={`${rIdx}_${cIdx}`}
                       >
-                        {cellData.val(row, idx) || "-"}
+                        {cellData.val(row, idx) || '-'}
                       </StyledTableCell>
                     )
                   )}
                   {props.actions && !props.viewMode ? (
-                    <StyledTableCell
-                      align={props.actionsAlign ?? "right"}
-                      {...styleProps}
-                    >
+                    <StyledTableCell align={props.actionsAlign ?? 'right'} {...styleProps}>
                       {props.actions(row)}
                     </StyledTableCell>
                   ) : null}

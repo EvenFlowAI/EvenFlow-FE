@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { EServiceCategoryType } from "../../store/reducers/categories/types";
-import {
-  collectServiceRequestIds,
-  decodeSCID,
-  mapRecallsForRequest,
-} from "../../utils/utils";
-import { IConsultantsRequestData } from "../../api/types";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/rootReducer";
-import { useParams } from "react-router-dom";
-import { IFirstScreenOption } from "../../store/reducers/serviceTypes/types";
-import { EServiceType } from "../../store/reducers/appointmentFrameReducer/types";
+import React, { useEffect, useState } from 'react';
+import { EServiceCategoryType } from '../../store/reducers/categories/types';
+import { collectServiceRequestIds, decodeSCID, mapRecallsForRequest } from '../../utils/utils';
+import { IConsultantsRequestData } from '../../api/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/rootReducer';
+import { useParams } from 'react-router-dom';
+import { IFirstScreenOption } from '../../store/reducers/serviceTypes/types';
+import { EServiceType } from '../../store/reducers/appointmentFrameReducer/types';
 
 const useGetConsultantsData = (
   serviceTypeOption: IFirstScreenOption | null,
@@ -36,26 +32,21 @@ const useGetConsultantsData = (
 
   useEffect(() => {
     const serviceCategoryIds = allCategories
-      .filter((category) => {
+      .filter(category => {
         return (
           category.type === EServiceCategoryType.GeneralCategory &&
           categoriesIds.includes(category.id)
         );
       })
-      .map((item) => item.id);
+      .map(item => item.id);
     if (selectedVehicle) {
       const maintenancePackageOption = selectedPackage
         ? { id: selectedPackage?.id, priceType: packagePricingType }
         : packageEMenuType !== null
-        ? { optionType: packageEMenuType }
-        : null;
+          ? { optionType: packageEMenuType }
+          : null;
       const recalls = mapRecallsForRequest(selectedRecalls);
-      const serviceRequestIds = collectServiceRequestIds(
-        service,
-        subService,
-        null,
-        selectedSR
-      );
+      const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR);
       const isValidForServiceType =
         serviceTypeOption?.type !== EServiceType.PickUpDropOff ||
         (address && zipCode?.length === 5);
@@ -74,7 +65,7 @@ const useGetConsultantsData = (
           serviceCategoryIds,
           maintenancePackageOption,
           serviceTypeOptionId: serviceTypeOption?.id ?? null,
-          searchTerm: "",
+          searchTerm: '',
           vehicle: {
             vin: selectedVehicle.vin,
             year: selectedVehicle.year,
@@ -83,7 +74,7 @@ const useGetConsultantsData = (
             mileage: selectedVehicle.mileage,
             engineTypeId: selectedVehicle.engineTypeId,
           },
-          address: typeof address === "string" ? address : address?.label ?? "",
+          address: typeof address === 'string' ? address : (address?.label ?? ''),
           zipCode,
         };
         if (valueService?.selectedService) {

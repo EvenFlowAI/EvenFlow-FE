@@ -1,76 +1,81 @@
-import {EPricingDisplayType} from "../pricingSettings/types";
-import {TIdAndName} from "../../../types/types";
+import { EPricingDisplayType } from '../pricingSettings/types';
+import { TIdAndName } from '../../../types/types';
 
 export enum EDaysFromMonday {
-    Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
 }
 
 export interface IZonesRoutingByDay {
-    dayOfWeek: EDaysFromMonday;
-    geographicZoneIds: number[]
+  dayOfWeek: EDaysFromMonday;
+  geographicZoneIds: number[];
 }
 
 export interface ITimeRangeAndCapacity {
-    serviceCenterId: number;
-    id?: number;
-    dayOfWeek?: number;
-    pickUpMin: string;
-    pickUpMax: string;
-    dropOffMin: string;
-    dropOffMax: string;
-    capacity: number;
+  serviceCenterId: number;
+  id?: number;
+  dayOfWeek?: number;
+  pickUpMin: string;
+  pickUpMax: string;
+  dropOffMin: string;
+  dropOffMax: string;
+  capacity: number;
 }
 
 export interface ICenterSettingsSR {
-    id: number;
-    code: string;
-    description: string;
-    price: number;
-    pricingDisplayType: EPricingDisplayType;
+  id: number;
+  code: string;
+  description: string;
+  price: number;
+  pricingDisplayType: EPricingDisplayType;
 }
 export type TDefaultOpsCode = {
-    id: number;
-    code: string;
-    description?: string;
-    price?: number;
-    orderIndex?: number;
-}
+  id: number;
+  code: string;
+  description?: string;
+  price?: number;
+  orderIndex?: number;
+};
 
 export interface ISVZoneDefaultOpsCode {
-    zone: TIdAndName;
-    serviceRequest: TDefaultOpsCode;
+  zone: TIdAndName;
+  serviceRequest: TDefaultOpsCode;
 }
 
 export interface ICenterSettings {
-    showDropOffTime: boolean;
-    dropOffTimeDescription?: string;
-    dmsAppointmentTime?: string;
-    serviceRequest?: ICenterSettingsSR;
-    zoneServiceRequests: ISVZoneDefaultOpsCode[];
+  showDropOffTime: boolean;
+  dropOffTimeDescription?: string;
+  dmsAppointmentTime?: string;
+  serviceRequest?: ICenterSettingsSR;
+  zoneServiceRequests: ISVZoneDefaultOpsCode[];
 }
 
 export interface IShowDropOffTime {
-    showDropOffTime: boolean;
-    description?: string;
+  showDropOffTime: boolean;
+  description?: string;
 }
 
 export type TDmsAppointmentTime = {
-    dmsAppointmentTime: string;
-}
+  dmsAppointmentTime: string;
+};
 
 export type TServiceValetRequestId = {
-    serviceRequestId: number;
-}
+  serviceRequestId: number;
+};
 
 export interface InitialState {
-    zonesRouting: IZonesRoutingByDay[];
-    timeRangesAndCapacity: ITimeRangeAndCapacity[];
-    isLoading: boolean;
-    centerSettings: ICenterSettings | null;
+  zonesRouting: IZonesRoutingByDay[];
+  timeRangesAndCapacity: ITimeRangeAndCapacity[];
+  isLoading: boolean;
+  centerSettings: ICenterSettings | null;
 }
 
 export type TZonesOpsCodesRequest = {
-    zoneId: number;
-    serviceRequestId: number;
-}
-
+  zoneId: number;
+  serviceRequestId: number;
+};
