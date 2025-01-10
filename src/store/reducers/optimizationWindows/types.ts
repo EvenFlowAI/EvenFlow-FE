@@ -1,65 +1,69 @@
-import {EDay} from "../demandSegments/types";
+import { EDay } from '../demandSegments/types';
 
 export enum EOptimizationWindowType {
-    FirstAvailable, SpecificDate, DemandSegments,
-    OverbookingFactor, AppointmentsPerSlot, AppointmentCutoff
+  FirstAvailable,
+  SpecificDate,
+  DemandSegments,
+  OverbookingFactor,
+  AppointmentsPerSlot,
+  AppointmentCutoff,
 }
 export interface IOptimizationWindow {
-    type: EOptimizationWindowType;
-    value: number;
-    serviceCenterId: number;
-    podId?: number;
+  type: EOptimizationWindowType;
+  value: number;
+  serviceCenterId: number;
+  podId?: number;
 }
 
 export const optimizationWindowsList: EOptimizationWindowType[] = [
-    EOptimizationWindowType.FirstAvailable,
-    EOptimizationWindowType.SpecificDate,
-    EOptimizationWindowType.DemandSegments,
-    EOptimizationWindowType.AppointmentsPerSlot,
-    EOptimizationWindowType.AppointmentCutoff,
+  EOptimizationWindowType.FirstAvailable,
+  EOptimizationWindowType.SpecificDate,
+  EOptimizationWindowType.DemandSegments,
+  EOptimizationWindowType.AppointmentsPerSlot,
+  EOptimizationWindowType.AppointmentCutoff,
 ];
 export type TOptContentData = {
-        helperText: string;
-        label: string;
-        title: string;
-        prefix?: string;
-        suffix?: string;
-    }
+  helperText: string;
+  label: string;
+  title: string;
+  prefix?: string;
+  suffix?: string;
+};
 export type TOptContent = {
-    [k in EOptimizationWindowType]: TOptContentData;
-}
+  [k in EOptimizationWindowType]: TOptContentData;
+};
 
 export interface IOverbookingFactor {
-    day: EDay;
-    overbookingFactorValue?: number;
-    noShowRate: number;
-    dayOfCancellations: number;
-    combined: number;
-    serviceCenterId: number;
-    podId?: number;
+  day: EDay;
+  overbookingFactorValue?: number;
+  noShowRate: number;
+  dayOfCancellations: number;
+  combined: number;
+  serviceCenterId: number;
+  podId?: number;
 }
 export interface IAppointmentCutoff {
-    day: EDay;
-    value: string;
-    serviceCenterId: number;
-    podId?: number;
+  day: EDay;
+  value: string;
+  serviceCenterId: number;
+  podId?: number;
 }
 
 export interface IWaitListSettings {
-    isEnabled: boolean;
-    serviceCenterId: number;
-    appointmentSlotText: string;
-    podId?: number|null;
-    appointmentSlotTextHex?: string;
-    appointmentSlotBoxHex?: string;
-    rolloverDescriptionText?: string;
+  isEnabled: boolean;
+  serviceCenterId: number;
+  appointmentSlotText: string;
+  podId?: number | null;
+  appointmentSlotTextHex?: string;
+  appointmentSlotBoxHex?: string;
+  rolloverDescriptionText?: string;
 }
 
 export type TState = {
-    dataList: IOptimizationWindow[],
-    overbookingFactor: IOverbookingFactor[],
-    appointmentCutoff: IAppointmentCutoff[],
-    maxPriceDateRange: number | undefined,
-    waitListSettings: IWaitListSettings | null;
-    isWaitListLoading: boolean;
-}
+  dataList: IOptimizationWindow[];
+  overbookingFactor: IOverbookingFactor[];
+  appointmentCutoff: IAppointmentCutoff[];
+  maxPriceDateRange: number | undefined;
+  waitListSettings: IWaitListSettings | null;
+  isWaitListLoading: boolean;
+};

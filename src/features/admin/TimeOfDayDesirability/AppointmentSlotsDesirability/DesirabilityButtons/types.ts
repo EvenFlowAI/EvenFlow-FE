@@ -1,3 +1,3 @@
-import {EDesirabilityState} from "../../../../../store/reducers/slotScoring/types";
+import { EDesirabilityState } from '../../../../../store/reducers/slotScoring/types';
 
-export type TButton = {label: string; type: EDesirabilityState};
+export type TButton = { label: string; type: EDesirabilityState };

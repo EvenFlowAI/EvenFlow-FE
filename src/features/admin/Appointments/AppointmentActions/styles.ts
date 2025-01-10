@@ -1,12 +1,12 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()({
-    linkBtn: {
-        fontSize: 14,
-        fontWeight: 700,
-        color: "#7898FF",
-        textTransform: 'uppercase',
-        textDecoration: 'none',
-        marginRight: 20
-    }
+  linkBtn: {
+    fontSize: 14,
+    fontWeight: 700,
+    color: '#7898FF',
+    textTransform: 'uppercase',
+    textDecoration: 'none',
+    marginRight: 20,
+  },
 });

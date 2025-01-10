@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { EServiceCategoryType } from "../../store/reducers/categories/types";
-import {
-  collectServiceRequestIds,
-  mapRecallsForRequest,
-} from "../../utils/utils";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/rootReducer";
-import { TTransportationData } from "../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types";
+import React, { useEffect, useState } from 'react';
+import { EServiceCategoryType } from '../../store/reducers/categories/types';
+import { collectServiceRequestIds, mapRecallsForRequest } from '../../utils/utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/rootReducer';
+import { TTransportationData } from '../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
 
 const useGetTransportationsData = () => {
   const {
@@ -21,9 +18,7 @@ const useGetTransportationsData = () => {
     subService,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
-  const { selectedSR, scProfile } = useSelector(
-    (state: RootState) => state.appointment
-  );
+  const { selectedSR, scProfile } = useSelector((state: RootState) => state.appointment);
   const [data, setData] = useState<TTransportationData | null>(null);
 
   useEffect(() => {
@@ -31,26 +26,21 @@ const useGetTransportationsData = () => {
       const maintenancePackageOption = selectedPackage
         ? { id: selectedPackage?.id, priceType: packagePricingType }
         : packageEMenuType !== null
-        ? { optionType: packageEMenuType }
-        : null;
+          ? { optionType: packageEMenuType }
+          : null;
 
       const serviceCategoryIds = allCategories
-        .filter((category) => {
+        .filter(category => {
           return (
             category.type === EServiceCategoryType.GeneralCategory &&
             categoriesIds.includes(category.id)
           );
         })
-        .map((item) => item.id);
+        .map(item => item.id);
 
       const request: TTransportationData = {
         serviceCenterId: scProfile.id,
-        serviceRequests: collectServiceRequestIds(
-          service,
-          subService,
-          null,
-          selectedSR
-        ),
+        serviceRequests: collectServiceRequestIds(service, subService, null, selectedSR),
         serviceCategoryIds,
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,

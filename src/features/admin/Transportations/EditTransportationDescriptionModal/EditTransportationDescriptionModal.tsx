@@ -5,52 +5,48 @@ import React, {
   HTMLAttributes,
   useMemo,
   ChangeEvent,
-} from "react";
+} from 'react';
 import {
   BaseModal,
   DialogActions,
   DialogContent,
   DialogTitle,
-} from "../../../../components/modals/BaseModal/BaseModal";
-import { DialogProps } from "../../../../components/modals/BaseModal/types";
-import { ITransportationOptionFull } from "../../../../store/reducers/transportationNeeds/types";
-import { TextField } from "../../../../components/formControls/TextFieldStyled/TextField";
-import { Button } from "@mui/material";
-import { useDispatch } from "react-redux";
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import { ITransportationOptionFull } from '../../../../store/reducers/transportationNeeds/types';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import {
   updateTransportationDescription,
   updateTransportationIcon,
-} from "../../../../store/reducers/transportationNeeds/actions";
-import { useStyles } from "./styles";
-import { useException } from "../../../../hooks/useException/useException";
-import { FileInput } from "../../../../components/formControls/FileInput/FileInput";
-import { IIconState } from "../../ServiceCategories/AddServiceCategoryModal/types";
-import { useSCs } from "../../../../hooks/useSCs/useSCs";
-import { useMessage } from "../../../../hooks/useMessage/useMessage";
-import { Autocomplete } from "@mui/material";
-import Checkbox from "../../../../components/formControls/Checkbox/Checkbox";
-import { CheckBoxOutlineBlank, CheckBoxOutlined } from "@mui/icons-material";
-import { useAutocompleteStyles } from "../../../../hooks/styling/useAutocompleteStyles";
-import { autocompleteRender } from "../../../../utils/autocompleteRenders";
-import { TOption } from "../types";
-import { RootState } from "../../../../store/rootReducer";
-import { useSelector } from "react-redux";
+} from '../../../../store/reducers/transportationNeeds/actions';
+import { useStyles } from './styles';
+import { useException } from '../../../../hooks/useException/useException';
+import { FileInput } from '../../../../components/formControls/FileInput/FileInput';
+import { IIconState } from '../../ServiceCategories/AddServiceCategoryModal/types';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { Autocomplete } from '@mui/material';
+import Checkbox from '../../../../components/formControls/Checkbox/Checkbox';
+import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
+import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
+import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { TOption } from '../types';
+import { RootState } from '../../../../store/rootReducer';
+import { useSelector } from 'react-redux';
 
 const initialFileState = { file: null, dataUrl: undefined };
 
 export const EditTransportationDescriptionModal: React.FC<
   React.PropsWithChildren<
-    React.PropsWithChildren<
-      DialogProps & { editingElement: ITransportationOptionFull | null }
-    >
+    React.PropsWithChildren<DialogProps & { editingElement: ITransportationOptionFull | null }>
   >
 > = ({ editingElement, ...props }) => {
-  const { allAssignedList } = useSelector(
-    (state: RootState) => state.serviceRequests
-  );
-  const [description, setDescription] = useState<string>("");
+  const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
+  const [description, setDescription] = useState<string>('');
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-  const [orderIndex, setOrderIndex] = useState<string>("");
+  const [orderIndex, setOrderIndex] = useState<string>('');
   const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
   const [fileState, setFileState] = useState<IIconState>(initialFileState);
   const { classes } = useStyles();
@@ -63,23 +59,20 @@ export const EditTransportationDescriptionModal: React.FC<
   useEffect(() => {
     if (editingElement && props.open) {
       editingElement.description && setDescription(editingElement.description);
-      editingElement.orderIndex &&
-        setOrderIndex(editingElement.orderIndex.toString());
+      editingElement.orderIndex && setOrderIndex(editingElement.orderIndex.toString());
     }
   }, [editingElement, props.open]);
 
   const onCancel = () => {
     setFormIsChecked(false);
-    setDescription("");
-    setOrderIndex("");
+    setDescription('');
+    setOrderIndex('');
     setFileState(initialFileState);
     setServiceRequests([]);
     props.onClose();
   };
 
-  const onDescriptionChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setFormIsChecked(false);
     setDescription(e.target.value);
   };
@@ -90,11 +83,11 @@ export const EditTransportationDescriptionModal: React.FC<
   };
 
   const onIconSaved = () => {
-    showMessage("Icon is saved");
+    showMessage('Icon is saved');
   };
 
   const onDataSaved = () => {
-    showMessage("Transportation Option Description and Order Index are saved");
+    showMessage('Transportation Option Description and Order Index are saved');
     onCancel();
   };
 
@@ -144,25 +137,16 @@ export const EditTransportationDescriptionModal: React.FC<
     saveIcon();
   };
 
-  const onRequestCheckboxChange = useCallback(
-    (event: React.SyntheticEvent, value: TOption) => {
-      setFormIsChecked(false);
-      console.log("here");
-    },
-    []
-  );
+  const onRequestCheckboxChange = useCallback((event: React.SyntheticEvent, value: TOption) => {
+    setFormIsChecked(false);
+    console.log('here');
+  }, []);
 
   const renderRequestOption = useCallback(
     (props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
-      const checked = !!serviceRequests.find(
-        (item) => item.value === option.value
-      );
+      const checked = !!serviceRequests.find(item => item.value === option.value);
       return (
-        <li
-          style={{ display: "flex", alignItems: "center" }}
-          {...props}
-          key={option.name}
-        >
+        <li style={{ display: 'flex', alignItems: 'center' }} {...props} key={option.name}>
           <Checkbox
             color="primary"
             icon={
@@ -173,7 +157,7 @@ export const EditTransportationDescriptionModal: React.FC<
               )
             }
             checked={checked}
-            onChange={(e) => onRequestCheckboxChange(e, option)}
+            onChange={e => onRequestCheckboxChange(e, option)}
           />
           {option.name}
         </li>
@@ -195,7 +179,7 @@ export const EditTransportationDescriptionModal: React.FC<
           );
         } else {
           setServiceRequests(
-            rules.serviceRequests.map((item) => ({
+            rules.serviceRequests.map(item => ({
               value: item.id,
               name: item.code,
             }))
@@ -206,7 +190,7 @@ export const EditTransportationDescriptionModal: React.FC<
   }, [editingElement, props.open, allAssignedList]);
 
   const requestsOptions = useMemo(() => {
-    const options = allAssignedList.map((item) => ({
+    const options = allAssignedList.map(item => ({
       name: item.serviceRequest.code,
       value: item.id,
     }));
@@ -241,7 +225,7 @@ export const EditTransportationDescriptionModal: React.FC<
             type="outlined"
             setState={setFileState}
             label={`${
-              fileState.file || editingElement?.iconPath ? "Update" : "Upload"
+              fileState.file || editingElement?.iconPath ? 'Update' : 'Upload'
             } Transportation Icon`}
           />
         </div>
@@ -264,15 +248,15 @@ export const EditTransportationDescriptionModal: React.FC<
             options={requestsOptions}
             disableCloseOnSelect
             disableClearable
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={option => option.name}
             isOptionEqualToValue={(o, v) => o.value === v.value}
             renderOption={renderRequestOption}
             value={serviceRequests}
             onChange={onRequestChange}
             renderInput={autocompleteRender({
-              label: "Op Codes",
+              label: 'Op Codes',
               error: !serviceRequests.length && formIsChecked,
-              placeholder: "Select Op Codes",
+              placeholder: 'Select Op Codes',
             })}
           />
         </div>

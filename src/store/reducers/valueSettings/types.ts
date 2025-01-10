@@ -1,52 +1,52 @@
 export interface ICustomerLifetime {
-    from: number;
-    to: number;
+  from: number;
+  to: number;
 }
 export interface ICustomerLifetimeForm extends ICustomerLifetime {
-    serviceCenterId: number;
-    podId?: number;
+  serviceCenterId: number;
+  podId?: number;
 }
 export enum NewLostEnum {
-    New,
-    Lost
+  New,
+  Lost,
 }
 export interface INewLostCustomer {
-    serviceCenterId: number;
-    podId?: number;
-    periodInMonth: number;
-    type: NewLostEnum
+  serviceCenterId: number;
+  podId?: number;
+  periodInMonth: number;
+  type: NewLostEnum;
 }
 export interface IEndOfWarranty {
-    podId?: number;
-    serviceCenterId: number;
-    periodInMonth: number;
+  podId?: number;
+  serviceCenterId: number;
+  periodInMonth: number;
 }
 
 export interface IValueSettings {
-    type: Indicators;
-    point: number;
-    state: number;
-    serviceCenterId: number;
-    podId?: number;
+  type: Indicators;
+  point: number;
+  state: number;
+  serviceCenterId: number;
+  podId?: number;
 }
 export interface IValueSettingsResponse {
-    items: IValueSettings[],
-    leversToConfiguration: number[]
+  items: IValueSettings[];
+  leversToConfiguration: number[];
 }
 
 export enum Indicators {
-    NewCustomer,
-    LostCustomer,
-    UrgencyFlag,
-    EndOfWarranty,
-    CustomerLifetimeLow,
-    CustomerLifetimeHigh
+  NewCustomer,
+  LostCustomer,
+  UrgencyFlag,
+  EndOfWarranty,
+  CustomerLifetimeLow,
+  CustomerLifetimeHigh,
 }
 
 export type TState = {
-    customerLifetimes?: ICustomerLifetime,
-    newLostCustomer: INewLostCustomer[],
-    endOfWarranty?: IEndOfWarranty,
-    valueSettings: IValueSettings[],
-    configuredValues: number[],
-}
+  customerLifetimes?: ICustomerLifetime;
+  newLostCustomer: INewLostCustomer[];
+  endOfWarranty?: IEndOfWarranty;
+  valueSettings: IValueSettings[];
+  configuredValues: number[];
+};

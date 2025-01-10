@@ -1,38 +1,28 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
-import {
-  Autocomplete,
-  Divider,
-  FormControlLabel,
-  Grid,
-  Switch,
-} from "@mui/material";
-import { TextField } from "../../../../formControls/TextFieldStyled/TextField";
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { Autocomplete, Divider, FormControlLabel, Grid, Switch } from '@mui/material';
+import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
 import {
   EDisplayOnBookingType,
   EEmployeeType,
   TDMSConsultantChange,
   TEmployeeForm,
   TSelectChange,
-} from "../types";
-import { ToggleButtons } from "../../../../buttons/ToggleButtons/ToggleButtons";
-import { autocompleteRender } from "../../../../../utils/autocompleteRenders";
-import {
-  checkEmail,
-  getOptions,
-  validatePhoneNumber,
-} from "../../../../../utils/utils";
-import "react-phone-number-input/style.css";
-import { DmsRoles, superRoles } from "../constants";
-import { userRoles, widerUserRoles } from "../../../../../utils/constants";
-import { useCurrentUser } from "../../../../../hooks/useCurrentUser/useCurrentUser";
-import { Roles, TTechnicianLevel } from "../../../../../types/types";
-import { loadDMSAdvisors } from "../../../../../store/reducers/employees/actions";
-import { TRole } from "../../../../../store/reducers/users/types";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../store/rootReducer";
-import { IServiceCenter } from "../../../../../store/reducers/serviceCenters/types";
-import { useMultipleAutocompleteStyles, useStyles } from "./styles";
-import { TOption } from "../../../../../features/admin/ServiceBookModal/types";
+} from '../types';
+import { ToggleButtons } from '../../../../buttons/ToggleButtons/ToggleButtons';
+import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
+import { checkEmail, getOptions, validatePhoneNumber } from '../../../../../utils/utils';
+import 'react-phone-number-input/style.css';
+import { DmsRoles, superRoles } from '../constants';
+import { userRoles, widerUserRoles } from '../../../../../utils/constants';
+import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
+import { Roles, TTechnicianLevel } from '../../../../../types/types';
+import { loadDMSAdvisors } from '../../../../../store/reducers/employees/actions';
+import { TRole } from '../../../../../store/reducers/users/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../store/rootReducer';
+import { IServiceCenter } from '../../../../../store/reducers/serviceCenters/types';
+import { useMultipleAutocompleteStyles, useStyles } from './styles';
+import { TOption } from '../../../../../features/admin/ServiceBookModal/types';
 
 type TTFormProps = {
   isEdit: boolean;
@@ -45,15 +35,9 @@ type TTFormProps = {
 export const CreateEmployeeForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
 > = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isEdit }) => {
-  const { shortSC, shortLoading } = useSelector(
-    (state: RootState) => state.serviceCenters
-  );
-  const { DmsAdvisors: dmsAdvisors } = useSelector(
-    (state: RootState) => state.scEmployees
-  );
-  const { loadingDMSAdvisors } = useSelector(
-    (state: RootState) => state.employees
-  );
+  const { shortSC, shortLoading } = useSelector((state: RootState) => state.serviceCenters);
+  const { DmsAdvisors: dmsAdvisors } = useSelector((state: RootState) => state.scEmployees);
+  const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
 
   const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
   const currentUser = useCurrentUser();
@@ -63,34 +47,28 @@ export const CreateEmployeeForm: React.FC<
   const { classes: autocompleteClasses } = useMultipleAutocompleteStyles();
   const { classes } = useStyles();
   const dmsOptions = useMemo(
-    () =>
-      dmsAdvisors.filter(
-        (el) => el.role && form.role && DmsRoles[el.role] === form.role
-      ),
+    () => dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role),
     [dmsAdvisors, form.role]
   );
   const dmsAdvisor = useMemo(
     () =>
       form?.dmsId && dmsAdvisors.length
-        ? dmsAdvisors.find((item) => item.dmsId === form.dmsId)
+        ? dmsAdvisors.find(item => item.dmsId === form.dmsId)
         : null,
     [form?.dmsId, dmsAdvisors]
   );
   const employeeTypeOptions: TOption[] = useMemo(
-    () =>
-      getOptions(
-        Object.keys(EEmployeeType).filter((key) => Number.isNaN(+key))
-      ),
+    () => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))),
     []
   );
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
     target: { name, value },
   }) => {
     setFormIsChecked(false);
-    if (name === "phoneNumber") {
+    if (name === 'phoneNumber') {
       value = validatePhoneNumber(value);
     }
-    setEmployeeForm((prev) => ({ ...prev, [name]: value }));
+    setEmployeeForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSelectChange: TSelectChange = (e, value) => {
@@ -98,83 +76,66 @@ export const CreateEmployeeForm: React.FC<
     if (value?.id) {
       dispatch(loadDMSAdvisors(value.id));
     }
-    setEmployeeForm((prev) => ({ ...prev, serviceCenter: value ?? null }));
+    setEmployeeForm(prev => ({ ...prev, serviceCenter: value ?? null }));
   };
 
-  const handleServiceCentersChange = (
-    e: React.ChangeEvent<{}>,
-    options: IServiceCenter[]
-  ) => {
+  const handleServiceCentersChange = (e: React.ChangeEvent<{}>, options: IServiceCenter[]) => {
     setServiceCenters(options);
   };
 
-  const handleSelfServiceChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => {
+  const handleSelfServiceChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
-    setEmployeeForm((prev) => ({
+    setEmployeeForm(prev => ({
       ...prev,
       displayOnBookingTypes: checked
         ? prev.displayOnBookingTypes
           ? [...prev.displayOnBookingTypes, EDisplayOnBookingType.SelfService]
           : [EDisplayOnBookingType.SelfService]
-        : prev.displayOnBookingTypes?.filter(
-            (el) => el !== EDisplayOnBookingType.SelfService
-          ),
+        : prev.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.SelfService),
     }));
   };
 
-  const handleEmployeeChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => {
+  const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
-    setEmployeeForm((prev) => ({
+    setEmployeeForm(prev => ({
       ...prev,
       displayOnBookingTypes: checked
         ? prev.displayOnBookingTypes
           ? [...prev.displayOnBookingTypes, EDisplayOnBookingType.Employee]
           : [EDisplayOnBookingType.Employee]
-        : prev.displayOnBookingTypes?.filter(
-            (el) => el !== EDisplayOnBookingType.Employee
-          ),
+        : prev.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.Employee),
     }));
   };
 
   const handleDMSConsultantChange: TDMSConsultantChange = (e, value) => {
     setFormIsChecked(false);
-    setEmployeeForm((prev) => ({ ...prev, dmsId: value ? value.dmsId : null }));
+    setEmployeeForm(prev => ({ ...prev, dmsId: value ? value.dmsId : null }));
   };
 
   const handleRoleChange = (e: any, value: string | null) => {
     setFormIsChecked(false);
-    setEmployeeForm((prev) => ({
+    setEmployeeForm(prev => ({
       ...prev,
       role: value as TRole,
       dmsId: null,
       type: null,
-      displayOnBookingTypes:
-        value === "Advisor" ? prev.displayOnBookingTypes : [],
+      displayOnBookingTypes: value === 'Advisor' ? prev.displayOnBookingTypes : [],
     }));
   };
 
   const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
     setFormIsChecked(false);
     if (newVal) {
-      setEmployeeForm((prev) => ({
+      setEmployeeForm(prev => ({
         ...prev,
         technicianLevel: newVal as TTechnicianLevel,
       }));
     }
   };
 
-  const handleTypeChange = (
-    e: React.SyntheticEvent<Element, Event>,
-    value: TOption | null
-  ) => {
+  const handleTypeChange = (e: React.SyntheticEvent<Element, Event>, value: TOption | null) => {
     setFormIsChecked(false);
-    setEmployeeForm((prev) => ({
+    setEmployeeForm(prev => ({
       ...prev,
       type: (value?.value as EEmployeeType) ?? null,
     }));
@@ -211,14 +172,14 @@ export const CreateEmployeeForm: React.FC<
           disabled={isEdit}
           options={shortSC}
           onChange={handleSelectChange}
-          getOptionLabel={(i) => i.name}
+          getOptionLabel={i => i.name}
           isOptionEqualToValue={(o, s) => o.id === s.id}
           loading={shortLoading}
           value={form.serviceCenter || null}
           renderInput={autocompleteRender({
-            label: "Service center",
+            label: 'Service center',
             fullWidth: true,
-            placeholder: "Select Service Center",
+            placeholder: 'Select Service Center',
             error: !form.serviceCenter && formIsChecked,
           })}
         />
@@ -251,11 +212,7 @@ export const CreateEmployeeForm: React.FC<
           disabled={isEdit}
           placeholder="Type Email"
           value={form.email}
-          error={
-            Boolean(form.email?.length) &&
-            !checkEmail(form.email) &&
-            formIsChecked
-          }
+          error={Boolean(form.email?.length) && !checkEmail(form.email) && formIsChecked}
           onChange={handleChange}
           label="Email"
         />
@@ -269,18 +226,16 @@ export const CreateEmployeeForm: React.FC<
         ) : (
           <Autocomplete
             options={
-              currentUser && superRoles.includes(currentUser?.role)
-                ? widerUserRoles
-                : userRoles
+              currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles
             }
             isOptionEqualToValue={(option, value) => option === value}
             onChange={handleRoleChange}
             loading={shortLoading}
             value={form.role ?? null}
             renderInput={autocompleteRender({
-              label: "Role",
+              label: 'Role',
               fullWidth: true,
-              placeholder: "Select Role",
+              placeholder: 'Select Role',
             })}
           />
         )}
@@ -292,17 +247,15 @@ export const CreateEmployeeForm: React.FC<
         <Autocomplete
           options={dmsOptions}
           onChange={handleDMSConsultantChange}
-          getOptionLabel={(i) =>
-            i.fullName ? `${i.fullName} - ${i.dmsId}` : `${i.dmsId}`
-          }
+          getOptionLabel={i => (i.fullName ? `${i.fullName} - ${i.dmsId}` : `${i.dmsId}`)}
           isOptionEqualToValue={(o, s) => o.id === s.id}
           disabled={!form.role || shortLoading || loadingDMSAdvisors}
           loading={shortLoading || loadingDMSAdvisors}
           value={dmsAdvisor ?? null}
           renderInput={autocompleteRender({
-            label: "Assign Employee from DMS",
+            label: 'Assign Employee from DMS',
             fullWidth: true,
-            placeholder: "Assign Employee from DMS",
+            placeholder: 'Assign Employee from DMS',
           })}
         />
       </Grid>
@@ -354,9 +307,9 @@ export const CreateEmployeeForm: React.FC<
               value={form.technicianLevel}
               label="Technician Level"
               buttons={[
-                { id: "1", label: "1", value: 1 },
-                { id: "2", label: "2", value: 2 },
-                { id: "3", label: "3", value: 3 },
+                { id: '1', label: '1', value: 1 },
+                { id: '2', label: '2', value: 2 },
+                { id: '3', label: '3', value: 3 },
               ]}
               exclusive
               onChange={handleSwitchChange}
@@ -368,9 +321,7 @@ export const CreateEmployeeForm: React.FC<
         <>
           <Grid item xs={12} sm={6} container>
             <Grid item xs={12}>
-              <div className={classes.switchersTitle}>
-                Display On Booking Flow
-              </div>
+              <div className={classes.switchersTitle}>Display On Booking Flow</div>
             </Grid>
 
             <Grid item xs={6}>
@@ -400,9 +351,7 @@ export const CreateEmployeeForm: React.FC<
                     disabled={!form.dmsId}
                     name="employee"
                     onChange={handleEmployeeChange}
-                    checked={form.displayOnBookingTypes?.includes(
-                      EDisplayOnBookingType.Employee
-                    )}
+                    checked={form.displayOnBookingTypes?.includes(EDisplayOnBookingType.Employee)}
                     color="primary"
                   />
                 }
@@ -416,19 +365,15 @@ export const CreateEmployeeForm: React.FC<
         <Grid item xs={12} sm={6}>
           <Autocomplete
             options={employeeTypeOptions}
-            isOptionEqualToValue={(option, value) =>
-              option.value === value.value
-            }
+            isOptionEqualToValue={(option, value) => option.value === value.value}
             onChange={handleTypeChange}
-            getOptionLabel={(o) => o.name}
+            getOptionLabel={o => o.name}
             loading={shortLoading}
-            value={
-              employeeTypeOptions.find((el) => el.value === form.type) ?? null
-            }
+            value={employeeTypeOptions.find(el => el.value === form.type) ?? null}
             renderInput={autocompleteRender({
-              label: "Type",
+              label: 'Type',
               fullWidth: true,
-              placeholder: "Select Type",
+              placeholder: 'Select Type',
             })}
           />
         </Grid>

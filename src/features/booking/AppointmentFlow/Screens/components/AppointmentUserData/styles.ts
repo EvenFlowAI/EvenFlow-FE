@@ -1,7 +1,7 @@
-import {styled} from "@mui/material";
+import { styled } from '@mui/material';
 
 export const Wrapper = styled('div')({
-    "& label": {
-        marginTop: 12
-    }
-})
+  '& label': {
+    marginTop: 12,
+  },
+});

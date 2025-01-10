@@ -1,23 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useParams,
-} from "react-router-dom";
-import { Routes } from "../../../routes/constants";
-import { CreateAppointmentFlow } from "../CreateAppointmentFlow/CreateAppointmentFlow";
-import { ManageAppointmentFlow } from "../ManageAppointmentFlow/ManageAppointmentFlow";
-import {
-  EServiceCategoryPage,
-  IAppointmentByKey,
-  ILoadedVehicle,
-} from "../../../api/types";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Redirect, Route, Switch, useHistory, useParams } from 'react-router-dom';
+import { Routes } from '../../../routes/constants';
+import { CreateAppointmentFlow } from '../CreateAppointmentFlow/CreateAppointmentFlow';
+import { ManageAppointmentFlow } from '../ManageAppointmentFlow/ManageAppointmentFlow';
+import { EServiceCategoryPage, IAppointmentByKey, ILoadedVehicle } from '../../../api/types';
 import {
   clearCustomerCache,
   setCustomerLoadedData,
-} from "../../../store/reducers/appointment/actions";
+} from '../../../store/reducers/appointment/actions';
 import {
   checkCarIsValid,
   handleAppointmentUpdate,
@@ -27,16 +17,16 @@ import {
   setWelcomeScreenView,
   updatePackageOption,
   updateRecalls,
-} from "../../../store/reducers/appointmentFrameReducer/actions";
-import { TMobileScreen, TScreen, TView } from "../../../types/types";
-import { encodeSCID } from "../../../utils/utils";
-import { IFirstScreenOption } from "../../../store/reducers/serviceTypes/types";
-import { setTransportationAvailable } from "../../../store/reducers/bookingFlowConfig/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store/rootReducer";
-import { useException } from "../../../hooks/useException/useException";
-import { useCurrentUser } from "../../../hooks/useCurrentUser/useCurrentUser";
-import { EServiceType } from "../../../store/reducers/appointmentFrameReducer/types";
+} from '../../../store/reducers/appointmentFrameReducer/actions';
+import { TMobileScreen, TScreen, TView } from '../../../types/types';
+import { encodeSCID } from '../../../utils/utils';
+import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
+import { setTransportationAvailable } from '../../../store/reducers/bookingFlowConfig/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../store/rootReducer';
+import { useException } from '../../../hooks/useException/useException';
+import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
+import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
 
 const AppointmentFlow = () => {
   const {
@@ -52,29 +42,22 @@ const AppointmentFlow = () => {
   const { customerLoadedData, scProfile, selectedSR } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
-  );
-  const { engineTypes } = useSelector(
-    (state: RootState) => state.vehicleDetails
-  );
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+  const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
-  const {
-    isTransportationAvailable,
-    isAppointmentTimingAvailable,
-    isAdvisorAvailable,
-  } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
+    useSelector((state: RootState) => state.bookingFlowConfig);
 
   const [currentScreen, setCurrentScreen] = useState<TScreen | TMobileScreen>(
     serviceTypeOption && serviceTypeOption?.type !== EServiceType.VisitCenter
-      ? "location"
-      : "serviceNeeds"
+      ? 'location'
+      : 'serviceNeeds'
   );
   const [loadingCar, setLoadingCar] = useState<boolean>(false);
-  const [needToShowServiceTypes, setNeedToShowServiceTypes] =
-    useState<boolean>(false);
-  const [serviceCategoryPage, setServiceCategoryPage] =
-    useState<EServiceCategoryPage>(EServiceCategoryPage.Page1);
+  const [needToShowServiceTypes, setNeedToShowServiceTypes] = useState<boolean>(false);
+  const [serviceCategoryPage, setServiceCategoryPage] = useState<EServiceCategoryPage>(
+    EServiceCategoryPage.Page1
+  );
 
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
@@ -89,10 +72,7 @@ const AppointmentFlow = () => {
 
   const onCarIsValid = useCallback(() => {
     const someRequestsSelected =
-      selectedSR.length ||
-      selectedPackage ||
-      categoriesIds.length ||
-      selectedRecalls.length;
+      selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
     const requestDataIsValid =
       serviceTypeOption?.type === EServiceType.VisitCenter ||
       !serviceTypeOption ||
@@ -119,11 +99,9 @@ const AppointmentFlow = () => {
     (screen: TView) => {
       dispatch(setWelcomeScreenView(screen));
       if (id) {
-        history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+        history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
       } else if (scProfile?.id) {
-        history.push(
-          Routes.EndUser.Welcome + "/" + encodeSCID(scProfile?.id) + "?frame=1"
-        );
+        history.push(Routes.EndUser.Welcome + '/' + encodeSCID(scProfile?.id) + '?frame=1');
       }
     },
     [id, history, dispatch, scProfile]
@@ -132,7 +110,7 @@ const AppointmentFlow = () => {
   const handleLogin = useCallback(() => {
     clearCustomerCache();
     dispatch(setCustomerLoadedData(null));
-    onGoToFirstScreen("select");
+    onGoToFirstScreen('select');
   }, [onGoToFirstScreen]);
 
   const handleSetScreen = useCallback((screen: TScreen) => {
@@ -151,9 +129,7 @@ const AppointmentFlow = () => {
       let needToShowService = needToShowServiceTypes;
       if (data.serviceTypeOption) {
         const optionExists = Boolean(
-          firstScreenOptions.find(
-            (item) => item.id === data.serviceTypeOption?.id
-          )
+          firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id)
         );
         if (optionExists) {
           needToShowService = false;
@@ -169,8 +145,8 @@ const AppointmentFlow = () => {
   const goToServiceTypeSelection = useCallback(() => {
     if (needToShowServiceTypes) {
       setNeedToShowServiceTypes(false);
-      dispatch(setWelcomeScreenView("serviceSelect"));
-      history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+      dispatch(setWelcomeScreenView('serviceSelect'));
+      history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
     }
   }, [history, needToShowServiceTypes]);
 
@@ -213,12 +189,10 @@ const AppointmentFlow = () => {
 
   const onSelectAppointment = async (car: ILoadedVehicle) => {
     customerLoadedData &&
-      dispatch(
-        setCustomerLoadedData({ ...customerLoadedData, isUpdating: true })
-      );
+      dispatch(setCustomerLoadedData({ ...customerLoadedData, isUpdating: true }));
     await onUpdateAppointment(car);
-    dispatch(setCurrentFrameScreen("manageAppointment"));
-    history.push("/f/appointment-manage/" + id);
+    dispatch(setCurrentFrameScreen('manageAppointment'));
+    history.push('/f/appointment-manage/' + id);
   };
 
   return (

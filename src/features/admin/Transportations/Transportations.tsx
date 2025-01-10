@@ -1,66 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { NoItemsLoading } from "../../../components/wrappers/NoItemsLoading/NoItemsLoading";
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  Switch,
-  TableBody,
-  TableCell,
-  TableHead,
-} from "@mui/material";
-import { getTransportationOptionString } from "../../../utils/utils";
+import React, { useEffect, useState } from 'react';
+import { NoItemsLoading } from '../../../components/wrappers/NoItemsLoading/NoItemsLoading';
+import { IconButton, Menu, MenuItem, Switch, TableBody, TableCell, TableHead } from '@mui/material';
+import { getTransportationOptionString } from '../../../utils/utils';
 import {
   ETransportationType,
   ITransportationOptionFull,
-} from "../../../store/reducers/transportationNeeds/types";
-import { MoreHoriz } from "@mui/icons-material";
+} from '../../../store/reducers/transportationNeeds/types';
+import { MoreHoriz } from '@mui/icons-material';
 import {
   loadTransportationOptions,
   updateTransportationOption,
-} from "../../../store/reducers/transportationNeeds/actions";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store/rootReducer";
-import { HeaderCell, TableWrapper, OpCodeValue } from "./styles";
-import { EditTransportationModal } from "./EditTransportationModal/EditTransportationModal";
-import { EditTransportationDescriptionModal } from "./EditTransportationDescriptionModal/EditTransportationDescriptionModal";
-import { DemandTable } from "../../../components/styled/DemandTable";
-import { TableRow } from "../../../components/styled/TableRow";
-import { useModal } from "../../../hooks/useModal/useModal";
-import { useException } from "../../../hooks/useException/useException";
-import { useSCs } from "../../../hooks/useSCs/useSCs";
-import { servicesRoot } from "../../../utils/constants";
-import { TitleContainer } from "../../../components/wrappers/TitleContainer/TitleContainer";
-import { loadFirstScreenOptionsList } from "../../../store/reducers/serviceTypes/actions";
-import { loadBookingFlowConfig } from "../../../store/reducers/bookingFlowConfig/actions";
-import { EServiceType } from "../../../store/reducers/appointmentFrameReducer/types";
-import { useHistory } from "react-router-dom";
-import { Routes } from "../../../routes/constants";
-import { QueryTypes, ServiceValetRoutes } from "../../../routes/types";
+} from '../../../store/reducers/transportationNeeds/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../store/rootReducer';
+import { HeaderCell, TableWrapper, OpCodeValue } from './styles';
+import { EditTransportationModal } from './EditTransportationModal/EditTransportationModal';
+import { EditTransportationDescriptionModal } from './EditTransportationDescriptionModal/EditTransportationDescriptionModal';
+import { DemandTable } from '../../../components/styled/DemandTable';
+import { TableRow } from '../../../components/styled/TableRow';
+import { useModal } from '../../../hooks/useModal/useModal';
+import { useException } from '../../../hooks/useException/useException';
+import { useSCs } from '../../../hooks/useSCs/useSCs';
+import { servicesRoot } from '../../../utils/constants';
+import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
+import { loadFirstScreenOptionsList } from '../../../store/reducers/serviceTypes/actions';
+import { loadBookingFlowConfig } from '../../../store/reducers/bookingFlowConfig/actions';
+import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
+import { useHistory } from 'react-router-dom';
+import { Routes } from '../../../routes/constants';
+import { QueryTypes, ServiceValetRoutes } from '../../../routes/types';
 
 export const Transportations = () => {
   const { push } = useHistory();
-  const { options, isLoading } = useSelector(
-    (state: RootState) => state.transportation
-  );
-  const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
-  );
+  const { options, isLoading } = useSelector((state: RootState) => state.transportation);
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const [editingElement, setEditingElement] =
-    useState<ITransportationOptionFull | null>(null);
-  const [anchorEl, setAnchorEl] = useState<
-    (EventTarget & HTMLButtonElement) | null
-  >(null);
+  const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
+  const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
   const { selectedSC } = useSCs();
   const showError = useException();
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useModal();
-  const {
-    isOpen: isOptionOpen,
-    onOpen: onOptionOpen,
-    onClose: onOptionClose,
-  } = useModal();
+  const { isOpen: isOptionOpen, onOpen: onOptionOpen, onClose: onOptionClose } = useModal();
 
   useEffect(() => {
     if (selectedSC) {
@@ -76,14 +57,10 @@ export const Transportations = () => {
   };
 
   const handleSwitch = (id: number) => async (e: any, value: boolean) => {
-    const option = options.find((item) => item.id === id);
+    const option = options.find(item => item.id === id);
     if (selectedSC && option) {
-      const pickUpConfig = config.find(
-        (el) => el.serviceType === EServiceType.PickUpDropOff
-      );
-      const pickUpOption = firstScreenOptions.find(
-        (el) => el.type === EServiceType.PickUpDropOff
-      );
+      const pickUpConfig = config.find(el => el.serviceType === EServiceType.PickUpDropOff);
+      const pickUpOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff);
       const isValid =
         value && option?.type === ETransportationType.PickUpDelivery
           ? pickUpConfig?.available && pickUpOption
@@ -102,18 +79,14 @@ export const Transportations = () => {
         }
       } else {
         if (!pickUpConfig?.available)
-          showError(
-            'Pick Up / Drop Off booking flow configuration must be "ON"'
-          );
-        if (!pickUpOption)
-          showError('"Service Valet" First Screen Option should be added');
+          showError('Pick Up / Drop Off booking flow configuration must be "ON"');
+        if (!pickUpOption) showError('"Service Valet" First Screen Option should be added');
       }
     }
   };
 
   const openMenu =
-    (el: ITransportationOptionFull) =>
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    (el: ITransportationOptionFull) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       setEditingElement(el);
       setAnchorEl(e.currentTarget);
     };
@@ -129,7 +102,7 @@ export const Transportations = () => {
   };
 
   const handleServiceValetRedirection = (opCode: string) => {
-    if (opCode.includes("Service valet")) {
+    if (opCode.includes('Service valet')) {
       push(
         `${Routes.Services.ServiceValet}?${QueryTypes.selectedTab}=${ServiceValetRoutes.CenterSettings}`
       );
@@ -139,7 +112,7 @@ export const Transportations = () => {
   return (
     <>
       <TitleContainer title="Other Transportation" pad parent={servicesRoot} />
-      <div style={{ padding: 16, width: "100%" }}>
+      <div style={{ padding: 16, width: '100%' }}>
         <NoItemsLoading items={options} loading={isLoading} />
         {options.length ? (
           <TableWrapper>
@@ -148,7 +121,7 @@ export const Transportations = () => {
                 <TableRow>
                   <HeaderCell
                     key="1"
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                     align="left"
                     width={200}
                   >
@@ -158,7 +131,7 @@ export const Transportations = () => {
                     width={200}
                     key="3"
                     align="left"
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                   >
                     Description
                   </HeaderCell>
@@ -166,7 +139,7 @@ export const Transportations = () => {
                     width={150}
                     key="2"
                     align="left"
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                   >
                     Order Index
                   </HeaderCell>
@@ -174,7 +147,7 @@ export const Transportations = () => {
                     width={150}
                     key="6"
                     align="left"
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                   >
                     OP Code
                   </HeaderCell>
@@ -182,7 +155,7 @@ export const Transportations = () => {
                     width={150}
                     key="4"
                     align="left"
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                   >
                     Manage
                   </HeaderCell>
@@ -190,14 +163,14 @@ export const Transportations = () => {
                     key="5"
                     align="left"
                     width={150}
-                    style={{ textTransform: "capitalize" }}
+                    style={{ textTransform: 'capitalize' }}
                   >
                     Status (Off/ON)
                   </HeaderCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {options.map((el) => {
+                {options.map(el => {
                   return (
                     <TableRow key={el.type}>
                       <TableCell key="1" align="left">
@@ -210,18 +183,12 @@ export const Transportations = () => {
                         {el.orderIndex}
                       </TableCell>
                       <TableCell
-                        onClick={() =>
-                          handleServiceValetRedirection(el.opCode ?? "")
-                        }
+                        onClick={() => handleServiceValetRedirection(el.opCode ?? '')}
                         key="6"
                         align="left"
                       >
-                        <OpCodeValue
-                          serviceValet={
-                            el.opCode?.includes("Service valet") ?? false
-                          }
-                        >
-                          {el.opCode ?? " "}
+                        <OpCodeValue serviceValet={el.opCode?.includes('Service valet') ?? false}>
+                          {el.opCode ?? ' '}
                         </OpCodeValue>
                       </TableCell>
                       <TableCell key="4" align="left">
@@ -250,11 +217,7 @@ export const Transportations = () => {
         <MenuItem onClick={() => onManageRules()}>Manage Rules</MenuItem>
         <MenuItem onClick={() => onManageOption()}>Manage Option</MenuItem>
       </Menu>
-      <EditTransportationModal
-        open={isOpen}
-        onClose={onClose}
-        editingElement={editingElement}
-      />
+      <EditTransportationModal open={isOpen} onClose={onClose} editingElement={editingElement} />
       <EditTransportationDescriptionModal
         open={isOptionOpen}
         editingElement={editingElement}

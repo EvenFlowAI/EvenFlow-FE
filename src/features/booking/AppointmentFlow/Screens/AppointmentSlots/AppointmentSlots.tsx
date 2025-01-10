@@ -1,16 +1,10 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { StepWrapper } from "../../../../../components/styled/StepWrapper";
-import { ActionButtons } from "../../../ActionButtons/ActionButtons";
-import { SelectedAppointment } from "./SelectedAppointment/SelectedAppointment";
-import { AppointmentDateSelector } from "../../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector";
-import { AppointmentTimeSelector } from "../../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { StepWrapper } from '../../../../../components/styled/StepWrapper';
+import { ActionButtons } from '../../../ActionButtons/ActionButtons';
+import { SelectedAppointment } from './SelectedAppointment/SelectedAppointment';
+import { AppointmentDateSelector } from '../../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector';
+import { AppointmentTimeSelector } from '../../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   collectServiceRequestIds,
   decodeSCID,
@@ -19,54 +13,49 @@ import {
   mapRecallsForRequest,
   sortAppointments,
   sortSVAppointments,
-} from "../../../../../utils/utils";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../store/rootReducer";
+} from '../../../../../utils/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../store/rootReducer';
 import {
   EAppointmentTimingType,
   IAppointmentSlotsRequest,
   MPOptionShort,
-} from "../../../../../store/reducers/appointment/types";
+} from '../../../../../store/reducers/appointment/types';
 import {
   loadAppointmentSlots,
   loadServiceValetSlots,
   selectAppointment,
   selectServiceValetAppointment,
-} from "../../../../../store/reducers/appointment/actions";
-import { TGroupedAppointments } from "../../../../../utils/types";
-import ReactGA from "react-ga4";
-import { EServiceCategoryType } from "../../../../../store/reducers/categories/types";
+} from '../../../../../store/reducers/appointment/actions';
+import { TGroupedAppointments } from '../../../../../utils/types';
+import ReactGA from 'react-ga4';
+import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import {
   EServiceType,
   EUserType,
-} from "../../../../../store/reducers/appointmentFrameReducer/types";
-import {
-  TArgCallback,
-  TCallback,
-  TParsableDate,
-  TScreen,
-} from "../../../../../types/types";
-import { SVAppointmentDateSelector } from "../../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector";
-import { SVAppointmentTimeSelector } from "../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector";
+} from '../../../../../store/reducers/appointmentFrameReducer/types';
+import { TArgCallback, TCallback, TParsableDate, TScreen } from '../../../../../types/types';
+import { SVAppointmentDateSelector } from '../../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector';
+import { SVAppointmentTimeSelector } from '../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector';
 import {
   clearAppointmentSteps,
   loadActiveTransportations,
   setServiceTypeOption,
   setWelcomeScreenView,
-} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import { useTranslation } from "react-i18next";
-import { SlotsScreenWrapper } from "./styles";
-import { groupAppointments } from "./utils";
-import { Routes } from "../../../../../routes/constants";
-import dayjs from "dayjs";
-import CustomerConsents from "../../../../../components/modals/booking/CustomerConsents/CustomerConsents";
-import { useModal } from "../../../../../hooks/useModal/useModal";
-import MileageModal from "../../../../../components/modals/booking/MileageModal/MileageModal";
-import { IFirstScreenOption } from "../../../../../store/reducers/serviceTypes/types";
-import utc from "dayjs/plugin/utc";
-import { useException } from "../../../../../hooks/useException/useException";
-import AppointmentFilters from "./AppointmentFilters/AppointmentFilters";
-import { useMediaQuery, useTheme } from "@mui/material";
+} from '../../../../../store/reducers/appointmentFrameReducer/actions';
+import { useTranslation } from 'react-i18next';
+import { SlotsScreenWrapper } from './styles';
+import { groupAppointments } from './utils';
+import { Routes } from '../../../../../routes/constants';
+import dayjs from 'dayjs';
+import CustomerConsents from '../../../../../components/modals/booking/CustomerConsents/CustomerConsents';
+import { useModal } from '../../../../../hooks/useModal/useModal';
+import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
+import { IFirstScreenOption } from '../../../../../store/reducers/serviceTypes/types';
+import utc from 'dayjs/plugin/utc';
+import { useException } from '../../../../../hooks/useException/useException';
+import AppointmentFilters from './AppointmentFilters/AppointmentFilters';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 dayjs.extend(utc);
 
@@ -80,13 +69,7 @@ type TAppointmentSelectionProps = {
 
 export const AppointmentSlots: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>
-> = ({
-  handleSetScreen,
-  onNext,
-  prevLogicalScreen,
-  fromServiceValetToVisitCenter,
-  isManaging,
-}) => {
+> = ({ handleSetScreen, onNext, prevLogicalScreen, fromServiceValetToVisitCenter, isManaging }) => {
   const {
     appointmentSlots,
     serviceValetSlots,
@@ -128,25 +111,20 @@ export const AppointmentSlots: React.FC<
     serviceOptionChangedFromSlotPage,
   } = useSelector((state: RootState) => state.appointmentFrame);
 
-  const {
-    currentConfig,
-    isAppointmentTimingAvailable,
-    isTransportationAvailable,
-  } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
+    (state: RootState) => state.bookingFlowConfig
+  );
 
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
-  const { firstScreenOptions } = useSelector(
-    (state: RootState) => state.serviceTypes
-  );
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
-  const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf("day"));
+  const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
   const [loading, setLoading] = useState<boolean>(false);
 
   const serviceType = useMemo(
-    () =>
-      serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter,
+    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
     [serviceTypeOption]
   );
   const { id } = useParams<{ id: string }>();
@@ -156,18 +134,14 @@ export const AppointmentSlots: React.FC<
   const { t } = useTranslation();
   const history = useHistory();
   const showError = useException();
-  const {
-    isOpen: isMileageOpen,
-    onClose: onMileageClose,
-    onOpen: onMileageOpen,
-  } = useModal();
+  const { isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen } = useModal();
   const {
     isOpen: isServiceOptionOpen,
     onClose: onServiceOptionClose,
     onOpen: onServiceOptionOpen,
   } = useModal();
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down("md"));
+  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const nextDisabled = useMemo(
     () =>
       serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -182,9 +156,7 @@ export const AppointmentSlots: React.FC<
 
   const currentSlots = useMemo(
     () =>
-      serviceTypeOption?.type === EServiceType.PickUpDropOff
-        ? serviceValetSlots
-        : appointmentSlots,
+      serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots,
     [serviceTypeOption, serviceValetSlots, appointmentSlots]
   );
 
@@ -198,9 +170,9 @@ export const AppointmentSlots: React.FC<
     if (consultants?.length && currentConfig?.advisorSelection) {
       ReactGA.event(
         {
-          category: "EvenFlow User",
-          action: "Selected advisor",
-          label: advisor ? advisor.name : "Any available",
+          category: 'EvenFlow User',
+          action: 'Selected advisor',
+          label: advisor ? advisor.name : 'Any available',
           nonInteraction: true,
         },
         trackerData.ids
@@ -209,16 +181,14 @@ export const AppointmentSlots: React.FC<
     if (appointment) {
       ReactGA.event(
         {
-          category: "EvenFlow User",
-          action: "Selected Service Requests",
+          category: 'EvenFlow User',
+          action: 'Selected Service Requests',
           label: `Requests Codes: 
-                ${appointment?.serviceRequestPrices
-                  ?.map((item) => item.requestName)
-                  .join(", ")}
+                ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
                 ${
                   !isNaN(appointment?.price?.value)
                     ? `with Total Price $${+appointment.price.value}`
-                    : ""
+                    : ''
                 }`,
         },
         trackerData.ids
@@ -238,24 +208,22 @@ export const AppointmentSlots: React.FC<
     (date?: TParsableDate, newServiceOption?: IFirstScreenOption) => {
       const serviceOption = newServiceOption ?? serviceTypeOption;
       const currentSlots =
-        serviceOption?.type === EServiceType.PickUpDropOff
-          ? serviceValetSlots
-          : appointmentSlots;
+        serviceOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
       if (currentSlots?.length) {
         const utcOffset = dayjs().utcOffset();
         const newDate = date ?? dayjs();
-        const dateWithOffset = dayjs(newDate).isSame(dayjs(), "date")
+        const dateWithOffset = dayjs(newDate).isSame(dayjs(), 'date')
           ? dayjs()
           : utcOffset > 0
-          ? dayjs(newDate)
-          : getClearDate(newDate);
+            ? dayjs(newDate)
+            : getClearDate(newDate);
         let firstAvailableSlot = null;
         if (serviceOption?.type === EServiceType.PickUpDropOff) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
-          firstAvailableSlot = sorted.find((slot) => {
+          firstAvailableSlot = sorted.find(slot => {
             const formatted = getClearSVDate(slot?.date);
             return (
-              dayjs(formatted).isSame(dayjs.utc(dateWithOffset), "date") ||
+              dayjs(formatted).isSame(dayjs.utc(dateWithOffset), 'date') ||
               dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
             );
           });
@@ -265,7 +233,7 @@ export const AppointmentSlots: React.FC<
           }
         } else {
           const sorted = [...appointmentSlots].sort(sortAppointments);
-          firstAvailableSlot = sorted.find((slot) => {
+          firstAvailableSlot = sorted.find(slot => {
             const formatted = getClearDate(slot?.date);
             return dayjs(formatted).isAfter(dateWithOffset);
           });
@@ -282,53 +250,39 @@ export const AppointmentSlots: React.FC<
   useEffect(() => {
     if (currentSlots.length) {
       const utcOffset = dayjs().utcOffset();
-      const dateWithOffset = dayjs(slotsSearchedDate as TParsableDate).isSame(
-        dayjs(),
-        "date"
-      )
+      const dateWithOffset = dayjs(slotsSearchedDate as TParsableDate).isSame(dayjs(), 'date')
         ? dayjs()
         : utcOffset > 0
-        ? dayjs(slotsSearchedDate as TParsableDate)
-        : getClearDate(slotsSearchedDate as TParsableDate);
+          ? dayjs(slotsSearchedDate as TParsableDate)
+          : getClearDate(slotsSearchedDate as TParsableDate);
       if (currentAppointment?.date) {
-        const sameSearchDate = getClearDate(
-          currentAppointment.searchDate
-        ).isSame(dateWithOffset, "date");
-        const slotTimeIsValid = dayjs(
-          getClearDate(currentAppointment.date)
-        ).isAfter(dateWithOffset);
-        const theSameServiceOption =
-          slotsServiceTypeOptionId === serviceTypeOption?.id;
-        const theSameTransportation =
-          slotsTransportationId === transportation?.id;
+        const sameSearchDate = getClearDate(currentAppointment.searchDate).isSame(
+          dateWithOffset,
+          'date'
+        );
+        const slotTimeIsValid = dayjs(getClearDate(currentAppointment.date)).isAfter(
+          dateWithOffset
+        );
+        const theSameServiceOption = slotsServiceTypeOptionId === serviceTypeOption?.id;
+        const theSameTransportation = slotsTransportationId === transportation?.id;
         if (theSameServiceOption && sameSearchDate && slotTimeIsValid) {
           if (theSameTransportation) {
             selectedTime
               ? selectFirstSlot(
-                  dayjs(selectedTime).isSame(dayjs(), "date")
-                    ? dayjs()
-                    : selectedTime
+                  dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime
                 )
               : selectFirstSlot();
           } else {
-            setDate(dayjs.utc(currentAppointment.date).startOf("day"));
+            setDate(dayjs.utc(currentAppointment.date).startOf('day'));
           }
         } else {
           selectedTime
-            ? selectFirstSlot(
-                dayjs(selectedTime).isSame(dayjs(), "date")
-                  ? dayjs()
-                  : selectedTime
-              )
+            ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
             : selectFirstSlot();
         }
       } else {
         selectedTime
-          ? selectFirstSlot(
-              dayjs(selectedTime).isSame(dayjs(), "date")
-                ? dayjs()
-                : selectedTime
-            )
+          ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
           : selectFirstSlot();
       }
       isMount.current = false;
@@ -346,10 +300,10 @@ export const AppointmentSlots: React.FC<
 
   useEffect(() => {
     let timeoutId: any = null;
-    const isTodaySlot = dayjs(appointment?.date).isSame(dayjs.utc(), "day");
-    const differenceInMSeconds = dayjs(
-      dayjs(appointment?.date).format("YYYY-MM-DDTHH:mm:ss")
-    ).diff(dayjs.utc());
+    const isTodaySlot = dayjs(appointment?.date).isSame(dayjs.utc(), 'day');
+    const differenceInMSeconds = dayjs(dayjs(appointment?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(
+      dayjs.utc()
+    );
     if (isTodaySlot && differenceInMSeconds > 0) {
       timeoutId = setTimeout(() => {
         selectFirstSlot(date);
@@ -367,9 +321,7 @@ export const AppointmentSlots: React.FC<
     dispatch(selectServiceValetAppointment(null));
     dispatch(
       clearAppointmentSteps(
-        isTransportationAvailable
-          ? "transportationNeeds"
-          : "appointmentSelection"
+        isTransportationAvailable ? 'transportationNeeds' : 'appointmentSelection'
       )
     );
   };
@@ -377,10 +329,10 @@ export const AppointmentSlots: React.FC<
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
       clearData();
-      const minDate = dayjs(d).isSame(dayjs(), "date") ? dayjs() : dayjs(d);
+      const minDate = dayjs(d).isSame(dayjs(), 'date') ? dayjs() : dayjs(d);
       setDate(dayjs(d));
       !keepSlot && selectFirstSlot(minDate);
-      if (!dayjs(d).isSame(month, "month")) {
+      if (!dayjs(d).isSame(month, 'month')) {
         setMonth(d);
       }
     },
@@ -394,7 +346,7 @@ export const AppointmentSlots: React.FC<
   const setDateCallback = useCallback(
     (d: TParsableDate) => {
       if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
-        setDate(dayjs(d).startOf("day"));
+        setDate(dayjs(d).startOf('day'));
       }
     },
     [selectedTiming]
@@ -406,23 +358,23 @@ export const AppointmentSlots: React.FC<
 
   const getCategories = useCallback((): number[] => {
     return allCategories
-      .filter((category) => {
+      .filter(category => {
         return (
           category.type === EServiceCategoryType.GeneralCategory &&
           categoriesIds.includes(category.id)
         );
       })
-      .map((item) => item.id);
+      .map(item => item.id);
   }, [allCategories, EServiceCategoryType, categoriesIds]);
 
   const handleError = (e: any) => {
     const internalServerError = e.response?.data?.message
       ?.toLowerCase()
-      .includes("internal server");
+      .includes('internal server');
     if (internalServerError) {
       const errorMessage = `We are sorry but there is a capacity configuration error. 
             No appointment dates and times are available for the specific appointment request. 
-            Error identifier: ${e.response?.data?.id ?? ""}`;
+            Error identifier: ${e.response?.data?.id ?? ''}`;
       showError(errorMessage);
     } else {
       showError(e);
@@ -443,12 +395,11 @@ export const AppointmentSlots: React.FC<
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
           ? { id: selectedPackage?.id, priceType: packagePricingType }
           : packageEMenuType !== null
-          ? { optionType: packageEMenuType }
-          : null;
+            ? { optionType: packageEMenuType }
+            : null;
 
         const transportationOptionId: number | null =
-          (serviceTypeOption?.type === EServiceType.VisitCenter ||
-            !serviceTypeOption) &&
+          (serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption) &&
           !serviceTypeOption?.transportationOption &&
           transportation
             ? transportation.id
@@ -456,15 +407,14 @@ export const AppointmentSlots: React.FC<
 
         const data: IAppointmentSlotsRequest = {
           appointmentTimingType:
-            serviceTypeOption?.type === EServiceType.PickUpDropOff ||
-            !selectedTiming
+            serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
               ? EAppointmentTimingType.FirstAvailable
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
           fromDate: selectedTime
-            ? dayjs(selectedTime).add(utcOffset, "minute").toISOString()
-            : dayjs().startOf("day").add(utcOffset, "minute").toISOString(),
+            ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
+            : dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -486,7 +436,7 @@ export const AppointmentSlots: React.FC<
         if (address) {
           if (address?.label) {
             data.address = address.label;
-          } else if (typeof address === "string") {
+          } else if (typeof address === 'string') {
             data.address = address;
           }
         }
@@ -506,13 +456,7 @@ export const AppointmentSlots: React.FC<
         if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
           if (data.address && data.zipCode)
             await dispatch(
-              loadServiceValetSlots(
-                data,
-                undefined,
-                undefined,
-                onLoadSlots,
-                handleError
-              )
+              loadServiceValetSlots(data, undefined, undefined, onLoadSlots, handleError)
             );
         } else {
           await dispatch(
@@ -534,9 +478,7 @@ export const AppointmentSlots: React.FC<
   useEffect(() => {
     const mileageIsValid =
       selectedVehicle?.mileage &&
-      mileage.find(
-        (item) => item.value.toString() === selectedVehicle?.mileage?.toString()
-      );
+      mileage.find(item => item.value.toString() === selectedVehicle?.mileage?.toString());
     if (!mileageIsValid) {
       setLoading(true);
       setTimeout(() => {
@@ -577,16 +519,14 @@ export const AppointmentSlots: React.FC<
     if (appointment) {
       ReactGA.event(
         {
-          category: "EvenFlow User",
+          category: 'EvenFlow User',
           action:
             serviceTypeOption?.type === EServiceType.PickUpDropOff
-              ? "Selected Service Valet Appointment Slot"
-              : "Selected Appointment Slot",
-          label: `On ${dayjs
+              ? 'Selected Service Valet Appointment Slot'
+              : 'Selected Appointment Slot',
+          label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs
             .utc(appointment.date)
-            .format("MM-DD-YYYY")} at ${dayjs
-            .utc(appointment.date)
-            .format("hh:mm A")}`,
+            .format('hh:mm A')}`,
         },
         trackerData.ids
       );
@@ -596,16 +536,16 @@ export const AppointmentSlots: React.FC<
   const handleGABack = useCallback(() => {
     ReactGA.event(
       {
-        category: "EvenFlow User",
-        action: "Went back",
-        label: "From Selection Date & Time Page",
+        category: 'EvenFlow User',
+        action: 'Went back',
+        label: 'From Selection Date & Time Page',
       },
       trackerData.ids
     );
   }, [trackerData]);
 
   const handleConsents = () => {
-    handleSetScreen("appointmentConfirmation");
+    handleSetScreen('appointmentConfirmation');
   };
 
   const handleNext = useCallback((): void => {
@@ -620,29 +560,19 @@ export const AppointmentSlots: React.FC<
       dispatch(selectServiceValetAppointment(null));
     }
     if (
-      prevLogicalScreen === "appointmentSelection" ||
+      prevLogicalScreen === 'appointmentSelection' ||
       (fromServiceValetToVisitCenter && !isAppointmentTimingAvailable)
     ) {
-      dispatch(
-        setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null)
-      );
-      dispatch(setWelcomeScreenView("serviceSelect"));
-      history.push(Routes.EndUser.Welcome + "/" + id + "?frame=1");
+      dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null));
+      dispatch(setWelcomeScreenView('serviceSelect'));
+      history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
     } else {
-      if (editingPosition === "slot" && serviceOptionChangedFromSlotPage) {
-        dispatch(
-          setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null)
-        );
+      if (editingPosition === 'slot' && serviceOptionChangedFromSlotPage) {
+        dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null));
       }
       handleSetScreen(prevLogicalScreen);
     }
-  }, [
-    currentConfig,
-    history,
-    fromServiceValetToVisitCenter,
-    prevLogicalScreen,
-    isManaging,
-  ]);
+  }, [currentConfig, history, fromServiceValetToVisitCenter, prevLogicalScreen, isManaging]);
 
   const loadDataForMileage = () => {
     onMileageClose();
@@ -658,7 +588,7 @@ export const AppointmentSlots: React.FC<
           onBack={handleBack}
           onNext={handleNext}
           nextDisabled={nextDisabled}
-          nextLabel={t("Next")}
+          nextLabel={t('Next')}
           loading={isConsultantsLoading || isConsentsLoading}
         />
         <AppointmentFilters
@@ -671,18 +601,14 @@ export const AppointmentSlots: React.FC<
           <SVAppointmentDateSelector
             onDateRangeSet={handleDateRangeSet}
             dateRangeUpdated={initRef.current}
-            dateChangeDisabled={
-              selectedTiming !== EAppointmentTimingType.SpecialOffers
-            }
+            dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             date={date}
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
           />
         ) : (
           <AppointmentDateSelector
-            dateChangeDisabled={
-              selectedTiming !== EAppointmentTimingType.SpecialOffers
-            }
+            dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             appointments={groupedAppointments}
             date={date}
             onDateRangeSet={handleDateRangeSet}
@@ -692,16 +618,11 @@ export const AppointmentSlots: React.FC<
           />
         )}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
-          <SVAppointmentTimeSelector
-            date={date}
-            loading={loading || isConsentsLoading}
-          />
+          <SVAppointmentTimeSelector date={date} loading={loading || isConsentsLoading} />
         ) : (
           <AppointmentTimeSelector
             appointments={
-              groupedAppointments[
-                dayjs(date).startOf("day").toISOString().replace(".000", "")
-              ]
+              groupedAppointments[dayjs(date).startOf('day').toISOString().replace('.000', '')]
             }
             selectFirstSlot={selectFirstSlot}
             date={date}
@@ -710,11 +631,7 @@ export const AppointmentSlots: React.FC<
         )}
       </SlotsScreenWrapper>
       <CustomerConsents onNext={handleConsents} />
-      <MileageModal
-        open={isMileageOpen}
-        onClose={onMileageClose}
-        onSave={loadDataForMileage}
-      />
+      <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={loadDataForMileage} />
     </StepWrapper>
   );
 };

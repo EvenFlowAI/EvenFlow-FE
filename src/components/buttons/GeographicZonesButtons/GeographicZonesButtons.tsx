@@ -1,24 +1,32 @@
 import React from 'react';
-import {ButtonsWrapper, TextButton} from "./styles";
-import {Button} from "@mui/material";
-import {TCallback} from "../../../types/types";
-import {TZone} from "../../../store/reducers/mobileService/types";
+import { ButtonsWrapper, TextButton } from './styles';
+import { Button } from '@mui/material';
+import { TCallback } from '../../../types/types';
+import { TZone } from '../../../store/reducers/mobileService/types';
 
 type TProps = {
-    onEditZoneOpen: TCallback;
-    onAddZoneOpen: TCallback;
-    selectedZone: TZone|null;
-    askRemove: TCallback;
-}
+  onEditZoneOpen: TCallback;
+  onAddZoneOpen: TCallback;
+  selectedZone: TZone | null;
+  askRemove: TCallback;
+};
 
-const GeographicZonesButtons: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({onEditZoneOpen, selectedZone, askRemove, onAddZoneOpen}) => {
-    return (
-        <ButtonsWrapper>
-            <TextButton variant="text" onClick={onEditZoneOpen} disabled={!selectedZone}>Edit</TextButton>
-            <TextButton variant="text" onClick={askRemove} disabled={!selectedZone}>Remove</TextButton>
-            <Button onClick={onAddZoneOpen} variant="contained" color="primary">Add Zone</Button>
-        </ButtonsWrapper>
-    );
+const GeographicZonesButtons: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TProps>>
+> = ({ onEditZoneOpen, selectedZone, askRemove, onAddZoneOpen }) => {
+  return (
+    <ButtonsWrapper>
+      <TextButton variant="text" onClick={onEditZoneOpen} disabled={!selectedZone}>
+        Edit
+      </TextButton>
+      <TextButton variant="text" onClick={askRemove} disabled={!selectedZone}>
+        Remove
+      </TextButton>
+      <Button onClick={onAddZoneOpen} variant="contained" color="primary">
+        Add Zone
+      </Button>
+    </ButtonsWrapper>
+  );
 };
 
 export default GeographicZonesButtons;

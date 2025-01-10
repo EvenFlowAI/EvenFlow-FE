@@ -1,16 +1,13 @@
-import React from "react";
-import { FiltersWrapper } from "./styles";
-import { autocompleteRender } from "../../../../utils/autocompleteRenders";
-import { Autocomplete } from "@mui/material";
-import {
-  IGlobalMake,
-  TReviewOption,
-} from "../../../../store/reducers/globalVehicles/types";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/rootReducer";
+import React from 'react';
+import { FiltersWrapper } from './styles';
+import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { Autocomplete } from '@mui/material';
+import { IGlobalMake, TReviewOption } from '../../../../store/reducers/globalVehicles/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/rootReducer';
 
-import { reviewOptions } from "../../../../utils/constants";
-import { useAutocompleteStyles } from "../../../../hooks/styling/useAutocompleteStyles";
+import { reviewOptions } from '../../../../utils/constants';
+import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 
 type TProps = {
   onMakesChange: (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => void;
@@ -29,9 +26,7 @@ const Filters: React.FC<TProps> = ({
   selectedStatus,
   disabled,
 }) => {
-  const { allMakesOptions } = useSelector(
-    (state: RootState) => state.globalVehicles
-  );
+  const { allMakesOptions } = useSelector((state: RootState) => state.globalVehicles);
   const { classes } = useAutocompleteStyles();
   return (
     <FiltersWrapper>
@@ -44,11 +39,11 @@ const Filters: React.FC<TProps> = ({
         options={allMakesOptions}
         multiple
         isOptionEqualToValue={(o, v) => o.id === v.id}
-        getOptionLabel={(o) => o.vinMake}
+        getOptionLabel={o => o.vinMake}
         onChange={onMakesChange}
         renderInput={autocompleteRender({
-          label: "Makes",
-          placeholder: "Not selected",
+          label: 'Makes',
+          placeholder: 'Not selected',
         })}
       />
       <Autocomplete
@@ -58,11 +53,11 @@ const Filters: React.FC<TProps> = ({
         value={selectedStatus}
         options={reviewOptions}
         isOptionEqualToValue={(o, v) => o === v}
-        getOptionLabel={(o) => o}
+        getOptionLabel={o => o}
         onChange={onStatusChange}
         renderInput={autocompleteRender({
-          label: "Review Status",
-          placeholder: "Not selected",
+          label: 'Review Status',
+          placeholder: 'Not selected',
         })}
       />
     </FiltersWrapper>

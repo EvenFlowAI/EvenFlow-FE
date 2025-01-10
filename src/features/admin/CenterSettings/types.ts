@@ -1,14 +1,15 @@
-import {TOptContentData} from "../../../store/reducers/optimizationWindows/types";
+import { TOptContentData } from '../../../store/reducers/optimizationWindows/types';
 
 export enum ECenterSettingType {
-    ShowDropOffTime, DmsAppointmentTime
+  ShowDropOffTime,
+  DmsAppointmentTime,
 }
 
 export type TOptContent = {
-    [k in ECenterSettingType]: TOptContentData;
-}
+  [k in ECenterSettingType]: TOptContentData;
+};
 
 export const centerSettingsList: ECenterSettingType[] = [
-    ECenterSettingType.ShowDropOffTime,
-    ECenterSettingType.DmsAppointmentTime,
-]
+  ECenterSettingType.ShowDropOffTime,
+  ECenterSettingType.DmsAppointmentTime,
+];
