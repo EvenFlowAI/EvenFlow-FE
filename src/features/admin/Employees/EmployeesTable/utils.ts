@@ -1,6 +1,7 @@
 import { IServiceCenter } from '../../../../store/reducers/serviceCenters/types';
 import { IEmployee } from '../../../../store/reducers/employees/types';
 import { EDisplayOnBookingType } from '../../../../components/modals/admin/CreateEmployee/types';
+import { Roles } from '../../../../types/types';
 
 export const getServiceCentersNames = (items: IServiceCenter[] | undefined): string => {
   let string = '';
@@ -16,8 +17,10 @@ export const getServiceCentersNames = (items: IServiceCenter[] | undefined): str
 
 export const getDisplayData = (el: IEmployee): string => {
   let str = '';
-  if (!el.displayOnBookingTypes?.length) {
-    str = 'Not displayed';
+  if (!el.displayOnBookingTypes?.length && el.role === Roles.Advisor) {
+    return 'Not Displayed';
+  } else if (!el.displayOnBookingTypes?.length) {
+    str = '-';
   } else {
     if (el.displayOnBookingTypes.includes(EDisplayOnBookingType.Employee)) {
       str = 'Employee';

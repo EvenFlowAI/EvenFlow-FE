@@ -38,13 +38,9 @@ export const CreateEmployeeForm: React.FC<
   const { shortSC, shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { DmsAdvisors: dmsAdvisors } = useSelector((state: RootState) => state.scEmployees);
   const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
-
-  const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
   const currentUser = useCurrentUser();
   const dispatch = useDispatch();
 
-  // todo multiple service centers
-  const { classes: autocompleteClasses } = useMultipleAutocompleteStyles();
   const { classes } = useStyles();
   const dmsOptions = useMemo(
     () => dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role),
@@ -79,9 +75,6 @@ export const CreateEmployeeForm: React.FC<
     setEmployeeForm(prev => ({ ...prev, serviceCenter: value ?? null }));
   };
 
-  const handleServiceCentersChange = (e: React.ChangeEvent<{}>, options: IServiceCenter[]) => {
-    setServiceCenters(options);
-  };
 
   const handleSelfServiceChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
@@ -168,21 +161,31 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12}>
-        <Autocomplete
-          disabled={isEdit}
-          options={shortSC}
-          onChange={handleSelectChange}
-          getOptionLabel={i => i.name}
-          isOptionEqualToValue={(o, s) => o.id === s.id}
-          loading={shortLoading}
-          value={form.serviceCenter || null}
-          renderInput={autocompleteRender({
-            label: 'Service center',
-            fullWidth: true,
-            placeholder: 'Select Service Center',
-            error: !form.serviceCenter && formIsChecked,
-          })}
-        />
+        {form.role === Roles.ServiceDirector ? (
+          <TextField
+            disabled
+            value={null}
+            placeholder="Select Service Center"
+            fullWidth
+            label="Service Center"
+          />
+        ) : (
+          <Autocomplete
+            disabled={isEdit}
+            options={shortSC}
+            onChange={handleSelectChange}
+            getOptionLabel={i => i.name}
+            isOptionEqualToValue={(o, s) => o.id === s.id}
+            loading={shortLoading}
+            value={form.serviceCenter || null}
+            renderInput={autocompleteRender({
+              label: 'Service center',
+              fullWidth: true,
+              placeholder: 'Select Service Center',
+              error: !form.serviceCenter && formIsChecked,
+            })}
+          />
+        )}
       </Grid>
       {/*<Grid item xs={12}>*/}
       {/*    <Autocomplete*/}
