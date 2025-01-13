@@ -1,29 +1,36 @@
-import {createReducer} from "@reduxjs/toolkit";
-import {TState} from "./types";
-import {getDesirability, getOptimizationSettings, getProximity, getRange, setLoading} from "./actions";
+import { createReducer } from '@reduxjs/toolkit';
+import { TState } from './types';
+import {
+  getDesirability,
+  getOptimizationSettings,
+  getProximity,
+  getRange,
+  setLoading,
+} from './actions';
 
 const initialState: TState = {
-    isLoading: false,
-    proximity: [],
-    desirability: [],
-    optimizationSettings: [],
-    slotRange: null,
+  isLoading: false,
+  proximity: [],
+  desirability: [],
+  optimizationSettings: [],
+  slotRange: null,
 };
 
-export const slotScoringReducer = createReducer(initialState, builder => builder
-    .addCase(getProximity, (state, {payload}) => {
-        return {...state, proximity: payload};
+export const slotScoringReducer = createReducer(initialState, builder =>
+  builder
+    .addCase(getProximity, (state, { payload }) => {
+      return { ...state, proximity: payload };
     })
-    .addCase(getDesirability, (state, {payload}) => {
-        return {...state, desirability: payload};
+    .addCase(getDesirability, (state, { payload }) => {
+      return { ...state, desirability: payload };
     })
-    .addCase(getOptimizationSettings, (state, {payload}) => {
-        return {...state, optimizationSettings: payload};
+    .addCase(getOptimizationSettings, (state, { payload }) => {
+      return { ...state, optimizationSettings: payload };
     })
     .addCase(getRange, (state, { payload }) => {
-        return {...state, slotRange: payload};
+      return { ...state, slotRange: payload };
     })
     .addCase(setLoading, (state, { payload }) => {
-        return {...state, isLoading: payload};
+      return { ...state, isLoading: payload };
     })
 );

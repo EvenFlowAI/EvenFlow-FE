@@ -1,4 +1,4 @@
 export type TSelectOption = {
-    name: string;
-    type: string | number;
-}
+  name: string;
+  type: string | number;
+};

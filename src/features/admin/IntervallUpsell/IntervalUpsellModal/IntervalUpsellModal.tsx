@@ -1,202 +1,222 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch} from "react-redux";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {IUpsellServiceRequest, IUpsellServiceRequestUpdate} from "../../../../store/reducers/serviceRequests/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Grid} from "@mui/material";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {updateUpsellServiceRequest} from "../../../../store/reducers/serviceRequests/actions";
-import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import {
+  IUpsellServiceRequest,
+  IUpsellServiceRequestUpdate,
+} from '../../../../store/reducers/serviceRequests/types';
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { Button, Grid } from '@mui/material';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { updateUpsellServiceRequest } from '../../../../store/reducers/serviceRequests/actions';
+import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../hooks/useException/useException';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 type TForm = {
-    description: string;
-    durationInHours: string;
-    invoiceAmount: string;
-    partsUnitCost: string;
-    numberOfParts: string;
-}
-
-const initialForm: TForm = {
-    description: "",
-    durationInHours: "",
-    invoiceAmount: "",
-    partsUnitCost: "",
-    numberOfParts: "",
+  description: string;
+  durationInHours: string;
+  invoiceAmount: string;
+  partsUnitCost: string;
+  numberOfParts: string;
 };
 
-const IntervalUpsellModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IUpsellServiceRequest>>>> = ({payload, ...props}) => {
-    const [form, setForm] = useState<TForm>(initialForm);
-    const [isLoading, setLoading] = useState<boolean>(false);
-    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const showMessage = useMessage();
-    const showError = useException();
-    const dispatch = useDispatch();
-    const {selectedSC} = useSCs();
+const initialForm: TForm = {
+  description: '',
+  durationInHours: '',
+  invoiceAmount: '',
+  partsUnitCost: '',
+  numberOfParts: '',
+};
 
-    useEffect(() => {
-        if (props.open) {
-            setForm(initialForm);
+const IntervalUpsellModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps<IUpsellServiceRequest>>>
+> = ({ payload, ...props }) => {
+  const [form, setForm] = useState<TForm>(initialForm);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const showMessage = useMessage();
+  const showError = useException();
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+
+  useEffect(() => {
+    if (props.open) {
+      setForm(initialForm);
+    }
+  }, [props.open]);
+
+  useEffect(() => {
+    if (props.open && payload) {
+      setForm({
+        ...initialForm,
+        description: payload?.description || payload?.serviceRequest?.description || '',
+        durationInHours:
+          payload?.durationInHours?.toString() ||
+          payload?.serviceRequest?.durationInHours.toString() ||
+          '',
+        invoiceAmount:
+          payload?.invoiceAmount?.toFixed(2) ||
+          payload?.serviceRequest?.invoiceAmount?.toFixed(2) ||
+          '',
+        partsUnitCost:
+          payload?.partsUnitCost?.toFixed(2) ||
+          payload?.serviceRequest?.partsUnitCost?.toFixed(2) ||
+          '',
+        numberOfParts:
+          payload?.numberOfParts?.toString() ||
+          payload?.serviceRequest?.numberOfParts?.toString() ||
+          '',
+      });
+    }
+  }, [payload, props.open]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormIsChecked(false);
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const onSuccess = () => {
+    showMessage('Interval Upsell Request Updated');
+    setLoading(false);
+    setForm(initialForm);
+    props.onClose();
+  };
+
+  const onError = (err: string) => {
+    showError(err);
+    setLoading(false);
+  };
+
+  const handleSave = () => {
+    setFormIsChecked(true);
+    if (!payload) {
+      showError('Data is not loaded');
+    } else {
+      if (selectedSC) {
+        setLoading(true);
+        try {
+          const data: IUpsellServiceRequestUpdate = {
+            description: form.description ?? null,
+            durationInHours: form.durationInHours ? Number(form.durationInHours) : null,
+            invoiceAmount: form.invoiceAmount ? Number(form.invoiceAmount) : null,
+            partsUnitCost: form.partsUnitCost ? Number(form.partsUnitCost) : null,
+            numberOfParts: form.numberOfParts ? Number(form.numberOfParts) : null,
+          };
+          dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id, onError, onSuccess));
+        } catch {
+          setLoading(false);
         }
-    }, [props.open]);
-
-    useEffect(() => {
-        if (props.open && payload) {
-            setForm({
-                ...initialForm,
-                description: payload?.description || payload?.serviceRequest?.description || "",
-                durationInHours: payload?.durationInHours?.toString() || payload?.serviceRequest?.durationInHours.toString() || "",
-                invoiceAmount: payload?.invoiceAmount?.toFixed(2) || payload?.serviceRequest?.invoiceAmount?.toFixed(2) || "",
-                partsUnitCost: payload?.partsUnitCost?.toFixed(2) || payload?.serviceRequest?.partsUnitCost?.toFixed(2) || "",
-                numberOfParts: payload?.numberOfParts?.toString() || payload?.serviceRequest?.numberOfParts?.toString() || "",
-            })
-        }
-    }, [payload, props.open])
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormIsChecked(false);
-        setForm({...form, [e.target.name]: e.target.value});
+      }
     }
+  };
 
-    const onSuccess = () => {
-        showMessage('Interval Upsell Request Updated');
-        setLoading(false);
-        setForm(initialForm);
-        props.onClose()
-    }
-
-    const onError = (err: string) => {
-        showError(err);
-        setLoading(false);
-    }
-
-    const handleSave = () => {
-        setFormIsChecked(true);
-        if (!payload) {
-            showError("Data is not loaded");
-        } else {
-            if (selectedSC) {
-                setLoading(true);
-                try {
-                    const data:IUpsellServiceRequestUpdate = {
-                        description: form.description ?? null,
-                        durationInHours: form.durationInHours ? Number(form.durationInHours) : null,
-                        invoiceAmount: form.invoiceAmount ? Number(form.invoiceAmount) : null,
-                        partsUnitCost: form.partsUnitCost ? Number(form.partsUnitCost) : null,
-                        numberOfParts: form.numberOfParts ? Number(form.numberOfParts) : null,
-                    }
-                    dispatch(updateUpsellServiceRequest(data, payload.id, selectedSC.id, onError, onSuccess))
-                }
-                catch {
-                    setLoading(false);
-                }
-            }
-        }
-    }
-
-    return <BaseModal {...props} maxWidth="xs">
-        <DialogTitle onClose={props.onClose}>Edit Interval Upsell</DialogTitle>
-        <DialogContent>
-            <Grid container spacing={3} alignItems="flex-end">
-                <Grid item xs={12}>
-                    <TextField
-                        label="Op Code Name"
-                        disabled
-                        fullWidth
-                        value={payload?.code || payload?.serviceRequest?.code || ""}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        fullWidth
-                        label="Description"
-                        value={form.description}
-                        placeholder={payload?.description}
-                        name="description"
-                        id="description"
-                        autoComplete="service-description description"
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        label="Labor Hours"
-                        name="durationInHours"
-                        id="durationInHours"
-                        autoComplete="duration-number duration"
-                        value={form.durationInHours}
-                        placeholder={payload ? String(payload.durationInHours) : ""}
-                        error={formIsChecked && +form.durationInHours < 0}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{min: .5, step: .5}}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        startAdornment="$"
-                        label="Labor Amount"
-                        name="invoiceAmount"
-                        id="invoiceAmount"
-                        autoComplete="invoice-amount"
-                        value={form.invoiceAmount}
-                        error={formIsChecked && +form.invoiceAmount < 0}
-                        placeholder={payload ? String(payload.invoiceAmount) : ""}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{min: 1, step: 0.01}}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        label="Parts Price"
-                        startAdornment="$"
-                        name="partsUnitCost"
-                        id="partsUnitCost"
-                        autoComplete="parts-unit-cost"
-                        value={form.partsUnitCost}
-                        error={formIsChecked && +form.partsUnitCost < 0}
-                        placeholder={payload?.partsUnitCost?.toString() || ""}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{min: 1, step: 0.01}}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField
-                        fullWidth
-                        label="Total Amount"
-                        name="numberOfParts"
-                        id="numberOfParts"
-                        autoComplete="number-of-parts"
-                        value={form.numberOfParts}
-                        error={formIsChecked && +form.numberOfParts < 0}
-                        placeholder={payload?.numberOfParts?.toString() || ""}
-                        onChange={handleChange}
-                        type="number"
-                        inputProps={{min: 1}}
-                    />
-                </Grid>
-            </Grid>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.onClose} color="info">Cancel</Button>
-            <LoadingButton
-                loading={isLoading}
-                color="primary"
-                variant="contained"
-                onClick={handleSave}
-            >
-                Save
-            </LoadingButton>
-        </DialogActions>
+  return (
+    <BaseModal {...props} maxWidth="xs">
+      <DialogTitle onClose={props.onClose}>Edit Interval Upsell</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={3} alignItems="flex-end">
+          <Grid item xs={12}>
+            <TextField
+              label="Op Code Name"
+              disabled
+              fullWidth
+              value={payload?.code || payload?.serviceRequest?.code || ''}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Description"
+              value={form.description}
+              placeholder={payload?.description}
+              name="description"
+              id="description"
+              autoComplete="service-description description"
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Labor Hours"
+              name="durationInHours"
+              id="durationInHours"
+              autoComplete="duration-number duration"
+              value={form.durationInHours}
+              placeholder={payload ? String(payload.durationInHours) : ''}
+              error={formIsChecked && +form.durationInHours < 0}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ min: 0.5, step: 0.5 }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              startAdornment="$"
+              label="Labor Amount"
+              name="invoiceAmount"
+              id="invoiceAmount"
+              autoComplete="invoice-amount"
+              value={form.invoiceAmount}
+              error={formIsChecked && +form.invoiceAmount < 0}
+              placeholder={payload ? String(payload.invoiceAmount) : ''}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ min: 1, step: 0.01 }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Parts Price"
+              startAdornment="$"
+              name="partsUnitCost"
+              id="partsUnitCost"
+              autoComplete="parts-unit-cost"
+              value={form.partsUnitCost}
+              error={formIsChecked && +form.partsUnitCost < 0}
+              placeholder={payload?.partsUnitCost?.toString() || ''}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ min: 1, step: 0.01 }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              label="Total Amount"
+              name="numberOfParts"
+              id="numberOfParts"
+              autoComplete="number-of-parts"
+              value={form.numberOfParts}
+              error={formIsChecked && +form.numberOfParts < 0}
+              placeholder={payload?.numberOfParts?.toString() || ''}
+              onChange={handleChange}
+              type="number"
+              inputProps={{ min: 1 }}
+            />
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose} color="info">
+          Cancel
+        </Button>
+        <LoadingButton loading={isLoading} color="primary" variant="contained" onClick={handleSave}>
+          Save
+        </LoadingButton>
+      </DialogActions>
     </BaseModal>
+  );
 };
 
 export default IntervalUpsellModal;

@@ -1,71 +1,76 @@
-import React, {useEffect, useState} from 'react';
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {useDispatch} from "react-redux";
-import {updateEngineTypeFieldName} from "../../../../store/reducers/vehicleDetails/actions";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button, Divider} from "@mui/material";
-import {useStyles} from "../../MakesModels/AddMakeModelModal/styles";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
+import React, { useEffect, useState } from 'react';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import { useDispatch } from 'react-redux';
+import { updateEngineTypeFieldName } from '../../../../store/reducers/vehicleDetails/actions';
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { Button, Divider } from '@mui/material';
+import { useStyles } from '../../MakesModels/AddMakeModelModal/styles';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { useException } from '../../../../hooks/useException/useException';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
-export const EditFieldNameModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = (props) => {
-    const [fieldName, setFieldName] = useState<string>('');
-    const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch()
-    const showError = useException();
-    const { classes  } = useStyles();
+export const EditFieldNameModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
+> = props => {
+  const [fieldName, setFieldName] = useState<string>('');
+  const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const { selectedSC } = useSCs();
+  const dispatch = useDispatch();
+  const showError = useException();
+  const { classes } = useStyles();
 
-    useEffect(() => {
-        if (selectedSC?.engineTypeFieldName) setFieldName(selectedSC.engineTypeFieldName);
-    }, [selectedSC])
+  useEffect(() => {
+    if (selectedSC?.engineTypeFieldName) setFieldName(selectedSC.engineTypeFieldName);
+  }, [selectedSC]);
 
-    const onCancel = (): void => {
-        setFieldName(selectedSC?.engineTypeFieldName ?? '');
-        setFormIsChecked(false);
-        props.onClose();
-    }
+  const onCancel = (): void => {
+    setFieldName(selectedSC?.engineTypeFieldName ?? '');
+    setFormIsChecked(false);
+    props.onClose();
+  };
 
-    const onFieldNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setFormIsChecked(false);
-        setFieldName(e.target.value);
-    }
+  const onFieldNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setFormIsChecked(false);
+    setFieldName(e.target.value);
+  };
 
-    const onSave = ():void => {
-        setFormIsChecked(true);
-        if (selectedSC) dispatch(updateEngineTypeFieldName(fieldName, selectedSC.id, onCancel, showError))
-    }
+  const onSave = (): void => {
+    setFormIsChecked(true);
+    if (selectedSC)
+      dispatch(updateEngineTypeFieldName(fieldName, selectedSC.id, onCancel, showError));
+  };
 
-    return (
-        <BaseModal {...props} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Edit Field Name</DialogTitle>
-            <DialogContent>
-                <TextField
-                    fullWidth
-                    label='Field Name'
-                    placeholder='Type Field Name'
-                    error={formIsChecked && !fieldName.length}
-                    onChange={onFieldNameChange}
-                    value={fieldName}/>
-            </DialogContent>
-            <Divider style={{ margin: '16px 0' }}/>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onSave}
-                            className={classes.saveButton}>
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            </DialogActions>
-        </BaseModal>
-    );
+  return (
+    <BaseModal {...props} width={540} onClose={onCancel}>
+      <DialogTitle onClose={onCancel}>Edit Field Name</DialogTitle>
+      <DialogContent>
+        <TextField
+          fullWidth
+          label="Field Name"
+          placeholder="Type Field Name"
+          error={formIsChecked && !fieldName.length}
+          onChange={onFieldNameChange}
+          value={fieldName}
+        />
+      </DialogContent>
+      <Divider style={{ margin: '16px 0' }} />
+      <DialogActions>
+        <div className={classes.wrapper}>
+          <div className={classes.buttonsWrapper}>
+            <Button onClick={onCancel} className={classes.cancelButton}>
+              Cancel
+            </Button>
+            <Button onClick={onSave} className={classes.saveButton}>
+              Save
+            </Button>
+          </div>
+        </div>
+      </DialogActions>
+    </BaseModal>
+  );
 };

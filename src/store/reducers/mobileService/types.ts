@@ -1,62 +1,62 @@
-import {EServiceType} from "../appointmentFrameReducer/types";
-import {IDistancePriceSettings, IZonePriceSettings} from "../serviceValet/types";
-import {TGeographicZoneShort} from "../../../types/types";
+import { EServiceType } from '../appointmentFrameReducer/types';
+import { IDistancePriceSettings, IZonePriceSettings } from '../serviceValet/types';
+import { TGeographicZoneShort } from '../../../types/types';
 
 export type TZipCode = {
-    code: string;
-    id: number;
-}
+  code: string;
+  id: number;
+};
 
 export type TZoneNew = {
-    name: string;
-    zipCodes: string[];
-    serviceType?: EServiceType;
-    serviceCenterId: number;
-}
+  name: string;
+  zipCodes: string[];
+  serviceType?: EServiceType;
+  serviceCenterId: number;
+};
 
 export type TZoneUpdate = {
-    name: string;
-    zipCodes: string[];
-    serviceType: EServiceType;
-    id: number;
-}
+  name: string;
+  zipCodes: string[];
+  serviceType: EServiceType;
+  id: number;
+};
 
 export type TZone = {
-    name: string;
-    id: number;
-    zipCodes: TZipCode[];
-    serviceType: EServiceType;
-}
+  name: string;
+  id: number;
+  zipCodes: TZipCode[];
+  serviceType: EServiceType;
+};
 
 export type TReassignZip = {
-    id: number;
-    geographicZoneId: number;
-}
+  id: number;
+  geographicZoneId: number;
+};
 
-export type TZonesServiceType = "serviceValet" | "mobileService";
+export type TZonesServiceType = 'serviceValet' | 'mobileService';
 
 export enum EAncillaryPriceType {
-    Zone,
-    Distance
+  Zone,
+  Distance,
 }
 
 export type TAncillaryPriceTypeData = {
-    serviceCenterId: number;
-    serviceType: EServiceType;
-}
+  serviceCenterId: number;
+  serviceType: EServiceType;
+};
 
 export type TChangeAncillaryPriceType = {
-    serviceType: EServiceType;
-    ancillaryPriceType: EAncillaryPriceType;
-}
+  serviceType: EServiceType;
+  ancillaryPriceType: EAncillaryPriceType;
+};
 
 export type TState = {
-    isLoading: boolean;
-    currentZone: TZone | null;
-    zones: TZone[];
-    pricingByZones: IZonePriceSettings[];
-    pricingByDistance: IDistancePriceSettings[];
-    isPricingByZoneLoading: boolean;
-    ancillaryPriceType: EAncillaryPriceType;
-    mobileZonesShort: TGeographicZoneShort[];
-}
+  isLoading: boolean;
+  currentZone: TZone | null;
+  zones: TZone[];
+  pricingByZones: IZonePriceSettings[];
+  pricingByDistance: IDistancePriceSettings[];
+  isPricingByZoneLoading: boolean;
+  ancillaryPriceType: EAncillaryPriceType;
+  mobileZonesShort: TGeographicZoneShort[];
+};

@@ -1,107 +1,115 @@
-import React, {useState} from 'react';
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button, Divider} from "@mui/material";
-import {TDistanceRange} from "../../../../store/reducers/serviceValet/types";
-import {useStyles} from "./styles";
+import React, { useState } from 'react';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import { Button, Divider } from '@mui/material';
+import { TDistanceRange } from '../../../../store/reducers/serviceValet/types';
+import { useStyles } from './styles';
 
-const AddDistanceRangeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps & {onAddRange: (data: TDistanceRange) => void}>>> = (props) => {
-    const [rangeMin, setRangeMin] = useState<number|''>('');
-    const [rangeMax, setRangeMax] = useState<number|''>('');
-    const [costPerMile, setCostPerMile] = useState<number|''>('');
-    const [formIsChecked, setFormChecked] = useState<boolean>(false);
-    const { classes  } = useStyles();
+const AddDistanceRangeModal: React.FC<
+  React.PropsWithChildren<
+    React.PropsWithChildren<DialogProps & { onAddRange: (data: TDistanceRange) => void }>
+  >
+> = props => {
+  const [rangeMin, setRangeMin] = useState<number | ''>('');
+  const [rangeMax, setRangeMax] = useState<number | ''>('');
+  const [costPerMile, setCostPerMile] = useState<number | ''>('');
+  const [formIsChecked, setFormChecked] = useState<boolean>(false);
+  const { classes } = useStyles();
 
-    const onCancel = () => {
-        setRangeMin('');
-        setRangeMax('');
-        setCostPerMile('');
-        setFormChecked(false);
-        props.onClose()
+  const onCancel = () => {
+    setRangeMin('');
+    setRangeMax('');
+    setCostPerMile('');
+    setFormChecked(false);
+    props.onClose();
+  };
+
+  const onSave = () => {
+    setFormChecked(true);
+    if (rangeMin && rangeMax && costPerMile) {
+      props.onAddRange({
+        minValue: rangeMin,
+        maxValue: rangeMax,
+        costPerMile: costPerMile,
+        serviceMultiplier: 0,
+      });
+      onCancel();
     }
+  };
 
-    const onSave = () => {
-        setFormChecked(true);
-        if (rangeMin && rangeMax && costPerMile) {
-            props.onAddRange({
-                minValue: rangeMin,
-                maxValue: rangeMax,
-                costPerMile: costPerMile,
-                serviceMultiplier: 0,
-            })
-            onCancel();
-        }
-    }
+  const onRangeMinChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    setFormChecked(false);
+    if (Number(value) >= 0) setRangeMin(+value);
+  };
 
-    const onRangeMinChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setFormChecked(false);
-        if (Number(value) >= 0) setRangeMin(+value);
-    }
+  const onRangeMaxChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    setFormChecked(false);
+    if (Number(value) >= 0) setRangeMax(+value);
+  };
 
-    const onRangeMaxChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setFormChecked(false);
-        if (Number(value) >= 0) setRangeMax(+value);
-    }
+  const onCostPerMileChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+    setFormChecked(false);
+    if (Number(value) >= 0) setCostPerMile(+value);
+  };
 
-    const onCostPerMileChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
-        setFormChecked(false);
-        if (Number(value) >= 0) setCostPerMile(+value);
-    }
-
-    return (
-        <BaseModal open={props.open} width={440} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Add Range</DialogTitle>
-            <DialogContent>
-                <TextField
-                    type="number"
-                    label='Distance (Range Min)'
-                    placeholder='Type Range Min'
-                    error={!rangeMin && formIsChecked}
-                    onChange={onRangeMinChange}
-                    fullWidth
-                    inputProps={{min: 0, step: 0.01}}
-                    style={{ marginBottom: 20 }}
-                    value={rangeMin}/>
-                <TextField
-                    type="number"
-                    label='Distance (Range Max)'
-                    placeholder='Type Range Max'
-                    error={!rangeMax && formIsChecked}
-                    onChange={onRangeMaxChange}
-                    fullWidth
-                    inputProps={{min: 0, step: 0.01}}
-                    style={{ marginBottom: 20 }}
-                    value={rangeMax}/>
-                <TextField
-                    type="number"
-                    label='Cost Per Mile ($)'
-                    placeholder='Type Cost Per Mile'
-                    error={!costPerMile && formIsChecked}
-                    onChange={onCostPerMileChange}
-                    fullWidth
-                    inputProps={{min: 0, step: 0.01}}
-                    value={costPerMile}/>
-            </DialogContent>
-            <Divider style={{marginBottom: 0}}/>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onSave}
-                            className={classes.saveButton}>
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            </DialogActions>
-        </BaseModal>
-    );
+  return (
+    <BaseModal open={props.open} width={440} onClose={onCancel}>
+      <DialogTitle onClose={onCancel}>Add Range</DialogTitle>
+      <DialogContent>
+        <TextField
+          type="number"
+          label="Distance (Range Min)"
+          placeholder="Type Range Min"
+          error={!rangeMin && formIsChecked}
+          onChange={onRangeMinChange}
+          fullWidth
+          inputProps={{ min: 0, step: 0.01 }}
+          style={{ marginBottom: 20 }}
+          value={rangeMin}
+        />
+        <TextField
+          type="number"
+          label="Distance (Range Max)"
+          placeholder="Type Range Max"
+          error={!rangeMax && formIsChecked}
+          onChange={onRangeMaxChange}
+          fullWidth
+          inputProps={{ min: 0, step: 0.01 }}
+          style={{ marginBottom: 20 }}
+          value={rangeMax}
+        />
+        <TextField
+          type="number"
+          label="Cost Per Mile ($)"
+          placeholder="Type Cost Per Mile"
+          error={!costPerMile && formIsChecked}
+          onChange={onCostPerMileChange}
+          fullWidth
+          inputProps={{ min: 0, step: 0.01 }}
+          value={costPerMile}
+        />
+      </DialogContent>
+      <Divider style={{ marginBottom: 0 }} />
+      <DialogActions>
+        <div className={classes.wrapper}>
+          <div className={classes.buttonsWrapper}>
+            <Button onClick={onCancel} className={classes.cancelButton}>
+              Cancel
+            </Button>
+            <Button onClick={onSave} className={classes.saveButton}>
+              Save
+            </Button>
+          </div>
+        </div>
+      </DialogActions>
+    </BaseModal>
+  );
 };
 
 export default AddDistanceRangeModal;

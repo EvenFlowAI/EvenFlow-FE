@@ -1,93 +1,99 @@
-import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../BaseModal/BaseModal";
-import {DialogProps} from "../../BaseModal/types";
-import {default as _Editor} from "react-draft-wysiwyg";
-import {EditorProps} from "react-draft-wysiwyg";
-import {convertToRaw, EditorState} from "draft-js";
-import {convertToHTML, convertFromHTML} from "draft-convert";
-import {Button} from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
+import { DialogProps } from '../../BaseModal/types';
+import { default as _Editor } from 'react-draft-wysiwyg';
+import { EditorProps } from 'react-draft-wysiwyg';
+import { convertToRaw, EditorState } from 'draft-js';
+import { convertToHTML, convertFromHTML } from 'draft-convert';
+import { Button } from '@mui/material';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { makeStyles } from 'tss-react/mui';
-import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
-import {useException} from "../../../../hooks/useException/useException";
+import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
+import { useException } from '../../../../hooks/useException/useException';
 
 // workaround because of typescript error
-const Editor = (_Editor as unknown) as React.FC<EditorProps>;
+const Editor = _Editor as unknown as React.FC<EditorProps>;
 
 type THTMLEditor = DialogProps & {
-    onSave: (value: string) => void;
-    isLoading?: boolean;
-    payload?: string;
-}
+  onSave: (value: string) => void;
+  isLoading?: boolean;
+  payload?: string;
+};
 
 const useStyles = makeStyles()({
-    editor: {
-        border: '1px solid #F1F1F1',
-    }
+  editor: {
+    border: '1px solid #F1F1F1',
+  },
 });
 
-const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTMLEditor>>> = ({open, onClose, title, onSave, isLoading, payload}) => {
-    const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty())
-    const showError = useException();
-    const { classes: styles, cx } = useStyles();
+const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTMLEditor>>> = ({
+  open,
+  onClose,
+  title,
+  onSave,
+  isLoading,
+  payload,
+}) => {
+  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
+  const showError = useException();
+  const { classes: styles, cx } = useStyles();
 
-    useEffect(() => {
-        if (open) {
-            if (payload) {
-                setEditorState(EditorState.createWithContent(convertFromHTML(payload)))
-            } else {
-                setEditorState(EditorState.createEmpty())
-            }
-        }
-    }, [payload, convertFromHTML, setEditorState, open])
-
-    const onEditorStateChange = (value: EditorState) => {
-        setEditorState(value)
-    };
-
-    const onCancel = () => {
-        onClose()
-    };
-
-    const checkEditorState = () => {
-        const data = convertToRaw(editorState.getCurrentContent());
-        return !!data.blocks.map(item => ({...item, text: item.text.trim()})).find(item => item.text)
+  useEffect(() => {
+    if (open) {
+      if (payload) {
+        setEditorState(EditorState.createWithContent(convertFromHTML(payload)));
+      } else {
+        setEditorState(EditorState.createEmpty());
+      }
     }
+  }, [payload, convertFromHTML, setEditorState, open]);
 
-    const onSubmit = () => {
-        if (checkEditorState()) {
-            onSave(convertToHTML(editorState.getCurrentContent()))
-        }
-        else {
-            showError("Please enter the text")
-        }
+  const onEditorStateChange = (value: EditorState) => {
+    setEditorState(value);
+  };
+
+  const onCancel = () => {
+    onClose();
+  };
+
+  const checkEditorState = () => {
+    const data = convertToRaw(editorState.getCurrentContent());
+    return !!data.blocks.map(item => ({ ...item, text: item.text.trim() })).find(item => item.text);
+  };
+
+  const onSubmit = () => {
+    if (checkEditorState()) {
+      onSave(convertToHTML(editorState.getCurrentContent()));
+    } else {
+      showError('Please enter the text');
     }
+  };
 
-    return (
-        <BaseModal onClose={onCancel} open={open}>
-            <DialogTitle onClose={onCancel}>{title}</DialogTitle>
-            <DialogContent>
-                <div>
-                    <Editor
-                        placeholder="Type Here..."
-                        editorState={editorState}
-                        wrapperClassName="wrapper-class"
-                        editorClassName={cx("editor-class", styles.editor)}
-                        toolbarClassName="toolbar-class"
-                        onEditorStateChange={onEditorStateChange}
-                    />
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button variant="outlined" onClick={onCancel} color="primary">
-                    Cancel
-                </Button>
-                <LoadingButton variant="contained" onClick={onSubmit} loading={isLoading}>
-                    Save
-                </LoadingButton>
-            </DialogActions>
-        </BaseModal>
-    );
+  return (
+    <BaseModal onClose={onCancel} open={open}>
+      <DialogTitle onClose={onCancel}>{title}</DialogTitle>
+      <DialogContent>
+        <div>
+          <Editor
+            placeholder="Type Here..."
+            editorState={editorState}
+            wrapperClassName="wrapper-class"
+            editorClassName={cx('editor-class', styles.editor)}
+            toolbarClassName="toolbar-class"
+            onEditorStateChange={onEditorStateChange}
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={onCancel} color="primary">
+          Cancel
+        </Button>
+        <LoadingButton variant="contained" onClick={onSubmit} loading={isLoading}>
+          Save
+        </LoadingButton>
+      </DialogActions>
+    </BaseModal>
+  );
 };
 
 export default HtmlEditor;

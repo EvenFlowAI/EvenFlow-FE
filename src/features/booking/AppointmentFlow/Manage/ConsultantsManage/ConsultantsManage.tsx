@@ -1,75 +1,81 @@
 import React from 'react';
-import {TCallback, TScreen} from "../../../../../types/types";
+import { TCallback, TScreen } from '../../../../../types/types';
 import {
-    setAdvisor, setAnyAdvisorSelected,
-    setCurrentFrameScreen,
-    setServiceTypeOption, setTransportation
-} from "../../../../../store/reducers/appointmentFrameReducer/actions";
-import {checkPodChanged} from "../../../../../store/reducers/appointments/actions";
-import {decodeSCID} from "../../../../../utils/utils";
-import {IServiceConsultant} from "../../../../../api/types";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../../store/rootReducer";
-import {useParams} from "react-router-dom";
-import {useException} from "../../../../../hooks/useException/useException";
-import {Consultants} from "../../Screens/Consultants/Consultants";
+  setAdvisor,
+  setAnyAdvisorSelected,
+  setCurrentFrameScreen,
+  setServiceTypeOption,
+  setTransportation,
+} from '../../../../../store/reducers/appointmentFrameReducer/actions';
+import { checkPodChanged } from '../../../../../store/reducers/appointments/actions';
+import { decodeSCID } from '../../../../../utils/utils';
+import { IServiceConsultant } from '../../../../../api/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../store/rootReducer';
+import { useParams } from 'react-router-dom';
+import { useException } from '../../../../../hooks/useException/useException';
+import { Consultants } from '../../Screens/Consultants/Consultants';
 
-const ConsultantsManage: React.FC<{onNext: TCallback}> = ({onNext}) => {
-    const {
-        serviceOptionChangedFromSlotPage,
-        prevSelectedOption,
-        editingPosition,
-        appointmentByKey
-    } = useSelector((state: RootState) => state.appointmentFrame);
-    const dispatch = useDispatch();
-    const {id} = useParams<{id: string}>();
-    const showError = useException();
+const ConsultantsManage: React.FC<{ onNext: TCallback }> = ({ onNext }) => {
+  const {
+    serviceOptionChangedFromSlotPage,
+    prevSelectedOption,
+    editingPosition,
+    appointmentByKey,
+  } = useSelector((state: RootState) => state.appointmentFrame);
+  const dispatch = useDispatch();
+  const { id } = useParams<{ id: string }>();
+  const showError = useException();
 
-    const handleSelectConsultant = (consultant: IServiceConsultant|null) => {
-        dispatch(setAdvisor(consultant));
-        dispatch(setAnyAdvisorSelected(!Boolean(consultant)))
+  const handleSelectConsultant = (consultant: IServiceConsultant | null) => {
+    dispatch(setAdvisor(consultant));
+    dispatch(setAnyAdvisorSelected(!Boolean(consultant)));
+  };
+
+  const restoreOriginalTransportation = () => {
+    if (appointmentByKey?.transportationOption) {
+      dispatch(setTransportation(appointmentByKey?.transportationOption));
     }
+  };
 
-    const restoreOriginalTransportation = () => {
-        if (appointmentByKey?.transportationOption) {
-            dispatch(setTransportation(appointmentByKey?.transportationOption))
-        }
+  const restoreServiceOption = () => {
+    if (appointmentByKey?.serviceTypeOption) {
+      dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption));
+      restoreOriginalTransportation();
     }
+  };
 
-    const restoreServiceOption = () => {
-        if (appointmentByKey?.serviceTypeOption) {
-            dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption))
-            restoreOriginalTransportation()
-        }
+  const onBackToPrevServiceOption = () => {
+    if (prevSelectedOption) restoreServiceOption();
+    const nextScreen: TScreen =
+      editingPosition === 'slot' || editingPosition === 'transportation'
+        ? 'manageAppointment'
+        : 'appointmentSelection';
+    dispatch(setCurrentFrameScreen(nextScreen));
+  };
+
+  const handleBack = () => {
+    serviceOptionChangedFromSlotPage && editingPosition === 'slot'
+      ? onBackToPrevServiceOption()
+      : dispatch(setCurrentFrameScreen('manageAppointment'));
+  };
+
+  const handleNext = () => {
+    if (editingPosition === 'advisor') {
+      dispatch(checkPodChanged(decodeSCID(id), showError));
+    } else {
+      onNext();
     }
+  };
 
-    const onBackToPrevServiceOption = () => {
-        if (prevSelectedOption) restoreServiceOption()
-        const nextScreen: TScreen = editingPosition === "slot" || editingPosition === "transportation"
-            ? "manageAppointment"
-            : 'appointmentSelection'
-        dispatch(setCurrentFrameScreen(nextScreen))
-    }
-
-    const handleBack = () => {
-        serviceOptionChangedFromSlotPage && editingPosition === "slot"
-            ? onBackToPrevServiceOption()
-            : dispatch(setCurrentFrameScreen("manageAppointment"))
-    }
-
-    const handleNext = () => {
-        if (editingPosition === 'advisor') {
-            dispatch(checkPodChanged(decodeSCID(id), showError))
-        } else {
-            onNext()
-        }
-    }
-
-    return <Consultants
-        onNext={onNext}
-        handleNext={handleNext}
-        handleBack={handleBack}
-        handleSelectConsultant={handleSelectConsultant}/>;
+  return (
+    <Consultants
+      onNext={onNext}
+      handleNext={handleNext}
+      handleBack={handleBack}
+      handleSelectConsultant={handleSelectConsultant}
+    />
+  );
 };
 
 export default ConsultantsManage;

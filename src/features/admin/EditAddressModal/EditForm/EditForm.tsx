@@ -1,63 +1,67 @@
-import {TViewMode} from "../../../../components/modals/BaseModal/types";
-import React from "react";
-import {TSelectChange} from "../../../../types/types";
-import {IAddress} from "../../../../store/reducers/dealershipGroups/types";
-import {Grid} from "@mui/material";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
+import { TViewMode } from '../../../../components/modals/BaseModal/types';
+import React from 'react';
+import { TSelectChange } from '../../../../types/types';
+import { IAddress } from '../../../../store/reducers/dealershipGroups/types';
+import { Grid } from '@mui/material';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete } from '@mui/material';
-import {states} from "../../../../utils/constants";
-import {autocompleteRender} from "../../../../utils/autocompleteRenders";
+import { states } from '../../../../utils/constants';
+import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 
 type TEditFormProps = TViewMode & {
-    onChange: React.ChangeEventHandler<HTMLInputElement>;
-    onSelect: TSelectChange;
-    form: IAddress;
-}
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onSelect: TSelectChange;
+  form: IAddress;
+};
 
-export const EditForm: React.FC<React.PropsWithChildren<React.PropsWithChildren<TEditFormProps>>> = ({viewMode, ...props}) => {
-    return <Grid container spacing={3}>
-        <Grid item xs={12}>
-            <TextField
-                fullWidth
-                disabled={viewMode}
-                id="street"
-                name="street"
-                label="Street"
-                onChange={props.onChange}
-                value={props.form.street}
-            />
-        </Grid>
-        <Grid item xs={12}>
-            <TextField
-                fullWidth
-                disabled={viewMode}
-                id="city"
-                name="city"
-                label="City"
-                onChange={props.onChange}
-                value={props.form.city}
-            />
-        </Grid>
-        <Grid item xs={6}>
-            <Autocomplete
-                options={states}
-                isOptionEqualToValue={(option, value) => option === value}
-                disabled={viewMode}
-                onChange={props.onSelect}
-                renderInput={autocompleteRender({label: "State", fullWidth: true})}
-                value={props.form.state}
-            />
-        </Grid>
-        <Grid item xs={6}>
-            <TextField
-                fullWidth
-                id="zipCode"
-                name="zipCode"
-                label="Zip code"
-                disabled={viewMode}
-                onChange={props.onChange}
-                value={props.form.zipCode}
-            />
-        </Grid>
+export const EditForm: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TEditFormProps>>
+> = ({ viewMode, ...props }) => {
+  return (
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          disabled={viewMode}
+          id="street"
+          name="street"
+          label="Street"
+          onChange={props.onChange}
+          value={props.form.street}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          fullWidth
+          disabled={viewMode}
+          id="city"
+          name="city"
+          label="City"
+          onChange={props.onChange}
+          value={props.form.city}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <Autocomplete
+          options={states}
+          isOptionEqualToValue={(option, value) => option === value}
+          disabled={viewMode}
+          onChange={props.onSelect}
+          renderInput={autocompleteRender({ label: 'State', fullWidth: true })}
+          value={props.form.state}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          fullWidth
+          id="zipCode"
+          name="zipCode"
+          label="Zip code"
+          disabled={viewMode}
+          onChange={props.onChange}
+          value={props.form.zipCode}
+        />
+      </Grid>
     </Grid>
-}
+  );
+};
