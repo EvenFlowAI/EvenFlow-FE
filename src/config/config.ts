@@ -16,6 +16,9 @@ switch (process.env.REACT_APP_ENV) {
   case 'local':
     apiHost = 'http://localhost:5000';
     break;
+  case 'Dev':
+      apiHost = 'https://be.dev.evenflow.ai';
+      break;
 }
 
 export const APIHost = apiHost;
