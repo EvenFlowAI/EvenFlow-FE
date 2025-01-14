@@ -1,3 +1,3 @@
 export type TStyleProps = {
-    isSelected: boolean;
-}
+  isSelected: boolean;
+};

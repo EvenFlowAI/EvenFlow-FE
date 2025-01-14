@@ -1,90 +1,95 @@
-import React, {useEffect, useState} from "react";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {Button} from "@mui/material";
-import {useDispatch} from "react-redux";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {SC_UNDEFINED} from "../../../../utils/constants";
-import {setEndOfWarranty} from "../../../../store/reducers/valueSettings/actions";
-import {IEndOfWarranty} from "../../../../store/reducers/valueSettings/types";
-import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import React, { useEffect, useState } from 'react';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { SC_UNDEFINED } from '../../../../utils/constants';
+import { setEndOfWarranty } from '../../../../store/reducers/valueSettings/actions';
+import { IEndOfWarranty } from '../../../../store/reducers/valueSettings/types';
+import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../hooks/useException/useException';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useSelectedPod } from '../../../../hooks/useSelectedPod/useSelectedPod';
 
-export const EndOfWarrantyModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEndOfWarranty>>>> = ({payload, onAction, ...props}) => {
-    const [saving, setSaving] = useState<boolean>();
-    const [months, setMonths] = useState<string>("");
-    const {selectedSC} = useSCs();
-    const {selectedPod} = useSelectedPod();
-    const dispatch = useDispatch();
-    const showMessage = useMessage();
-    const showError = useException();
+export const EndOfWarrantyModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEndOfWarranty>>>
+> = ({ payload, onAction, ...props }) => {
+  const [saving, setSaving] = useState<boolean>();
+  const [months, setMonths] = useState<string>('');
+  const { selectedSC } = useSCs();
+  const { selectedPod } = useSelectedPod();
+  const dispatch = useDispatch();
+  const showMessage = useMessage();
+  const showError = useException();
 
-    useEffect(() => {
-        if (props.open) {
-            if (payload) {
-                setMonths(String(payload.periodInMonth));
-            } else {
-                setMonths("");
-            }
-        }
-
-    }, [props.open, payload]);
-
-    const handleSave = async () => {
-        if (!selectedSC) {
-            showError(SC_UNDEFINED);
-        } else if (!months.length) {
-            showError('"Time Period" must be greater than "0"')
-        } else {
-            setSaving(true);
-            try {
-                await dispatch(setEndOfWarranty({
-                    serviceCenterId: selectedSC.id,
-                    podId: selectedPod?.id,
-                    periodInMonth: Number(months)
-                }));
-                setSaving(false);
-                showMessage("End of Warranty updated");
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
-            }
-        }
+  useEffect(() => {
+    if (props.open) {
+      if (payload) {
+        setMonths(String(payload.periodInMonth));
+      } else {
+        setMonths('');
+      }
     }
+  }, [props.open, payload]);
 
-    return <BaseModal {...props} width={490}>
-        <DialogTitle onClose={props.onClose}>Edit End of Warranty</DialogTitle>
-        <DialogContent>
-            <TextField
-                fullWidth
-                id="warranty-months"
-                name="months"
-                label="Time Period"
-                autoComplete="warranty-months months"
-                endAdornment="months"
-                type="number"
-                inputProps={{min: 1}}
-                value={months}
-                onChange={e => setMonths(e.target.value)}
-            />
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.onClose} color="info">
-                Cancel
-            </Button>
-            <LoadingButton
-                variant="contained"
-                color="primary"
-                loading={saving}
-                onClick={handleSave}
-            >
-                Save
-            </LoadingButton>
-        </DialogActions>
+  const handleSave = async () => {
+    if (!selectedSC) {
+      showError(SC_UNDEFINED);
+    } else if (!months.length) {
+      showError('"Time Period" must be greater than "0"');
+    } else {
+      setSaving(true);
+      try {
+        await dispatch(
+          setEndOfWarranty({
+            serviceCenterId: selectedSC.id,
+            podId: selectedPod?.id,
+            periodInMonth: Number(months),
+          })
+        );
+        setSaving(false);
+        showMessage('End of Warranty updated');
+        props.onClose();
+      } catch (e) {
+        setSaving(false);
+        showError(e);
+      }
+    }
+  };
+
+  return (
+    <BaseModal {...props} width={490}>
+      <DialogTitle onClose={props.onClose}>Edit End of Warranty</DialogTitle>
+      <DialogContent>
+        <TextField
+          fullWidth
+          id="warranty-months"
+          name="months"
+          label="Time Period"
+          autoComplete="warranty-months months"
+          endAdornment="months"
+          type="number"
+          inputProps={{ min: 1 }}
+          value={months}
+          onChange={e => setMonths(e.target.value)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose} color="info">
+          Cancel
+        </Button>
+        <LoadingButton variant="contained" color="primary" loading={saving} onClick={handleSave}>
+          Save
+        </LoadingButton>
+      </DialogActions>
     </BaseModal>
-}
+  );
+};

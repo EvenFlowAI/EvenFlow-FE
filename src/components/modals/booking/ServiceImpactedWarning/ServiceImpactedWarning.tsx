@@ -1,84 +1,85 @@
 import React from 'react';
-import {BaseModal, DialogTitle} from "../../BaseModal/BaseModal";
-import {useTranslation} from "react-i18next";
-import {setServiceWarningOpen} from "../../../../store/reducers/modals/actions";
+import { BaseModal, DialogTitle } from '../../BaseModal/BaseModal';
+import { useTranslation } from 'react-i18next';
+import { setServiceWarningOpen } from '../../../../store/reducers/modals/actions';
 import {
-    clearSelectedServices,
-    setCurrentFrameScreen,
-    setServiceTypeOption,
-    setUsualFlowNeeded,
-    setWelcomeScreenView
-} from "../../../../store/reducers/appointmentFrameReducer/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/rootReducer";
-import {useHistory, useParams} from "react-router-dom";
-import {useStyles} from "./styles";
-import {LoadingButton} from "../../../buttons/LoadingButton/LoadingButton";
+  clearSelectedServices,
+  setCurrentFrameScreen,
+  setServiceTypeOption,
+  setUsualFlowNeeded,
+  setWelcomeScreenView,
+} from '../../../../store/reducers/appointmentFrameReducer/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../store/rootReducer';
+import { useHistory, useParams } from 'react-router-dom';
+import { useStyles } from './styles';
+import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 
 const ServiceImpactedWarning = () => {
-    const {isServiceWarningOpen} = useSelector((state: RootState) => state.modals);
-    const {appointmentByKey} = useSelector((state: RootState) => state.appointmentFrame);
-    const {customerLoadedData} = useSelector((state: RootState) => state.appointment);
-    const dispatch = useDispatch();
-    const { classes  } = useStyles();
-    const {t} = useTranslation();
-    const {id} = useParams<{id: string}>();
-    const history = useHistory();
+  const { isServiceWarningOpen } = useSelector((state: RootState) => state.modals);
+  const { appointmentByKey } = useSelector((state: RootState) => state.appointmentFrame);
+  const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const dispatch = useDispatch();
+  const { classes } = useStyles();
+  const { t } = useTranslation();
+  const { id } = useParams<{ id: string }>();
+  const history = useHistory();
 
-    const onClose = () => {
-        dispatch(setServiceWarningOpen(false));
+  const onClose = () => {
+    dispatch(setServiceWarningOpen(false));
+  };
+
+  const onNext = () => {
+    dispatch(clearSelectedServices());
+    dispatch(setUsualFlowNeeded(true));
+    dispatch(setCurrentFrameScreen('serviceNeeds'));
+    onClose();
+    if (history.location.pathname.includes('welcome')) {
+      if (customerLoadedData?.isUpdating) {
+        history.push('/f/appointment-manage/' + id);
+      } else {
+        history.push('/f/appointment/' + id);
+      }
     }
+  };
 
-    const onNext = () => {
-        dispatch(clearSelectedServices());
-        dispatch(setUsualFlowNeeded(true));
-        dispatch(setCurrentFrameScreen("serviceNeeds"));
-        onClose()
-        if (history.location.pathname.includes("welcome")) {
-            if (customerLoadedData?.isUpdating) {
-                history.push( "/f/appointment-manage/" + id);
-            } else {
-                history.push( "/f/appointment/" + id);
-            }
-        }
-    }
+  const onCancel = () => {
+    if (history.location.pathname.includes('welcome'))
+      dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null));
+    dispatch(setWelcomeScreenView('serviceSelect'));
+    onClose();
+  };
 
-    const onCancel = () => {
-        if (history.location.pathname.includes("welcome")) dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null))
-        dispatch(setWelcomeScreenView("serviceSelect"));
-        onClose();
-    }
-
-    return (
-        <BaseModal
-            width={450}
-            open={isServiceWarningOpen}
-            onClose={onCancel}
+  return (
+    <BaseModal width={450} open={isServiceWarningOpen} onClose={onCancel}>
+      <DialogTitle onClose={onCancel}>
+        <div>
+          {t('The services our Mobile Truck offer may be different from our Service Center.')}
+        </div>
+        <div>{t('Please continue to see available services and appointment times')}</div>
+      </DialogTitle>
+      <div className={classes.wrapper}>
+        <LoadingButton
+          loading={false}
+          fullWidth
+          onClick={onCancel}
+          variant="outlined"
+          color="primary"
         >
-            <DialogTitle onClose={onCancel}>
-                <div>{t("The services our Mobile Truck offer may be different from our Service Center.")}</div>
-                <div>{t("Please continue to see available services and appointment times")}</div>
-            </DialogTitle>
-            <div className={classes.wrapper}>
-                <LoadingButton
-                    loading={false}
-                    fullWidth
-                    onClick={onCancel}
-                    variant="outlined"
-                    color="primary">
-                    {t("Cancel")}
-                </LoadingButton>
-                <LoadingButton
-                    loading={false}
-                    fullWidth
-                    onClick={onNext}
-                    variant="contained"
-                    color="primary">
-                    {t("Next")}
-                </LoadingButton>
-            </div>
-        </BaseModal>
-    );
+          {t('Cancel')}
+        </LoadingButton>
+        <LoadingButton
+          loading={false}
+          fullWidth
+          onClick={onNext}
+          variant="contained"
+          color="primary"
+        >
+          {t('Next')}
+        </LoadingButton>
+      </div>
+    </BaseModal>
+  );
 };
 
 export default ServiceImpactedWarning;

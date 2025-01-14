@@ -1,51 +1,55 @@
-import React, {useEffect, useState} from "react";
-import {TParsableDate} from "../../../types/types";
-import dayjs from "dayjs";
-import {ReactComponent as Star} from "../../../assets/img/star.svg";
-import {ReactComponent as User} from "../../../assets/img/persons.svg";
-import {DataCalendar} from "../../../components/DataCalendar/DataCalendar";
-import {TTimePeriod} from "../../../store/reducers/schedules/types";
+import React, { useEffect, useState } from 'react';
+import { TParsableDate } from '../../../types/types';
+import dayjs from 'dayjs';
+import { ReactComponent as Star } from '../../../assets/img/star.svg';
+import { ReactComponent as User } from '../../../assets/img/persons.svg';
+import { DataCalendar } from '../../../components/DataCalendar/DataCalendar';
+import { TTimePeriod } from '../../../store/reducers/schedules/types';
 
 type TData = {
-    date: TParsableDate;
-    techniciansAmount: number;
-    advisorsAmount: number;
-}
+  date: TParsableDate;
+  techniciansAmount: number;
+  advisorsAmount: number;
+};
 
 export const AvailableStaffCalendar = () => {
-    const [date, setDate] = useState<TParsableDate>(dayjs());
-    const [data, setData] = useState<TData[]>([]);
-    const [timePeriod, setTimePeriod] = useState<TTimePeriod|null>(null)
+  const [date, setDate] = useState<TParsableDate>(dayjs());
+  const [data, setData] = useState<TData[]>([]);
+  const [timePeriod, setTimePeriod] = useState<TTimePeriod | null>(null);
 
-    useEffect(() => {
-        const dates = []
-        let today = dayjs()
-        for (let i = 1; i < 60; i++) {
-            dates.push(today)
-            today = today.add(1, 'day');
-        }
-        setData(dates.map(date => ({
-            date,
-            techniciansAmount: 8,
-            advisorsAmount: 5
-        })))
-    }, [])
-
-    const onDayClick = (el: TData|undefined, date: TParsableDate) => {
+  useEffect(() => {
+    const dates = [];
+    let today = dayjs();
+    for (let i = 1; i < 60; i++) {
+      dates.push(today);
+      today = today.add(1, 'day');
     }
+    setData(
+      dates.map(date => ({
+        date,
+        techniciansAmount: 8,
+        advisorsAmount: 5,
+      }))
+    );
+  }, []);
 
-    return <DataCalendar
-        data={data}
-        firstIcon={<User/>}
-        secondIcon={<Star />}
-        firstIconFieldName={'advisorsAmount'}
-        secondIconFieldName={'techniciansAmount'}
-        date={date}
-        // firstIconText={"The number of advisors scheduled for the day"}
-        // secondIconText={"The number of technicians scheduled for the day"}
-        setTimePeriod={setTimePeriod}
-        timePeriod={timePeriod}
-        setDate={setDate}
-        dateFieldName={'date'}
-        onDayClick={onDayClick}/>
-}
+  const onDayClick = (el: TData | undefined, date: TParsableDate) => {};
+
+  return (
+    <DataCalendar
+      data={data}
+      firstIcon={<User />}
+      secondIcon={<Star />}
+      firstIconFieldName={'advisorsAmount'}
+      secondIconFieldName={'techniciansAmount'}
+      date={date}
+      // firstIconText={"The number of advisors scheduled for the day"}
+      // secondIconText={"The number of technicians scheduled for the day"}
+      setTimePeriod={setTimePeriod}
+      timePeriod={timePeriod}
+      setDate={setDate}
+      dateFieldName={'date'}
+      onDayClick={onDayClick}
+    />
+  );
+};

@@ -1,53 +1,39 @@
-import React, { useEffect, useState } from "react";
-import {
-  BaseModal,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "../../BaseModal/BaseModal";
-import { DialogProps } from "../../BaseModal/types";
-import { Button } from "@mui/material";
-import { Roles, TTechnicianLevel } from "../../../../types/types";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../store/rootReducer";
-import { loadShortSC } from "../../../../store/reducers/serviceCenters/actions";
-import { TEmployeeForm } from "./types";
-import {
-  IEmployee,
-  IEmployeeForm,
-} from "../../../../store/reducers/employees/types";
+import React, { useEffect, useState } from 'react';
+import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
+import { DialogProps } from '../../BaseModal/types';
+import { Button } from '@mui/material';
+import { Roles, TTechnicianLevel } from '../../../../types/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../store/rootReducer';
+import { loadShortSC } from '../../../../store/reducers/serviceCenters/actions';
+import { TEmployeeForm } from './types';
+import { IEmployee, IEmployeeForm } from '../../../../store/reducers/employees/types';
 import {
   createEmployee,
   loadDMSAdvisors,
   updateEmployee,
-} from "../../../../store/reducers/employees/actions";
-import { IUserForm, TRole } from "../../../../store/reducers/users/types";
-import {
-  createUser,
-  updateUser,
-} from "../../../../store/reducers/users/actions";
-import { checkEmail } from "../../../../utils/utils";
-import { initialEmployeeForm } from "./constants";
-import { AvatarWrapper } from "../../../wrappers/AvatarWrapper/AvatarWrapper";
-import { LoadingButton } from "../../../buttons/LoadingButton/LoadingButton";
+} from '../../../../store/reducers/employees/actions';
+import { IUserForm, TRole } from '../../../../store/reducers/users/types';
+import { createUser, updateUser } from '../../../../store/reducers/users/actions';
+import { checkEmail } from '../../../../utils/utils';
+import { initialEmployeeForm } from './constants';
+import { AvatarWrapper } from '../../../wrappers/AvatarWrapper/AvatarWrapper';
+import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 
-import { useMessage } from "../../../../hooks/useMessage/useMessage";
-import { useException } from "../../../../hooks/useException/useException";
-import { useSCs } from "../../../../hooks/useSCs/useSCs";
-import { CreateEmployeeForm } from "./CreateEmployeeForm/CreateEmployeeForm";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../hooks/useException/useException';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { CreateEmployeeForm } from './CreateEmployeeForm/CreateEmployeeForm';
 
 export const CreateEmployee: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEmployee>>>
 > = ({ payload, onAction, ...props }) => {
   const { shortSC } = useSelector((state: RootState) => state.serviceCenters);
-  const { saving: savingE } = useSelector(
-    (state: RootState) => state.employees
-  );
+  const { saving: savingE } = useSelector((state: RootState) => state.employees);
   const { saving: savingU } = useSelector((state: RootState) => state.users);
 
   const [avatar, setAvatar] = useState<File | undefined>();
-  const [employeeForm, setEmployeeForm] =
-    useState<TEmployeeForm>(initialEmployeeForm);
+  const [employeeForm, setEmployeeForm] = useState<TEmployeeForm>(initialEmployeeForm);
 
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
@@ -65,34 +51,31 @@ export const CreateEmployee: React.FC<
 
   useEffect(() => {
     if (selectedSC && props.open) {
-      const centerId =
-        payload && isEdit ? payload.serviceCenterId : selectedSC.id;
+      const centerId = payload && isEdit ? payload.serviceCenterId : selectedSC.id;
       dispatch(loadDMSAdvisors(centerId));
     }
   }, [selectedSC, props.open, payload, isEdit]);
 
   useEffect(() => {
     if (payload) {
-      const selectedServiceCenter = shortSC.find(
-        (el) => el.id === payload.serviceCenterId
-      );
+      const selectedServiceCenter = shortSC.find(el => el.id === payload.serviceCenterId);
       let data: TEmployeeForm = {
         firstName: payload.firstName,
         lastName: payload.lastName,
         serviceCenter: selectedServiceCenter ?? null,
         email: payload.email,
         role: payload.role as TRole,
-        position: payload.position ?? "",
+        position: payload.position ?? '',
         dmsId: payload.dmsId ? payload.dmsId.toString() : null,
       };
       if (payload.role === Roles.Technician) {
         data = {
           ...data,
-          hourlyRate: payload.employeeInfo?.hourlyRate || "",
-          overtimeRate: payload.employeeInfo?.overtimeRate || "",
+          hourlyRate: payload.employeeInfo?.hourlyRate || '',
+          overtimeRate: payload.employeeInfo?.overtimeRate || '',
           technicianLevel:
-            (payload.employeeInfo?.skillLevel as TTechnicianLevel) ||
-            (1 as TTechnicianLevel),
+            (payload.employeeInfo?.skillLevel as TTechnicianLevel) || (1 as TTechnicianLevel),
+          type: payload.type,
         };
       } else {
         data.type = payload.type;
@@ -106,25 +89,20 @@ export const CreateEmployee: React.FC<
 
   const checkIsValid = (): boolean => {
     let err: string[] = [];
-    if (!employeeForm.firstName.length)
-      err = [...err, '"First Name" must not be empty'];
-    if (!employeeForm.lastName.length)
-      err = [...err, '"Last Name" must not be empty'];
-    if (!employeeForm.serviceCenter)
+    if (!employeeForm.firstName.length) err = [...err, '"First Name" must not be empty'];
+    if (!employeeForm.lastName.length) err = [...err, '"Last Name" must not be empty'];
+    if (employeeForm.role !== Roles.ServiceDirector && !employeeForm.serviceCenter)
       err = [...err, '"Service Center" must not be empty'];
     if (!employeeForm.email?.length) {
       err = [...err, '"Email" must not be empty'];
     } else {
-      if (!checkEmail(employeeForm.email))
-        err = [...err, '"Email" is not valid'];
+      if (!checkEmail(employeeForm.email)) err = [...err, '"Email" is not valid'];
     }
     if (employeeForm.role === Roles.Technician) {
-      if (!employeeForm.hourlyRate)
-        err = [...err, '"Hourly Rate" must not be empty'];
-      if (!employeeForm.overtimeRate)
-        err = [...err, '"Overtime Rate" must not be empty'];
+      if (!employeeForm.hourlyRate) err = [...err, '"Hourly Rate" must not be empty'];
+      if (!employeeForm.overtimeRate) err = [...err, '"Overtime Rate" must not be empty'];
     }
-    err.map((e) => showError(e));
+    err.map(e => showError(e));
     return !Boolean(err.length);
   };
 
@@ -136,7 +114,7 @@ export const CreateEmployee: React.FC<
   };
 
   const onSuccess = () => {
-    showMessage(`Employee ${isEdit ? "updated" : "created"}`);
+    showMessage(`Employee ${isEdit ? 'updated' : 'created'}`);
     onClose();
   };
 
@@ -155,7 +133,7 @@ export const CreateEmployee: React.FC<
           dmsId: employeeForm?.dmsId ?? null,
           serviceCenterId: employeeForm.serviceCenter?.id || null,
         } as IUserForm;
-        if (advisorData.role === "Service Director") {
+        if (advisorData.role === 'Service Director') {
           delete data.serviceCenterId;
         }
       } else {
@@ -172,49 +150,24 @@ export const CreateEmployee: React.FC<
           },
         } as IEmployeeForm;
       }
-      if (
-        [Roles.Technician, Roles.Advisor].includes(employeeForm.role as Roles)
-      ) {
+      if ([Roles.Technician, Roles.Advisor].includes(employeeForm.role as Roles)) {
         data.type = employeeForm.type;
         data.displayOnBookingTypes = employeeForm.displayOnBookingTypes;
       }
       try {
         if (employeeForm.role !== Roles.Technician) {
           if (payload?.id) {
-            await dispatch(
-              updateUser(
-                data as IUserForm,
-                payload.id,
-                onSuccess,
-                showError,
-                avatar
-              )
-            );
+            await dispatch(updateUser(data as IUserForm, payload.id, onSuccess, showError, avatar));
           } else {
-            await dispatch(
-              createUser(data as IUserForm, onSuccess, showError, avatar)
-            );
+            await dispatch(createUser(data as IUserForm, onSuccess, showError, avatar));
           }
         } else {
           if (payload?.id) {
             await dispatch(
-              updateEmployee(
-                data as IEmployeeForm,
-                payload.id,
-                onSuccess,
-                showError,
-                avatar
-              )
+              updateEmployee(data as IEmployeeForm, payload.id, onSuccess, showError, avatar)
             );
           } else {
-            await dispatch(
-              createEmployee(
-                data as IEmployeeForm,
-                onSuccess,
-                showError,
-                avatar
-              )
-            );
+            await dispatch(createEmployee(data as IEmployeeForm, onSuccess, showError, avatar));
           }
         }
         if (onAction) {
@@ -229,13 +182,10 @@ export const CreateEmployee: React.FC<
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
       <DialogTitle onClose={onClose}>
-        {isEdit ? `Edit ${payload?.role}` : "Add Employee"}
+        {isEdit ? `Edit ${payload?.role}` : 'Add Employee'}
       </DialogTitle>
       <DialogContent>
-        <AvatarWrapper
-          onChange={(f) => setAvatar(f)}
-          dataUrl={payload?.avatarPath}
-        />
+        <AvatarWrapper onChange={f => setAvatar(f)} dataUrl={payload?.avatarPath} />
         <CreateEmployeeForm
           formIsChecked={formIsChecked}
           form={employeeForm}
@@ -246,12 +196,7 @@ export const CreateEmployee: React.FC<
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <LoadingButton
-          loading={saving}
-          color="primary"
-          onClick={handleCreate}
-          variant="contained"
-        >
+        <LoadingButton loading={saving} color="primary" onClick={handleCreate} variant="contained">
           Save
         </LoadingButton>
       </DialogActions>

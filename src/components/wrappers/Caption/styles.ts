@@ -1,14 +1,14 @@
 import { makeStyles } from 'tss-react/mui';
 
-// 
+//
 export const useStyles = makeStyles()({
-    caption: {
-        display: "flex",
-        fontSize: 16,
-        marginTop: 10,
-        alignItems: "center",
-        "& .MuiSvgIcon-root": {
-            marginRight: 8
-        }
-    }
+  caption: {
+    display: 'flex',
+    fontSize: 16,
+    marginTop: 10,
+    alignItems: 'center',
+    '& .MuiSvgIcon-root': {
+      marginRight: 8,
+    },
+  },
 });

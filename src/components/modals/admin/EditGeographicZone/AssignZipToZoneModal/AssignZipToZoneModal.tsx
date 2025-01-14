@@ -1,113 +1,150 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {DialogProps} from "../../../BaseModal/types";
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../BaseModal/BaseModal";
-import {Button, Divider, MenuItem, Select, SelectChangeEvent} from "@mui/material";
-import {TReassignZip, TZipCode, TZone, TZonesServiceType} from "../../../../../store/reducers/mobileService/types";
-import {TextField} from "../../../../formControls/TextFieldStyled/TextField";
-import {assignZipToMobServiceZone} from "../../../../../store/reducers/mobileService/actions";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DialogProps } from '../../../BaseModal/types';
+import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../../BaseModal/BaseModal';
+import { Button, Divider, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import {
-    reassignZipToServiceValetZone,
-} from "../../../../../store/reducers/serviceValet/actions";
-import {RootState} from "../../../../../store/rootReducer";
-import {useStyles} from "./styles";
+  TReassignZip,
+  TZipCode,
+  TZone,
+  TZonesServiceType,
+} from '../../../../../store/reducers/mobileService/types';
+import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
+import { assignZipToMobServiceZone } from '../../../../../store/reducers/mobileService/actions';
+import { reassignZipToServiceValetZone } from '../../../../../store/reducers/serviceValet/actions';
+import { RootState } from '../../../../../store/rootReducer';
+import { useStyles } from './styles';
 
-import {useMessage} from "../../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../../hooks/useException/useException";
-import {useSCs} from "../../../../../hooks/useSCs/useSCs";
+import { useMessage } from '../../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../../hooks/useException/useException';
+import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 
 type TAssignZipToZoneProps = DialogProps & {
-    serviceType: TZonesServiceType;
-    zip?: TZipCode|null;
-    zone?: TZone|null;
-}
+  serviceType: TZonesServiceType;
+  zip?: TZipCode | null;
+  zone?: TZone | null;
+};
 
-const AssignZipToZoneModal:React.FC<React.PropsWithChildren<React.PropsWithChildren<TAssignZipToZoneProps>>> = ({zip, zone, serviceType, ...props}) => {
-    const {zones: serviceValetZones, currentZone: currentValetZone, isLoading: isValetLoading} = useSelector((state: RootState) => state.serviceValet);
-    const {zones: mobileServiceZones, currentZone: currentMobileZone, isLoading: isMobileLoading} = useSelector((state: RootState) => state.mobileService);
-    const [selectedZone, setSelectedZone] = useState<TZone|null>(null);
-    const [data, setData] = useState<TZone[]>([]);
-    const { classes  } = useStyles();
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const showError = useException();
-    const showMessage = useMessage();
+const AssignZipToZoneModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TAssignZipToZoneProps>>
+> = ({ zip, zone, serviceType, ...props }) => {
+  const {
+    zones: serviceValetZones,
+    currentZone: currentValetZone,
+    isLoading: isValetLoading,
+  } = useSelector((state: RootState) => state.serviceValet);
+  const {
+    zones: mobileServiceZones,
+    currentZone: currentMobileZone,
+    isLoading: isMobileLoading,
+  } = useSelector((state: RootState) => state.mobileService);
+  const [selectedZone, setSelectedZone] = useState<TZone | null>(null);
+  const [data, setData] = useState<TZone[]>([]);
+  const { classes } = useStyles();
+  const { selectedSC } = useSCs();
+  const dispatch = useDispatch();
+  const showError = useException();
+  const showMessage = useMessage();
 
-    useEffect(() => {
-        setData(serviceType === 'serviceValet' ? serviceValetZones : mobileServiceZones);
-    }, [serviceType, serviceValetZones, mobileServiceZones])
+  useEffect(() => {
+    setData(serviceType === 'serviceValet' ? serviceValetZones : mobileServiceZones);
+  }, [serviceType, serviceValetZones, mobileServiceZones]);
 
-    const onCancel = () => props.onClose();
+  const onCancel = () => props.onClose();
 
-    const onSuccess = () => {
-        showMessage(`Zip code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`)
-        props.onClose();
-    }
+  const onSuccess = () => {
+    showMessage(`Zip code ${zip?.code} was reassigned to the zone ${selectedZone?.name}`);
+    props.onClose();
+  };
 
-    const onError = (err:string) => {
-        showError(err)
-    }
+  const onError = (err: string) => {
+    showError(err);
+  };
 
-    const onAssign = () => {
-        if (selectedSC && selectedZone && zip) {
-            const data: TReassignZip = {
-                id: zip.id,
-                geographicZoneId: selectedZone.id,
-            }
-            if (serviceType === 'mobileService') {
-                if (currentMobileZone) {
-                    dispatch(assignZipToMobServiceZone(zip.id, selectedSC.id, data, currentMobileZone.id, onSuccess, onError));
-                }
-            } else {
-                if (currentValetZone) {
-                    dispatch(reassignZipToServiceValetZone(zip.id, selectedSC.id, data, currentValetZone.id, onSuccess, onError));
-                }
-            }
+  const onAssign = () => {
+    if (selectedSC && selectedZone && zip) {
+      const data: TReassignZip = {
+        id: zip.id,
+        geographicZoneId: selectedZone.id,
+      };
+      if (serviceType === 'mobileService') {
+        if (currentMobileZone) {
+          dispatch(
+            assignZipToMobServiceZone(
+              zip.id,
+              selectedSC.id,
+              data,
+              currentMobileZone.id,
+              onSuccess,
+              onError
+            )
+          );
         }
+      } else {
+        if (currentValetZone) {
+          dispatch(
+            reassignZipToServiceValetZone(
+              zip.id,
+              selectedSC.id,
+              data,
+              currentValetZone.id,
+              onSuccess,
+              onError
+            )
+          );
+        }
+      }
     }
-    const onChange = (e: SelectChangeEvent<number>) => {
-        const selected = serviceType === 'serviceValet'
-            ? serviceValetZones.find(item => item.id === +e.target.value)
-            : mobileServiceZones.find(item => item.id === +e.target.value)
-        if (selected) setSelectedZone(selected);
-    }
+  };
+  const onChange = (e: SelectChangeEvent<number>) => {
+    const selected =
+      serviceType === 'serviceValet'
+        ? serviceValetZones.find(item => item.id === +e.target.value)
+        : mobileServiceZones.find(item => item.id === +e.target.value);
+    if (selected) setSelectedZone(selected);
+  };
 
-    return (
-        <BaseModal {...props} width={540} onClose={onCancel}>
-            <DialogTitle onClose={onCancel}>Assign ZIP to Another Zone</DialogTitle>
-            <DialogContent>
-                <Select
-                    fullWidth
-                    input={<TextField label="Choose zone From the list" placeholder="Zone name"/>}
-                    id="zone"
-                    placeholder="Zone name"
-                    name="zone"
-                    value={selectedZone?.id ?? ''}
-                    onChange={onChange}
-                >
-                    {data.filter(item => item.id !== zone?.id).map(item => <MenuItem value={item.id} key={item.id}>{item.name}</MenuItem>)}
-                </Select>
-            </DialogContent>
-            <Divider style={{ margin: 0 }}/>
-            <DialogActions>
-                <div className={classes.wrapper}>
-                    <div className={classes.buttonsWrapper}>
-                        <Button
-                            onClick={onCancel}
-                            className={classes.cancelButton}>
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={onAssign}
-                            disabled={isMobileLoading || isValetLoading}
-                            className={classes.saveButton}>
-                            Assign
-                        </Button>
-                    </div>
-                </div>
-            </DialogActions>
-        </BaseModal>
-    );
+  return (
+    <BaseModal {...props} width={540} onClose={onCancel}>
+      <DialogTitle onClose={onCancel}>Assign ZIP to Another Zone</DialogTitle>
+      <DialogContent>
+        <Select
+          fullWidth
+          input={<TextField label="Choose zone From the list" placeholder="Zone name" />}
+          id="zone"
+          placeholder="Zone name"
+          name="zone"
+          value={selectedZone?.id ?? ''}
+          onChange={onChange}
+        >
+          {data
+            .filter(item => item.id !== zone?.id)
+            .map(item => (
+              <MenuItem value={item.id} key={item.id}>
+                {item.name}
+              </MenuItem>
+            ))}
+        </Select>
+      </DialogContent>
+      <Divider style={{ margin: 0 }} />
+      <DialogActions>
+        <div className={classes.wrapper}>
+          <div className={classes.buttonsWrapper}>
+            <Button onClick={onCancel} className={classes.cancelButton}>
+              Cancel
+            </Button>
+            <Button
+              onClick={onAssign}
+              disabled={isMobileLoading || isValetLoading}
+              className={classes.saveButton}
+            >
+              Assign
+            </Button>
+          </div>
+        </div>
+      </DialogActions>
+    </BaseModal>
+  );
 };
 
 export default AssignZipToZoneModal;
