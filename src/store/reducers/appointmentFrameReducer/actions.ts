@@ -1213,7 +1213,7 @@ export const loadAppointmentRequestsPrices =
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
 
-    const serviceRequestIds = collectServiceRequestIds(
+    const serviceRequests = collectServiceRequestIds(
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
@@ -1233,7 +1233,7 @@ export const loadAppointmentRequestsPrices =
         ? { optionType: appointmentFrame.packageEMenuType }
         : null;
     const data = {
-      serviceRequestIds,
+      serviceRequests,
       serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
       valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
         ? [appointmentFrame?.valueService?.selectedService.id]
@@ -1251,7 +1251,7 @@ export const loadAppointmentRequestsPrices =
       appointmentHashKey: appointmentFrame.appointmentByKey?.hashKey ?? '',
     };
     if (
-      serviceRequestIds.length ||
+      serviceRequests.length ||
       data.serviceCategoryIds.length ||
       data.valueServiceOfferIds.length ||
       data.recalls.length ||
