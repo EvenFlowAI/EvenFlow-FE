@@ -179,7 +179,7 @@ export const FormWithSelectors: React.FC<
               ? `${t('Make')} ${t('required')}`
               : `${t('Select')} ${t('Make')}`
           }
-          disabled={Boolean(selectedVehicle?.make)}
+          // disabled={isExistingVehicle && Boolean(selectedVehicle?.make)}
           onChange={handleSelectChange('make', false)}
         >
           <MenuItem disabled value="">
@@ -246,7 +246,7 @@ export const FormWithSelectors: React.FC<
           displayEmpty
           MenuProps={MenuProps}
           style={{ color: selectedVehicle?.model ? 'inherit' : '#858585' }}
-          disabled={Boolean(selectedVehicle?.model)}
+          // disabled={isExistingVehicle && Boolean(selectedVehicle?.model)}
           onChange={handleSelectChange('model', false)}
         >
           <MenuItem disabled value="">

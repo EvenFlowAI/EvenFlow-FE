@@ -120,7 +120,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
           disablePortal
           isOptionEqualToValue={(o, v) => o === v}
           disableClearable
-          disabled={Boolean(selectedVehicle?.make)}
+          // disabled={isExistingVehicle && Boolean(selectedVehicle?.make)}
           renderInput={autocompleteRender({
             label: t('Make'),
             placeholder: errors.includes('make')
@@ -168,7 +168,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
           getOptionLabel={o => o}
           getOptionKey={o => o}
           isOptionEqualToValue={(o, v) => o === v}
-          disabled={Boolean(selectedVehicle?.model)}
+          // disabled={isExistingVehicle && Boolean(selectedVehicle?.model)}
           renderInput={autocompleteRender({
             label: t('Model'),
             placeholder: errors.includes('model')
