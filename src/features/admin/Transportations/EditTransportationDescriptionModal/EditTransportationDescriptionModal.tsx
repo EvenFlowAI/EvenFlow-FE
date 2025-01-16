@@ -52,8 +52,9 @@ export const EditTransportationDescriptionModal: React.FC<
     if (editingElement && props.open) {
       editingElement.description && setDescription(editingElement.description);
       editingElement.orderIndex && setOrderIndex(editingElement.orderIndex.toString());
+      editingElement.opCode && setSelectedCode(currentSelectedCode);
     }
-  }, [editingElement, props.open]);
+  }, [editingElement, props.open, currentSelectedCode]);
 
   const onCancel = () => {
     setFormIsChecked(false);
