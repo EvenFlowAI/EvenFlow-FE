@@ -100,7 +100,6 @@ export const EditTransportationDescriptionModal: React.FC<
   const saveData = () => {
     if (editingElement) {
       if (description.trim().length && +orderIndex > 0) {
-        console.log('selectedCode', selectedCode);
         dispatch(
           updateTransportationDescription(
             editingElement.id,
