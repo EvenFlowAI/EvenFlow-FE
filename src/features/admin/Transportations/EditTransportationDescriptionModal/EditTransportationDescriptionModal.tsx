@@ -129,8 +129,12 @@ export const EditTransportationDescriptionModal: React.FC<
     saveIcon();
   };
 
-  const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest) => {
-    setSelectedCode(option);
+  const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest | null) => {
+    if (!option) {
+      setSelectedCode(undefined);
+    } else {
+      setSelectedCode(option);
+    }
   };
 
   return (
@@ -170,7 +174,6 @@ export const EditTransportationDescriptionModal: React.FC<
           </div>
           <Autocomplete
             disabled={editingElement?.description === 'Pick up and delivery'}
-            disableClearable
             value={selectedCode ?? currentSelectedCode}
             onChange={onOpsCodeChange}
             getOptionLabel={o => o.serviceRequest.code}
