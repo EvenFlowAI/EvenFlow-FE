@@ -19,6 +19,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
   setSelectedEngine,
   errors,
   setErrors,
+  isExistingSelectedVehicle,
 }) => {
   const { selectedVehicle, makes, appointmentByKey } = useSelector(
     (state: RootState) => state.appointmentFrame
@@ -120,7 +121,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
           disablePortal
           isOptionEqualToValue={(o, v) => o === v}
           disableClearable
-          disabled={isExistingVehicle && Boolean(selectedVehicle?.make)}
+          disabled={Boolean(isExistingSelectedVehicle?.make)}
           renderInput={autocompleteRender({
             label: t('Make'),
             placeholder: errors.includes('make')
@@ -168,7 +169,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
           getOptionLabel={o => o}
           getOptionKey={o => o}
           isOptionEqualToValue={(o, v) => o === v}
-          disabled={isExistingVehicle && Boolean(selectedVehicle?.model)}
+          disabled={Boolean(isExistingSelectedVehicle?.model)}
           renderInput={autocompleteRender({
             label: t('Model'),
             placeholder: errors.includes('model')
