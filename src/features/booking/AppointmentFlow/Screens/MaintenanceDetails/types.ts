@@ -19,6 +19,7 @@ export type TFormProps = {
   setSelectedEngine: Dispatch<SetStateAction<IEngineType | null>>;
   errors: TKey[];
   setErrors: Dispatch<SetStateAction<TKey[]>>;
+  isExistingSelectedVehicle?: ILoadedVehicle;
 };
 export type TMaintenanceDetailsProps = {
   onBack: TArgCallback<TScreen>;
