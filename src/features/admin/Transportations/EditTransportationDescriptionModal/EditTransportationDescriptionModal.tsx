@@ -6,7 +6,10 @@ import {
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
-import { ITransportationOptionFull } from '../../../../store/reducers/transportationNeeds/types';
+import {
+  ITransportationOptionFull,
+  ETransportationType,
+} from '../../../../store/reducers/transportationNeeds/types';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
@@ -47,6 +50,8 @@ export const EditTransportationDescriptionModal: React.FC<
   const dispatch = useDispatch();
   const showError = useException();
   const showMessage = useMessage();
+
+  const pickupAndDeliveryType = editingElement?.type === ETransportationType.PickUpDelivery;
 
   useEffect(() => {
     if (editingElement && props.open) {
@@ -174,7 +179,7 @@ export const EditTransportationDescriptionModal: React.FC<
             />
           </div>
           <Autocomplete
-            disabled={editingElement?.description === 'Pick up and delivery'}
+            disabled={pickupAndDeliveryType}
             value={selectedCode ?? currentSelectedCode}
             onChange={onOpsCodeChange}
             getOptionLabel={o => o.serviceRequest.code}
@@ -183,10 +188,7 @@ export const EditTransportationDescriptionModal: React.FC<
             }
             renderInput={autocompleteRender({
               label: 'OP Code',
-              placeholder:
-                editingElement?.description === 'Pick up and delivery'
-                  ? 'See Service Valet page'
-                  : 'Select Op Code',
+              placeholder: pickupAndDeliveryType ? 'See Service Valet page' : 'Select Op Code',
             })}
             options={allAssignedList}
           />
