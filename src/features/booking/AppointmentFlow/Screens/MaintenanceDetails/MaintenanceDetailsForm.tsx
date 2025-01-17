@@ -116,7 +116,7 @@ export const MaintenanceDetailsForm: React.FC<
       }),
     [selectedVehicle, customerLoadedData]
   );
-  console.log('isExistingSelectedVehicle', isExistingSelectedVehicle);
+
   const recallsToggledOn = useMemo(
     () =>
       (currentConfig?.checkRecallsNew && userType === EUserType.New) ||
