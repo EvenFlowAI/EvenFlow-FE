@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -37,13 +37,9 @@ export const EditTransportationDescriptionModal: React.FC<
   >
 > = ({ editingElement, ...props }) => {
   const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
-  const currentSelectedCode = allAssignedList.find(
-    i => i.serviceRequest.code === editingElement?.opCode
-  );
   const [description, setDescription] = useState<string>('');
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [orderIndex, setOrderIndex] = useState<string>('');
-  const [selectedCode, setSelectedCode] = useState<IAssignedServiceRequest>();
   const [fileState, setFileState] = useState<IIconState>(initialFileState);
   const { classes } = useStyles();
   const { selectedSC } = useSCs();
@@ -53,20 +49,24 @@ export const EditTransportationDescriptionModal: React.FC<
 
   const pickupAndDeliveryType = editingElement?.type === ETransportationType.PickUpDelivery;
 
+  const [selectedCode, setSelectedCode] = useState<IAssignedServiceRequest | null>(
+    () => allAssignedList.find(i => i?.serviceRequest?.code === editingElement?.opCode) ?? null
+  );
   useEffect(() => {
     if (editingElement && props.open) {
+      const code =
+        allAssignedList.find(i => i?.serviceRequest?.code === editingElement?.opCode) ?? null;
+      setSelectedCode(code);
       editingElement.description && setDescription(editingElement.description);
       editingElement.orderIndex && setOrderIndex(editingElement.orderIndex.toString());
-      editingElement.opCode && setSelectedCode(currentSelectedCode);
     }
-  }, [editingElement, props.open, currentSelectedCode]);
+  }, [editingElement, props.open, allAssignedList]);
 
   const onCancel = () => {
     setFormIsChecked(false);
     setDescription('');
     setOrderIndex('');
     setFileState(initialFileState);
-    setSelectedCode(undefined);
     props.onClose();
   };
 
@@ -136,11 +136,7 @@ export const EditTransportationDescriptionModal: React.FC<
   };
 
   const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest | null) => {
-    if (!option) {
-      setSelectedCode(undefined);
-    } else {
-      setSelectedCode(option);
-    }
+    setSelectedCode(option);
   };
 
   return (
@@ -180,7 +176,7 @@ export const EditTransportationDescriptionModal: React.FC<
           </div>
           <Autocomplete
             disabled={pickupAndDeliveryType}
-            value={selectedCode ?? currentSelectedCode}
+            value={selectedCode}
             onChange={onOpsCodeChange}
             getOptionLabel={o => o.serviceRequest.code}
             isOptionEqualToValue={(option, value) =>
