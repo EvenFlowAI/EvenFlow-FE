@@ -50,6 +50,8 @@ type TProps = {
   isManagingFlow?: boolean;
 };
 
+const MAX_COUNT_WORDS_CAPACITY = 250;
+
 const MessageIconComponent = ({ filled }: { filled: boolean }) =>
   filled ? <MessageIconFilled /> : <MessageIcon />;
 
@@ -260,6 +262,9 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleCommentChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > MAX_COUNT_WORDS_CAPACITY) {
+      return;
+    }
     setCommentText(prev => ({
       ...prev,
       [id]: e.target.value,
@@ -325,7 +330,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
                       opened={
                         selectedOpsCodes.includes(s.id) ||
                         openedComments.includes(s.id) ||
-                        commentText[s.id]?.length > 1
+                        commentText[s.id]?.length > 0
                       }
                       onClick={() => {
                         setOpenedComments(prevState => {
@@ -336,13 +341,16 @@ export const SelectOpsCode: React.FC<TProps> = ({
                         });
                       }}
                     >
-                      <MessageIconComponent filled={commentText[s.id]?.length > 1} />
+                      <MessageIconComponent filled={commentText[s.id]?.length > 0} />
                     </MessageIconWrapper>
                   </PriceCommentWrapper>
                 </DescriptionWrapper>
                 <TextFieldWrapper opened={openedComments.includes(s.id)}>
                   <RemainingCharactersWrapper opened={false}>
-                    {commentText[s.id] ? 250 - commentText[s.id]?.length : 250} / 250 characters
+                    {commentText[s.id]
+                      ? MAX_COUNT_WORDS_CAPACITY - commentText[s.id]?.length
+                      : MAX_COUNT_WORDS_CAPACITY}{' '}
+                    / {MAX_COUNT_WORDS_CAPACITY} characters
                   </RemainingCharactersWrapper>
                   <TextField
                     value={commentText[s.id] ?? ''}
