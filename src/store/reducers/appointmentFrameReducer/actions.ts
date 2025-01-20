@@ -1569,11 +1569,6 @@ export const handleAppointmentUpdate =
                 })
               );
             }
-            console.log(
-              'update',
-              data,
-              data.serviceRequests.map(el => el.id)
-            );
             dispatch(updateRecalls(data, id));
             dispatch(setUpdateAppointment(data));
             dispatch(setAppointmentByKey(data));

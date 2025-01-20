@@ -62,7 +62,6 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const { selectedSR, serviceRequests, search, scProfile, selectedSRComments } = useSelector(
     ({ appointment }: RootState) => appointment
   );
-  console.log('selectedSR', selectedSR);
   const { subService, service, categoriesIds, trackerData } = useSelector(
     ({ appointmentFrame }: RootState) => appointmentFrame
   );
