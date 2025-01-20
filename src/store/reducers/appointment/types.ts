@@ -202,6 +202,7 @@ export type TAppointmentState = {
   customerLoadedData: ICustomerLoadedData | null;
   appointmentId: ICreateAppointmentResp | null;
   selectedSR: number[];
+  selectedSRComments: Record<number, string>;
   search: string;
   personalInformation: IPersonalInformation;
   reminders: IReminders;
