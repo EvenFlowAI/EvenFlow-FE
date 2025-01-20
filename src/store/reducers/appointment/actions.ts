@@ -91,7 +91,9 @@ export const loadSRs =
     }
   };
 export const selectSR = createAction<number | null>('Appointment/SelectSR');
-export const selectSRMultiple = createAction<number[]>('Appointment/SelectSRMultiple');
+export const selectSRMultiple = createAction<{ ids: number[]; comments: Record<number, string> }>(
+  'Appointment/SelectSRMultiple'
+);
 export const handleSearch = createAction<string>('Appointment/Search');
 export const changeReminders = createAction<Partial<IReminders>>('Appointment/ChangeReminders');
 export const changePrivacy = createAction<Partial<IPrivacy>>('Appointment/ChangePrivacy');

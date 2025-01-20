@@ -394,7 +394,7 @@ export const loadConsultants =
       advisor,
       appointmentByKey,
     } = getState().appointmentFrame;
-    const { selectedSR } = getState().appointment;
+    const { selectedSR, selectedSRComments } = getState().appointment;
     const { allCategories } = getState().categories;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
     const serviceCategoryIds = allCategories
@@ -412,7 +412,14 @@ export const loadConsultants =
           ? { optionType: packageEMenuType }
           : null;
       const recalls = mapRecallsForRequest(selectedRecalls);
-      const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR);
+      const serviceRequestIds = collectServiceRequestIds(
+        service,
+        subService,
+        null,
+        selectedSR,
+        undefined,
+        selectedSRComments
+      );
       if (
         serviceRequestIds.length ||
         maintenancePackageOption ||
@@ -1562,11 +1569,18 @@ export const handleAppointmentUpdate =
                 })
               );
             }
+            console.log(
+              'update',
+              data,
+              data.serviceRequests.map(el => el.id)
+            );
             dispatch(updateRecalls(data, id));
             dispatch(setUpdateAppointment(data));
             dispatch(setAppointmentByKey(data));
             dispatch(updatePackageOption(data.maintenancePackageOption));
-            dispatch(selectSRMultiple(data.serviceRequests.map(el => el.id)));
+            dispatch(
+              selectSRMultiple({ ids: data.serviceRequests.map(el => el.id), comments: {} })
+            );
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
