@@ -7,6 +7,7 @@ import { styled } from '@mui/material';
 
 type ServiceCommentProps = DialogProps & {
   onSave: () => void;
+  onCloseX: () => void;
 };
 
 export const DialogContentText = styled('div')({
@@ -19,14 +20,11 @@ export const DialogContentText = styled('div')({
 
 const ServiceComment = (props: ServiceCommentProps) => (
   <BaseModal width={550} open={props.open} onClose={props.onClose}>
-    <DialogTitle onClose={props.onClose}></DialogTitle>
-    <DialogContent>
-      <DialogContentText>
-        You added comments to a service that is not selected.
-        <br />
-        Do you wish to add the service?
-      </DialogContentText>
-    </DialogContent>
+    <DialogTitle onClose={props.onCloseX}>
+      You added comments to a service that is not selected.
+      <br />
+      Do you wish to add the service?
+    </DialogTitle>
     <BfButtonsWrapper>
       <LoadingButton loading={false} onClick={props.onClose} color="primary" variant="outlined">
         NO, THANKS

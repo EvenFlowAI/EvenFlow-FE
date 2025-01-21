@@ -220,6 +220,12 @@ export const SelectOpsCode: React.FC<TProps> = ({
 
   const onCloseValidationCommentsModal = () => {
     OnCloseCommentedService();
+    Object.keys(commentText).forEach(i => {
+      if (!selectedOpsCodes.includes(+i)) {
+        delete commentText[+i];
+      }
+    });
+    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
     goNext();
   };
 
@@ -237,6 +243,9 @@ export const SelectOpsCode: React.FC<TProps> = ({
       new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
     );
     handleValidateCheckedServiceComments();
+    if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
+      return;
+    }
     dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
     if (isManagingFlow) {
       dispatch(checkCarIsValid(onCarIsValid, goNext));
@@ -350,10 +359,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
                 </DescriptionWrapper>
                 <TextFieldWrapper opened={openedComments.includes(s.id)}>
                   <RemainingCharactersWrapper opened={false}>
-                    {commentText[s.id]
-                      ? MAX_COUNT_WORDS_CAPACITY - commentText[s.id]?.length
-                      : MAX_COUNT_WORDS_CAPACITY}{' '}
-                    / {MAX_COUNT_WORDS_CAPACITY} characters
+                    {commentText[s.id]?.length ?? 0} / {MAX_COUNT_WORDS_CAPACITY} characters
                   </RemainingCharactersWrapper>
                   <TextField
                     value={commentText[s.id] ?? ''}
@@ -397,6 +403,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
       <ServiceComment
         onSave={confirmValidationCommentsModal}
         onClose={onCloseValidationCommentsModal}
+        onCloseX={OnCloseCommentedService}
         open={isCommentedServiceNotAdded}
       />
       <ActionButtons
