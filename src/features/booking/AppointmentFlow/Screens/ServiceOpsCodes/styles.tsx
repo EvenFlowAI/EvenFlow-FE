@@ -94,9 +94,9 @@ export const Code = styled(FormControlLabel)<FormControlLabelProps>({
   },
   '@media (max-width: 768px)': {
     width: '250px',
-    // whiteSpace: 'nowrap',
-    // overflow: 'hidden',
-    // textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     '& span': {
       fontSize: 12, // Adjust font size for smaller screens
       '&:last-child': {
