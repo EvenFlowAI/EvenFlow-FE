@@ -140,7 +140,9 @@ export const checkPodChanged =
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
-      appointment.selectedSR
+      appointment.selectedSR,
+      undefined,
+      appointment.selectedSRComments
     );
     const maintenancePackageOption = appointmentFrame.selectedPackage
       ? { id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType }
@@ -267,6 +269,7 @@ const loadSlotsForCloning =
   (dispatch, getState) => {
     const { selectedRecalls, consultants } = getState().appointmentFrame;
     const { currentAppointment } = getState().appointments;
+    console.log('currentAppointment', currentAppointment);
     const utcOffset = dayjs().utcOffset();
     const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
     if (currentAppointment) {
