@@ -365,6 +365,7 @@ export const loadAppointmentByKey =
     const { mileage } = getState().vehicleDetails;
     try {
       const { data } = await API.appointment.getByKey(key);
+      console.log('here 333');
       if (data) {
         const mileageIsValid =
           data?.vehicle?.mileage &&
