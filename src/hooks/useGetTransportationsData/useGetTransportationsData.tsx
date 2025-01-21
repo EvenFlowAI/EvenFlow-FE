@@ -18,7 +18,9 @@ const useGetTransportationsData = () => {
     subService,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
-  const { selectedSR, scProfile } = useSelector((state: RootState) => state.appointment);
+  const { selectedSR, scProfile, selectedSRComments } = useSelector(
+    (state: RootState) => state.appointment
+  );
   const [data, setData] = useState<TTransportationData | null>(null);
 
   useEffect(() => {
@@ -40,7 +42,14 @@ const useGetTransportationsData = () => {
 
       const request: TTransportationData = {
         serviceCenterId: scProfile.id,
-        serviceRequests: collectServiceRequestIds(service, subService, null, selectedSR),
+        serviceRequests: collectServiceRequestIds(
+          service,
+          subService,
+          null,
+          selectedSR,
+          undefined,
+          selectedSRComments
+        ),
         serviceCategoryIds,
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,

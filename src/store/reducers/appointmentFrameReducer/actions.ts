@@ -1049,7 +1049,9 @@ export const createOrUpdateAppointment =
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
-      appointment.selectedSR
+      appointment.selectedSR,
+      undefined,
+      appointment.selectedSRComments
     );
 
     const maintenancePackageOption: TMaintenanceOption | null = appointmentFrame.selectedPackage
@@ -1617,7 +1619,7 @@ export const loadActiveTransportations =
       subService,
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
-    const { selectedSR } = getState().appointment;
+    const { selectedSR, selectedSRComments } = getState().appointment;
     const { firstScreenOptions } = getState().serviceTypes;
     if (selectedVehicle) {
       dispatch(setTransportationsLoading(true));
@@ -1638,7 +1640,14 @@ export const loadActiveTransportations =
 
       const data: TTransportationData = {
         serviceCenterId,
-        serviceRequests: collectServiceRequestIds(service, subService, null, selectedSR),
+        serviceRequests: collectServiceRequestIds(
+          service,
+          subService,
+          null,
+          selectedSR,
+          undefined,
+          selectedSRComments
+        ),
         serviceCategoryIds,
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,

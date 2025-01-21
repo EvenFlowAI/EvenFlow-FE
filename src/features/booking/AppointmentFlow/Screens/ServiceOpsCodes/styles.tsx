@@ -68,7 +68,7 @@ export const PricesWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  paddingRight: 8,
+  paddingRight: 16,
 });
 
 const OfferPrice = styled('div')({
@@ -91,6 +91,18 @@ export const Code = styled(FormControlLabel)<FormControlLabelProps>({
     fontSize: 14,
     '&:last-child': {
       padding: '8px 8px 8px 0',
+    },
+  },
+  '@media (max-width: 768px)': {
+    width: '250px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    '& span': {
+      fontSize: 12, // Adjust font size for smaller screens
+      '&:last-child': {
+        padding: '6px 6px 6px 0', // Adjust padding for smaller screens
+      },
     },
   },
 });
