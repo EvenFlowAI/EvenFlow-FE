@@ -233,8 +233,11 @@ export const SelectOpsCode: React.FC<TProps> = ({
 
   const handleNext = () => {
     handleGA();
-    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
+    const newSelectedOpsCodes = Array.from(
+      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
+    );
     handleValidateCheckedServiceComments();
+    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
     if (isManagingFlow) {
       dispatch(checkCarIsValid(onCarIsValid, goNext));
     } else {
