@@ -305,7 +305,6 @@ export const loadConsultantsForUpdating =
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
-    console.log('appointment', appointment);
     const { selectedVehicle, selectedRecalls, valueService, sideBarSteps, appointmentByKey } =
       getState().appointmentFrame;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
@@ -1415,7 +1414,6 @@ export const cloneAppointment =
 
       const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
       const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
-      console.log('currentAppointment', currentAppointment);
       const serviceRequests = currentAppointment?.serviceRequests
         ? currentAppointment?.serviceRequests.map(el => ({ id: el.id, comment: null }))
         : [];

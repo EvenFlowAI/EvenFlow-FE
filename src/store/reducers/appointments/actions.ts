@@ -269,7 +269,7 @@ const loadSlotsForCloning =
   (dispatch, getState) => {
     const { selectedRecalls, consultants } = getState().appointmentFrame;
     const { currentAppointment } = getState().appointments;
-    console.log('currentAppointment', currentAppointment);
+
     const utcOffset = dayjs().utcOffset();
     const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
     if (currentAppointment) {
