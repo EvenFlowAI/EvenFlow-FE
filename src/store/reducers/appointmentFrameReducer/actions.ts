@@ -541,7 +541,7 @@ export const clearSelectedServices =
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(setValueService(null));
-    dispatch(selectSR(null));
+    dispatch(selectSRMultiple({ ids: [], comments: {} }));
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
@@ -1137,9 +1137,9 @@ export const createOrUpdateAppointment =
       data,
       urlParams: { id: appointmentFrame.hashKey },
     })
-      .then(({ data }) => {
+      .then(({ data: resData }) => {
         dispatch(setEditingPosition(null));
-        dispatch(handleAppointmentResponse(data, endpoint, onNext));
+        dispatch(handleAppointmentResponse(resData, endpoint, onNext));
       })
       .catch(e => {
         onError(e);
@@ -1226,7 +1226,9 @@ export const loadAppointmentRequestsPrices =
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
-      appointment.selectedSR
+      appointment.selectedSR,
+      undefined,
+      appointment.selectedSRComments
     );
 
     const time =
@@ -1575,8 +1577,12 @@ export const handleAppointmentUpdate =
             dispatch(setUpdateAppointment(data));
             dispatch(setAppointmentByKey(data));
             dispatch(updatePackageOption(data.maintenancePackageOption));
+            const comments = data.serviceRequests.reduce((acc: { [key: number]: string }, item) => {
+              acc[item.id] = (item as any).comment || '';
+              return acc;
+            }, {});
             dispatch(
-              selectSRMultiple({ ids: data.serviceRequests.map(el => el.id), comments: {} })
+              selectSRMultiple({ ids: data.serviceRequests.map(el => el.id), comments: comments })
             );
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());

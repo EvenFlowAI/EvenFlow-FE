@@ -19,7 +19,7 @@ export const DialogContentText = styled('div')({
 });
 
 const ServiceComment = (props: ServiceCommentProps) => (
-  <BaseModal width={550} open={props.open} onClose={props.onClose}>
+  <BaseModal width={550} open={props.open} onClose={props.onCloseX}>
     <DialogTitle onClose={props.onCloseX}>
       You added comments to a service that is not selected.
       <br />

@@ -28,7 +28,6 @@ export const DescriptionWrapper = styled('div')({
   justifyContent: 'space-between',
   alignItems: 'center',
   width: '100%',
-  whiteSpace: 'nowrap',
 });
 
 export const CodeWrapper = styled('div')<CodeWrapperProps>(({ opened }) => ({
@@ -38,7 +37,7 @@ export const CodeWrapper = styled('div')<CodeWrapperProps>(({ opened }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   overflow: 'hidden',
-  maxHeight: opened ? '200px' : '40px',
+  maxHeight: opened ? '500px' : '200px',
   height: 'auto',
   transition: 'max-height 0.3s ease-in-out',
 }));
@@ -82,13 +81,13 @@ const OfferPrice = styled('div')({
 });
 
 export const Code = styled(FormControlLabel)<FormControlLabelProps>({
-  width: '80%',
   padding: 0,
   margin: 0,
   textTransform: 'uppercase',
   display: 'flex',
   '& span': {
     fontSize: 14,
+
     '&:last-child': {
       padding: '8px 8px 8px 0',
     },

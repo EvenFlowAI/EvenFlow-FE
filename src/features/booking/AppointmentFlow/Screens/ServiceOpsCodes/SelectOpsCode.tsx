@@ -235,6 +235,8 @@ export const SelectOpsCode: React.FC<TProps> = ({
       new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
+    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
+    goNext();
   };
 
   const handleNext = () => {
@@ -309,23 +311,26 @@ export const SelectOpsCode: React.FC<TProps> = ({
             return (
               <CodeWrapper opened={openedComments.includes(s.id)} key={`${s.code} ${s.id}`}>
                 <DescriptionWrapper>
-                  <div>
-                    <Code
-                      key={s.id}
-                      label={s?.description ?? s.code}
-                      labelPlacement={'end'}
-                      value={s.id}
-                      control={
-                        <Checkbox
-                          onChange={handleSelectCode}
-                          value={s.id}
-                          size={'small'}
-                          checked={selectedOpsCodes.includes(s.id)}
-                          color="primary"
-                        />
-                      }
-                    />
-                  </div>
+                  <Code
+                    key={s.id}
+                    label={s?.description ?? s.code}
+                    sx={{
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
+                    }}
+                    labelPlacement={'end'}
+                    value={s.id}
+                    control={
+                      <Checkbox
+                        onChange={handleSelectCode}
+                        value={s.id}
+                        size={'small'}
+                        checked={selectedOpsCodes.includes(s.id)}
+                        color="primary"
+                      />
+                    }
+                  />
+
                   <PriceCommentWrapper>
                     <PricesWrapper>
                       {/*todo uncomment for offer new functionality*/}
