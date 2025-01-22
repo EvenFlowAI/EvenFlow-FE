@@ -215,18 +215,17 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const handleValidateCheckedServiceComments = () => {
     if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
       onAddCommentedService();
+    } else {
+      confirmValidationCommentsModal();
     }
   };
 
   const onCloseValidationCommentsModal = () => {
     OnCloseCommentedService();
-    Object.keys(commentText).forEach(i => {
-      if (!selectedOpsCodes.includes(+i)) {
-        delete commentText[+i];
-      }
-    });
-    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
-    goNext();
+    const filteredComments = Object.fromEntries(
+      Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
+    );
+    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
   };
 
   const confirmValidationCommentsModal = () => {
@@ -236,19 +235,11 @@ export const SelectOpsCode: React.FC<TProps> = ({
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
     dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
-    goNext();
   };
 
   const handleNext = () => {
     handleGA();
-    const newSelectedOpsCodes = Array.from(
-      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
-    );
     handleValidateCheckedServiceComments();
-    if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
-      return;
-    }
-    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
     if (isManagingFlow) {
       dispatch(checkCarIsValid(onCarIsValid, goNext));
     } else {
@@ -283,6 +274,15 @@ export const SelectOpsCode: React.FC<TProps> = ({
       ...prev,
       [id]: e.target.value,
     }));
+  };
+
+  const handleShowComment = (id: number) => {
+    setOpenedComments(prevState => {
+      if (prevState?.includes(id)) {
+        return prevState.filter(i => i !== id);
+      }
+      return [...prevState, id];
+    });
   };
 
   return (
@@ -322,7 +322,12 @@ export const SelectOpsCode: React.FC<TProps> = ({
                     value={s.id}
                     control={
                       <Checkbox
-                        onChange={handleSelectCode}
+                        onChange={e => {
+                          handleSelectCode(e);
+                          if (openedComments.includes(s.id)) {
+                            handleShowComment(s.id);
+                          }
+                        }}
                         value={s.id}
                         size={'small'}
                         checked={selectedOpsCodes.includes(s.id)}
@@ -349,14 +354,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
                         openedComments.includes(s.id) ||
                         commentText[s.id]?.length > 0
                       }
-                      onClick={() => {
-                        setOpenedComments(prevState => {
-                          if (prevState?.includes(s.id)) {
-                            return prevState.filter(i => i !== s.id);
-                          }
-                          return [...prevState, s.id];
-                        });
-                      }}
+                      onClick={() => handleShowComment(s.id)}
                     >
                       <MessageIconComponent filled={commentText[s.id]?.length > 0} />
                     </MessageIconWrapper>
