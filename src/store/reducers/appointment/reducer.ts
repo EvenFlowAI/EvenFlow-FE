@@ -15,6 +15,7 @@ import {
   selectAppointment,
   selectServiceValetAppointment,
   selectSR,
+  selectSRComments,
   selectSRMultiple,
   setAppointmentFilters,
   setAppointmentWasChanged,
@@ -193,6 +194,9 @@ export const appointmentReducer = createReducer(initialState, builder =>
     })
     .addCase(selectSRMultiple, (state, { payload }) => {
       return { ...state, selectedSR: payload.ids, selectedSRComments: payload.comments };
+    })
+    .addCase(selectSRComments, (state, { payload }) => {
+      return { ...state, selectedSRComments: payload.comments };
     })
     .addCase(setProfileLoading, (state, { payload }) => {
       return { ...state, isProfileLoading: payload };

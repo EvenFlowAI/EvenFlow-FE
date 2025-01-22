@@ -5,6 +5,7 @@ import { RootState } from '../../../../../../store/rootReducer';
 import {
   loadSRs,
   setAppointmentWasChanged,
+  selectSRComments,
 } from '../../../../../../store/reducers/appointment/actions';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
@@ -35,9 +36,8 @@ const ShoppingCart = () => {
     selectedRecalls,
     packageEMenuType,
   } = useSelector((state: RootState) => state.appointmentFrame);
-  const { scProfile, selectedSR, serviceRequests, customerLoadedData } = useSelector(
-    (state: RootState) => state.appointment
-  );
+  const { scProfile, selectedSR, serviceRequests, customerLoadedData, selectedSRComments } =
+    useSelector((state: RootState) => state.appointment);
   const { allCategories } = useSelector((state: RootState) => state.categories);
 
   const [isOpen, setOpen] = useState<boolean>(true);
@@ -101,6 +101,11 @@ const ShoppingCart = () => {
   const deleteService = (item: IMaintenanceItem) => {
     switch (item.type) {
       case 'service':
+        const itemId = item?.id;
+        const newComments = Object.fromEntries(
+          Object.entries(selectedSRComments).filter(([key]) => Number(key) !== itemId)
+        );
+        dispatch(selectSRComments({ comments: newComments }));
         dispatch(deleteIndService(item));
         setAppointmentChanged();
         handleSideBarSteps();
