@@ -628,7 +628,7 @@ export const getMaintenanceDescription = (
     });
   }
   if (valueService?.selectedService?.name) services.push(valueService.selectedService.name);
-  selectedRecalls.forEach(el => services.push(el.shortDescription));
+  selectedRecalls.forEach(el => services.push(el.recallComponent));
   return services;
 };
 
@@ -698,7 +698,7 @@ export const getMaintenanceList = (
     selectedRecalls.forEach(item => {
       services.push({
         id: item.serviceRequestId,
-        name: item.shortDescription,
+        name: item.recallComponent,
         type: 'recall',
         campaignNumber: item.campaignNumber ?? item.oemProgram,
       });

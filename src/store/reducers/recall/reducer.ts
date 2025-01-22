@@ -43,6 +43,7 @@ export const recallsReducer = createReducer(initialState, builder =>
       return { ...state, recallPageData: { ...state.recallPageData, ...payload } };
     })
     .addCase(getRecallsByVin, (state, { payload }) => {
+      console.log('qwe', payload);
       return { ...state, recallsByVin: payload };
     })
     .addCase(setRecallOrder, (state, { payload }) => {
