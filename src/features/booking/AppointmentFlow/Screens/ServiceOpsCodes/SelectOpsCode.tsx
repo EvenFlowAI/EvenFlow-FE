@@ -13,6 +13,7 @@ import { IServiceRequest } from '../../../../../store/reducers/serviceRequests/t
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import AskAddService from '../../../../../components/modals/booking/AskAddService/AskAddService';
 import ServiceComment from '../../../../../components/modals/booking/ServiceComment/ServiceComment';
+import ServiceCommentUpdate from '../../../../../components/modals/booking/ServiceComment/ServiceCommentUpdate';
 import {
   checkCarIsValid,
   selectCategoriesIds,
@@ -220,12 +221,30 @@ export const SelectOpsCode: React.FC<TProps> = ({
     }
   };
 
+  const handleValidateCheckedServiceCommentsUpdate = () => {
+    if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
+      onAddCommentedService();
+    } else {
+      confirmValidationCommentsModal();
+      dispatch(checkCarIsValid(onCarIsValid, goNext));
+    }
+  };
+
   const onCloseValidationCommentsModal = () => {
     OnCloseCommentedService();
     const filteredComments = Object.fromEntries(
       Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
     );
     dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
+  };
+
+  const onCloseValidationCommentsModalUpdate = () => {
+    OnCloseCommentedService();
+    const filteredComments = Object.fromEntries(
+      Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
+    );
+    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
+    dispatch(checkCarIsValid(onCarIsValid, goNext));
   };
 
   const confirmValidationCommentsModal = () => {
@@ -237,12 +256,23 @@ export const SelectOpsCode: React.FC<TProps> = ({
     dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
   };
 
+  const confirmValidationCommentsModalUpdate = () => {
+    OnCloseCommentedService();
+    const newSelectedOpsCodes = Array.from(
+      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
+    );
+    setSelectedOpsCodes(newSelectedOpsCodes);
+    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
+    dispatch(checkCarIsValid(onCarIsValid, goNext));
+  };
+
   const handleNext = () => {
     handleGA();
-    handleValidateCheckedServiceComments();
     if (isManagingFlow) {
-      dispatch(checkCarIsValid(onCarIsValid, goNext));
+      // dispatch(checkCarIsValid(onCarIsValid, goNext));
+      handleValidateCheckedServiceCommentsUpdate();
     } else {
+      handleValidateCheckedServiceComments();
       onAdditionalOpen();
     }
   };
@@ -403,15 +433,27 @@ export const SelectOpsCode: React.FC<TProps> = ({
         )}
       </Wrapper>
       <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
-      <ServiceComment
-        onSave={confirmValidationCommentsModal}
-        onClose={onCloseValidationCommentsModal}
-        onCloseX={() => {
-          OnCloseCommentedService();
-          onAdditionalClose();
-        }}
-        open={isCommentedServiceNotAdded}
-      />
+      {isManagingFlow ? (
+        <ServiceCommentUpdate
+          onSave={confirmValidationCommentsModalUpdate}
+          onClose={onCloseValidationCommentsModalUpdate}
+          onCloseX={() => {
+            OnCloseCommentedService();
+            onAdditionalClose();
+          }}
+          open={isCommentedServiceNotAdded}
+        />
+      ) : (
+        <ServiceComment
+          onSave={confirmValidationCommentsModal}
+          onClose={onCloseValidationCommentsModal}
+          onCloseX={() => {
+            OnCloseCommentedService();
+            onAdditionalClose();
+          }}
+          open={isCommentedServiceNotAdded}
+        />
+      )}
       <ActionButtons
         onBack={handleBack}
         nextDisabled={!selectedOpsCodes.length}
