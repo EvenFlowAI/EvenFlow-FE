@@ -484,7 +484,6 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
     const data: TRecallForRequest = {
       serviceRequestId: recall.serviceRequestId,
       number: recall.campaignNumber ?? recall.oemProgram,
-      recallComponent: recall.recallComponent,
     };
     if (recall.id) data.id = recall.id;
     return data;
@@ -629,7 +628,7 @@ export const getMaintenanceDescription = (
     });
   }
   if (valueService?.selectedService?.name) services.push(valueService.selectedService.name);
-  selectedRecalls.forEach(el => services.push(el.recallComponent));
+  selectedRecalls.forEach(el => services.push(el.shortDescription));
   return services;
 };
 
@@ -699,7 +698,7 @@ export const getMaintenanceList = (
     selectedRecalls.forEach(item => {
       services.push({
         id: item.serviceRequestId,
-        name: item.recallComponent,
+        name: item.shortDescription,
         type: 'recall',
         campaignNumber: item.campaignNumber ?? item.oemProgram,
       });

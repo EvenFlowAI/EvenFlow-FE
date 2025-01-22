@@ -145,7 +145,6 @@ export type TRecallForRequest = {
   serviceRequestId: number;
   number: string | undefined;
   id?: number;
-  recallComponent: string;
 };
 
 export type MPOptionShort = {

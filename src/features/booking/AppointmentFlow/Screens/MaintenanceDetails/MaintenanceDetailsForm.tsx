@@ -351,7 +351,7 @@ export const MaintenanceDetailsForm: React.FC<
         if (vin && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
           setLoading(true);
           try {
-            const { data: resData } = await Api.call(Api.endpoints.Recalls.GetByVin, {
+            const { data } = await Api.call(Api.endpoints.Recalls.GetByVin, {
               data: {
                 serviceCenterId: decodeSCID(id),
                 vin: vin.toUpperCase(),
@@ -361,8 +361,8 @@ export const MaintenanceDetailsForm: React.FC<
               },
             });
             dispatch(setRecallsAreShown(true));
-            if (resData.length) {
-              onOpen();
+            if (data.length) {
+              await onOpen();
             } else {
               onEmptyRecalls();
             }
