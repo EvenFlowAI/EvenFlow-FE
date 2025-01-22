@@ -15,6 +15,7 @@ import {
   selectAppointment,
   selectServiceValetAppointment,
   selectSR,
+  selectSRComments,
   selectSRMultiple,
   setAppointmentFilters,
   setAppointmentWasChanged,
@@ -62,6 +63,7 @@ const initialState: TAppointmentState = {
   customerEnteredEmail: '',
   appointmentId: null,
   selectedSR: [],
+  selectedSRComments: {},
   search: '',
   personalInformation: blankPersonalInfo,
   reminders: blankReminders,
@@ -191,7 +193,10 @@ export const appointmentReducer = createReducer(initialState, builder =>
       return { ...state, allServiceCategories: payload };
     })
     .addCase(selectSRMultiple, (state, { payload }) => {
-      return { ...state, selectedSR: payload };
+      return { ...state, selectedSR: payload.ids, selectedSRComments: payload.comments };
+    })
+    .addCase(selectSRComments, (state, { payload }) => {
+      return { ...state, selectedSRComments: payload.comments };
     })
     .addCase(setProfileLoading, (state, { payload }) => {
       return { ...state, isProfileLoading: payload };

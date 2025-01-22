@@ -81,6 +81,7 @@ export const AppointmentSlots: React.FC<
     slotsServiceTypeOptionId,
     slotsTransportationId,
     slotsSearchedDate,
+    selectedSRComments,
   } = useSelector((state: RootState) => state.appointment);
 
   const {
@@ -420,7 +421,9 @@ export const AppointmentSlots: React.FC<
             service,
             subService,
             selectedPackage,
-            selectedSR
+            selectedSR,
+            undefined,
+            selectedSRComments
           ),
           serviceCategoryIds: getCategories(),
           customerId: customerLoadedData?.id,
@@ -509,6 +512,7 @@ export const AppointmentSlots: React.FC<
     address,
     mileage,
     transportation,
+    selectedSRComments,
   ]);
 
   useEffect(() => {

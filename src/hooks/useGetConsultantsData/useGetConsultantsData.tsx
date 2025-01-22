@@ -25,7 +25,7 @@ const useGetConsultantsData = (
     categoriesIds,
     appointmentByKey,
   } = useSelector((state: RootState) => state.appointmentFrame);
-  const { selectedSR } = useSelector((state: RootState) => state.appointment);
+  const { selectedSR, selectedSRComments } = useSelector((state: RootState) => state.appointment);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<IConsultantsRequestData | null>(null);
@@ -46,7 +46,14 @@ const useGetConsultantsData = (
           ? { optionType: packageEMenuType }
           : null;
       const recalls = mapRecallsForRequest(selectedRecalls);
-      const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR);
+      const serviceRequestIds = collectServiceRequestIds(
+        service,
+        subService,
+        null,
+        selectedSR,
+        undefined,
+        selectedSRComments
+      );
       const isValidForServiceType =
         serviceTypeOption?.type !== EServiceType.PickUpDropOff ||
         (address && zipCode?.length === 5);

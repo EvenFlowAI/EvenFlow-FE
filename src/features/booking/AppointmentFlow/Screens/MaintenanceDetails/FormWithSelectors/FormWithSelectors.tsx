@@ -9,9 +9,7 @@ import { useStyles } from '../styles';
 import { TFormProps, TKey } from '../types';
 import { MenuProps } from '../constants';
 
-export const FormWithSelectors: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<TFormProps>>
-> = ({
+export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFormProps>>> = ({
   orderMapStyles,
   isExistingVehicle,
   requiredFields,
@@ -21,6 +19,7 @@ export const FormWithSelectors: React.FC<
   setSelectedEngine,
   errors,
   setErrors,
+  isExistingSelectedVehicle,
 }) => {
   const { selectedVehicle, makes, appointmentByKey } = useSelector(
     (state: RootState) => state.appointmentFrame
@@ -179,7 +178,7 @@ export const FormWithSelectors: React.FC<
               ? `${t('Make')} ${t('required')}`
               : `${t('Select')} ${t('Make')}`
           }
-          disabled={Boolean(selectedVehicle?.make)}
+          disabled={Boolean(isExistingSelectedVehicle?.make)}
           onChange={handleSelectChange('make', false)}
         >
           <MenuItem disabled value="">
@@ -246,7 +245,7 @@ export const FormWithSelectors: React.FC<
           displayEmpty
           MenuProps={MenuProps}
           style={{ color: selectedVehicle?.model ? 'inherit' : '#858585' }}
-          disabled={Boolean(selectedVehicle?.model)}
+          disabled={Boolean(isExistingSelectedVehicle?.model)}
           onChange={handleSelectChange('model', false)}
         >
           <MenuItem disabled value="">

@@ -101,12 +101,19 @@ export const Transportations = () => {
     onOptionOpen();
   };
 
-  const handleServiceValetRedirection = (opCode: string) => {
-    if (opCode.includes('Service valet')) {
+  const handleServiceValetRedirection = (redirect: boolean) => {
+    if (redirect) {
       push(
         `${Routes.Services.ServiceValet}?${QueryTypes.selectedTab}=${ServiceValetRoutes.CenterSettings}`
       );
     }
+  };
+
+  const renderOpCodeCol = (type: number, opCode?: string) => {
+    if (type === ETransportationType.PickUpDelivery) {
+      return 'Service valet';
+    }
+    return opCode ?? '';
   };
 
   return (
@@ -183,12 +190,16 @@ export const Transportations = () => {
                         {el.orderIndex}
                       </TableCell>
                       <TableCell
-                        onClick={() => handleServiceValetRedirection(el.opCode ?? '')}
+                        onClick={() =>
+                          handleServiceValetRedirection(
+                            el.type === ETransportationType.PickUpDelivery
+                          )
+                        }
                         key="6"
                         align="left"
                       >
-                        <OpCodeValue serviceValet={el.opCode?.includes('Service valet') ?? false}>
-                          {el.opCode ?? ' '}
+                        <OpCodeValue serviceValet={el.type === ETransportationType.PickUpDelivery}>
+                          {renderOpCodeCol(el.type, el.opCode)}
                         </OpCodeValue>
                       </TableCell>
                       <TableCell key="4" align="left">

@@ -394,7 +394,7 @@ export const loadConsultants =
       advisor,
       appointmentByKey,
     } = getState().appointmentFrame;
-    const { selectedSR } = getState().appointment;
+    const { selectedSR, selectedSRComments } = getState().appointment;
     const { allCategories } = getState().categories;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
     const serviceCategoryIds = allCategories
@@ -412,7 +412,14 @@ export const loadConsultants =
           ? { optionType: packageEMenuType }
           : null;
       const recalls = mapRecallsForRequest(selectedRecalls);
-      const serviceRequestIds = collectServiceRequestIds(service, subService, null, selectedSR);
+      const serviceRequestIds = collectServiceRequestIds(
+        service,
+        subService,
+        null,
+        selectedSR,
+        undefined,
+        selectedSRComments
+      );
       if (
         serviceRequestIds.length ||
         maintenancePackageOption ||
@@ -534,7 +541,7 @@ export const clearSelectedServices =
     dispatch(selectService(null));
     dispatch(selectSubService(null));
     dispatch(setValueService(null));
-    dispatch(selectSR(null));
+    dispatch(selectSRMultiple({ ids: [], comments: {} }));
     dispatch(setAdvisor(null));
     dispatch(setTransportation(null));
     dispatch(setRecallsAreShown(false));
@@ -1042,7 +1049,9 @@ export const createOrUpdateAppointment =
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
-      appointment.selectedSR
+      appointment.selectedSR,
+      undefined,
+      appointment.selectedSRComments
     );
 
     const maintenancePackageOption: TMaintenanceOption | null = appointmentFrame.selectedPackage
@@ -1128,9 +1137,9 @@ export const createOrUpdateAppointment =
       data,
       urlParams: { id: appointmentFrame.hashKey },
     })
-      .then(({ data }) => {
+      .then(({ data: resData }) => {
         dispatch(setEditingPosition(null));
-        dispatch(handleAppointmentResponse(data, endpoint, onNext));
+        dispatch(handleAppointmentResponse(resData, endpoint, onNext));
       })
       .catch(e => {
         onError(e);
@@ -1217,7 +1226,9 @@ export const loadAppointmentRequestsPrices =
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
-      appointment.selectedSR
+      appointment.selectedSR,
+      undefined,
+      appointment.selectedSRComments
     );
 
     const time =
@@ -1566,7 +1577,13 @@ export const handleAppointmentUpdate =
             dispatch(setUpdateAppointment(data));
             dispatch(setAppointmentByKey(data));
             dispatch(updatePackageOption(data.maintenancePackageOption));
-            dispatch(selectSRMultiple(data.serviceRequests.map(el => el.id)));
+            const comments = data.serviceRequests.reduce((acc: { [key: number]: string }, item) => {
+              acc[item.id] = (item as any).comment || '';
+              return acc;
+            }, {});
+            dispatch(
+              selectSRMultiple({ ids: data.serviceRequests.map(el => el.id), comments: comments })
+            );
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
@@ -1608,7 +1625,7 @@ export const loadActiveTransportations =
       subService,
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
-    const { selectedSR } = getState().appointment;
+    const { selectedSR, selectedSRComments } = getState().appointment;
     const { firstScreenOptions } = getState().serviceTypes;
     if (selectedVehicle) {
       dispatch(setTransportationsLoading(true));
@@ -1629,7 +1646,14 @@ export const loadActiveTransportations =
 
       const data: TTransportationData = {
         serviceCenterId,
-        serviceRequests: collectServiceRequestIds(service, subService, null, selectedSR),
+        serviceRequests: collectServiceRequestIds(
+          service,
+          subService,
+          null,
+          selectedSR,
+          undefined,
+          selectedSRComments
+        ),
         serviceCategoryIds,
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,

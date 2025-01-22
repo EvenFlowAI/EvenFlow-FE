@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { handleSearch, selectSRMultiple } from '../../../../../store/reducers/appointment/actions';
 import { Checkbox, IconButton } from '@mui/material';
+import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { InfoOutlined, Search } from '@mui/icons-material';
 import { TArgCallback, TScreen } from '../../../../../types/types';
 import ReactGA from 'react-ga4';
 import { IServiceRequest } from '../../../../../store/reducers/serviceRequests/types';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import AskAddService from '../../../../../components/modals/booking/AskAddService/AskAddService';
+import ServiceComment from '../../../../../components/modals/booking/ServiceComment/ServiceComment';
 import {
   checkCarIsValid,
   selectCategoriesIds,
@@ -29,10 +31,17 @@ import {
   PricesWrapper,
   SearchInput,
   Wrapper,
+  MessageIconWrapper,
+  DescriptionWrapper,
+  PriceCommentWrapper,
+  TextFieldWrapper,
+  RemainingCharactersWrapper,
 } from './styles';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useDebounce } from '../../../../../hooks/useDebounce/useDebounce';
 import { useException } from '../../../../../hooks/useException/useException';
+import { ReactComponent as MessageIcon } from '../../../../../assets/img/comment_icon.svg';
+import { ReactComponent as MessageIconFilled } from '../../../../../assets/img/comment_icon_filled.svg';
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -41,20 +50,26 @@ type TProps = {
   isManagingFlow?: boolean;
 };
 
+const MAX_COUNT_WORDS_CAPACITY = 250;
+
+const MessageIconComponent = ({ filled }: { filled: boolean }) =>
+  filled ? <MessageIconFilled /> : <MessageIcon />;
+
 export const SelectOpsCode: React.FC<TProps> = ({
   isManagingFlow,
   handleSetScreen,
   onAddServices,
   page,
 }) => {
-  const { selectedSR, serviceRequests, search, scProfile } = useSelector(
+  const { selectedSR, serviceRequests, search, scProfile, selectedSRComments } = useSelector(
     ({ appointment }: RootState) => appointment
   );
   const { subService, service, categoriesIds, trackerData } = useSelector(
     ({ appointmentFrame }: RootState) => appointmentFrame
   );
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
-
+  const [openedComments, setOpenedComments] = useState<number[]>([]);
+  const [commentText, setCommentText] = useState<{ [key: number]: string }>({});
   const [searchInput, setSearch] = useState<string>('');
   const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
   const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
@@ -69,6 +84,11 @@ export const SelectOpsCode: React.FC<TProps> = ({
     onOpen: onAdditionalOpen,
     onClose: onAdditionalClose,
   } = useModal();
+  const {
+    isOpen: isCommentedServiceNotAdded,
+    onOpen: onAddCommentedService,
+    onClose: OnCloseCommentedService,
+  } = useModal();
   const allRequestsHavePrice = useMemo(
     () => opsCodesList.every(el => Boolean(el.price)),
     [opsCodesList]
@@ -77,6 +97,10 @@ export const SelectOpsCode: React.FC<TProps> = ({
   useEffect(() => {
     setSelectedOpsCodes(selectedSR);
   }, [selectedSR]);
+
+  useEffect(() => {
+    setCommentText(selectedSRComments);
+  }, [selectedSRComments]);
 
   useEffect(() => {
     if (!isInit.current) {
@@ -188,9 +212,34 @@ export const SelectOpsCode: React.FC<TProps> = ({
     );
   };
 
+  const handleValidateCheckedServiceComments = () => {
+    if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
+      onAddCommentedService();
+    } else {
+      confirmValidationCommentsModal();
+    }
+  };
+
+  const onCloseValidationCommentsModal = () => {
+    OnCloseCommentedService();
+    const filteredComments = Object.fromEntries(
+      Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
+    );
+    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
+  };
+
+  const confirmValidationCommentsModal = () => {
+    OnCloseCommentedService();
+    const newSelectedOpsCodes = Array.from(
+      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
+    );
+    setSelectedOpsCodes(newSelectedOpsCodes);
+    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
+  };
+
   const handleNext = () => {
     handleGA();
-    dispatch(selectSRMultiple(selectedOpsCodes));
+    handleValidateCheckedServiceComments();
     if (isManagingFlow) {
       dispatch(checkCarIsValid(onCarIsValid, goNext));
     } else {
@@ -217,6 +266,25 @@ export const SelectOpsCode: React.FC<TProps> = ({
     goNext();
   };
 
+  const handleCommentChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > MAX_COUNT_WORDS_CAPACITY) {
+      return;
+    }
+    setCommentText(prev => ({
+      ...prev,
+      [id]: e.target.value,
+    }));
+  };
+
+  const handleShowComment = (id: number) => {
+    setOpenedComments(prevState => {
+      if (prevState?.includes(id)) {
+        return prevState.filter(i => i !== id);
+      }
+      return [...prevState, id];
+    });
+  };
+
   return (
     <StepWrapper>
       <Wrapper>
@@ -241,33 +309,91 @@ export const SelectOpsCode: React.FC<TProps> = ({
         <CodesWrapper>
           {opsCodesList.map(s => {
             return (
-              <CodeWrapper key={`${s.code} ${s.id}`}>
-                <Code
-                  key={s.id}
-                  label={s?.description ?? s.code}
-                  labelPlacement={'end'}
-                  value={s.id}
-                  control={
-                    <Checkbox
-                      onChange={handleSelectCode}
-                      value={s.id}
-                      size={'small'}
-                      checked={selectedOpsCodes.includes(s.id)}
-                      color="primary"
-                    />
-                  }
-                />
-                <PricesWrapper>
-                  {/*todo uncomment for offer new functionality*/}
-                  {/*{s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>*/}
-                  {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
-                  {/*</OfferPrice> : null}*/}
-                  {Boolean(s.price) ? (
-                    <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
-                  ) : (
-                    <InfoOutlined style={{ paddingRight: 8, fontSize: '2rem' }} />
-                  )}
-                </PricesWrapper>
+              <CodeWrapper opened={openedComments.includes(s.id)} key={`${s.code} ${s.id}`}>
+                <DescriptionWrapper>
+                  <Code
+                    key={s.id}
+                    label={s?.description ?? s.code}
+                    sx={{
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
+                    }}
+                    labelPlacement={'end'}
+                    value={s.id}
+                    control={
+                      <Checkbox
+                        onChange={e => {
+                          handleSelectCode(e);
+                          if (openedComments.includes(s.id)) {
+                            handleShowComment(s.id);
+                          }
+                        }}
+                        value={s.id}
+                        size={'small'}
+                        checked={selectedOpsCodes.includes(s.id)}
+                        color="primary"
+                      />
+                    }
+                  />
+
+                  <PriceCommentWrapper>
+                    <PricesWrapper>
+                      {/*todo uncomment for offer new functionality*/}
+                      {/*{s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>*/}
+                      {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
+                      {/*</OfferPrice> : null}*/}
+                      {Boolean(s.price) ? (
+                        <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
+                      ) : (
+                        <InfoOutlined style={{ paddingRight: 8, fontSize: '2rem' }} />
+                      )}
+                    </PricesWrapper>
+                    <MessageIconWrapper
+                      opened={
+                        selectedOpsCodes.includes(s.id) ||
+                        openedComments.includes(s.id) ||
+                        commentText[s.id]?.length > 0
+                      }
+                      onClick={() => handleShowComment(s.id)}
+                    >
+                      <MessageIconComponent filled={commentText[s.id]?.length > 0} />
+                    </MessageIconWrapper>
+                  </PriceCommentWrapper>
+                </DescriptionWrapper>
+                <TextFieldWrapper opened={openedComments.includes(s.id)}>
+                  <RemainingCharactersWrapper opened={false}>
+                    {commentText[s.id]?.length ?? 0} / {MAX_COUNT_WORDS_CAPACITY} characters
+                  </RemainingCharactersWrapper>
+                  <TextField
+                    value={commentText[s.id] ?? ''}
+                    onChange={handleCommentChange(s.id)}
+                    fullWidth
+                    multiline
+                    rows={3}
+                    placeholder={t('Comments')}
+                    size="small"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#ffffff',
+
+                        '& fieldset': {
+                          borderColor: '#e0e0e0',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#bdbdbd',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#1976d2',
+                        },
+                      },
+                      '& .MuiInputBase-input': {
+                        padding: '12px 10px',
+                        fontSize: '14px',
+                        lineHeight: '20px',
+                      },
+                    }}
+                  />
+                </TextFieldWrapper>
               </CodeWrapper>
             );
           })}
@@ -277,6 +403,15 @@ export const SelectOpsCode: React.FC<TProps> = ({
         )}
       </Wrapper>
       <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
+      <ServiceComment
+        onSave={confirmValidationCommentsModal}
+        onClose={onCloseValidationCommentsModal}
+        onCloseX={() => {
+          OnCloseCommentedService();
+          onAdditionalClose();
+        }}
+        open={isCommentedServiceNotAdded}
+      />
       <ActionButtons
         onBack={handleBack}
         nextDisabled={!selectedOpsCodes.length}

@@ -1,11 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  HTMLAttributes,
-  useMemo,
-  ChangeEvent,
-} from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -13,7 +6,10 @@ import {
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
-import { ITransportationOptionFull } from '../../../../store/reducers/transportationNeeds/types';
+import {
+  ITransportationOptionFull,
+  ETransportationType,
+} from '../../../../store/reducers/transportationNeeds/types';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
@@ -28,13 +24,10 @@ import { IIconState } from '../../ServiceCategories/AddServiceCategoryModal/type
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { Autocomplete } from '@mui/material';
-import Checkbox from '../../../../components/formControls/Checkbox/Checkbox';
-import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
-import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { TOption } from '../types';
 import { RootState } from '../../../../store/rootReducer';
 import { useSelector } from 'react-redux';
+import { IAssignedServiceRequest } from '../../../../store/reducers/serviceRequests/types';
 
 const initialFileState = { file: null, dataUrl: undefined };
 
@@ -47,28 +40,33 @@ export const EditTransportationDescriptionModal: React.FC<
   const [description, setDescription] = useState<string>('');
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [orderIndex, setOrderIndex] = useState<string>('');
-  const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
   const [fileState, setFileState] = useState<IIconState>(initialFileState);
   const { classes } = useStyles();
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
   const showError = useException();
   const showMessage = useMessage();
-  const { classes: autocompleteClasses } = useAutocompleteStyles();
 
+  const pickupAndDeliveryType = editingElement?.type === ETransportationType.PickUpDelivery;
+
+  const [selectedCode, setSelectedCode] = useState<IAssignedServiceRequest | null>(
+    () => allAssignedList.find(i => i?.serviceRequest?.code === editingElement?.opCode) ?? null
+  );
   useEffect(() => {
     if (editingElement && props.open) {
+      const code =
+        allAssignedList.find(i => i?.serviceRequest?.code === editingElement?.opCode) ?? null;
+      setSelectedCode(code);
       editingElement.description && setDescription(editingElement.description);
       editingElement.orderIndex && setOrderIndex(editingElement.orderIndex.toString());
     }
-  }, [editingElement, props.open]);
+  }, [editingElement, props.open, allAssignedList]);
 
   const onCancel = () => {
     setFormIsChecked(false);
     setDescription('');
     setOrderIndex('');
     setFileState(initialFileState);
-    setServiceRequests([]);
     props.onClose();
   };
 
@@ -115,7 +113,7 @@ export const EditTransportationDescriptionModal: React.FC<
               ...editingElement,
               description: description.trim(),
               orderIndex: +orderIndex,
-              serviceRequestId: serviceRequests[0].value ?? undefined,
+              serviceRequestId: selectedCode?.id ?? undefined,
             },
             onDataSaved,
             showError
@@ -137,73 +135,9 @@ export const EditTransportationDescriptionModal: React.FC<
     saveIcon();
   };
 
-  const onRequestCheckboxChange = useCallback((event: React.SyntheticEvent, value: TOption) => {
-    setFormIsChecked(false);
-    console.log('here');
-  }, []);
-
-  const renderRequestOption = useCallback(
-    (props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
-      const checked = !!serviceRequests.find(item => item.value === option.value);
-      return (
-        <li style={{ display: 'flex', alignItems: 'center' }} {...props} key={option.name}>
-          <Checkbox
-            color="primary"
-            icon={
-              checked ? (
-                <CheckBoxOutlined htmlColor="#3855FE" />
-              ) : (
-                <CheckBoxOutlineBlank htmlColor="#DADADA" />
-              )
-            }
-            checked={checked}
-            onChange={e => onRequestCheckboxChange(e, option)}
-          />
-          {option.name}
-        </li>
-      );
-    },
-    [serviceRequests, onRequestCheckboxChange]
-  );
-
-  useEffect(() => {
-    if (editingElement && props.open) {
-      const { rules } = editingElement;
-      if (rules) {
-        if (rules.isAllServiceRequestsIncluded) {
-          setServiceRequests(
-            allAssignedList.map((item: any) => ({
-              name: item.serviceRequest.code,
-              value: item.id,
-            }))
-          );
-        } else {
-          setServiceRequests(
-            rules.serviceRequests.map(item => ({
-              value: item.id,
-              name: item.code,
-            }))
-          );
-        }
-      }
-    }
-  }, [editingElement, props.open, allAssignedList]);
-
-  const requestsOptions = useMemo(() => {
-    const options = allAssignedList.map(item => ({
-      name: item.serviceRequest.code,
-      value: item.id,
-    }));
-    return options;
-  }, [allAssignedList]);
-
-  const onRequestChange = useCallback(
-    (event: React.SyntheticEvent, value: TOption[], reason: string) => {
-      setFormIsChecked(false);
-      setServiceRequests([value[value.length - 1]]);
-    },
-    [allAssignedList]
-  );
+  const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest | null) => {
+    setSelectedCode(option);
+  };
 
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
@@ -240,24 +174,19 @@ export const EditTransportationDescriptionModal: React.FC<
               value={description}
             />
           </div>
-
           <Autocomplete
-            multiple
-            style={{ marginBottom: 20 }}
-            classes={autocompleteClasses}
-            options={requestsOptions}
-            disableCloseOnSelect
-            disableClearable
-            getOptionLabel={option => option.name}
-            isOptionEqualToValue={(o, v) => o.value === v.value}
-            renderOption={renderRequestOption}
-            value={serviceRequests}
-            onChange={onRequestChange}
+            disabled={pickupAndDeliveryType}
+            value={selectedCode}
+            onChange={onOpsCodeChange}
+            getOptionLabel={o => o.serviceRequest.code}
+            isOptionEqualToValue={(option, value) =>
+              option.serviceRequest.id === value.serviceRequest.id
+            }
             renderInput={autocompleteRender({
-              label: 'Op Codes',
-              error: !serviceRequests.length && formIsChecked,
-              placeholder: 'Select Op Codes',
+              label: 'OP Code',
+              placeholder: pickupAndDeliveryType ? 'See Service Valet page' : 'Select Op Code',
             })}
+            options={allAssignedList}
           />
         </div>
       </DialogContent>

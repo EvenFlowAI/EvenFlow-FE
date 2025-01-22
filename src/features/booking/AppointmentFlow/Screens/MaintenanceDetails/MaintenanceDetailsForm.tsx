@@ -101,6 +101,22 @@ export const MaintenanceDetailsForm: React.FC<
     );
   }, [selectedVehicle, customerLoadedData]);
 
+  const isExistingSelectedVehicle = useMemo(
+    () =>
+      customerLoadedData?.vehicles.find(v => {
+        return (
+          (v.vin &&
+            selectedVehicle?.vin &&
+            v.vin?.toUpperCase() === selectedVehicle?.vin?.toUpperCase()) ||
+          (v.make?.toLowerCase() === selectedVehicle?.make?.toLowerCase() &&
+            v.model?.toLowerCase() === selectedVehicle?.model?.toLowerCase() &&
+            v.year &&
+            v.year?.toString() === selectedVehicle?.year?.toString())
+        );
+      }),
+    [selectedVehicle, customerLoadedData]
+  );
+
   const recallsToggledOn = useMemo(
     () =>
       (currentConfig?.checkRecallsNew && userType === EUserType.New) ||
@@ -406,6 +422,7 @@ export const MaintenanceDetailsForm: React.FC<
               isExistingVehicle={isExistingVehicle}
               orderMapStyles={orderMapStyles}
               requiredFields={requiredFields}
+              isExistingSelectedVehicle={isExistingSelectedVehicle}
             />
           ) : (
             <FormWithAutocompletes
@@ -418,6 +435,7 @@ export const MaintenanceDetailsForm: React.FC<
               isExistingVehicle={isExistingVehicle}
               orderMapStyles={orderMapStyles}
               requiredFields={requiredFields}
+              isExistingSelectedVehicle={isExistingSelectedVehicle}
             />
           )}
 

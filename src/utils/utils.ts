@@ -402,7 +402,8 @@ export const collectServiceRequestIds = (
   sub: IServiceCategory | null,
   selectedPackage?: IPackageOptions | null,
   individualOpsCodes?: number[],
-  selectedRecalls?: IRecallByVin[]
+  selectedRecalls?: IRecallByVin[],
+  individualOpsCodesComments?: Record<number, string>
 ): IServiceRequestIds[] => {
   let ids = [];
 
@@ -415,7 +416,10 @@ export const collectServiceRequestIds = (
     }
   }
   const set = new Set(ids);
-  return Array.from(set).map(i => ({ id: i, comment: null }));
+  return Array.from(set).map(i => {
+    const currComment = individualOpsCodesComments ? individualOpsCodesComments[i] : null;
+    return { id: i, comment: currComment };
+  });
 };
 
 export const collectServiceRequestsForConsents = (
