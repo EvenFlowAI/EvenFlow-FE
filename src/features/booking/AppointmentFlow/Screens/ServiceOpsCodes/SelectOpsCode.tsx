@@ -406,7 +406,10 @@ export const SelectOpsCode: React.FC<TProps> = ({
       <ServiceComment
         onSave={confirmValidationCommentsModal}
         onClose={onCloseValidationCommentsModal}
-        onCloseX={OnCloseCommentedService}
+        onCloseX={() => {
+          OnCloseCommentedService();
+          onAdditionalClose();
+        }}
         open={isCommentedServiceNotAdded}
       />
       <ActionButtons
