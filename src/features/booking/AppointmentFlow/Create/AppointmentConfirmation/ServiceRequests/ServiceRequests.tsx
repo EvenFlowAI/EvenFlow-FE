@@ -8,16 +8,21 @@ import { List, ServiceItem, TitleWrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 
 const ServiceRequests = () => {
-  const { appointment, serviceValetAppointment } = useSelector(
+  const { appointment, serviceValetAppointment, selectedSR, selectedSRComments } = useSelector(
     (state: RootState) => state.appointment
   );
+
   const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+
   const { t } = useTranslation();
+
   const currentAppointment = useMemo(() => {
     return serviceTypeOption?.type === EServiceType.PickUpDropOff
       ? serviceValetAppointment
       : appointment;
   }, [serviceTypeOption, serviceValetAppointment, appointment]);
+
+  console.log({ appointment, serviceValetAppointment, selectedSR, selectedSRComments });
 
   return currentAppointment?.serviceRequestPrices?.length ? (
     <ConfirmationItemWrapper>
@@ -25,21 +30,11 @@ const ServiceRequests = () => {
         <AppointmentConfirmationTitle>{t('Service Requests')}</AppointmentConfirmationTitle>
       </TitleWrapper>
       <List>
-        {serviceTypeOption?.type === EServiceType.PickUpDropOff
-          ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
-              <ServiceItem key={item.requestName}>
-                {item.requestName.includes('Going')
-                  ? t('My Description of Needs')
-                  : item.requestName}
-              </ServiceItem>
-            ))
-          : appointment?.serviceRequestPrices?.map(item => (
-              <ServiceItem key={item.requestName}>
-                {item.requestName.includes('Going')
-                  ? t('My Description of Needs')
-                  : item.requestName}
-              </ServiceItem>
-            ))}
+        {currentAppointment?.serviceRequestPrices?.map(item => (
+          <ServiceItem key={item.requestName}>
+            {item.requestName.includes('Going') ? t('My Description of Needs') : item.requestName}
+          </ServiceItem>
+        ))}
       </List>
     </ConfirmationItemWrapper>
   ) : null;

@@ -153,7 +153,7 @@ export const AppointmentConfirmation: React.FC<
           {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable ? (
             <Review />
           ) : null}
-          <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} />
+          {/* <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} /> */}
         </div>
         <div>
           <AppointmentUserData
