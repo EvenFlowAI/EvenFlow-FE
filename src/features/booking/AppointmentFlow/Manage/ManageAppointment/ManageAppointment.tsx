@@ -362,7 +362,7 @@ export const ManageAppointment: React.FC<
               {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable ? (
                 <ReviewManaging />
               ) : null}
-              <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} />
+              {/* <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} /> */}
             </div>
             <div>
               <AppointmentUserData
@@ -401,7 +401,7 @@ export const ManageAppointment: React.FC<
 
       <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose} />
       <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={searchForConsents} />
-      <CommentModal open={isCommentOpen} onClose={onCommentClose} />
+      {/* <CommentModal open={isCommentOpen} onClose={onCommentClose} /> */}
       <ConfirmCancelUpdate
         open={isCancelConfirmOpen}
         onClose={onCancelConfirmClose}

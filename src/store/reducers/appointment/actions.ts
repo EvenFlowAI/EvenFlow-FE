@@ -97,6 +97,10 @@ export const selectSRMultiple = createAction<{ ids: number[]; comments: Record<n
 export const selectSRComments = createAction<{ comments: Record<number, string> }>(
   'Appointment/SelectSRComments'
 );
+export const selectSRComment = createAction<{ comments: Record<number, string> }>(
+  'Appointment/SelectSRComment'
+);
+
 export const handleSearch = createAction<string>('Appointment/Search');
 export const changeReminders = createAction<Partial<IReminders>>('Appointment/ChangeReminders');
 export const changePrivacy = createAction<Partial<IPrivacy>>('Appointment/ChangePrivacy');
