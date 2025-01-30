@@ -35,7 +35,7 @@ const ServiceRequests = () => {
         </TitleWrapper>
         <List>
           {serviceTypeOption?.type === EServiceType.PickUpDropOff
-            ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
+            ? currentAppointment?.serviceRequestPrices?.map(item => (
                 <ServiceItem key={item.requestName}>
                   {item.requestName.includes('Going')
                     ? t('My Description of Needs')
