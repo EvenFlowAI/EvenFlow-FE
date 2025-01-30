@@ -34,34 +34,37 @@ const ServiceRequests = () => {
           <AppointmentConfirmationTitle>{t('Service Requests')}</AppointmentConfirmationTitle>
         </TitleWrapper>
         <List>
-          {selectedSR.map(item => {
-            const currentServiceRequest = serviceRequests.find(
-              serviceRequest => serviceRequest.id === item
-            );
-            if (currentServiceRequest) {
-              return (
-                <ServiceItem key={item}>
-                  {currentServiceRequest?.description?.includes('Going')
+          {serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
+                <ServiceItem key={item.requestName}>
+                  {item.requestName.includes('Going')
                     ? t('My Description of Needs')
-                    : currentServiceRequest.description}
-                  <MessageIconWrapper
-                    onClick={() => {
-                      setSelectedRequest(currentServiceRequest);
-                      onCommentOpen();
-                    }}
-                  >
-                    {selectedSRComments[item] ? <MessageIconFilled /> : <MessageIcon />}
-                  </MessageIconWrapper>
+                    : item.requestName}
                 </ServiceItem>
-              );
-            }
-            return null;
-          })}
-          {/* {currentAppointment?.serviceRequestPrices?.map(item => (
-          <ServiceItem key={item.requestName}>
-            {item.requestName.includes('Going') ? t('My Description of Needs') : item.requestName}
-          </ServiceItem>
-        ))} */}
+              ))
+            : selectedSR.map(item => {
+                const currentServiceRequest = serviceRequests.find(
+                  serviceRequest => serviceRequest.id === item
+                );
+                if (currentServiceRequest) {
+                  return (
+                    <ServiceItem key={item}>
+                      {currentServiceRequest?.description?.includes('Going')
+                        ? t('My Description of Needs')
+                        : currentServiceRequest.description}
+                      <MessageIconWrapper
+                        onClick={() => {
+                          setSelectedRequest(currentServiceRequest);
+                          onCommentOpen();
+                        }}
+                      >
+                        {selectedSRComments[item] ? <MessageIconFilled /> : <MessageIcon />}
+                      </MessageIconWrapper>
+                    </ServiceItem>
+                  );
+                }
+                return null;
+              })}
         </List>
       </ConfirmationItemWrapper>
       <CommentModal
