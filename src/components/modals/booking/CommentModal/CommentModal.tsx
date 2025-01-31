@@ -37,7 +37,7 @@ const CommentModal: React.FC<
   };
 
   const onSave = () => {
-    if (!text.length) {
+    if (!text.length && selectedRequest?.code === 'specialCategory') {
       showError(t('Appointment Comment must not be empty'));
     } else if (selectedRequest?.code === 'specialCategory') {
       dispatch(setFrameDescription(text));
