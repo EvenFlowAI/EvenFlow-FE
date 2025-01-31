@@ -30,7 +30,7 @@ const ServiceRequests = () => {
   }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
   const currentCategories = allCategories.filter(
-    category => categoriesIds.includes(category.id) && category.type !== 2
+    category => categoriesIds.includes(category.id) && category.type === 0
   );
 
   return currentAppointment?.serviceRequestPrices?.length ? (
