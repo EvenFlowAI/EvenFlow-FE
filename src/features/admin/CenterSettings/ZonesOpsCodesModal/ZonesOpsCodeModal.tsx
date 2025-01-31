@@ -41,10 +41,10 @@ const ZonesOpsCodeModal: React.FC<
   }, [selectedSC]);
 
   useEffect(() => {
-    if (centerSettings?.zoneServiceRequests && open) {
+    if (centerSettings?.zoneServiceRequests) {
       setZonesOpsCodes(centerSettings.zoneServiceRequests);
     }
-  }, [centerSettings, open]);
+  }, [centerSettings]);
 
   const onCancel = () => {
     setFormChecked(false);
