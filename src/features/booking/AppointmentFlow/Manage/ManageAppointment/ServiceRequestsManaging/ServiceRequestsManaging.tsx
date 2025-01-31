@@ -146,7 +146,6 @@ const ServiceRequestsManaging = () => {
         open={isCommentOpen}
         onClose={() => {
           onCommentClose();
-          setSelectedRequest(null);
         }}
       />
     </ConfirmationItemWrapper>

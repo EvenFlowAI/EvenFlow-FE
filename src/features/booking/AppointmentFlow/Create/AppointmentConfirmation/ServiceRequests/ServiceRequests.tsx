@@ -106,7 +106,6 @@ const ServiceRequests = () => {
         open={isCommentOpen}
         onClose={() => {
           onCommentClose();
-          setSelectedRequest(null);
         }}
       />
     </>
