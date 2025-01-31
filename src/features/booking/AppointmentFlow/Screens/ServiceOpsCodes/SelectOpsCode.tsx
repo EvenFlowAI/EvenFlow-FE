@@ -13,7 +13,6 @@ import { IServiceRequest } from '../../../../../store/reducers/serviceRequests/t
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import AskAddService from '../../../../../components/modals/booking/AskAddService/AskAddService';
 import ServiceComment from '../../../../../components/modals/booking/ServiceComment/ServiceComment';
-import ServiceCommentUpdate from '../../../../../components/modals/booking/ServiceComment/ServiceCommentUpdate';
 import {
   checkCarIsValid,
   selectCategoriesIds,
@@ -222,10 +221,13 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleValidateCheckedServiceCommentsUpdate = () => {
-    if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
+    if (
+      !Object.keys(commentText).every(i => selectedOpsCodes.includes(+i)) &&
+      selectedOpsCodes.length !== Object.values(commentText).filter(i => i.length > 0).length
+    ) {
       onAddCommentedService();
     } else {
-      confirmValidationCommentsModal();
+      dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
       dispatch(checkCarIsValid(onCarIsValid, goNext));
     }
   };
@@ -434,7 +436,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
       </Wrapper>
       <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
       {isManagingFlow ? (
-        <ServiceCommentUpdate
+        <ServiceComment
           onSave={confirmValidationCommentsModalUpdate}
           onClose={onCloseValidationCommentsModalUpdate}
           onCloseX={() => {
