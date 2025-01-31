@@ -16,9 +16,11 @@ const ServiceRequests = () => {
   const { appointment, serviceValetAppointment, selectedSR, selectedSRComments, serviceRequests } =
     useSelector((state: RootState) => state.appointment);
   const { isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen } = useModal();
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, categoriesIds, description } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const [selectedRequest, setSelectedRequest] = useState<ISR | null>(null);
-
+  const { allCategories } = useSelector((state: RootState) => state.categories);
   const { t } = useTranslation();
 
   const currentAppointment = useMemo(() => {
@@ -27,6 +29,10 @@ const ServiceRequests = () => {
       : appointment;
   }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
+  const currentCategories = allCategories.filter(
+    category => categoriesIds.includes(category.id) && category.type !== 2
+  );
+
   return currentAppointment?.serviceRequestPrices?.length ? (
     <>
       <ConfirmationItemWrapper>
@@ -34,15 +40,17 @@ const ServiceRequests = () => {
           <AppointmentConfirmationTitle>{t('Service Requests')}</AppointmentConfirmationTitle>
         </TitleWrapper>
         <List>
-          {serviceTypeOption?.type === EServiceType.PickUpDropOff
-            ? currentAppointment?.serviceRequestPrices?.map(item => (
-                <ServiceItem key={item.requestName}>
-                  {item.requestName.includes('Going')
-                    ? t('My Description of Needs')
-                    : item.requestName}
-                </ServiceItem>
-              ))
-            : selectedSR.map(item => {
+          {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
+            currentAppointment?.serviceRequestPrices?.map(item => (
+              <ServiceItem key={item.requestName}>
+                {item.requestName.includes('Going')
+                  ? t('My Description of Needs')
+                  : item.requestName}
+              </ServiceItem>
+            ))
+          ) : (
+            <>
+              {selectedSR.map(item => {
                 const currentServiceRequest = serviceRequests.find(
                   serviceRequest => serviceRequest.id === item
                 );
@@ -65,11 +73,36 @@ const ServiceRequests = () => {
                 }
                 return null;
               })}
+              {currentCategories.map(item => {
+                return (
+                  <ServiceItem key={item.id}>
+                    {item?.name?.includes('Going') ? t('My Description of Needs') : item?.name}
+                    <MessageIconWrapper
+                      onClick={() => {
+                        setSelectedRequest({
+                          description: item?.name,
+                          id: item.id,
+                          code: 'specialCategory',
+                        });
+                        onCommentOpen();
+                      }}
+                    >
+                      {description ? <MessageIconFilled /> : <MessageIcon />}
+                    </MessageIconWrapper>
+                  </ServiceItem>
+                );
+              })}
+            </>
+          )}
         </List>
       </ConfirmationItemWrapper>
       <CommentModal
         selectedRequest={selectedRequest}
-        currentComment={selectedSRComments[selectedRequest?.id ?? 0]}
+        currentComment={
+          selectedRequest?.code === 'specialCategory'
+            ? description
+            : selectedSRComments[selectedRequest?.id ?? 0]
+        }
         open={isCommentOpen}
         onClose={() => {
           onCommentClose();

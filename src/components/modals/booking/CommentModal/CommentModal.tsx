@@ -9,6 +9,7 @@ import { BfButtonsWrapper } from '../../../styled/BfButtonsWrapper';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
+import { setFrameDescription } from '../../../../store/reducers/appointmentFrameReducer/actions';
 
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
@@ -34,6 +35,9 @@ const CommentModal: React.FC<
   const onSave = () => {
     if (!text.length) {
       showError(t('Appointment Comment must not be empty'));
+    } else if (selectedRequest?.code === 'specialCategory') {
+      dispatch(setFrameDescription(text));
+      onClose();
     } else if (selectedRequest?.id) {
       dispatch(selectSRComment({ comments: { [selectedRequest.id]: text } }));
       onClose();
