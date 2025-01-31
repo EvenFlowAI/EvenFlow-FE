@@ -402,7 +402,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
                     fullWidth
                     multiline
                     rows={3}
-                    placeholder={t('Comments')}
+                    placeholder={t('Your comment')}
                     size="small"
                     sx={{
                       '& .MuiOutlinedInput-root': {

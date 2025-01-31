@@ -10,7 +10,8 @@ import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
 import { setFrameDescription } from '../../../../store/reducers/appointmentFrameReducer/actions';
-
+import { CharactersWrapper } from './styles';
+const MAX_COUNT_WORDS_CAPACITY = 250;
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
 > = ({ open, onClose, selectedRequest, currentComment }) => {
@@ -29,6 +30,9 @@ const CommentModal: React.FC<
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+    if (value.length > 250) {
+      return;
+    }
     setText(value);
   };
 
@@ -60,6 +64,9 @@ const CommentModal: React.FC<
           InputProps={{ disableUnderline: true }}
           placeholder={'Your comment'}
         />
+        <CharactersWrapper>
+          {text?.length ?? 0} / {MAX_COUNT_WORDS_CAPACITY} characters
+        </CharactersWrapper>
       </DialogContent>
 
       <BfButtonsWrapper>
