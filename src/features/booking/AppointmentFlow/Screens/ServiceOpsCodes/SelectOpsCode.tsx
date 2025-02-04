@@ -434,7 +434,9 @@ export const SelectOpsCode: React.FC<TProps> = ({
           <Caption title={t('The price for the service will be quoted at the dealership')} />
         )}
       </Wrapper>
-      <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
+      {!isCommentedServiceNotAdded && (
+        <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
+      )}
       {isManagingFlow ? (
         <ServiceComment
           onSave={confirmValidationCommentsModalUpdate}

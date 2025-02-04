@@ -16,7 +16,7 @@ const ServiceRequests = () => {
   const { appointment, serviceValetAppointment, selectedSR, selectedSRComments, serviceRequests } =
     useSelector((state: RootState) => state.appointment);
   const { isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen } = useModal();
-  const { serviceTypeOption, categoriesIds, description } = useSelector(
+  const { serviceTypeOption, categoriesIds, description, selectedPackage } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const [selectedRequest, setSelectedRequest] = useState<ISR | null>(null);
@@ -50,6 +50,11 @@ const ServiceRequests = () => {
             ))
           ) : (
             <>
+              {selectedPackage?.complimentaryServices?.map(item => (
+                <ServiceItem key={item.name}>
+                  {item.name.includes('Going') ? t('My Description of Needs') : item.name}
+                </ServiceItem>
+              ))}
               {selectedSR.map(item => {
                 const currentServiceRequest = serviceRequests.find(
                   serviceRequest => serviceRequest.id === item

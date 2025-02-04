@@ -58,10 +58,8 @@ import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUs
 import { Routes } from '../../../../../routes/constants';
 import CustomerConsents from '../../../../../components/modals/booking/CustomerConsents/CustomerConsents';
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
-import CommentModal from '../../../../../components/modals/booking/CommentModal/CommentModal';
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
-import serviceType from '../../Create/AppointmentConfirmation/ServiceType/ServiceType';
 
 type TProps = {
   onChangeSlot: TCallback;
