@@ -92,6 +92,11 @@ const ServiceRequestsManaging = () => {
       </TitleWrapper>
       <List>
         <>
+          {selectedPackage?.complimentaryServices?.map(item => (
+            <ServiceItem key={item.name}>
+              {item.name.includes('Going') ? t('My Description of Needs') : item.name}
+            </ServiceItem>
+          ))}
           {selectedSR.map(item => {
             const currentServiceRequest = serviceRequests.find(
               serviceRequest => serviceRequest.id === item

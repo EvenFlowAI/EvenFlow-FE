@@ -102,8 +102,6 @@ export const ManageAppointment: React.FC<
     onClose: onCancelConfirmClose,
     onOpen: onCancelConfirmOpen,
   } = useModal();
-  const { isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen } = useModal();
-
   const showError = useException();
   const dispatch = useDispatch();
   const { t } = useTranslation();

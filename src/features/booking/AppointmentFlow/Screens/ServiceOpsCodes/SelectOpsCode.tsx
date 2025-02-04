@@ -195,8 +195,9 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const goNext = () => {
     handleSetScreen('maintenanceDetails');
   };
-
-  const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+  const allCommentsSelected = Object.keys(commentText).every(i => selectedOpsCodes.includes(+i));
+  const onCarIsValid = () =>
+    allCommentsSelected && scProfile && dispatch(checkPodChanged(scProfile.id, showError));
 
   const handleGA = () => {
     ReactGA.event(
@@ -221,10 +222,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleValidateCheckedServiceCommentsUpdate = () => {
-    if (
-      !Object.keys(commentText).every(i => selectedOpsCodes.includes(+i)) &&
-      selectedOpsCodes.length !== Object.values(commentText).filter(i => i.length > 0).length
-    ) {
+    if (!Object.keys(commentText).every(i => selectedOpsCodes.includes(+i))) {
       onAddCommentedService();
     } else {
       dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
