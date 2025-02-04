@@ -79,6 +79,17 @@ const ServiceRequestsManaging = () => {
   const currentCategories = allCategories.filter(
     category => categoriesIds.includes(category.id) && category.type === 0
   );
+  
+
+  let name;
+  if (selectedPackage) {
+    name = `${selectedPackage.name} package`;
+    if (packagePriceTitles?.length) {
+      const price = packagePriceTitles.find(item => item.type === packagePricingType);
+      if (price) name = name + ` (${price.title})`;
+    }
+  }
+
   return servicesList?.length ? (
     <ConfirmationItemWrapper>
       <TitleWrapper>
@@ -92,11 +103,10 @@ const ServiceRequestsManaging = () => {
       </TitleWrapper>
       <List>
         <>
-          {selectedPackage?.complimentaryServices?.map(item => (
-            <ServiceItem key={item.name}>
-              {item.name.includes('Going') ? t('My Description of Needs') : item.name}
-            </ServiceItem>
+          {selectedRecalls.map(el => (
+            <ServiceItem key={el.id}>{el.recallComponent}</ServiceItem>
           ))}
+          {selectedPackage?.name ? <ServiceItem>{name}</ServiceItem> : null}
           {selectedSR.map(item => {
             const currentServiceRequest = serviceRequests.find(
               serviceRequest => serviceRequest.id === item

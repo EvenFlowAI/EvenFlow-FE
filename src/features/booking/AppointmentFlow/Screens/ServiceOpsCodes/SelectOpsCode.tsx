@@ -195,9 +195,8 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const goNext = () => {
     handleSetScreen('maintenanceDetails');
   };
-  const allCommentsSelected = Object.keys(commentText).every(i => selectedOpsCodes.includes(+i));
-  const onCarIsValid = () =>
-    allCommentsSelected && scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+
+  const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
 
   const handleGA = () => {
     ReactGA.event(
@@ -254,7 +253,12 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const confirmValidationCommentsModal = () => {
     OnCloseCommentedService();
     const newSelectedOpsCodes = Array.from(
-      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
+      new Set([
+        ...selectedOpsCodes,
+        ...Object.keys(commentText)
+          .filter((i: any) => commentText[i].length > 0)
+          .map(i => +i),
+      ])
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
     dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
@@ -263,7 +267,12 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const confirmValidationCommentsModalUpdate = () => {
     OnCloseCommentedService();
     const newSelectedOpsCodes = Array.from(
-      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
+      new Set([
+        ...selectedOpsCodes,
+        ...Object.keys(commentText)
+          .filter((i: any) => commentText[i].length > 0)
+          .map(i => +i),
+      ])
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
     dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
