@@ -74,7 +74,10 @@ export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWith
         } else {
           const currentMake = makes.find(item => item.name === e.target.value);
           if (currentMake)
-            setLoadedOptions(prevOptions => ({ ...prevOptions, model: currentMake.models }));
+            setLoadedOptions(prevOptions => ({
+              ...prevOptions,
+              model: currentMake.models.map(model => model.name),
+            }));
           if (e.target.value !== selectedVehicle?.make) dispatch(updateVehicle({ model: '' }));
         }
       }

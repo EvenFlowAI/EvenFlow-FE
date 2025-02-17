@@ -6,6 +6,7 @@ import {
   ICreateAppointmentResp,
   ICustomerLoadedData,
   IOfferForCategory,
+  IModel,
   IServiceCategory,
   IServiceCategoryShort,
   IServiceRequestIds,
@@ -239,7 +240,7 @@ export const APPOINTMENT_STATE_SAVED_KEY = 'APPOINTMENT_SAVED';
 
 export interface IMake {
   name: string;
-  models: string[];
+  models: IModel[];
 }
 
 export interface IServiceRequestPrice {

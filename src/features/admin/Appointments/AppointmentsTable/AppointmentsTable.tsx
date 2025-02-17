@@ -144,9 +144,9 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
         hidePagination={count < 11}
         onChangePage={onChangePage}
         onChangeRowsPerPage={onChangeRowsPerPage}
-        count={count}
         page={pageData.pageIndex}
         rowsPerPage={pageData.pageSize}
+        count={count}
         index="id"
         actions={actions}
       />

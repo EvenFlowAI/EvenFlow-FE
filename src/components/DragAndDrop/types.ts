@@ -1,10 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { TArgCallback } from '../../types/types';
-
-export type TItem = {
-  id: number;
-  text: string;
-};
+import { IGlobalMake } from '../../store/reducers/globalVehicles/types';
 
 export type TContainerStyle = {
   width?: number | string;
@@ -14,9 +10,14 @@ export type TContainerStyle = {
   border?: string;
 };
 
+export type IData = {
+  id: number;
+  text: string;
+};
+
 export type TDnDProps = {
-  data: TItem[];
-  setData: Dispatch<SetStateAction<TItem[]>>;
+  data: IData[];
+  setData: Dispatch<SetStateAction<IData[]>>;
   style?: TContainerStyle;
 };
 

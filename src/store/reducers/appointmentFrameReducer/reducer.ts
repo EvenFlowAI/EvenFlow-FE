@@ -277,7 +277,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
       };
     })
     .addCase(getMakes, (state, { payload }) => {
-      return { ...state, makes: payload };
+      return { ...state, makes: [] };
     })
     .addCase(getModels, (state, { payload }) => {
       return { ...state, models: payload };
