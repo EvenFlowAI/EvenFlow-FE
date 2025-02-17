@@ -383,7 +383,10 @@ export const AppointmentSlots: React.FC<
   };
 
   const onLoadSlots = (isEmptyList: boolean) => {
-    if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) {
+    const isPossibleToChangeType =
+      firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
+    const isMobileServiceType = serviceTypeOption?.type === EServiceType.MobileService;
+    if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
       onServiceOptionOpen();
     }
   };
