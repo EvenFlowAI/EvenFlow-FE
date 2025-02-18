@@ -3,7 +3,7 @@ declare global {
     interface ProcessEnv {
       GITHUB_AUTH_TOKEN: string;
       NODE_ENV: 'development' | 'production' | 'test';
-      REACT_APP_ENV?: 'uat' | 'production' | 'dev' | 'local' | 'QA';
+      REACT_APP_ENV?: 'uat' | 'production' | 'dev' | 'local' | 'QA' | 'Dev' | 'PreProd';
       PORT?: string;
       PWD: string;
     }
