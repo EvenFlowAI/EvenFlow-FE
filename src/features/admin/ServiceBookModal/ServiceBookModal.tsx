@@ -215,7 +215,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
     if (podById?.vehicleModels?.length) {
       const modelsIDs = models.flat().map(item => item.id);
       const filteredModels = podById?.vehicleModels?.filter(item => modelsIDs.includes(item.id));
-      setSelectedModels(filteredModels);
+      // setSelectedModels(filteredModels);
     } else {
       setSelectedModels([]);
     }

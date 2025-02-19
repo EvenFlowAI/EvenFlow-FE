@@ -6,16 +6,27 @@ import {
   setCurrentMake,
   setLoading,
   setPodsMakes,
+  setPaging,
+  setMakeOrder,
+  setGlobalMakes,
+  setGlobalModels,
+  setPageData,
 } from './actions';
 import { TState } from './types';
+import { defaultPaging, defaultPageData } from '../constants';
 
 const initialState: TState = {
   makes: [],
+  paging: { ...defaultPaging },
+  pageData: { ...defaultPageData },
+  order: { orderBy: 'OrderIndex', isAscending: true },
   currentMake: null,
   isLoading: false,
   mileage: [],
   makesModels: [],
   engineTypes: [],
+  globalMakes: [],
+  globalModels: [],
 };
 
 export const vehicleDetailsReducer = createReducer<TState>(initialState, builder =>
@@ -25,6 +36,12 @@ export const vehicleDetailsReducer = createReducer<TState>(initialState, builder
     })
     .addCase(setCurrentMake, (state, { payload }) => {
       return { ...state, currentMake: payload };
+    })
+    .addCase(setPaging, (state, { payload }) => {
+      return { ...state, paging: payload };
+    })
+    .addCase(setPageData, (state, { payload }) => {
+      return { ...state, pageData: { ...state.pageData, ...payload } };
     })
     .addCase(setLoading, (state, { payload }) => {
       return { ...state, isLoading: payload };
@@ -37,5 +54,14 @@ export const vehicleDetailsReducer = createReducer<TState>(initialState, builder
     })
     .addCase(getEngineType, (state, { payload }) => {
       return { ...state, engineTypes: payload };
+    })
+    .addCase(setMakeOrder, (state, { payload }) => {
+      return { ...state, order: payload };
+    })
+    .addCase(setGlobalMakes, (state, { payload }) => {
+      return { ...state, globalMakes: payload };
+    })
+    .addCase(setGlobalModels, (state, { payload }) => {
+      return { ...state, globalModels: payload };
     })
 );

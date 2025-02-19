@@ -212,9 +212,17 @@ export const MaintenanceDetailsForm: React.FC<
         item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase()
       );
       if (currentMake)
-        setLoadedOptions(prevOptions => ({ ...prevOptions, model: currentMake.models }));
+        setLoadedOptions(prevOptions => ({
+          ...prevOptions,
+          model: currentMake.models.map(model => model.name),
+        }));
     } else {
-      setCurrentModels(() => makes.map(item => item.models).flat());
+      setCurrentModels(() =>
+        makes
+          .map(item => item.models)
+          .flat()
+          .map(item => item.name)
+      );
     }
   }, [makes, selectedVehicle]);
 
@@ -223,7 +231,7 @@ export const MaintenanceDetailsForm: React.FC<
       const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId);
       if (defaultMake) {
         selectedVehicle && dispatch(setVehicle({ ...selectedVehicle, make: defaultMake.name }));
-        setCurrentModels(defaultMake.models);
+        setCurrentModels(defaultMake.models.map(model => model.name));
       }
     }
   }, [makes, selectedVehicle]);

@@ -814,8 +814,8 @@ export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getStat
       ) {
         vehicle.year = Number(valueService.year.year);
       }
-      const model = bmwMake.models.find(model => model === valueService.series?.name);
-      if (model) vehicle.model = model;
+      const model = bmwMake.models.find(model => model.name === valueService.series?.name);
+      if (model) vehicle.model = model.name;
       dispatch(setVehicle(vehicle));
     }
   }
@@ -1174,7 +1174,7 @@ export const checkCarIsValid =
           item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase()
         );
         const existingModel = models.find(
-          item => item.toLowerCase() === selectedVehicle.model.toLowerCase()
+          item => item.name.toLowerCase() === selectedVehicle.model.toLowerCase()
         );
         if (!existingMake || !existingModel) carIsValid = false;
       }
