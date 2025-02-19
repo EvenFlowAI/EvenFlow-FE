@@ -34,6 +34,7 @@ import {
   setSlotsTransportationId,
   setTopAligning,
   setWaitListSettings,
+  selectSRComment,
 } from './actions';
 import { setPackage } from '../appointmentFrameReducer/actions';
 import dayjs from 'dayjs';
@@ -197,6 +198,9 @@ export const appointmentReducer = createReducer(initialState, builder =>
     })
     .addCase(selectSRComments, (state, { payload }) => {
       return { ...state, selectedSRComments: payload.comments };
+    })
+    .addCase(selectSRComment, (state, { payload }) => {
+      return { ...state, selectedSRComments: { ...state.selectedSRComments, ...payload.comments } };
     })
     .addCase(setProfileLoading, (state, { payload }) => {
       return { ...state, isProfileLoading: payload };

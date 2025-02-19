@@ -29,7 +29,7 @@ import { Wrapper } from './styles';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
-import CommentModal from '../../../../../components/modals/booking/CommentModal/CommentModal';
+
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 
 type TProps = {
@@ -54,8 +54,7 @@ export const AppointmentConfirmation: React.FC<
 
   const { id } = useParams<{ id: string }>();
   const { isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen } = useModal();
-  const { isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen } = useModal();
-  const { isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen } = useModal();
+  const { isOpen: isPaymentOpen, onClose: onPaymentClose } = useModal();
 
   const showError = useException();
   const dispatch = useDispatch();
@@ -153,7 +152,7 @@ export const AppointmentConfirmation: React.FC<
           {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable ? (
             <Review />
           ) : null}
-          <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} />
+          {/* <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} /> */}
         </div>
         <div>
           <AppointmentUserData
@@ -167,7 +166,7 @@ export const AppointmentConfirmation: React.FC<
       {/*todo change to open payment window on next*/}
       <ActionButtons loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
       <DetailedFees open={isFeesOpen} onClose={onFeesClose} />
-      <CommentModal open={isCommentOpen} onClose={onCommentClose} />
+      {/* <CommentModal open={isCommentOpen} onClose={onCommentClose} /> */}
       <PaymentTypeModal
         open={isPaymentOpen}
         onClose={onPaymentClose}

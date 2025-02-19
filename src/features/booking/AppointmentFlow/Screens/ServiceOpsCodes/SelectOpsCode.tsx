@@ -220,6 +220,19 @@ export const SelectOpsCode: React.FC<TProps> = ({
     }
   };
 
+  const handleValidateCheckedServiceCommentsUpdate = () => {
+    if (
+      !Object.keys(commentText).some(
+        (i: any) => selectedOpsCodes.includes(+i) && commentText[i].length > 0
+      )
+    ) {
+      onAddCommentedService();
+    } else {
+      dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
+      dispatch(checkCarIsValid(onCarIsValid, goNext));
+    }
+  };
+
   const onCloseValidationCommentsModal = () => {
     OnCloseCommentedService();
     const filteredComments = Object.fromEntries(
@@ -228,21 +241,51 @@ export const SelectOpsCode: React.FC<TProps> = ({
     dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
   };
 
+  const onCloseValidationCommentsModalUpdate = () => {
+    OnCloseCommentedService();
+    const filteredComments = Object.fromEntries(
+      Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
+    );
+    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
+    dispatch(checkCarIsValid(onCarIsValid, goNext));
+  };
+
   const confirmValidationCommentsModal = () => {
     OnCloseCommentedService();
     const newSelectedOpsCodes = Array.from(
-      new Set([...selectedOpsCodes, ...Object.keys(commentText).map(i => +i)])
+      new Set([
+        ...selectedOpsCodes,
+        ...Object.keys(commentText)
+          .filter((i: any) => commentText[i].length > 0)
+          .map(i => +i),
+      ])
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
     dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
   };
 
+  const confirmValidationCommentsModalUpdate = () => {
+    OnCloseCommentedService();
+    const newSelectedOpsCodes = Array.from(
+      new Set([
+        ...selectedOpsCodes,
+        ...Object.keys(commentText)
+          .filter((i: any) => commentText[i].length > 0)
+          .map(i => +i),
+      ])
+    );
+    setSelectedOpsCodes(newSelectedOpsCodes);
+    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
+    dispatch(checkCarIsValid(onCarIsValid, goNext));
+  };
+
   const handleNext = () => {
     handleGA();
-    handleValidateCheckedServiceComments();
     if (isManagingFlow) {
-      dispatch(checkCarIsValid(onCarIsValid, goNext));
+      // dispatch(checkCarIsValid(onCarIsValid, goNext));
+      handleValidateCheckedServiceCommentsUpdate();
     } else {
+      handleValidateCheckedServiceComments();
       onAdditionalOpen();
     }
   };
@@ -370,7 +413,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
                     fullWidth
                     multiline
                     rows={3}
-                    placeholder={t('Comments')}
+                    placeholder={t('Your comment')}
                     size="small"
                     sx={{
                       '& .MuiOutlinedInput-root': {
@@ -402,16 +445,30 @@ export const SelectOpsCode: React.FC<TProps> = ({
           <Caption title={t('The price for the service will be quoted at the dealership')} />
         )}
       </Wrapper>
-      <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
-      <ServiceComment
-        onSave={confirmValidationCommentsModal}
-        onClose={onCloseValidationCommentsModal}
-        onCloseX={() => {
-          OnCloseCommentedService();
-          onAdditionalClose();
-        }}
-        open={isCommentedServiceNotAdded}
-      />
+      {!isCommentedServiceNotAdded && (
+        <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
+      )}
+      {isManagingFlow ? (
+        <ServiceComment
+          onSave={confirmValidationCommentsModalUpdate}
+          onClose={onCloseValidationCommentsModalUpdate}
+          onCloseX={() => {
+            OnCloseCommentedService();
+            onAdditionalClose();
+          }}
+          open={isCommentedServiceNotAdded}
+        />
+      ) : (
+        <ServiceComment
+          onSave={confirmValidationCommentsModal}
+          onClose={onCloseValidationCommentsModal}
+          onCloseX={() => {
+            OnCloseCommentedService();
+            onAdditionalClose();
+          }}
+          open={isCommentedServiceNotAdded}
+        />
+      )}
       <ActionButtons
         onBack={handleBack}
         nextDisabled={!selectedOpsCodes.length}

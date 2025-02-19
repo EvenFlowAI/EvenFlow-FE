@@ -20,3 +20,17 @@ export const List = styled('ul')({
     textTransform: 'capitalize',
   },
 });
+
+export const ServiceItem = styled('li')({
+  textTransform: 'capitalize',
+  fontSize: 14,
+  display: 'flex',
+  alignItems: 'center',
+  gap: 10,
+});
+
+export const MessageIconWrapper = styled('div')({
+  '&:hover': {
+    cursor: 'pointer',
+  },
+});
