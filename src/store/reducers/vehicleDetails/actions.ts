@@ -33,7 +33,6 @@ export const loadMakes =
       },
     })
       .then(response => {
-        console.log('response', response);
         if (response?.data) {
           dispatch(getMakes(response.data.result));
           dispatch(setPaging(response.data.paging));
@@ -71,6 +70,23 @@ export const updateMake =
         })
         .catch(err => {
           console.log('update make error', err);
+        });
+    }
+  };
+
+export const updateModel =
+  (serviceCenterId: number, globalMakeId: number, globalIds: number[]): AppThunk =>
+  async (dispatch, getState) => {
+    const { selectedSC } = getState().serviceCenters;
+    if (selectedSC) {
+      Api.call(Api.endpoints.Vehicles.UpdateModel, {
+        data: { serviceCenterId, globalMakeId, globalIds },
+      })
+        .then(result => {
+          if (result) dispatch(loadMakes(selectedSC.id));
+        })
+        .catch(err => {
+          console.log('update model error', err);
         });
     }
   };

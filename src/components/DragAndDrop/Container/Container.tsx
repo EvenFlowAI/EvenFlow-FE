@@ -15,7 +15,7 @@ export const useStyles = makeStyles()(() => ({
   },
 }));
 
-export const Container: FC<TDnDProps> = ({ style, data, setData }) => {
+export const Container: FC<TDnDProps> = ({ style, data, setData, isEditing }) => {
   const { classes } = useStyles();
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
     setData((prevCards: IData[]) => {
@@ -50,7 +50,9 @@ export const Container: FC<TDnDProps> = ({ style, data, setData }) => {
     <>
       <div style={style}>
         {data.length === 0 ? (
-          <div className={classes.placeholderStyles}>No Makes Configured</div>
+          <div className={classes.placeholderStyles}>
+            {isEditing ? 'No Models Configured' : 'No Makes Configured'}
+          </div>
         ) : (
           <>
             {data.map((card, i) => renderCard(card, i))}

@@ -19,7 +19,7 @@ const mockData = [
 
 const DnDExample = () => {
   const [data, setData] = useState<any>(mockData);
-  return <DragAndDrop data={data} setData={setData} style={style} />;
+  return <DragAndDrop data={data} setData={setData} style={style} isEditing={false} />;
 };
 
 export default DnDExample;

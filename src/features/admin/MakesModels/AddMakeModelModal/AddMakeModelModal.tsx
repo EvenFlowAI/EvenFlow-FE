@@ -15,11 +15,15 @@ import { ReactComponent as AttentionIcon } from '../../../../assets/img/attentio
 import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 import DragAndDrop from '../../../../components/DragAndDrop/DragAndDrop';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { createMake, loadGlobalModels } from '../../../../store/reducers/vehicleDetails/actions';
+import {
+  createMake,
+  loadGlobalModels,
+  updateModel,
+} from '../../../../store/reducers/vehicleDetails/actions';
 import { useDispatch } from 'react-redux';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { IData } from '../../../../components/DragAndDrop/types';
-
+import { setCurrentMake } from '../../../../store/reducers/vehicleDetails/actions';
 type TAddMakeModalProps = DialogProps & {
   isEditing?: boolean;
 };
@@ -31,6 +35,8 @@ const style = {
   width: '238px',
   height: '576px',
   gap: '8px',
+  overflowX: 'auto',
+  overflowY: 'auto',
 };
 
 export const AddMakeModelModal: React.FC<
@@ -47,8 +53,17 @@ export const AddMakeModelModal: React.FC<
       id: el.id,
       text: el.name,
     }));
+
+  const filteredModels = currentMake?.models
+    .filter(el => !el.isReadOnly)
+    .map(el => ({
+      id: el.globalId,
+      text: el.name,
+    }));
   const [configuredMakes, setConfiguredMakes] = useState<IData[]>(filteredMakes);
+  const [configuredModels, setConfiguredModels] = useState<IData[]>(filteredModels ?? []);
   const [makesToAdd, setMakesToAdd] = useState<IData[]>([]);
+  const [modelsToAdd, setModelsToAdd] = useState<IData[]>([]);
   const { classes } = useStyles();
   const autocompleteClasses = useAutocompleteStyles();
   const filteredGlobalMakes = globalMakes
@@ -57,6 +72,18 @@ export const AddMakeModelModal: React.FC<
       id: el.id,
       text: el.vinMake,
     }));
+  const filteredGlobalModels = globalModels
+    .filter(el => el.vinModel !== 'OTHER')
+    .map(el => ({
+      id: el.id,
+      text: el.vinModel,
+    }));
+
+  const onCloseModal = () => {
+    dispatch(setCurrentMake(null));
+    onClose();
+  };
+
   const autocompleteOptionsRender =
     (label: (el: any) => string) =>
     (
@@ -89,11 +116,19 @@ export const AddMakeModelModal: React.FC<
     };
   const selectAll = { text: 'Select All', id: 0 } as IData;
 
-  const onChange = (value: IData[]) => {
+  const onChangeMakes = (value: IData[]) => {
     if (value.find(el => el.text === 'Select All')) {
       setMakesToAdd(filteredGlobalMakes);
     } else {
       setMakesToAdd(value);
+    }
+  };
+
+  const onChangeModels = (value: IData[]) => {
+    if (value.find(el => el.text === 'Select All')) {
+      setModelsToAdd(filteredGlobalModels);
+    } else {
+      setModelsToAdd(value);
     }
   };
 
@@ -103,7 +138,13 @@ export const AddMakeModelModal: React.FC<
     setMakesToAdd([]);
   };
 
-  const onSave = () => {
+  const addModels = () => {
+    const newModels = modelsToAdd.filter(el => !configuredModels.includes(el));
+    setConfiguredModels(prev => [...prev, ...newModels]);
+    setModelsToAdd([]);
+  };
+
+  const onSaveMakes = () => {
     if (selectedSC?.id) {
       const globalIds = [
         ...configuredMakes.map(el => el.id),
@@ -115,10 +156,21 @@ export const AddMakeModelModal: React.FC<
           globalIds,
         })
       );
-      onClose();
+      onCloseModal();
     }
   };
 
+  const onSaveModels = () => {
+    if (selectedSC?.id && currentMake?.globalId) {
+      dispatch(
+        updateModel(selectedSC?.id, currentMake?.globalId, [
+          ...configuredModels.map(el => el.id),
+          ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+        ])
+      );
+      onCloseModal();
+    }
+  };
   useEffect(() => {
     if (currentMake) {
       dispatch(loadGlobalModels(currentMake.globalId));
@@ -132,12 +184,25 @@ export const AddMakeModelModal: React.FC<
         id: el.globalId,
         text: el.name,
       }));
+
     setConfiguredMakes(filteredMakes);
   }, [makes]);
 
+  useEffect(() => {
+    const filteredModels = currentMake?.models
+      .filter(el => !el.isReadOnly)
+      .map(el => ({
+        id: el.globalId,
+        text: el.name,
+      }));
+    setConfiguredModels(filteredModels ?? []);
+  }, [currentMake]);
+
   return (
-    <BaseModal {...props} width={810} onClose={onClose}>
-      <DialogTitle onClose={onClose}>{isEditing ? 'Edit' : 'Make options'}</DialogTitle>
+    <BaseModal {...props} width={810} onClose={onCloseModal}>
+      <DialogTitle onClose={onCloseModal}>
+        {isEditing ? `${currentMake?.name} Model Options` : 'Make options'}
+      </DialogTitle>
       <DialogContent>
         <div className={classes.wrapper}>
           <div className={classes.firstColumnLayout}>
@@ -155,14 +220,14 @@ export const AddMakeModelModal: React.FC<
                   style: { borderRadius: 4 },
                   size: 'small',
                 }}
-                options={[selectAll, ...filteredGlobalMakes]}
+                options={[selectAll, ...(isEditing ? filteredGlobalModels : filteredGlobalMakes)]}
                 getOptionLabel={option => option.text}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderOption={autocompleteOptionsRender(e => e.text)}
                 onChange={(_, value) => {
-                  onChange(value);
+                  isEditing ? onChangeModels(value) : onChangeMakes(value);
                 }}
-                value={makesToAdd}
+                value={isEditing ? modelsToAdd : makesToAdd}
                 disabled={false}
                 renderInput={params =>
                   autocompleteRender({
@@ -174,34 +239,44 @@ export const AddMakeModelModal: React.FC<
                 }
               />
               <Button
-                disabled={!makesToAdd.length}
-                onClick={() => addMakes()}
+                disabled={isEditing ? !modelsToAdd.length : !makesToAdd.length}
+                onClick={() => (isEditing ? addModels() : addMakes())}
                 className={classes.addmakesBtn}
               >
-                Add makes
+                Add {isEditing ? 'models' : 'makes'}
               </Button>
             </div>
             <div className={classes.attentionWrapper}>
-              You can drag and drop the configured makes to rearrange the order
+              You can drag and drop the configured {isEditing ? 'models' : 'makes'} to rearrange the
               <br />
-              that is presented in the drop-down menu on the booking flow
+              order that is presented in the drop-down menu on the booking flow
               <AttentionIcon />
             </div>
           </div>
 
           <div>
-            <div className={classes.fieldTitle}>configured makes</div>
-            <DragAndDrop data={configuredMakes} setData={setConfiguredMakes} style={style} />
+            <div className={classes.fieldTitle}>
+              {isEditing ? 'configured models' : 'configured makes'}
+            </div>
+            <DragAndDrop
+              isEditing={isEditing ?? false}
+              data={isEditing ? configuredModels : configuredMakes}
+              setData={isEditing ? setConfiguredModels : setConfiguredMakes}
+              style={style}
+            />
           </div>
         </div>
       </DialogContent>
       <Divider style={{ margin: 0 }} />
       <DialogActions>
         <div className={classes.buttonsWrapper}>
-          <Button onClick={onClose} className={classes.cancelButton}>
+          <Button onClick={onCloseModal} className={classes.cancelButton}>
             Cancel
           </Button>
-          <Button onClick={() => onSave()} className={classes.saveButton}>
+          <Button
+            onClick={() => (isEditing ? onSaveModels() : onSaveMakes())}
+            className={classes.saveButton}
+          >
             Save
           </Button>
         </div>

@@ -596,6 +596,7 @@ export class Api {
       GetEngineType: { route: '/vehicles/engine-type/by-query', method: 'get' },
       RemoveEngineType: { route: '/vehicles/engine-type/{id}', method: 'delete' },
       CreateEngineType: { route: '/vehicles/engine-type', method: 'post' },
+      UpdateModel: { route: '/vehicles/models', method: 'put' },
     },
     ValueService: {
       GetSeriesModels: { route: '/value-service-offers/vehicle-models', method: 'get' },

@@ -4,11 +4,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Container } from './Container/Container';
 import { TDnDProps } from './types';
 
-const DragAndDrop: React.FC<TDnDProps> = ({ style, data, setData }) => {
+const DragAndDrop: React.FC<TDnDProps> = ({ style, data, setData, isEditing }) => {
   return (
     <div>
       <DndProvider backend={HTML5Backend}>
-        <Container data={data} setData={setData} style={style} />
+        <Container data={data} setData={setData} style={style} isEditing={isEditing} />
       </DndProvider>
     </div>
   );
