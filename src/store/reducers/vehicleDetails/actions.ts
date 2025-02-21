@@ -44,6 +44,32 @@ export const loadMakes =
       .finally(() => dispatch(setLoading(false)));
   };
 
+  export const loadMakesGlobally =
+    (serviceCenterId: number): AppThunk =>
+    async (dispatch, getState) => {
+      const state = getState().vehicleDetails;
+      dispatch(setLoading(true));
+      Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+        data: {
+          serviceCenterId,
+          orderBy: state.order.orderBy,
+          isAscending: state.order.isAscending,
+          pageIndex: 0,
+          pageSize: 0,
+        },
+      })
+        .then(response => {
+          if (response?.data) {
+            dispatch(getMakes(response.data.result));
+            dispatch(setPaging(response.data.paging));
+          }
+        })
+        .catch(err => {
+          console.log('load makes error', err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+    };
+
 export const deleteMake =
   (makeId: number): AppThunk =>
   async (dispatch, getState) => {

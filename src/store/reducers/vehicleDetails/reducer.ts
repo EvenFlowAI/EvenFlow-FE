@@ -5,7 +5,6 @@ import {
   getMileage,
   setCurrentMake,
   setLoading,
-  setPodsMakes,
   setPaging,
   setMakeOrder,
   setGlobalMakes,
@@ -23,10 +22,10 @@ const initialState: TState = {
   currentMake: null,
   isLoading: false,
   mileage: [],
-  makesModels: [],
   engineTypes: [],
   globalMakes: [],
   globalModels: [],
+  makesModels: [],
 };
 
 export const vehicleDetailsReducer = createReducer<TState>(initialState, builder =>
@@ -48,9 +47,6 @@ export const vehicleDetailsReducer = createReducer<TState>(initialState, builder
     })
     .addCase(getMileage, (state, { payload }) => {
       return { ...state, mileage: payload };
-    })
-    .addCase(setPodsMakes, (state, { payload }) => {
-      return { ...state, makesModels: payload };
     })
     .addCase(getEngineType, (state, { payload }) => {
       return { ...state, engineTypes: payload };
