@@ -71,7 +71,7 @@ const MakeAndModel: React.FC<
   const getSortedModelsOptions = useCallback(
     (makesFromDB: IMake[]): string[] => {
       const data: string[] = makesFromDB
-        .map(make => make.models)
+        .map(make => make.models.map(model => model.name))
         .flat(1)
         .sort(sortModels);
       if (data.length) data.unshift(ApplyToAll);
@@ -174,7 +174,7 @@ const MakeAndModel: React.FC<
 
   const onModelChange = (e: React.SyntheticEvent, value: string[]) => {
     setFormIsChecked(false);
-    const filteredModels = filteredMakes.map(item => item.models).flat(1);
+    const filteredModels = filteredMakes.map(item => item.models.map(model => model.name)).flat(1);
     const modelsSet = removeDuplicates(filteredModels);
     if (value.includes(ApplyToAll)) {
       if (modelsSet.length && value.length === modelsSet.length + 1) {

@@ -25,7 +25,7 @@ import {
   autocompleteOptionsRender,
   autocompleteRender,
 } from '../../../../utils/autocompleteRenders';
-import { IMakeExtended, IModel } from '../../../../api/types';
+import { IMake, IModel } from '../../../../api/types';
 import { TOption } from '../../ServiceBookModal/types';
 import { EUserType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { IPodShort } from '../../../../store/reducers/pods/types';
@@ -56,7 +56,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   const { scRequestsShort: serviceRequests } = useSelector(
     ({ serviceRequests }: RootState) => serviceRequests
   );
-  const { makesModels } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
+  const { makes } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
   const { mobileZonesShort } = useSelector(({ mobileService }: RootState) => mobileService);
   const { svZonesShort } = useSelector(({ serviceValet }: RootState) => serviceValet);
   const { optionsShort: transportationsShort } = useSelector(
@@ -140,8 +140,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
             appointmentTimeFrom,
             appointmentTimeTo,
             daysOfWeek: daysOfWeek ?? [],
-            makes: makesModels.filter(el => currentConsent.makeIds?.includes(el.id)),
-            models: makesModels
+            makes: makes.filter(el => currentConsent.makeIds?.includes(el.id)),
+            models: makes
               .map(el => el.models)
               .flat(1)
               .filter(el => currentConsent.modelIds?.includes(el.id)),
@@ -169,7 +169,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   }, [
     open,
     currentConsent,
-    makesModels,
+    makes,
     serviceRequests,
     advisorsList,
     transportationsShort,
@@ -259,7 +259,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   };
 
   const getSortedMakes = () => {
-    return [...makesModels].sort((a, b) =>
+    return [...makes].sort((a, b) =>
       form.makes.find(make => make.id === a.id)
         ? form.makes.find(make => make.id === b.id)
           ? 0
@@ -273,7 +273,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const onMakeChange = useCallback((e: ChangeEvent<{}>, value: IMakeExtended[]) => {
+  const onMakeChange = useCallback((e: ChangeEvent<{}>, value: IMake[]) => {
     setFormIsChecked(false);
     setForm(prev => ({ ...prev, makes: value }));
     setModelsOptions(value.map(make => make.models).flat());

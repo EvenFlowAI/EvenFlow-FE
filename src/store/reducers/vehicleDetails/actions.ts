@@ -1,6 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { AppThunk, PaginatedAPIResponse } from '../../../types/types';
-import { IMake, IMakeExtended } from '../../../api/types';
+import { IMake } from '../../../api/types';
 import { ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage } from './types';
 import { loadAllSCs } from '../serviceCenters/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -10,7 +10,6 @@ export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
 export const setLoading = createAction<boolean>('VehicleDetails/SetLoading');
 export const getMileage = createAction<IMileage[]>('VehicleDetails/GetMileage');
-export const setPodsMakes = createAction<IMakeExtended[]>('VehicleDetails/MakesModels');
 export const getEngineType = createAction<IEngineType[]>('VehicleDetails/EngineType');
 export const setPaging = createAction<IPagingResponse>('VehicleDetails/SetPaging');
 export const setPageData = createAction<IPageRequest>('VehicleDetails/SetPageData');
@@ -44,31 +43,31 @@ export const loadMakes =
       .finally(() => dispatch(setLoading(false)));
   };
 
-  export const loadMakesGlobally =
-    (serviceCenterId: number): AppThunk =>
-    async (dispatch, getState) => {
-      const state = getState().vehicleDetails;
-      dispatch(setLoading(true));
-      Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
-        data: {
-          serviceCenterId,
-          orderBy: state.order.orderBy,
-          isAscending: state.order.isAscending,
-          pageIndex: 0,
-          pageSize: 0,
-        },
+export const loadMakesGlobally =
+  (serviceCenterId: number): AppThunk =>
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
+    dispatch(setLoading(true));
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: 0,
+        pageSize: 0,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getMakes(response.data.result));
+          dispatch(setPaging(response.data.paging));
+        }
       })
-        .then(response => {
-          if (response?.data) {
-            dispatch(getMakes(response.data.result));
-            dispatch(setPaging(response.data.paging));
-          }
-        })
-        .catch(err => {
-          console.log('load makes error', err);
-        })
-        .finally(() => dispatch(setLoading(false)));
-    };
+      .catch(err => {
+        console.log('load makes error', err);
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
 
 export const deleteMake =
   (makeId: number): AppThunk =>
@@ -180,17 +179,6 @@ export const removeMileage =
       });
   };
 
-export const loadMakesForPods =
-  (serviceCenterId: number): AppThunk =>
-  dispatch => {
-    Api.call<IMakeExtended[]>(Api.endpoints.Vehicles.MakesModels, { params: { serviceCenterId } })
-      .then(result => {
-        dispatch(setPodsMakes(result.data));
-      })
-      .catch(err => {
-        console.log('get makes for pods error', err);
-      });
-  };
 
 export const loadEngineType =
   (serviceCenterId: number): AppThunk =>
