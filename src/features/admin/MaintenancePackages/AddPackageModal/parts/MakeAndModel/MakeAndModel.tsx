@@ -33,15 +33,15 @@ const MakeAndModel: React.FC<
   const [models, setModels] = useState<string[]>([]);
   const { classes } = useAutocompleteStyles();
 
-  // const filteredMakes = useMemo(
-  //   () => makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase())),
-  //   [makesFromDB, selectedMakes]
-  // );
+  const filteredMakes = useMemo(
+    () => makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase())),
+    [makesFromDB, selectedMakes]
+  );
 
-  // useEffect(() => {
-  //   const sorted = getSortedModelsOptions(filteredMakes);
-  //   setModels(removeDuplicates(sorted));
-  // }, [filteredMakes]);
+  useEffect(() => {
+    const sorted = getSortedModelsOptions(filteredMakes);
+    setModels(removeDuplicates(sorted));
+  }, [filteredMakes]);
 
   const sortMakes = (a: string, b: string) => {
     return upperCase(selectedMakes).includes(a.toUpperCase())
@@ -68,17 +68,17 @@ const MakeAndModel: React.FC<
     [selectedMakes]
   );
 
-  // const getSortedModelsOptions = useCallback(
-  //   (makesFromDB: IMake[]): string[] => {
-  //     const data: string[] = makesFromDB
-  //       .map(make => make.models)
-  //       .flat(1)
-  //       .sort(sortModels);
-  //     if (data.length) data.unshift(ApplyToAll);
-  //     return removeDuplicates(data);
-  //   },
-  //   [selectedModels]
-  // );
+  const getSortedModelsOptions = useCallback(
+    (makesFromDB: IMake[]): string[] => {
+      const data: string[] = makesFromDB
+        .map(make => make.models.map(model => model.name))
+        .flat(1)
+        .sort(sortModels);
+      if (data.length) data.unshift(ApplyToAll);
+      return removeDuplicates(data);
+    },
+    [selectedModels]
+  );
 
   const renderMakeOption = useCallback(
     (props: any, option: any) => {
@@ -113,10 +113,10 @@ const MakeAndModel: React.FC<
     return data;
   };
 
-  // const setInitialModels = () => {
-  //   const sorted = getSortedModelsOptions(makesFromDB);
-  //   setModels(removeDuplicates(sorted));
-  // };
+  const setInitialModels = () => {
+    const sorted = getSortedModelsOptions(makesFromDB);
+    setModels(removeDuplicates(sorted));
+  };
 
   const renderModelOption = useCallback(
     (props: any, option: any) => {
@@ -165,7 +165,7 @@ const MakeAndModel: React.FC<
         setSelectedMakes([]);
       } else {
         setSelectedMakes(() => makesFromDB.map(item => item.name));
-        // setInitialModels();
+        setInitialModels();
       }
     } else {
       setSelectedMakes(value);
@@ -174,9 +174,8 @@ const MakeAndModel: React.FC<
 
   const onModelChange = (e: React.SyntheticEvent, value: string[]) => {
     setFormIsChecked(false);
-    // const filteredModels = filteredMakes.map(item => item.models).flat(1);
-    // const modelsSet = removeDuplicates(filteredModels);
-    const modelsSet: string[] = [];
+    const filteredModels = filteredMakes.map(item => item.models.map(model => model.name)).flat(1);
+    const modelsSet = removeDuplicates(filteredModels);
     if (value.includes(ApplyToAll)) {
       if (modelsSet.length && value.length === modelsSet.length + 1) {
         setSelectedModels([]);

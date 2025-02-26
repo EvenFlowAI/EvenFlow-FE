@@ -10,6 +10,7 @@ import {
   ICustomer,
   ICustomerLoadedData,
   ILoadedVehicle,
+  IMake,
   IPackage,
   IPackageOptions,
   IServiceCategory,
@@ -20,7 +21,6 @@ import {
 import {
   EAppointmentTimingType,
   EReminderType,
-  IMake,
   IServiceRequestPrice,
   IVehicle,
 } from '../appointment/types';
@@ -50,6 +50,7 @@ import {
 import {
   AppThunk,
   IMaintenanceItem,
+  IPagingResponse,
   IRecallByVin,
   PaginatedAPIResponse,
   TArgCallback,
@@ -490,10 +491,18 @@ export const loadConsultants =
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
   async dispatch => {
-    Api.call<IMake[]>(Api.endpoints.Vehicles.Makes, { params: { serviceCenterId } })
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        pageIndex: 0,
+        pageSize: 0,
+        isAscending: true,
+        orderBy: 'name',
+      },
+    })
       .then(({ data }) => {
         if (data) {
-          dispatch(getMakes(data));
+          dispatch(getMakes(data.result));
         }
       })
       .catch(err => {
