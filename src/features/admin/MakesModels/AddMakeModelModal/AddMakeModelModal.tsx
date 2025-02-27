@@ -133,13 +133,17 @@ export const AddMakeModelModal: React.FC<
   };
 
   const addMakes = () => {
-    const newMakes = makesToAdd.filter(el => !configuredMakes.includes(el));
+    const newMakes = makesToAdd.filter(
+      newMake => !configuredMakes.some(existingMake => existingMake.id === newMake.id)
+    );
     setConfiguredMakes(prev => [...prev, ...newMakes]);
     setMakesToAdd([]);
   };
 
   const addModels = () => {
-    const newModels = modelsToAdd.filter(el => !configuredModels.includes(el));
+    const newModels = modelsToAdd.filter(
+      newModel => !configuredModels.some(existingModel => existingModel.id === newModel.id)
+    );
     setConfiguredModels(prev => [...prev, ...newModels]);
     setModelsToAdd([]);
   };

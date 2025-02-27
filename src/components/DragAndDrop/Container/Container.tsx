@@ -51,7 +51,7 @@ export const Container: FC<TDnDProps> = ({ style, data, setData, isEditing }) =>
       <div style={style}>
         {data.length === 0 ? (
           <div className={classes.placeholderStyles}>
-            {isEditing ? 'No Models Configured' : 'No Makes Configured'}
+            <Card onDelete={() => {}} key={0} index={0} id={0} text={'Other'} moveCard={moveCard} />
           </div>
         ) : (
           <>
