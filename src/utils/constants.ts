@@ -113,4 +113,5 @@ export const DealershipsIds: IServiceCenterFlag = {
   RiverViewFord: [5],
   Bountiful: [118],
   Walser: [150],
+  TomWoodVW: [217],
 };
