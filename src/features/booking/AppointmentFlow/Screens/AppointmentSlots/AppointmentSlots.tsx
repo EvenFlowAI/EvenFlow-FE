@@ -519,7 +519,13 @@ export const AppointmentSlots: React.FC<
   ]);
 
   useEffect(() => {
-    dispatch(loadActiveTransportations(decodeSCID(id)));
+    if (
+      ![EServiceType.PickUpDropOff, EServiceType.MobileService].includes(
+        serviceTypeOption?.type as EServiceType
+      )
+    ) {
+      dispatch(loadActiveTransportations(decodeSCID(id)));
+    }
   }, [id]);
 
   const handleGANext = useCallback(() => {
