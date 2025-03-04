@@ -18,7 +18,7 @@ import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { truncateMakes } from './utils';
-
+import { usePagination } from '../../../../hooks/usePaginations/usePaginations';
 const RowData: TableRowDataType<IMake>[] = [
   {
     val: (el: IMake) => <span style={{ fontWeight: 'bold' }}>{el.name}</span>,
@@ -36,8 +36,16 @@ const RowData: TableRowDataType<IMake>[] = [
 export const MakesModelsTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<{ onOpen: TCallback }>>
 > = ({ onOpen }) => {
-  const { makes, currentMake, isLoading, order, pageData } = useSelector(
-    (state: RootState) => state.vehicleDetails
+  const {
+    makes,
+    currentMake,
+    isLoading,
+    order,
+    paging: { numberOfRecords },
+  } = useSelector((state: RootState) => state.vehicleDetails);
+  const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
+    (s: RootState) => s.vehicleDetails.pageData,
+    setPageData
   );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [tableData, setTableData] = useState<IMake[]>([]);
@@ -116,22 +124,6 @@ export const MakesModelsTable: React.FC<
     dispatch(setMakeOrder(d));
   };
 
-  const onChangePage = useCallback(
-    (e: React.MouseEvent<Element, MouseEvent> | null, pageIndex: number) => {
-      console.log('onChangePage', pageIndex);
-      dispatch(setPageData({ pageIndex, pageSize: pageData.pageSize }));
-    },
-    [dispatch, pageData.pageSize]
-  );
-
-  const onChangeRowsPerPage = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log('onChangeRowsPerPage', e.target.value);
-      dispatch(setPageData({ pageIndex: 0, pageSize: parseInt(e.target.value) }));
-    },
-    [dispatch]
-  );
-
   return (
     <div>
       <Table
@@ -143,16 +135,16 @@ export const MakesModelsTable: React.FC<
         rowData={RowData}
         actions={tableActions}
         hidePagination={false}
+        onChangePage={changePage}
+        onChangeRowsPerPage={changeRowsPerPage}
         isLoading={isLoading}
-        onChangePage={onChangePage}
-        onChangeRowsPerPage={onChangeRowsPerPage}
-        page={pageData.pageIndex}
-        rowsPerPage={pageData.pageSize}
-        count={pageData.pageSize}
+        page={pageIndex}
+        rowsPerPage={pageSize}
+        count={numberOfRecords}
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
-        <MenuItem onClick={askRemove}>Remove</MenuItem>
+        {currentMake?.isReadOnly ? null : <MenuItem onClick={askRemove}>Remove</MenuItem>}
       </Menu>
     </div>
   );
