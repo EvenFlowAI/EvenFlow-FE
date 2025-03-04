@@ -61,7 +61,8 @@ export const loadSCProfile =
         DealershipsIds.LakePowellFord.includes(data?.dealershipId) ||
         DealershipsIds.Dealerbuilt.includes(data?.dealershipId) ||
         DealershipsIds.Bountiful.includes(data?.dealershipId) ||
-        DealershipsIds.Walser.includes(data?.dealershipId);
+        DealershipsIds.Walser.includes(data?.dealershipId) ||
+        DealershipsIds.TomWoodVW.includes(data?.dealershipId);
 
       dispatch(setTopAligning(shouldBeTopAligned));
     } catch (err) {
