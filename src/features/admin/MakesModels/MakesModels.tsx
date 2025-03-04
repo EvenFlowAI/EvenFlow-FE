@@ -10,7 +10,9 @@ import { useModal } from '../../../hooks/useModal/useModal';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 
 export const MakesModels = () => {
-  const { currentMake, makes, order } = useSelector((state: RootState) => state.vehicleDetails);
+  const { currentMake, makes, order, pageData } = useSelector(
+    (state: RootState) => state.vehicleDetails
+  );
   const { selectedSC } = useSCs();
   const { onOpen, onClose, isOpen } = useModal();
   const dispatch = useDispatch();
@@ -19,7 +21,7 @@ export const MakesModels = () => {
     if (selectedSC) {
       dispatch(loadMakes(selectedSC.id));
     }
-  }, [selectedSC, order]);
+  }, [selectedSC, order, pageData]);
 
   useEffect(() => {
     dispatch(loadGlobalMakes());

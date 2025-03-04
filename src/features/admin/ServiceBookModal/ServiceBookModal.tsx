@@ -1,6 +1,11 @@
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
-import { EAppointmentType, EJobType, IPodForm } from '../../../store/reducers/pods/types';
+import {
+  EAppointmentType,
+  EJobType,
+  IPodForm,
+  IPodVehicleModel,
+} from '../../../store/reducers/pods/types';
 import {
   BaseModal,
   DialogActions,
@@ -217,7 +222,18 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
     if (podById?.vehicleModels?.length) {
       const modelsIDs = models.flat().map(item => item.id);
       const filteredModels = podById?.vehicleModels?.filter(item => modelsIDs.includes(item.id));
-      // setSelectedModels(filteredModels);
+      const selectedModels = filteredModels?.map(item => {
+        // Find the matching model in the flattened models array to get all fields
+        const sourceModel = models.flat().find(model => model.id === item.id) as IModel;
+        return {
+          id: item.id,
+          name: item.name,
+          globalId: sourceModel.globalId,
+          isReadOnly: sourceModel.isReadOnly,
+          orderIndex: sourceModel.orderIndex,
+        };
+      });
+      setSelectedModels(selectedModels);
     } else {
       setSelectedModels([]);
     }
