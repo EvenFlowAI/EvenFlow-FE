@@ -70,4 +70,5 @@ export type IServiceCenterFlag = {
   RiverViewFord: number[];
   Bountiful: number[];
   Walser: number[];
+  TomWoodVW: number[];
 };
