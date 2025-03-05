@@ -249,7 +249,7 @@ export interface IRecallByVin {
 
 export type TActionProps = {
   onBack: () => void;
-  onNext: () => void;
+  onNext: any;
   nextDisabled?: boolean;
   nextLabel?: string;
   loading?: boolean;

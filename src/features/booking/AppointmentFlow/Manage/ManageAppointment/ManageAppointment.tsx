@@ -227,7 +227,7 @@ export const ManageAppointment: React.FC<
       dispatch(setSlotsWarningOpen(true));
     } else if (internalError) {
       showError(
-        `We’re sorry. Something went wrong on our end. Please try again shortly. Error identifier: ${e.response?.data?.id ?? 'unknown'}`
+        `We're sorry. Something went wrong on our end. Please try again shortly. Error identifier: ${e.response?.data?.id ?? 'unknown'}`
       );
     } else {
       showError(e);
@@ -241,9 +241,11 @@ export const ManageAppointment: React.FC<
       });
     }
   };
-
-  const onNext = () => {
-    dispatch(setCurrentFrameScreen('appointmentConfirmed'));
+  const onNext = (): Promise<void> => {
+    return new Promise(resolve => {
+      dispatch(setCurrentFrameScreen('appointmentConfirmed'));
+      resolve();
+    });
   };
 
   const handleCreateAppointment = () => {
@@ -338,12 +340,13 @@ export const ManageAppointment: React.FC<
   const onSaveMileage = () => {
     userClickedOnSave ? handleCreateAppointment() : onMileageClose();
   };
+  const showLoader = isAppointmentSaving || isConsentsLoading;
 
   return (
     <StepWrapper style={isXs ? { paddingBottom: 30 } : {}}>
       <ManageTitle>Manage Appointment</ManageTitle>
       <Wrapper>
-        {isAppointmentSaving || isConsentsLoading ? (
+        {showLoader ? (
           <Loading />
         ) : (
           <React.Fragment>
@@ -372,9 +375,9 @@ export const ManageAppointment: React.FC<
         )}
       </Wrapper>
       {/*todo change to open payment window on next*/}
-      {isAppointmentSaving || isConsentsLoading ? null : (
+      {showLoader ? null : (
         <ActionButtons
-          loading={isAppointmentSaving || isConsentsLoading}
+          loading={showLoader}
           nextDisabled={loading || isMileageOpen}
           onBack={onCancelConfirmOpen}
           onNext={searchForConsents}
@@ -382,19 +385,13 @@ export const ManageAppointment: React.FC<
           prevLabel="Cancel Changes"
         />
       )}
-
-      {isAppointmentSaving || isConsentsLoading ? null : (
+      {showLoader ? null : (
         <ButtonWrapper>
-          <Button
-            disabled={isAppointmentSaving || isConsentsLoading}
-            variant="text"
-            onClick={onCancelAppointment}
-          >
+          <Button disabled={showLoader} variant="text" onClick={onCancelAppointment}>
             Cancel Appointment
           </Button>
         </ButtonWrapper>
       )}
-
       <DetailedFeesManage open={isFeesOpen} onClose={onFeesClose} />
       <PaymentTypeModal open={isPaymentOpen} onClose={onPaymentClose} onNo={searchForConsents} />
       {/* <CommentModal open={isCommentOpen} onClose={onCommentClose} /> */}

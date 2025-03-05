@@ -988,12 +988,12 @@ export const updateConsultant =
 export const createOrUpdateAppointment =
   (
     id: number,
-    onNext: () => void,
+    onNext: () => Promise<void>,
     onError: (e: any) => void,
     isMobile: boolean,
     isAdmin: boolean
   ): AppThunk =>
-  (dispatch, getState) => {
+  async (dispatch, getState) => {
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
     const categories = getState().categories;
@@ -1129,22 +1129,24 @@ export const createOrUpdateAppointment =
 
     if (isAdmin) delete data.schedulerType;
 
-    const endpoint = appointmentFrame.hashKey
-      ? Api.endpoints.Appointments.UpdateByKey
-      : Api.endpoints.Appointments.Create;
+    try {
+      const endpoint = appointmentFrame.hashKey
+        ? Api.endpoints.Appointments.UpdateByKey
+        : Api.endpoints.Appointments.Create;
 
-    Api.call<ICreateAppointmentResp>(endpoint, {
-      data,
-      urlParams: { id: appointmentFrame.hashKey },
-    })
-      .then(({ data: resData }) => {
-        dispatch(setEditingPosition(null));
-        dispatch(handleAppointmentResponse(resData, endpoint, onNext));
-      })
-      .catch(e => {
-        onError(e);
-        dispatch(setAppointmentSaving(false));
+      const response = await Api.call<ICreateAppointmentResp>(endpoint, {
+        data,
+        urlParams: { id: appointmentFrame.hashKey },
       });
+
+      dispatch(setEditingPosition(null));
+      await onNext();
+      dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
+    } catch (e) {
+      onError(e);
+    } finally {
+      dispatch(setAppointmentSaving(false));
+    }
   };
 
 export const checkCarIsValid =

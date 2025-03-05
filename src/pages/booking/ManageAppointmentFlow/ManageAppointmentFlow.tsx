@@ -66,6 +66,13 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     handleSetScreen(nextScreen);
   };
 
+  const handleNext = (): Promise<void> => {
+    return new Promise(resolve => {
+      handleSetScreen('appointmentConfirmed');
+      resolve();
+    });
+  };
+
   const component = useMemo(() => {
     const carSelections: { [k in TScreen]?: JSX.Element } = {
       carSelection: (
@@ -151,7 +158,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
               isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection'
             )
           }
-          onNext={() => handleSetScreen('appointmentConfirmed')}
+          onNext={handleNext}
         />
       ),
       appointmentConfirmed: (
