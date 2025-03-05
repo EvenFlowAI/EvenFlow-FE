@@ -343,29 +343,31 @@ export const loadConsultantsForUpdating =
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
         }
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-          Api.endpoints.ServiceConsultants.GetByQuery,
-          { data }
-        )
-          .then(({ data: { result } }) => {
-            dispatch(setConsultants(result));
-            if (!result.length) {
-              dispatch(setAdvisorAvailable(false));
-            } else {
-              if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                dispatch(
-                  setSideBarSteps(
-                    sideBarSteps.filter(
-                      el => el !== 'appointmentTiming' && el !== 'appointmentSelection'
+        if (data.vehicle.mileage) {
+          Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+            Api.endpoints.ServiceConsultants.GetByQuery,
+            { data }
+          )
+            .then(({ data: { result } }) => {
+              dispatch(setConsultants(result));
+              if (!result.length) {
+                dispatch(setAdvisorAvailable(false));
+              } else {
+                if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+                  dispatch(
+                    setSideBarSteps(
+                      sideBarSteps.filter(
+                        el => el !== 'appointmentTiming' && el !== 'appointmentSelection'
+                      )
                     )
-                  )
-                );
-                dispatch(setAdvisorAvailable(true));
+                  );
+                  dispatch(setAdvisorAvailable(true));
+                }
               }
-            }
-          })
-          .catch(err => console.log(err))
-          .finally(() => dispatch(setConsultantsLoading(false)));
+            })
+            .catch(err => console.log(err))
+            .finally(() => dispatch(setConsultantsLoading(false)));
+        }
       }
     }
   };
