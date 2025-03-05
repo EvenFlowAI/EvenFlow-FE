@@ -136,8 +136,14 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
           currentPackage.businessRules.vehicleMileageValues.map(item => item.toString())
         );
         setVehiclesData({
-          yearFrom: currentPackage.businessRules.vehicleYearRange?.from?.toString(),
-          yearTo: currentPackage.businessRules.vehicleYearRange?.to?.toString(),
+          yearFrom:
+            currentPackage.businessRules.vehicleYearRange?.from > 0
+              ? currentPackage.businessRules.vehicleYearRange?.from?.toString()
+              : '',
+          yearTo:
+            currentPackage.businessRules.vehicleYearRange?.to > 0
+              ? currentPackage.businessRules.vehicleYearRange?.to?.toString()
+              : '',
           customerCriteria: currentPackage.businessRules.customerCriteria,
           isApplyBusinessRules: currentPackage.isApplyBusinessRules,
         });
@@ -426,7 +432,6 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
               <Autocomplete
                 disabled={!isApplyBusinessRules}
                 classes={autoCompleteStyles}
-                disableClearable
                 options={yearOptions}
                 disableCloseOnSelect
                 isOptionEqualToValue={(option, value) =>
@@ -443,7 +448,6 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
                 disabled={!isApplyBusinessRules}
                 classes={autoCompleteStyles}
                 options={yearOptions}
-                disableClearable
                 disableCloseOnSelect
                 isOptionEqualToValue={(option, value) =>
                   option.toLowerCase() === value.toLowerCase()
