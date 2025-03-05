@@ -20,7 +20,6 @@ type TProps = {
 
 export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selected, date }) => {
   const { waitListSettings } = useSelector((state: RootState) => state.appointment);
-  const { isConsentOpen } = useSelector((state: RootState) => state.modals);
   const [timePassed, setTimePassed] = useState<boolean>(false);
   const { t } = useTranslation();
   const title = t(
@@ -62,24 +61,27 @@ export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selec
   }, [selected, everySlotTimoutId]);
 
   useEffect(() => {
-    const rect = slotRef?.current?.getBoundingClientRect();
+    const rect = slotRef.current?.getBoundingClientRect();
     const parentHeight = slotRef.current?.parentElement?.clientHeight;
     const parentWidth = slotRef.current?.parentElement?.clientWidth;
     const isVisible =
       Boolean(rect) &&
       parentHeight &&
       parentWidth &&
-      rect?.top &&
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= parentHeight &&
-      rect.right <= parentWidth;
+      rect?.top !== undefined &&
+      rect?.left !== undefined &&
+      rect?.bottom !== undefined &&
+      rect?.top >= 0 &&
+      rect?.left >= 0 &&
+      rect?.bottom <= parentHeight &&
+      rect?.right <= parentWidth;
+
     if (slotRef.current && selected) {
-      !isVisible &&
-        !isConsentOpen &&
-        slotRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (!isVisible) {
+        slotRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
-  }, [selected, slot, isConsentOpen]);
+  }, [selected]);
 
   const getContent = (timePassed: boolean): string => {
     if (slot?.isOverbookingApplied && waitListSettings?.isEnabled) {
