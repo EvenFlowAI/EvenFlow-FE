@@ -241,10 +241,8 @@ export const ManageAppointment: React.FC<
       });
     }
   };
-  console.log('1', { isAppointmentSaving, isConsentsLoading });
   const onNext = (): Promise<void> => {
     return new Promise(resolve => {
-      console.log('2', { isAppointmentSaving, isConsentsLoading });
       dispatch(setCurrentFrameScreen('appointmentConfirmed'));
       resolve();
     });
@@ -274,7 +272,6 @@ export const ManageAppointment: React.FC<
   };
 
   const searchForConsents = () => {
-    dispatch(setAppointmentSaving(true));
     dispatch(searchForCustomerConsents(handleCreateAppointment));
   };
 
