@@ -330,11 +330,22 @@ export const AppointmentSlots: React.FC<
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
       clearData();
-      const minDate = dayjs(d).isSame(dayjs(), 'date') ? dayjs() : dayjs(d);
-      setDate(dayjs(d));
-      !keepSlot && selectFirstSlot(minDate);
-      if (!dayjs(d).isSame(month, 'month')) {
-        setMonth(d);
+
+      // Convert the incoming date to UTC
+      const newDate = dayjs.utc(d);
+      const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
+
+      // Set the date in UTC
+      setDate(newDate);
+
+      // Select the first slot if keepSlot is false
+      if (!keepSlot) {
+        selectFirstSlot(minDate);
+      }
+
+      // Check if the month needs to be updated
+      if (!newDate.isSame(dayjs.utc(month), 'month')) {
+        setMonth(newDate);
       }
     },
     [month, selectedTiming, selectFirstSlot]
