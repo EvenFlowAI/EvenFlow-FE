@@ -123,6 +123,7 @@ export const AppointmentSlots: React.FC<
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
   const [loading, setLoading] = useState<boolean>(false);
+  const dateSlotsRef = useRef<HTMLDivElement | null>(null);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
@@ -602,6 +603,15 @@ export const AppointmentSlots: React.FC<
     onMileageClose();
     loadData().finally();
   };
+
+  useEffect(() => {
+    if (dateSlotsRef.current) {
+      const selectedDateElement = dateSlotsRef.current.querySelector(`[data-date="${date}"]`);
+      if (selectedDateElement) {
+        selectedDateElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [date]);
 
   return (
     <StepWrapper>

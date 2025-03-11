@@ -174,6 +174,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
           appointment={appointments[day]}
           onClick={handleChangeDay(day)}
           day={day}
+          data-date={day}
         />
       ))}
       <DateSelectArrow onClick={handleNext} disabled={!nextAvailable()}>
