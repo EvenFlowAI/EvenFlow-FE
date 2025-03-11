@@ -988,7 +988,7 @@ export const updateConsultant =
 export const createOrUpdateAppointment =
   (
     id: number,
-    onNext: () => Promise<void>,
+    onNext: () => void,
     onError: (e: any) => void,
     isMobile: boolean,
     isAdmin: boolean
@@ -1138,10 +1138,8 @@ export const createOrUpdateAppointment =
         data,
         urlParams: { id: appointmentFrame.hashKey },
       });
-
       dispatch(setEditingPosition(null));
-      await onNext();
-      dispatch(setAppointmentSaving(false));
+      onNext();
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
     } catch (e) {
       onError(e);
