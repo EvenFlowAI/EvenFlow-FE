@@ -16,7 +16,6 @@ import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/ty
 import { TScreen } from '../../../types/types';
 import { MobileSteps } from './MobileSteps/MobileSteps';
 import { Index, Wrapper } from './styles';
-import { ConsoleView } from 'react-device-detect';
 
 type TProps = {
   screen: TScreen;
