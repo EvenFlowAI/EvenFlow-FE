@@ -6,6 +6,9 @@ import { ReactComponent as CalendarIconWhite } from '../../../assets/img/empty_c
 import { monthDayFormat } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/constants';
 import { Date, Day, DayCard } from '../../styled/DayCard';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 type TProps = {
   day: string;
@@ -15,30 +18,23 @@ type TProps = {
   isXs: boolean;
 };
 
-export const DaySelectCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
-  day,
-  onClick,
-  appointment,
-  isCurrent,
-  isXs,
-}) => {
-  const utcOffset = dayjs().utcOffset();
-  const dateWithOffset = dayjs().add(utcOffset, 'minute');
+export const DaySelectCard: React.FC<TProps> = ({ day, onClick, appointment, isCurrent, isXs }) => {
+  const utcDay = dayjs.utc(day);
 
   const getLabel = () => {
-    return dayjs.utc(day).format('ddd');
+    return utcDay.format('ddd');
   };
 
   const isAvailable = Boolean(
-    appointment?.appointments?.find(slot => dayjs(slot?.date).isAfter(dateWithOffset))
+    appointment?.appointments?.find(slot => dayjs.utc(slot?.date).isAfter(utcDay))
   );
 
   const isOffPeak =
     isAvailable && Boolean(appointment?.appointments?.find(el => el.price?.amountOfSavingMoney));
 
   return (
-    <DayCard available={isAvailable} isCurrent={isCurrent} isOffPeak={isOffPeak}>
-      <Date>{dayjs.utc(day).format(monthDayFormat)}</Date>
+    <DayCard available={isAvailable} isCurrent={isCurrent} isOffPeak={isOffPeak} onClick={onClick}>
+      <Date>{utcDay.format(monthDayFormat)}</Date>
       <Day available={isAvailable} isCurrent={isCurrent} isOffPeak={isOffPeak} onClick={onClick}>
         {isCurrent ? <CalendarIconWhite /> : <CalendarIcon />}
         {getLabel()}
