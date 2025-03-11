@@ -23,6 +23,9 @@ import { getAppointmentDate } from '../../../features/booking/AppointmentFlow/Sc
 import { useModal } from '../../../hooks/useModal/useModal';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router-dom';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 type TProps = {
   date: TParsableDate;
@@ -89,7 +92,11 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   useEffect(() => {
     if (!dateRangeUpdated) {
       const selectedDate = appointment?.date ? appointment.date : date;
-      const formattedDate = dayjs(selectedDate).startOf('day').toISOString().replace('.000', '');
+      const formattedDate = dayjs
+        .utc(selectedDate)
+        .startOf('day')
+        .toISOString()
+        .replace('.000', '');
       let dateIdx = days.findIndex(el => el === formattedDate);
       if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
         setSliceIdx(0);
