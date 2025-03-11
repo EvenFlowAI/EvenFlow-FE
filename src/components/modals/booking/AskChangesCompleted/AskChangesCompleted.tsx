@@ -67,9 +67,9 @@ const AskChangesCompleted = () => {
 
   const onSuccessAppointmentUpdate = (): Promise<void> => {
     return new Promise(resolve => {
-      dispatch(setChangesCompletedOpen(false));
       dispatch(setCurrentFrameScreen('appointmentConfirmed'));
       redirectToAppointmentFrame();
+      dispatch(setChangesCompletedOpen(false));
       resolve();
     });
   };
