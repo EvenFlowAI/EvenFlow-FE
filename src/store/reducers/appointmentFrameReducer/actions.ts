@@ -292,12 +292,10 @@ export const loadConsultantsForCloning =
       .then(({ data: { result } }) => {
         dispatch(setConsultants(result));
         cb();
-      })
-      .catch(err => console.log(err))
-      .finally(() => {
         dispatch(setConsultantsLoading(false));
         dispatch(setCurrentAppointmentLoading(false));
-      });
+      })
+      .catch(err => console.log(err));
   };
 
 export const loadConsultantsForUpdating =
@@ -364,9 +362,9 @@ export const loadConsultantsForUpdating =
                   dispatch(setAdvisorAvailable(true));
                 }
               }
+              dispatch(setConsultantsLoading(false));
             })
-            .catch(err => console.log(err))
-            .finally(() => dispatch(setConsultantsLoading(false)));
+            .catch(err => console.log(err));
         }
       }
     }
@@ -482,9 +480,9 @@ export const loadConsultants =
                 dispatch(setAdvisor(null));
               }
             }
+            dispatch(setConsultantsLoading(false));
           })
-          .catch(err => console.log(err))
-          .finally(() => dispatch(setConsultantsLoading(false)));
+          .catch(err => console.log(err));
       }
     }
   };
@@ -524,11 +522,11 @@ export const loadServiceOffers =
     })
       .then(result => {
         if (result?.data) dispatch(getValueServiceOffers(result.data));
+        dispatch(setOffersLoading(false));
       })
       .catch(err => {
         console.log('get value service offers error', err);
-      })
-      .finally(() => dispatch(setOffersLoading(false)));
+      });
   };
 
 export const clearSelectedServices =
@@ -593,6 +591,7 @@ export const loadAncillaryPriceByZip =
           dispatch(setAncillaryPriceByZip(result.data));
           onSuccess(result.data);
         }
+        dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
         if (err.response?.data?.errorCode === 12) {
@@ -601,8 +600,7 @@ export const loadAncillaryPriceByZip =
           onError(err);
         }
         console.log('get ancillary price by zip code error', err);
-      })
-      .finally(() => dispatch(setAncillaryPriceLoading(false)));
+      });
   };
 
 export const loadFilteredZip =
@@ -616,11 +614,11 @@ export const loadFilteredZip =
       .then(result => {
         if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes));
         if (onSuccess) onSuccess(result.data.zipCodes, data.search);
+        dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
         console.log('get zip codes by filter error', err);
-      })
-      .finally(() => dispatch(setAncillaryPriceLoading(false)));
+      });
   };
 
 export const loadHoursOfOperations =
@@ -634,11 +632,11 @@ export const loadHoursOfOperations =
         if (result?.data) {
           dispatch(setHoursOfOperations(result.data));
         }
+        dispatch(setLoading(false));
       })
       .catch(err => {
         console.log('get hours of operations error', err);
-      })
-      .finally(() => dispatch(setLoading(false)));
+      });
   };
 
 export const setDefaultVisitCenterOption = (): AppThunk => (dispatch, getState) => {
@@ -1143,11 +1141,10 @@ export const createOrUpdateAppointment =
 
       dispatch(setEditingPosition(null));
       await onNext();
+      dispatch(setAppointmentSaving(false));
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
     } catch (e) {
       onError(e);
-    } finally {
-      dispatch(setAppointmentSaving(false));
     }
   };
 
@@ -1275,11 +1272,11 @@ export const loadAppointmentRequestsPrices =
       Api.call(Api.endpoints.AppointmentPricing.GetPriceList, { data })
         .then(result => {
           if (result) dispatch(getAppointmentRequestsPrices(result.data));
+          dispatch(setAppointmentsLoading(false));
         })
         .catch(err => {
           console.log('get appointment requests prices list err', err);
-        })
-        .finally(() => dispatch(setAppointmentsLoading(false)));
+        });
     }
   };
 
@@ -1373,12 +1370,10 @@ export const searchForCustomerConsents =
           } else {
             onEmptyList();
           }
+          dispatch(setConsentsLoading(false));
         })
         .catch(err => {
           console.log('search for customer consent error', err);
-        })
-        .finally(() => {
-          dispatch(setConsentsLoading(false));
         });
     }
   };
@@ -1491,12 +1486,10 @@ export const cloneAppointment =
         .then(({ data }) => {
           dispatch(setEditingPosition(null));
           onNext(data.hashKey);
+          dispatch(setAppointmentSaving(false));
         })
         .catch(e => {
           onError(e);
-        })
-        .finally(() => {
-          dispatch(setAppointmentSaving(false));
         });
     }
   };
@@ -1594,15 +1587,13 @@ export const handleAppointmentUpdate =
             dispatch(updateConsultant(data.advisor));
             dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true));
             dispatch(checkCarIsValid());
+            setLoadingCar(false);
+            dispatch(setAppointmentSaving(false));
           }
         })
         .catch(e => {
           console.log(e);
           showError(e);
-        })
-        .finally(() => {
-          setLoadingCar(false);
-          dispatch(setAppointmentSaving(false));
         });
     }
   };
@@ -1671,8 +1662,8 @@ export const loadActiveTransportations =
         },
       };
       if (hashKey) data.appointmentHashKey = hashKey;
-      Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, { data })
-        .then(({ data }) => {
+      Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, { data }).then(
+        ({ data }) => {
           const serviceValetOption = firstScreenOptions.find(
             el => el.type === EServiceType.PickUpDropOff
           );
@@ -1683,10 +1674,9 @@ export const loadActiveTransportations =
                 : data.filter(el => el.type !== ETransportationType.PickUpDelivery)
             )
           );
-        })
-        .finally(() => {
           dispatch(setTransportationsLoading(false));
-        });
+        }
+      );
     } else {
       setTimeout(() => dispatch(setTransportationsLoading(false)), 500);
     }
