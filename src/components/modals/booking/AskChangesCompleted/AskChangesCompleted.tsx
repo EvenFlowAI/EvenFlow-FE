@@ -65,13 +65,10 @@ const AskChangesCompleted = () => {
     redirectToAppointmentFrame();
   };
 
-  const onSuccessAppointmentUpdate = (): Promise<void> => {
-    return new Promise(resolve => {
-      dispatch(setCurrentFrameScreen('appointmentConfirmed'));
-      redirectToAppointmentFrame();
-      dispatch(setChangesCompletedOpen(false));
-      resolve();
-    });
+  const onSuccessAppointmentUpdate = () => {
+    dispatch(setCurrentFrameScreen('appointmentConfirmed'));
+    redirectToAppointmentFrame();
+    dispatch(setChangesCompletedOpen(false));
   };
 
   const handleError = (e: any) => {
