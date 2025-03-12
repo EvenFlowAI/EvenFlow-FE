@@ -92,37 +92,30 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   }, [date, searchedDateRange]);
 
   useEffect(() => {
-    if (!dateRangeUpdated) {
-      const selectedDate = appointment?.date ? appointment.date : date;
-      const formattedDate = dayjs
-        .utc(selectedDate)
-        .startOf('day')
-        .toISOString()
-        .replace('.000', '');
-      const dateIdx = days.findIndex(el => el === formattedDate);
+    const selectedDate = appointment?.date ? appointment.date : date;
+    const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
+    const dateIdx = days.findIndex(el => el === formattedDate);
 
-      // Always set sliceIdx to 0 to display selectedDate as the first date
-      if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
-        setSliceIdx(0);
-      } else {
-        // Calculate the maximum slice index
-        const maxSliceIndex = daysInMonth - daysPerScreen;
+    // Если дата не найдена или недостаточно дней для отображения
+    if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
+      setSliceIdx(0);
+    } else {
+      // Устанавливаем максимальный индекс среза
+      const maxSliceIndex = daysInMonth - daysPerScreen;
 
-        // Set sliceIdx to the index of the selected date
+      // Проверяем, находится ли выбранная дата в пределах видимых дней
+      if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
+        // Если выбранная дата не видима, устанавливаем sliceIdx так, чтобы она была видна
         let newSliceIdx = dateIdx;
 
-        // Ensure the new slice index is within bounds
-        if (newSliceIdx < 0) {
-          newSliceIdx = 0; // Adjust to the start if it goes negative
-        } else if (newSliceIdx > maxSliceIndex) {
-          newSliceIdx = maxSliceIndex; // Adjust to the end if it exceeds the max
-        }
+        // Убедитесь, что новый индекс среза не выходит за пределы
+        newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
 
         setSliceIdx(newSliceIdx);
       }
-
-      onDateRangeSet(true);
     }
+
+    onDateRangeSet(true);
   }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
   const handleChangeDay = (date: string) => () => {
