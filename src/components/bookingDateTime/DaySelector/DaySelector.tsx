@@ -90,24 +90,37 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   }, [date, searchedDateRange]);
 
   useEffect(() => {
-    const selectedDate = appointment?.date ? appointment.date : date;
-    const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
+    if (!dateRangeUpdated) {
+      const selectedDate = appointment?.date ? appointment.date : date;
+      const formattedDate = dayjs
+        .utc(selectedDate)
+        .startOf('day')
+        .toISOString()
+        .replace('.000', '');
+      const dateIdx = days.findIndex(el => el === formattedDate);
 
-    const dateIdx = days.findIndex(el => el === formattedDate);
+      // If the date is not found or there are not enough days to display
+      if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
+        setSliceIdx(0);
+      } else {
+        // Calculate the maximum slice index
+        const maxSliceIndex = daysInMonth - daysPerScreen;
 
-    console.log('Selected Date:', formattedDate);
-    console.log('Date Index:', dateIdx);
+        // Determine the new slice index
+        let newSliceIdx = dateIdx - Math.floor(daysPerScreen / 2);
 
-    if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
-      setSliceIdx(0);
-    } else {
-      const centerIndex = Math.max(0, dateIdx - Math.floor(daysPerScreen / 2));
-      const maxSliceIndex = Math.max(0, daysInMonth - daysPerScreen);
+        // Ensure the new slice index is within bounds
+        if (newSliceIdx < 0) {
+          newSliceIdx = 0; // Adjust to the start if it goes negative
+        } else if (newSliceIdx > maxSliceIndex) {
+          newSliceIdx = maxSliceIndex; // Adjust to the end if it exceeds the max
+        }
 
-      setSliceIdx(Math.min(centerIndex, maxSliceIndex));
+        setSliceIdx(newSliceIdx);
+      }
+
+      onDateRangeSet(true);
     }
-
-    onDateRangeSet(true);
   }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
   const handleChangeDay = (date: string) => () => {
