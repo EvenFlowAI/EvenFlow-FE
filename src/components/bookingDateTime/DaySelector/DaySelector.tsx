@@ -90,34 +90,24 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   }, [date, searchedDateRange]);
 
   useEffect(() => {
-    if (!dateRangeUpdated) {
-      const selectedDate = appointment?.date ? appointment.date : date;
-      const formattedDate = dayjs
-        .utc(selectedDate)
-        .startOf('day')
-        .toISOString()
-        .replace('.000', '');
-      let dateIdx = days.findIndex(el => el === formattedDate);
-      if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
-        setSliceIdx(0);
-      } else {
-        // to get center of the displayed dates
-        const idXOfCenterElement = dateIdx - Math.floor(daysPerScreen / 2);
-        if (idXOfCenterElement + daysPerScreen > daysInMonth) {
-          // Handle right date edge
-          if (dateIdx === days.length - 1) {
-            setSliceIdx(daysInMonth - daysPerScreen + 1);
-          } else {
-            setSliceIdx(daysInMonth - daysPerScreen);
-          }
-        } else {
-          // Handle left date edge
-          setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
-        }
+    const selectedDate = appointment?.date ? appointment.date : date;
+    const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
 
-        onDateRangeSet(true);
-      }
+    const dateIdx = days.findIndex(el => el === formattedDate);
+
+    console.log('Selected Date:', formattedDate);
+    console.log('Date Index:', dateIdx);
+
+    if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
+      setSliceIdx(0);
+    } else {
+      const centerIndex = Math.max(0, dateIdx - Math.floor(daysPerScreen / 2));
+      const maxSliceIndex = Math.max(0, daysInMonth - daysPerScreen);
+
+      setSliceIdx(Math.min(centerIndex, maxSliceIndex));
     }
+
+    onDateRangeSet(true);
   }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
   const handleChangeDay = (date: string) => () => {
