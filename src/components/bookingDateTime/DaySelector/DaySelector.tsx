@@ -59,10 +59,10 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const history = useHistory();
   const isAdminPanel = history.location.pathname.includes('admin');
   const daysPerScreen = useMemo(() => {
-    if (isXs) return 3; // For extra small devices
-    if (isSm) return 4; // For small devices
-    if (isMd) return 5; // For medium devices
-    return 6; // For large devices
+    if (isXs) return 3;
+    if (isSm) return 4;
+    if (isMd) return 5;
+    return 6;
   }, [isXs, isSm, isMd]);
 
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
@@ -96,22 +96,21 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
     const dateIdx = days.findIndex(el => el === formattedDate);
 
-    // Если дата не найдена или недостаточно дней для отображения
     if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
       setSliceIdx(0);
     } else {
-      // Устанавливаем максимальный индекс среза
       const maxSliceIndex = daysInMonth - daysPerScreen;
 
-      // Проверяем, находится ли выбранная дата в пределах видимых дней
-      if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
-        // Если выбранная дата не видима, устанавливаем sliceIdx так, чтобы она была видна
-        let newSliceIdx = dateIdx;
+      if (sliceIdx === 0) {
+        setSliceIdx(Math.min(2, maxSliceIndex));
+      } else {
+        if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
+          let newSliceIdx = dateIdx - 2;
 
-        // Убедитесь, что новый индекс среза не выходит за пределы
-        newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
+          newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
 
-        setSliceIdx(newSliceIdx);
+          setSliceIdx(newSliceIdx);
+        }
       }
     }
 
@@ -125,6 +124,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const nextAvailable = (): boolean => {
     return sliceIdx < daysInMonth - daysPerScreen;
   };
+
   const prevAvailable = (): boolean => {
     return sliceIdx > 0;
   };
@@ -132,18 +132,21 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const handleNext = () => {
     if (nextAvailable()) {
       setSliceIdx(prevIndex => {
-        const nS = prevIndex + daysPerScreen * 2;
-        return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
+        const newSliceIdx = prevIndex + 2;
+        return newSliceIdx <= daysInMonth - daysPerScreen
+          ? newSliceIdx
+          : daysInMonth - daysPerScreen;
       });
     } else {
       if (isAppointmentTimingAvailable && !isAdminPanel) onOpen();
     }
   };
+
   const handlePrev = () => {
     if (prevAvailable()) {
-      setSliceIdx(s => {
-        const pS = s - daysPerScreen;
-        return pS >= 0 ? pS : 0;
+      setSliceIdx(prevIndex => {
+        const newSliceIdx = prevIndex - 2;
+        return newSliceIdx >= 0 ? newSliceIdx : 0;
       });
     } else {
       if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
