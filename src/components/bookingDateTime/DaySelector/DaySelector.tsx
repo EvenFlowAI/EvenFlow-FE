@@ -56,12 +56,14 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
-  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
   const history = useHistory();
   const isAdminPanel = history.location.pathname.includes('admin');
-  const daysPerScreen: number = useMemo(() => {
-    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
-  }, [isMd, isMds]);
+  const daysPerScreen = useMemo(() => {
+    if (isXs) return 3; // For extra small devices
+    if (isSm) return 4; // For small devices
+    if (isMd) return 5; // For medium devices
+    return 6; // For large devices
+  }, [isXs, isSm, isMd]);
 
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
     let daysInMonth: number = dayjs.utc(date).daysInMonth();
@@ -99,15 +101,15 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
         .replace('.000', '');
       const dateIdx = days.findIndex(el => el === formattedDate);
 
-      // If the date is not found or there are not enough days to display
+      // Always set sliceIdx to 0 to display selectedDate as the first date
       if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
         setSliceIdx(0);
       } else {
         // Calculate the maximum slice index
         const maxSliceIndex = daysInMonth - daysPerScreen;
 
-        // Determine the new slice index
-        let newSliceIdx = dateIdx - Math.floor(daysPerScreen / 2);
+        // Set sliceIdx to the index of the selected date
+        let newSliceIdx = dateIdx;
 
         // Ensure the new slice index is within bounds
         if (newSliceIdx < 0) {
