@@ -103,15 +103,21 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
       // Устанавливаем максимальный индекс среза
       const maxSliceIndex = daysInMonth - daysPerScreen;
 
-      // Проверяем, находится ли выбранная дата в пределах видимых дней
-      if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
-        // Если выбранная дата не видима, устанавливаем sliceIdx так, чтобы она была видна
-        let newSliceIdx = dateIdx;
+      // Логика для первой загрузки
+      if (sliceIdx === 0) {
+        // Устанавливаем sliceIdx на третий элемент (индекс 2), если это возможно
+        setSliceIdx(Math.min(2, maxSliceIndex));
+      } else {
+        // Проверяем, находится ли выбранная дата в пределах видимых дней
+        if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
+          // Если выбранная дата не видима, устанавливаем sliceIdx так, чтобы она была видима
+          let newSliceIdx = dateIdx - 2; // Устанавливаем на 2 дня раньше выбранной даты
 
-        // Убедитесь, что новый индекс среза не выходит за пределы
-        newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
+          // Убедитесь, что новый индекс среза не выходит за пределы
+          newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
 
-        setSliceIdx(newSliceIdx);
+          setSliceIdx(newSliceIdx);
+        }
       }
     }
 
@@ -125,6 +131,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const nextAvailable = (): boolean => {
     return sliceIdx < daysInMonth - daysPerScreen;
   };
+
   const prevAvailable = (): boolean => {
     return sliceIdx > 0;
   };
@@ -132,18 +139,21 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const handleNext = () => {
     if (nextAvailable()) {
       setSliceIdx(prevIndex => {
-        const nS = prevIndex + daysPerScreen * 2;
-        return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
+        const newSliceIdx = prevIndex + 2; // Двигаемся на 2 элемента вперед
+        return newSliceIdx <= daysInMonth - daysPerScreen
+          ? newSliceIdx
+          : daysInMonth - daysPerScreen;
       });
     } else {
       if (isAppointmentTimingAvailable && !isAdminPanel) onOpen();
     }
   };
+
   const handlePrev = () => {
     if (prevAvailable()) {
-      setSliceIdx(s => {
-        const pS = s - daysPerScreen;
-        return pS >= 0 ? pS : 0;
+      setSliceIdx(prevIndex => {
+        const newSliceIdx = prevIndex - 2; // Двигаемся на 2 элемента назад
+        return newSliceIdx >= 0 ? newSliceIdx : 0;
       });
     } else {
       if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
