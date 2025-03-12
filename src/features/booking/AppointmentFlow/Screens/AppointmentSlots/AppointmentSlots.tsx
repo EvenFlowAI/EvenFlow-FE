@@ -333,11 +333,13 @@ export const AppointmentSlots: React.FC<
       clearData();
 
       // Convert the incoming date to UTC
-      const newDate = dayjs.utc(d);
-      const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
+      const newDate = dayjs.utc(d).startOf('day'); // Ensure we are working with the start of the day in UTC
 
       // Set the date in UTC
       setDate(newDate);
+
+      // Determine the minimum date for slot selection
+      const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc().startOf('day') : newDate;
 
       // Select the first slot if keepSlot is false
       if (!keepSlot) {
@@ -345,11 +347,11 @@ export const AppointmentSlots: React.FC<
       }
 
       // Check if the month needs to be updated
-      if (!newDate.isSame(dayjs.utc(month), 'month')) {
+      if (!newDate.isSame(dayjs.utc(month).startOf('month'), 'month')) {
         setMonth(newDate);
       }
     },
-    [month, selectedTiming, selectFirstSlot]
+    [month, selectFirstSlot, clearData]
   );
 
   const onChangeServiceOption = () => {
