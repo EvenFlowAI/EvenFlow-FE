@@ -59,10 +59,10 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const history = useHistory();
   const isAdminPanel = history.location.pathname.includes('admin');
   const daysPerScreen = useMemo(() => {
-    if (isXs) return 3; // For extra small devices
-    if (isSm) return 4; // For small devices
-    if (isMd) return 5; // For medium devices
-    return 6; // For large devices
+    if (isXs) return 3;
+    if (isSm) return 4;
+    if (isMd) return 5;
+    return 6;
   }, [isXs, isSm, isMd]);
 
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
@@ -96,24 +96,17 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
     const dateIdx = days.findIndex(el => el === formattedDate);
 
-    // Если дата не найдена или недостаточно дней для отображения
     if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
       setSliceIdx(0);
     } else {
-      // Устанавливаем максимальный индекс среза
       const maxSliceIndex = daysInMonth - daysPerScreen;
 
-      // Логика для первой загрузки
       if (sliceIdx === 0) {
-        // Устанавливаем sliceIdx на третий элемент (индекс 2), если это возможно
         setSliceIdx(Math.min(2, maxSliceIndex));
       } else {
-        // Проверяем, находится ли выбранная дата в пределах видимых дней
         if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
-          // Если выбранная дата не видима, устанавливаем sliceIdx так, чтобы она была видима
-          let newSliceIdx = dateIdx - 2; // Устанавливаем на 2 дня раньше выбранной даты
+          let newSliceIdx = dateIdx - 2;
 
-          // Убедитесь, что новый индекс среза не выходит за пределы
           newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
 
           setSliceIdx(newSliceIdx);
@@ -139,7 +132,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const handleNext = () => {
     if (nextAvailable()) {
       setSliceIdx(prevIndex => {
-        const newSliceIdx = prevIndex + 2; // Двигаемся на 2 элемента вперед
+        const newSliceIdx = prevIndex + 2;
         return newSliceIdx <= daysInMonth - daysPerScreen
           ? newSliceIdx
           : daysInMonth - daysPerScreen;
@@ -152,7 +145,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const handlePrev = () => {
     if (prevAvailable()) {
       setSliceIdx(prevIndex => {
-        const newSliceIdx = prevIndex - 2; // Двигаемся на 2 элемента назад
+        const newSliceIdx = prevIndex - 2;
         return newSliceIdx >= 0 ? newSliceIdx : 0;
       });
     } else {
