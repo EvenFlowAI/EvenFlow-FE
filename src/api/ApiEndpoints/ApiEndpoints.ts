@@ -626,17 +626,17 @@ export class Api {
       }
     } catch (error: any) {
       // Show error notification using notistack
-      enqueueSnackbar(
-        error.response?.data?.message || 'An error occurred while processing your request',
-        {
-          variant: 'error',
-          autoHideDuration: 3000,
-          anchorOrigin: {
-            vertical: 'top',
-            horizontal: 'right',
-          },
-        }
-      );
+      // enqueueSnackbar(
+      //   error.response?.data?.message || 'An error occurred while processing your request',
+      //   {
+      //     variant: 'error',
+      //     autoHideDuration: 3000,
+      //     anchorOrigin: {
+      //       vertical: 'top',
+      //       horizontal: 'right',
+      //     },
+      //   }
+      // );
       throw error; // Re-throw the error so it can be handled by the calling code if needed
     }
   }
