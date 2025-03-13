@@ -93,7 +93,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
 
   useEffect(() => {
     const selectedDate = appointment?.date ? appointment.date : date;
-    const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString().replace('.000', '');
+    const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString();
     const dateIdx = days.findIndex(el => el === formattedDate);
 
     if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
@@ -102,7 +102,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
       const maxSliceIndex = daysInMonth - daysPerScreen;
 
       if (sliceIdx === 0) {
-        setSliceIdx(Math.min(2, maxSliceIndex));
+        setSliceIdx(0);
       } else {
         if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
           let newSliceIdx = dateIdx - 2;
