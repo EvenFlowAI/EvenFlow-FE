@@ -93,24 +93,22 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
 
   useEffect(() => {
     const selectedDate = appointment?.date ? appointment.date : date;
-    const formattedDate = dayjs.utc(selectedDate).startOf('day').toISOString();
+    const formattedDate = dayjs
+      .utc(selectedDate)
+      .startOf('day')
+      .toISOString()
+      .replace('.000Z', 'Z');
     const dateIdx = days.findIndex(el => el === formattedDate);
-
     if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
       setSliceIdx(0);
     } else {
       const maxSliceIndex = daysInMonth - daysPerScreen;
 
-      if (sliceIdx === 0) {
-        setSliceIdx(0);
-      } else {
-        if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
-          let newSliceIdx = dateIdx - 2;
+      if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
+        let newSliceIdx = dateIdx - 2;
 
-          newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
-
-          setSliceIdx(newSliceIdx);
-        }
+        newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
+        setSliceIdx(newSliceIdx);
       }
     }
 
@@ -161,6 +159,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
   };
+
 
   return (
     <DaySelectorWrapper>
