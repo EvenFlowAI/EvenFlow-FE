@@ -486,11 +486,21 @@ export type TModelCode = {
   name: string;
 };
 
+export interface IModel {
+  globalId: number;
+  isReadOnly: boolean;
+  orderIndex: number;
+  id: number;
+  name: string;
+}
+
 export interface IMake {
   name: string;
-  models: string[];
-  id?: number;
-  modelCodes?: TModelCode[];
+  models: IModel[];
+  id: number;
+  globalId: number;
+  isReadOnly: boolean;
+  orderIndex: number;
 }
 
 export interface IModel {

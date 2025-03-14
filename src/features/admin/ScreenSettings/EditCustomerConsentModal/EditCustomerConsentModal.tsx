@@ -25,7 +25,7 @@ import {
   autocompleteOptionsRender,
   autocompleteRender,
 } from '../../../../utils/autocompleteRenders';
-import { IMakeExtended, IModel } from '../../../../api/types';
+import { IMake, IModel } from '../../../../api/types';
 import { TOption } from '../../ServiceBookModal/types';
 import { EUserType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { IPodShort } from '../../../../store/reducers/pods/types';
@@ -56,7 +56,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   const { scRequestsShort: serviceRequests } = useSelector(
     ({ serviceRequests }: RootState) => serviceRequests
   );
-  const { makesModels } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
+  const { makes } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
   const { mobileZonesShort } = useSelector(({ mobileService }: RootState) => mobileService);
   const { svZonesShort } = useSelector(({ serviceValet }: RootState) => serviceValet);
   const { optionsShort: transportationsShort } = useSelector(
@@ -130,6 +130,21 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
             appointmentTimeTo,
             daysOfWeek,
           } = currentConsent;
+          const selectedModels = makes
+            .map(el => el.models)
+            .flat(1)
+            .filter(el => currentConsent.modelIds?.includes(el.id));
+
+          // Get all models with the same names as the selected models
+          const allModelsWithSameNames = makes
+            .map(el => el.models)
+            .flat(1)
+            .filter(model =>
+              selectedModels.some(
+                selectedModel => selectedModel.name.toLowerCase() === model.name.toLowerCase()
+              )
+            );
+
           return {
             name,
             title,
@@ -140,11 +155,8 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
             appointmentTimeFrom,
             appointmentTimeTo,
             daysOfWeek: daysOfWeek ?? [],
-            makes: makesModels.filter(el => currentConsent.makeIds?.includes(el.id)),
-            models: makesModels
-              .map(el => el.models)
-              .flat(1)
-              .filter(el => currentConsent.modelIds?.includes(el.id)),
+            makes: makes.filter(el => currentConsent.makeIds?.includes(el.id)),
+            models: allModelsWithSameNames,
             customerType: currentConsent.customerType ?? null,
             serviceRequests: serviceRequests.filter(el =>
               currentConsent.serviceRequestIds?.includes(el.id)
@@ -169,7 +181,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   }, [
     open,
     currentConsent,
-    makesModels,
+    makes,
     serviceRequests,
     advisorsList,
     transportationsShort,
@@ -227,13 +239,24 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   const onSave = () => {
     setFormIsChecked(true);
     if (checkIsValid() && selectedSC) {
+      // Get all model IDs that share names with the selected models
+      const allModelIds = makes
+        .map(el => el.models)
+        .flat(1)
+        .filter(model =>
+          form.models.some(
+            selectedModel => selectedModel.name.toLowerCase() === model.name.toLowerCase()
+          )
+        )
+        .map(({ id }) => id);
+
       const data: IBaseCustomerConsent = {
         serviceCenterId: selectedSC.id,
         podId: selectedPod?.id ?? null,
         name: form.name,
         title: form.title,
         makeIds: form.makes.map(({ id }) => id),
-        modelIds: form.models.map(({ id }) => id),
+        modelIds: allModelIds,
         modelYearFrom: form.modelYearFrom ?? null,
         modelYearTo: form.modelYearTo ?? null,
         customerType: form.customerType ?? null,
@@ -259,7 +282,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   };
 
   const getSortedMakes = () => {
-    return [...makesModels].sort((a, b) =>
+    return [...makes].sort((a, b) =>
       form.makes.find(make => make.id === a.id)
         ? form.makes.find(make => make.id === b.id)
           ? 0
@@ -273,7 +296,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const onMakeChange = useCallback((e: ChangeEvent<{}>, value: IMakeExtended[]) => {
+  const onMakeChange = useCallback((e: ChangeEvent<{}>, value: IMake[]) => {
     setFormIsChecked(false);
     setForm(prev => ({ ...prev, makes: value }));
     setModelsOptions(value.map(make => make.models).flat());
@@ -286,7 +309,15 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
   }, []);
 
   const getSortedModels = () => {
-    return modelsOptions.sort((a, b) =>
+    const otherModels = modelsOptions.filter(model => model.name.toUpperCase().includes('OTHER'));
+    const nonOtherModels = modelsOptions.filter(
+      model => !model.name.toUpperCase().includes('OTHER')
+    );
+
+    // Keep only the first OTHER model if it exists
+    const uniqueOtherModel = otherModels.length > 0 ? [otherModels[0]] : [];
+
+    return [...nonOtherModels, ...uniqueOtherModel].sort((a, b) =>
       form.models.find(model => model.id === a.id)
         ? form.models.find(model => model.id === b.id)
           ? 0
@@ -362,6 +393,7 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
     setFormIsChecked(false);
     setForm(prev => ({ ...prev, message: value }));
   };
+
 
   return (
     <BaseModal open={open} width={940} onClose={onCancel}>

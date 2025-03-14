@@ -13,7 +13,7 @@ import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { RootState } from '../../../../store/rootReducer';
 import { IMakeExtended, IModel } from '../../../../api/types';
 import { IAssignedServiceRequest } from '../../../../store/reducers/serviceRequests/types';
-import { loadMakesForPods } from '../../../../store/reducers/vehicleDetails/actions';
+import { loadMakesGlobally } from '../../../../store/reducers/vehicleDetails/actions';
 import { createRecall, updateRecall } from '../../../../store/reducers/recall/actions';
 import { Textarea, useStyles } from './styles';
 import { TAddRecallProps, TForm } from './types';
@@ -28,7 +28,7 @@ import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocomplete
 const AddRecallModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddRecallProps>>
 > = ({ editingItem, open, onClose, setEditingItem }) => {
-  const { makesModels } = useSelector((state: RootState) => state.vehicleDetails);
+  const { makes } = useSelector((state: RootState) => state.vehicleDetails);
   const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
   const [form, setForm] = useState<TForm>(initialForm);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
@@ -41,13 +41,13 @@ const AddRecallModal: React.FC<
 
   useEffect(() => {
     if (open && selectedSC) {
-      dispatch(loadMakesForPods(selectedSC.id));
+      dispatch(loadMakesGlobally(selectedSC.id));
     }
   }, [selectedSC, open]);
 
   useEffect(() => {
     if (open && editingItem) {
-      const make = makesModels.find(el => el.id === editingItem.make?.id);
+      const make = makes.find(el => el.id === editingItem.make?.id);
       const models =
         make?.models.filter(el => editingItem.models.find(item => item.id === el.id)) ?? [];
       const sr = allAssignedList.find(item => item.id === editingItem.serviceRequest?.id);
@@ -63,7 +63,7 @@ const AddRecallModal: React.FC<
         oemProgram: editingItem.oemProgram ?? '',
       }));
     }
-  }, [open, editingItem, makesModels, allAssignedList]);
+  }, [open, editingItem, makes, allAssignedList]);
 
   const onCancel = () => {
     setForm(initialForm);
@@ -182,7 +182,7 @@ const AddRecallModal: React.FC<
         />
         <Autocomplete
           style={{ marginBottom: 10 }}
-          options={makesModels}
+          options={makes}
           value={form.make}
           isOptionEqualToValue={(o, v) => o.id === v.id}
           getOptionLabel={o => o.name}

@@ -20,7 +20,7 @@ import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { loadSCAdvisors } from '../../../../store/reducers/employees/actions';
 import { loadSCRequestsShort } from '../../../../store/reducers/serviceRequests/actions';
-import { loadMakesForPods } from '../../../../store/reducers/vehicleDetails/actions';
+import { loadMakesGlobally } from '../../../../store/reducers/vehicleDetails/actions';
 import {
   loadZonesByServiceType,
   removeCustomerConsent,
@@ -57,7 +57,7 @@ export const CustomerConsentsModal: React.FC<
     if (selectedSC) {
       dispatch(loadSCAdvisors(selectedSC.id));
       dispatch(loadSCRequestsShort(selectedSC.id));
-      dispatch(loadMakesForPods(selectedSC.id));
+      dispatch(loadMakesGlobally(selectedSC.id));
     }
   }, [selectedSC]);
 

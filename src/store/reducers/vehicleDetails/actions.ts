@@ -1,25 +1,66 @@
 import { createAction } from '@reduxjs/toolkit';
-import { AppThunk } from '../../../types/types';
-import { IMake, IMakeExtended } from '../../../api/types';
+import { AppThunk, PaginatedAPIResponse } from '../../../types/types';
+import { IMake } from '../../../api/types';
 import { ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage } from './types';
 import { loadAllSCs } from '../serviceCenters/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
-
+import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
+import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
 export const setLoading = createAction<boolean>('VehicleDetails/SetLoading');
 export const getMileage = createAction<IMileage[]>('VehicleDetails/GetMileage');
-export const setPodsMakes = createAction<IMakeExtended[]>('VehicleDetails/MakesModels');
 export const getEngineType = createAction<IEngineType[]>('VehicleDetails/EngineType');
+export const setPaging = createAction<IPagingResponse>('VehicleDetails/SetPaging');
+export const setPageData = createAction<Partial<IPageRequest>>('VehicleDetails/SetPageData');
+export const setMakeOrder = createAction<IOrder<IMake>>('VehicleDetails/SetMakeOrder');
+export const setGlobalMakes = createAction<IGlobalMake[]>('VehicleDetails/SetGlobalMakes');
+export const setGlobalModels = createAction<IGlobalModel[]>('VehicleDetails/SetGlobalModels');
 
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
-  async dispatch => {
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.Vehicles.Makes, { params: { serviceCenterId } })
-      .then(result => {
-        if (result?.data) {
-          dispatch(getMakes(result.data));
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: state.pageData.pageIndex,
+        pageSize: state.pageData.pageSize,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getMakes(response.data.result));
+          dispatch(setPaging(response.data.paging));
+        }
+      })
+      .catch(err => {
+        console.log('load makes error', err);
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+export const loadMakesGlobally =
+  (serviceCenterId: number): AppThunk =>
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
+    dispatch(setLoading(true));
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: 0,
+        pageSize: 0,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getMakes(response.data.result));
+          dispatch(setPaging(response.data.paging));
         }
       })
       .catch(err => {
@@ -54,6 +95,23 @@ export const updateMake =
         })
         .catch(err => {
           console.log('update make error', err);
+        });
+    }
+  };
+
+export const updateModel =
+  (serviceCenterId: number, globalMakeId: number, globalIds: number[]): AppThunk =>
+  async (dispatch, getState) => {
+    const { selectedSC } = getState().serviceCenters;
+    if (selectedSC) {
+      Api.call(Api.endpoints.Vehicles.UpdateModel, {
+        data: { serviceCenterId, globalMakeId, globalIds },
+      })
+        .then(result => {
+          if (result) dispatch(loadMakes(selectedSC.id));
+        })
+        .catch(err => {
+          console.log('update model error', err);
         });
     }
   };
@@ -121,17 +179,6 @@ export const removeMileage =
       });
   };
 
-export const loadMakesForPods =
-  (serviceCenterId: number): AppThunk =>
-  dispatch => {
-    Api.call<IMakeExtended[]>(Api.endpoints.Vehicles.MakesModels, { params: { serviceCenterId } })
-      .then(result => {
-        dispatch(setPodsMakes(result.data));
-      })
-      .catch(err => {
-        console.log('get makes for pods error', err);
-      });
-  };
 
 export const loadEngineType =
   (serviceCenterId: number): AppThunk =>
@@ -206,5 +253,46 @@ export const updateEngineTypeFieldName =
       .catch(err => {
         onError(err);
         console.log('update engine type field name error');
+      });
+  };
+
+export const loadGlobalMakes = (): AppThunk => async dispatch => {
+  Api.call<PaginatedAPIResponse<IGlobalMake>>(Api.endpoints.GlobalVehicles.GetMakes, {
+    data: {
+      pageIndex: 0,
+      pageSize: 0,
+      isAscending: true,
+      showStandardized: true,
+    },
+  })
+    .then(result => {
+      if (result?.data) {
+        dispatch(setGlobalMakes(result.data.result));
+      }
+    })
+    .catch(err => {
+      console.log('load global makes error', err);
+    });
+};
+
+export const loadGlobalModels =
+  (makeId: number): AppThunk =>
+  async dispatch => {
+    Api.call<PaginatedAPIResponse<IGlobalModel>>(Api.endpoints.GlobalVehicles.GetModels, {
+      data: {
+        pageIndex: 0,
+        pageSize: 0,
+        isAscending: true,
+        showStandardized: true,
+        makeIds: [makeId],
+      },
+    })
+      .then(result => {
+        if (result?.data) {
+          dispatch(setGlobalModels(result.data.result));
+        }
+      })
+      .catch(err => {
+        console.log('load global models error', err);
       });
   };

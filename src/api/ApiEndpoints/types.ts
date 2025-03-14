@@ -344,7 +344,8 @@ export interface IApiEndpoints {
     | 'MakesModels'
     | 'GetEngineType'
     | 'RemoveEngineType'
-    | 'CreateEngineType',
+    | 'CreateEngineType'
+    | 'UpdateModel',
     TApiEndpoint
   >;
   ValueService: Record<'GetSeriesModels' | 'GetValueServiceOffers', TApiEndpoint>;

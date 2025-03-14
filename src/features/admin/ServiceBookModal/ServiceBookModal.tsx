@@ -1,6 +1,11 @@
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
-import { EAppointmentType, EJobType, IPodForm } from '../../../store/reducers/pods/types';
+import {
+  EAppointmentType,
+  EJobType,
+  IPodForm,
+  IPodVehicleModel,
+} from '../../../store/reducers/pods/types';
 import {
   BaseModal,
   DialogActions,
@@ -25,9 +30,13 @@ import {
   updatePod,
 } from '../../../store/reducers/pods/actions';
 import { loadBaysShort } from '../../../store/reducers/bays/actions';
-import { IMakeExtended, IModel } from '../../../api/types';
+import { IMake, IModel } from '../../../api/types';
 import { getOptions, getTransportationOptionString } from '../../../utils/utils';
-import { loadEngineType, loadMakesForPods } from '../../../store/reducers/vehicleDetails/actions';
+import {
+  loadEngineType,
+  loadMakes,
+  loadMakesGlobally,
+} from '../../../store/reducers/vehicleDetails/actions';
 import { TZone } from '../../../store/reducers/mobileService/types';
 import { loadMobServiceZones } from '../../../store/reducers/mobileService/actions';
 import { loadServiceValetZones } from '../../../store/reducers/serviceValet/actions';
@@ -64,9 +73,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   const { scRequestsShort: serviceRequests } = useSelector(
     ({ serviceRequests }: RootState) => serviceRequests
   );
-  const { makesModels, engineTypes } = useSelector(
-    ({ vehicleDetails }: RootState) => vehicleDetails
-  );
+  const { makes, engineTypes } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
   const { options: transportations, isLoading: isTransportationLoading } = useSelector(
     ({ transportation }: RootState) => transportation
   );
@@ -77,7 +84,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   const [form, setForm] = useState<TForm>(initialForm);
   const [loading, setLoading] = useState<boolean>();
   const [formIsChecked, setFormIsChecked] = useState<boolean>();
-  const [selectedMakes, setSelectedMakes] = useState<IMakeExtended[]>([]);
+  const [selectedMakes, setSelectedMakes] = useState<IMake[]>([]);
   const [modelsOptions, setModelsOptions] = useState<IModel[]>([]);
   const [selectedModels, setSelectedModels] = useState<IModel[]>([]);
   const [mobileZones, setMobileZones] = useState<TZone[]>([]);
@@ -187,7 +194,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   }, [
     props.open,
     podById,
-    makesModels,
+    makes,
     engineTypes,
     serviceValetZones,
     zones,
@@ -196,11 +203,11 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   ]);
 
   useEffect(() => {
-    const filteredMakes = makesModels.filter(item =>
+    const filteredMakes = makes.filter(item =>
       podById?.vehicleMakes?.find(el => el.id === item.id)
     );
     const models: IModel[][] = [];
-    makesModels.forEach(item => {
+    makes.forEach(item => {
       const makeIsSelected = podById?.vehicleMakes?.find(make => make.id === item.id);
       if (makeIsSelected) {
         models.push(item.models);
@@ -215,11 +222,22 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
     if (podById?.vehicleModels?.length) {
       const modelsIDs = models.flat().map(item => item.id);
       const filteredModels = podById?.vehicleModels?.filter(item => modelsIDs.includes(item.id));
-      setSelectedModels(filteredModels);
+      const selectedModels = filteredModels?.map(item => {
+        // Find the matching model in the flattened models array to get all fields
+        const sourceModel = models.flat().find(model => model.id === item.id) as IModel;
+        return {
+          id: item.id,
+          name: item.name,
+          globalId: sourceModel.globalId,
+          isReadOnly: sourceModel.isReadOnly,
+          orderIndex: sourceModel.orderIndex,
+        };
+      });
+      setSelectedModels(selectedModels);
     } else {
       setSelectedModels([]);
     }
-  }, [makesModels, props.open, podById]);
+  }, [makes, props.open, podById]);
 
   useEffect(() => {
     if (selectedSC && props.open) {
@@ -227,7 +245,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
       dispatch(loadSCEmployees(selectedSC.id));
       dispatch(loadSCRequestsShort(selectedSC.id));
       dispatch(loadBaysShort(selectedSC.id));
-      dispatch(loadMakesForPods(selectedSC.id));
+      dispatch(loadMakesGlobally(selectedSC.id));
       dispatch(loadMobServiceZones(selectedSC.id));
       dispatch(loadServiceValetZones(selectedSC.id));
       dispatch(loadEngineType(selectedSC.id));
@@ -369,7 +387,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   };
 
   const getSortedMakes = () => {
-    return [...makesModels].sort((a, b) =>
+    return [...makes].sort((a, b) =>
       selectedMakes.find(make => make.id === a.id)
         ? selectedMakes.find(make => make.id === b.id)
           ? 0
@@ -379,7 +397,18 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   };
 
   const getSortedModels = () => {
-    return modelsOptions.sort((a, b) =>
+    const uniqueModels = modelsOptions.reduce((acc, model) => {
+      const existingModel = acc.find(m => m.name === model.name);
+      if (!existingModel) {
+        acc.push(model);
+      } else if (selectedModels.find(sm => sm.id === model.id)) {
+        // Replace with selected model if current one is selected
+        const index = acc.findIndex(m => m.name === model.name);
+        acc[index] = model;
+      }
+      return acc;
+    }, [] as IModel[]);
+    return uniqueModels.sort((a, b) =>
       selectedModels.find(model => model.id === a.id)
         ? selectedModels.find(model => model.id === b.id)
           ? 0
@@ -389,7 +418,7 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
   };
 
   const onMakeChange = useCallback(
-    (e: ChangeEvent<{}>, value: IMakeExtended[]) => {
+    (e: ChangeEvent<{}>, value: IMake[]) => {
       setSelectedMakes(value);
       setModelsOptions(value.map(make => make.models).flat());
       setSelectedModels(prev =>
