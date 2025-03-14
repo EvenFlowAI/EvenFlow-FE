@@ -222,8 +222,8 @@ export const SelectOpsCode: React.FC<TProps> = ({
 
   const handleValidateCheckedServiceCommentsUpdate = () => {
     if (
-      !Object.keys(commentText).some(
-        (i: any) => selectedOpsCodes.includes(+i) && commentText[i].length > 0
+      Object.keys(commentText).some(
+        (i: any) => !selectedOpsCodes.includes(+i) && commentText[i].length > 0
       )
     ) {
       onAddCommentedService();

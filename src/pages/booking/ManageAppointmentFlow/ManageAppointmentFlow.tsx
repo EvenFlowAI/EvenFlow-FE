@@ -66,132 +66,123 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     handleSetScreen(nextScreen);
   };
 
-  const component = useMemo(() => {
-    const carSelections: { [k in TScreen]?: JSX.Element } = {
-      carSelection: (
-        <Cars
-          onBack={handleLogin}
-          loading={loadingCar}
-          setNeedToShowServiceSelection={setNeedToShowServiceTypes}
-          needToShowServiceSelection={needToShowServiceTypes}
-          handleSetScreen={handleSetScreen}
-          onSelectAppointment={onSelectAppointment}
-        />
-      ),
-      serviceNeeds: (
-        <ServiceNeedsManage
-          page={serviceCategoryPage}
-          setPage={setServiceCategoryPage}
-          setLastSelectedCategory={setLastSelectedCategory}
-          onSelect={handleSetScreen}
-        />
-      ),
-      maintenanceDetails: (
-        <MaintenanceDetailsManage
-          serviceCategoryPage={serviceCategoryPage}
-          onBack={handleSetScreen}
-          onNext={handleSetScreen}
-        />
-      ),
-      packageSelection: (
-        <MaintenancePackages
-          isManagingFlow={!isUsualFlowNeeded}
-          onBack={() => handleSetScreen('maintenanceDetails')}
-          onNext={handleSetScreen}
-          onAddServices={() => handleSetScreen('serviceNeeds')}
-        />
-      ),
-      describeMore: (
-        <AppointmentComment
-          handleSetScreen={handleSetScreen}
-          onAddServices={() => handleSetScreen('serviceNeeds')}
-          isManagingFlow={!isUsualFlowNeeded}
-        />
-      ),
-      opsCode: (
-        <SelectOpsCode
-          onAddServices={() => handleSetScreen('serviceNeeds')}
-          handleSetScreen={handleSetScreen}
-          page={serviceCategoryPage}
-          isManagingFlow={!isUsualFlowNeeded}
-        />
-      ),
-      consultantSelection: (
-        <ConsultantsManage
-          onNext={() =>
-            handleSetScreen(
-              isTransportationAvailable && !serviceTypeOption?.transportationOption
-                ? 'transportationNeeds'
-                : isAppointmentTimingAvailable
-                  ? 'appointmentTiming'
-                  : 'appointmentSelection'
-            )
-          }
-        />
-      ),
-      appointmentTiming: <AppointmentTimingManage handleSetScreen={handleSetScreen} />,
-      appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen} />,
-      transportationNeeds: (
-        <TransportationsManage
-          onBack={() =>
-            handleSetScreen(isAdvisorAvailable ? 'consultantSelection' : 'serviceNeeds')
-          }
-          onNext={() =>
-            handleSetScreen(
-              isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection'
-            )
-          }
-        />
-      ),
-      appointmentConfirmation: (
-        <AppointmentConfirmation
-          onBack={() => handleSetScreen('appointmentSelection')}
-          onChangeSlot={() =>
-            handleSetScreen(
-              isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection'
-            )
-          }
-          onNext={() => handleSetScreen('appointmentConfirmed')}
-        />
-      ),
-      appointmentConfirmed: (
-        <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment} isManagingFlow />
-      ),
-      location: (
-        <YourLocationManage
-          onUpdateAppointment={onUpdateAppointment}
-          setNeedToShowServiceSelection={setNeedToShowServiceTypes}
-          onGoToFirstScreen={onGoToFirstScreen}
-        />
-      ),
-      payment: <PaymentScreen />,
-      serviceOfferProductPage: (
-        <OfferProductPage
-          handleSetScreen={handleSetScreen}
-          category={lastSelectedCategory}
-          lastCategory={lastSelectedCategory}
-          onChangeVehicle={() => handleSetScreen('maintenanceDetails')}
-        />
-      ),
-      manageAppointment: (
-        <ManageAppointment onUpdateAppointment={onUpdateAppointment} onChangeSlot={onChangeSlot} />
-      ),
-    };
-    return carSelections[currentScreen];
-  }, [
-    currentScreen,
-    handleSetScreen,
-    handleLogin,
-    loadingCar,
-    serviceTypeOption,
-    needToShowServiceTypes,
-    onUpdateAppointment,
-    serviceCategoryPage,
-    isTransportationAvailable,
-    isAdvisorAvailable,
-    isAppointmentTimingAvailable,
-  ]);
+  const handleNext = (): Promise<void> => {
+    return new Promise(resolve => {
+      handleSetScreen('appointmentConfirmed');
+      resolve();
+    });
+  };
 
+  const carSelections: { [k in TScreen]?: JSX.Element } = {
+    carSelection: (
+      <Cars
+        onBack={handleLogin}
+        loading={loadingCar}
+        setNeedToShowServiceSelection={setNeedToShowServiceTypes}
+        needToShowServiceSelection={needToShowServiceTypes}
+        handleSetScreen={handleSetScreen}
+        onSelectAppointment={onSelectAppointment}
+      />
+    ),
+    serviceNeeds: (
+      <ServiceNeedsManage
+        page={serviceCategoryPage}
+        setPage={setServiceCategoryPage}
+        setLastSelectedCategory={setLastSelectedCategory}
+        onSelect={handleSetScreen}
+      />
+    ),
+    maintenanceDetails: (
+      <MaintenanceDetailsManage
+        serviceCategoryPage={serviceCategoryPage}
+        onBack={handleSetScreen}
+        onNext={handleSetScreen}
+      />
+    ),
+    packageSelection: (
+      <MaintenancePackages
+        isManagingFlow={!isUsualFlowNeeded}
+        onBack={() => handleSetScreen('maintenanceDetails')}
+        onNext={handleSetScreen}
+        onAddServices={() => handleSetScreen('serviceNeeds')}
+      />
+    ),
+    describeMore: (
+      <AppointmentComment
+        handleSetScreen={handleSetScreen}
+        onAddServices={() => handleSetScreen('serviceNeeds')}
+        isManagingFlow={!isUsualFlowNeeded}
+      />
+    ),
+    opsCode: (
+      <SelectOpsCode
+        onAddServices={() => handleSetScreen('serviceNeeds')}
+        handleSetScreen={handleSetScreen}
+        page={serviceCategoryPage}
+        isManagingFlow={!isUsualFlowNeeded}
+      />
+    ),
+    consultantSelection: (
+      <ConsultantsManage
+        onNext={() =>
+          handleSetScreen(
+            isTransportationAvailable && !serviceTypeOption?.transportationOption
+              ? 'transportationNeeds'
+              : isAppointmentTimingAvailable
+                ? 'appointmentTiming'
+                : 'appointmentSelection'
+          )
+        }
+      />
+    ),
+    appointmentTiming: <AppointmentTimingManage handleSetScreen={handleSetScreen} />,
+    appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen} />,
+    transportationNeeds: (
+      <TransportationsManage
+        onBack={() => handleSetScreen(isAdvisorAvailable ? 'consultantSelection' : 'serviceNeeds')}
+        onNext={() =>
+          handleSetScreen(
+            isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection'
+          )
+        }
+      />
+    ),
+    appointmentConfirmation: (
+      <AppointmentConfirmation
+        onBack={() => handleSetScreen('appointmentSelection')}
+        onChangeSlot={() =>
+          handleSetScreen(
+            isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection'
+          )
+        }
+        onNext={handleNext}
+      />
+    ),
+    appointmentConfirmed: (
+      <AppointmentConfirmed onUpdateAppointment={onUpdateAppointment} isManagingFlow />
+    ),
+    location: (
+      <YourLocationManage
+        onUpdateAppointment={onUpdateAppointment}
+        setNeedToShowServiceSelection={setNeedToShowServiceTypes}
+        onGoToFirstScreen={onGoToFirstScreen}
+      />
+    ),
+    payment: <PaymentScreen />,
+    serviceOfferProductPage: (
+      <OfferProductPage
+        handleSetScreen={handleSetScreen}
+        category={lastSelectedCategory}
+        lastCategory={lastSelectedCategory}
+        onChangeVehicle={() => handleSetScreen('maintenanceDetails')}
+      />
+    ),
+    manageAppointment: (
+      <ManageAppointment onUpdateAppointment={onUpdateAppointment} onChangeSlot={onChangeSlot} />
+    ),
+  };
+
+  const component = carSelections[currentScreen];
   return (
     <AppointmentFlow
       handleLogin={handleLogin}
