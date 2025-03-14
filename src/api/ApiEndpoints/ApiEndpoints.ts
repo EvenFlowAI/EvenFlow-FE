@@ -155,9 +155,6 @@ export class Api {
       UpdateSettings: { route: '/demand-management-settings', method: 'put' },
     },
     Employees: {
-      Create: { route: '/employees', method: 'post' },
-      Update: { route: '/employees/{id}', method: 'put' },
-      GetAll: { route: '/employees/by-query', method: 'post' },
       GetAssignmentSettings: {
         route: '/employees/assignment-settings/{serviceCenterId}',
         method: 'get',

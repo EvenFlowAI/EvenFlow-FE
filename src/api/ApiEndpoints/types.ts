@@ -77,10 +77,7 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   DemandManagement: Record<'GetSettings' | 'UpdateSettings', TApiEndpoint>;
-  Employees: Record<
-    'Create' | 'Update' | 'GetAll' | 'GetAssignmentSettings' | 'UpdateAssignmentSettings',
-    TApiEndpoint
-  >;
+  Employees: Record<'GetAssignmentSettings' | 'UpdateAssignmentSettings', TApiEndpoint>;
   EmployeeCapacity: Record<
     | 'GetAdvisorsCapacity'
     | 'UpdateAdvisorsCapacity'

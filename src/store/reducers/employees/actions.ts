@@ -15,7 +15,6 @@ import {
   IEmployee,
   IEmployeeAssignmentSetting,
   IEmployeeFilters,
-  IEmployeeForm,
   IEmployeeRoleHours,
   IEmployeeSchedule,
   TBaseScheduleRequest,
@@ -24,7 +23,6 @@ import {
   TSetScheduleData,
   TUpdateAssignmentSettingsData,
 } from './types';
-import { saveEmployeeAvatar } from '../users/actions';
 import { createAction } from '@reduxjs/toolkit';
 import { IAdvisorShort } from '../users/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -72,62 +70,6 @@ export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState)
     console.log('loadAll', e);
   }
 };
-const loadingTechnicians = (payload: boolean): TEmployeeActions => ({
-  type: 'Employees/LoadingTechnicians',
-  payload,
-});
-const _loadTechnicians = (payload: IEmployee[]): TEmployeeActions => ({
-  type: 'Employees/GetTechnicians',
-  payload,
-});
-export const loadTechnicians =
-  (serviceCenterId: number): AppThunk =>
-  async dispatch => {
-    dispatch(loadingTechnicians(true));
-    try {
-      const {
-        data: { result: employees },
-      } = await Api.call<PaginatedAPIResponse<IEmployee>>(Api.endpoints.Employees.GetAll, {
-        data: {
-          serviceCenterId,
-          pageIndex: 0,
-          pageSize: 0,
-        },
-      });
-      dispatch(loadingTechnicians(false));
-      dispatch(_loadTechnicians(employees));
-    } catch (e) {
-      dispatch(loadingTechnicians(false));
-      console.log('loadTechnicians', e);
-    }
-  };
-export const createEmployee =
-  (
-    payload: IEmployeeForm,
-    onSuccess: () => void,
-    onError: (err: any) => void,
-    avatar?: File
-  ): AppThunk =>
-  async dispatch => {
-    dispatch(saving(true));
-    try {
-      const { data } = await Api.call<IEmployee | string>(Api.endpoints.Employees.Create, {
-        data: payload,
-      });
-      if (avatar) {
-        await dispatch(
-          saveEmployeeAvatar(avatar, typeof data === 'string' ? data : data.id, onError)
-        );
-      }
-      dispatch(saving(false));
-      dispatch(loadByFilters());
-      onSuccess();
-    } catch (e) {
-      dispatch(saving(false));
-      onError(e);
-      console.log('createEmployee', e);
-    }
-  };
 
 export const changePaging = changePagingGeneric('Employees/ChangePaging');
 
@@ -139,30 +81,6 @@ export const removeEmployee =
       dispatch(loadByFilters());
     } catch (err) {
       console.log('remove employee err', err);
-    }
-  };
-export const updateEmployee =
-  (
-    data: IEmployeeForm,
-    id: string,
-    onSuccess: () => void,
-    onError: (err: any) => void,
-    avatar?: File
-  ): AppThunk =>
-  async dispatch => {
-    dispatch(saving(true));
-    try {
-      await Api.call(Api.endpoints.Employees.Update, { urlParams: { id }, data });
-      if (avatar) {
-        await dispatch(saveEmployeeAvatar(avatar, id, onError));
-      }
-      dispatch(saving(false));
-      dispatch(loadByFilters());
-      onSuccess();
-    } catch (e) {
-      dispatch(saving(false));
-      onError(e);
-      console.log('updateEmployee', e);
     }
   };
 
