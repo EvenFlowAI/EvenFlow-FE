@@ -7,6 +7,7 @@ import {
 import { AppThunk, TArgCallback, TCallback } from '../../../types/types';
 
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { useSnackbar } from 'notistack';
 
 export const setTransportationLoading = createAction<boolean>('TransportationNeeds/SetLoading');
 export const getTransportationOptions = createAction<ITransportationOptionFull[]>(
@@ -35,6 +36,7 @@ export const loadTransportationOptions =
 export const updateTransportationOption =
   (data: ITransportationOptionFull): AppThunk =>
   dispatch => {
+    const { enqueueSnackbar } = useSnackbar();
     Api.call(Api.endpoints.TransportationOptions.Edit, { data })
       .then(result => {
         if (result) {
@@ -42,7 +44,17 @@ export const updateTransportationOption =
         }
       })
       .catch(err => {
-        console.log('update transportation option error', err);
+        enqueueSnackbar(
+          err.response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };
 
