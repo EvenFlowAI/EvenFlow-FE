@@ -36,26 +36,13 @@ export const loadTransportationOptions =
 export const updateTransportationOption =
   (data: ITransportationOptionFull): AppThunk =>
   dispatch => {
-    const { enqueueSnackbar } = useSnackbar();
     Api.call(Api.endpoints.TransportationOptions.Edit, { data })
       .then(result => {
         if (result) {
           dispatch(loadTransportationOptions(data.serviceCenterId));
         }
       })
-      .catch(err => {
-        enqueueSnackbar(
-          err.response?.data?.message || 'An error occurred while processing your request',
-          {
-            variant: 'error',
-            autoHideDuration: 3000,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'right',
-            },
-          }
-        );
-      });
+      .catch(err => {});
   };
 
 export const editTransportationOptionRules =
