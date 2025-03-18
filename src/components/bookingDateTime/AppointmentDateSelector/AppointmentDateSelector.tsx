@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TArgCallback } from '../../../types/types';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { DaySelector } from '../DaySelector/DaySelector';
@@ -28,12 +28,21 @@ export const AppointmentDateSelector: React.FC<
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const { t } = useTranslation();
+  const monthSelectorRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (monthSelectorRef.current) {
+      monthSelectorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [date]);
 
   return (
     <div style={isMobile ? { padding: '16px 8px' } : {}}>
       {!isMobile && <h4>{t('Select Date')}</h4>}
       {!dateChangeDisabled ? (
-        <MonthSelector date={date} loading={loading} onDateChange={onDateChange} />
+        <div ref={monthSelectorRef}>
+          <MonthSelector date={date} loading={loading} onDateChange={onDateChange} />
+        </div>
       ) : null}
       <DaySelector
         onDateRangeSet={onDateRangeSet}
