@@ -1,115 +1,120 @@
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
-    IUnplannedDemand,
-    IUnplannedDemandBySlot
-} from "../../../../store/reducers/demandSegments/types";
-import UnplannedDemandSlots from "../UnplannedDemandSlots/UnplannedDemandSlots";
-import {useDispatch, useSelector} from "react-redux";
-import {changeUnplannedSlots} from "../../../../store/reducers/demandSegments/actions";
-import {RootState} from "../../../../store/rootReducer";
-import {Loading} from "../../../../components/wrappers/Loading/Loading";
-import {Divider} from "@mui/material";
-import {useStyles} from "./styles";
-import {SaveEditBlock} from "../../../../components/buttons/SaveEditBlock/SaveEditBlock";
+  IUnplannedDemand,
+  IUnplannedDemandBySlot,
+} from '../../../../store/reducers/demandSegments/types';
+import UnplannedDemandSlots from '../UnplannedDemandSlots/UnplannedDemandSlots';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeUnplannedSlots } from '../../../../store/reducers/demandSegments/actions';
+import { RootState } from '../../../../store/rootReducer';
+import { Loading } from '../../../../components/wrappers/Loading/Loading';
+import { Divider } from '@mui/material';
+import { useStyles } from './styles';
+import { SaveEditBlock } from '../../../../components/buttons/SaveEditBlock/SaveEditBlock';
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {useSelectedPod} from "../../../../hooks/useSelectedPod/useSelectedPod";
-import dayjs from "dayjs";
-import {sortSlots} from "../utils";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../hooks/useException/useException';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useSelectedPod } from '../../../../hooks/useSelectedPod/useSelectedPod';
+import dayjs from 'dayjs';
+import { sortSlots } from '../utils';
 
 type TUnplannedDemandEditingProps = {
-    isEdit: boolean;
-    setEdit: Dispatch<SetStateAction<boolean>>;
-    editingElement: IUnplannedDemand|null;
-}
+  isEdit: boolean;
+  setEdit: Dispatch<SetStateAction<boolean>>;
+  editingElement: IUnplannedDemand | null;
+};
 
-const UnplannedDemandEditing: React.FC<React.PropsWithChildren<React.PropsWithChildren<TUnplannedDemandEditingProps>>> = ({ setEdit, isEdit, editingElement }) => {
-    const {unplannedSlots, isSlotsLoading} = useSelector((state: RootState) => state.demandSegments);
-    const [slots1, setSlots1] = useState<IUnplannedDemandBySlot[]>([]);
-    const [slots2, setSlots2] = useState<IUnplannedDemandBySlot[]>([]);
-    const {selectedSC} = useSCs();
-    const {selectedPod} = useSelectedPod();
-    const dispatch = useDispatch();
-    const { classes  } = useStyles();
-    const showError = useException();
-    const showMessage = useMessage();
+const UnplannedDemandEditing: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TUnplannedDemandEditingProps>>
+> = ({ setEdit, isEdit, editingElement }) => {
+  const { unplannedSlots, isSlotsLoading } = useSelector(
+    (state: RootState) => state.demandSegments
+  );
+  const [slots1, setSlots1] = useState<IUnplannedDemandBySlot[]>([]);
+  const [slots2, setSlots2] = useState<IUnplannedDemandBySlot[]>([]);
+  const { selectedSC } = useSCs();
+  const { selectedPod } = useSelectedPod();
+  const dispatch = useDispatch();
+  const { classes } = useStyles();
+  const showError = useException();
+  const showMessage = useMessage();
 
-    const setInitialData = useCallback(() => {
-        const half = Math.ceil(unplannedSlots.length / 2);
-        const firstHalf = unplannedSlots.slice(0, half)
-        const secondHalf = unplannedSlots.slice(half)
-        setSlots1(firstHalf.sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})));
-        setSlots2(secondHalf.sort(sortSlots).map((el, i) => ({...el, localId: (i + 1) * 123})));
-    }, [unplannedSlots])
+  const setInitialData = useCallback(() => {
+    const half = Math.ceil(unplannedSlots.length / 2);
+    const firstHalf = unplannedSlots.slice(0, half);
+    const secondHalf = unplannedSlots.slice(half);
+    setSlots1(firstHalf.sort(sortSlots).map((el, i) => ({ ...el, localId: (i + 1) * 123 })));
+    setSlots2(secondHalf.sort(sortSlots).map((el, i) => ({ ...el, localId: (i + 1) * 123 })));
+  }, [unplannedSlots]);
 
-    useEffect(() => {
-        setInitialData()
-    }, [setInitialData])
+  useEffect(() => {
+    setInitialData();
+  }, [setInitialData]);
 
-    const handleCancel = useCallback(() => {
-        setInitialData()
-        setEdit(false);
-    }, [setInitialData])
+  const handleCancel = useCallback(() => {
+    setInitialData();
+    setEdit(false);
+  }, [setInitialData]);
 
-    const onSuccess = () => {
-        showMessage("Unplanned Demand Updated");
-        handleCancel()
+  const onSuccess = () => {
+    showMessage('Unplanned Demand Updated');
+    handleCancel();
+  };
+
+  const handleSave = () => {
+    if (selectedSC && editingElement) {
+      const items = [...slots1, ...slots2].map(item => ({ ...item, amount: +item.amount }));
+      const data = {
+        items,
+        day: editingElement.day,
+        serviceCenterId: selectedSC.id,
+        podId: selectedPod?.id,
+      };
+      dispatch(changeUnplannedSlots(data, showError, onSuccess));
     }
+  };
 
-    const handleSave = () => {
-        if (selectedSC && editingElement) {
-            const items = [...slots1, ...slots2]
-                .map(item => ({...item, amount: +item.amount}))
-            const data = {
-                items,
-                day: editingElement.day,
-                serviceCenterId: selectedSC.id,
-                podId: selectedPod?.id
-            }
-            dispatch(changeUnplannedSlots(data, showError, onSuccess))
-        }
-    }
-
-    return (
-        <div className={classes.wrapper}>
-            <div className={classes.titleLine}>
-                <div className={classes.dayName}>
-                    {editingElement ? dayjs().set('day', editingElement?.day).format('dddd') : ''}
-                </div>
-                <div className={classes.title}>Enter The Unplanned Demand By Appointment Slot</div>
-                <div>
-                    <SaveEditBlock
-                        onSave={handleSave}
-                        onEdit={() => setEdit(true)}
-                        onCancel={handleCancel}
-                        isEdit={isEdit}
-                        isSaving={isSlotsLoading}
-                    />
-                </div>
-            </div>
-            {isSlotsLoading
-                ? <Loading/>
-                : unplannedSlots.length
-                    ?  <div className={classes.tablesWrapper}>
-                        <UnplannedDemandSlots
-                            slots={slots1}
-                            setDemandSlots={setSlots1}
-                            withEmptyRow={slots1.length < slots2.length}
-                        />
-                        <UnplannedDemandSlots
-                            slots={slots2}
-                            setDemandSlots={setSlots2}
-                            withEmptyRow={slots2.length < slots1.length}
-                        />
-                    </div>
-                    : <div className={classes.text}>
-                        <Divider style={{marginBottom: 36}}/>
-                        <div>There are no working hours for this day</div>
-                    </div>}
+  return (
+    <div className={classes.wrapper}>
+      <div className={classes.titleLine}>
+        <div className={classes.dayName}>
+          {editingElement ? dayjs().set('day', editingElement?.day).format('dddd') : ''}
         </div>
-    );
+        <div className={classes.title}>Enter The Unplanned Demand By Appointment Slot</div>
+        <div>
+          <SaveEditBlock
+            onSave={handleSave}
+            onEdit={() => setEdit(true)}
+            onCancel={handleCancel}
+            isEdit={isEdit}
+            isSaving={isSlotsLoading}
+          />
+        </div>
+      </div>
+      {isSlotsLoading ? (
+        <Loading />
+      ) : unplannedSlots.length ? (
+        <div className={classes.tablesWrapper}>
+          <UnplannedDemandSlots
+            slots={slots1}
+            setDemandSlots={setSlots1}
+            withEmptyRow={slots1.length < slots2.length}
+          />
+          <UnplannedDemandSlots
+            slots={slots2}
+            setDemandSlots={setSlots2}
+            withEmptyRow={slots2.length < slots1.length}
+          />
+        </div>
+      ) : (
+        <div className={classes.text}>
+          <Divider style={{ marginBottom: 36 }} />
+          <div>There are no working hours for this day</div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default UnplannedDemandEditing;

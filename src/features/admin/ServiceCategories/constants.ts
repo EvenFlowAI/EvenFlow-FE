@@ -1,1 +1,1 @@
-export const visitCenterTabs = ["0", "1"];
+export const visitCenterTabs = ['0', '1'];

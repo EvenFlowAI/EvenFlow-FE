@@ -1,80 +1,86 @@
-import React, {useEffect, useState} from 'react';
-import {BaseModal, DialogActions, DialogContent, DialogTitle} from "../../../../components/modals/BaseModal/BaseModal";
-import {DialogProps} from "../../../../components/modals/BaseModal/types";
-import {Button} from "@mui/material";
-import {useDispatch} from "react-redux";
-import {TextField} from "../../../../components/formControls/TextFieldStyled/TextField";
-import {EDemandCategory, IPricingLevel} from "../../../../store/reducers/pricingSettings/types";
-import {SC_UNDEFINED} from "../../../../utils/constants";
-import {setPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
-import {LoadingButton} from "../../../../components/buttons/LoadingButton/LoadingButton";
+import React, { useEffect, useState } from 'react';
+import {
+  BaseModal,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
+import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import { Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { EDemandCategory, IPricingLevel } from '../../../../store/reducers/pricingSettings/types';
+import { SC_UNDEFINED } from '../../../../utils/constants';
+import { setPricingLevels } from '../../../../store/reducers/pricingSettings/actions';
+import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
 
-import {useMessage} from "../../../../hooks/useMessage/useMessage";
-import {useException} from "../../../../hooks/useException/useException";
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { useException } from '../../../../hooks/useException/useException';
 
-export const PriceLevelsModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPricingLevel>>>>
-    = ({onAction, payload, ...props}) => {
-    const [priceSetting, setSetting] = useState<string>("100");
-    const [saving, setSaving] = useState<boolean>(false);
-    const dispatch = useDispatch();
-    const showMessage = useMessage();
-    const showError = useException();
+export const PriceLevelsModal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPricingLevel>>>
+> = ({ onAction, payload, ...props }) => {
+  const [priceSetting, setSetting] = useState<string>('100');
+  const [saving, setSaving] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const showMessage = useMessage();
+  const showError = useException();
 
-    useEffect(() => {
-        if (payload) {
-            setSetting(String(payload?.percentage));
-        }
-    }, [payload]);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSetting(e.target.value);
+  useEffect(() => {
+    if (payload) {
+      setSetting(String(payload?.percentage));
     }
+  }, [payload]);
 
-    const handleSave = async () => {
-        if (!payload) {
-            showError(SC_UNDEFINED);
-        } else {
-            try {
-                setSaving(true);
-                await dispatch(setPricingLevels({...payload, percentage: Number(priceSetting)}));
-                showMessage("Saved");
-                setSaving(false);
-                props.onClose();
-            } catch (e) {
-                setSaving(false);
-                showError(e);
-            }
-        }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSetting(e.target.value);
+  };
+
+  const handleSave = async () => {
+    if (!payload) {
+      showError(SC_UNDEFINED);
+    } else {
+      try {
+        setSaving(true);
+        await dispatch(setPricingLevels({ ...payload, percentage: Number(priceSetting) }));
+        showMessage('Saved');
+        setSaving(false);
+        props.onClose();
+      } catch (e) {
+        setSaving(false);
+        showError(e);
+      }
     }
-    return <BaseModal {...props} width={400}>
-        <DialogTitle onClose={props.onClose}>
-            Edit {payload?.demandCategory === EDemandCategory.Low ? "Discount" : "Premium"}
-        </DialogTitle>
-        <DialogContent>
-            <TextField
-                label={payload?.demandCategory === EDemandCategory.Low ? "Discount" : "Premium"}
-                name="discount"
-                type="number"
-                inputProps={{
-                    min: payload?.demandCategory === EDemandCategory.Low ? 0 : 100,
-                    max: payload?.demandCategory === EDemandCategory.Low ? 100 : 200
-                }}
-                value={priceSetting}
-                onChange={handleChange}
-                fullWidth
-                id="discount"
-                endAdornment="%"
-            />
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={props.onClose} color="info">Close</Button>
-            <LoadingButton
-                loading={saving}
-                onClick={handleSave}
-                color="primary"
-                variant="contained">
-                Save
-            </LoadingButton>
-        </DialogActions>
+  };
+  return (
+    <BaseModal {...props} width={400}>
+      <DialogTitle onClose={props.onClose}>
+        Edit {payload?.demandCategory === EDemandCategory.Low ? 'Discount' : 'Premium'}
+      </DialogTitle>
+      <DialogContent>
+        <TextField
+          label={payload?.demandCategory === EDemandCategory.Low ? 'Discount' : 'Premium'}
+          name="discount"
+          type="number"
+          inputProps={{
+            min: payload?.demandCategory === EDemandCategory.Low ? 0 : 100,
+            max: payload?.demandCategory === EDemandCategory.Low ? 100 : 200,
+          }}
+          value={priceSetting}
+          onChange={handleChange}
+          fullWidth
+          id="discount"
+          endAdornment="%"
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose} color="info">
+          Close
+        </Button>
+        <LoadingButton loading={saving} onClick={handleSave} color="primary" variant="contained">
+          Save
+        </LoadingButton>
+      </DialogActions>
     </BaseModal>
+  );
 };

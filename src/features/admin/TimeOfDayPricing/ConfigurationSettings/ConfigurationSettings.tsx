@@ -1,99 +1,109 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {TableBody, TableCell, TableHead, TableRow} from "@mui/material";
-import {EditButton} from "../../../../components/buttons/EditButton/EditButton";
-import {PriceLevelsModal} from "../../PricingLevels/PriceLevelsModal/PriceLevelsModal";
-import {EDemandCategory, IPricingLevel, TPricingLevels} from "../../../../store/reducers/pricingSettings/types";
-import {useDispatch, useSelector} from "react-redux";
-import {loadPricingLevels} from "../../../../store/reducers/pricingSettings/actions";
-import {RootState} from "../../../../store/rootReducer";
-import {useStyles} from "./styles";
-import {DenseTableNormalFont} from "../../../../components/styled/DemandTable";
-import {useModal} from "../../../../hooks/useModal/useModal";
-import {useSCs} from "../../../../hooks/useSCs/useSCs";
-import {TableTitle} from "../../../../components/wrappers/TableTitle/TableTitle";
+import React, { useEffect, useMemo, useState } from 'react';
+import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { EditButton } from '../../../../components/buttons/EditButton/EditButton';
+import { PriceLevelsModal } from '../../PricingLevels/PriceLevelsModal/PriceLevelsModal';
+import {
+  EDemandCategory,
+  IPricingLevel,
+  TPricingLevels,
+} from '../../../../store/reducers/pricingSettings/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadPricingLevels } from '../../../../store/reducers/pricingSettings/actions';
+import { RootState } from '../../../../store/rootReducer';
+import { useStyles } from './styles';
+import { DenseTableNormalFont } from '../../../../components/styled/DemandTable';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { TableTitle } from '../../../../components/wrappers/TableTitle/TableTitle';
 
 export const ConfigurationSettings = () => {
-    const {pricingLevels} = useSelector((state: RootState) => state.pricingSettings)
-    const [editedItem, setEditedItem] = useState<IPricingLevel|undefined>(undefined);
-    const {onClose, onOpen, isOpen} = useModal();
-    const {selectedSC} = useSCs();
-    const dispatch = useDispatch();
-    const { classes  } = useStyles();
+  const { pricingLevels } = useSelector((state: RootState) => state.pricingSettings);
+  const [editedItem, setEditedItem] = useState<IPricingLevel | undefined>(undefined);
+  const { onClose, onOpen, isOpen } = useModal();
+  const { selectedSC } = useSCs();
+  const dispatch = useDispatch();
+  const { classes } = useStyles();
 
-    const mappedPricingLevels: TPricingLevels = useMemo(() => {
-        return pricingLevels.reduce((acc, item) => {
-            acc[item.demandCategory] = item;
-            return acc;
-        }, {} as TPricingLevels);
-    }, [pricingLevels]);
+  const mappedPricingLevels: TPricingLevels = useMemo(() => {
+    return pricingLevels.reduce((acc, item) => {
+      acc[item.demandCategory] = item;
+      return acc;
+    }, {} as TPricingLevels);
+  }, [pricingLevels]);
 
-    useEffect(() => {
-        if (selectedSC) {
-            dispatch(loadPricingLevels(selectedSC.id));
-        }
-    }, [selectedSC, dispatch]);
-
-    const handleOpen = (t: EDemandCategory) => () => {
-        if (selectedSC) {
-            const item = mappedPricingLevels[t];
-            setEditedItem({
-                serviceCenterId: item?.serviceCenterId ?? selectedSC.id,
-                percentage: item?.percentage ?? 100,
-                demandCategory: item.demandCategory ?? t,
-            });
-            onOpen();
-        }
+  useEffect(() => {
+    if (selectedSC) {
+      dispatch(loadPricingLevels(selectedSC.id));
     }
+  }, [selectedSC, dispatch]);
 
-    return <div>
-        <TableTitle style={{textTransform: 'none'}}>Configuration Settings for All Services</TableTitle>
-            <DenseTableNormalFont>
-                <TableHead>
-                    <TableRow>
-                        <TableCell colSpan={2} style={{textTransform: "capitalize"}} width={"50%"}>Price levels</TableCell>
-                        <TableCell style={{textTransform: "capitalize"}}>Price percentage</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell width={100}>Discount</TableCell>
-                        <TableCell align="center">from 0% to 100%</TableCell>
-                        <TableCell>
-                            <div className={classes.editCell}>
-                                <span>
-                                    {mappedPricingLevels[EDemandCategory.Low]?.percentage
-                                        ? `${mappedPricingLevels[EDemandCategory.Low].percentage}%`
-                                        : "-"}
-                                </span>
-                                <EditButton onClick={handleOpen(EDemandCategory.Low)} color="primary">
-                                    Edit
-                                </EditButton>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell style={{padding: "18px 12px"}}>Base</TableCell>
-                        <TableCell align="center">fixed to 100%</TableCell>
-                        <TableCell>100%</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Premium</TableCell>
-                        <TableCell align="center">from 100% to 200%</TableCell>
-                        <TableCell>
-                            <div className={classes.editCell}>
-                                <span>
-                                    {mappedPricingLevels[EDemandCategory.High]?.percentage
-                                        ? `${mappedPricingLevels[EDemandCategory.High].percentage}%`
-                                        : "-"}
-                                </span>
-                                <EditButton onClick={handleOpen(EDemandCategory.High)} color="primary">
-                                    Edit
-                                </EditButton>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </DenseTableNormalFont>
-        <PriceLevelsModal payload={editedItem} open={isOpen} onClose={onClose} />
+  const handleOpen = (t: EDemandCategory) => () => {
+    if (selectedSC) {
+      const item = mappedPricingLevels[t];
+      setEditedItem({
+        serviceCenterId: item?.serviceCenterId ?? selectedSC.id,
+        percentage: item?.percentage ?? 100,
+        demandCategory: item.demandCategory ?? t,
+      });
+      onOpen();
+    }
+  };
+
+  return (
+    <div>
+      <TableTitle style={{ textTransform: 'none' }}>
+        Configuration Settings for All Services
+      </TableTitle>
+      <DenseTableNormalFont>
+        <TableHead>
+          <TableRow>
+            <TableCell colSpan={2} style={{ textTransform: 'capitalize' }} width={'50%'}>
+              Price levels
+            </TableCell>
+            <TableCell style={{ textTransform: 'capitalize' }}>Price percentage</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell width={100}>Discount</TableCell>
+            <TableCell align="center">from 0% to 100%</TableCell>
+            <TableCell>
+              <div className={classes.editCell}>
+                <span>
+                  {mappedPricingLevels[EDemandCategory.Low]?.percentage
+                    ? `${mappedPricingLevels[EDemandCategory.Low].percentage}%`
+                    : '-'}
+                </span>
+                <EditButton onClick={handleOpen(EDemandCategory.Low)} color="primary">
+                  Edit
+                </EditButton>
+              </div>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell style={{ padding: '18px 12px' }}>Base</TableCell>
+            <TableCell align="center">fixed to 100%</TableCell>
+            <TableCell>100%</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Premium</TableCell>
+            <TableCell align="center">from 100% to 200%</TableCell>
+            <TableCell>
+              <div className={classes.editCell}>
+                <span>
+                  {mappedPricingLevels[EDemandCategory.High]?.percentage
+                    ? `${mappedPricingLevels[EDemandCategory.High].percentage}%`
+                    : '-'}
+                </span>
+                <EditButton onClick={handleOpen(EDemandCategory.High)} color="primary">
+                  Edit
+                </EditButton>
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </DenseTableNormalFont>
+      <PriceLevelsModal payload={editedItem} open={isOpen} onClose={onClose} />
     </div>
+  );
 };

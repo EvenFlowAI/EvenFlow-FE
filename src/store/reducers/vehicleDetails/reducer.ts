@@ -1,33 +1,63 @@
-import {createReducer} from "@reduxjs/toolkit";
-import {getEngineType, getMakes, getMileage, setCurrentMake, setLoading, setPodsMakes} from "./actions";
-import {TState} from "./types";
+import { createReducer } from '@reduxjs/toolkit';
+import {
+  getEngineType,
+  getMakes,
+  getMileage,
+  setCurrentMake,
+  setLoading,
+  setPaging,
+  setMakeOrder,
+  setGlobalMakes,
+  setGlobalModels,
+  setPageData,
+} from './actions';
+import { TState } from './types';
+import { defaultPaging, defaultPageData } from '../constants';
 
 const initialState: TState = {
-    makes: [],
-    currentMake: null,
-    isLoading: false,
-    mileage: [],
-    makesModels: [],
-    engineTypes: [],
-}
+  makes: [],
+  paging: { ...defaultPaging },
+  pageData: { ...defaultPageData },
+  order: { orderBy: 'OrderIndex', isAscending: true },
+  currentMake: null,
+  isLoading: false,
+  mileage: [],
+  engineTypes: [],
+  globalMakes: [],
+  globalModels: [],
+  makesModels: [],
+};
 
-export const vehicleDetailsReducer = createReducer<TState>(initialState, builder => builder
-    .addCase(getMakes, (state, {payload}) => {
-        return { ...state, makes: payload }
+export const vehicleDetailsReducer = createReducer<TState>(initialState, builder =>
+  builder
+    .addCase(getMakes, (state, { payload }) => {
+      return { ...state, makes: payload };
     })
-    .addCase(setCurrentMake, (state, {payload}) => {
-        return { ...state, currentMake: payload }
+    .addCase(setCurrentMake, (state, { payload }) => {
+      return { ...state, currentMake: payload };
     })
-    .addCase(setLoading, (state, {payload}) => {
-        return { ...state, isLoading: payload }
+    .addCase(setPaging, (state, { payload }) => {
+      return { ...state, paging: payload };
     })
-    .addCase(getMileage, (state, {payload}) => {
-        return { ...state, mileage: payload }
+    .addCase(setPageData, (state, { payload }) => {
+      return { ...state, pageData: { ...state.pageData, ...payload } };
     })
-    .addCase(setPodsMakes, (state, {payload}) => {
-        return { ...state, makesModels: payload }
+    .addCase(setLoading, (state, { payload }) => {
+      return { ...state, isLoading: payload };
     })
-    .addCase(getEngineType, (state, {payload}) => {
-        return { ...state, engineTypes: payload }
+    .addCase(getMileage, (state, { payload }) => {
+      return { ...state, mileage: payload };
     })
-)
+    .addCase(getEngineType, (state, { payload }) => {
+      return { ...state, engineTypes: payload };
+    })
+    .addCase(setMakeOrder, (state, { payload }) => {
+      return { ...state, order: payload };
+    })
+    .addCase(setGlobalMakes, (state, { payload }) => {
+      return { ...state, globalMakes: payload };
+    })
+    .addCase(setGlobalModels, (state, { payload }) => {
+      return { ...state, globalModels: payload };
+    })
+);

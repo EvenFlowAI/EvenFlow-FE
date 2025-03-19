@@ -1,13 +1,13 @@
-import {styled} from "@mui/material";
+import { styled } from '@mui/material';
 
 export const WrapperFlexEnd = styled('div')({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
-})
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+});
 
 export const WrapperJustify = styled('div')({
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between'
-})
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+});

@@ -1,36 +1,38 @@
-import {Dispatch, SetStateAction} from "react";
-import {TArgCallback} from "../../types/types";
-
-export type TItem = {
-    id: number
-    text: string
-}
+import { Dispatch, SetStateAction } from 'react';
+import { TArgCallback } from '../../types/types';
+import { IGlobalMake } from '../../store/reducers/globalVehicles/types';
 
 export type TContainerStyle = {
-    width?: number|string;
-    padding?: number;
-    height?: number|string;
-    backgroundColor?: string;
-    border?: string;
-}
+  width?: number | string;
+  padding?: number;
+  height?: number | string;
+  backgroundColor?: string;
+  border?: string;
+};
+
+export type IData = {
+  id: number;
+  text: string;
+};
 
 export type TDnDProps = {
-    data: TItem[];
-    setData: Dispatch<SetStateAction<TItem[]>>;
-    style?: TContainerStyle;
-}
+  data: IData[];
+  setData: Dispatch<SetStateAction<IData[]>>;
+  style?: TContainerStyle;
+  isEditing: boolean;
+};
 
 export interface CardProps {
-    id: any
-    text: string
-    index: number
-    moveCard: (dragIndex: number, hoverIndex: number) => void;
-    backGroundColor?: string;
-    onDelete?: TArgCallback<number>;
+  id: any;
+  text: string;
+  index: number;
+  moveCard: (dragIndex: number, hoverIndex: number) => void;
+  backGroundColor?: string;
+  onDelete?: TArgCallback<number>;
 }
 
 export interface DragItem {
-    index: number
-    id: string
-    type: string
+  index: number;
+  id: string;
+  type: string;
 }

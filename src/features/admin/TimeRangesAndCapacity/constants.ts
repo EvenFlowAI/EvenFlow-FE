@@ -1,1 +1,1 @@
-export const timeWithSecond = "HH:mm:ss";
+export const timeWithSecond = 'HH:mm:ss';

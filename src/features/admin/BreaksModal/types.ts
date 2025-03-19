@@ -1,9 +1,9 @@
-import {TParsableDate} from "../../../types/types";
+import { TParsableDate } from '../../../types/types';
 
 export type TBreak = {
-    id?: number;
-    from: TParsableDate;
-    to: TParsableDate;
-    checked: boolean;
-    dayOfWeek: number;
-}
+  id?: number;
+  from: TParsableDate;
+  to: TParsableDate;
+  checked: boolean;
+  dayOfWeek: number;
+};
