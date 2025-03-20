@@ -143,7 +143,7 @@ export const MakesModelsTable: React.FC<
         count={numberOfRecords}
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
-        <MenuItem onClick={openEdit}>Edit</MenuItem>
+        <MenuItem onClick={openEdit}>Edit Model</MenuItem>
         {currentMake?.isReadOnly ? null : <MenuItem onClick={askRemove}>Remove</MenuItem>}
       </Menu>
     </div>

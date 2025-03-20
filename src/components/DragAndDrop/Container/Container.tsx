@@ -15,7 +15,7 @@ export const useStyles = makeStyles()(() => ({
   },
 }));
 
-export const Container: FC<TDnDProps> = ({ style, data, setData, isEditing }) => {
+export const Container: FC<TDnDProps> = ({ style, data, setData, isEditing, currentMakeName }) => {
   const { classes } = useStyles();
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
     setData((prevCards: IData[]) => {
@@ -51,12 +51,26 @@ export const Container: FC<TDnDProps> = ({ style, data, setData, isEditing }) =>
       <div style={style}>
         {data.length === 0 ? (
           <div className={classes.placeholderStyles}>
-            <Card onDelete={() => {}} key={0} index={0} id={0} text={'Other'} moveCard={moveCard} />
+            <Card
+              onDelete={() => {}}
+              key={0}
+              index={0}
+              id={0}
+              text={isEditing ? `Other ${currentMakeName}` : 'Other'}
+              moveCard={moveCard}
+            />
           </div>
         ) : (
           <>
             {data.map((card, i) => renderCard(card, i))}
-            <Card onDelete={() => {}} key={0} index={0} id={0} text={'Other'} moveCard={moveCard} />
+            <Card
+              onDelete={() => {}}
+              key={0}
+              index={0}
+              id={0}
+              text={isEditing ? `Other ${currentMakeName}` : 'Other'}
+              moveCard={moveCard}
+            />
           </>
         )}
       </div>

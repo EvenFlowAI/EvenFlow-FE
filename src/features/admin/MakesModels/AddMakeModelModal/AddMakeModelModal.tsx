@@ -43,15 +43,15 @@ export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
 > = ({ isEditing, onClose, ...props }) => {
   const dispatch = useDispatch();
-  const { currentMake, globalMakes, globalModels, makes } = useSelector(
+  const { currentMake, globalMakes, globalModels } = useSelector(
     (state: RootState) => state.vehicleDetails
   );
   const { selectedSC } = useSCs();
-  const filteredMakes = makes
+  const filteredMakes = globalMakes
     .filter(el => !el.isReadOnly)
     .map(el => ({
       id: el.id,
-      text: el.name,
+      text: el.vinMake,
     }));
 
   const filteredModels = currentMake?.models
@@ -80,6 +80,10 @@ export const AddMakeModelModal: React.FC<
     }));
 
   const onCloseModal = () => {
+    setModelsToAdd([]);
+    setMakesToAdd([]);
+    setConfiguredMakes(filteredMakes);
+    setConfiguredModels(filteredModels ?? []);
     dispatch(setCurrentMake(null));
     onClose();
   };
@@ -182,15 +186,15 @@ export const AddMakeModelModal: React.FC<
   }, [currentMake]);
 
   useEffect(() => {
-    const filteredMakes = makes
+    const filteredMakes = globalMakes
       .filter(el => !el.isReadOnly)
       .map(el => ({
-        id: el.globalId,
-        text: el.name,
+        id: el.id,
+        text: el.vinMake,
       }));
 
     setConfiguredMakes(filteredMakes);
-  }, [makes]);
+  }, [globalMakes]);
 
   useEffect(() => {
     const filteredModels = currentMake?.models
@@ -214,6 +218,7 @@ export const AddMakeModelModal: React.FC<
               <Autocomplete
                 fullWidth
                 multiple
+                disableCloseOnSelect
                 classes={{
                   tag: autocompleteClasses.classes.tag,
                   option: autocompleteClasses.classes.option,
@@ -263,6 +268,7 @@ export const AddMakeModelModal: React.FC<
               {isEditing ? 'configured models' : 'configured makes'}
             </div>
             <DragAndDrop
+              currentMakeName={currentMake?.name}
               isEditing={isEditing ?? false}
               data={isEditing ? configuredModels : configuredMakes}
               setData={isEditing ? setConfiguredModels : setConfiguredMakes}

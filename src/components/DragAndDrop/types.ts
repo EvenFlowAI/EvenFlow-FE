@@ -20,6 +20,7 @@ export type TDnDProps = {
   setData: Dispatch<SetStateAction<IData[]>>;
   style?: TContainerStyle;
   isEditing: boolean;
+  currentMakeName?: string;
 };
 
 export interface CardProps {
