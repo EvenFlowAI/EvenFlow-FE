@@ -7,6 +7,7 @@ import {
 import { AppThunk, TArgCallback, TCallback } from '../../../types/types';
 
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { useSnackbar } from 'notistack';
 
 export const setTransportationLoading = createAction<boolean>('TransportationNeeds/SetLoading');
 export const getTransportationOptions = createAction<ITransportationOptionFull[]>(
@@ -41,9 +42,7 @@ export const updateTransportationOption =
           dispatch(loadTransportationOptions(data.serviceCenterId));
         }
       })
-      .catch(err => {
-        console.log('update transportation option error', err);
-      });
+      .catch(err => {});
   };
 
 export const editTransportationOptionRules =

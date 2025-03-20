@@ -56,14 +56,12 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
   const history = useHistory();
   const isAdminPanel = history.location.pathname.includes('admin');
-  const daysPerScreen = useMemo(() => {
-    if (isXs) return 3;
-    if (isSm) return 4;
-    if (isMd) return 5;
-    return 6;
-  }, [isXs, isSm, isMd]);
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds]);
 
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
     let daysInMonth: number = dayjs.utc(date).daysInMonth();
@@ -111,8 +109,6 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
         setSliceIdx(newSliceIdx);
       }
     }
-
-    onDateRangeSet(true);
   }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
   const handleChangeDay = (date: string) => () => {
@@ -122,7 +118,6 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const nextAvailable = (): boolean => {
     return sliceIdx < daysInMonth - daysPerScreen;
   };
-
   const prevAvailable = (): boolean => {
     return sliceIdx > 0;
   };
@@ -130,21 +125,18 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const handleNext = () => {
     if (nextAvailable()) {
       setSliceIdx(prevIndex => {
-        const newSliceIdx = prevIndex + 2;
-        return newSliceIdx <= daysInMonth - daysPerScreen
-          ? newSliceIdx
-          : daysInMonth - daysPerScreen;
+        const nS = prevIndex + daysPerScreen * 2;
+        return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
       });
     } else {
       if (isAppointmentTimingAvailable && !isAdminPanel) onOpen();
     }
   };
-
   const handlePrev = () => {
     if (prevAvailable()) {
-      setSliceIdx(prevIndex => {
-        const newSliceIdx = prevIndex - 2;
-        return newSliceIdx >= 0 ? newSliceIdx : 0;
+      setSliceIdx(s => {
+        const pS = s - daysPerScreen;
+        return pS >= 0 ? pS : 0;
       });
     } else {
       if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {

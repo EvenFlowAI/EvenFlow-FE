@@ -622,20 +622,21 @@ export class Api {
           params: options?.params,
         });
       }
-    } catch (error: any) {
-      // Show error notification using notistack
-      // enqueueSnackbar(
-      //   error.response?.data?.message || 'An error occurred while processing your request',
-      //   {
-      //     variant: 'error',
-      //     autoHideDuration: 3000,
-      //     anchorOrigin: {
-      //       vertical: 'top',
-      //       horizontal: 'right',
-      //     },
-      //   }
-      // );
-      throw error; // Re-throw the error so it can be handled by the calling code if needed
+    } catch (err) {
+      if (process.env.REACT_APP_ENV === 'QA') {
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      }
+      throw err;
     }
   }
 }
