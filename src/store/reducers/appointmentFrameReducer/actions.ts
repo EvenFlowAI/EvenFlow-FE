@@ -497,7 +497,7 @@ export const loadMakes =
         pageIndex: 0,
         pageSize: 0,
         isAscending: true,
-        orderBy: 'name',
+        orderBy: 'OrderIndex',
       },
     })
       .then(({ data }) => {
