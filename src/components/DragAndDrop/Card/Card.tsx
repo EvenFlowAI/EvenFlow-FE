@@ -85,13 +85,14 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
       style={{
         opacity,
         boxShadow,
-        backgroundColor:
-          text.toLowerCase() === 'other' ? '#858585' : (backGroundColor ?? '#7898FF'),
+        backgroundColor: text.toLowerCase().includes('other')
+          ? '#858585'
+          : (backGroundColor ?? '#7898FF'),
       }}
       data-handler-id={handlerId}
     >
       {text}
-      {onDelete && text.toLowerCase() !== 'other' ? (
+      {onDelete && !text.toLowerCase().includes('other') ? (
         <Delete onClick={() => onDelete(id)} style={{ cursor: 'pointer' }} />
       ) : null}
     </CardWrapper>

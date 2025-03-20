@@ -80,6 +80,8 @@ export const AddMakeModelModal: React.FC<
     }));
 
   const onCloseModal = () => {
+    setModelsToAdd([]);
+    setMakesToAdd([]);
     setConfiguredMakes(filteredMakes);
     setConfiguredModels(filteredModels ?? []);
     dispatch(setCurrentMake(null));
@@ -182,7 +184,7 @@ export const AddMakeModelModal: React.FC<
       dispatch(loadGlobalModels(currentMake.globalId));
     }
   }, [currentMake]);
-  console.log(globalMakes);
+
   useEffect(() => {
     const filteredMakes = globalMakes
       .filter(el => !el.isReadOnly)
@@ -266,6 +268,7 @@ export const AddMakeModelModal: React.FC<
               {isEditing ? 'configured models' : 'configured makes'}
             </div>
             <DragAndDrop
+              currentMakeName={currentMake?.name}
               isEditing={isEditing ?? false}
               data={isEditing ? configuredModels : configuredMakes}
               setData={isEditing ? setConfiguredModels : setConfiguredMakes}
