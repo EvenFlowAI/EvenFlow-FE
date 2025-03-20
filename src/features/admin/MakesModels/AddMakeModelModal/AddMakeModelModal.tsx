@@ -80,6 +80,8 @@ export const AddMakeModelModal: React.FC<
     }));
 
   const onCloseModal = () => {
+    setConfiguredMakes(filteredMakes);
+    setConfiguredModels(filteredModels ?? []);
     dispatch(setCurrentMake(null));
     onClose();
   };
