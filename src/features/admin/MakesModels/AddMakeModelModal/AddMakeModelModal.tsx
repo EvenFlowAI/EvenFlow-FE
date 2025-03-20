@@ -214,6 +214,7 @@ export const AddMakeModelModal: React.FC<
               <Autocomplete
                 fullWidth
                 multiple
+                disableCloseOnSelect
                 classes={{
                   tag: autocompleteClasses.classes.tag,
                   option: autocompleteClasses.classes.option,
