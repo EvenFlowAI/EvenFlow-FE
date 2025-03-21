@@ -10,12 +10,14 @@ import {
   setGlobalMakes,
   setGlobalModels,
   setPageData,
+  setAllMakes,
 } from './actions';
 import { TState } from './types';
 import { defaultPaging, defaultPageData } from '../constants';
 
 const initialState: TState = {
   makes: [],
+  allMakes: [],
   paging: { ...defaultPaging },
   pageData: { ...defaultPageData },
   order: { orderBy: 'OrderIndex', isAscending: true },
@@ -32,6 +34,9 @@ export const vehicleDetailsReducer = createReducer<TState>(initialState, builder
   builder
     .addCase(getMakes, (state, { payload }) => {
       return { ...state, makes: payload };
+    })
+    .addCase(setAllMakes, (state, { payload }) => {
+      return { ...state, allMakes: payload };
     })
     .addCase(setCurrentMake, (state, { payload }) => {
       return { ...state, currentMake: payload };
