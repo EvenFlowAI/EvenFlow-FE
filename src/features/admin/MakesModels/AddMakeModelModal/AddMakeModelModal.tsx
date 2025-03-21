@@ -82,8 +82,8 @@ export const AddMakeModelModal: React.FC<
   const onCloseModal = () => {
     setModelsToAdd([]);
     setMakesToAdd([]);
-    setConfiguredMakes(filteredMakes);
-    setConfiguredModels(filteredModels ?? []);
+    setConfiguredMakes([]);
+    setConfiguredModels([]);
     dispatch(setCurrentMake(null));
     onClose();
   };
@@ -159,24 +159,31 @@ export const AddMakeModelModal: React.FC<
         ...globalMakes.filter(el => el.isReadOnly).map(el => el.id),
       ];
       dispatch(
-        createMake({
-          serviceCenterId: selectedSC?.id,
-          globalIds,
-        })
+        createMake(
+          {
+            serviceCenterId: selectedSC?.id,
+            globalIds,
+          },
+          onCloseModal
+        )
       );
-      onCloseModal();
     }
   };
 
   const onSaveModels = () => {
     if (selectedSC?.id && currentMake?.globalId) {
       dispatch(
-        updateModel(selectedSC?.id, currentMake?.globalId, [
-          ...configuredModels.map(el => el.id),
-          ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
-        ])
+        updateModel(
+          selectedSC?.id,
+          currentMake?.globalId,
+          [
+            ...configuredModels.map(el => el.id),
+            ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+          ],
+          onCloseModal
+        )
       );
-      onCloseModal();
+      
     }
   };
   useEffect(() => {
