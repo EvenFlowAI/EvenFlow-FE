@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadMakes, loadGlobalMakes } from '../../../store/reducers/vehicleDetails/actions';
+import {
+  loadMakes,
+  loadGlobalMakes,
+  loadMakesAll,
+} from '../../../store/reducers/vehicleDetails/actions';
 import { RootState } from '../../../store/rootReducer';
 import { Button } from '@mui/material';
 import { AddMakeModelModal } from './AddMakeModelModal/AddMakeModelModal';
@@ -20,6 +24,7 @@ export const MakesModels = () => {
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadMakes(selectedSC.id));
+      dispatch(loadMakesAll(selectedSC.id));
     }
   }, [selectedSC, order, pageData]);
 

@@ -43,15 +43,15 @@ export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
 > = ({ isEditing, onClose, ...props }) => {
   const dispatch = useDispatch();
-  const { currentMake, globalMakes, globalModels } = useSelector(
+  const { currentMake, globalMakes, globalModels, allMakes } = useSelector(
     (state: RootState) => state.vehicleDetails
   );
   const { selectedSC } = useSCs();
-  const filteredMakes = globalMakes
+  const filteredMakes = allMakes
     .filter(el => !el.isReadOnly)
     .map(el => ({
       id: el.id,
-      text: el.vinMake,
+      text: el.name,
     }));
 
   const filteredModels = currentMake?.models
@@ -186,15 +186,15 @@ export const AddMakeModelModal: React.FC<
   }, [currentMake]);
 
   useEffect(() => {
-    const filteredMakes = globalMakes
+    const filteredMakes = allMakes
       .filter(el => !el.isReadOnly)
       .map(el => ({
         id: el.id,
-        text: el.vinMake,
+        text: el.name,
       }));
 
     setConfiguredMakes(filteredMakes);
-  }, [globalMakes]);
+  }, [allMakes]);
 
   useEffect(() => {
     const filteredModels = currentMake?.models

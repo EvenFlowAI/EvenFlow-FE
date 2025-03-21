@@ -7,6 +7,7 @@ import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
 import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
+export const setAllMakes = createAction<IMake[]>('VehicleDetails/SetAllMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
 export const setLoading = createAction<boolean>('VehicleDetails/SetLoading');
 export const getMileage = createAction<IMileage[]>('VehicleDetails/GetMileage');
@@ -42,6 +43,31 @@ export const loadMakes =
       })
       .finally(() => dispatch(setLoading(false)));
   };
+
+  export const loadMakesAll =
+    (serviceCenterId: number): AppThunk =>
+    async (dispatch, getState) => {
+      const state = getState().vehicleDetails;
+      dispatch(setLoading(true));
+      Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+        data: {
+          serviceCenterId,
+          orderBy: state.order.orderBy,
+          isAscending: state.order.isAscending,
+          pageIndex: 0,
+          pageSize: 0,
+        },
+      })
+        .then(response => {
+          if (response?.data) {
+            dispatch(setAllMakes(response.data.result));
+          }
+        })
+        .catch(err => {
+          console.log('load makes error', err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+    };
 
 export const loadMakesGlobally =
   (serviceCenterId: number): AppThunk =>

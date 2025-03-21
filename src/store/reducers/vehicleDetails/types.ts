@@ -30,6 +30,7 @@ export type TCreateEngineType = {
 
 export type TState = {
   makes: IMake[];
+  allMakes: IMake[];
   currentMake: IMake | null;
   isLoading: boolean;
   mileage: IMileage[];
