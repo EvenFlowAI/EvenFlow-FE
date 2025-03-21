@@ -24,13 +24,19 @@ const RowData: TableRowDataType<IMake>[] = [
     val: (el: IMake) => <span style={{ fontWeight: 'bold' }}>{el.name}</span>,
     header: 'Make',
     orderId: 'Name',
+    width: '30%',
   },
   {
     val: (el: IMake) => el.orderIndex.toString(),
     header: 'Order',
     orderId: 'OrderIndex',
+    width: '20%',
   },
-  { val: (el: IMake) => el.models.map(model => model.name).join(', '), header: 'Model' },
+  {
+    val: (el: IMake) => el.models.map(model => model.name).join(', '),
+    header: 'Model',
+    width: '50%',
+  },
 ];
 
 export const MakesModelsTable: React.FC<
