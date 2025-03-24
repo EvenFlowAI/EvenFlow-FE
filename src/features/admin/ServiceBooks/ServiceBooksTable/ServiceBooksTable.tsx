@@ -6,6 +6,8 @@ import {
   removePod,
   setPodById,
   setPodsOrderIndex,
+  deactivatePod,
+  activatePod,
 } from '../../../../store/reducers/pods/actions';
 import { Table } from '../../../../components/tables/Table/Table';
 import { RootState } from '../../../../store/rootReducer';
@@ -44,6 +46,7 @@ const ServiceBooksTable = () => {
   const { askConfirm } = useConfirm();
   const { isOpen, onClose, onOpen } = useModal();
   const [tableMode, setTableMode] = useState<'active' | 'inactive'>('active');
+  const isActive = tableMode === 'active';
   useEffect(() => {
     setEdit(false);
     setWrongOrderIndexes([]);
@@ -82,7 +85,10 @@ const ServiceBooksTable = () => {
         id: el.serviceBookId,
         orderIndex: el.orderIndex ?? 0,
       }));
-      selectedSC && dispatch(setPodsOrderIndex(selectedSC?.id, data, showError, clearState));
+      selectedSC &&
+        dispatch(
+          setPodsOrderIndex(selectedSC?.id, data, tableMode === 'active', showError, clearState)
+        );
     } else {
       setWrongOrderIndexes(wrongNumbers);
       handleErrors(errors);
@@ -95,8 +101,8 @@ const ServiceBooksTable = () => {
   };
 
   useEffect(() => {
-    if (selectedSC) dispatch(loadPodsSummary(selectedSC.id));
-  }, [selectedSC]);
+    if (selectedSC) dispatch(loadPodsSummary(selectedSC.id, tableMode === 'active'));
+  }, [selectedSC, tableMode, dispatch]);
 
   useEffect(() => {
     setCurrentData(summary.map(el => ({ ...el, prevOrder: el.orderIndex ?? 0 })));
@@ -217,12 +223,38 @@ const ServiceBooksTable = () => {
     setAnchorEl(null);
   };
 
+  const activateHandler = async () => {
+    if (!currentItem?.serviceBookId || !selectedSC?.id) {
+      showError('Service Book or Service Center not specified');
+      return;
+    }
+    try {
+      await dispatch(activatePod(isActive, currentItem.serviceBookId, selectedSC.id, showError));
+      setAnchorEl(null);
+    } catch (e) {
+      showError(e);
+    }
+  };
+
+  const deactivateHandler = async () => {
+    if (!currentItem?.serviceBookId || !selectedSC?.id) {
+      showError('Service Book or Service Center not specified');
+      return;
+    }
+    try {
+      await dispatch(deactivatePod(isActive, currentItem.serviceBookId, selectedSC.id, showError));
+      setAnchorEl(null);
+    } catch (e) {
+      showError(e);
+    }
+  };
+
   const handleRemove = async () => {
     if (!currentItem) {
       showError('Service Book not specified');
     } else {
       try {
-        await dispatch(removePod(currentItem.serviceBookId, selectedSC?.id, showError));
+        await dispatch(removePod(currentItem.serviceBookId, isActive, selectedSC?.id, showError));
         setCurrentItem(null);
       } catch (e) {
         showError(e);
@@ -248,10 +280,16 @@ const ServiceBooksTable = () => {
     dispatch(setPodById(null));
     onClose();
   };
-  console.log(currentData);
+
   return (
     <>
-      <ButtonsRow setEdit={setEdit} isEdit={isEdit} onSave={onSave} onCancel={onCancel} />
+      <ButtonsRow
+        isActive={isActive}
+        setEdit={setEdit}
+        isEdit={isEdit}
+        onSave={onSave}
+        onCancel={onCancel}
+      />
       <TableMode tableMode={tableMode} setTableMode={setTableMode} />
       <div style={{ paddingTop: 32 }}>
         <Table
@@ -276,12 +314,12 @@ const ServiceBooksTable = () => {
             </MenuItem>
           )}
           {tableMode === 'active' && (
-            <MenuItem onClick={() => {}} disabled={podsLoading}>
+            <MenuItem onClick={deactivateHandler} disabled={podsLoading}>
               Deactivate
             </MenuItem>
           )}
           {tableMode === 'inactive' && (
-            <MenuItem onClick={() => {}} disabled={podsLoading}>
+            <MenuItem onClick={activateHandler} disabled={podsLoading}>
               Activate
             </MenuItem>
           )}
@@ -291,6 +329,7 @@ const ServiceBooksTable = () => {
         </Menu>
         <ServiceBookModal
           open={isOpen}
+          isActive={isActive}
           onClose={onEditClose}
           editingItemId={currentItem?.serviceBookId}
         />
@@ -300,3 +339,4 @@ const ServiceBooksTable = () => {
 };
 
 export default ServiceBooksTable;
+
