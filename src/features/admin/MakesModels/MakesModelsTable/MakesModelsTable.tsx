@@ -33,7 +33,16 @@ const RowData: TableRowDataType<IMake>[] = [
     width: '20%',
   },
   {
-    val: (el: IMake) => el.models.map(model => model.name).join(', '),
+    val: (el: IMake) => {
+      return el.models
+        .map(model => {
+          if (el.models.length > 1 && model.name === 'OTHER') {
+            return `OTHER ${el.name}`;
+          }
+          return model.name;
+        })
+        .join(', ');
+    },
     header: 'Model',
     width: '50%',
   },
