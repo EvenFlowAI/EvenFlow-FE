@@ -94,6 +94,7 @@ const CapacitySettingsTable = () => {
         open={isConfigureOpen}
         editingItemId={editedItem?.serviceBookId}
         onClose={onCloseConfigureModal}
+        isActive={true}
       />
     </div>
   );

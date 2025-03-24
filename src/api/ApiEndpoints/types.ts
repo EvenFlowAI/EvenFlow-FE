@@ -177,7 +177,9 @@ export interface IApiEndpoints {
     | 'GetShort'
     | 'GetMakes'
     | 'GetSummary'
-    | 'SetOrderIndex',
+    | 'SetOrderIndex'
+    | 'Deactivate'
+    | 'Activate',
     TApiEndpoint
   >;
   PricingSettings: Record<

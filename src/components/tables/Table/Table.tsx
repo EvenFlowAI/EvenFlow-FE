@@ -83,7 +83,7 @@ export function Table<U>({
               <TableRow>
                 {props.startActions ? <StyledTableHead {...styleProps} /> : null}
                 {props.rowData.map((rE, idx) =>
-                  isXS && rE.xsHidden ? null : (
+                  rE.hide ? null : isXS && rE.xsHidden ? null : (
                     <StyledTableHead
                       {...styleProps}
                       key={`t_${idx}`}
@@ -128,7 +128,7 @@ export function Table<U>({
                     <StyledTableCell {...styleProps}>{props.startActions(row)}</StyledTableCell>
                   ) : null}
                   {props.rowData.map((cellData, cIdx) =>
-                    isXS && cellData.xsHidden ? null : (
+                    cellData.hide ? null : isXS && cellData.xsHidden ? null : (
                       <StyledTableCell
                         {...styleProps}
                         width={cellData.width}

@@ -62,11 +62,9 @@ const initialForm: TForm = {
   isVisitCenter: true,
 };
 
-export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | undefined }> = ({
-  onAction,
-  editingItemId,
-  ...props
-}) => {
+export const ServiceBookModal: React.FC<
+  DialogProps & { editingItemId: number | undefined; isActive: boolean }
+> = ({ onAction, editingItemId, isActive, ...props }) => {
   const { advisorsList, techniciansList } = useSelector(
     ({ scEmployees }: RootState) => scEmployees
   );
@@ -370,9 +368,9 @@ export const ServiceBookModal: React.FC<DialogProps & { editingItemId: number | 
             data.mileageTo = +mileageTo;
           }
           if (editingItemId && podById) {
-            await dispatch(updatePod(data, podById.id));
+            await dispatch(updatePod(data, podById.id, isActive));
           } else {
-            await dispatch(createPod(data));
+            await dispatch(createPod(data, isActive));
           }
           setLoading(false);
           setFormIsChecked(false);

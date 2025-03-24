@@ -150,6 +150,7 @@ export type TableRowDataType<DataEl> = {
 };
 export type TableRowDataTypeResp<DataEl> = TableRowDataType<DataEl> & {
   xsHidden?: boolean;
+  hide?: boolean;
 };
 
 export interface ITableProps<Data> {

@@ -41,19 +41,19 @@ export const loadPods =
     }
   };
 export const createPod =
-  (data: IPodForm): AppThunk =>
+  (data: IPodForm, active: boolean): AppThunk =>
   async dispatch => {
     await Api.call(Api.endpoints.Pods.Create, { data });
-    dispatch(loadPodsSummary(data.serviceCenterId));
+    dispatch(loadPodsSummary(data.serviceCenterId, active));
   };
 export const updatePod =
-  (data: IPodForm, id: number): AppThunk =>
+  (data: IPodForm, id: number, active: boolean): AppThunk =>
   async dispatch => {
     await Api.call(Api.endpoints.Pods.Update, { data, urlParams: { id } });
-    dispatch(loadPodsSummary(data.serviceCenterId));
+    dispatch(loadPodsSummary(data.serviceCenterId, active));
   };
 export const removePod =
-  (id: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
+  (id: number, active: boolean, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
   async (dispatch, getState) => {
     dispatch(setPodsLoading(true));
     Api.call(Api.endpoints.Pods.Remove, { urlParams: { id } })
@@ -62,7 +62,7 @@ export const removePod =
           dispatch(setSelectedPod(null));
         }
         if (serviceCenterId) {
-          dispatch(loadPodsSummary(serviceCenterId));
+          dispatch(loadPodsSummary(serviceCenterId, active));
         }
       })
       .catch(err => {
@@ -101,10 +101,10 @@ export const loadPodById =
   };
 
 export const loadPodsSummary =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, active: boolean): AppThunk =>
   dispatch => {
     dispatch(setPodsLoading(true));
-    Api.call<IPodSummary[]>(Api.endpoints.Pods.GetSummary, { params: { serviceCenterId } })
+    Api.call<IPodSummary[]>(Api.endpoints.Pods.GetSummary, { params: { serviceCenterId, active } })
       .then(res => {
         if (res.data) dispatch(setPodsSummary(res.data));
       })
@@ -114,10 +114,44 @@ export const loadPodsSummary =
       .finally(() => dispatch(setPodsLoading(false)));
   };
 
+export const deactivatePod =
+  (active: boolean, id?: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
+  async dispatch => {
+    dispatch(setPodsLoading(true));
+    Api.call(Api.endpoints.Pods.Deactivate, { urlParams: { id } })
+      .then(() => {
+        if (serviceCenterId) {
+          console.log('deactivatePod', serviceCenterId, active);
+          dispatch(loadPodsSummary(serviceCenterId, active));
+        }
+      })
+      .catch(err => {
+        onError && onError(err);
+        dispatch(setPodsLoading(false));
+      });
+  };
+
+export const activatePod =
+  (active: boolean, id?: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
+  async dispatch => {
+    dispatch(setPodsLoading(true));
+    Api.call(Api.endpoints.Pods.Activate, { urlParams: { id } })
+      .then(() => {
+        if (serviceCenterId) {
+          dispatch(loadPodsSummary(serviceCenterId, active));
+        }
+      })
+      .catch(err => {
+        onError && onError(err);
+        dispatch(setPodsLoading(false));
+      });
+  };
+
 export const setPodsOrderIndex =
   (
     serviceCenterId: number,
     serviceBooks: TPodOrder[],
+    active: boolean,
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>
@@ -127,7 +161,7 @@ export const setPodsOrderIndex =
       data: { serviceCenterId, serviceBooks },
     })
       .then(res => {
-        if (res.data) dispatch(loadPodsSummary(serviceCenterId));
+        if (res.data) dispatch(loadPodsSummary(serviceCenterId, active));
         onSuccess();
       })
       .catch(err => {

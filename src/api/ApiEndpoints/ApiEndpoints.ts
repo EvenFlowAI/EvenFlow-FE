@@ -315,6 +315,8 @@ export class Api {
       GetMakes: { route: '/pods/makes', method: 'get' },
       GetSummary: { route: '/pods/summary', method: 'get' },
       SetOrderIndex: { route: '/pods/order-index-assignment', method: 'patch' },
+      Deactivate: { route: '/pods/{id}/deactivate', method: 'put' },
+      Activate: { route: '/pods/{id}/activate', method: 'put' },
     },
     PricingSettings: {
       GetList: { route: '/pricing-settings', method: 'get' },
