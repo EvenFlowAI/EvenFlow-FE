@@ -177,7 +177,6 @@ export interface IBaseAppointment {
   serviceCenterId: number;
   transportationOption: ITransportation | null;
   isNeedCall: boolean;
-  comment: string;
   offerId: number;
   offer: IOffer;
   isEditable: boolean;
@@ -351,7 +350,7 @@ export interface IConsultantsRequestData {
   pageSize: 0;
   searchTerm: string;
   serviceRequests: IServiceRequestIds[];
-  serviceCategoryIds: number[];
+  serviceCategories: IServiceRequestIds[];
   maintenancePackageOption: MPOptionShort | null;
   recalls: TRecallForRequest[];
   serviceTypeOptionId: number | null;

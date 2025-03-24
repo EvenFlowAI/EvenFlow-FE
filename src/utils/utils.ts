@@ -491,7 +491,10 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
   });
 };
 
-export const getCategories = (allCategories: ICategory[], categoriesIds: number[]): number[] => {
+export const getCategories = (
+  allCategories: ICategory[],
+  categoriesIds: number[]
+): IServiceRequestIds[] => {
   return allCategories
     .filter(category => {
       return (
@@ -499,7 +502,7 @@ export const getCategories = (allCategories: ICategory[], categoriesIds: number[
         categoriesIds.includes(category.id)
       );
     })
-    .map(item => item.id);
+    .map(item => ({ id: item.id, comment: item.comment }));
 };
 
 export const getCategoriesForAppointment = (

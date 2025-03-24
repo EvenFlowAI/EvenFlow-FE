@@ -250,10 +250,11 @@ export const loadConsultantsForCloning =
   (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk =>
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
-    const { selectedRecalls } = getState().appointmentFrame;
+    const { selectedRecalls, categoriesIds } = getState().appointmentFrame;
+    const { allCategories } = getState().categories;
+
     const {
       serviceRequests,
-      serviceCategories,
       maintenancePackageOption,
       serviceTypeOption,
       vehicle,
@@ -268,7 +269,7 @@ export const loadConsultantsForCloning =
         ? serviceRequests.map(el => ({ id: el.id, comment: null }))
         : [],
       recalls: mapRecallsForRequest(selectedRecalls),
-      serviceCategoryIds: serviceCategories ? serviceCategories.map(el => el.id) : [],
+      serviceCategories: getCategories(allCategories, categoriesIds),
       maintenancePackageOption: maintenancePackageOption,
       serviceTypeOptionId: serviceTypeOption?.id ?? null,
       searchTerm: '',
@@ -321,7 +322,10 @@ export const loadConsultantsForUpdating =
           pageSize: 0,
           serviceRequests: serviceRequests.map(item => ({ id: item.id, comment: null })),
           recalls,
-          serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
+          serviceCategories: serviceCategories.map(item => ({
+            id: item.id,
+            comment: item.comment,
+          })),
           maintenancePackageOption,
           serviceTypeOptionId,
           searchTerm: '',
@@ -434,7 +438,7 @@ export const loadConsultants =
           pageSize: 0,
           serviceRequests: serviceRequestIds,
           recalls,
-          serviceCategoryIds,
+          serviceCategories: getCategories(allCategories, categoriesIds),
           maintenancePackageOption,
           serviceTypeOptionId,
           searchTerm: '',
@@ -1099,7 +1103,6 @@ export const createOrUpdateAppointment =
       id: appointmentFrame.id,
       appointmentTimingType,
       customerId: appointment.customerLoadedData?.id ?? appointmentFrame?.customer?.id ?? null,
-      comment: appointmentFrame.description,
       driver,
       vehicle,
       gmt: dayjs().utcOffset(),
@@ -1114,10 +1117,7 @@ export const createOrUpdateAppointment =
       slot,
       serviceRequests,
       date,
-      serviceCategoryIds: getCategoriesForAppointment(
-        categories.allCategories,
-        appointmentFrame.categoriesIds
-      ),
+      serviceCategories: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
       maintenancePackageOption,
       valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
         ? [appointmentFrame?.valueService?.selectedService.id]
@@ -1453,7 +1453,6 @@ export const cloneAppointment =
         id: currentAppointment.id,
         appointmentTimingType,
         customerId: currentAppointment.driver?.id ?? null,
-        comment: currentAppointment.comment,
         driver,
         vehicle,
         gmt: dayjs().utcOffset(),
@@ -1471,9 +1470,10 @@ export const cloneAppointment =
         slot,
         serviceRequests,
         date,
-        serviceCategoryIds: currentAppointment.serviceCategories
-          ? currentAppointment.serviceCategories.map(el => el.id)
-          : [],
+        serviceCategories: currentAppointment.serviceCategories.map(el => ({
+          id: el.id,
+          comment: el.comment,
+        })),
         maintenancePackageOption,
         searchTerm: '',
         serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
@@ -1637,15 +1637,6 @@ export const loadActiveTransportations =
           ? { optionType: packageEMenuType }
           : null;
 
-      const serviceCategoryIds = allCategories
-        .filter(category => {
-          return (
-            category.type === EServiceCategoryType.GeneralCategory &&
-            categoriesIds.includes(category.id)
-          );
-        })
-        .map(item => item.id);
-
       const data: TTransportationData = {
         serviceCenterId,
         serviceRequests: collectServiceRequestIds(
@@ -1656,7 +1647,7 @@ export const loadActiveTransportations =
           undefined,
           selectedSRComments
         ),
-        serviceCategoryIds,
+        serviceCategories: getCategories(allCategories, categoriesIds),
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,
         vehicle: {

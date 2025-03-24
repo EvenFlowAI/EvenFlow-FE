@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { EServiceCategoryType } from '../../store/reducers/categories/types';
-import { collectServiceRequestIds, mapRecallsForRequest } from '../../utils/utils';
+import { useEffect, useState } from 'react';
+import { collectServiceRequestIds, getCategories, mapRecallsForRequest } from '../../utils/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { TTransportationData } from '../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
@@ -31,15 +30,6 @@ const useGetTransportationsData = () => {
           ? { optionType: packageEMenuType }
           : null;
 
-      const serviceCategoryIds = allCategories
-        .filter(category => {
-          return (
-            category.type === EServiceCategoryType.GeneralCategory &&
-            categoriesIds.includes(category.id)
-          );
-        })
-        .map(item => item.id);
-
       const request: TTransportationData = {
         serviceCenterId: scProfile.id,
         serviceRequests: collectServiceRequestIds(
@@ -50,7 +40,7 @@ const useGetTransportationsData = () => {
           undefined,
           selectedSRComments
         ),
-        serviceCategoryIds,
+        serviceCategories: getCategories(allCategories, categoriesIds),
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,
         vehicle: {

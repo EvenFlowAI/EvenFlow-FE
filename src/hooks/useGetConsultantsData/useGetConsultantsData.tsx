@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EServiceCategoryType } from '../../store/reducers/categories/types';
-import { collectServiceRequestIds, decodeSCID, mapRecallsForRequest } from '../../utils/utils';
+import {
+  collectServiceRequestIds,
+  getCategories,
+  decodeSCID,
+  mapRecallsForRequest,
+} from '../../utils/utils';
 import { IConsultantsRequestData } from '../../api/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
@@ -69,7 +74,7 @@ const useGetConsultantsData = (
           pageSize: 0,
           serviceRequests: serviceRequestIds,
           recalls,
-          serviceCategoryIds,
+          serviceCategories: getCategories(allCategories, categoriesIds),
           maintenancePackageOption,
           serviceTypeOptionId: serviceTypeOption?.id ?? null,
           searchTerm: '',
