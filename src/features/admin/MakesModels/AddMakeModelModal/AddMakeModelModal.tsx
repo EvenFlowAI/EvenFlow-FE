@@ -50,7 +50,7 @@ export const AddMakeModelModal: React.FC<
   const filteredMakes = allMakes
     .filter(el => !el.isReadOnly)
     .map(el => ({
-      id: el.id,
+      id: el.globalId,
       text: el.name,
     }));
 
@@ -183,7 +183,6 @@ export const AddMakeModelModal: React.FC<
           onCloseModal
         )
       );
-      
     }
   };
   useEffect(() => {
@@ -196,7 +195,7 @@ export const AddMakeModelModal: React.FC<
     const filteredMakes = allMakes
       .filter(el => !el.isReadOnly)
       .map(el => ({
-        id: el.id,
+        id: el.globalId,
         text: el.name,
       }));
 
