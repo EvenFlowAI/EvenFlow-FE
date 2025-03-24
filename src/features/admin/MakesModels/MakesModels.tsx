@@ -26,7 +26,7 @@ export const MakesModels = () => {
       dispatch(loadMakes(selectedSC.id));
       dispatch(loadMakesAll(selectedSC.id));
     }
-  }, [selectedSC, order, pageData]);
+  }, [selectedSC, order, pageData, isOpen, dispatch]);
 
   useEffect(() => {
     dispatch(loadGlobalMakes());
