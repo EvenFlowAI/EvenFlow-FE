@@ -28,6 +28,7 @@ import ButtonsRow from '../ButtonsRow/ButtonsRow';
 import { findMissingNumbers } from '../../ServiceCategories/AddServiceCategoryModal/utils';
 import { StyledField } from './styles';
 import { EOrderError } from '../../ServiceCategories/AddServiceCategoryModal/types';
+import TableMode from '../TableMode/TableMode';
 
 const ServiceBooksTable = () => {
   const { summary, podsLoading } = useSelector((state: RootState) => state.pods);
@@ -42,7 +43,7 @@ const ServiceBooksTable = () => {
   const showError = useException();
   const { askConfirm } = useConfirm();
   const { isOpen, onClose, onOpen } = useModal();
-
+  const [tableMode, setTableMode] = useState<'active' | 'inactive'>('active');
   useEffect(() => {
     setEdit(false);
     setWrongOrderIndexes([]);
@@ -141,6 +142,7 @@ const ServiceBooksTable = () => {
           ''
         ),
       width: 80,
+      hide: tableMode === 'inactive',
     },
     {
       header: 'Service Book',
@@ -246,10 +248,11 @@ const ServiceBooksTable = () => {
     dispatch(setPodById(null));
     onClose();
   };
-
+  console.log(currentData);
   return (
     <>
       <ButtonsRow setEdit={setEdit} isEdit={isEdit} onSave={onSave} onCancel={onCancel} />
+      <TableMode tableMode={tableMode} setTableMode={setTableMode} />
       <div style={{ paddingTop: 32 }}>
         <Table
           data={currentData}
@@ -267,9 +270,21 @@ const ServiceBooksTable = () => {
           }}
           anchorEl={anchorEl}
         >
-          <MenuItem onClick={openEdit} disabled={podsLoading}>
-            Edit
-          </MenuItem>
+          {tableMode === 'active' && (
+            <MenuItem onClick={openEdit} disabled={podsLoading}>
+              Edit
+            </MenuItem>
+          )}
+          {tableMode === 'active' && (
+            <MenuItem onClick={() => {}} disabled={podsLoading}>
+              Deactivate
+            </MenuItem>
+          )}
+          {tableMode === 'inactive' && (
+            <MenuItem onClick={() => {}} disabled={podsLoading}>
+              Activate
+            </MenuItem>
+          )}
           <MenuItem onClick={askRemove} disabled={podsLoading}>
             Remove
           </MenuItem>
