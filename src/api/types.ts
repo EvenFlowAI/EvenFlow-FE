@@ -328,6 +328,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
   description?: string;
   offer?: IOfferForCategory;
   isCommentRequired?: boolean;
+  comment: string;
 }
 
 export interface IServiceConsultant {

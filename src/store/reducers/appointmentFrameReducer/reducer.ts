@@ -10,7 +10,7 @@ import {
   getSlotsGap,
   getTransactionValue,
   getValueServiceOffers,
-  selectCategoriesIds,
+  selectCategories,
   selectService,
   selectSubService,
   setAcceptedConsentIds,
@@ -34,7 +34,6 @@ import {
   setEditingPosition,
   setFilteredZipCodes,
   setFiltersVisibility,
-  setFrameDescription,
   setHashKey,
   setHoursOfOperations,
   setLoadingPackages,
@@ -86,7 +85,6 @@ const initialState: TState = {
   service: null,
   subService: null,
   selectedPackage: null,
-  description: '',
   advisor: null,
   isAnyAdvisorSelected: false,
   selectedTime: null,
@@ -115,7 +113,7 @@ const initialState: TState = {
   trackerData: { isCreated: false, ids: [] },
   isAdditionalServices: false,
   packageIsSelected: false,
-  categoriesIds: [],
+  serviceCategories: [],
   packageOptionType: null,
   gap: undefined,
   userType: undefined,
@@ -183,9 +181,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(selectSubService, (state, { payload }) => {
       return { ...state, subService: payload };
     })
-    .addCase(setFrameDescription, (state, { payload }) => {
-      return { ...state, description: payload };
-    })
+
     .addCase(setPackage, (state, { payload }) => {
       return { ...state, selectedPackage: payload };
     })
@@ -243,7 +239,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         hashKey: payload.hashKey,
         customer: { ...payload.driver },
         reminders: payload.reminderTypes,
-        categories: payload.serviceCategories.map(item => ({ id: item.id, comment: item.comment })),
+        serviceCategories: payload.serviceCategories.map(item => ({
+          id: item.id,
+          comment: item.comment,
+        })),
         serviceType: payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
         address: payload.address?.fullAddress ?? null,
         zipCode: payload.address?.zipCode ?? '',
@@ -288,8 +287,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setPackageIsSelected, (state, { payload }) => {
       return { ...state, packageIsSelected: payload };
     })
-    .addCase(selectCategoriesIds, (state, { payload }) => {
-      return { ...state, categoriesIds: payload };
+    .addCase(selectCategories, (state, { payload }) => {
+      return { ...state, serviceCategories: payload };
     })
     .addCase(setSelectedPackageOptionType, (state, { payload }) => {
       return { ...state, packageOptionType: payload };

@@ -93,7 +93,7 @@ export const AppointmentSlots: React.FC<
     subService,
     selectedPackage,
     advisor,
-    categoriesIds,
+    serviceCategories,
     valueService,
     userType,
     hashKey,
@@ -430,7 +430,7 @@ export const AppointmentSlots: React.FC<
             undefined,
             selectedSRComments
           ),
-          serviceCategories: getCategories(allCategories, categoriesIds),
+          serviceCategories: getCategories(allCategories, serviceCategories),
           customerId: customerLoadedData?.id,
           warrantyExpiration: selectedVehicle?.warrantyExpiration,
           serviceTypeOptionId: serviceTypeOption?.id ?? null,

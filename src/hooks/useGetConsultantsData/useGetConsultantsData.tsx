@@ -27,7 +27,7 @@ const useGetConsultantsData = (
     valueService,
     service,
     subService,
-    categoriesIds,
+    serviceCategories,
     appointmentByKey,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { selectedSR, selectedSRComments } = useSelector((state: RootState) => state.appointment);
@@ -40,7 +40,7 @@ const useGetConsultantsData = (
       .filter(category => {
         return (
           category.type === EServiceCategoryType.GeneralCategory &&
-          categoriesIds.includes(category.id)
+          serviceCategories.map(item => item.id).includes(category.id)
         );
       })
       .map(item => item.id);
@@ -74,7 +74,7 @@ const useGetConsultantsData = (
           pageSize: 0,
           serviceRequests: serviceRequestIds,
           recalls,
-          serviceCategories: getCategories(allCategories, categoriesIds),
+          serviceCategories: getCategories(allCategories, serviceCategories),
           maintenancePackageOption,
           serviceTypeOptionId: serviceTypeOption?.id ?? null,
           searchTerm: '',

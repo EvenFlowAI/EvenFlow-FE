@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import {
   clearAppointmentSteps,
-  selectCategoriesIds,
+  selectCategories,
   selectService,
   selectSubService,
   setAdditionalServicesChosen,
@@ -56,7 +56,7 @@ export const ServiceNeedsCards: React.FC<
   const {
     service: selectedService,
     subService,
-    categoriesIds,
+    serviceCategories,
     selectedPackage,
     valueService,
     userType,
@@ -69,9 +69,10 @@ export const ServiceNeedsCards: React.FC<
     (state: RootState) => state.appointment
   );
   const { allCategories } = useSelector((state: RootState) => state.categories);
+  console.log('allCategories', allCategories);
   const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const [loading, setLoading] = useState<boolean>(false);
-  const [serviceCategories, setServiceCategories] = useState<IServiceCategory[]>([]);
+  const [serviceCategoriesLocal, setServiceCategoriesLocal] = useState<IServiceCategory[]>([]);
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -88,7 +89,7 @@ export const ServiceNeedsCards: React.FC<
       selectedSR,
       selectedPackage,
       allCategories,
-      categoriesIds,
+      serviceCategories,
       valueService,
       packageEMenuType,
       scProfile?.maintenancePackageOptionTypes
@@ -98,7 +99,7 @@ export const ServiceNeedsCards: React.FC<
     selectedSR,
     selectedPackage,
     allCategories,
-    categoriesIds,
+    serviceCategories,
     valueService,
     selectedRecalls,
     packageEMenuType,
@@ -126,7 +127,7 @@ export const ServiceNeedsCards: React.FC<
       },
     })
       .then(({ data }) => {
-        setServiceCategories(data);
+        setServiceCategoriesLocal(data);
       })
       .finally(() => {
         setLoading(false);
@@ -152,8 +153,8 @@ export const ServiceNeedsCards: React.FC<
   };
 
   const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {
-    if (categoriesIds && selectedCategory.type !== EServiceCategoryType.LinkToPage2) {
-      dispatch(selectCategoriesIds([...categoriesIds, selectedCategory.id]));
+    if (serviceCategories && selectedCategory.type !== EServiceCategoryType.LinkToPage2) {
+      dispatch(selectCategories([...serviceCategories, selectedCategory]));
     }
   };
 
@@ -214,7 +215,7 @@ export const ServiceNeedsCards: React.FC<
     }
     if (card.type === EServiceCategoryType.IndividualServices) {
       return Boolean(
-        serviceCategories.find(
+        serviceCategoriesLocal.find(
           cat =>
             cat.type === EServiceCategoryType.IndividualServices &&
             card.id === cat.id &&
@@ -224,7 +225,7 @@ export const ServiceNeedsCards: React.FC<
     }
     if (card.type === EServiceCategoryType.Diagnose) {
       return Boolean(
-        serviceCategories.find(
+        serviceCategoriesLocal.find(
           cat =>
             cat.type === EServiceCategoryType.Diagnose &&
             card.id === cat.id &&
@@ -232,13 +233,13 @@ export const ServiceNeedsCards: React.FC<
         )
       );
     }
-    return categoriesIds?.includes(card.id);
+    return serviceCategories.map(item => item.id).includes(card.id);
   };
 
   const getCardIsActive = (card: IServiceCategory): boolean => {
     return (
       currentService?.id === card.id &&
-      !categoriesIds.includes(card.id) &&
+      !serviceCategories.map(item => item.id).includes(card.id) &&
       card.type !== EServiceCategoryType.LinkToPage2
     );
   };
@@ -247,7 +248,7 @@ export const ServiceNeedsCards: React.FC<
     <StepWrapper>
       {!loading ? (
         <CardsWrapper>
-          {serviceCategories.map(card => {
+          {serviceCategoriesLocal.map(card => {
             return (
               <ServiceCard
                 selected={getCardIsSelected(card)}

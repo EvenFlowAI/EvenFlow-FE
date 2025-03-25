@@ -152,7 +152,10 @@ export const checkPodChanged =
 
     const data: ICheckPodRequest = {
       serviceRequests: serviceRequestIds,
-      serviceCategories: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
+      serviceCategories: getCategories(
+        categories.allCategories,
+        appointmentFrame.serviceCategories
+      ),
       valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
         ? [appointmentFrame?.valueService?.selectedService.id]
         : [],

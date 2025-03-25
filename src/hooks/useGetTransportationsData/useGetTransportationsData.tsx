@@ -6,7 +6,7 @@ import { TTransportationData } from '../../features/booking/AppointmentFlow/Scre
 
 const useGetTransportationsData = () => {
   const {
-    categoriesIds,
+    serviceCategories,
     selectedVehicle,
     selectedPackage,
     packagePricingType,
@@ -40,7 +40,7 @@ const useGetTransportationsData = () => {
           undefined,
           selectedSRComments
         ),
-        serviceCategories: getCategories(allCategories, categoriesIds),
+        serviceCategories: getCategories(allCategories, serviceCategories),
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,
         vehicle: {

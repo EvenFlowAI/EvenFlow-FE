@@ -125,10 +125,14 @@ export type TFiltersVisibility = {
   advisor: boolean;
 };
 
+export type TServiceCategory = {
+  id: number;
+  comment: string;
+};
+
 export type TState = {
   service: IServiceCategory | null;
   subService: IServiceCategory | null;
-  description: string;
   selectedPackage: IPackageOptions | null;
   advisor: IServiceConsultant | null;
   isAnyAdvisorSelected: boolean;
@@ -153,7 +157,7 @@ export type TState = {
   isAdditionalServices: boolean;
   packageIsSelected: boolean;
   packageOptionType: number | null;
-  categoriesIds: number[];
+  serviceCategories: TServiceCategory[];
   id?: number;
   hashKey?: string;
   gap: number | undefined;

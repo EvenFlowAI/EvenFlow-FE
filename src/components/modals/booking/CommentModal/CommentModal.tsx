@@ -9,7 +9,6 @@ import { BfButtonsWrapper } from '../../../styled/BfButtonsWrapper';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
-import { setFrameDescription } from '../../../../store/reducers/appointmentFrameReducer/actions';
 import { CharactersWrapper } from './styles';
 const MAX_COUNT_WORDS_CAPACITY = 250;
 const CommentModal: React.FC<
@@ -40,7 +39,6 @@ const CommentModal: React.FC<
     if (!text.length && selectedRequest?.code === 'specialCategory') {
       showError(t('Appointment Comment must not be empty'));
     } else if (selectedRequest?.code === 'specialCategory') {
-      dispatch(setFrameDescription(text));
       onClose();
     } else if (selectedRequest?.id) {
       dispatch(selectSRComment({ comments: { [selectedRequest.id]: text } }));

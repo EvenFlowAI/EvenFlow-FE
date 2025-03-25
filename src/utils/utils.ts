@@ -27,6 +27,7 @@ import {
   EPackagePricingType,
   EServiceType,
   IValueService,
+  TServiceCategory,
 } from '../store/reducers/appointmentFrameReducer/types';
 import { IMaintenanceItem, IRecallByVin, TParsableDate } from '../types/types';
 import { TPackagePrice } from '../store/reducers/packages/types';
@@ -418,14 +419,14 @@ export const collectServiceRequestIds = (
   const set = new Set(ids);
   return Array.from(set).map(i => {
     const currComment = individualOpsCodesComments ? individualOpsCodesComments[i] : null;
-    return { id: i, comment: currComment };
+    return { id: i, comment: currComment ?? '' };
   });
 };
 
 export const collectServiceRequestsForConsents = (
   s: IServiceCategory | null,
   sub: IServiceCategory | null,
-  categoriesIds: number[],
+  serviceCategories: TServiceCategory[],
   allCategories: ICategory[],
   individualOpsCodes?: number[],
   selectedRecalls?: IRecallByVin[]
@@ -450,9 +451,11 @@ export const collectServiceRequestsForConsents = (
       ids.push(c.id);
     }
   }
-  if (categoriesIds.length && allCategories.length) {
+  if (serviceCategories.length && allCategories.length) {
     const selected = allCategories.filter(
-      item => categoriesIds.includes(item.id) && item.type === EServiceCategoryType.GeneralCategory
+      item =>
+        serviceCategories.map(scItem => scItem.id).includes(item.id) &&
+        item.type === EServiceCategoryType.GeneralCategory
     );
     if (selected.length) {
       const array = selected.map(el => el.serviceRequests);
@@ -493,13 +496,13 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
 
 export const getCategories = (
   allCategories: ICategory[],
-  categoriesIds: number[]
+  serviceCategories: TServiceCategory[]
 ): IServiceRequestIds[] => {
   return allCategories
     .filter(category => {
       return (
         category.type === EServiceCategoryType.GeneralCategory &&
-        categoriesIds.includes(category.id)
+        serviceCategories.map(item => item.id).includes(category.id)
       );
     })
     .map(item => ({ id: item.id, comment: item.comment }));
@@ -507,14 +510,14 @@ export const getCategories = (
 
 export const getCategoriesForAppointment = (
   allCategories: ICategory[],
-  categoriesIds: number[]
+  serviceCategories: TServiceCategory[]
 ): number[] => {
   return allCategories
     .filter(category => {
       return (
         (category.type === EServiceCategoryType.GeneralCategory ||
           category.type === EServiceCategoryType.OpenRecalls) &&
-        categoriesIds.includes(category.id)
+        serviceCategories.map(item => item.id).includes(category.id)
       );
     })
     .map(item => item.id);
@@ -594,7 +597,7 @@ export const getMaintenanceDescription = (
   selectedSR?: number[],
   selectedPackage?: IPackageOptions | null,
   allCategories?: ICategory[],
-  selectedCategories?: number[],
+  selectedCategories?: TServiceCategory[],
   valueService?: IValueService | null,
   packagePricingType?: EPackagePricingType | null,
   packageEMenuType?: EMaintenanceOptionType | null,
@@ -622,7 +625,9 @@ export const getMaintenanceDescription = (
     filtered.forEach(item => item && services.push(item));
   }
   if (selectedCategories && allCategories) {
-    const categories = allCategories.filter(category => selectedCategories.includes(category.id));
+    const categories = allCategories.filter(category =>
+      selectedCategories.map(item => item.id).includes(category.id)
+    );
     categories.forEach(item => {
       if (item.name.includes('Going')) {
         services.push(i18n.t('My Description of Needs'));
@@ -642,7 +647,7 @@ export const getMaintenanceList = (
   selectedSR?: number[],
   selectedPackage?: IPackageOptions | null,
   allCategories?: ICategory[],
-  selectedCategories?: number[],
+  selectedCategories?: TServiceCategory[],
   valueService?: IValueService | null,
   packageEMenuType?: EMaintenanceOptionType | null,
   optionTypes?: EMaintenanceOptionType[] | undefined
@@ -671,7 +676,7 @@ export const getMaintenanceList = (
   if (selectedCategories && allCategories) {
     const categories = allCategories.filter(
       category =>
-        selectedCategories.includes(category.id) &&
+        selectedCategories.map(item => item.id).includes(category.id) &&
         category.type === EServiceCategoryType.GeneralCategory
     );
     categories.forEach(item => {

@@ -8,7 +8,7 @@ import {
   checkCarIsValid,
   clearAppointmentSteps,
   setAdditionalServicesChosen,
-  setFrameDescription,
+  setCommentsForCategories,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { TArgCallback, TScreen } from '../../../../../types/types';
 import {
@@ -36,9 +36,10 @@ export const AppointmentComment: React.FC<TProps> = ({
   handleSetScreen,
   onAddServices,
 }) => {
-  const { subService, service, description } = useSelector(
+  const { subService, service, serviceCategories } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  console.log('subService', subService, service, serviceCategories);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const dispatch = useDispatch();
   const { isOpen, onClose, onOpen } = useModal();
@@ -52,7 +53,7 @@ export const AppointmentComment: React.FC<TProps> = ({
   }, [ref]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    dispatch(setFrameDescription(value));
+    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment: value }));
   };
 
   const handleYes = () => {
@@ -74,11 +75,15 @@ export const AppointmentComment: React.FC<TProps> = ({
     const isCommentRequired = subService
       ? subService?.isCommentRequired
       : service?.isCommentRequired;
-    if (!description?.trim().length) {
+    if (
+      !serviceCategories.find(el => el.id === service?.id)?.comment?.trim().length &&
+      !serviceCategories.find(el => el.id === subService?.id)?.comment?.trim().length
+    ) {
       if (isCommentRequired) {
         return onErrorOpen();
       } else {
-        dispatch(setFrameDescription(''));
+        dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment: '' }));
+        dispatch(setCommentsForCategories({ id: subService?.id ?? 0, comment: '' }));
       }
     }
     if (isManagingFlow) {
@@ -105,7 +110,7 @@ export const AppointmentComment: React.FC<TProps> = ({
         fullWidth
         multiline
         onChange={handleChange}
-        value={description}
+        value={serviceCategories.find(el => el.id === service?.id)?.comment}
         rows={4}
         variant="standard"
         InputProps={{ disableUnderline: true }}

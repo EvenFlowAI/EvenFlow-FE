@@ -34,7 +34,7 @@ const AppointmentFlow = () => {
     makes,
     serviceTypeOption,
     selectedPackage,
-    categoriesIds,
+    serviceCategories,
     selectedRecalls,
     address,
     zipCode,
@@ -72,7 +72,7 @@ const AppointmentFlow = () => {
 
   const onCarIsValid = useCallback(() => {
     const someRequestsSelected =
-      selectedSR.length || selectedPackage || categoriesIds.length || selectedRecalls.length;
+      selectedSR.length || selectedPackage || serviceCategories.length || selectedRecalls.length;
     const requestDataIsValid =
       serviceTypeOption?.type === EServiceType.VisitCenter ||
       !serviceTypeOption ||
@@ -83,7 +83,7 @@ const AppointmentFlow = () => {
   }, [
     selectedSR,
     selectedPackage,
-    categoriesIds,
+    serviceCategories,
     selectedRecalls,
     serviceTypeOption,
     id,
