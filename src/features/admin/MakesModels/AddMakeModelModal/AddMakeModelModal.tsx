@@ -247,9 +247,9 @@ export const AddMakeModelModal: React.FC<
                 renderInput={params =>
                   autocompleteRender({
                     ...params,
-                    label: 'Add Makes',
+                    label: isEditing ? 'Add Models' : 'Add Makes',
                     fullWidth: true,
-                    placeholder: 'Search Makes',
+                    placeholder: isEditing ? 'Search Models' : 'Search Makes',
                   })(params)
                 }
               />
