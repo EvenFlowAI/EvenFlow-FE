@@ -107,7 +107,7 @@ export const AppointmentComment: React.FC<TProps> = ({
 
   useEffect(() => {
     const mergedArray = mergeArrayById(serviceCategories);
-    console.log('mergedArray', mergedArray);
+
     setComment(mergedArray.find(el => el.id === service?.id)?.comment ?? '');
   }, [serviceCategories, service?.id]);
 

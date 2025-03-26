@@ -12,7 +12,7 @@ export const SelectedPriceManaging = () => {
   const { appointmentRequestsPrices = [] } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
-  console.log('appointmentRequestsPrices', appointmentRequestsPrices);
+
   const { t } = useTranslation();
   const price = (appointmentRequestsPrices ?? []).reduce(
     (prev, current) => prev + (current.priceValue ?? 0),
