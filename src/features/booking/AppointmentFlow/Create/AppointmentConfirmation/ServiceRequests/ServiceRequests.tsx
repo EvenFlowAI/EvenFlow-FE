@@ -19,8 +19,7 @@ const ServiceRequests = () => {
   const {
     serviceTypeOption,
     packagePriceTitles,
-    categoriesIds,
-    description,
+    serviceCategories,
     selectedPackage,
     packagePricingType,
     selectedRecalls,
@@ -36,7 +35,7 @@ const ServiceRequests = () => {
   }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
   const currentCategories = allCategories.filter(
-    category => categoriesIds.includes(category.id) && category.type === 0
+    category => serviceCategories.map(item => item.id).includes(category.id) && category.type === 0
   );
 
   let name;
@@ -106,7 +105,7 @@ const ServiceRequests = () => {
                         onCommentOpen();
                       }}
                     >
-                      {description ? <MessageIconFilled /> : <MessageIcon />}
+                      {/* {description ? <MessageIconFilled /> : <MessageIcon />} */}
                     </MessageIconWrapper>
                   </ServiceItem>
                 );
@@ -115,7 +114,7 @@ const ServiceRequests = () => {
           )}
         </List>
       </ConfirmationItemWrapper>
-      <CommentModal
+      {/* <CommentModal
         selectedRequest={selectedRequest}
         currentComment={
           selectedRequest?.code === 'specialCategory'
@@ -126,7 +125,7 @@ const ServiceRequests = () => {
         onClose={() => {
           onCommentClose();
         }}
-      />
+      /> */}
     </>
   ) : null;
 };

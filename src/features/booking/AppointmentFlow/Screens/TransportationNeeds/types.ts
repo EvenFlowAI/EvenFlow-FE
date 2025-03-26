@@ -8,7 +8,7 @@ import { IServiceRequestIds } from '../../../../../api/types';
 export type TTransportationData = {
   serviceCenterId: number;
   serviceRequests: IServiceRequestIds[];
-  serviceCategoryIds: number[];
+  serviceCategories: IServiceRequestIds[];
   appointmentHashKey?: string;
   recalls: TRecallForRequest[];
   maintenancePackageOption: MPOptionShort | null;

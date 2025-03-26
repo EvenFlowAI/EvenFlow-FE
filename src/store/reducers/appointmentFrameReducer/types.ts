@@ -125,10 +125,14 @@ export type TFiltersVisibility = {
   advisor: boolean;
 };
 
+export type TServiceCategory = {
+  id: number;
+  comment: string;
+};
+
 export type TState = {
   service: IServiceCategory | null;
   subService: IServiceCategory | null;
-  description: string;
   selectedPackage: IPackageOptions | null;
   advisor: IServiceConsultant | null;
   isAnyAdvisorSelected: boolean;
@@ -153,7 +157,7 @@ export type TState = {
   isAdditionalServices: boolean;
   packageIsSelected: boolean;
   packageOptionType: number | null;
-  categoriesIds: number[];
+  serviceCategories: TServiceCategory[];
   id?: number;
   hashKey?: string;
   gap: number | undefined;
@@ -238,7 +242,6 @@ export interface ICreateAppointmentRequest {
   id?: number;
   appointmentTimingType: EAppointmentTimingType;
   customerId: string | number | null;
-  comment: string;
   driver: TDriverForRequest;
   vehicle: TVehicleForRequest;
   gmt: ParsableDate;
@@ -253,7 +256,7 @@ export interface ICreateAppointmentRequest {
   slot: string;
   serviceRequests: IServiceRequestIds[];
   date: ParsableDate;
-  serviceCategoryIds: number[];
+  serviceCategories: IServiceRequestIds[];
   maintenancePackageOption: TMaintenanceOption | null;
   valueServiceOfferIds: number[];
   searchTerm: string;
