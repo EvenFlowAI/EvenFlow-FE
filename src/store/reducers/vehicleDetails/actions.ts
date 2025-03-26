@@ -122,7 +122,9 @@ export const deleteMake =
   async (dispatch, getState) => {
     const { selectedSC } = getState().serviceCenters;
     if (selectedSC) {
-      Api.call(Api.endpoints.Vehicles.RemoveMake, { urlParams: { id: makeId } })
+      Api.call(Api.endpoints.Vehicles.RemoveMake, {
+        urlParams: { serviceCenterId: selectedSC.id, makeId },
+      })
         .then(result => {
           if (result) {
             dispatch(loadMakes(selectedSC.id));
