@@ -498,14 +498,18 @@ export const getCategories = (
   allCategories: ICategory[],
   serviceCategories: TServiceCategory[]
 ): IServiceRequestIds[] => {
+  const mergedArray = mergeArrayById(serviceCategories);
   return allCategories
     .filter(category => {
       return (
         category.type === EServiceCategoryType.GeneralCategory &&
-        serviceCategories.map(item => item.id).includes(category.id)
+        mergedArray.map((item: any) => item.id).includes(category.id)
       );
     })
-    .map(item => ({ id: item.id, comment: item.comment }));
+    .map(item => {
+      const comment = mergedArray.find((el: IMergedCategory) => el.id === item.id)?.comment ?? '';
+      return { id: item.id, comment };
+    });
 };
 
 export const getCategoriesForAppointment = (
@@ -781,3 +785,32 @@ export const checkVin = (vin: string) => {
     vin && vin.length === 17 && (vin.includes('~') || vin.match(/[(A-H|J-N|P|R-Z|0-9)]{17}/gm))
   );
 };
+
+interface IMergedCategory {
+  id: number;
+  comment?: string;
+  [key: string]: any;
+}
+
+export const mergeArrayById = (array: any[]): IMergedCategory[] => {
+  const groupedById = array.reduce((acc: { [key: number]: IMergedCategory }, item) => {
+    if (!acc[item.id]) {
+      acc[item.id] = { id: item.id };
+    }
+
+    if (Object.keys(item).length === 2 && 'comment' in item) {
+      acc[item.id].comment = item.comment;
+    } else {
+      acc[item.id] = {
+        ...acc[item.id],
+        ...item,
+      };
+    }
+
+    return acc;
+  }, {});
+
+  return Object.values(groupedById);
+};
+
+

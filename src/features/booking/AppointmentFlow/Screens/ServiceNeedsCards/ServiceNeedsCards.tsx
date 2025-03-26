@@ -69,7 +69,6 @@ export const ServiceNeedsCards: React.FC<
     (state: RootState) => state.appointment
   );
   const { allCategories } = useSelector((state: RootState) => state.categories);
-  console.log('allCategories', allCategories);
   const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const [loading, setLoading] = useState<boolean>(false);
   const [serviceCategoriesLocal, setServiceCategoriesLocal] = useState<IServiceCategory[]>([]);

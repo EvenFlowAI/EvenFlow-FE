@@ -700,6 +700,7 @@ export const handleAppointmentResponse =
     if (data.maintenancePackageOption?.priceType) {
       dispatch(setPackagePricingType(data.maintenancePackageOption.priceType));
     }
+    console.log('data', data);
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList));
     dispatch(getTransactionValue(data.transactionValue ?? 0));
 
@@ -1150,7 +1151,10 @@ export const createOrUpdateAppointment =
       isWaitlist: Boolean(isWaitlist),
       customerConsentIds: appointmentFrame.acceptedConsentIds,
     };
-
+    console.log(
+      'data',
+      getCategories(categories.allCategories, appointmentFrame.serviceCategories)
+    );
     if (isAdmin) delete data.schedulerType;
 
     try {
@@ -1268,7 +1272,7 @@ export const loadAppointmentRequestsPrices =
         : null;
     const data = {
       serviceRequests,
-      serviceCategoryIds: getCategories(
+      serviceCategories: getCategories(
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
@@ -1289,13 +1293,14 @@ export const loadAppointmentRequestsPrices =
     };
     if (
       serviceRequests.length ||
-      data.serviceCategoryIds.length ||
+      data.serviceCategories.length ||
       data.valueServiceOfferIds.length ||
       data.recalls.length ||
       maintenancePackageOption
     ) {
       Api.call(Api.endpoints.AppointmentPricing.GetPriceList, { data })
         .then(result => {
+          console.log('result', result);
           if (result) dispatch(getAppointmentRequestsPrices(result.data));
           dispatch(setAppointmentsLoading(false));
         })

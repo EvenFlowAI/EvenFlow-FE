@@ -9,13 +9,16 @@ import { EPricingDisplayType } from '../../../../../../store/reducers/pricingSet
 
 export const SelectedPriceManaging = () => {
   const { scProfile } = useSelector((state: RootState) => state.appointment);
-  const { appointmentRequestsPrices } = useSelector((state: RootState) => state.appointmentFrame);
+  const { appointmentRequestsPrices = [] } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
+  console.log('appointmentRequestsPrices', appointmentRequestsPrices);
   const { t } = useTranslation();
-  const price = appointmentRequestsPrices.reduce(
+  const price = (appointmentRequestsPrices ?? []).reduce(
     (prev, current) => prev + (current.priceValue ?? 0),
     0
   );
-  const noDefinedPriceExists = appointmentRequestsPrices.find(
+  const noDefinedPriceExists = (appointmentRequestsPrices ?? []).find(
     el => !el.priceValue || el.pricingDisplayType === EPricingDisplayType.Suppressed
   );
   return (

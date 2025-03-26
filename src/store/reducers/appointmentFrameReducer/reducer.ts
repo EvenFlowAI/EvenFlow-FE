@@ -26,6 +26,7 @@ import {
   setAppointmentSaving,
   setCarIsValidForUpdate,
   setCity,
+  setCommentsForCategories,
   setConsentsLoading,
   setConsultants,
   setConsultantsLoading,
@@ -233,6 +234,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
       return { ...state, maintenanceDetails: { ...state.maintenanceDetails, ...payload } };
     })
     .addCase(setUpdateAppointment, (state, { payload }) => {
+      console.log('payload', payload);
       return {
         ...state,
         id: payload.id,
@@ -289,6 +291,13 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     })
     .addCase(selectCategories, (state, { payload }) => {
       return { ...state, serviceCategories: payload };
+    })
+    .addCase(setCommentsForCategories, (state, { payload }) => {
+      console.log('payload', payload);
+      return {
+        ...state,
+        serviceCategories: [...state.serviceCategories, payload],
+      };
     })
     .addCase(setSelectedPackageOptionType, (state, { payload }) => {
       return { ...state, packageOptionType: payload };
@@ -406,6 +415,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
       return { ...state, editingPosition: payload };
     })
     .addCase(getAppointmentRequestsPrices, (state, { payload }) => {
+      console.log('payload', payload);
       return { ...state, appointmentRequestsPrices: payload };
     })
     .addCase(setAppointmentNotes, (state, { payload }) => {
