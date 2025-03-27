@@ -48,7 +48,6 @@ export const OverrideOPsCodeModal: React.FC<
   const showMessage = useMessage();
   const showError = useException();
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (props.open) {
       setForm(initialForm);
@@ -56,12 +55,13 @@ export const OverrideOPsCodeModal: React.FC<
   }, [props.open]);
 
   useEffect(() => {
-    if (props.open && payload?.serviceRequestOverride) {
+    if (props.open && (payload?.serviceRequestOverride || payload?.serviceRequest)) {
       const override = payload.serviceRequestOverride;
       const request = payload.serviceRequest;
+
       setForm({
         ...initialForm,
-        description: override?.description || '',
+        description: override?.description || request?.description || '',
         countOfTechnicians: override?.countOfTechnicians?.toString() || '',
         durationInHours: override?.durationInHours?.toString() || '',
         invoiceAmount: override?.invoiceAmount?.toFixed(2) || '',
@@ -90,6 +90,7 @@ export const OverrideOPsCodeModal: React.FC<
 
       try {
         const { description, ...f } = form;
+
         const data: IServiceRequestOverrideEditRequest = {
           serviceRequestInfo: {
             description,

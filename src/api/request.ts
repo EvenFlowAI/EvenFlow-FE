@@ -18,7 +18,6 @@ export const request = axios.create({
 request.interceptors.request.use(request => {
   const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
   if (sessionId?.length) request.headers['SessionId'] = sessionId;
-  console.log('request.url', request.url);
   if (skipCallIfNoToken.includes(request.url ?? '') && !authService.getLocalToken()) {
     return Promise.reject(new Error('Skipping request - no token available'));
   }
