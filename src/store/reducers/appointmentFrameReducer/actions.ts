@@ -1151,10 +1151,7 @@ export const createOrUpdateAppointment =
       isWaitlist: Boolean(isWaitlist),
       customerConsentIds: appointmentFrame.acceptedConsentIds,
     };
-    console.log(
-      'data',
-      getCategories(categories.allCategories, appointmentFrame.serviceCategories)
-    );
+
     if (isAdmin) delete data.schedulerType;
 
     try {

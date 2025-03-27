@@ -11,4 +11,9 @@ export const CardWrapper = styled('div')({
   color: '#FFFFFF',
   fontWeight: 'bold',
   cursor: 'move',
+  span: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 });

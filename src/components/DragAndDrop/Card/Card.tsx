@@ -91,7 +91,7 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
       }}
       data-handler-id={handlerId}
     >
-      {text}
+      <span>{text}</span>
       {onDelete && !text.toLowerCase().includes('other') ? (
         <Delete onClick={() => onDelete(id)} style={{ cursor: 'pointer' }} />
       ) : null}
