@@ -586,7 +586,10 @@ export class Api {
       GetByQuery: { route: '/vehicles/by-query', method: 'post' },
       Models: { route: '/vehicles/models', method: 'get' },
       Makes: { route: '/vehicles/makes-and-models/by-query', method: 'post' },
-      RemoveMake: { route: '/vehicles/makes/{serviceCenterId}&{makeId}', method: 'delete' },
+      RemoveMake: {
+        route: '/vehicles/makes?serviceCenterId={serviceCenterId}&makeId={makeId}',
+        method: 'delete',
+      },
       UpdateMake: { route: '/vehicles/makes/{id}', method: 'put' },
       CreateMake: { route: '/vehicles/makes', method: 'put' },
       GetMileage: { route: '/vehicles/mileage', method: 'get' },
