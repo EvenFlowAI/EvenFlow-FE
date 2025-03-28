@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useStyles } from './styles';
 import { ReactComponent as AttentionIcon } from '../../../../assets/img/attention.svg';
+import { ReactComponent as Delete } from '../../../../assets/img/delete.svg';
 import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 import DragAndDrop from '../../../../components/DragAndDrop/DragAndDrop';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
@@ -95,18 +96,18 @@ export const AddMakeModelModal: React.FC<
       option: any,
       state: AutocompleteRenderOptionState
     ) => {
-      if (option.name === 'Select All') {
+      if (option.text === 'Select All') {
+        const isAllSelected = isEditing
+          ? modelsToAdd.length === filteredGlobalModels.length
+          : makesToAdd.length === filteredGlobalMakes.length;
+
         return (
           <li
             style={{ display: 'flex', alignItems: 'center' }}
             key={option + new Date()}
             {...props}
           >
-            <Checkbox
-              size="small"
-              style={{ marginRight: 8, padding: 0 }}
-              checked={filteredGlobalMakes.length === makesToAdd.length}
-            />
+            <Checkbox size="small" style={{ marginRight: 8, padding: 0 }} checked={isAllSelected} />
             {label(option)}
           </li>
         );
@@ -239,6 +240,60 @@ export const AddMakeModelModal: React.FC<
                 getOptionLabel={option => option.text}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderOption={autocompleteOptionsRender(e => e.text)}
+                renderTags={(value: IData[], getTagProps) => {
+                  const allSelected = isEditing
+                    ? value.length === filteredGlobalModels.length
+                    : value.length === filteredGlobalMakes.length;
+
+                  if (allSelected) {
+                    const props = getTagProps({ index: 0 });
+                    return (
+                      <div {...props}>
+                        <div className={autocompleteClasses.classes.tag}>
+                          {isEditing ? 'All models' : 'All makes'}
+                          <Delete
+                            onClick={() => {
+                              isEditing ? setModelsToAdd([]) : setMakesToAdd([]);
+                            }}
+                            style={{ cursor: 'pointer', marginLeft: 4 }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  const maxVisibleTags = 2; // Adjust this number as needed
+                  const visibleTags = value.slice(0, maxVisibleTags);
+                  const remainingCount = value.length - maxVisibleTags;
+
+                  return (
+                    <>
+                      {visibleTags.map((option, index) => {
+                        const props = getTagProps({ index });
+                        return (
+                          <div {...props}>
+                            <div className={autocompleteClasses.classes.tag}>
+                              {option.text}
+                              {props.onDelete && (
+                                <Delete
+                                  onClick={props.onDelete}
+                                  style={{ cursor: 'pointer', marginLeft: 4 }}
+                                />
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {remainingCount > 0 && (
+                        <div {...getTagProps({ index: maxVisibleTags })}>
+                          <div className={autocompleteClasses.classes.tag}>
+                            +{remainingCount} others
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                }}
                 onChange={(_, value) => {
                   isEditing ? onChangeModels(value) : onChangeMakes(value);
                 }}

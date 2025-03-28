@@ -1,13 +1,29 @@
 import type { Identifier, XYCoord } from 'dnd-core';
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../itemTypes';
 import { CardProps, DragItem } from '../types';
-import { CardWrapper } from './styles';
+import { Tooltip } from '@mui/material';
 import { ReactComponent as Delete } from '../../../assets/img/delete.svg';
+import { CardWrapper } from './styles';
 
 export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor, onDelete }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (textRef.current) {
+        setIsOverflowing(textRef.current.scrollWidth > textRef.current.clientWidth);
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [text]);
+
   const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.CARD,
     collect(monitor) {
@@ -77,7 +93,27 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
   const opacity = isDragging ? 0 : 1;
   const boxShadow = isDragging ? '0px 2px 6px 0px #4D70E3' : 'none';
 
+  const isTextOverflowing = () => {
+    const element = textRef.current;
+    return element ? element.scrollWidth > element.clientWidth : false;
+  };
+
   drag(drop(ref));
+
+  const textContent = (
+    <span
+      ref={textRef}
+      style={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        display: 'block',
+        width: 150,
+      }}
+    >
+      {text}
+    </span>
+  );
 
   return (
     <CardWrapper
@@ -91,7 +127,7 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
       }}
       data-handler-id={handlerId}
     >
-      <span>{text}</span>
+      {isOverflowing ? <Tooltip title={text}>{textContent}</Tooltip> : textContent}
       {onDelete && !text.toLowerCase().includes('other') ? (
         <Delete onClick={() => onDelete(id)} style={{ cursor: 'pointer' }} />
       ) : null}
