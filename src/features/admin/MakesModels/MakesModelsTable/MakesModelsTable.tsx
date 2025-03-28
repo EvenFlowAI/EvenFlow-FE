@@ -116,6 +116,12 @@ export const MakesModelsTable: React.FC<
           currentMake.id === selectedSC?.defaultVehicleMakeId
             ? `The Make ${currentMake.name} is selected as a default. Please confirm that you want to remove make ${currentMake.name}`
             : `Please confirm that you want to remove make ${currentMake.name}`,
+        content: (
+          <span>
+            After removing, please check configuration settings for Packages, Service Books, Consent
+            Messages, and Recalls which may have been impacted.
+          </span>
+        ),
         onConfirm: handleRemove,
       });
     }
