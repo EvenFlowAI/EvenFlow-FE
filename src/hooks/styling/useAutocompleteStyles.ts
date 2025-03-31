@@ -9,6 +9,7 @@ export const useAutocompleteStyles = makeStyles()(() => ({
     color: 'white',
     fontWeight: 'bold',
     margin: '1px 2px',
+    padding: '1px 3px',
     '& > svg': {
       color: 'white',
     },
