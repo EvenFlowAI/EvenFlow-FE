@@ -1122,10 +1122,7 @@ export const createOrUpdateAppointment =
       offerId: appointment.appointment?.offer?.id ?? null,
       reminderTypes: appointmentFrame.reminders,
       serviceCenterId: id,
-      advisor: {
-        id: appointmentFrame.advisor?.id ?? null,
-        isAnySelected: !Boolean(appointmentFrame.advisor),
-      },
+      advisor: appointmentFrame.advisor?.id ?? null,
       transportationOptionId,
       slot,
       serviceRequests,
@@ -1467,7 +1464,7 @@ export const cloneAppointment =
 
       const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
 
-      const advisor = consultants.find(el => el.id === currentAppointment?.advisor?.id);
+      // const advisor = consultants.find(el => el.id === currentAppointment?.advisor?.id);
 
       const data: ICreateAppointmentRequest = {
         id: currentAppointment.id,
@@ -1479,13 +1476,7 @@ export const cloneAppointment =
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: currentAppointment.reminderTypes,
         serviceCenterId: id,
-        advisor: {
-          id:
-            currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected && advisor
-              ? advisor?.id
-              : null,
-          isAnySelected: advisor ? Boolean(currentAppointment.advisor?.isAnySelected) : true,
-        },
+        advisor: currentAppointment.advisor?.id ?? null,
         transportationOptionId,
         slot,
         serviceRequests,

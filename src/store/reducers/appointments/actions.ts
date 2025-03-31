@@ -166,10 +166,7 @@ export const checkPodChanged =
       serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
       zipCode: appointmentFrame.zipCode ?? null,
       address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
-      advisor: {
-        id: appointmentFrame.advisor?.id,
-        isAnySelected: !Boolean(appointmentFrame.advisor),
-      },
+      advisor: appointmentFrame.advisor?.id ?? null,
       vehicle,
       transportationOptionId:
         (appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter ||
