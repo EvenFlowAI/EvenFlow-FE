@@ -10,6 +10,7 @@ import {
   ICustomer,
   ICustomerLoadedData,
   ILoadedVehicle,
+  IMake,
   IPackage,
   IPackageOptions,
   IServiceCategory,
@@ -20,7 +21,6 @@ import {
 import {
   EAppointmentTimingType,
   EReminderType,
-  IMake,
   IServiceRequestPrice,
   IVehicle,
 } from '../appointment/types';
@@ -43,6 +43,7 @@ import {
   TLanguage,
   TMaintenanceDetails,
   TMaintenanceOption,
+  TServiceCategory,
   TTrackerState,
   TVehicleForRequest,
   TYear,
@@ -50,6 +51,7 @@ import {
 import {
   AppThunk,
   IMaintenanceItem,
+  IPagingResponse,
   IRecallByVin,
   PaginatedAPIResponse,
   TArgCallback,
@@ -104,7 +106,7 @@ export const selectService = createAction<IServiceCategory | null>('fAppointment
 export const selectSubService = createAction<IServiceCategory | null>(
   'fAppointment/selectSubService'
 );
-export const setFrameDescription = createAction<string>('fAppointment/setFrameDescription');
+
 export const setPackage = createAction<IPackageOptions | null>('fAppointment/setPackage');
 export const setPackagePricingType = createAction<EPackagePricingType | null>(
   'fAppointment/setPackagePricingType'
@@ -127,6 +129,9 @@ export const setMaintenanceDetails = createAction<Partial<TMaintenanceDetails>>(
 export const setUpdateAppointment = createAction<IAppointmentByKey>(
   'fAppointment/setUpdateAppointment'
 );
+export const setCommentsForCategories = createAction<TServiceCategory>(
+  'fAppointment/setCommentsForCategories'
+);
 export const setLoadingPackages = createAction<boolean>('fAppointment/loadingPackages');
 export const setPackages = createAction<IPackage[]>('fAppointment/setPackages');
 export const setConsultants = createAction<IServiceConsultant[]>('fAppointment/setConsultants');
@@ -145,7 +150,7 @@ export const setSelectedPackageOptionType = createAction<number | null>(
 export const setSelectedPackagePriceTitles = createAction<TPackagePrice[]>(
   'fAppointment/SetSelectedPackagePriceTitles'
 );
-export const selectCategoriesIds = createAction<number[]>('fAppointment/SelectCategoriesIds');
+export const selectCategories = createAction<TServiceCategory[]>('fAppointment/SelectCategories');
 export const getSlotsGap = createAction<number>('fAppointment/GetSlotsGap');
 export const setUserType = createAction<EUserType>('fAppointment/SetUserType');
 export const setServiceTypeOption = createAction<IFirstScreenOption | null>(
@@ -249,10 +254,11 @@ export const loadConsultantsForCloning =
   (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk =>
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
-    const { selectedRecalls } = getState().appointmentFrame;
+    const { selectedRecalls, serviceCategories } = getState().appointmentFrame;
+    const { allCategories } = getState().categories;
+
     const {
       serviceRequests,
-      serviceCategories,
       maintenancePackageOption,
       serviceTypeOption,
       vehicle,
@@ -267,7 +273,7 @@ export const loadConsultantsForCloning =
         ? serviceRequests.map(el => ({ id: el.id, comment: null }))
         : [],
       recalls: mapRecallsForRequest(selectedRecalls),
-      serviceCategoryIds: serviceCategories ? serviceCategories.map(el => el.id) : [],
+      serviceCategories: getCategories(allCategories, serviceCategories),
       maintenancePackageOption: maintenancePackageOption,
       serviceTypeOptionId: serviceTypeOption?.id ?? null,
       searchTerm: '',
@@ -320,7 +326,7 @@ export const loadConsultantsForUpdating =
           pageSize: 0,
           serviceRequests: serviceRequests.map(item => ({ id: item.id, comment: null })),
           recalls,
-          serviceCategoryIds: serviceCategories ? serviceCategories.map(item => item.id) : [],
+          serviceCategories,
           maintenancePackageOption,
           serviceTypeOptionId,
           searchTerm: '',
@@ -389,7 +395,7 @@ export const loadConsultants =
       valueService,
       service,
       subService,
-      categoriesIds,
+      serviceCategories,
       sideBarSteps,
       advisor,
       appointmentByKey,
@@ -401,7 +407,7 @@ export const loadConsultants =
       .filter(category => {
         return (
           category.type === EServiceCategoryType.GeneralCategory &&
-          categoriesIds.includes(category.id)
+          serviceCategories.map(item => item.id).includes(category.id)
         );
       })
       .map(item => item.id);
@@ -433,7 +439,7 @@ export const loadConsultants =
           pageSize: 0,
           serviceRequests: serviceRequestIds,
           recalls,
-          serviceCategoryIds,
+          serviceCategories: getCategories(allCategories, serviceCategories),
           maintenancePackageOption,
           serviceTypeOptionId,
           searchTerm: '',
@@ -490,10 +496,18 @@ export const loadConsultants =
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
   async dispatch => {
-    Api.call<IMake[]>(Api.endpoints.Vehicles.Makes, { params: { serviceCenterId } })
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        pageIndex: 0,
+        pageSize: 0,
+        isAscending: true,
+        orderBy: 'OrderIndex',
+      },
+    })
       .then(({ data }) => {
         if (data) {
-          dispatch(getMakes(data));
+          dispatch(getMakes(data.result));
         }
       })
       .catch(err => {
@@ -532,7 +546,7 @@ export const loadServiceOffers =
 export const clearSelectedServices =
   (keepCategories?: boolean): AppThunk =>
   dispatch => {
-    if (!keepCategories) dispatch(selectCategoriesIds([]));
+    if (!keepCategories) dispatch(selectCategories([]));
     dispatch(setPackage(null));
     dispatch(setPackageIsSelected(false));
     dispatch(setSelectedPackageOptionType(null));
@@ -557,7 +571,6 @@ export const clearAppointmentData =
     dispatch(setAcceptedConsentIds([]));
     dispatch(selectServiceValetAppointment(null));
     dispatch(setTiming(null));
-    dispatch(setFrameDescription(''));
     dispatch(setHashKey(''));
     dispatch(setAppointmentByKey(null));
     dispatch(setUsualFlowNeeded(false));
@@ -687,6 +700,7 @@ export const handleAppointmentResponse =
     if (data.maintenancePackageOption?.priceType) {
       dispatch(setPackagePricingType(data.maintenancePackageOption.priceType));
     }
+    console.log('data', data);
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList));
     dispatch(getTransactionValue(data.transactionValue ?? 0));
 
@@ -761,7 +775,7 @@ export const updateRecalls =
             return data.serviceCategories.map(el => el.id).includes(item.id);
           });
           if (category) {
-            dispatch(selectCategoriesIds([category.id]));
+            dispatch(selectCategories([category]));
             if (category.page === 0) {
               dispatch(selectService(category));
             } else {
@@ -814,8 +828,8 @@ export const setVehicleDataFromValueService = (): AppThunk => (dispatch, getStat
       ) {
         vehicle.year = Number(valueService.year.year);
       }
-      const model = bmwMake.models.find(model => model === valueService.series?.name);
-      if (model) vehicle.model = model;
+      const model = bmwMake.models.find(model => model.name === valueService.series?.name);
+      if (model) vehicle.model = model.name;
       dispatch(setVehicle(vehicle));
     }
   }
@@ -834,7 +848,7 @@ export const deleteIndService =
   (item: IMaintenanceItem): AppThunk =>
   (dispatch, getState) => {
     const { selectedSR } = getState().appointment;
-    const { categoriesIds, service, subService } = getState().appointmentFrame;
+    const { serviceCategories, service, subService } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
     const services = selectedSR.filter(sr => sr !== item.id);
     item.id && dispatch(selectSR(item.id));
@@ -851,22 +865,22 @@ export const deleteIndService =
         category.serviceRequests.find(el => el.id === item.id)
       );
     });
-    let categories = [...categoriesIds];
+    let categories = [...serviceCategories];
     if (!indServiceCategory?.serviceRequests.find(request => services.includes(request.id))) {
       if (subService && indServiceCategory && subService?.id === indServiceCategory?.id)
         dispatch(selectSubService(null));
       if (service && indServiceCategory && service?.id === indServiceCategory?.id)
         dispatch(selectService(null));
-      categories = categoriesIds.filter(id => id !== indServiceCategory?.id);
-      dispatch(selectCategoriesIds(categories));
+      categories = categories.filter(item => item.id !== indServiceCategory?.id);
+      dispatch(selectCategories(categories));
     }
     if (!diagnoseCategory?.serviceRequests.find(request => services.includes(request.id))) {
       if (subService && diagnoseCategory && subService?.id === diagnoseCategory?.id)
         dispatch(selectSubService(null));
       if (service && diagnoseCategory && service?.id === diagnoseCategory?.id)
         dispatch(selectService(null));
-      categories = categories.filter(id => id !== diagnoseCategory?.id);
-      dispatch(selectCategoriesIds(categories));
+      categories = categories.filter(item => item.id !== diagnoseCategory?.id);
+      dispatch(selectCategories(categories));
     }
   };
 
@@ -881,22 +895,22 @@ export const deletePackage = (): AppThunk => (dispatch, getState) => {
 export const deleteGeneralService =
   (item: IMaintenanceItem): AppThunk =>
   (dispatch, getState) => {
-    const { service, subService, categoriesIds } = getState().appointmentFrame;
+    const { service, subService, serviceCategories } = getState().appointmentFrame;
     if (service?.id === item.id) dispatch(selectService(null));
     if (subService?.id === item.id) dispatch(selectSubService(null));
     dispatch(clearAppointmentsWhileCreating());
-    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== item.id)));
+    dispatch(selectCategories(serviceCategories.filter(scItem => scItem.id !== item.id)));
   };
 
 export const deleteValueService = (): AppThunk => (dispatch, getState) => {
-  const { service, subService, categoriesIds } = getState().appointmentFrame;
+  const { service, subService, serviceCategories } = getState().appointmentFrame;
   if (service?.type === EServiceCategoryType.ValueService) {
     dispatch(selectService(null));
-    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== service?.id)));
+    dispatch(selectCategories(serviceCategories.filter(scItem => scItem.id !== service?.id)));
   }
   if (subService?.type === EServiceCategoryType.ValueService) {
     dispatch(selectSubService(null));
-    dispatch(selectCategoriesIds(categoriesIds.filter(id => id !== subService?.id)));
+    dispatch(selectCategories(serviceCategories.filter(scItem => scItem.id !== subService?.id)));
   }
   dispatch(setVehicleDataFromValueService());
   dispatch(setValueService(null));
@@ -906,12 +920,22 @@ export const deleteValueService = (): AppThunk => (dispatch, getState) => {
 export const deleteRecall =
   (item: IMaintenanceItem): AppThunk =>
   (dispatch, getState) => {
-    const { service, subService, categoriesIds, selectedRecalls, sideBarSteps, serviceTypeOption } =
-      getState().appointmentFrame;
+    const {
+      service,
+      subService,
+      serviceCategories,
+      selectedRecalls,
+      sideBarSteps,
+      serviceTypeOption,
+    } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
     const recalls = selectedRecalls.filter(el => el.campaignNumber !== item.campaignNumber);
-    const serviceType = serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter;
-    const selectedCategories = allCategories.filter(el => categoriesIds.includes(el.id));
+    const serviceType = serviceTypeOption
+      ? serviceTypeOption.type
+      : EServiceCategoryType.GeneralCategory;
+    const selectedCategories = allCategories.filter(el =>
+      serviceCategories.map(item => item.id).includes(el.id)
+    );
     item.campaignNumber && dispatch(setSelectedRecalls(recalls));
 
     if (!recalls.length) {
@@ -922,8 +946,10 @@ export const deleteRecall =
       if (openRecallCategory) {
         let filteredCategories = [];
         if (openRecallCategory) {
-          filteredCategories = categoriesIds.filter(id => id !== openRecallCategory?.id);
-          dispatch(selectCategoriesIds(filteredCategories));
+          filteredCategories = serviceCategories.filter(
+            scItem => scItem.id !== openRecallCategory?.id
+          );
+          dispatch(selectCategories(filteredCategories));
         }
         if (service?.type === EServiceCategoryType.OpenRecalls) {
           dispatch(selectService(null));
@@ -1090,7 +1116,6 @@ export const createOrUpdateAppointment =
       id: appointmentFrame.id,
       appointmentTimingType,
       customerId: appointment.customerLoadedData?.id ?? appointmentFrame?.customer?.id ?? null,
-      comment: appointmentFrame.description,
       driver,
       vehicle,
       gmt: dayjs().utcOffset(),
@@ -1105,9 +1130,9 @@ export const createOrUpdateAppointment =
       slot,
       serviceRequests,
       date,
-      serviceCategoryIds: getCategoriesForAppointment(
+      serviceCategories: getCategories(
         categories.allCategories,
-        appointmentFrame.categoriesIds
+        appointmentFrame.serviceCategories
       ),
       maintenancePackageOption,
       valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
@@ -1173,7 +1198,7 @@ export const checkCarIsValid =
           item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase()
         );
         const existingModel = models.find(
-          item => item.toLowerCase() === selectedVehicle.model.toLowerCase()
+          item => item.name.toLowerCase() === selectedVehicle.model.toLowerCase()
         );
         if (!existingMake || !existingModel) carIsValid = false;
       }
@@ -1244,7 +1269,10 @@ export const loadAppointmentRequestsPrices =
         : null;
     const data = {
       serviceRequests,
-      serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
+      serviceCategories: getCategories(
+        categories.allCategories,
+        appointmentFrame.serviceCategories
+      ),
       valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
         ? [appointmentFrame?.valueService?.selectedService.id]
         : [],
@@ -1262,13 +1290,14 @@ export const loadAppointmentRequestsPrices =
     };
     if (
       serviceRequests.length ||
-      data.serviceCategoryIds.length ||
+      data.serviceCategories.length ||
       data.valueServiceOfferIds.length ||
       data.recalls.length ||
       maintenancePackageOption
     ) {
       Api.call(Api.endpoints.AppointmentPricing.GetPriceList, { data })
         .then(result => {
+          console.log('result', result);
           if (result) dispatch(getAppointmentRequestsPrices(result.data));
           dispatch(setAppointmentsLoading(false));
         })
@@ -1308,7 +1337,7 @@ export const searchForCustomerConsents =
       advisor,
       appointmentByKey,
       zipCode,
-      categoriesIds,
+      serviceCategories,
       acceptedConsentIds,
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
@@ -1337,7 +1366,7 @@ export const searchForCustomerConsents =
         serviceRequestIds: collectServiceRequestsForConsents(
           service,
           subService,
-          categoriesIds,
+          serviceCategories,
           allCategories,
           selectedSR,
           selectedRecalls
@@ -1444,7 +1473,6 @@ export const cloneAppointment =
         id: currentAppointment.id,
         appointmentTimingType,
         customerId: currentAppointment.driver?.id ?? null,
-        comment: currentAppointment.comment,
         driver,
         vehicle,
         gmt: dayjs().utcOffset(),
@@ -1462,9 +1490,10 @@ export const cloneAppointment =
         slot,
         serviceRequests,
         date,
-        serviceCategoryIds: currentAppointment.serviceCategories
-          ? currentAppointment.serviceCategories.map(el => el.id)
-          : [],
+        serviceCategories: currentAppointment.serviceCategories.map(el => ({
+          id: el.id,
+          comment: el.comment,
+        })),
         maintenancePackageOption,
         searchTerm: '',
         serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
@@ -1607,7 +1636,7 @@ export const loadActiveTransportations =
   (serviceCenterId: number): AppThunk =>
   (dispatch, getState) => {
     const {
-      categoriesIds,
+      serviceCategories,
       selectedVehicle,
       selectedPackage,
       packagePricingType,
@@ -1628,15 +1657,6 @@ export const loadActiveTransportations =
           ? { optionType: packageEMenuType }
           : null;
 
-      const serviceCategoryIds = allCategories
-        .filter(category => {
-          return (
-            category.type === EServiceCategoryType.GeneralCategory &&
-            categoriesIds.includes(category.id)
-          );
-        })
-        .map(item => item.id);
-
       const data: TTransportationData = {
         serviceCenterId,
         serviceRequests: collectServiceRequestIds(
@@ -1647,7 +1667,7 @@ export const loadActiveTransportations =
           undefined,
           selectedSRComments
         ),
-        serviceCategoryIds,
+        serviceCategories: getCategories(allCategories, serviceCategories),
         recalls: mapRecallsForRequest(selectedRecalls),
         maintenancePackageOption,
         vehicle: {

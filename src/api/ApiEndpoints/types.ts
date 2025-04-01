@@ -77,10 +77,7 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   DemandManagement: Record<'GetSettings' | 'UpdateSettings', TApiEndpoint>;
-  Employees: Record<
-    'Create' | 'Update' | 'GetAll' | 'GetAssignmentSettings' | 'UpdateAssignmentSettings',
-    TApiEndpoint
-  >;
+  Employees: Record<'GetAssignmentSettings' | 'UpdateAssignmentSettings', TApiEndpoint>;
   EmployeeCapacity: Record<
     | 'GetAdvisorsCapacity'
     | 'UpdateAdvisorsCapacity'
@@ -180,7 +177,9 @@ export interface IApiEndpoints {
     | 'GetShort'
     | 'GetMakes'
     | 'GetSummary'
-    | 'SetOrderIndex',
+    | 'SetOrderIndex'
+    | 'Deactivate'
+    | 'Activate',
     TApiEndpoint
   >;
   PricingSettings: Record<
@@ -347,7 +346,8 @@ export interface IApiEndpoints {
     | 'MakesModels'
     | 'GetEngineType'
     | 'RemoveEngineType'
-    | 'CreateEngineType',
+    | 'CreateEngineType'
+    | 'UpdateModel',
     TApiEndpoint
   >;
   ValueService: Record<'GetSeriesModels' | 'GetValueServiceOffers', TApiEndpoint>;

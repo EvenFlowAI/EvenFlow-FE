@@ -160,17 +160,28 @@ export const updatePackage =
       .finally(() => dispatch(setPackageLoading(false)));
   };
 
-export const loadMakes =
-  (serviceCenterId: number): AppThunk =>
-  async dispatch => {
-    Api.call(Api.endpoints.Vehicles.Makes, { params: { serviceCenterId } })
-      .then(result => {
-        if (result) dispatch(getMakes(result.data));
+  export const loadMakes =
+    (serviceCenterId: number): AppThunk =>
+    async (dispatch, getState) => {
+      const state = getState().vehicleDetails;
+      Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+        data: {
+          serviceCenterId,
+          orderBy: state.order.orderBy,
+          isAscending: state.order.isAscending,
+          pageIndex: 0,
+          pageSize: 0,
+        },
       })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+        .then(response => {
+          if (response?.data) {
+            dispatch(getMakes(response.data.result));
+          }
+        })
+        .catch(err => {
+          console.log('load makes error', err);
+        });
+    };
 
 export const createPackage =
   (

@@ -12,6 +12,7 @@ export interface ICategory {
   orderIndex?: number;
   description?: string;
   isCommentRequired?: boolean;
+  comment: string;
 }
 
 export type TCategoryServiceRequest = {

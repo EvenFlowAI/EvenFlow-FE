@@ -29,7 +29,7 @@ import { useConfirm } from '../../../../../../hooks/useConfirm/useConfirm';
 const ShoppingCart = () => {
   const {
     selectedPackage,
-    categoriesIds,
+    serviceCategories,
     valueService,
     sideBarSteps,
     serviceTypeOption,
@@ -60,7 +60,7 @@ const ShoppingCart = () => {
       selectedSR,
       selectedPackage,
       allCategories,
-      categoriesIds,
+      serviceCategories,
       valueService,
       packageEMenuType,
       scProfile?.maintenancePackageOptionTypes
@@ -70,7 +70,7 @@ const ShoppingCart = () => {
     selectedSR,
     selectedPackage,
     allCategories,
-    categoriesIds,
+    serviceCategories,
     valueService,
     selectedRecalls,
     packageEMenuType,

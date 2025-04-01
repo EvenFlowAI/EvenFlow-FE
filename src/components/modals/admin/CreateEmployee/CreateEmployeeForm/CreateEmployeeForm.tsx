@@ -212,7 +212,6 @@ export const CreateEmployeeForm: React.FC<
           id="email"
           name="email"
           fullWidth
-          disabled={isEdit}
           placeholder="Type Email"
           value={form.email}
           error={Boolean(form.email?.length) && !checkEmail(form.email) && formIsChecked}
@@ -221,27 +220,20 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        {isEdit ||
-        (form.role && currentUser && superRoles.includes(currentUser?.role)
-          ? !widerUserRoles.includes(form.role)
-          : form.role && !userRoles.includes(form.role)) ? (
-          <TextField disabled value={form.role} fullWidth label="Role" />
-        ) : (
-          <Autocomplete
-            options={
-              currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles
-            }
-            isOptionEqualToValue={(option, value) => option === value}
-            onChange={handleRoleChange}
-            loading={shortLoading}
-            value={form.role ?? null}
-            renderInput={autocompleteRender({
-              label: 'Role',
-              fullWidth: true,
-              placeholder: 'Select Role',
-            })}
-          />
-        )}
+        <Autocomplete
+          options={
+            currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles
+          }
+          isOptionEqualToValue={(option, value) => option === value}
+          onChange={handleRoleChange}
+          loading={shortLoading}
+          value={form.role ?? null}
+          renderInput={autocompleteRender({
+            label: 'Role',
+            fullWidth: true,
+            placeholder: 'Select Role',
+          })}
+        />
       </Grid>
       <Grid item xs={12}>
         <Divider color="#DADADA" style={{ margin: 0 }} />

@@ -22,7 +22,7 @@ type TProps = {
 export const ServiceNeedsManage: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TProps>>
 > = ({ onSelect, setLastSelectedCategory, page, setPage }) => {
-  const { categoriesIds, selectedPackage, valueService, packageEMenuType, selectedRecalls } =
+  const { serviceCategories, selectedPackage, valueService, packageEMenuType, selectedRecalls } =
     useSelector((state: RootState) => state.appointmentFrame);
   const { selectedSR, serviceRequests, scProfile } = useSelector(
     (state: RootState) => state.appointment
@@ -39,7 +39,7 @@ export const ServiceNeedsManage: React.FC<
       selectedSR,
       selectedPackage,
       allCategories,
-      categoriesIds,
+      serviceCategories,
       valueService,
       packageEMenuType,
       scProfile?.maintenancePackageOptionTypes
@@ -49,7 +49,7 @@ export const ServiceNeedsManage: React.FC<
     selectedSR,
     selectedPackage,
     allCategories,
-    categoriesIds,
+    serviceCategories,
     valueService,
     selectedRecalls,
     packageEMenuType,

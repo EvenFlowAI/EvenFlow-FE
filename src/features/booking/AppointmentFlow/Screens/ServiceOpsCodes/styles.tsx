@@ -37,9 +37,9 @@ export const CodeWrapper = styled('div')<CodeWrapperProps>(({ opened }) => ({
   justifyContent: 'space-between',
   alignItems: 'center',
   overflow: 'hidden',
-  maxHeight: opened ? '500px' : '200px',
   height: 'auto',
-  transition: 'max-height 0.3s ease-in-out',
+  // borderRadius: '4px',
+  // backgroundColor: opened ? '#F7F8FB' : '#fff',
 }));
 
 export const PriceCommentWrapper = styled('div')({
@@ -47,12 +47,13 @@ export const PriceCommentWrapper = styled('div')({
   flexDirection: 'row',
 });
 
-export const TextFieldWrapper = styled('div')<CodeWrapperProps>(({ opened }) => ({
-  display: opened ? 'block' : 'none',
-  width: '98%',
-  marginBottom: '8px',
-  marginLeft: '16px',
-  marginRight: '16px',
+export const TextFieldWrapper = styled('div')<{ opened: boolean }>(({ opened }) => ({
+  width: '100%',
+  overflow: 'hidden',
+  maxHeight: opened ? '200px' : '0',
+  opacity: opened ? 1 : 0,
+  transition: 'all 0.3s ease-in-out',
+  padding: opened ? '0 12px 12px' : '0 12px',
 }));
 
 export const Price = styled('span')({
@@ -93,10 +94,10 @@ export const Code = styled(FormControlLabel)<FormControlLabelProps>({
     },
   },
   '@media (max-width: 768px)': {
-    width: '250px',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    // width: '250px',
+    // whiteSpace: 'nowrap',
+    // overflow: 'hidden',
+    // textOverflow: 'ellipsis',
     '& span': {
       fontSize: 12, // Adjust font size for smaller screens
       '&:last-child': {

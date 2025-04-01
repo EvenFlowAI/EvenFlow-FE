@@ -1,8 +1,9 @@
 import { IMake, IMakeExtended } from '../../../api/types';
-
-export interface ICreateMake extends IMake {
+import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
+import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
+export interface ICreateMake {
   serviceCenterId: number;
-  podId?: number;
+  globalIds: number[];
 }
 
 export interface IMileage {
@@ -29,9 +30,15 @@ export type TCreateEngineType = {
 
 export type TState = {
   makes: IMake[];
+  allMakes: IMake[];
   currentMake: IMake | null;
   isLoading: boolean;
   mileage: IMileage[];
   makesModels: IMakeExtended[];
   engineTypes: IEngineType[];
+  paging: IPagingResponse;
+  order: IOrder<IMake>;
+  pageData: IPageRequest;
+  globalMakes: IGlobalMake[];
+  globalModels: IGlobalModel[];
 };

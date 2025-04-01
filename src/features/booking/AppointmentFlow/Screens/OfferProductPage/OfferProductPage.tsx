@@ -6,7 +6,7 @@ import { IServiceCategory } from '../../../../../api/types';
 import { useTranslation } from 'react-i18next';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import {
-  selectCategoriesIds,
+  selectCategories,
   setAdditionalServicesChosen,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import ReactGA from 'react-ga4';
@@ -29,7 +29,7 @@ type TOfferProductPageProps = {
 const OfferProductPage: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TOfferProductPageProps>>
 > = ({ category, onChangeVehicle, handleSetScreen, lastCategory }) => {
-  const { selectedVehicle, categoriesIds, subService, service, trackerData } = useSelector(
+  const { selectedVehicle, serviceCategories, subService, service, trackerData } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);
@@ -39,11 +39,11 @@ const OfferProductPage: React.FC<
   const handleCategoriesAndGA = () => {
     dispatch(setAdditionalServicesChosen(false));
     if (service && service.id === lastCategory?.id) {
-      if (categoriesIds && service.type !== EServiceCategoryType.LinkToPage2) {
-        const categories = categoriesIds?.includes(service.id)
-          ? categoriesIds
-          : [...categoriesIds, service.id];
-        dispatch(selectCategoriesIds(categories));
+      if (serviceCategories && service.type !== EServiceCategoryType.LinkToPage2) {
+        const categories = serviceCategories.map(item => item.id).includes(service.id)
+          ? serviceCategories
+          : [...serviceCategories, service];
+        dispatch(selectCategories(categories));
       }
       const requestsString = service.serviceRequests
         .map(item => `${item.code} (${item.description})`)
@@ -58,11 +58,11 @@ const OfferProductPage: React.FC<
       );
     } else {
       if (subService && subService?.id === lastCategory?.id) {
-        if (categoriesIds && subService.type !== EServiceCategoryType.LinkToPage2) {
-          const categories = categoriesIds?.includes(subService.id)
-            ? categoriesIds
-            : [...categoriesIds, subService.id];
-          dispatch(selectCategoriesIds(categories));
+        if (serviceCategories && subService.type !== EServiceCategoryType.LinkToPage2) {
+          const categories = serviceCategories.map(item => item.id).includes(subService.id)
+            ? serviceCategories
+            : [...serviceCategories, subService];
+          dispatch(selectCategories(categories));
         }
         const requestsString = subService.serviceRequests
           .map(item => `${item.code} (${item.description})`)

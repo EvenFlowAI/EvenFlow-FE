@@ -19,18 +19,20 @@ const DetailedFeesManage: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
 > = ({ open, onClose }) => {
   const { scProfile } = useSelector((state: RootState) => state.appointment);
-  const { appointmentRequestsPrices } = useSelector((state: RootState) => state.appointmentFrame);
+  const { appointmentRequestsPrices = [] } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { classes: dialogClasses } = useDialogStyles();
   const { classes } = useStyles();
   const { t } = useTranslation();
 
   const noDefinedPriceExists = useMemo(() => {
-    return appointmentRequestsPrices.find(
+    return (appointmentRequestsPrices ?? []).find(
       item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed
     );
   }, [appointmentRequestsPrices]);
 
-  const price = appointmentRequestsPrices.reduce(
+  const price = (appointmentRequestsPrices ?? []).reduce(
     (prev, current) => prev + (current.priceValue ?? 0),
     0
   );

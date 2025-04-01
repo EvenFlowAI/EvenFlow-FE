@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { TextField } from '../../../../../components/styled/EndUserInputs';
@@ -8,7 +8,7 @@ import {
   checkCarIsValid,
   clearAppointmentSteps,
   setAdditionalServicesChosen,
-  setFrameDescription,
+  setCommentsForCategories,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { TArgCallback, TScreen } from '../../../../../types/types';
 import {
@@ -21,6 +21,7 @@ import AddCommentPrompt from './AddCommentPrompt/AddCommentPrompt';
 import { checkPodChanged } from '../../../../../store/reducers/appointments/actions';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
+import { mergeArrayById } from '../../../../../utils/utils';
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -36,7 +37,7 @@ export const AppointmentComment: React.FC<TProps> = ({
   handleSetScreen,
   onAddServices,
 }) => {
-  const { subService, service, description } = useSelector(
+  const { subService, service, serviceCategories } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);
@@ -46,22 +47,25 @@ export const AppointmentComment: React.FC<TProps> = ({
   const { t } = useTranslation();
   const showError = useException();
   const ref = useRef<HTMLDivElement | null>(null);
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     if (ref) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [ref]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    dispatch(setFrameDescription(value));
+    setComment(value);
   };
 
   const handleYes = () => {
+    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
     onClose();
     dispatch(setAdditionalServicesChosen(true));
     onAddServices();
   };
 
   const handleNo = () => {
+    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
     onClose();
     handleSetScreen('maintenanceDetails');
   };
@@ -74,14 +78,16 @@ export const AppointmentComment: React.FC<TProps> = ({
     const isCommentRequired = subService
       ? subService?.isCommentRequired
       : service?.isCommentRequired;
-    if (!description?.trim().length) {
+    if (!comment?.trim().length) {
       if (isCommentRequired) {
         return onErrorOpen();
       } else {
-        dispatch(setFrameDescription(''));
+        dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+        // dispatch(setCommentsForCategories({ id: subService?.id ?? 0, comment: '' }));
       }
     }
     if (isManagingFlow) {
+      dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
       dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid));
     } else {
       onOpen();
@@ -99,13 +105,19 @@ export const AppointmentComment: React.FC<TProps> = ({
     handleSetScreen('serviceNeeds');
   };
 
+  useEffect(() => {
+    const mergedArray = mergeArrayById(serviceCategories);
+
+    setComment(mergedArray.find(el => el.id === service?.id)?.comment ?? '');
+  }, [serviceCategories, service?.id]);
+
   return (
     <StepWrapper>
       <TextField
         fullWidth
         multiline
         onChange={handleChange}
-        value={description}
+        value={comment}
         rows={4}
         variant="standard"
         InputProps={{ disableUnderline: true }}

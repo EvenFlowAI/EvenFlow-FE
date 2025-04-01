@@ -1,7 +1,7 @@
 import { IAdvisorShort } from '../../../../store/reducers/users/types';
 import { IAssignedServiceRequestShort } from '../../../../store/reducers/serviceRequests/types';
 import { TGeographicZone } from '../../../../store/reducers/screenSettings/types';
-import { IMakeExtended, IModel } from '../../../../api/types';
+import { IModel, IMake } from '../../../../api/types';
 import { TTransportationShort } from '../../../../store/reducers/transportationNeeds/types';
 import { EUserType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { IPodShort } from '../../../../store/reducers/pods/types';
@@ -14,7 +14,7 @@ export type TForm = {
   advisors: IAdvisorShort[];
   serviceRequests: IAssignedServiceRequestShort[];
   isWaitlistEnabled: boolean;
-  makes: IMakeExtended[];
+  makes: IMake[];
   models: IModel[];
   modelYearFrom: number | null;
   modelYearTo: number | null;
