@@ -65,9 +65,9 @@ import {
   collectServiceRequestsForConsents,
   decodeSCID,
   getCategories,
-  getCategoriesForAppointment,
   getVehicleData,
   getYearOptions,
+  mapModelsWithParentNames,
   mapRecallsForRequest,
 } from '../../../utils/utils';
 import {
@@ -507,7 +507,7 @@ export const loadMakes =
     })
       .then(({ data }) => {
         if (data) {
-          dispatch(getMakes(data.result));
+          dispatch(getMakes(mapModelsWithParentNames(data.result)));
         }
       })
       .catch(err => {

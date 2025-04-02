@@ -7,6 +7,7 @@ import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
 import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
 import { enqueueSnackbar } from 'notistack';
+import { mapModelsWithParentNames } from '../../../utils/utils';
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
 export const setAllMakes = createAction<IMake[]>('VehicleDetails/SetAllMakes');
@@ -97,7 +98,7 @@ export const loadMakesGlobally =
     })
       .then(response => {
         if (response?.data) {
-          dispatch(getMakes(response.data.result));
+          dispatch(getMakes(mapModelsWithParentNames(response.data.result)));
           dispatch(setPaging(response.data.paging));
         }
       })
