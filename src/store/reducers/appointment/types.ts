@@ -45,6 +45,7 @@ export interface ISR {
   code: string;
   description?: string;
   price?: number;
+  comment?: string;
 }
 
 export interface IVehicleData {
