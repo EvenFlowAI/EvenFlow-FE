@@ -10,6 +10,7 @@ import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
 import { CharactersWrapper } from './styles';
+import { setCommentsForCategories } from '../../../../store/reducers/appointmentFrameReducer/actions';
 const MAX_COUNT_WORDS_CAPACITY = 250;
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
@@ -21,10 +22,9 @@ const CommentModal: React.FC<
 
   useEffect(() => {
     setText(currentComment);
-  }, [currentComment]);
+  }, [currentComment, open]);
 
   const onCancel = () => {
-    setText(currentComment);
     onClose();
   };
 
@@ -40,6 +40,7 @@ const CommentModal: React.FC<
       showError(t('Appointment Comment must not be empty'));
     } else if (selectedRequest?.code === 'specialCategory') {
       onClose();
+      dispatch(setCommentsForCategories({ id: selectedRequest?.id ?? 0, comment: text }));
     } else if (selectedRequest?.id) {
       dispatch(selectSRComment({ comments: { [selectedRequest.id]: text } }));
       onClose();

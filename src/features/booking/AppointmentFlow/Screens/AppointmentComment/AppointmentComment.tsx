@@ -58,14 +58,24 @@ export const AppointmentComment: React.FC<TProps> = ({
   };
 
   const handleYes = () => {
-    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+    dispatch(
+      setCommentsForCategories({
+        id: (subService?.id ? subService?.id : service?.id) ?? 0,
+        comment,
+      })
+    );
     onClose();
     dispatch(setAdditionalServicesChosen(true));
     onAddServices();
   };
 
   const handleNo = () => {
-    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+    dispatch(
+      setCommentsForCategories({
+        id: (subService?.id ? subService?.id : service?.id) ?? 0,
+        comment,
+      })
+    );
     onClose();
     handleSetScreen('maintenanceDetails');
   };
@@ -82,12 +92,21 @@ export const AppointmentComment: React.FC<TProps> = ({
       if (isCommentRequired) {
         return onErrorOpen();
       } else {
-        dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
-        // dispatch(setCommentsForCategories({ id: subService?.id ?? 0, comment: '' }));
+        dispatch(
+          setCommentsForCategories({
+            id: (subService?.id ? subService?.id : service?.id) ?? 0,
+            comment,
+          })
+        );
       }
     }
     if (isManagingFlow) {
-      dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+      dispatch(
+        setCommentsForCategories({
+          id: (subService?.id ? subService?.id : service?.id) ?? 0,
+          comment,
+        })
+      );
       dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid));
     } else {
       onOpen();
