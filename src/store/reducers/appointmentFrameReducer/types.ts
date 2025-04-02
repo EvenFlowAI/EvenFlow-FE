@@ -248,10 +248,7 @@ export interface ICreateAppointmentRequest {
   offerId: number | null;
   reminderTypes: EReminderType[];
   serviceCenterId: number;
-  advisor: {
-    id: string | null;
-    isAnySelected: boolean;
-  };
+  advisorId: string | null;
   transportationOptionId: number | null;
   slot: string;
   serviceRequests: IServiceRequestIds[];

@@ -1122,10 +1122,7 @@ export const createOrUpdateAppointment =
       offerId: appointment.appointment?.offer?.id ?? null,
       reminderTypes: appointmentFrame.reminders,
       serviceCenterId: id,
-      advisor: {
-        id: appointmentFrame.advisor?.id ?? null,
-        isAnySelected: !Boolean(appointmentFrame.advisor),
-      },
+      advisorId: appointmentFrame.advisor?.id ?? null,
       transportationOptionId,
       slot,
       serviceRequests,
@@ -1479,13 +1476,10 @@ export const cloneAppointment =
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: currentAppointment.reminderTypes,
         serviceCenterId: id,
-        advisor: {
-          id:
-            currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected && advisor
-              ? advisor?.id
-              : null,
-          isAnySelected: advisor ? Boolean(currentAppointment.advisor?.isAnySelected) : true,
-        },
+        advisorId:
+          currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected && advisor
+            ? advisor?.id
+            : null,
         transportationOptionId,
         slot,
         serviceRequests,
