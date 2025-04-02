@@ -50,7 +50,7 @@ export interface ICheckPodRequest {
   zipCode: string | null;
   vehicle: IVehicle;
   serviceTypeOptionId: number | null;
-  advisor: TAppointmentAdvisor;
+  advisor: string | null;
   transportationOptionId: number | null;
 }
 
