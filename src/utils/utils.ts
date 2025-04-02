@@ -828,9 +828,7 @@ export const mapModelsWithParentNames = (makes: IMake[]) => {
       models: make.models.map((model: IModel) => ({
         ...model,
         name:
-          model.name === 'OTHER' && make.name === 'OTHER'
-            ? model.name
-            : `${model.name} ${make.name}`,
+          !make.isReadOnly && model.name === 'OTHER' ? `${model.name} ${make.name}` : model.name,
       })),
     };
   });
