@@ -4,3 +4,4 @@ export const CharactersWrapper = styled('div')(() => ({
   display: 'flex',
   justifyContent: 'flex-end',
 }));
+
