@@ -243,8 +243,9 @@ const YourLocation: React.FC<
   const restorePrevData = () => {
     if (appointmentByKey?.address)
       dispatch(setAddress(appointmentByKey?.address?.fullAddress ?? null));
-    if (appointmentByKey?.address?.zipCode)
+    if (appointmentByKey?.address?.zipCode) {
       dispatch(setZipCode(appointmentByKey?.address?.zipCode ?? ''));
+    }
   };
 
   const onBackFromAncillaryModal = () => {
