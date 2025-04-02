@@ -166,7 +166,7 @@ export const checkPodChanged =
       serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
       zipCode: appointmentFrame.zipCode ?? null,
       address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
-      advisor: appointmentFrame.advisor?.id ?? null,
+      advisorId: appointmentFrame.advisor?.id ?? null,
       vehicle,
       transportationOptionId:
         (appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter ||
@@ -183,6 +183,7 @@ export const checkPodChanged =
         urlParams: { key: appointmentFrame?.appointmentByKey?.hashKey },
       })
         .then(result => {
+          console.log('check pod changed result', result);
           if (result?.data) {
             if (wasWarningShowed) {
               const nextScreen: TScreen =
