@@ -8,7 +8,6 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'flex-start',
     paddingTop: 14,
     gap: 24,
-    minHeight: 598,
   },
   buttonsWrapper: {
     display: 'flex',
