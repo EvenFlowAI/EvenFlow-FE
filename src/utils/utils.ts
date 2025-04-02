@@ -15,6 +15,8 @@ import {
   IAppointmentByKey,
   IAppointmentByQuery,
   ILoadedVehicle,
+  IMake,
+  IModel,
   IOfferForCategory,
   IPackageOptions,
   IServiceCategory,
@@ -819,4 +821,18 @@ export const mergeArrayById = (array: any[]): IMergedCategory[] => {
   return Object.values(groupedById);
 };
 
+export const mapModelsWithParentNames = (makes: IMake[]) => {
+  return makes.map((make: IMake) => {
+    return {
+      ...make,
+      models: make.models.map((model: IModel) => ({
+        ...model,
+        name:
+          model.name === 'OTHER' && make.name === 'OTHER'
+            ? model.name
+            : `${model.name} ${make.name}`,
+      })),
+    };
+  });
+};
 
