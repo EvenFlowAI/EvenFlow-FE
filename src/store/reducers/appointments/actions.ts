@@ -183,7 +183,6 @@ export const checkPodChanged =
         urlParams: { key: appointmentFrame?.appointmentByKey?.hashKey },
       })
         .then(result => {
-          console.log('check pod changed result', result);
           if (result?.data) {
             if (wasWarningShowed) {
               const nextScreen: TScreen =
