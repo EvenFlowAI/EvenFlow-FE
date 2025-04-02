@@ -69,22 +69,10 @@ const CommentModal: React.FC<
       </DialogContent>
 
       <BfButtonsWrapper>
-        <LoadingButton
-          style={{ width: '144px' }}
-          loading={false}
-          onClick={onCancel}
-          variant="outlined"
-          color="primary"
-        >
+        <LoadingButton loading={false} onClick={onCancel} variant="outlined" color="primary">
           {t('Cancel')}
         </LoadingButton>
-        <LoadingButton
-          style={{ width: '144px' }}
-          loading={false}
-          onClick={onSave}
-          color="primary"
-          variant="contained"
-        >
+        <LoadingButton loading={false} onClick={onSave} color="primary" variant="contained">
           {t('Save')}
         </LoadingButton>
       </BfButtonsWrapper>
