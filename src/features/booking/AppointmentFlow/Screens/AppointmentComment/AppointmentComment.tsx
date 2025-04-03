@@ -22,6 +22,18 @@ import { checkPodChanged } from '../../../../../store/reducers/appointments/acti
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { mergeArrayById } from '../../../../../utils/utils';
+import styled from '@mui/material/styles/styled';
+
+const MAX_COUNT_WORDS_CAPACITY = 250;
+
+export const RemainingCharactersWrapper = styled('div')(() => ({
+  color: '#202021',
+  fontFamily: 'Proxima Nova',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  alignSelf: 'flex-start',
+}));
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -54,7 +66,9 @@ export const AppointmentComment: React.FC<TProps> = ({
   }, [ref]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    setComment(value);
+    if (value.length <= MAX_COUNT_WORDS_CAPACITY) {
+      setComment(value);
+    }
   };
 
   const handleYes = () => {
@@ -146,6 +160,9 @@ export const AppointmentComment: React.FC<TProps> = ({
         required={scProfile?.isCommentRequired}
         placeholder={t('Enter comments')}
       />
+      <RemainingCharactersWrapper>
+        {comment?.length ?? 0} / {MAX_COUNT_WORDS_CAPACITY} characters
+      </RemainingCharactersWrapper>
       <ActionButtons onBack={handleBack} onNext={onSubmit} nextLabel={t('Next')} />
       <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen} />
       <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose} />

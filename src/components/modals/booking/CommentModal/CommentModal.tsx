@@ -29,7 +29,7 @@ const CommentModal: React.FC<
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    if (value.length > 250) {
+    if (value.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
     setText(value);
