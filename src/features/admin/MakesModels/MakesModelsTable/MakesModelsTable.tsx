@@ -36,9 +36,10 @@ const RowData: TableRowDataType<IMake>[] = [
     val: (el: IMake) => {
       return el.models
         .map(model => {
-          if (el.models.length === 1 && model.name === 'OTHER') {
+          if (el.name === 'OTHER' && model.name === 'OTHER') {
             return model.name;
           }
+
           if (model.name === 'OTHER') {
             return `OTHER ${el.name}`;
           }
