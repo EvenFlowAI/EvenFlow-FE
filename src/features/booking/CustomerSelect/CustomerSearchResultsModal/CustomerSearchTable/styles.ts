@@ -15,18 +15,19 @@ export const useStyles = makeStyles()(() => ({
     borderTop: '1px solid #DADADA',
     borderLeft: '1px solid #DADADA',
     borderCollapse: 'unset',
-    flex: 1,
+    width: '100%',
   },
   tableContainer: {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    overflow: 'hidden',
+    position: 'relative',
+    marginBottom: 52, // Space for pagination
   },
   tableContent: {
     flex: 1,
-    overflowY: 'auto',
-    overflowX: 'auto',
+    overflow: 'auto',
+    maxHeight: 'calc(100vh - 352px)', // Adjusted to account for pagination
   },
   emptyWrapper: {
     height: 500,

@@ -478,7 +478,7 @@ const CustomerSearchTable: React.FC<
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow className={classes.greyRow}>
+              {/* <TableRow className={classes.greyRow}>
                 <TableCell
                   key="firstColumn"
                   ref={firstColumn}
@@ -510,7 +510,7 @@ const CustomerSearchTable: React.FC<
                 {orderedColumns.slice(0, orderedColumns.length - 2).map((_, index) => (
                   <TableCell className={classes.bodyCell} style={{ borderBottom: 0 }} key={index} />
                 ))}
-              </TableRow>
+              </TableRow> */}
               {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) => (
                 <TableRow key={customer.vin + index}>
                   <TableCell key="icon" className={classes.stickyLeftCell} width={150}>
