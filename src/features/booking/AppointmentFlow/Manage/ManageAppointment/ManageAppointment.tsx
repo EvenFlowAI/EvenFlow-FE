@@ -13,7 +13,6 @@ import {
   loadAppointmentRequestsPrices,
   loadConsultantsForUpdating,
   searchForCustomerConsents,
-  setAnyAdvisorSelected,
   setAppointmentSaving,
   setCurrentFrameScreen,
   setReminders,
@@ -166,7 +165,6 @@ export const ManageAppointment: React.FC<
         )
       );
       await dispatch(updateConsultant(appointmentByKey.advisor));
-      await dispatch(setAnyAdvisorSelected(appointmentByKey?.advisor?.isAnySelected ?? true));
     }
   };
 

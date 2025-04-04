@@ -135,7 +135,6 @@ export type TState = {
   subService: IServiceCategory | null;
   selectedPackage: IPackageOptions | null;
   advisor: IServiceConsultant | null;
-  isAnyAdvisorSelected: boolean;
   selectedTiming: EAppointmentTimingType | null;
   selectedTime: TParsableDate;
   selectedVehicle: ILoadedVehicle | null;

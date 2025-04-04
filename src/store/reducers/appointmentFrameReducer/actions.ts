@@ -112,7 +112,6 @@ export const setPackagePricingType = createAction<EPackagePricingType | null>(
   'fAppointment/setPackagePricingType'
 );
 export const setAdvisor = createAction<IServiceConsultant | null>('fAppointment/setAdvisor');
-export const setAnyAdvisorSelected = createAction<boolean>('fAppointment/setAnyAdvisorSelected');
 export const setTiming = createAction<EAppointmentTimingType | null>('fAppointment/setTiming');
 export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
@@ -1003,7 +1002,6 @@ const findSelectedConsultant =
 export const updateConsultant =
   (advisor: TAppointmentAdvisor | null | undefined): AppThunk =>
   dispatch => {
-    dispatch(setAnyAdvisorSelected(advisor?.isAnySelected ?? true));
     if (advisor?.id) {
       if (!advisor?.isAnySelected) {
         dispatch(findSelectedConsultant(advisor.id));
@@ -1606,7 +1604,6 @@ export const handleAppointmentUpdate =
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
             dispatch(updateConsultant(data.advisor));
-            dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true));
             dispatch(checkCarIsValid());
             setLoadingCar(false);
             dispatch(setAppointmentSaving(false));
