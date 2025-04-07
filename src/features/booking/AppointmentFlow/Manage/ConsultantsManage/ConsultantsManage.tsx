@@ -2,7 +2,6 @@ import React from 'react';
 import { TCallback, TScreen } from '../../../../../types/types';
 import {
   setAdvisor,
-  setAnyAdvisorSelected,
   setCurrentFrameScreen,
   setServiceTypeOption,
   setTransportation,
@@ -29,7 +28,6 @@ const ConsultantsManage: React.FC<{ onNext: TCallback }> = ({ onNext }) => {
 
   const handleSelectConsultant = (consultant: IServiceConsultant | null) => {
     dispatch(setAdvisor(consultant));
-    dispatch(setAnyAdvisorSelected(!Boolean(consultant)));
   };
 
   const restoreOriginalTransportation = () => {

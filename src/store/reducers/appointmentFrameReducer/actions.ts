@@ -16,7 +16,6 @@ import {
   IServiceCategory,
   IServiceConsultant,
   ITransportation,
-  TAppointmentAdvisor,
 } from '../../../api/types';
 import {
   EAppointmentTimingType,
@@ -112,7 +111,6 @@ export const setPackagePricingType = createAction<EPackagePricingType | null>(
   'fAppointment/setPackagePricingType'
 );
 export const setAdvisor = createAction<IServiceConsultant | null>('fAppointment/setAdvisor');
-export const setAnyAdvisorSelected = createAction<boolean>('fAppointment/setAnyAdvisorSelected');
 export const setTiming = createAction<EAppointmentTimingType | null>('fAppointment/setTiming');
 export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
@@ -1001,13 +999,10 @@ const findSelectedConsultant =
   };
 
 export const updateConsultant =
-  (advisor: TAppointmentAdvisor | null | undefined): AppThunk =>
+  (advisorId: string | null | undefined): AppThunk =>
   dispatch => {
-    dispatch(setAnyAdvisorSelected(advisor?.isAnySelected ?? true));
-    if (advisor?.id) {
-      if (!advisor?.isAnySelected) {
-        dispatch(findSelectedConsultant(advisor.id));
-      }
+    if (advisorId) {
+      dispatch(findSelectedConsultant(advisorId));
     }
   };
 
@@ -1464,7 +1459,7 @@ export const cloneAppointment =
 
       const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
 
-      const advisor = consultants.find(el => el.id === currentAppointment?.advisor?.id);
+      const advisor = consultants.find(el => el.id === currentAppointment?.advisorId)?.id;
 
       const data: ICreateAppointmentRequest = {
         id: currentAppointment.id,
@@ -1476,10 +1471,7 @@ export const cloneAppointment =
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: currentAppointment.reminderTypes,
         serviceCenterId: id,
-        advisorId:
-          currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected && advisor
-            ? advisor?.id
-            : null,
+        advisorId: advisor ? advisor : null,
         transportationOptionId,
         slot,
         serviceRequests,
@@ -1605,8 +1597,7 @@ export const handleAppointmentUpdate =
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
-            dispatch(updateConsultant(data.advisor));
-            dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true));
+            dispatch(updateConsultant(data.advisorId));
             dispatch(checkCarIsValid());
             setLoadingCar(false);
             dispatch(setAppointmentSaving(false));

@@ -17,12 +17,12 @@ const SelectedConsultant = () => {
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
-    if (currentAppointment?.advisor?.id && !currentAppointment?.advisor?.isAnySelected) {
-      setAdvisor(() => consultants.find(el => el.id === currentAppointment?.advisor?.id) ?? null);
+    if (currentAppointment?.advisorId) {
+      setAdvisor(() => consultants.find(el => el.id === currentAppointment?.advisorId) ?? null);
     }
   }, [consultants, currentAppointment]);
 
-  return currentAppointment?.advisor && consultants.length ? (
+  return currentAppointment?.advisorId && consultants.length ? (
     <div className={classes.selectWrapper}>
       <div className={classes.selectWrapper}>
         {t('Advisor')}: {isSm ? <br /> : null}

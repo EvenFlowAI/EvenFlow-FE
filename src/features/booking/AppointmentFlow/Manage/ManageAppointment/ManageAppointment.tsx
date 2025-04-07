@@ -13,7 +13,6 @@ import {
   loadAppointmentRequestsPrices,
   loadConsultantsForUpdating,
   searchForCustomerConsents,
-  setAnyAdvisorSelected,
   setAppointmentSaving,
   setCurrentFrameScreen,
   setReminders,
@@ -165,13 +164,12 @@ export const ManageAppointment: React.FC<
           appointmentByKey
         )
       );
-      await dispatch(updateConsultant(appointmentByKey.advisor));
-      await dispatch(setAnyAdvisorSelected(appointmentByKey?.advisor?.isAnySelected ?? true));
+      await dispatch(updateConsultant(appointmentByKey.advisorId));
     }
   };
 
   useEffect(() => {
-    const advisorShouldBeSelected = appointmentByKey?.advisor?.id && !advisor;
+    const advisorShouldBeSelected = appointmentByKey?.advisorId && !advisor;
     if (advisorShouldBeSelected && selectedVehicle?.mileage) handleConsultants().then();
   }, [selectedVehicle, appointmentByKey, advisor]);
 

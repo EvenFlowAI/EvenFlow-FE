@@ -23,7 +23,7 @@ export const FormElements: <T>(
               label={element.label}
               name={element.name as string}
               id={element.name as string}
-              value={props.data[element.name]}
+              value={props.data[element.name] as any}
               placeholder={element.label}
               error={props.errors.includes(element.name as string)}
               onChange={props.onChange}
