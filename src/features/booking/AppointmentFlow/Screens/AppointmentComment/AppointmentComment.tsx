@@ -22,6 +22,18 @@ import { checkPodChanged } from '../../../../../store/reducers/appointments/acti
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { mergeArrayById } from '../../../../../utils/utils';
+import styled from '@mui/material/styles/styled';
+
+const MAX_COUNT_WORDS_CAPACITY = 250;
+
+export const RemainingCharactersWrapper = styled('div')(() => ({
+  color: '#202021',
+  fontFamily: 'Proxima Nova',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  alignSelf: 'flex-start',
+}));
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -54,18 +66,30 @@ export const AppointmentComment: React.FC<TProps> = ({
   }, [ref]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    setComment(value);
+    if (value.length <= MAX_COUNT_WORDS_CAPACITY) {
+      setComment(value);
+    }
   };
 
   const handleYes = () => {
-    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+    dispatch(
+      setCommentsForCategories({
+        id: (subService?.id ? subService?.id : service?.id) ?? 0,
+        comment,
+      })
+    );
     onClose();
     dispatch(setAdditionalServicesChosen(true));
     onAddServices();
   };
 
   const handleNo = () => {
-    dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+    dispatch(
+      setCommentsForCategories({
+        id: (subService?.id ? subService?.id : service?.id) ?? 0,
+        comment,
+      })
+    );
     onClose();
     handleSetScreen('maintenanceDetails');
   };
@@ -82,12 +106,21 @@ export const AppointmentComment: React.FC<TProps> = ({
       if (isCommentRequired) {
         return onErrorOpen();
       } else {
-        dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
-        // dispatch(setCommentsForCategories({ id: subService?.id ?? 0, comment: '' }));
+        dispatch(
+          setCommentsForCategories({
+            id: (subService?.id ? subService?.id : service?.id) ?? 0,
+            comment,
+          })
+        );
       }
     }
     if (isManagingFlow) {
-      dispatch(setCommentsForCategories({ id: service?.id ?? 0, comment }));
+      dispatch(
+        setCommentsForCategories({
+          id: (subService?.id ? subService?.id : service?.id) ?? 0,
+          comment,
+        })
+      );
       dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid));
     } else {
       onOpen();
@@ -108,8 +141,11 @@ export const AppointmentComment: React.FC<TProps> = ({
   useEffect(() => {
     const mergedArray = mergeArrayById(serviceCategories);
 
-    setComment(mergedArray.find(el => el.id === service?.id)?.comment ?? '');
-  }, [serviceCategories, service?.id]);
+    setComment(
+      mergedArray.find(el => el.id === (subService?.id ? subService?.id : service?.id))?.comment ??
+        ''
+    );
+  }, [serviceCategories, service?.id, subService?.id]);
 
   return (
     <StepWrapper>
@@ -124,6 +160,9 @@ export const AppointmentComment: React.FC<TProps> = ({
         required={scProfile?.isCommentRequired}
         placeholder={t('Enter comments')}
       />
+      <RemainingCharactersWrapper>
+        {comment?.length ?? 0} / {MAX_COUNT_WORDS_CAPACITY} characters
+      </RemainingCharactersWrapper>
       <ActionButtons onBack={handleBack} onNext={onSubmit} nextLabel={t('Next')} />
       <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen} />
       <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose} />

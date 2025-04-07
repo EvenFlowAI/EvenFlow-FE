@@ -1,10 +1,7 @@
 import React from 'react';
 import { MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import {
-  setAdvisor,
-  setAnyAdvisorSelected,
-} from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
+import { setAdvisor } from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import clsx from 'clsx';
@@ -30,7 +27,6 @@ const SelectedConsultant: React.FC<TProps> = ({ disabled, isVisible, loading }) 
   const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
     const consultant = consultants.find(item => item.id === e.target.value);
     dispatch(setAdvisor(consultant ? consultant : null));
-    dispatch(setAnyAdvisorSelected(!Boolean(e.target.value)));
   };
 
   return isVisible ? (

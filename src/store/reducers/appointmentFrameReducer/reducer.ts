@@ -19,7 +19,6 @@ import {
   setAdvisor,
   setAncillaryPriceByZip,
   setAncillaryPriceLoading,
-  setAnyAdvisorSelected,
   setAppointmentByKey,
   setAppointmentId,
   setAppointmentNotes,
@@ -87,7 +86,6 @@ const initialState: TState = {
   subService: null,
   selectedPackage: null,
   advisor: null,
-  isAnyAdvisorSelected: false,
   selectedTime: null,
   selectedTiming: null,
   selectedVehicle: null,
@@ -188,9 +186,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     })
     .addCase(setAdvisor, (state, { payload }) => {
       return { ...state, advisor: payload };
-    })
-    .addCase(setAnyAdvisorSelected, (state, { payload }) => {
-      return { ...state, isAnyAdvisorSelected: payload };
     })
     .addCase(setTiming, (state, { payload }) => {
       return {

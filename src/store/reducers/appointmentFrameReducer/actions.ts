@@ -16,7 +16,6 @@ import {
   IServiceCategory,
   IServiceConsultant,
   ITransportation,
-  TAppointmentAdvisor,
 } from '../../../api/types';
 import {
   EAppointmentTimingType,
@@ -65,9 +64,9 @@ import {
   collectServiceRequestsForConsents,
   decodeSCID,
   getCategories,
-  getCategoriesForAppointment,
   getVehicleData,
   getYearOptions,
+  mapModelsWithParentNames,
   mapRecallsForRequest,
 } from '../../../utils/utils';
 import {
@@ -112,7 +111,6 @@ export const setPackagePricingType = createAction<EPackagePricingType | null>(
   'fAppointment/setPackagePricingType'
 );
 export const setAdvisor = createAction<IServiceConsultant | null>('fAppointment/setAdvisor');
-export const setAnyAdvisorSelected = createAction<boolean>('fAppointment/setAnyAdvisorSelected');
 export const setTiming = createAction<EAppointmentTimingType | null>('fAppointment/setTiming');
 export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
@@ -507,7 +505,7 @@ export const loadMakes =
     })
       .then(({ data }) => {
         if (data) {
-          dispatch(getMakes(data.result));
+          dispatch(getMakes(mapModelsWithParentNames(data.result)));
         }
       })
       .catch(err => {
@@ -1001,13 +999,10 @@ const findSelectedConsultant =
   };
 
 export const updateConsultant =
-  (advisor: TAppointmentAdvisor | null | undefined): AppThunk =>
+  (advisorId: string | null | undefined): AppThunk =>
   dispatch => {
-    dispatch(setAnyAdvisorSelected(advisor?.isAnySelected ?? true));
-    if (advisor?.id) {
-      if (!advisor?.isAnySelected) {
-        dispatch(findSelectedConsultant(advisor.id));
-      }
+    if (advisorId) {
+      dispatch(findSelectedConsultant(advisorId));
     }
   };
 
@@ -1122,10 +1117,7 @@ export const createOrUpdateAppointment =
       offerId: appointment.appointment?.offer?.id ?? null,
       reminderTypes: appointmentFrame.reminders,
       serviceCenterId: id,
-      advisor: {
-        id: appointmentFrame.advisor?.id ?? null,
-        isAnySelected: !Boolean(appointmentFrame.advisor),
-      },
+      advisorId: appointmentFrame.advisor?.id ?? null,
       transportationOptionId,
       slot,
       serviceRequests,
@@ -1467,7 +1459,7 @@ export const cloneAppointment =
 
       const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
 
-      const advisor = consultants.find(el => el.id === currentAppointment?.advisor?.id);
+      const advisor = consultants.find(el => el.id === currentAppointment?.advisorId)?.id;
 
       const data: ICreateAppointmentRequest = {
         id: currentAppointment.id,
@@ -1479,13 +1471,7 @@ export const cloneAppointment =
         offerId: appointment.appointment?.offer?.id ?? null,
         reminderTypes: currentAppointment.reminderTypes,
         serviceCenterId: id,
-        advisor: {
-          id:
-            currentAppointment.advisor?.id && !currentAppointment.advisor?.isAnySelected && advisor
-              ? advisor?.id
-              : null,
-          isAnySelected: advisor ? Boolean(currentAppointment.advisor?.isAnySelected) : true,
-        },
+        advisorId: advisor ? advisor : null,
         transportationOptionId,
         slot,
         serviceRequests,
@@ -1611,8 +1597,7 @@ export const handleAppointmentUpdate =
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
-            dispatch(updateConsultant(data.advisor));
-            dispatch(setAnyAdvisorSelected(data.advisor?.isAnySelected ?? true));
+            dispatch(updateConsultant(data.advisorId));
             dispatch(checkCarIsValid());
             setLoadingCar(false);
             dispatch(setAppointmentSaving(false));

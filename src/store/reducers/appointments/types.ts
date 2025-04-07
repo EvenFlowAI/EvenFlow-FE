@@ -6,7 +6,6 @@ import {
   IListAppointment,
   IPackageAppointments,
   IVehicle,
-  TAppointmentAdvisor,
   IServiceRequestIds,
 } from '../../../api/types';
 import { EPackagePricingType } from '../appointmentFrameReducer/types';
@@ -50,7 +49,7 @@ export interface ICheckPodRequest {
   zipCode: string | null;
   vehicle: IVehicle;
   serviceTypeOptionId: number | null;
-  advisor: TAppointmentAdvisor;
+  advisorId: string | null;
   transportationOptionId: number | null;
 }
 

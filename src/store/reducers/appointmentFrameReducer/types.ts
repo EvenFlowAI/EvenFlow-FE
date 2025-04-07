@@ -135,7 +135,6 @@ export type TState = {
   subService: IServiceCategory | null;
   selectedPackage: IPackageOptions | null;
   advisor: IServiceConsultant | null;
-  isAnyAdvisorSelected: boolean;
   selectedTiming: EAppointmentTimingType | null;
   selectedTime: TParsableDate;
   selectedVehicle: ILoadedVehicle | null;
@@ -248,10 +247,7 @@ export interface ICreateAppointmentRequest {
   offerId: number | null;
   reminderTypes: EReminderType[];
   serviceCenterId: number;
-  advisor: {
-    id: string | null;
-    isAnySelected: boolean;
-  };
+  advisorId: string | null;
   transportationOptionId: number | null;
   slot: string;
   serviceRequests: IServiceRequestIds[];

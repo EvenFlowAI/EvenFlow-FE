@@ -15,6 +15,8 @@ import {
   IAppointmentByKey,
   IAppointmentByQuery,
   ILoadedVehicle,
+  IMake,
+  IModel,
   IOfferForCategory,
   IPackageOptions,
   IServiceCategory,
@@ -162,6 +164,7 @@ const ServiceCenters = {
   DealertrackCovinaKia: 460,
   TekionWalserBuickGMCofBloomington: 461,
   Subaru: 559,
+  DealerTrackHonda: 658,
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
@@ -287,6 +290,9 @@ export const getTrackersForParentSite = (id: string): GATrackers[] => {
     if (decodedId === ServiceCenters.Subaru) {
       return [{ measurementId: 'G-N620TERHNN' }];
     }
+    if (decodedId === ServiceCenters.DealerTrackHonda) {
+      return [{ measurementId: 'G-26B8EPXVKX' }];
+    }
     return [{ measurementId: 'G-DWX0X9CBTT' }];
   } else {
     return [{ measurementId: 'G-LS5EEY1SRM' }];
@@ -334,6 +340,7 @@ export const getTrackerById = (id: string): string => {
     if (decodedId === ServiceCenters.DealertrackCovinaKia) return 'G-PQGQVFH16R';
     if (decodedId === ServiceCenters.TekionWalserBuickGMCofBloomington) return 'G-BMDLQ8PS7X';
     if (decodedId === ServiceCenters.Subaru) return 'G-N620TERHNN';
+    if (decodedId === ServiceCenters.DealerTrackHonda) return 'G-26B8EPXVKX';
     return 'G-DWX0X9CBTT';
   } else {
     return 'G-LS5EEY1SRM';
@@ -819,4 +826,16 @@ export const mergeArrayById = (array: any[]): IMergedCategory[] => {
   return Object.values(groupedById);
 };
 
+export const mapModelsWithParentNames = (makes: IMake[]) => {
+  return makes.map((make: IMake) => {
+    return {
+      ...make,
+      models: make.models.map((model: IModel) => ({
+        ...model,
+        name:
+          !make.isReadOnly && model.name === 'OTHER' ? `${model.name} ${make.name}` : model.name,
+      })),
+    };
+  });
+};
 

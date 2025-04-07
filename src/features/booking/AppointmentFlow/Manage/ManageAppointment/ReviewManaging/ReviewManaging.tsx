@@ -14,14 +14,9 @@ import { Wrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 
 export const ReviewManaging = () => {
-  const {
-    advisor,
-    isAnyAdvisorSelected,
-    transportation,
-    serviceTypeOption,
-    consultants,
-    appointmentByKey,
-  } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
+  const { advisor, transportation, serviceTypeOption, consultants, appointmentByKey } = useSelector(
+    ({ appointmentFrame }: RootState) => appointmentFrame
+  );
   const { currentConfig, isTransportationAvailable, isAdvisorAvailable } = useSelector(
     ({ bookingFlowConfig }: RootState) => bookingFlowConfig
   );
@@ -29,15 +24,15 @@ export const ReviewManaging = () => {
   const { t } = useTranslation();
   const transportationSelected = serviceTypeOption?.transportationOption || transportation;
   const dispatch = useDispatch();
-
   useEffect(() => {
-    if (!advisor && !appointmentByKey?.advisor?.isAnySelected && !isAnyAdvisorSelected) {
-      const selectedPreviouslyConsultant = appointmentByKey?.advisor?.id
-        ? consultants.find(item => item.id === appointmentByKey?.advisor?.id)
+    if (!advisor && appointmentByKey?.advisorId) {
+      const selectedPreviouslyConsultant = appointmentByKey?.advisorId
+        ? consultants.find(item => item.id === appointmentByKey?.advisorId)
         : undefined;
+      console.log('selectedPreviouslyConsultant', selectedPreviouslyConsultant);
       selectedPreviouslyConsultant && dispatch(setAdvisor(selectedPreviouslyConsultant));
     }
-  }, [appointmentByKey, consultants, advisor, isAnyAdvisorSelected]);
+  }, [appointmentByKey, consultants, advisor]);
 
   const handleChangeAdvisor = () => {
     dispatch(setServiceOptionChanged(false));
