@@ -164,12 +164,12 @@ export const ManageAppointment: React.FC<
           appointmentByKey
         )
       );
-      await dispatch(updateConsultant(appointmentByKey.advisor));
+      await dispatch(updateConsultant(appointmentByKey.advisorId));
     }
   };
 
   useEffect(() => {
-    const advisorShouldBeSelected = appointmentByKey?.advisor?.id && !advisor;
+    const advisorShouldBeSelected = appointmentByKey?.advisorId && !advisor;
     if (advisorShouldBeSelected && selectedVehicle?.mileage) handleConsultants().then();
   }, [selectedVehicle, appointmentByKey, advisor]);
 

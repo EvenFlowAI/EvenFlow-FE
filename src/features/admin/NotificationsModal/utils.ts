@@ -32,7 +32,7 @@ export function checkTransportationAreTheSame(
           remoteItem.id === localItem.id &&
           remoteItem.usersList?.length === localItem.usersList?.length &&
           remoteItem.usersList?.every(
-            remoteDataUsersList => localItem.usersList?.indexOf(remoteDataUsersList) !== -1
+            (remoteDataUsersList: any) => localItem.usersList?.indexOf(remoteDataUsersList) !== -1
           )
         );
       });

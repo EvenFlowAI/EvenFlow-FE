@@ -6,7 +6,6 @@ import {
   IListAppointment,
   IPackageAppointments,
   IVehicle,
-  TAppointmentAdvisor,
   IServiceRequestIds,
 } from '../../../api/types';
 import { EPackagePricingType } from '../appointmentFrameReducer/types';

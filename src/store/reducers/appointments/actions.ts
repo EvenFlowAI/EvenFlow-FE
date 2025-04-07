@@ -271,12 +271,12 @@ const loadSlotsForCloning =
     const { currentAppointment } = getState().appointments;
 
     const utcOffset = dayjs().utcOffset();
-    const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
+    const advisorId = consultants.find(item => item.id === currentAppointment?.advisorId)?.id;
     if (currentAppointment) {
       const data: IAppointmentSlotsRequest = {
         appointmentTimingType: EAppointmentTimingType.FirstAvailable,
         serviceCenterId,
-        advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
+        advisorId: advisorId ? advisorId : null,
         fromDate: dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
         maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
         serviceRequests: currentAppointment.serviceRequests

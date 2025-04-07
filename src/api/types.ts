@@ -208,10 +208,10 @@ export interface IAddressData {
   originalFullAddress?: string;
 }
 
-export type TAppointmentAdvisor = {
-  isAnySelected: boolean;
-  id?: string | null;
-};
+// export type TAppointmentAdvisor = {
+//   isAnySelected: boolean;
+//   id?: string | null;
+// };
 
 export interface IAppointmentByKey extends IBaseAppointment {
   serviceCategories: ICategory[];
@@ -219,7 +219,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
   serviceTypeOption?: IFirstScreenOption;
   recalls?: string[];
   recallDescriptions?: string[];
-  advisor?: TAppointmentAdvisor | null;
+  advisorId: string | null;
   detailedPriceList?: IServiceRequestPrice[];
   serviceValetTime?: TServiceValetSlot;
   notes?: string;
