@@ -165,6 +165,7 @@ const ServiceCenters = {
   TekionWalserBuickGMCofBloomington: 461,
   Subaru: 559,
   DealerTrackHonda: 658,
+  WalserMitsubishi: 691,
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
@@ -293,6 +294,9 @@ export const getTrackersForParentSite = (id: string): GATrackers[] => {
     if (decodedId === ServiceCenters.DealerTrackHonda) {
       return [{ measurementId: 'G-26B8EPXVKX' }];
     }
+    if (decodedId === ServiceCenters.WalserMitsubishi) {
+      return [{ measurementId: 'G-EDDHXKDHQW' }];
+    }
     return [{ measurementId: 'G-DWX0X9CBTT' }];
   } else {
     return [{ measurementId: 'G-LS5EEY1SRM' }];
@@ -341,6 +345,7 @@ export const getTrackerById = (id: string): string => {
     if (decodedId === ServiceCenters.TekionWalserBuickGMCofBloomington) return 'G-BMDLQ8PS7X';
     if (decodedId === ServiceCenters.Subaru) return 'G-N620TERHNN';
     if (decodedId === ServiceCenters.DealerTrackHonda) return 'G-26B8EPXVKX';
+    if (decodedId === ServiceCenters.WalserMitsubishi) return 'G-EDDHXKDHQW';
     return 'G-DWX0X9CBTT';
   } else {
     return 'G-LS5EEY1SRM';
