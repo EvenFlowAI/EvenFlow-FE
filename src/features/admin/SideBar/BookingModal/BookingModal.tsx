@@ -29,14 +29,14 @@ export const BookingModal: React.FC<
   const [link, frame] = useMemo(() => {
     const encoded = encodeSCID(selectedSC?.id ?? 0);
     const url = window.location.origin + Routes.EndUser.Welcome + '/' + encoded + '?frame=1';
-    const tealiumScript = `<script type="text/javascript">
-(function(a,b,c,d){
-a='https://tags.tiqcdn.com/utag/rohrman/evenflow/dev/utag.js';
-b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
-a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
-})();
-</script>`;
-    const f: string = `<iframe id="evenflow-frame" class="booking-frame" src="${url}" width="100%" height="100%" style="border: none;" frameborder="0">${tealiumScript}</iframe>`;
+    //     const tealiumScript = `<script type="text/javascript">
+    // (function(a,b,c,d){
+    // a='https://tags.tiqcdn.com/utag/rohrman/evenflow/dev/utag.js';
+    // b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
+    // a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
+    // })();
+    // </script>`;
+    const f: string = `<iframe id="evenflow-frame" class="booking-frame" src="${url}" width="100%" height="100%" style="border: none;" frameborder="0"></iframe>`;
     return [url, f];
   }, [selectedSC]);
 
