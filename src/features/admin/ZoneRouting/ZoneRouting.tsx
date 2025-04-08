@@ -19,7 +19,7 @@ import { CheckBox } from '@mui/icons-material';
 
 const dayNames = Object.keys(EDay).filter(key => Number.isNaN(+key));
 
-const ZoneRouting = () => {
+const ZoneRouting = ({ serviceType }: { serviceType: string }) => {
   const { zones, isLoading: isZonesLoading } = useSelector(
     (state: RootState) => state.serviceValet
   );
@@ -29,8 +29,8 @@ const ZoneRouting = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (selectedSC) dispatch(loadZonesRouting(selectedSC.id));
-  }, [selectedSC]);
+    if (selectedSC) dispatch(loadZonesRouting(selectedSC.id, serviceType));
+  }, [selectedSC, dispatch, serviceType]);
 
   useEffect(() => {
     setInitialZones(
@@ -58,7 +58,7 @@ const ZoneRouting = () => {
           };
         }
         const data = zonesRouting.filter(item => item.dayOfWeek !== dayOfWeek).concat(updatedData);
-        dispatch(updateZonesRouting(selectedSC.id, data));
+        dispatch(updateZonesRouting(selectedSC.id, data, serviceType));
       }
     };
 
