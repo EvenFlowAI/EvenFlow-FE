@@ -20,14 +20,16 @@ import { CheckBox } from '@mui/icons-material';
 const dayNames = Object.keys(EDay).filter(key => Number.isNaN(+key));
 
 const ZoneRouting = ({ serviceType }: { serviceType: string }) => {
-  const { zones, isLoading: isZonesLoading } = useSelector(
+  const { zones: serviceValetZones, isLoading: isServiceValetZonesLoading } = useSelector(
     (state: RootState) => state.serviceValet
+  );
+  const { zones: mobileZones, isLoading: isMobileZonesLoading } = useSelector(
+    (state: RootState) => state.mobileService
   );
   const { zonesRouting, isLoading } = useSelector((state: RootState) => state.capacityServiceValet);
   const [initialZones, setInitialZones] = useState<IZonesRoutingByDay[]>([]);
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (selectedSC) dispatch(loadZonesRouting(selectedSC.id, serviceType));
   }, [selectedSC, dispatch, serviceType]);
@@ -70,7 +72,9 @@ const ZoneRouting = ({ serviceType }: { serviceType: string }) => {
         val: el => dayNames[el.dayOfWeek].toString(),
       },
     ];
-    const zonesData: TableRowDataType<IZonesRoutingByDay>[] = zones.map(item => {
+    const zonesData: TableRowDataType<IZonesRoutingByDay>[] = (
+      serviceType === 'PickUpDropOff' ? serviceValetZones : mobileZones
+    ).map(item => {
       return {
         header: item.name,
         width: 100,
@@ -88,7 +92,7 @@ const ZoneRouting = ({ serviceType }: { serviceType: string }) => {
     return [...data, ...zonesData];
   };
 
-  return isLoading || isZonesLoading ? (
+  return isLoading || isServiceValetZonesLoading || isMobileZonesLoading ? (
     <Loading />
   ) : (
     <div style={{ overflowX: 'auto' }}>
