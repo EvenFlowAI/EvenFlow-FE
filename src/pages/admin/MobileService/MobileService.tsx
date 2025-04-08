@@ -9,6 +9,7 @@ import AddEditGeographicZone from '../../../components/modals/admin/EditGeograph
 import AncillaryPrice from '../../../features/admin/PricingMobileService/AncillaryPrice/AncillaryPrice';
 import { servicesRoot } from '../../../utils/constants';
 import { useModal } from '../../../hooks/useModal/useModal';
+import ZoneRouting from '../../../features/admin/ZoneRouting/ZoneRouting';
 
 type TTab = {
   id: string;
@@ -27,7 +28,7 @@ const MobileService = () => {
       component: <GeographicZones onAddZoneOpen={onAddZoneOpen} />,
     },
     { id: '1', label: 'Geographic Zones Map', component: <GeographicZonesMap /> },
-    // {id: "2", label: "Zone Routing", component: null},
+    { id: '2', label: 'Zone Routing', component: <ZoneRouting serviceType="MobileService" /> },
     { id: '3', label: 'Convenience Fees', component: <AncillaryPrice /> },
   ];
 

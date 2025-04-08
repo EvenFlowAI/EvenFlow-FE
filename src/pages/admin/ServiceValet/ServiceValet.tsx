@@ -42,7 +42,11 @@ const ServiceValet = () => {
       label: 'Center Settings',
       component: <CenterSettings />,
     },
-    { route: ServiceValetRoutes.ZoneRouting, label: 'Zone Routing', component: <ZoneRouting /> },
+    {
+      route: ServiceValetRoutes.ZoneRouting,
+      label: 'Zone Routing',
+      component: <ZoneRouting serviceType="PickUpDropOff" />,
+    },
     {
       route: ServiceValetRoutes.TimeRangesCapacity,
       label: 'Time Ranges & Capacity',
