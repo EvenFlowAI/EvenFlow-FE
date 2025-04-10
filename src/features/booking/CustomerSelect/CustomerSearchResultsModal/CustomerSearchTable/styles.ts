@@ -11,7 +11,6 @@ export const useStyles = makeStyles()(() => ({
     flexDirection: 'column',
   },
   wrapper: {
-    marginTop: 16,
     borderTop: '1px solid #DADADA',
     borderLeft: '1px solid #DADADA',
     borderCollapse: 'unset',
