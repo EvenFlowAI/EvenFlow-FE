@@ -34,7 +34,7 @@ const style = {
   padding: 12,
   backgroundColor: '#F7F8FB',
   border: '1px solid #DADADA',
-  width: '238px',
+  width: '317px',
   height: '576px',
   gap: '8px',
   overflowX: 'auto',
@@ -273,7 +273,9 @@ export const AddMakeModelModal: React.FC<
                     );
                   }
 
-                  const maxVisibleTags = 2; // Adjust this number as needed
+                  // Dynamic max visible tags based on text length
+                  const maxVisibleTags = 1; // Default value
+
                   const visibleTags = value.slice(0, maxVisibleTags);
                   const remainingCount = value.length - maxVisibleTags;
 
