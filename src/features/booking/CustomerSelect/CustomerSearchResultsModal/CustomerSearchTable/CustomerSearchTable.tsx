@@ -85,7 +85,7 @@ const CustomerSearchTable: React.FC<
   const [editingElement, setEditingElement] = useState<ICustomerWithPhones | null>(null);
   const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
   const [formIsChecked, setFormChecked] = useState<boolean>(false);
-  console.log('offset', offset);
+
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.customers.pageData,
     changePageData
