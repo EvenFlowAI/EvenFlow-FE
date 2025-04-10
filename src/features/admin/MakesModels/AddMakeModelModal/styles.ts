@@ -28,6 +28,11 @@ export const useStyles = makeStyles()(() => ({
     '&:hover': {
       color: '#7898FF',
     },
+    '&.Mui-disabled': {
+      backgroundColor: '#FFFFFF',
+      border: '1px solid #DADADA',
+      color: '#DADADA',
+    },
   },
   addModel: {
     display: 'flex',

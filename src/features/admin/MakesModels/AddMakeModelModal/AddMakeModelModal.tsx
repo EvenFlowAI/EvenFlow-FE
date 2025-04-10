@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -26,6 +26,8 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { IData } from '../../../../components/DragAndDrop/types';
 import { setCurrentMake } from '../../../../store/reducers/vehicleDetails/actions';
 import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+
 type TAddMakeModalProps = DialogProps & {
   isEditing?: boolean;
 };
@@ -40,6 +42,13 @@ const style = {
   overflowX: 'auto',
   overflowY: 'auto',
 };
+
+interface IConfirmParams {
+  title: ReactNode;
+  content?: ReactNode;
+  isRemove?: boolean;
+  onConfirm: () => void;
+}
 
 export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
@@ -155,45 +164,120 @@ export const AddMakeModelModal: React.FC<
     setModelsToAdd([]);
   };
 
+  const removedMakes = allMakes
+    .filter(el => !el.isReadOnly)
+    .filter(make => !configuredMakes.some(configured => configured.id === make.globalId));
+
+  const removedModels = currentMake?.models
+    .filter(el => !el.isReadOnly)
+    .filter(model => !configuredModels.some(configured => configured.id === model.globalId));
   const onSaveMakes = () => {
     if (selectedSC?.id) {
       const globalIds = [
         ...configuredMakes.map(el => el.id),
         ...globalMakes.filter(el => el.isReadOnly).map(el => el.id),
       ];
-      askConfirm({
-        title: `Please confirm you want to change the make options`,
-        onConfirm: () =>
-          dispatch(
-            createMake(
-              {
-                serviceCenterId: selectedSC?.id,
-                globalIds,
-              },
-              onCloseModal
-            )
+      if (removedMakes?.length) {
+        askConfirm({
+          isRemove: true,
+          title:
+            removedMakes?.length === 1 ? (
+              `Please confirm you want to remove make ${removedMakes[0].name}!`
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {`Please confirm you want to remove ${removedMakes.length} selected makes!`}
+                <Tooltip
+                  title={removedMakes.map(make => make.name).join(', ')}
+                  arrow
+                  placement="top"
+                >
+                  <InfoOutlinedIcon style={{ fontSize: 16, color: '#5C5C5C', cursor: 'help' }} />
+                </Tooltip>
+              </div>
+            ),
+          content: (
+            <span>
+              After removing, please check configuration settings for Packages, Service Books,
+              Consent Messages, and Recalls which may have been impacted.
+            </span>
           ),
-      });
+          onConfirm: () =>
+            dispatch(
+              createMake(
+                {
+                  serviceCenterId: selectedSC?.id,
+                  globalIds,
+                },
+                onCloseModal
+              )
+            ),
+        });
+      } else {
+        dispatch(
+          createMake(
+            {
+              serviceCenterId: selectedSC?.id,
+              globalIds,
+            },
+            onCloseModal
+          )
+        );
+      }
     }
   };
 
   const onSaveModels = () => {
     if (selectedSC?.id && currentMake?.globalId) {
-      askConfirm({
-        title: `Please confirm you want to change the ${currentMake?.name} model options`,
-        onConfirm: () =>
-          dispatch(
-            updateModel(
-              selectedSC?.id,
-              currentMake?.globalId,
-              [
-                ...configuredModels.map(el => el.id),
-                ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
-              ],
-              onCloseModal
-            )
+      if (removedModels?.length) {
+        askConfirm({
+          isRemove: true,
+          title:
+            removedModels?.length === 1 ? (
+              `Please confirm you want to remove model ${removedModels[0].name}!`
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {`Please confirm you want to remove ${removedModels?.length} selected models!`}
+                <Tooltip
+                  title={removedModels?.map(model => model.name).join(', ')}
+                  arrow
+                  placement="top"
+                >
+                  <InfoOutlinedIcon style={{ fontSize: 16, color: '#5C5C5C', cursor: 'help' }} />
+                </Tooltip>
+              </div>
+            ),
+          content: (
+            <span>
+              After removing, please check configuration settings for Packages, Service Books,
+              Consent Messages, and Recalls which may have been impacted.
+            </span>
           ),
-      });
+          onConfirm: () =>
+            dispatch(
+              updateModel(
+                selectedSC?.id,
+                currentMake?.globalId,
+                [
+                  ...configuredModels.map(el => el.id),
+                  ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+                ],
+                onCloseModal
+              )
+            ),
+        });
+      } else {
+        dispatch(
+          updateModel(
+            selectedSC?.id,
+            currentMake?.globalId,
+            [
+              ...configuredModels.map(el => el.id),
+              ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+            ],
+            onCloseModal
+          )
+        );
+      }
     }
   };
 

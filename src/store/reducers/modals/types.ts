@@ -1,6 +1,8 @@
+import { ReactNode } from 'react';
+
 export type TConfirmModalPayload = {
-  content?: JSX.Element | string;
-  title: string;
+  content?: ReactNode;
+  title: ReactNode;
   isRemove?: boolean;
   icon?: JSX.Element;
   confirmContent?: string;
