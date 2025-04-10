@@ -105,7 +105,7 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         display: 'block',
-        width: 150,
+        width: 200,
         fontFamily: 'Proxima Nova',
         fontWeight: 700,
         fontSize: 16,

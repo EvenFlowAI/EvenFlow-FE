@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button, Divider, Checkbox } from '@mui/material';
+import { Button, Divider, Checkbox, Tooltip } from '@mui/material';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { Autocomplete, AutocompleteRenderOptionState } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -285,23 +285,46 @@ export const AddMakeModelModal: React.FC<
                         const props = getTagProps({ index });
                         return (
                           <div {...props}>
-                            <div className={autocompleteClasses.classes.tag}>
-                              {option.text}
-                              {props.onDelete && (
-                                <Delete
-                                  onClick={props.onDelete}
-                                  style={{ cursor: 'pointer', marginLeft: 4 }}
-                                />
-                              )}
-                            </div>
+                            <Tooltip title={option.text} arrow placement="top">
+                              <div className={autocompleteClasses.classes.tag}>
+                                <div
+                                  style={{
+                                    maxWidth: '120px',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                  }}
+                                >
+                                  {option.text}
+                                </div>
+                                {props.onDelete && (
+                                  <Delete
+                                    onClick={props.onDelete}
+                                    style={{ cursor: 'pointer', marginLeft: 4, flexShrink: 0 }}
+                                  />
+                                )}
+                              </div>
+                            </Tooltip>
                           </div>
                         );
                       })}
                       {remainingCount > 0 && (
                         <div {...getTagProps({ index: maxVisibleTags })}>
-                          <div className={autocompleteClasses.classes.tag}>
-                            +{remainingCount} others
-                          </div>
+                          <Tooltip
+                            title={
+                              <React.Fragment>
+                                {value.slice(maxVisibleTags).map(option => (
+                                  <div key={option.id}>{option.text}</div>
+                                ))}
+                              </React.Fragment>
+                            }
+                            arrow
+                            placement="top"
+                          >
+                            <div className={autocompleteClasses.classes.tag}>
+                              +{remainingCount} others
+                            </div>
+                          </Tooltip>
                         </div>
                       )}
                     </>
