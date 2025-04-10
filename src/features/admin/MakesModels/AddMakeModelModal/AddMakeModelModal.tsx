@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { IData } from '../../../../components/DragAndDrop/types';
 import { setCurrentMake } from '../../../../store/reducers/vehicleDetails/actions';
+import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 type TAddMakeModalProps = DialogProps & {
   isEditing?: boolean;
 };
@@ -159,33 +160,42 @@ export const AddMakeModelModal: React.FC<
         ...configuredMakes.map(el => el.id),
         ...globalMakes.filter(el => el.isReadOnly).map(el => el.id),
       ];
-      dispatch(
-        createMake(
-          {
-            serviceCenterId: selectedSC?.id,
-            globalIds,
-          },
-          onCloseModal
-        )
-      );
+      askConfirm({
+        title: `Please confirm you want to change the make options`,
+        onConfirm: () =>
+          dispatch(
+            createMake(
+              {
+                serviceCenterId: selectedSC?.id,
+                globalIds,
+              },
+              onCloseModal
+            )
+          ),
+      });
     }
   };
 
   const onSaveModels = () => {
     if (selectedSC?.id && currentMake?.globalId) {
-      dispatch(
-        updateModel(
-          selectedSC?.id,
-          currentMake?.globalId,
-          [
-            ...configuredModels.map(el => el.id),
-            ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
-          ],
-          onCloseModal
-        )
-      );
+      askConfirm({
+        title: `Please confirm you want to change the ${currentMake?.name} model options`,
+        onConfirm: () =>
+          dispatch(
+            updateModel(
+              selectedSC?.id,
+              currentMake?.globalId,
+              [
+                ...configuredModels.map(el => el.id),
+                ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+              ],
+              onCloseModal
+            )
+          ),
+      });
     }
   };
+
   useEffect(() => {
     if (currentMake) {
       dispatch(loadGlobalModels(currentMake.globalId));
