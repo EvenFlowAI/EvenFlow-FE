@@ -1160,6 +1160,8 @@ export const createOrUpdateAppointment =
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
     } catch (e) {
       onError(e);
+    } finally {
+      dispatch(setAppointmentSaving(false));
     }
   };
 
