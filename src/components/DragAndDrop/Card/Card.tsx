@@ -93,10 +93,7 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
   const opacity = isDragging ? 0 : 1;
   const boxShadow = isDragging ? '0px 2px 6px 0px #4D70E3' : 'none';
 
-  const isTextOverflowing = () => {
-    const element = textRef.current;
-    return element ? element.scrollWidth > element.clientWidth : false;
-  };
+
 
   drag(drop(ref));
 
@@ -109,6 +106,12 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
         whiteSpace: 'nowrap',
         display: 'block',
         width: 150,
+        fontFamily: 'Proxima Nova',
+        fontWeight: 700,
+        fontSize: 16,
+        lineHeight: '100%',
+        letterSpacing: '0.4px',
+        textTransform: 'capitalize',
       }}
     >
       {text}
