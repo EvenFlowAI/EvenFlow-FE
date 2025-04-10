@@ -66,6 +66,7 @@ export const AddMakeModelModal: React.FC<
   const [configuredModels, setConfiguredModels] = useState<IData[]>(filteredModels ?? []);
   const [makesToAdd, setMakesToAdd] = useState<IData[]>([]);
   const [modelsToAdd, setModelsToAdd] = useState<IData[]>([]);
+  const { askConfirm } = useConfirm();
   const { classes } = useStyles();
   const autocompleteClasses = useAutocompleteStyles();
   const filteredGlobalMakes = globalMakes
