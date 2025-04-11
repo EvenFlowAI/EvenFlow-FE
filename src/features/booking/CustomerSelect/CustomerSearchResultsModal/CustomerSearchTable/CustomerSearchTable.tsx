@@ -102,27 +102,18 @@ const CustomerSearchTable: React.FC<
   const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
     return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize];
   }, [pageData]);
-  const firstColumn = useRef();
-  const secondColumn = useRef();
 
   useEffect(() => {
-    let width1 = 0;
-    let width2 = 0;
-    if (firstColumn.current) {
-      // @ts-ignore
-      width1 = firstColumn.current?.offsetWidth;
-    }
-    if (secondColumn.current) {
-      // @ts-ignore
-      width2 = secondColumn.current?.offsetWidth;
-    }
-    if (width1 && width2) {
-      setOffset(() => ({
-        secondColumn: width1,
-        thirdColumn: width1 + width2,
-      }));
-    }
-  }, [firstColumn.current, secondColumn.current, selectedColumns]);
+    // Fixed widths for the first three columns
+    const iconColumnWidth = 124;
+    const lastNameWidth = 150;
+    const firstNameWidth = 150;
+
+    setOffset(() => ({
+      secondColumn: iconColumnWidth,
+      thirdColumn: iconColumnWidth + lastNameWidth,
+    }));
+  }, []); // Remove dependencies since we want fixed widths
 
   useEffect(() => {
     const orderedData = customers.map((el, i) => ({ ...el, sortOrder: i }));
@@ -430,6 +421,9 @@ const CustomerSearchTable: React.FC<
   // Use the ordered columns
   const orderedColumns = useMemo(() => getOrderedColumns(selectedColumns), [selectedColumns]);
 
+  const FIXED_COLUMNS_WIDTH = 424; // icons(124) + lastName(150) + firstName(150)
+  const MIN_TABLE_WIDTH = 1550;
+
   return isLoading ? (
     <div className={classes.emptyWrapper}>
       <Loading />
@@ -440,26 +434,50 @@ const CustomerSearchTable: React.FC<
         <div className={classes.tableContent}>
           <Table
             className={classes.wrapper}
-            style={{ width: selectedColumns.length > 10 ? selectedColumns.length * 150 : 1550 }}
+            style={{
+              tableLayout: 'fixed',
+              width: Math.max(
+                MIN_TABLE_WIDTH,
+                FIXED_COLUMNS_WIDTH +
+                  (selectedColumns.length > 2 ? (selectedColumns.length - 2) * 150 : 0)
+              ),
+            }}
           >
             <TableHead>
               <TableRow>
-                <TableCell className={classes.stickyTHeadCell} key="emptyCell" />
+                <TableCell className={classes.stickyTHeadCell} key="emptyCell" width={124} />
                 {orderedColumns.map(({ name, order }, index) => {
+                  const isLastName = name === 'Last Name';
+                  const isFirstName = name === 'First Name';
                   return (
                     <TableCell
                       key={name}
-                      className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
+                      className={
+                        isLastName || isFirstName ? classes.stickyTHeadCell : classes.headerCell
+                      }
                       style={{
-                        left:
-                          index === 0
-                            ? offset.secondColumn
-                            : index === 1
-                              ? offset.thirdColumn
-                              : 'unset',
-                        borderRight: index === 1 ? '1px solid #828282' : '1px solid #DADADA',
+                        left: isLastName
+                          ? offset.secondColumn
+                          : isFirstName
+                            ? offset.thirdColumn
+                            : 'unset',
+                        borderRight: isFirstName ? '1px solid #828282' : '1px solid #DADADA',
                       }}
-                      width={index > 0 && index < 7 ? 150 : 'auto'}
+                      width={
+                        // Fixed widths for sticky columns within the map
+                        isLastName || isFirstName
+                          ? 150
+                          : // Special widths for other columns
+                            name === 'Year'
+                            ? 60
+                            : name === 'Address'
+                              ? 225
+                              : // Default width for other common columns (adjust range if needed)
+                                index > 0 && index < 7
+                                ? 150
+                                : // Fallback width
+                                  'auto'
+                      }
                     >
                       {order ? (
                         <TableSortLabel
@@ -478,42 +496,9 @@ const CustomerSearchTable: React.FC<
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* <TableRow className={classes.greyRow}>
-                <TableCell
-                  key="firstColumn"
-                  ref={firstColumn}
-                  className={classes.stickyTHeadCell}
-                  style={{
-                    borderBottom: 0,
-                    borderRight: '1px solid #DADADA',
-                  }}
-                />
-                <TableCell
-                  key="secondColumn"
-                  ref={secondColumn}
-                  className={classes.stickyTHeadCell}
-                  style={{
-                    left: offset.secondColumn,
-                    borderBottom: 0,
-                    borderRight: '1px solid #DADADA',
-                  }}
-                />
-                <TableCell
-                  key="thirdColumn"
-                  className={classes.stickyTHeadCell}
-                  style={{
-                    left: offset.thirdColumn,
-                    borderBottom: 0,
-                    borderRight: '0.5px solid #828282',
-                  }}
-                />
-                {orderedColumns.slice(0, orderedColumns.length - 2).map((_, index) => (
-                  <TableCell className={classes.bodyCell} style={{ borderBottom: 0 }} key={index} />
-                ))}
-              </TableRow> */}
               {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) => (
                 <TableRow key={customer.vin + index}>
-                  <TableCell key="icon" className={classes.stickyLeftCell} width={150}>
+                  <TableCell key="icon" className={classes.stickyLeftCell} width={124}>
                     {isNewVehicleMode ? (
                       <IconsBlock>
                         <Button
@@ -553,6 +538,7 @@ const CustomerSearchTable: React.FC<
                             disabled={!Boolean(customer.vehicleId)}
                             onClick={() => onCreateNewForCar(customer)}
                             size="small"
+                            style={{ padding: '9px 3px' }}
                           >
                             <Create />
                           </IconButton>
@@ -563,6 +549,7 @@ const CustomerSearchTable: React.FC<
                               disabled={!Boolean(customer.appointmentHashKey)}
                               onClick={() => onUpdateAppForCar(customer)}
                               size="small"
+                              style={{ padding: '9px 3px' }}
                             >
                               {Boolean(customer.appointmentHashKey) ? <Update /> : <EditDisabled />}
                             </IconButton>
@@ -574,6 +561,7 @@ const CustomerSearchTable: React.FC<
                               disabled={!Boolean(customer.hasOrders)}
                               onClick={() => onViewRepairHistory(customer)}
                               size="small"
+                              style={{ padding: '9px 3px' }}
                             >
                               {Boolean(customer.hasOrders) ? <Search /> : <SearchDisabled />}
                             </IconButton>
@@ -585,6 +573,7 @@ const CustomerSearchTable: React.FC<
                               disabled={false}
                               onClick={() => onEditData(customer)}
                               size="small"
+                              style={{ padding: '9px 3px' }}
                             >
                               <Edit />
                             </IconButton>
@@ -596,6 +585,7 @@ const CustomerSearchTable: React.FC<
                               disabled={!Boolean(customer.appointmentHashKey)}
                               onClick={() => onCancelAppointment(customer)}
                               size="small"
+                              style={{ padding: '9px 3px' }}
                             >
                               {Boolean(customer.appointmentHashKey) ? (
                                 <CancelApp />
@@ -608,7 +598,6 @@ const CustomerSearchTable: React.FC<
                       </IconsBlock>
                     )}
                   </TableCell>
-                  {/* Display each column based on the new ordered list */}
                   {orderedColumns.find(el => el.name === 'Last Name') ? (
                     <TableCell
                       key="last"
@@ -664,7 +653,7 @@ const CustomerSearchTable: React.FC<
                     </TableCell>
                   ) : null}
                   {orderedColumns.find(el => el.name === 'Year') ? (
-                    <TableCell key="year" className={classes.bodyCell}>
+                    <TableCell key="year" className={classes.bodyCell} width={60}>
                       {customer.year ?? ''}
                     </TableCell>
                   ) : null}
@@ -752,7 +741,7 @@ const CustomerSearchTable: React.FC<
                     <TableCell
                       key="address"
                       className={classes.bodyCell}
-                      width={150}
+                      width={225}
                       style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
                     >
                       <AddressInputField

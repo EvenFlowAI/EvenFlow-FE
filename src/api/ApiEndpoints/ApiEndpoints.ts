@@ -628,7 +628,7 @@ export class Api {
         });
       }
     } catch (err) {
-      if (['QA', 'DEV'].includes(process.env.REACT_APP_ENV ?? '')) {
+      if (['DEV'].includes(process.env.REACT_APP_ENV ?? '')) {
         enqueueSnackbar(
           (err as any).response?.data?.message || 'An error occurred while processing your request',
           {
