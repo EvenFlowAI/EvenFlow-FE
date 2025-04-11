@@ -555,6 +555,22 @@ const CustomerSearchTable: React.FC<
                             </IconButton>
                           </div>
                         </HtmlTooltip>
+                        <HtmlTooltip title="Cancel appointment">
+                          <div>
+                            <IconButton
+                              disabled={!Boolean(customer.appointmentHashKey)}
+                              onClick={() => onCancelAppointment(customer)}
+                              size="small"
+                              style={{ padding: '9px 3px' }}
+                            >
+                              {Boolean(customer.appointmentHashKey) ? (
+                                <CancelApp />
+                              ) : (
+                                <CancelAppDisabled />
+                              )}
+                            </IconButton>
+                          </div>
+                        </HtmlTooltip>
                         <HtmlTooltip title="Repair history">
                           <div>
                             <IconButton
@@ -576,22 +592,6 @@ const CustomerSearchTable: React.FC<
                               style={{ padding: '9px 3px' }}
                             >
                               <Edit />
-                            </IconButton>
-                          </div>
-                        </HtmlTooltip>
-                        <HtmlTooltip title="Cancel appointment">
-                          <div>
-                            <IconButton
-                              disabled={!Boolean(customer.appointmentHashKey)}
-                              onClick={() => onCancelAppointment(customer)}
-                              size="small"
-                              style={{ padding: '9px 3px' }}
-                            >
-                              {Boolean(customer.appointmentHashKey) ? (
-                                <CancelApp />
-                              ) : (
-                                <CancelAppDisabled />
-                              )}
                             </IconButton>
                           </div>
                         </HtmlTooltip>
