@@ -293,7 +293,13 @@ const ServiceBooksTable = () => {
         onSave={onSave}
         onCancel={onCancel}
       />
-      <TableMode tableMode={tableMode} setTableMode={setTableMode} />
+      <TableMode
+        tableMode={tableMode}
+        setTableMode={(value: 'active' | 'inactive') => {
+          setTableMode(value);
+          setEdit(false);
+        }}
+      />
       <div style={{ paddingTop: 32 }}>
         <Table
           data={currentData}
