@@ -9,7 +9,7 @@ import { TCallback } from '../../../../types/types';
 
 type TProps = {
   isEdit: boolean;
-  setEdit: Dispatch<SetStateAction<boolean>>;
+  setEdit: (value: boolean) => void;
   onSave: TCallback;
   onCancel: TCallback;
   isActive: boolean;

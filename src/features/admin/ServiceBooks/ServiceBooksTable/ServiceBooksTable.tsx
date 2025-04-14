@@ -285,7 +285,10 @@ const ServiceBooksTable = () => {
     <>
       <ButtonsRow
         isActive={isActive}
-        setEdit={setEdit}
+        setEdit={(value: boolean) => {
+          setEdit(value);
+          setTableMode('active');
+        }}
         isEdit={isEdit}
         onSave={onSave}
         onCancel={onCancel}
