@@ -11,8 +11,7 @@ export const useStyles = makeStyles()(() => ({
     flexDirection: 'column',
   },
   wrapper: {
-    borderTop: '1px solid #DADADA',
-    borderLeft: '1px solid #DADADA',
+    border: '1px solid #DADADA',
     borderCollapse: 'unset',
     width: '100%',
   },
@@ -40,17 +39,18 @@ export const useStyles = makeStyles()(() => ({
     fontWeight: 'bold',
     color: '#202021',
     textTransform: 'uppercase',
-    padding: '12px 8px',
+    padding: '10px 6px',
     backgroundColor: '#F7F8FB',
     position: 'sticky',
     top: 0,
     zIndex: 1,
+    border: '1px solid #DADADA',
   },
   bodyCell: {
     fontSize: 12,
     color: '#202021',
-    padding: '12px 8px',
-    borderRight: '1px solid #DADADA',
+    padding: '10px 6px',
+    border: '1px solid #DADADA',
   },
   greyRow: {
     height: 20,
@@ -71,7 +71,6 @@ export const useStyles = makeStyles()(() => ({
     width: '100%',
     backgroundColor: '#fff',
     padding: '8px 0',
-    borderTop: '1px solid #DADADA',
     zIndex: 3,
   },
   stickyLeftCell: {
@@ -82,7 +81,7 @@ export const useStyles = makeStyles()(() => ({
     color: '#202021',
     padding: '12px 8px',
     backgroundColor: '#F7F8FB',
-    borderRight: '1px solid #DADADA',
+    border: '1px solid #DADADA',
   },
   stickyTHeadCell: {
     position: 'sticky',
@@ -94,7 +93,7 @@ export const useStyles = makeStyles()(() => ({
     textTransform: 'uppercase',
     backgroundColor: '#F7F8FB',
     padding: '12px 8px',
-    borderRight: '1px solid #DADADA',
+    border: '1px solid #DADADA',
     top: 0,
   },
 }));
