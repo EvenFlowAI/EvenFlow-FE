@@ -19,8 +19,11 @@ import ZonesOpsCodeModal from './ZonesOpsCodesModal/ZonesOpsCodeModal';
 import { TParsableDate } from '../../../types/types';
 import ClockTimePicker from '../../../components/pickers/ClockTimePicker/ClockTimePicker';
 import dayjs from 'dayjs';
-
-const CenterSettings = () => {
+import {
+  loadMobServiceZones,
+  loadMobileServiceCenterSettings,
+} from '../../../store/reducers/mobileService/actions';
+const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   const { centerSettings, isLoading } = useSelector(
     (state: RootState) => state.capacityServiceValet
   );
@@ -45,10 +48,17 @@ const CenterSettings = () => {
 
   useEffect(() => {
     if (selectedSC) {
-      dispatch(loadCenterSettings(selectedSC.id));
-      dispatch(loadServiceValetZones(selectedSC.id));
+      console.log('serviceType', serviceType);
+      if (serviceType === 'PickUpDropOff') {
+        dispatch(loadCenterSettings(selectedSC.id));
+        dispatch(loadServiceValetZones(selectedSC.id));
+      }
+      if (serviceType === 'MobileService') {
+        dispatch(loadMobileServiceCenterSettings(selectedSC.id));
+        dispatch(loadMobServiceZones(selectedSC.id));
+      }
     }
-  }, [selectedSC]);
+  }, [selectedSC, serviceType, dispatch]);
 
   const optContent: TOptContent = {
     [ECenterSettingType.ShowDropOffTime]: {
@@ -91,7 +101,6 @@ const CenterSettings = () => {
       dispatch(updateDmsAppointmentTime(selectedSC.id, data, onClose, showError));
     }
   };
-
   return (
     <Grid container spacing={3}>
       <>
@@ -111,7 +120,11 @@ const CenterSettings = () => {
             />
           );
         })}
-        <ZonesOpsCodesPlate onEdit={onServiceValetOpsCodeOpen} isLoading={isLoading} />
+        <ZonesOpsCodesPlate
+          serviceType={serviceType}
+          onEdit={onServiceValetOpsCodeOpen}
+          isLoading={isLoading}
+        />
       </>
       <div style={{ visibility: 'hidden' }}></div>
       <ClockTimePicker
@@ -124,7 +137,11 @@ const CenterSettings = () => {
         onClose={onClose}
       />
       <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose} />
-      <ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose} />
+      <ZonesOpsCodeModal
+        serviceType={serviceType}
+        open={isServiceValetOpsCodeOpen}
+        onClose={onServiceValetOpsCodeClose}
+      />
     </Grid>
   );
 };

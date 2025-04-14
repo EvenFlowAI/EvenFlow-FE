@@ -317,7 +317,8 @@ export interface IApiEndpoints {
     | 'ChangeServiceRequest'
     | 'ChangeDmsTimeStamp'
     | 'GetServiceValetSettings'
-    | 'UpdateZonesServiceRequests',
+    | 'UpdateZonesServiceRequests'
+    | 'GetMobileServiceSettings',
     TApiEndpoint
   >;
   TransportationOptions: Record<

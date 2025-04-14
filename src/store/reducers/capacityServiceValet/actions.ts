@@ -201,6 +201,7 @@ export const updateServiceValetServiceRequest =
 export const updateServiceValetZonesOpsCodes =
   (
     id: number,
+    serviceType: string,
     zoneServiceRequests: TZonesOpsCodesRequest[],
     onSuccess: TCallback,
     onError: TArgCallback<string>
@@ -209,11 +210,12 @@ export const updateServiceValetZonesOpsCodes =
     dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.UpdateZonesServiceRequests, {
       urlParams: { id },
-      data: { zoneServiceRequests },
+      data: { serviceType, zoneServiceRequests },
     })
       .then(result => {
-        if (result) dispatch(loadCenterSettings(id));
-        onSuccess();
+        if (result) {
+          onSuccess();
+        }
       })
       .catch(err => {
         onError(err);

@@ -1,7 +1,7 @@
 import { EServiceType } from '../appointmentFrameReducer/types';
 import { IDistancePriceSettings, IZonePriceSettings } from '../serviceValet/types';
 import { TGeographicZoneShort } from '../../../types/types';
-
+import { ICenterSettings } from '../capacityServiceValet/types';
 export type TZipCode = {
   code: string;
   id: number;
@@ -59,4 +59,5 @@ export type TState = {
   isPricingByZoneLoading: boolean;
   ancillaryPriceType: EAncillaryPriceType;
   mobileZonesShort: TGeographicZoneShort[];
+  centerSettings: ICenterSettings | null;
 };

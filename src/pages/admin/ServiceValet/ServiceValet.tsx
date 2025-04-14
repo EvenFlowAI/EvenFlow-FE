@@ -40,7 +40,7 @@ const ServiceValet = () => {
     {
       route: ServiceValetRoutes.CenterSettings,
       label: 'Center Settings',
-      component: <CenterSettings />,
+      component: <CenterSettings serviceType="PickUpDropOff" />,
     },
     {
       route: ServiceValetRoutes.ZoneRouting,
