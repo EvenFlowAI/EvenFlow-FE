@@ -48,7 +48,6 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
 
   useEffect(() => {
     if (selectedSC) {
-      console.log('serviceType', serviceType);
       if (serviceType === 'PickUpDropOff') {
         dispatch(loadCenterSettings(selectedSC.id));
         dispatch(loadServiceValetZones(selectedSC.id));
