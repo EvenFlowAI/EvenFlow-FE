@@ -545,9 +545,10 @@ export class Api {
       ChangeDmsTimeStamp: { route: 'service-valet/{id}/dms-time', method: 'put' },
       GetServiceValetSettings: { route: 'service-valet/{id}/settings', method: 'get' },
       UpdateZonesServiceRequests: {
-        route: 'service-valet/{id}/zone-service-requests',
+        route: 'geographical-zone-settings/service-requests/{id}',
         method: 'put',
       },
+      GetMobileServiceSettings: { route: 'mobile-service/{id}/settings', method: 'get' },
     },
     TransportationOptions: {
       Edit: { route: '/transportation-options', method: 'put' },
