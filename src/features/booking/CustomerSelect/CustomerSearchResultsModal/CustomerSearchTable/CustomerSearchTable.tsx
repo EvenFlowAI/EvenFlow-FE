@@ -461,7 +461,6 @@ const CustomerSearchTable: React.FC<
                           : isFirstName
                             ? offset.thirdColumn
                             : 'unset',
-                        borderRight: isFirstName ? '1px solid #828282' : '1px solid #DADADA',
                       }}
                       width={
                         // Fixed widths for sticky columns within the map
@@ -472,11 +471,13 @@ const CustomerSearchTable: React.FC<
                             ? 60
                             : name === 'Address'
                               ? 225
-                              : // Default width for other common columns (adjust range if needed)
-                                index > 0 && index < 7
-                                ? 150
-                                : // Fallback width
-                                  'auto'
+                              : name === 'State' || name === 'ZIP' // Add State and ZIP check
+                                ? 70
+                                : // Default width for other common columns (adjust range if needed)
+                                  index > 0 && index < 7
+                                  ? 150
+                                  : // Fallback width
+                                    'auto'
                       }
                     >
                       {order ? (
@@ -624,7 +625,6 @@ const CustomerSearchTable: React.FC<
                       width={150}
                       style={{
                         left: offset.thirdColumn,
-                        borderRight: '1px solid #828282',
                         padding: getIsEdit(customer) ? '12px 0px' : '12px 8px',
                       }}
                     >
@@ -773,6 +773,7 @@ const CustomerSearchTable: React.FC<
                     <TableCell
                       key="state"
                       className={classes.bodyCell}
+                      width={70}
                       style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
                     >
                       <AddressInputField
@@ -788,6 +789,7 @@ const CustomerSearchTable: React.FC<
                     <TableCell
                       key="zip"
                       className={classes.bodyCell}
+                      width={70}
                       style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
                     >
                       <AddressInputField
