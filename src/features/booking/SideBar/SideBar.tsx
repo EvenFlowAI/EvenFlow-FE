@@ -36,6 +36,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     serviceTypeOption,
     isAppointmentSaving,
   } = useSelector((state: RootState) => state.appointmentFrame);
+
   const {
     currentConfig,
     isAdvisorAvailable,
@@ -119,10 +120,10 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
       if (index > 0 && sideBarSteps.length < 2) return true;
       if (sideBarActualSteps) {
         const currentScreenNumberValue = sideBarActualSteps[screen];
-        const lastStep = sideBarSteps[sideBarSteps.length - 2];
-        const lastPassedScreenNumberValue =
-          lastStep === 'manageAppointment' ? 0 : sideBarActualSteps[lastStep];
-        return currentScreenNumberValue < index + 1 && lastPassedScreenNumberValue < index + 1;
+        // const lastStep = sideBarSteps[sideBarSteps.length - 2];
+        // const lastPassedScreenNumberValue =
+        //   lastStep === 'manageAppointment' ? 0 : sideBarActualSteps[lastStep];
+        return currentScreenNumberValue < index + 1;
       }
       return false;
     },

@@ -119,7 +119,7 @@ export interface ISearchedDateRange {
 
 export interface IAppointmentResponse {
   items: IAppointmentSlot[];
-  searchedDateRange: ISearchedDateRange;
+  // searchedDateRange: ISearchedDateRange;
   slotGapMinutes: number;
   advisorId?: string;
   waitlistSettings?: IWaitListData;
@@ -158,7 +158,8 @@ export interface IAppointmentSlotsRequest {
   serviceCenterId: number;
   maintenancePackageOptionId?: number | null;
   maintenancePackageOption: MPOptionShort | null;
-  fromDate?: ParsableDate;
+  startDate: ParsableDate;
+  endDate: ParsableDate;
   appointmentTimingType: EAppointmentTimingType;
   countOfDays?: number;
   offerType?: EOfferType;
@@ -210,7 +211,7 @@ export type TAppointmentState = {
   privacy: IPrivacy;
   appointment: IRemappedAppointmentSlot | null;
   serviceValetAppointment: IServiceValetAppointment | null;
-  searchedDateRange: ISearchedDateRange | null;
+  // searchedDateRange: ISearchedDateRange | null;
   appointmentSlots: IRemappedAppointmentSlot[];
   serviceValetSlots: IServiceValetAppointment[];
   appointmentFilters: IAppointmentFilters;
@@ -290,6 +291,5 @@ export interface IDropOffSettings {
 
 export interface ISVAppointmentResponse {
   items: IServiceValetAppointment[];
-  searchedDateRange: ISearchedDateRange;
   dropOffSettings: IDropOffSettings;
 }

@@ -66,9 +66,9 @@ const AskChangesCompleted = () => {
   };
 
   const onSuccessAppointmentUpdate = () => {
-    dispatch(setChangesCompletedOpen(false));
     dispatch(setCurrentFrameScreen('appointmentConfirmed'));
     redirectToAppointmentFrame();
+    dispatch(setChangesCompletedOpen(false));
   };
 
   const handleError = (e: any) => {

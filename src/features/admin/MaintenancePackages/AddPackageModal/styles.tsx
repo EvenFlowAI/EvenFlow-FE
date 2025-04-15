@@ -57,7 +57,7 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'start',
     alignContent: 'start',
-    justifyContent: 'stretch',
+    justifyContent: 'flex-start',
     flexWrap: 'wrap',
     overflowY: 'auto',
     marginBottom: 16,

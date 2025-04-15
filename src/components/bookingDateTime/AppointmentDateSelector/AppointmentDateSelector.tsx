@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TArgCallback } from '../../../types/types';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { DaySelector } from '../DaySelector/DaySelector';
@@ -12,6 +12,7 @@ type TProps = {
   appointments: TGroupedAppointments;
   dateRangeUpdated: boolean;
   dateChangeDisabled: boolean;
+  daysPerScreen: number;
 } & TMonthProps;
 
 export const AppointmentDateSelector: React.FC<
@@ -24,16 +25,26 @@ export const AppointmentDateSelector: React.FC<
   dateChangeDisabled,
   dateRangeUpdated,
   onDateRangeSet,
+  daysPerScreen,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const { t } = useTranslation();
+  const monthSelectorRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (monthSelectorRef.current) {
+      monthSelectorRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [date]);
 
   return (
     <div style={isMobile ? { padding: '16px 8px' } : {}}>
       {!isMobile && <h4>{t('Select Date')}</h4>}
       {!dateChangeDisabled ? (
-        <MonthSelector date={date} loading={loading} onDateChange={onDateChange} />
+        <div ref={monthSelectorRef}>
+          <MonthSelector date={date} loading={loading} onDateChange={onDateChange} />
+        </div>
       ) : null}
       <DaySelector
         onDateRangeSet={onDateRangeSet}
@@ -42,6 +53,7 @@ export const AppointmentDateSelector: React.FC<
         appointments={appointments}
         loading={loading}
         onDateChange={onDateChange}
+        daysPerScreen={daysPerScreen}
       />
     </div>
   );

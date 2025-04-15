@@ -111,7 +111,7 @@ export const AppointmentSlots: React.FC<
     editingPosition,
     serviceOptionChangedFromSlotPage,
   } = useSelector((state: RootState) => state.appointmentFrame);
-
+  console.log('selectedTime', selectedTime);
   const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
@@ -123,6 +123,7 @@ export const AppointmentSlots: React.FC<
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
   const [loading, setLoading] = useState<boolean>(false);
+  const dateSlotsRef = useRef<HTMLDivElement | null>(null);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
@@ -142,7 +143,6 @@ export const AppointmentSlots: React.FC<
     onOpen: onServiceOptionOpen,
   } = useModal();
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const nextDisabled = useMemo(
     () =>
       serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -150,6 +150,13 @@ export const AppointmentSlots: React.FC<
         : !appointment,
     [appointment, serviceValetAppointment]
   );
+
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds, isXs]);
 
   const groupedAppointments: TGroupedAppointments = useMemo(() => {
     return groupAppointments(appointmentSlots);
@@ -330,11 +337,22 @@ export const AppointmentSlots: React.FC<
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
       clearData();
-      const minDate = dayjs(d).isSame(dayjs(), 'date') ? dayjs() : dayjs(d);
-      setDate(dayjs(d));
-      !keepSlot && selectFirstSlot(minDate);
-      if (!dayjs(d).isSame(month, 'month')) {
-        setMonth(d);
+
+      // Convert the incoming date to UTC
+      const newDate = dayjs.utc(d);
+      const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
+
+      // Set the date in UTC
+      setDate(newDate);
+
+      // Select the first slot if keepSlot is false
+      if (!keepSlot) {
+        selectFirstSlot(minDate);
+      }
+
+      // Check if the month needs to be updated
+      if (!newDate.isSame(dayjs.utc(month), 'month')) {
+        setMonth(newDate);
       }
     },
     [month, selectedTiming, selectFirstSlot]
@@ -383,7 +401,10 @@ export const AppointmentSlots: React.FC<
   };
 
   const onLoadSlots = (isEmptyList: boolean) => {
-    if (isEmptyList && serviceTypeOption?.type !== EServiceType.MobileService) {
+    const isPossibleToChangeType =
+      firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
+    const isMobileServiceType = serviceTypeOption?.type === EServiceType.MobileService;
+    if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
       onServiceOptionOpen();
     }
   };
@@ -413,9 +434,19 @@ export const AppointmentSlots: React.FC<
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
-          fromDate: selectedTime
+          startDate: selectedTime
             ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
             : dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
+          endDate: selectedTime
+            ? dayjs(selectedTime)
+                .add(daysPerScreen * 24 * 60, 'minute')
+                .add(utcOffset, 'minute')
+                .toISOString()
+            : dayjs()
+                .startOf('day')
+                .add(daysPerScreen * 24 * 60, 'minute')
+                .add(utcOffset, 'minute')
+                .toISOString(),
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -516,7 +547,13 @@ export const AppointmentSlots: React.FC<
   ]);
 
   useEffect(() => {
-    dispatch(loadActiveTransportations(decodeSCID(id)));
+    if (
+      ![EServiceType.PickUpDropOff, EServiceType.MobileService].includes(
+        serviceTypeOption?.type as EServiceType
+      )
+    ) {
+      dispatch(loadActiveTransportations(decodeSCID(id)));
+    }
   }, [id]);
 
   const handleGANext = useCallback(() => {
@@ -583,6 +620,15 @@ export const AppointmentSlots: React.FC<
     loadData().finally();
   };
 
+  useEffect(() => {
+    if (dateSlotsRef.current) {
+      const selectedDateElement = dateSlotsRef.current.querySelector(`[data-date="${date}"]`);
+      if (selectedDateElement) {
+        selectedDateElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [date]);
+
   return (
     <StepWrapper>
       <SlotsScreenWrapper>
@@ -597,7 +643,7 @@ export const AppointmentSlots: React.FC<
         />
         <AppointmentFilters
           onChangeServiceOption={onChangeServiceOption}
-          isSm={isSm}
+          isSm={isMd}
           isServiceOptionOpen={isServiceOptionOpen}
           onServiceOptionClose={onServiceOptionClose}
         />
@@ -619,6 +665,7 @@ export const AppointmentSlots: React.FC<
             dateRangeUpdated={initRef.current}
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
+            daysPerScreen={daysPerScreen}
           />
         )}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (

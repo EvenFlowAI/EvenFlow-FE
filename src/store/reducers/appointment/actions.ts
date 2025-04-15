@@ -61,7 +61,8 @@ export const loadSCProfile =
         DealershipsIds.LakePowellFord.includes(data?.dealershipId) ||
         DealershipsIds.Dealerbuilt.includes(data?.dealershipId) ||
         DealershipsIds.Bountiful.includes(data?.dealershipId) ||
-        DealershipsIds.Walser.includes(data?.dealershipId);
+        DealershipsIds.Walser.includes(data?.dealershipId) ||
+        DealershipsIds.TomWoodVW.includes(data?.dealershipId);
 
       dispatch(setTopAligning(shouldBeTopAligned));
     } catch (err) {
@@ -119,9 +120,9 @@ export const getServiceCategories = createAction<IServiceCategory[]>(
 export const getAllServiceCategories = createAction<IServiceCategoryShort[]>(
   'Appointment/GetAllServiceCategories'
 );
-export const setLoadedDateRange = createAction<ISearchedDateRange>(
-  'Appointment/SetLoadedDateRange'
-);
+// export const setLoadedDateRange = createAction<ISearchedDateRange>(
+//   'Appointment/SetLoadedDateRange'
+// );
 export const getAppointmentSlots = createAction<IAppointmentSlot[]>(
   'Appointment/GetAppointmentSlots'
 );
@@ -155,11 +156,11 @@ export const loadAppointmentSlots =
     dispatch(setSlotsLoading(true));
     try {
       const {
-        data: { items, searchedDateRange, slotGapMinutes, waitlistSettings, podId },
+        data: { items, slotGapMinutes, waitlistSettings, podId },
       } = await Api.call<IAppointmentResponse>(Api.endpoints.AppointmentSlots.GetSlots, { data });
       const res = dispatch(
         getAppointmentSlots(
-          items.map(item => ({ ...item, searchDate: data.fromDate as TParsableDate }))
+          items.map(item => ({ ...item, searchDate: data.startDate as TParsableDate }))
         )
       );
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
@@ -169,17 +170,17 @@ export const loadAppointmentSlots =
         loadCB();
       }
       if (onLoadedCb) onLoadedCb(!Boolean(items.length));
-      searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
+      // searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
-      dispatch(setSlotsSearchDate(data.fromDate));
-      if (
-        cb &&
-        data.appointmentTimingType === EAppointmentTimingType.FirstAvailable &&
-        searchedDateRange
-      ) {
-        return cb(dayjs.utc(searchedDateRange.from));
-      }
+      dispatch(setSlotsSearchDate(data.startDate));
+      // if (
+      //   cb &&
+      //   data.appointmentTimingType === EAppointmentTimingType.FirstAvailable &&
+      //   searchedDateRange
+      // ) {
+      //   return cb(dayjs.utc(searchedDateRange.from));
+      // }
       return res;
     } catch (err) {
       onError && onError(err);
@@ -286,12 +287,11 @@ export const loadServiceValetSlots =
     dispatch(setSlotsLoading(true));
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, { data })
       .then(result => {
-        const { items, searchedDateRange, dropOffSettings } = result.data;
+        const { items, dropOffSettings } = result.data;
         dispatch(getServiceValetSlots(items.map(el => ({ ...el, uniqueId: uuidv4() }))));
-        if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
         if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
-        dispatch(setSlotsSearchDate(data.fromDate));
+        dispatch(setSlotsSearchDate(data.startDate));
         loadCB && loadCB();
         if (onLoadedCb) onLoadedCb(!Boolean(items.length));
       })
