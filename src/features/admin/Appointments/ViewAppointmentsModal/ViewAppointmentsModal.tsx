@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { AppointmentStatus, IAppointment } from '../../../../api/types';
 import { AppointmentDetails } from './AppointmentDetails/AppointmentDetails';
@@ -47,6 +47,13 @@ export const ViewAppointmentsModal: React.FC<
   const { onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone } = useModal();
   const { isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen } = useModal();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds, isXs]);
 
   useEffect(() => {
     selectedSC && dispatch(loadMileage(selectedSC.id));
@@ -73,7 +80,13 @@ export const ViewAppointmentsModal: React.FC<
   const onClone = async () => {
     if (payload?.hashKey && selectedSC) {
       await dispatch(
-        loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onGetSlots, onMileageOpen)
+        loadAppointmentByKey(
+          payload?.hashKey,
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          daysPerScreen,
+          onMileageOpen
+        )
       );
     } else {
       handleExEvenFlowAppointments();
@@ -86,7 +99,10 @@ export const ViewAppointmentsModal: React.FC<
   };
 
   const onMileageSave = () => {
-    selectedSC && dispatch(handleUpdatedMileageForCloning(encodeSCID(selectedSC.id), onGetSlots));
+    selectedSC &&
+      dispatch(
+        handleUpdatedMileageForCloning(encodeSCID(selectedSC.id), onGetSlots, daysPerScreen)
+      );
     onMileageClose();
   };
 

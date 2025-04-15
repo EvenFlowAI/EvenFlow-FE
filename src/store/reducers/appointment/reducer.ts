@@ -22,7 +22,6 @@ import {
   setCustomerEnteredEmail,
   setCustomerLoadedData,
   setEditAppointment,
-  setLoadedDateRange,
   setLoadedReducer,
   setOldAppointmentId,
   setProfileLoading,
@@ -58,7 +57,6 @@ const blankPrivacy: IPrivacy = {
 const initialState: TAppointmentState = {
   sessionId: '',
   updated: false,
-  searchedDateRange: null,
   serviceRequests: [],
   customerLoadedData: null,
   customerEnteredEmail: '',
@@ -129,9 +127,9 @@ export const appointmentReducer = createReducer(initialState, builder =>
     .addCase(selectAppointment, (state, { payload }) => {
       return { ...state, appointment: payload };
     })
-    .addCase(setLoadedDateRange, (state, { payload }) => {
-      return { ...state, searchedDateRange: payload };
-    })
+    // .addCase(setLoadedDateRange, (state, { payload }) => {
+    //   return { ...state, searchedDateRange: payload };
+    // })
     .addCase(getAppointmentSlots, (state, { payload }) => {
       let appointmentSlots = payload.map(sl => {
         const date = `${String(sl.date).split('T')[0]}T${sl.time}Z`;

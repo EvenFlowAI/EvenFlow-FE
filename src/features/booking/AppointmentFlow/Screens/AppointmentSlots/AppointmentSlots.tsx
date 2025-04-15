@@ -111,7 +111,7 @@ export const AppointmentSlots: React.FC<
     editingPosition,
     serviceOptionChangedFromSlotPage,
   } = useSelector((state: RootState) => state.appointmentFrame);
-
+  console.log('selectedTime', selectedTime);
   const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
@@ -143,7 +143,6 @@ export const AppointmentSlots: React.FC<
     onOpen: onServiceOptionOpen,
   } = useModal();
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const nextDisabled = useMemo(
     () =>
       serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -151,6 +150,13 @@ export const AppointmentSlots: React.FC<
         : !appointment,
     [appointment, serviceValetAppointment]
   );
+
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds, isXs]);
 
   const groupedAppointments: TGroupedAppointments = useMemo(() => {
     return groupAppointments(appointmentSlots);
@@ -428,9 +434,19 @@ export const AppointmentSlots: React.FC<
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
-          fromDate: selectedTime
+          startDate: selectedTime
             ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
             : dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
+          endDate: selectedTime
+            ? dayjs(selectedTime)
+                .add(daysPerScreen * 24 * 60, 'minute')
+                .add(utcOffset, 'minute')
+                .toISOString()
+            : dayjs()
+                .startOf('day')
+                .add(daysPerScreen * 24 * 60, 'minute')
+                .add(utcOffset, 'minute')
+                .toISOString(),
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -627,7 +643,7 @@ export const AppointmentSlots: React.FC<
         />
         <AppointmentFilters
           onChangeServiceOption={onChangeServiceOption}
-          isSm={isSm}
+          isSm={isMd}
           isServiceOptionOpen={isServiceOptionOpen}
           onServiceOptionClose={onServiceOptionClose}
         />
@@ -649,6 +665,7 @@ export const AppointmentSlots: React.FC<
             dateRangeUpdated={initRef.current}
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
+            daysPerScreen={daysPerScreen}
           />
         )}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
