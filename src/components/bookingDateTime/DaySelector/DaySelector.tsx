@@ -99,7 +99,9 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   //   return sliceIdx < daysInMonth - daysPerScreen;
   // };
   const prevAvailable = (): boolean => {
-    return sliceIdx > 0;
+    const todayStart = dayjs.utc().startOf('day');
+    const currentStartDate = dayjs.utc(date).startOf('day');
+    return currentStartDate.isAfter(todayStart);
   };
 
   const handleNext = () => {
