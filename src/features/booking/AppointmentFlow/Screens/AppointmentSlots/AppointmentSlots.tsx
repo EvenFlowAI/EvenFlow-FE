@@ -122,10 +122,10 @@ export const AppointmentSlots: React.FC<
 
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
-  const [startDate, setStartDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
-  const [endDate, setEndDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [loading, setLoading] = useState<boolean>(false);
   const dateSlotsRef = useRef<HTMLDivElement | null>(null);
+  const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
+  const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
@@ -422,12 +422,6 @@ export const AppointmentSlots: React.FC<
     return { apiStartDate, apiEndDate };
   };
 
-  useEffect(() => {
-    const { apiStartDate, apiEndDate } = getApiDates();
-    setStartDate(apiStartDate);
-    setEndDate(apiEndDate);
-  }, [daysPerScreen, selectedTime]);
-
   const loadData = async ({
     requestedStartDate,
     requestedEndDate,
@@ -436,6 +430,10 @@ export const AppointmentSlots: React.FC<
     requestedEndDate: string;
   }) => {
     if (id) {
+      // Set the current range *before* loading starts
+      setCurrentApiStartDate(requestedStartDate);
+      setCurrentApiEndDate(requestedEndDate);
+
       setLoading(true);
       try {
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
@@ -533,6 +531,7 @@ export const AppointmentSlots: React.FC<
         onMileageOpen();
       }, 1000);
     } else {
+      // Initial load: calculate dates and pass them to loadData
       const { apiStartDate, apiEndDate } = getApiDates();
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
@@ -551,7 +550,6 @@ export const AppointmentSlots: React.FC<
     selectedSR,
     advisor,
     valueService,
-    serviceType,
     selectedTime,
     zipCode,
     address,
@@ -645,31 +643,55 @@ export const AppointmentSlots: React.FC<
   }, [date]);
 
   const loadNextSlots = () => {
-    const { apiStartDate, apiEndDate } = getApiDates();
-    const nextApiStartDate = dayjs(apiStartDate)
-      .add(daysPerScreen, 'day')
-      .startOf('day')
-      .toISOString();
-    const nextApiEndDate = dayjs(apiEndDate).add(daysPerScreen, 'day').endOf('day').toISOString();
+    // Ensure we have a current range to base the next one on
+    if (!currentApiStartDate || !currentApiEndDate) {
+      console.error('Cannot load next slots without a current API date range.');
+      // Optionally, trigger an initial load here if needed
+      const { apiStartDate, apiEndDate } = getApiDates();
+      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
+      return;
+    }
+
+    // Calculate next range based on the *current* API range state
+    const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
+    const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
+
+    // Update the visual date state (optional but recommended for DaySelector)
+    // setDate(nextStartDate.toISOString()); // Or set a separate visual state
+
     loadData({
-      requestedStartDate: nextApiStartDate,
-      requestedEndDate: nextApiEndDate,
+      requestedStartDate: nextStartDate.toISOString(),
+      requestedEndDate: nextEndDate.toISOString(),
     }).finally();
   };
 
   const loadPreviousSlots = () => {
-    const { apiStartDate, apiEndDate } = getApiDates();
-    const previousApiStartDate = dayjs(apiStartDate)
-      .subtract(daysPerScreen, 'day')
-      .startOf('day')
-      .toISOString();
-    const previousApiEndDate = dayjs(apiEndDate)
-      .subtract(daysPerScreen, 'day')
-      .endOf('day')
-      .toISOString();
+    // Ensure we have a current range
+    if (!currentApiStartDate || !currentApiEndDate) {
+      console.error('Cannot load previous slots without a current API date range.');
+      return;
+    }
+
+    // Calculate previous range based on the *current* API range state
+    const previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
+    const previousEndDate = dayjs(currentApiEndDate).subtract(daysPerScreen, 'day');
+
+    // --- Prevent navigating before today ---
+    const todayStart = dayjs().startOf('day');
+    // Check against the *start* of the day for the previous range
+    if (previousStartDate.startOf('day').isBefore(todayStart)) {
+      console.log('Cannot load slots before today.');
+      // Optionally disable the previous button based on this logic
+      return;
+    }
+    // --- End Prevention Check ---
+
+    // Update the visual date state (optional)
+    // setDate(previousStartDate.toISOString());
+
     loadData({
-      requestedStartDate: previousApiStartDate,
-      requestedEndDate: previousApiEndDate,
+      requestedStartDate: previousStartDate.toISOString(),
+      requestedEndDate: previousEndDate.toISOString(),
     }).finally();
   };
 
