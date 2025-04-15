@@ -122,6 +122,8 @@ export const AppointmentSlots: React.FC<
 
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
+  const [startDate, setStartDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
+  const [endDate, setEndDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [loading, setLoading] = useState<boolean>(false);
   const dateSlotsRef = useRef<HTMLDivElement | null>(null);
 
@@ -409,9 +411,31 @@ export const AppointmentSlots: React.FC<
     }
   };
 
-  const loadData = async () => {
+  const getApiDates = () => {
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = selectedTime ? dayjs(selectedTime) : dayjs().startOf('day');
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    return { apiStartDate, apiEndDate };
+  };
+
+  useEffect(() => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    setStartDate(apiStartDate);
+    setEndDate(apiEndDate);
+  }, [daysPerScreen, selectedTime]);
+
+  const loadData = async ({
+    requestedStartDate,
+    requestedEndDate,
+  }: {
+    requestedStartDate: string;
+    requestedEndDate: string;
+  }) => {
     if (id) {
-      const utcOffset = dayjs().utcOffset();
       setLoading(true);
       try {
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
@@ -434,19 +458,8 @@ export const AppointmentSlots: React.FC<
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
-          startDate: selectedTime
-            ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
-            : dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
-          endDate: selectedTime
-            ? dayjs(selectedTime)
-                .add(daysPerScreen * 24 * 60, 'minute')
-                .add(utcOffset, 'minute')
-                .toISOString()
-            : dayjs()
-                .startOf('day')
-                .add(daysPerScreen * 24 * 60, 'minute')
-                .add(utcOffset, 'minute')
-                .toISOString(),
+          startDate: requestedStartDate,
+          endDate: requestedEndDate,
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -520,7 +533,8 @@ export const AppointmentSlots: React.FC<
         onMileageOpen();
       }, 1000);
     } else {
-      loadData().finally();
+      const { apiStartDate, apiEndDate } = getApiDates();
+      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
   }, [
     dispatch,
@@ -617,7 +631,8 @@ export const AppointmentSlots: React.FC<
 
   const loadDataForMileage = () => {
     onMileageClose();
-    loadData().finally();
+    const { apiStartDate, apiEndDate } = getApiDates();
+    loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
   };
 
   useEffect(() => {
@@ -628,6 +643,35 @@ export const AppointmentSlots: React.FC<
       }
     }
   }, [date]);
+
+  const loadNextSlots = () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    const nextApiStartDate = dayjs(apiStartDate)
+      .add(daysPerScreen, 'day')
+      .startOf('day')
+      .toISOString();
+    const nextApiEndDate = dayjs(apiEndDate).add(daysPerScreen, 'day').endOf('day').toISOString();
+    loadData({
+      requestedStartDate: nextApiStartDate,
+      requestedEndDate: nextApiEndDate,
+    }).finally();
+  };
+
+  const loadPreviousSlots = () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    const previousApiStartDate = dayjs(apiStartDate)
+      .subtract(daysPerScreen, 'day')
+      .startOf('day')
+      .toISOString();
+    const previousApiEndDate = dayjs(apiEndDate)
+      .subtract(daysPerScreen, 'day')
+      .endOf('day')
+      .toISOString();
+    loadData({
+      requestedStartDate: previousApiStartDate,
+      requestedEndDate: previousApiEndDate,
+    }).finally();
+  };
 
   return (
     <StepWrapper>
@@ -666,6 +710,8 @@ export const AppointmentSlots: React.FC<
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
             daysPerScreen={daysPerScreen}
+            onLoadNext={loadNextSlots}
+            onLoadPrevious={loadPreviousSlots}
           />
         )}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (

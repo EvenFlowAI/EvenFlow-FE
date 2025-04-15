@@ -13,6 +13,8 @@ type TProps = {
   dateRangeUpdated: boolean;
   dateChangeDisabled: boolean;
   daysPerScreen: number;
+  onLoadNext: () => void;
+  onLoadPrevious: () => void;
 } & TMonthProps;
 
 export const AppointmentDateSelector: React.FC<
@@ -26,6 +28,8 @@ export const AppointmentDateSelector: React.FC<
   dateRangeUpdated,
   onDateRangeSet,
   daysPerScreen,
+  onLoadNext,
+  onLoadPrevious,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
@@ -54,6 +58,8 @@ export const AppointmentDateSelector: React.FC<
         loading={loading}
         onDateChange={onDateChange}
         daysPerScreen={daysPerScreen}
+        onLoadNext={onLoadNext}
+        onLoadPrevious={onLoadPrevious}
       />
     </div>
   );

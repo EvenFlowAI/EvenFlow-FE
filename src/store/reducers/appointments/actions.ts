@@ -13,7 +13,14 @@ import {
   TServiceBook,
   TServiceConsultant,
 } from './types';
-import { AppThunk, IPageRequest, TArgCallback, TCallback, TScreen } from '../../../types/types';
+import {
+  AppThunk,
+  IPageRequest,
+  TArgCallback,
+  TCallback,
+  TScreen,
+  TParsableDate,
+} from '../../../types/types';
 import { API } from '../../../api/api';
 import { EServiceType } from '../appointmentFrameReducer/types';
 import { EAppointmentTimingType, IAppointmentSlotsRequest } from '../appointment/types';
@@ -265,21 +272,21 @@ export const loadServiceConsultants =
   };
 
 const loadSlotsForCloning =
-  (serviceCenterId: number, onEmptyList: (isEmpty: boolean) => void, daysCount: number): AppThunk =>
+  (
+    serviceCenterId: number,
+    onEmptyList: (isEmpty: boolean) => void,
+    startDate: TParsableDate,
+    endDate: TParsableDate
+  ): AppThunk =>
   (dispatch, getState) => {
     const { selectedRecalls, consultants } = getState().appointmentFrame;
     const { currentAppointment } = getState().appointments;
 
-    const utcOffset = dayjs().utcOffset();
     const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
     if (currentAppointment) {
       const data: IAppointmentSlotsRequest = {
-        startDate: dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
-        endDate: dayjs()
-          .startOf('day')
-          .add(daysCount * 24 * 60, 'minute')
-          .add(utcOffset, 'minute')
-          .toISOString(),
+        startDate,
+        endDate,
         appointmentTimingType: EAppointmentTimingType.FirstAvailable,
         serviceCenterId,
         advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
@@ -341,7 +348,12 @@ const loadSlotsForCloning =
   };
 
 export const handleUpdatedMileageForCloning =
-  (serviceCenterId: string, cb: TArgCallback<boolean>, daysCount: number): AppThunk =>
+  (
+    serviceCenterId: string,
+    cb: TArgCallback<boolean>,
+    startDate: TParsableDate,
+    endDate: TParsableDate
+  ): AppThunk =>
   (dispatch, getState) => {
     const { currentAppointment } = getState().appointments;
     if (currentAppointment) {
@@ -349,7 +361,7 @@ export const handleUpdatedMileageForCloning =
         dispatch(setCurrentAppointmentLoading(true));
         dispatch(
           loadConsultantsForCloning(serviceCenterId, currentAppointment, () =>
-            dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, daysCount))
+            dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
           )
         );
       } catch {
@@ -363,7 +375,8 @@ export const loadAppointmentByKey =
     key: string,
     serviceCenterId: string,
     cb: TArgCallback<boolean>,
-    daysCount: number,
+    startDate: TParsableDate,
+    endDate: TParsableDate,
     onEmptyMileage?: TCallback
   ): AppThunk =>
   async (dispatch, getState) => {
@@ -383,7 +396,7 @@ export const loadAppointmentByKey =
         } else {
           dispatch(
             loadConsultantsForCloning(serviceCenterId, data, () =>
-              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, daysCount))
+              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
             )
           );
         }

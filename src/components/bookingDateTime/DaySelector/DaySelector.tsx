@@ -35,6 +35,8 @@ type TProps = {
   loading: boolean;
   appointments: TGroupedAppointments;
   daysPerScreen: number;
+  onLoadNext: () => void;
+  onLoadPrevious: () => void;
 };
 
 export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
@@ -45,10 +47,9 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   dateRangeUpdated,
   onDateRangeSet,
   daysPerScreen,
+  onLoadNext,
+  onLoadPrevious,
 }) => {
-  const { isAppointmentTimingAvailable } = useSelector(
-    (state: RootState) => state.bookingFlowConfig
-  );
   const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
   const { appointment } = useSelector((state: RootState) => state.appointment);
   const [sliceIdx, setSliceIdx] = useState<number>(0);
@@ -62,26 +63,9 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
     let daysInMonth: number = dayjs.utc(date).daysInMonth();
     let generatedDays: string[] = [];
-    // if (searchedDateRange) {
-    //   daysInMonth = Math.abs(
-    //     dayjs
-    //       .utc(searchedDateRange.from)
-    //       .diff(dayjs.utc(dayjs(searchedDateRange.to).add(1, 'day')), 'days')
-    //   );
-    //   let currentDate = dayjs.utc(searchedDateRange.from);
-    //   let endDate = dayjs.utc(searchedDateRange.to).endOf('day');
-    //   let i = 0;
-    //   const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
-    //   while (dayjs(currentDate).isSameOrBefore(endDate, 'date') && i < maxAvailableDaysAmount) {
-    //     generatedDays.push(currentDate.startOf('day').toISOString().replace('.000', ''));
-    //     currentDate = dayjs.utc(currentDate).add(1, 'day');
-    //     i++;
-    //   }
-    // }
     generatedDays = Array(daysInMonth)
       .fill(0)
       .map((e, idx) => getAppointmentDate(date, idx + 1));
-
     return [daysInMonth, generatedDays];
   }, [date]);
 
@@ -111,22 +95,19 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
     onDateChange(dayjs.utc(date));
   };
 
-  const nextAvailable = (): boolean => {
-    return sliceIdx < daysInMonth - daysPerScreen;
-  };
+  // const nextAvailable = (): boolean => {
+  //   return sliceIdx < daysInMonth - daysPerScreen;
+  // };
   const prevAvailable = (): boolean => {
     return sliceIdx > 0;
   };
 
   const handleNext = () => {
-    if (nextAvailable()) {
-      setSliceIdx(prevIndex => {
-        const nS = prevIndex + daysPerScreen * 2;
-        return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
-      });
-    } else {
-      if (isAppointmentTimingAvailable && !isAdminPanel) onOpen();
-    }
+    setSliceIdx(prevIndex => {
+      const nS = prevIndex + daysPerScreen * 2;
+      return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
+    });
+    onLoadNext();
   };
   const handlePrev = () => {
     if (prevAvailable()) {
@@ -134,6 +115,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
         const pS = s - daysPerScreen;
         return pS >= 0 ? pS : 0;
       });
+      onLoadPrevious();
     } else {
       if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
         onOpen();
@@ -164,7 +146,7 @@ export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildr
           data-date={day}
         />
       ))}
-      <DateSelectArrow onClick={handleNext} disabled={!nextAvailable()}>
+      <DateSelectArrow onClick={handleNext} disabled={false}>
         <ChevronRight />
       </DateSelectArrow>
       <PromptNewSearchModal onClose={onClose} open={isOpen} onSave={handleYes} />
