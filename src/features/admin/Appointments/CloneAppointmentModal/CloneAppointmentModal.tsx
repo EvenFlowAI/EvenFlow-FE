@@ -32,10 +32,9 @@ import { clearAfterCloning } from '../../../../store/reducers/appointments/actio
 import theme from '../../../../theme/theme';
 import { useMediaQuery } from '@mui/material';
 
-const CloneAppointmentModal: React.FC<DialogProps & { onViewClose: TCallback }> = ({
-  onViewClose,
-  ...props
-}) => {
+const CloneAppointmentModal: React.FC<
+  DialogProps & { onViewClose: TCallback; loadNextSlots: TCallback; loadPreviousSlots: TCallback }
+> = ({ onViewClose, loadNextSlots, loadPreviousSlots, ...props }) => {
   const { currentAppointment, isAppointmentLoading } = useSelector(
     (state: RootState) => state.appointments
   );
@@ -165,6 +164,8 @@ const CloneAppointmentModal: React.FC<DialogProps & { onViewClose: TCallback }> 
               dateRangeUpdated={initRef.current}
               loading={isLoading}
               onDateChange={updateDate}
+              onLoadNext={loadNextSlots}
+              onLoadPrevious={loadPreviousSlots}
             />
           )}
           {currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff ? (

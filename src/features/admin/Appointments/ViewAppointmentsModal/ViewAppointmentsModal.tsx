@@ -28,6 +28,7 @@ import { RootState } from '../../../../store/rootReducer';
 import { TCallback } from '../../../../types/types';
 import { loadMileage } from '../../../../store/reducers/vehicleDetails/actions';
 import MileageModal from '../../../../components/modals/booking/MileageModal/MileageModal';
+import dayjs from 'dayjs';
 
 type TCallbackProps = {
   onEditAppointment: TCallback;
@@ -66,6 +67,17 @@ export const ViewAppointmentsModal: React.FC<
     onOpen();
   };
 
+  const getApiDates = () => {
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = dayjs().startOf('day');
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    return { apiStartDate, apiEndDate };
+  };
+
   const handleExEvenFlowAppointments = () => {
     setMessageText(`We are sorry but this appointment \n 
             was made outside of EvenFlow \n 
@@ -79,12 +91,14 @@ export const ViewAppointmentsModal: React.FC<
 
   const onClone = async () => {
     if (payload?.hashKey && selectedSC) {
+      const { apiStartDate, apiEndDate } = getApiDates();
       await dispatch(
         loadAppointmentByKey(
           payload?.hashKey,
           encodeSCID(selectedSC.id),
           onGetSlots,
-          daysPerScreen,
+          apiStartDate,
+          apiEndDate,
           onMileageOpen
         )
       );
@@ -99,11 +113,63 @@ export const ViewAppointmentsModal: React.FC<
   };
 
   const onMileageSave = () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
     selectedSC &&
       dispatch(
-        handleUpdatedMileageForCloning(encodeSCID(selectedSC.id), onGetSlots, daysPerScreen)
+        handleUpdatedMileageForCloning(
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          apiStartDate,
+          apiEndDate
+        )
       );
     onMileageClose();
+  };
+
+  const loadNextSlots = async () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    const nextApiStartDate = dayjs(apiStartDate)
+      .add(daysPerScreen, 'day')
+      .startOf('day')
+      .toISOString();
+    const nextApiEndDate = dayjs(apiEndDate).add(daysPerScreen, 'day').endOf('day').toISOString();
+    // loadData({ requestedStartDate: nextApiStartDate, requestedEndDate: nextApiEndDate }).finally();
+    if (payload?.hashKey && selectedSC) {
+      await dispatch(
+        loadAppointmentByKey(
+          payload?.hashKey,
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          nextApiStartDate,
+          nextApiEndDate,
+          onMileageOpen
+        )
+      );
+    }
+  };
+
+  const loadPreviousSlots = async () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    const previousApiStartDate = dayjs(apiStartDate)
+      .subtract(daysPerScreen, 'day')
+      .startOf('day')
+      .toISOString();
+    const previousApiEndDate = dayjs(apiEndDate)
+      .subtract(daysPerScreen, 'day')
+      .endOf('day')
+      .toISOString();
+    if (payload?.hashKey && selectedSC) {
+      await dispatch(
+        loadAppointmentByKey(
+          payload?.hashKey,
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          previousApiStartDate,
+          previousApiEndDate,
+          onMileageOpen
+        )
+      );
+    }
   };
 
   return (
@@ -161,7 +227,13 @@ export const ViewAppointmentsModal: React.FC<
         </Button>
       </DialogActions>
       <Informing icon={<Warning />} open={isOpen} onClose={onClose} title={messageText} />
-      <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone} onViewClose={onAfterClone} />
+      <CloneAppointmentModal
+        open={isOpenClone}
+        onClose={onCloseClone}
+        onViewClose={onAfterClone}
+        loadNextSlots={loadNextSlots}
+        loadPreviousSlots={loadPreviousSlots}
+      />
       <MileageModal
         open={isMileageOpen}
         onSave={onMileageSave}
