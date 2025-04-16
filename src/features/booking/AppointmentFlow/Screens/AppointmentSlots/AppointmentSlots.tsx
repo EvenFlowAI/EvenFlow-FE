@@ -734,6 +734,8 @@ export const AppointmentSlots: React.FC<
             daysPerScreen={daysPerScreen}
             onLoadNext={loadNextSlots}
             onLoadPrevious={loadPreviousSlots}
+            apiStartDate={currentApiStartDate || undefined}
+            apiEndDate={currentApiEndDate || undefined}
           />
         )}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
