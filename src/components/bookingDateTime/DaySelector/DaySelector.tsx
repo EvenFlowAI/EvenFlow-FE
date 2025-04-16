@@ -60,13 +60,31 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const [sliceIdx, setSliceIdx] = useState<number>(0);
 
   // Memoized days array and month length
-  const { days, daysInMonth } = useMemo(() => {
-    const monthLength = dayjs.utc(date).daysInMonth();
-    const generatedDays = Array(monthLength)
+  const { days, daysInMonth, nextMonthDays } = useMemo(() => {
+    const currentMonth = dayjs.utc(date);
+    const monthLength = currentMonth.daysInMonth();
+
+    // Generate days for current month
+    const currentMonthDays = Array(monthLength)
       .fill(0)
       .map((_, idx) => getAppointmentDate(date, idx + 1));
-    return { days: generatedDays, daysInMonth: monthLength };
-  }, [date]);
+
+    // Generate days for next month
+    const nextMonth = currentMonth.add(1, 'month');
+    const nextMonthLength = Math.min(daysPerScreen, nextMonth.daysInMonth());
+    const nextMonthDays = Array(nextMonthLength)
+      .fill(0)
+      .map((_, idx) => {
+        const nextMonthDate = nextMonth.date(idx + 1);
+        return dayjs.utc(nextMonthDate).startOf('day').toISOString().replace('.000Z', 'Z');
+      });
+
+    return {
+      days: currentMonthDays,
+      daysInMonth: monthLength,
+      nextMonthDays,
+    };
+  }, [date, daysPerScreen]);
 
   // Find the index of the selected date
   const selectedDateIndex = useMemo(() => {
@@ -129,14 +147,22 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     dispatch(selectServiceValetAppointment(null));
   }, [dispatch]);
 
-  // Get visible days for rendering
-  const visibleDays = useMemo(
-    () => days.slice(sliceIdx, sliceIdx + daysPerScreen),
-    [days, sliceIdx, daysPerScreen]
-  );
+  // Get visible days for rendering, including next month days if needed
+  const visibleDays = useMemo(() => {
+    const currentMonthVisibleDays = days.slice(sliceIdx, sliceIdx + daysPerScreen);
+
+    // If we're near the end of the month, add days from the next month
+    if (sliceIdx + daysPerScreen > daysInMonth) {
+      const remainingDays = daysPerScreen - currentMonthVisibleDays.length;
+      const nextMonthDaysToAdd = nextMonthDays.slice(0, remainingDays);
+      return [...currentMonthVisibleDays, ...nextMonthDaysToAdd];
+    }
+
+    return currentMonthVisibleDays;
+  }, [days, sliceIdx, daysPerScreen, daysInMonth, nextMonthDays]);
 
   // Check if we can navigate forward
-  const canNavigateForward = sliceIdx + daysPerScreen < daysInMonth;
+  const canNavigateForward = sliceIdx + daysPerScreen < daysInMonth || nextMonthDays.length > 0;
 
   return (
     <DaySelectorWrapper>
