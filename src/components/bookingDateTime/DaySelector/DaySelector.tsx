@@ -157,7 +157,9 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     <DaySelectorWrapper>
       <DateSelectArrow
         onClick={handlePrev}
-        disabled={!dayjs.utc(date).startOf('day').isAfter(dayjs.utc().startOf('day'))}
+        disabled={
+          visibleDays.length > 0 && dayjs.utc(visibleDays[0]).isSame(dayjs.utc().startOf('day'))
+        }
       >
         <ChevronLeft />
       </DateSelectArrow>
