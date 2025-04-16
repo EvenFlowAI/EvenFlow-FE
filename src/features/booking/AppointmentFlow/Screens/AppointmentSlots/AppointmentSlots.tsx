@@ -656,8 +656,15 @@ export const AppointmentSlots: React.FC<
     const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
     const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
 
-    // Update the visual date state (optional but recommended for DaySelector)
-    // setDate(nextStartDate.toISOString()); // Or set a separate visual state
+    // Check if we're crossing a month boundary
+    const currentMonth = dayjs(currentApiStartDate).month();
+    const nextMonth = nextStartDate.month();
+
+    // If we're crossing to a new month, update the date state to match the new month
+    if (currentMonth !== nextMonth) {
+      // Update the date to the first day of the new month
+      setDate(nextStartDate.startOf('month').toISOString());
+    }
 
     loadData({
       requestedStartDate: nextStartDate.toISOString(),
@@ -686,8 +693,15 @@ export const AppointmentSlots: React.FC<
     }
     // --- End Prevention Check ---
 
-    // Update the visual date state (optional)
-    // setDate(previousStartDate.toISOString());
+    // Check if we're crossing a month boundary
+    const currentMonth = dayjs(currentApiStartDate).month();
+    const previousMonth = previousStartDate.month();
+
+    // If we're crossing to a new month, update the date state to match the new month
+    if (currentMonth !== previousMonth) {
+      // Update the date to the first day of the new month
+      setDate(previousStartDate.startOf('month').toISOString());
+    }
 
     loadData({
       requestedStartDate: previousStartDate.toISOString(),
