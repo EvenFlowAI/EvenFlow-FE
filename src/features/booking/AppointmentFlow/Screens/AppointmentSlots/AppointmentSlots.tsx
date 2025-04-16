@@ -654,7 +654,7 @@ export const AppointmentSlots: React.FC<
 
     // Calculate next range based on the *current* API range state
     const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
-    const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
+    const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen - 1, 'day');
 
     // Update the visual date state (optional but recommended for DaySelector)
     // setDate(nextStartDate.toISOString()); // Or set a separate visual state
@@ -674,7 +674,7 @@ export const AppointmentSlots: React.FC<
 
     // Calculate previous range based on the *current* API range state
     const previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
-    const previousEndDate = dayjs(currentApiEndDate).subtract(daysPerScreen, 'day');
+    const previousEndDate = dayjs(currentApiEndDate).subtract(daysPerScreen - 1, 'day');
 
     // --- Prevent navigating before today ---
     const todayStart = dayjs().startOf('day');
