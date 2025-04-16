@@ -15,6 +15,8 @@ type TProps = {
   daysPerScreen: number;
   onLoadNext: () => void;
   onLoadPrevious: () => void;
+  apiStartDate?: string | null;
+  apiEndDate?: string | null;
 } & TMonthProps;
 
 export const AppointmentDateSelector: React.FC<
@@ -30,6 +32,8 @@ export const AppointmentDateSelector: React.FC<
   daysPerScreen,
   onLoadNext,
   onLoadPrevious,
+  apiStartDate,
+  apiEndDate,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
@@ -58,6 +62,8 @@ export const AppointmentDateSelector: React.FC<
         daysPerScreen={daysPerScreen}
         onLoadNext={onLoadNext}
         onLoadPrevious={onLoadPrevious}
+        apiStartDate={apiStartDate}
+        apiEndDate={apiEndDate}
       />
     </div>
   );

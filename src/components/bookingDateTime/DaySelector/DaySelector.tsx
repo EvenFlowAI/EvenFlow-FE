@@ -36,6 +36,8 @@ interface DaySelectorProps {
   onLoadNext: () => void;
   onLoadPrevious: () => void;
   onVisibleRangeChange?: (startDate: string, endDate: string) => void;
+  apiStartDate?: string | null;
+  apiEndDate?: string | null;
 }
 
 export const DaySelector: React.FC<DaySelectorProps> = ({
@@ -47,6 +49,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   onLoadNext,
   onLoadPrevious,
   onVisibleRangeChange,
+  apiStartDate,
+  apiEndDate,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -100,10 +104,37 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     return days.findIndex(el => el === formattedDate);
   }, [days, date, appointment]);
 
-  // Update slice index when selected date changes
+  // Update slice index when selected date changes or when API dates change
   useEffect(() => {
-    if (isInitialLoad.current) {
-      if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
+    if (isInitialLoad.current || (apiStartDate && apiEndDate)) {
+      if (apiStartDate && apiEndDate) {
+        // Find the index of the API start date in the days array
+        const startDateIndex = days.findIndex(
+          day =>
+            dayjs.utc(day).startOf('day').toISOString() ===
+            dayjs.utc(apiStartDate).startOf('day').toISOString()
+        );
+
+        if (startDateIndex !== -1) {
+          setSliceIdx(startDateIndex);
+        } else if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
+          setSliceIdx(0);
+        } else {
+          // to get center of the displayed dates
+          const idXOfCenterElement = selectedDateIndex - Math.floor(daysPerScreen / 2);
+          if (idXOfCenterElement + daysPerScreen > daysInMonth) {
+            // Handle right date edge
+            if (selectedDateIndex === days.length - 1) {
+              setSliceIdx(daysInMonth - daysPerScreen + 1);
+            } else {
+              setSliceIdx(daysInMonth - daysPerScreen);
+            }
+          } else {
+            // Handle left date edge
+            setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
+          }
+        }
+      } else if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
         setSliceIdx(0);
       } else {
         // to get center of the displayed dates
@@ -122,7 +153,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
       }
       isInitialLoad.current = false;
     }
-  }, [selectedDateIndex, daysInMonth, daysPerScreen]);
+  }, [selectedDateIndex, daysInMonth, daysPerScreen, apiStartDate, apiEndDate, days]);
 
   // Get visible days for rendering, including next month days if needed
   const visibleDays = useMemo(() => {
