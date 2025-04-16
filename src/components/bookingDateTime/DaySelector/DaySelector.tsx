@@ -158,11 +158,6 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     dispatch(selectServiceValetAppointment(null));
   }, [dispatch]);
 
-  // Check if we can navigate forward
-  const canNavigateForward =
-    visibleDays.length > 0 &&
-    dayjs.utc(visibleDays[visibleDays.length - 1]).isAfter(dayjs.utc().add(7, 'day'));
-
   return (
     <DaySelectorWrapper>
       <DateSelectArrow
@@ -184,7 +179,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
         />
       ))}
 
-      <DateSelectArrow onClick={handleNext} disabled={!canNavigateForward}>
+      <DateSelectArrow onClick={handleNext} disabled={false}>
         <ChevronRight />
       </DateSelectArrow>
 
