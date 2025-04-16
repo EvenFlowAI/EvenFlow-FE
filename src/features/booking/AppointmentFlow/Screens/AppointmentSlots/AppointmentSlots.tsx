@@ -689,6 +689,28 @@ export const AppointmentSlots: React.FC<
 
     // --- Prevent navigating before today ---
     const todayStart = dayjs().startOf('day');
+
+    // Special case: If the current range doesn't include today but we can go back to include today
+    if (
+      !dayjs(currentApiStartDate).isSame(todayStart, 'day') &&
+      previousStartDate.isBefore(todayStart)
+    ) {
+      // Set the start date to today and calculate the end date
+      const adjustedStartDate = todayStart;
+      const adjustedEndDate = todayStart.add(daysPerScreen - 1, 'day');
+
+      // Update the date to show today
+      setDate(adjustedStartDate.toISOString());
+
+      // Load data with the adjusted range
+      loadData({
+        requestedStartDate: adjustedStartDate.toISOString(),
+        requestedEndDate: adjustedEndDate.toISOString(),
+      }).finally();
+
+      return;
+    }
+
     // Check against the *start* of the day for the previous range
     if (previousStartDate.startOf('day').isBefore(todayStart)) {
       console.log('Cannot load slots before today.');
