@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { DaySelectCard } from '../DaySelectCard/DaySelectCard';
 import { TArgCallback, TParsableDate } from '../../../types/types';
@@ -27,131 +27,143 @@ import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
-type TProps = {
+interface DaySelectorProps {
   date: TParsableDate;
-  dateRangeUpdated: boolean;
-  onDateRangeSet: TArgCallback<boolean>;
   onDateChange: TArgCallback<TParsableDate>;
   loading: boolean;
   appointments: TGroupedAppointments;
   daysPerScreen: number;
   onLoadNext: () => void;
   onLoadPrevious: () => void;
-};
+}
 
-export const DaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
+export const DaySelector: React.FC<DaySelectorProps> = ({
   date,
   onDateChange,
   loading,
   appointments,
-  dateRangeUpdated,
-  onDateRangeSet,
   daysPerScreen,
   onLoadNext,
   onLoadPrevious,
 }) => {
-  const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
-  const { appointment } = useSelector((state: RootState) => state.appointment);
-  const [sliceIdx, setSliceIdx] = useState<number>(0);
   const theme = useTheme();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { onOpen, isOpen, onClose } = useModal();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-  const history = useHistory();
   const isAdminPanel = history.location.pathname.includes('admin');
 
-  const [daysInMonth, days]: [number, string[]] = useMemo(() => {
-    let daysInMonth: number = dayjs.utc(date).daysInMonth();
-    let generatedDays: string[] = [];
-    generatedDays = Array(daysInMonth)
+  const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
+  const { appointment } = useSelector((state: RootState) => state.appointment);
+
+  // State for managing the visible slice of days
+  const [sliceIdx, setSliceIdx] = useState<number>(0);
+
+  // Memoized days array and month length
+  const { days, daysInMonth } = useMemo(() => {
+    const monthLength = dayjs.utc(date).daysInMonth();
+    const generatedDays = Array(monthLength)
       .fill(0)
-      .map((e, idx) => getAppointmentDate(date, idx + 1));
-    return [daysInMonth, generatedDays];
+      .map((_, idx) => getAppointmentDate(date, idx + 1));
+    return { days: generatedDays, daysInMonth: monthLength };
   }, [date]);
 
-  useEffect(() => {
-    const selectedDate = appointment?.date ? appointment.date : date;
+  // Find the index of the selected date
+  const selectedDateIndex = useMemo(() => {
+    const selectedDate = appointment?.date || date;
     const formattedDate = dayjs
       .utc(selectedDate)
       .startOf('day')
       .toISOString()
       .replace('.000Z', 'Z');
-    const dateIdx = days.findIndex(el => el === formattedDate);
-    if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
+    return days.findIndex(el => el === formattedDate);
+  }, [days, date, appointment]);
+
+  // Update slice index when selected date changes
+  useEffect(() => {
+    if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
       setSliceIdx(0);
-    } else {
-      const maxSliceIndex = daysInMonth - daysPerScreen;
-
-      if (dateIdx < sliceIdx || dateIdx >= sliceIdx + daysPerScreen) {
-        let newSliceIdx = dateIdx - 2;
-
-        newSliceIdx = Math.max(0, Math.min(newSliceIdx, maxSliceIndex));
-        setSliceIdx(newSliceIdx);
-      }
+      return;
     }
-  }, [date, days, daysPerScreen, daysInMonth, dateRangeUpdated, onDateRangeSet, appointment]);
 
-  const handleChangeDay = (date: string) => () => {
-    onDateChange(dayjs.utc(date));
-  };
+    // Always position the selected date at the beginning of the visible range
+    setSliceIdx(selectedDateIndex);
+  }, [selectedDateIndex, daysInMonth, daysPerScreen]);
 
-  // const nextAvailable = (): boolean => {
-  //   return sliceIdx < daysInMonth - daysPerScreen;
-  // };
-  const prevAvailable = (): boolean => {
+  // Navigation handlers
+  const handleNext = useCallback(() => {
+    // Move forward by daysPerScreen
+    const nextSliceIdx = Math.min(sliceIdx + daysPerScreen, daysInMonth - daysPerScreen);
+    setSliceIdx(nextSliceIdx);
+    onLoadNext();
+  }, [sliceIdx, daysPerScreen, daysInMonth, onLoadNext]);
+
+  const handlePrev = useCallback(() => {
     const todayStart = dayjs.utc().startOf('day');
     const currentStartDate = dayjs.utc(date).startOf('day');
-    return currentStartDate.isAfter(todayStart);
-  };
+    const canGoBack = currentStartDate.isAfter(todayStart);
 
-  const handleNext = () => {
-    setSliceIdx(prevIndex => {
-      const nS = prevIndex + daysPerScreen * 2;
-      return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
-    });
-    onLoadNext();
-  };
-  const handlePrev = () => {
-    if (prevAvailable()) {
-      setSliceIdx(s => {
-        const pS = s - daysPerScreen;
-        return pS >= 0 ? pS : 0;
-      });
+    if (canGoBack) {
+      // Move backward by daysPerScreen
+      const prevSliceIdx = Math.max(0, sliceIdx - daysPerScreen);
+      setSliceIdx(prevSliceIdx);
       onLoadPrevious();
-    } else {
-      if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
-        onOpen();
-      }
+    } else if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
+      onOpen();
     }
-  };
+  }, [date, sliceIdx, daysPerScreen, selectedTiming, isAdminPanel, onLoadPrevious, onOpen]);
 
-  const handleYes = () => {
+  // Date selection handler
+  const handleDateSelect = useCallback(
+    (selectedDate: string) => () => {
+      onDateChange(dayjs.utc(selectedDate));
+    },
+    [onDateChange]
+  );
+
+  // Reset appointment selection handler
+  const handleResetAppointment = useCallback(() => {
     dispatch(setTiming(EAppointmentTimingType.PreferredDate));
     dispatch(setCurrentFrameScreen('appointmentTiming'));
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
-  };
+  }, [dispatch]);
+
+  // Get visible days for rendering
+  const visibleDays = useMemo(
+    () => days.slice(sliceIdx, sliceIdx + daysPerScreen),
+    [days, sliceIdx, daysPerScreen]
+  );
+
+  // Check if we can navigate forward
+  const canNavigateForward = sliceIdx + daysPerScreen < daysInMonth;
 
   return (
     <DaySelectorWrapper>
-      <DateSelectArrow onClick={handlePrev} disabled={!prevAvailable()}>
+      <DateSelectArrow
+        onClick={handlePrev}
+        disabled={!dayjs.utc(date).startOf('day').isAfter(dayjs.utc().startOf('day'))}
+      >
         <ChevronLeft />
       </DateSelectArrow>
-      {days.slice(sliceIdx, sliceIdx + daysPerScreen).map(day => (
+
+      {visibleDays.map(day => (
         <DaySelectCard
           key={day}
           isXs={isSm}
           isCurrent={dayjs.utc(date).isSame(dayjs.utc(day), 'date')}
           appointment={appointments[day]}
-          onClick={handleChangeDay(day)}
+          onClick={handleDateSelect(day)}
           day={day}
           data-date={day}
         />
       ))}
-      <DateSelectArrow onClick={handleNext} disabled={false}>
+
+      <DateSelectArrow onClick={handleNext} disabled={!canNavigateForward}>
         <ChevronRight />
       </DateSelectArrow>
-      <PromptNewSearchModal onClose={onClose} open={isOpen} onSave={handleYes} />
+
+      <PromptNewSearchModal onClose={onClose} open={isOpen} onSave={handleResetAppointment} />
     </DaySelectorWrapper>
   );
 };

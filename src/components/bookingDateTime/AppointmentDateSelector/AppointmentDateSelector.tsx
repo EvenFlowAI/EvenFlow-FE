@@ -51,8 +51,6 @@ export const AppointmentDateSelector: React.FC<
         </div>
       ) : null}
       <DaySelector
-        dateRangeUpdated={dateRangeUpdated}
-        onDateRangeSet={onDateRangeSet}
         date={date}
         appointments={appointments}
         loading={loading}
