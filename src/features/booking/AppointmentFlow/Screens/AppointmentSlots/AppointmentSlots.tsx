@@ -711,13 +711,25 @@ export const AppointmentSlots: React.FC<
       return;
     }
 
-    // Check against the *start* of the day for the previous range
-    if (previousStartDate.startOf('day').isBefore(todayStart)) {
-      console.log('Cannot load slots before today.');
-      // Optionally disable the previous button based on this logic
+    // Special case: If the previous range would go before today,
+    // adjust it to start from today
+    if (previousStartDate.isBefore(todayStart)) {
+      const adjustedStartDate = todayStart;
+      const adjustedEndDate = todayStart.add(daysPerScreen - 1, 'day');
+
+      loadData({
+        requestedStartDate: adjustedStartDate.toISOString(),
+        requestedEndDate: adjustedEndDate.toISOString(),
+      }).finally();
+
       return;
     }
-    // --- End Prevention Check ---
+
+    // We can safely go back a full range
+    loadData({
+      requestedStartDate: previousStartDate.toISOString(),
+      requestedEndDate: previousEndDate.toISOString(),
+    }).finally();
 
     // Check if we're crossing a month boundary
     const currentMonth = dayjs(currentApiStartDate).month();
@@ -735,11 +747,6 @@ export const AppointmentSlots: React.FC<
         setDate(previousStartDate.startOf('month').toISOString());
       }
     }
-
-    loadData({
-      requestedStartDate: previousStartDate.toISOString(),
-      requestedEndDate: previousEndDate.toISOString(),
-    }).finally();
   };
 
   return (
