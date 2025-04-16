@@ -356,8 +356,8 @@ export const AppointmentSlots: React.FC<
       }
 
       // Check if the month needs to be updated
-      // Only update the month if it's a different month
-      if (!newDate.isSame(dayjs.utc(month), 'month')) {
+      // Only update the month if it's a different month and we're not keeping the slot
+      if (!newDate.isSame(dayjs.utc(month), 'month') && !keepSlot) {
         setMonth(newDate);
       }
     },
