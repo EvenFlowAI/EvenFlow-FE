@@ -117,21 +117,37 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
 
         if (startDateIndex !== -1) {
           setSliceIdx(startDateIndex);
-        } else if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
-          setSliceIdx(0);
         } else {
-          // to get center of the displayed dates
-          const idXOfCenterElement = selectedDateIndex - Math.floor(daysPerScreen / 2);
-          if (idXOfCenterElement + daysPerScreen > daysInMonth) {
-            // Handle right date edge
-            if (selectedDateIndex === days.length - 1) {
-              setSliceIdx(daysInMonth - daysPerScreen + 1);
+          // If the API start date is not in the current month's days array,
+          // it means we've crossed a month boundary
+          const apiStartDateObj = dayjs.utc(apiStartDate);
+          const currentMonthObj = dayjs.utc(date);
+
+          // Check if API date is in a different month
+          if (apiStartDateObj.month() !== currentMonthObj.month()) {
+            // If API date is in a previous month, start from the beginning
+            if (apiStartDateObj.isBefore(currentMonthObj)) {
+              setSliceIdx(0);
             } else {
-              setSliceIdx(daysInMonth - daysPerScreen);
+              // If API date is in a next month, show the end of current month
+              setSliceIdx(Math.max(0, daysInMonth - daysPerScreen));
             }
+          } else if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
+            setSliceIdx(0);
           } else {
-            // Handle left date edge
-            setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
+            // to get center of the displayed dates
+            const idXOfCenterElement = selectedDateIndex - Math.floor(daysPerScreen / 2);
+            if (idXOfCenterElement + daysPerScreen > daysInMonth) {
+              // Handle right date edge
+              if (selectedDateIndex === days.length - 1) {
+                setSliceIdx(daysInMonth - daysPerScreen + 1);
+              } else {
+                setSliceIdx(daysInMonth - daysPerScreen);
+              }
+            } else {
+              // Handle left date edge
+              setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
+            }
           }
         }
       } else if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
@@ -153,10 +169,32 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
       }
       isInitialLoad.current = false;
     }
-  }, [selectedDateIndex, daysInMonth, daysPerScreen, apiStartDate, apiEndDate, days]);
+  }, [selectedDateIndex, daysInMonth, daysPerScreen, apiStartDate, apiEndDate, days, date]);
 
   // Get visible days for rendering, including next month days if needed
   const visibleDays = useMemo(() => {
+    // If we have API dates and they're in a different month than the current date,
+    // we need to adjust our visible days calculation
+    if (apiStartDate && apiEndDate) {
+      const apiStartDateObj = dayjs.utc(apiStartDate);
+      const currentMonthObj = dayjs.utc(date);
+
+      // If API date is in a different month than the current date
+      if (apiStartDateObj.month() !== currentMonthObj.month()) {
+        // If API date is in a previous month, we need to show days from the previous month
+        if (apiStartDateObj.isBefore(currentMonthObj)) {
+          // We don't have previous month days in our array, so we'll just show
+          // the first days of the current month
+          return days.slice(0, daysPerScreen);
+        } else {
+          // If API date is in a next month, we need to show days from the next month
+          // We already have nextMonthDays, so we'll use those
+          return nextMonthDays.slice(0, daysPerScreen);
+        }
+      }
+    }
+
+    // Default behavior for same month
     const currentMonthVisibleDays = days.slice(sliceIdx, sliceIdx + daysPerScreen);
 
     // If we're near the end of the month, add days from the next month
@@ -167,7 +205,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     }
 
     return currentMonthVisibleDays;
-  }, [days, sliceIdx, daysPerScreen, daysInMonth, nextMonthDays]);
+  }, [days, sliceIdx, daysPerScreen, daysInMonth, nextMonthDays, apiStartDate, apiEndDate, date]);
 
   // Notify parent component of visible date range changes
   useEffect(() => {
