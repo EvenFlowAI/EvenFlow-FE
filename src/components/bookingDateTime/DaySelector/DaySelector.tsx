@@ -35,6 +35,7 @@ interface DaySelectorProps {
   daysPerScreen: number;
   onLoadNext: () => void;
   onLoadPrevious: () => void;
+  onVisibleRangeChange?: (startDate: string, endDate: string) => void;
 }
 
 export const DaySelector: React.FC<DaySelectorProps> = ({
@@ -45,6 +46,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   daysPerScreen,
   onLoadNext,
   onLoadPrevious,
+  onVisibleRangeChange,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -108,6 +110,29 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     setSliceIdx(selectedDateIndex);
   }, [selectedDateIndex, daysInMonth, daysPerScreen]);
 
+  // Get visible days for rendering, including next month days if needed
+  const visibleDays = useMemo(() => {
+    const currentMonthVisibleDays = days.slice(sliceIdx, sliceIdx + daysPerScreen);
+
+    // If we're near the end of the month, add days from the next month
+    if (sliceIdx + daysPerScreen > daysInMonth) {
+      const remainingDays = daysPerScreen - currentMonthVisibleDays.length;
+      const nextMonthDaysToAdd = nextMonthDays.slice(0, remainingDays);
+      return [...currentMonthVisibleDays, ...nextMonthDaysToAdd];
+    }
+
+    return currentMonthVisibleDays;
+  }, [days, sliceIdx, daysPerScreen, daysInMonth, nextMonthDays]);
+
+  // Notify parent component of visible date range changes
+  useEffect(() => {
+    if (onVisibleRangeChange && visibleDays.length > 0) {
+      const startDate = visibleDays[0];
+      const endDate = visibleDays[visibleDays.length - 1];
+      onVisibleRangeChange(startDate, endDate);
+    }
+  }, [visibleDays, onVisibleRangeChange]);
+
   // Navigation handlers
   const handleNext = useCallback(() => {
     // Move forward by daysPerScreen
@@ -146,20 +171,6 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
   }, [dispatch]);
-
-  // Get visible days for rendering, including next month days if needed
-  const visibleDays = useMemo(() => {
-    const currentMonthVisibleDays = days.slice(sliceIdx, sliceIdx + daysPerScreen);
-
-    // If we're near the end of the month, add days from the next month
-    if (sliceIdx + daysPerScreen > daysInMonth) {
-      const remainingDays = daysPerScreen - currentMonthVisibleDays.length;
-      const nextMonthDaysToAdd = nextMonthDays.slice(0, remainingDays);
-      return [...currentMonthVisibleDays, ...nextMonthDaysToAdd];
-    }
-
-    return currentMonthVisibleDays;
-  }, [days, sliceIdx, daysPerScreen, daysInMonth, nextMonthDays]);
 
   // Check if we can navigate forward
   const canNavigateForward = sliceIdx + daysPerScreen < daysInMonth || nextMonthDays.length > 0;
