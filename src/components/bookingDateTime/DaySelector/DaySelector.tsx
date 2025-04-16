@@ -106,27 +106,22 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
 
   const handlePrev = useCallback(() => {
     const todayStart = dayjs.utc().startOf('day');
-    const currentStartDate = dayjs.utc(date).startOf('day');
-    const canGoBack = currentStartDate.isAfter(todayStart);
+
+    // Get the first visible day
+    const firstVisibleDay =
+      visibleDays.length > 0
+        ? dayjs.utc(visibleDays[0]).startOf('day')
+        : dayjs.utc(date).startOf('day');
+
+    // Check if we can go back
+    const canGoBack = firstVisibleDay.isAfter(todayStart);
 
     if (canGoBack) {
       onLoadPrevious();
     } else if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
       onOpen();
     }
-  }, [date, selectedTiming, isAdminPanel, onLoadPrevious, onOpen]);
-
-  // Check if a date is in the visible days
-  const isDateVisible = useCallback(
-    (dateToCheck: string) => {
-      return visibleDays.some(
-        day =>
-          dayjs.utc(day).startOf('day').toISOString() ===
-          dayjs.utc(dateToCheck).startOf('day').toISOString()
-      );
-    },
-    [visibleDays]
-  );
+  }, [date, selectedTiming, isAdminPanel, onLoadPrevious, onOpen, visibleDays]);
 
   // Override the onDateChange to prevent re-rendering when selecting a visible date
   const handleDateChange = useCallback(
