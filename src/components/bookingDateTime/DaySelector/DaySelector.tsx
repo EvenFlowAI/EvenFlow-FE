@@ -271,14 +271,43 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     }
   }, [date, sliceIdx, daysPerScreen, selectedTiming, isAdminPanel, onLoadPrevious, onOpen]);
 
+  // Check if a date is in the visible days
+  const isDateVisible = useCallback(
+    (dateToCheck: string) => {
+      return visibleDays.some(
+        day =>
+          dayjs.utc(day).startOf('day').toISOString() ===
+          dayjs.utc(dateToCheck).startOf('day').toISOString()
+      );
+    },
+    [visibleDays]
+  );
+
+  // Override the onDateChange to prevent re-rendering when selecting a visible date
+  const handleDateChange = useCallback(
+    (selectedDate: TParsableDate) => {
+      const selectedDateStr = dayjs.utc(selectedDate).startOf('day').toISOString();
+
+      // If the selected date is already visible, just update the date without changing the slice
+      if (isDateVisible(selectedDateStr)) {
+        onDateChange(selectedDate);
+        return;
+      }
+
+      // Otherwise, proceed with normal date change
+      onDateChange(selectedDate);
+    },
+    [onDateChange, isDateVisible]
+  );
+
   // Date selection handler
   const handleDateSelect = useCallback(
     (selectedDate: string) => () => {
       // When a date is selected, we don't change the slice index
       // This ensures the selected date stays in the same position
-      onDateChange(dayjs.utc(selectedDate));
+      handleDateChange(dayjs.utc(selectedDate));
     },
-    [onDateChange]
+    [handleDateChange]
   );
 
   // Reset appointment selection handler
