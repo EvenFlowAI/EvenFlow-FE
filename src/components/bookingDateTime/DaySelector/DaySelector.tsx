@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { DaySelectCard } from '../DaySelectCard/DaySelectCard';
 import { TArgCallback, TParsableDate } from '../../../types/types';
@@ -54,6 +54,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const { onOpen, isOpen, onClose } = useModal();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isAdminPanel = history.location.pathname.includes('admin');
+  const isInitialLoad = useRef(true);
 
   const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
   const { appointment } = useSelector((state: RootState) => state.appointment);
@@ -101,13 +102,26 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
 
   // Update slice index when selected date changes
   useEffect(() => {
-    if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
-      setSliceIdx(0);
-      return;
+    if (isInitialLoad.current) {
+      if (selectedDateIndex === -1 || daysInMonth <= daysPerScreen) {
+        setSliceIdx(0);
+      } else {
+        // to get center of the displayed dates
+        const idXOfCenterElement = selectedDateIndex - Math.floor(daysPerScreen / 2);
+        if (idXOfCenterElement + daysPerScreen > daysInMonth) {
+          // Handle right date edge
+          if (selectedDateIndex === days.length - 1) {
+            setSliceIdx(daysInMonth - daysPerScreen + 1);
+          } else {
+            setSliceIdx(daysInMonth - daysPerScreen);
+          }
+        } else {
+          // Handle left date edge
+          setSliceIdx(idXOfCenterElement >= 0 ? idXOfCenterElement : 0);
+        }
+      }
+      isInitialLoad.current = false;
     }
-
-    // Always position the selected date at the beginning of the visible range
-    setSliceIdx(selectedDateIndex);
   }, [selectedDateIndex, daysInMonth, daysPerScreen]);
 
   // Get visible days for rendering, including next month days if needed

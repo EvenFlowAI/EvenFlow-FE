@@ -111,7 +111,7 @@ export const AppointmentSlots: React.FC<
     editingPosition,
     serviceOptionChangedFromSlotPage,
   } = useSelector((state: RootState) => state.appointmentFrame);
-  console.log('selectedTime', selectedTime);
+
   const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
@@ -416,7 +416,7 @@ export const AppointmentSlots: React.FC<
     const anchorTime = selectedTime ? dayjs(selectedTime) : dayjs().startOf('day');
     const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
     const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
-    const desiredEndDate = desiredStartDate.add(daysPerScreen, 'day');
+    const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
     return { apiStartDate, apiEndDate };
@@ -433,7 +433,7 @@ export const AppointmentSlots: React.FC<
       // Set the current range *before* loading starts
       setCurrentApiStartDate(requestedStartDate);
       setCurrentApiEndDate(requestedEndDate);
-
+      console.log('requested date range', requestedStartDate, requestedEndDate);
       setLoading(true);
       try {
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
