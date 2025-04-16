@@ -67,7 +67,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const [sliceIdx, setSliceIdx] = useState<number>(0);
 
   // Memoized days array and month length
-  const { days, daysInMonth, nextMonthDays } = useMemo(() => {
+  const { days, daysInMonth, nextMonthDays, prevMonthDays } = useMemo(() => {
     const currentMonth = dayjs.utc(date);
     const monthLength = currentMonth.daysInMonth();
 
@@ -86,10 +86,21 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
         return dayjs.utc(nextMonthDate).startOf('day').toISOString().replace('.000Z', 'Z');
       });
 
+    // Generate days for previous month
+    const prevMonth = currentMonth.subtract(1, 'month');
+    const prevMonthLength = Math.min(daysPerScreen, prevMonth.daysInMonth());
+    const prevMonthDays = Array(prevMonthLength)
+      .fill(0)
+      .map((_, idx) => {
+        const prevMonthDate = prevMonth.date(prevMonth.daysInMonth() - prevMonthLength + idx + 1);
+        return dayjs.utc(prevMonthDate).startOf('day').toISOString().replace('.000Z', 'Z');
+      });
+
     return {
       days: currentMonthDays,
       daysInMonth: monthLength,
       nextMonthDays,
+      prevMonthDays,
     };
   }, [date, daysPerScreen]);
 
@@ -106,6 +117,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
 
   // Update slice index when selected date changes or when API dates change
   useEffect(() => {
+    // Only update the slice index on initial load or when API dates change
+    // This prevents the slice index from changing when a date is selected
     if (isInitialLoad.current || (apiStartDate && apiEndDate)) {
       if (apiStartDate && apiEndDate) {
         // Find the index of the API start date in the days array
@@ -183,9 +196,18 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
       if (apiStartDateObj.month() !== currentMonthObj.month()) {
         // If API date is in a previous month, we need to show days from the previous month
         if (apiStartDateObj.isBefore(currentMonthObj)) {
-          // We don't have previous month days in our array, so we'll just show
-          // the first days of the current month
-          return days.slice(0, daysPerScreen);
+          // Check if we're at the end of the previous month
+          const isEndOfPrevMonth =
+            apiStartDateObj.date() > apiStartDateObj.daysInMonth() - daysPerScreen;
+
+          if (isEndOfPrevMonth) {
+            // Show the last days of the previous month
+            return prevMonthDays.slice(-daysPerScreen);
+          } else {
+            // We don't have all previous month days in our array, so we'll just show
+            // the first days of the current month
+            return days.slice(0, daysPerScreen);
+          }
         } else {
           // If API date is in a next month, we need to show days from the next month
           // We already have nextMonthDays, so we'll use those
@@ -205,7 +227,17 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     }
 
     return currentMonthVisibleDays;
-  }, [days, sliceIdx, daysPerScreen, daysInMonth, nextMonthDays, apiStartDate, apiEndDate, date]);
+  }, [
+    days,
+    sliceIdx,
+    daysPerScreen,
+    daysInMonth,
+    nextMonthDays,
+    prevMonthDays,
+    apiStartDate,
+    apiEndDate,
+    date,
+  ]);
 
   // Notify parent component of visible date range changes
   useEffect(() => {
@@ -242,6 +274,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   // Date selection handler
   const handleDateSelect = useCallback(
     (selectedDate: string) => () => {
+      // When a date is selected, we don't change the slice index
+      // This ensures the selected date stays in the same position
       onDateChange(dayjs.utc(selectedDate));
     },
     [onDateChange]

@@ -338,7 +338,10 @@ export const AppointmentSlots: React.FC<
 
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
-      clearData();
+      // Only clear data if we're not keeping the slot
+      if (!keepSlot) {
+        clearData();
+      }
 
       // Convert the incoming date to UTC
       const newDate = dayjs.utc(d);
@@ -353,6 +356,7 @@ export const AppointmentSlots: React.FC<
       }
 
       // Check if the month needs to be updated
+      // Only update the month if it's a different month
       if (!newDate.isSame(dayjs.utc(month), 'month')) {
         setMonth(newDate);
       }
@@ -699,8 +703,15 @@ export const AppointmentSlots: React.FC<
 
     // If we're crossing to a new month, update the date state to match the new month
     if (currentMonth !== previousMonth) {
-      // Update the date to the first day of the new month
-      setDate(previousStartDate.startOf('month').toISOString());
+      // If we're going from the first days of a month to the previous month,
+      // we want to show the last days of the previous month
+      if (dayjs(currentApiStartDate).date() <= daysPerScreen) {
+        // Set the date to the last day of the previous month
+        setDate(previousStartDate.endOf('month').toISOString());
+      } else {
+        // Otherwise, set to the first day of the new month
+        setDate(previousStartDate.startOf('month').toISOString());
+      }
     }
 
     loadData({
