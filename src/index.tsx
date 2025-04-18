@@ -31,23 +31,6 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(localeData);
 dayjs.extend(weekday);
 
-const currentVersion = process.env.REACT_APP_VERSION || new Date().getTime().toString();
-const storedVersion = localStorage.getItem('app_version');
-
-localStorage.setItem('app_version', currentVersion);
-
-if (storedVersion && storedVersion !== currentVersion) {
-  if ('caches' in window) {
-    caches.keys().then(names => {
-      names.forEach(name => {
-        caches.delete(name);
-      });
-    });
-  }
-
-  window.location.reload();
-}
-
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
