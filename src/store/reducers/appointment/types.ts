@@ -119,7 +119,7 @@ export interface ISearchedDateRange {
 
 export interface IAppointmentResponse {
   items: IAppointmentSlot[];
-  // searchedDateRange: ISearchedDateRange;
+  searchedDateRange: ISearchedDateRange;
   slotGapMinutes: number;
   advisorId?: string;
   waitlistSettings?: IWaitListData;
@@ -199,6 +199,7 @@ export interface IAppointmentFilters {
 export type TAppointmentState = {
   sessionId: string;
   updated: boolean;
+  searchedDateRange: ISearchedDateRange | null;
   customerEnteredEmail: string;
   scProfile?: IServiceCenterProfile;
   serviceRequests: ISR[];

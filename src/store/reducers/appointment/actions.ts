@@ -144,6 +144,10 @@ export const setSlotsSearchDate = createAction<ParsableDate>(
   'Appointment/SetSlotsServiceSearchDate'
 );
 
+export const setLoadedDateRange = createAction<ISearchedDateRange>(
+  'Appointment/SetLoadedDateRange'
+);
+
 export const loadAppointmentSlots =
   (
     data: IAppointmentSlotsRequest,
@@ -156,7 +160,7 @@ export const loadAppointmentSlots =
     dispatch(setSlotsLoading(true));
     try {
       const {
-        data: { items, slotGapMinutes, waitlistSettings, podId },
+        data: { items, slotGapMinutes, waitlistSettings, podId, searchedDateRange },
       } = await Api.call<IAppointmentResponse>(Api.endpoints.AppointmentSlots.GetSlots, { data });
       const res = dispatch(
         getAppointmentSlots(
@@ -170,17 +174,17 @@ export const loadAppointmentSlots =
         loadCB();
       }
       if (onLoadedCb) onLoadedCb(!Boolean(items.length));
-      // searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
+      searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
       dispatch(setSlotsSearchDate(data.startDate));
-      // if (
-      //   cb &&
-      //   data.appointmentTimingType === EAppointmentTimingType.FirstAvailable &&
-      //   searchedDateRange
-      // ) {
-      //   return cb(dayjs.utc(searchedDateRange.from));
-      // }
+      if (
+        cb &&
+        data.appointmentTimingType === EAppointmentTimingType.FirstAvailable &&
+        searchedDateRange
+      ) {
+        return cb(dayjs.utc(searchedDateRange.from));
+      }
       return res;
     } catch (err) {
       onError && onError(err);

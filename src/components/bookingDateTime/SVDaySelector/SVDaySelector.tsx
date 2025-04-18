@@ -42,7 +42,9 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
   const { selectedTiming, serviceTypeOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
-  const { serviceValetAppointment } = useSelector((state: RootState) => state.appointment);
+  const { searchedDateRange, serviceValetAppointment } = useSelector(
+    (state: RootState) => state.appointment
+  );
 
   const [sliceIdx, setSliceIdx] = useState<number>(0);
   const theme = useTheme();
@@ -53,7 +55,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
   const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
   const isMds = useMediaQuery(theme.breakpoints.down('mds'));
   const history = useHistory();
-  // const utcOffset = dayjs().utcOffset();
+  const utcOffset = dayjs().utcOffset();
 
   const isAdminPanel = history.location.pathname.includes('admin');
   const daysPerScreen: number = useMemo(() => {
@@ -68,31 +70,31 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
     let daysInMonth: number = dayjs(date).daysInMonth();
     let generatedDays: string[] = [];
-    // if (searchedDateRange) {
-    //   daysInMonth = Math.abs(
-    //     dayjs
-    //       .utc(searchedDateRange.from)
-    //       .diff(dayjs.utc(dayjs(searchedDateRange.to).add(1, 'day')), 'days')
-    //   );
-    //   let currentDate = dayjs.utc(searchedDateRange.from);
-    //   let endDate = dayjs.utc(searchedDateRange.to).endOf('day');
-    //   let i = 0;
-    //   const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
-    //   while (currentDate.isSameOrBefore(endDate, 'date') && i < maxAvailableDaysAmount) {
-    //     generatedDays.push(currentDate.startOf('day').toISOString().replace('.000', ''));
-    //     currentDate = dayjs.utc(currentDate).add(1, 'day');
-    //     i++;
-    //   }
-    // }
-    generatedDays = Array(daysInMonth)
-      .fill(0)
-      .map((e, idx) => getAppointmentDate(date, idx + 1));
-
+    if (searchedDateRange) {
+      daysInMonth = Math.abs(
+        dayjs
+          .utc(searchedDateRange.from)
+          .diff(dayjs.utc(dayjs(searchedDateRange.to).add(1, 'day')), 'days')
+      );
+      let currentDate = dayjs.utc(searchedDateRange.from);
+      let endDate = dayjs.utc(searchedDateRange.to).endOf('day');
+      let i = 0;
+      const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
+      while (currentDate.isSameOrBefore(endDate, 'date') && i < maxAvailableDaysAmount) {
+        generatedDays.push(currentDate.startOf('day').toISOString().replace('.000', ''));
+        currentDate = dayjs.utc(currentDate).add(1, 'day');
+        i++;
+      }
+    } else {
+      generatedDays = Array(daysInMonth)
+        .fill(0)
+        .map((e, idx) => getAppointmentDate(date, idx + 1));
+    }
     return [daysInMonth, generatedDays];
-  }, [date, getAppointmentDate]);
+  }, [date, searchedDateRange, getAppointmentDate]);
 
   useEffect(() => {
-    if (!dateRangeUpdated) {
+    if (!dateRangeUpdated && searchedDateRange) {
       const selectedDate = serviceValetAppointment?.date ?? date;
       const formattedDate = dayjs
         .utc(selectedDate)
@@ -127,6 +129,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     dateRangeUpdated,
     onDateRangeSet,
     serviceValetAppointment,
+    searchedDateRange,
   ]);
 
   const handleChangeDay = (date: string) => () => {
