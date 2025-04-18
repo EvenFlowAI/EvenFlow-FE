@@ -294,4 +294,5 @@ export interface IDropOffSettings {
 export interface ISVAppointmentResponse {
   items: IServiceValetAppointment[];
   dropOffSettings: IDropOffSettings;
+  searchedDateRange: ISearchedDateRange;
 }

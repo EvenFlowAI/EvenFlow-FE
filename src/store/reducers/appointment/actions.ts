@@ -164,7 +164,13 @@ export const loadAppointmentSlots =
       } = await Api.call<IAppointmentResponse>(Api.endpoints.AppointmentSlots.GetSlots, { data });
       const res = dispatch(
         getAppointmentSlots(
-          items.map(item => ({ ...item, searchDate: data.startDate as TParsableDate }))
+          items.map(item => {
+            const searchDate = data.fromDate || data.startDate;
+            return {
+              ...item,
+              searchDate: searchDate as TParsableDate,
+            };
+          })
         )
       );
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
@@ -177,7 +183,8 @@ export const loadAppointmentSlots =
       searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
-      dispatch(setSlotsSearchDate(data.startDate));
+      const searchDate = data.fromDate || data.startDate;
+      dispatch(setSlotsSearchDate(searchDate as TParsableDate));
       if (
         cb &&
         data.appointmentTimingType === EAppointmentTimingType.FirstAvailable &&
@@ -291,11 +298,13 @@ export const loadServiceValetSlots =
     dispatch(setSlotsLoading(true));
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, { data })
       .then(result => {
-        const { items, dropOffSettings } = result.data;
+        const { items, dropOffSettings, searchedDateRange } = result.data;
         dispatch(getServiceValetSlots(items.map(el => ({ ...el, uniqueId: uuidv4() }))));
+        if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
         if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
-        dispatch(setSlotsSearchDate(data.startDate));
+        const searchDate = data.fromDate || data.startDate;
+        dispatch(setSlotsSearchDate(searchDate as TParsableDate));
         loadCB && loadCB();
         if (onLoadedCb) onLoadedCb(!Boolean(items.length));
       })
