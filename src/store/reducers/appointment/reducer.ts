@@ -34,6 +34,7 @@ import {
   setTopAligning,
   setWaitListSettings,
   selectSRComment,
+  setLoadedDateRange,
 } from './actions';
 import { setPackage } from '../appointmentFrameReducer/actions';
 import dayjs from 'dayjs';
@@ -58,6 +59,7 @@ const initialState: TAppointmentState = {
   sessionId: '',
   updated: false,
   serviceRequests: [],
+  searchedDateRange: null,
   customerLoadedData: null,
   customerEnteredEmail: '',
   appointmentId: null,
@@ -127,9 +129,9 @@ export const appointmentReducer = createReducer(initialState, builder =>
     .addCase(selectAppointment, (state, { payload }) => {
       return { ...state, appointment: payload };
     })
-    // .addCase(setLoadedDateRange, (state, { payload }) => {
-    //   return { ...state, searchedDateRange: payload };
-    // })
+    .addCase(setLoadedDateRange, (state, { payload }) => {
+      return { ...state, searchedDateRange: payload };
+    })
     .addCase(getAppointmentSlots, (state, { payload }) => {
       let appointmentSlots = payload.map(sl => {
         const date = `${String(sl.date).split('T')[0]}T${sl.time}Z`;
