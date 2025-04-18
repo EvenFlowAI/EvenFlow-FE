@@ -17,7 +17,6 @@ import AppRoutes from './routes/AppRoutes/AppRoutes';
 import dayjs from 'dayjs';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
-import VersionDisplay from './components/VersionDisplay/VersionDisplay';
 
 const App = () => {
   const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
@@ -151,7 +150,6 @@ const App = () => {
           valueServicePreviousScreen={valueServicePreviousScreen}
           valueServiceNextScreen={valueServiceNextScreen}
         />
-        {process.env.NODE_ENV === 'development' && <VersionDisplay />}
       </Container>
     </SnackbarProvider>
   );

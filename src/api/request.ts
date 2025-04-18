@@ -30,18 +30,3 @@ request.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-axios.interceptors.request.use(
-  config => {
-    const cacheBuster = `v=${process.env.REACT_APP_VERSION || new Date().getTime()}`;
-
-    if (config.method?.toLowerCase() === 'get' && config.url) {
-      config.url = config.url + (config.url.includes('?') ? '&' : '?') + cacheBuster;
-    }
-
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);

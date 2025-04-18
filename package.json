@@ -58,15 +58,14 @@
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
-    "build": "REACT_APP_VERSION=$npm_package_version-$(date +%s) react-scripts build",
-    "buildQA": "REACT_APP_ENV=QA REACT_APP_VERSION=$npm_package_version-$(date +%s) react-scripts build",
-    "buildUAT": "REACT_APP_ENV=uat REACT_APP_VERSION=$npm_package_version-$(date +%s) react-scripts build",
-    "buildProduction": "REACT_APP_ENV=production REACT_APP_VERSION=$npm_package_version-$(date +%s) react-scripts build",
+    "build": "react-scripts build",
+    "buildQA": "REACT_APP_ENV=QA react-scripts build",
+    "buildUAT": "REACT_APP_ENV=uat react-scripts build",
+    "buildProduction": "REACT_APP_ENV=production react-scripts build",
     "startpreprod": "REACT_APP_ENV=PreProd react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
-    "clear-cache": "rm -rf node_modules/.cache build"
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\""
   },
   "eslintConfig": {
     "extends": "react-app"
