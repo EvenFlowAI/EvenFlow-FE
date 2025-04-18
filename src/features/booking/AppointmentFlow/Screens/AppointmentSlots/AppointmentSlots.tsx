@@ -338,26 +338,18 @@ export const AppointmentSlots: React.FC<
 
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
-      // Only clear data if we're not keeping the slot
-      if (!keepSlot) {
-        clearData();
-      }
+      clearData();
 
-      // Convert the incoming date to UTC
       const newDate = dayjs.utc(d);
       const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
 
-      // Set the date in UTC
       setDate(newDate);
 
-      // Select the first slot if keepSlot is false
       if (!keepSlot) {
         selectFirstSlot(minDate);
       }
 
-      // Check if the month needs to be updated
-      // Only update the month if it's a different month and we're not keeping the slot
-      if (!newDate.isSame(dayjs.utc(month), 'month') && !keepSlot) {
+      if (!newDate.isSame(dayjs.utc(month), 'month')) {
         setMonth(newDate);
       }
     },
@@ -430,15 +422,18 @@ export const AppointmentSlots: React.FC<
     requestedStartDate,
     requestedEndDate,
   }: {
-    requestedStartDate: string;
-    requestedEndDate: string;
+    requestedStartDate?: string;
+    requestedEndDate?: string;
   }) => {
     if (id) {
       // Set the current range *before* loading starts
-      setCurrentApiStartDate(requestedStartDate);
-      setCurrentApiEndDate(requestedEndDate);
-      console.log('requested date range', requestedStartDate, requestedEndDate);
+      setCurrentApiStartDate(requestedStartDate ?? null);
+      setCurrentApiEndDate(requestedEndDate ?? null);
       setLoading(true);
+      const utcOffset = dayjs().utcOffset();
+      const fromDate = selectedTime
+        ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
+        : dayjs().startOf('day').add(utcOffset, 'minute').toISOString();
       try {
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
           ? { id: selectedPackage?.id, priceType: packagePricingType }
@@ -460,8 +455,11 @@ export const AppointmentSlots: React.FC<
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
-          startDate: requestedStartDate,
-          endDate: requestedEndDate,
+          fromDate: serviceTypeOption?.type === EServiceType.PickUpDropOff ? fromDate : undefined,
+          startDate:
+            serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedStartDate : undefined,
+          endDate:
+            serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedEndDate : undefined,
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -633,8 +631,7 @@ export const AppointmentSlots: React.FC<
 
   const loadDataForMileage = () => {
     onMileageClose();
-    const { apiStartDate, apiEndDate } = getApiDates();
-    loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
+    loadData({}).finally();
   };
 
   useEffect(() => {
