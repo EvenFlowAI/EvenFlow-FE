@@ -456,9 +456,9 @@ export const AppointmentSlots: React.FC<
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
           fromDate: serviceTypeOption?.type === EServiceType.PickUpDropOff ? fromDate : undefined,
-          startDate:
+          startDateTest:
             serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedStartDate : undefined,
-          endDate:
+          endDateTest:
             serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedEndDate : undefined,
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
