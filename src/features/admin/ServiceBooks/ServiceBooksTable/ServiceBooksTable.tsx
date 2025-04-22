@@ -219,8 +219,8 @@ const ServiceBooksTable = () => {
   };
 
   const openEdit = () => {
-    onOpen();
     setAnchorEl(null);
+    onOpen();
   };
 
   const activateHandler = async () => {
@@ -229,8 +229,8 @@ const ServiceBooksTable = () => {
       return;
     }
     try {
-      await dispatch(activatePod(isActive, currentItem.serviceBookId, selectedSC.id, showError));
       setAnchorEl(null);
+      await dispatch(activatePod(isActive, currentItem.serviceBookId, selectedSC.id, showError));
     } catch (e) {
       showError(e);
     }
@@ -242,8 +242,8 @@ const ServiceBooksTable = () => {
       return;
     }
     try {
-      await dispatch(deactivatePod(isActive, currentItem.serviceBookId, selectedSC.id, showError));
       setAnchorEl(null);
+      await dispatch(deactivatePod(isActive, currentItem.serviceBookId, selectedSC.id, showError));
     } catch (e) {
       showError(e);
     }
@@ -254,8 +254,8 @@ const ServiceBooksTable = () => {
       showError('Service Book not specified');
     } else {
       try {
-        await dispatch(removePod(currentItem.serviceBookId, isActive, selectedSC?.id, showError));
         setCurrentItem(null);
+        await dispatch(removePod(currentItem.serviceBookId, isActive, selectedSC?.id, showError));
       } catch (e) {
         showError(e);
       }
