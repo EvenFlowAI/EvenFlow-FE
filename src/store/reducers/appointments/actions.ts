@@ -286,7 +286,7 @@ const loadSlotsForCloning =
       currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff
         ? dayjs().startOf('day').add(utcOffset, 'minute').toISOString()
         : undefined;
-    const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
+    const advisorId = consultants.find(item => item.id === currentAppointment?.advisorId)?.id;
     if (currentAppointment) {
       const data: IAppointmentSlotsRequest = {
         fromDate,
@@ -294,7 +294,7 @@ const loadSlotsForCloning =
         endDate,
         appointmentTimingType: EAppointmentTimingType.FirstAvailable,
         serviceCenterId,
-        advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
+        advisorId: !currentAppointment?.advisorId && advisorId ? advisorId : null,
         maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
         serviceRequests: currentAppointment.serviceRequests
           ? currentAppointment.serviceRequests.map(el => ({ id: el.id, comment: null }))
