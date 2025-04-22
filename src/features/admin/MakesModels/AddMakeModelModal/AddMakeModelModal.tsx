@@ -123,9 +123,29 @@ export const AddMakeModelModal: React.FC<
           </li>
         );
       }
+
+      // Check if option is already configured
+      const isAlreadyConfigured = isEditing
+        ? configuredModels.some(model => model.id === option.id)
+        : configuredMakes.some(make => make.id === option.id);
+
       return (
-        <li style={{ display: 'flex', alignItems: 'center' }} key={option + new Date()} {...props}>
-          <Checkbox size="small" style={{ marginRight: 8, padding: 0 }} checked={state.selected} />
+        <li
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            opacity: isAlreadyConfigured ? 0.6 : 1,
+            pointerEvents: isAlreadyConfigured ? 'none' : 'auto',
+          }}
+          key={option + new Date()}
+          {...props}
+        >
+          <Checkbox
+            size="small"
+            style={{ marginRight: 8, padding: 0 }}
+            checked={isAlreadyConfigured || state.selected}
+            disabled={isAlreadyConfigured}
+          />
           {label(option)}
         </li>
       );

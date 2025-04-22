@@ -104,8 +104,9 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
+        textAlign: 'left',
         display: 'block',
-        width: 200,
+        width: 250,
         fontFamily: 'Proxima Nova',
         fontWeight: 700,
         fontSize: 16,
@@ -130,7 +131,11 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
       }}
       data-handler-id={handlerId}
     >
-      {isOverflowing ? <Tooltip title={text}>{textContent}</Tooltip> : textContent}
+      {isOverflowing ? (
+        <Tooltip title={text.length}>{textContent}</Tooltip>
+      ) : (
+        <Tooltip title={text.length}>{textContent}</Tooltip>
+      )}
       {onDelete && !text.toLowerCase().includes('other') ? (
         <Delete onClick={() => onDelete(id)} style={{ cursor: 'pointer' }} />
       ) : null}
