@@ -180,7 +180,7 @@ export const loadAppointmentSlots =
         loadCB();
       }
       if (onLoadedCb) onLoadedCb(!Boolean(items.length));
-      searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
+      // searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
       const searchDate = data.fromDate || data.startDate;
@@ -300,7 +300,6 @@ export const loadServiceValetSlots =
       .then(result => {
         const { items, dropOffSettings, searchedDateRange } = result.data;
         dispatch(getServiceValetSlots(items.map(el => ({ ...el, uniqueId: uuidv4() }))));
-        if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
         if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
         const searchDate = data.fromDate || data.startDate;
