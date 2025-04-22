@@ -13,7 +13,14 @@ import {
   TServiceBook,
   TServiceConsultant,
 } from './types';
-import { AppThunk, IPageRequest, TArgCallback, TCallback, TScreen } from '../../../types/types';
+import {
+  AppThunk,
+  IPageRequest,
+  TArgCallback,
+  TCallback,
+  TScreen,
+  TParsableDate,
+} from '../../../types/types';
 import { API } from '../../../api/api';
 import { EServiceType } from '../appointmentFrameReducer/types';
 import { EAppointmentTimingType, IAppointmentSlotsRequest } from '../appointment/types';
@@ -265,19 +272,29 @@ export const loadServiceConsultants =
   };
 
 const loadSlotsForCloning =
-  (serviceCenterId: number, onEmptyList: (isEmpty: boolean) => void): AppThunk =>
+  (
+    serviceCenterId: number,
+    onEmptyList: (isEmpty: boolean) => void,
+    startDate: TParsableDate,
+    endDate: TParsableDate
+  ): AppThunk =>
   (dispatch, getState) => {
     const { selectedRecalls, consultants } = getState().appointmentFrame;
     const { currentAppointment } = getState().appointments;
-
     const utcOffset = dayjs().utcOffset();
-    const advisorId = consultants.find(item => item.id === currentAppointment?.advisorId)?.id;
+    const fromDate =
+      currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+        ? dayjs().startOf('day').add(utcOffset, 'minute').toISOString()
+        : undefined;
+    const advisorId = consultants.find(item => item.id === currentAppointment?.advisor?.id)?.id;
     if (currentAppointment) {
       const data: IAppointmentSlotsRequest = {
+        fromDate,
+        startDate,
+        endDate,
         appointmentTimingType: EAppointmentTimingType.FirstAvailable,
         serviceCenterId,
-        advisorId: advisorId ? advisorId : null,
-        fromDate: dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
+        advisorId: !currentAppointment?.advisor?.isAnySelected && advisorId ? advisorId : null,
         maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
         serviceRequests: currentAppointment.serviceRequests
           ? currentAppointment.serviceRequests.map(el => ({ id: el.id, comment: null }))
@@ -337,7 +354,12 @@ const loadSlotsForCloning =
   };
 
 export const handleUpdatedMileageForCloning =
-  (serviceCenterId: string, cb: TArgCallback<boolean>): AppThunk =>
+  (
+    serviceCenterId: string,
+    cb: TArgCallback<boolean>,
+    startDate: TParsableDate,
+    endDate: TParsableDate
+  ): AppThunk =>
   (dispatch, getState) => {
     const { currentAppointment } = getState().appointments;
     if (currentAppointment) {
@@ -345,7 +367,7 @@ export const handleUpdatedMileageForCloning =
         dispatch(setCurrentAppointmentLoading(true));
         dispatch(
           loadConsultantsForCloning(serviceCenterId, currentAppointment, () =>
-            dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb))
+            dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
           )
         );
       } catch {
@@ -359,6 +381,8 @@ export const loadAppointmentByKey =
     key: string,
     serviceCenterId: string,
     cb: TArgCallback<boolean>,
+    startDate: TParsableDate,
+    endDate: TParsableDate,
     onEmptyMileage?: TCallback
   ): AppThunk =>
   async (dispatch, getState) => {
@@ -378,7 +402,7 @@ export const loadAppointmentByKey =
         } else {
           dispatch(
             loadConsultantsForCloning(serviceCenterId, data, () =>
-              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb))
+              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
             )
           );
         }

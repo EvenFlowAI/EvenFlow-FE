@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { AppointmentStatus, IAppointment } from '../../../../api/types';
 import { AppointmentDetails } from './AppointmentDetails/AppointmentDetails';
@@ -28,6 +28,7 @@ import { RootState } from '../../../../store/rootReducer';
 import { TCallback } from '../../../../types/types';
 import { loadMileage } from '../../../../store/reducers/vehicleDetails/actions';
 import MileageModal from '../../../../components/modals/booking/MileageModal/MileageModal';
+import dayjs from 'dayjs';
 
 type TCallbackProps = {
   onEditAppointment: TCallback;
@@ -47,6 +48,13 @@ export const ViewAppointmentsModal: React.FC<
   const { onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone } = useModal();
   const { isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen } = useModal();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds, isXs]);
 
   useEffect(() => {
     selectedSC && dispatch(loadMileage(selectedSC.id));
@@ -57,6 +65,17 @@ export const ViewAppointmentsModal: React.FC<
       'We are sorry but the appointment cannot be cloned.  The original appointment has services that are not available in EvenFlow.'
     );
     onOpen();
+  };
+
+  const getApiDates = () => {
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = dayjs().startOf('day');
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    return { apiStartDate, apiEndDate };
   };
 
   const handleExEvenFlowAppointments = () => {
@@ -72,8 +91,16 @@ export const ViewAppointmentsModal: React.FC<
 
   const onClone = async () => {
     if (payload?.hashKey && selectedSC) {
+      const { apiStartDate, apiEndDate } = getApiDates();
       await dispatch(
-        loadAppointmentByKey(payload?.hashKey, encodeSCID(selectedSC.id), onGetSlots, onMileageOpen)
+        loadAppointmentByKey(
+          payload?.hashKey,
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          apiStartDate,
+          apiEndDate,
+          onMileageOpen
+        )
       );
     } else {
       handleExEvenFlowAppointments();
@@ -86,8 +113,63 @@ export const ViewAppointmentsModal: React.FC<
   };
 
   const onMileageSave = () => {
-    selectedSC && dispatch(handleUpdatedMileageForCloning(encodeSCID(selectedSC.id), onGetSlots));
+    const { apiStartDate, apiEndDate } = getApiDates();
+    selectedSC &&
+      dispatch(
+        handleUpdatedMileageForCloning(
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          apiStartDate,
+          apiEndDate
+        )
+      );
     onMileageClose();
+  };
+
+  const loadNextSlots = async () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    const nextApiStartDate = dayjs(apiStartDate)
+      .add(daysPerScreen, 'day')
+      .startOf('day')
+      .toISOString();
+    const nextApiEndDate = dayjs(apiEndDate).add(daysPerScreen, 'day').endOf('day').toISOString();
+    // loadData({ requestedStartDate: nextApiStartDate, requestedEndDate: nextApiEndDate }).finally();
+    if (payload?.hashKey && selectedSC) {
+      await dispatch(
+        loadAppointmentByKey(
+          payload?.hashKey,
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          nextApiStartDate,
+          nextApiEndDate,
+          onMileageOpen
+        )
+      );
+    }
+  };
+
+  const loadPreviousSlots = async () => {
+    const { apiStartDate, apiEndDate } = getApiDates();
+    const previousApiStartDate = dayjs(apiStartDate)
+      .subtract(daysPerScreen, 'day')
+      .startOf('day')
+      .toISOString();
+    const previousApiEndDate = dayjs(apiEndDate)
+      .subtract(daysPerScreen, 'day')
+      .endOf('day')
+      .toISOString();
+    if (payload?.hashKey && selectedSC) {
+      await dispatch(
+        loadAppointmentByKey(
+          payload?.hashKey,
+          encodeSCID(selectedSC.id),
+          onGetSlots,
+          previousApiStartDate,
+          previousApiEndDate,
+          onMileageOpen
+        )
+      );
+    }
   };
 
   return (
@@ -145,7 +227,13 @@ export const ViewAppointmentsModal: React.FC<
         </Button>
       </DialogActions>
       <Informing icon={<Warning />} open={isOpen} onClose={onClose} title={messageText} />
-      <CloneAppointmentModal open={isOpenClone} onClose={onCloseClone} onViewClose={onAfterClone} />
+      <CloneAppointmentModal
+        open={isOpenClone}
+        onClose={onCloseClone}
+        onViewClose={onAfterClone}
+        loadNextSlots={loadNextSlots}
+        loadPreviousSlots={loadPreviousSlots}
+      />
       <MileageModal
         open={isMileageOpen}
         onSave={onMileageSave}

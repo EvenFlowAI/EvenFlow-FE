@@ -29,11 +29,12 @@ import { cloneAppointment } from '../../../../store/reducers/appointmentFrameRed
 import { useModal } from '../../../../hooks/useModal/useModal';
 import Informing from '../../../../components/modals/common/Informing/Informing';
 import { clearAfterCloning } from '../../../../store/reducers/appointments/actions';
+import theme from '../../../../theme/theme';
+import { useMediaQuery } from '@mui/material';
 
-const CloneAppointmentModal: React.FC<DialogProps & { onViewClose: TCallback }> = ({
-  onViewClose,
-  ...props
-}) => {
+const CloneAppointmentModal: React.FC<
+  DialogProps & { onViewClose: TCallback; loadNextSlots: TCallback; loadPreviousSlots: TCallback }
+> = ({ onViewClose, loadNextSlots, loadPreviousSlots, ...props }) => {
   const { currentAppointment, isAppointmentLoading } = useSelector(
     (state: RootState) => state.appointments
   );
@@ -51,6 +52,13 @@ const CloneAppointmentModal: React.FC<DialogProps & { onViewClose: TCallback }> 
   const { onOpen, isOpen, onClose } = useModal();
   const initRef = useRef<boolean>(false);
   const isLoading = isAppointmentLoading || isAppointmentSaving;
+
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds, isXs]);
 
   const dateString = useMemo(() => {
     return appointment
@@ -148,6 +156,7 @@ const CloneAppointmentModal: React.FC<DialogProps & { onViewClose: TCallback }> 
             />
           ) : (
             <AppointmentDateSelector
+              daysPerScreen={daysPerScreen}
               dateChangeDisabled
               appointments={groupedAppointments}
               date={date}
@@ -155,6 +164,8 @@ const CloneAppointmentModal: React.FC<DialogProps & { onViewClose: TCallback }> 
               dateRangeUpdated={initRef.current}
               loading={isLoading}
               onDateChange={updateDate}
+              onLoadNext={loadNextSlots}
+              onLoadPrevious={loadPreviousSlots}
             />
           )}
           {currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff ? (

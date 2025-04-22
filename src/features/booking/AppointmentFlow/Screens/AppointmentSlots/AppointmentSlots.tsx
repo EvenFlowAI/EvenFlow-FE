@@ -125,6 +125,8 @@ export const AppointmentSlots: React.FC<
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
   const [loading, setLoading] = useState<boolean>(false);
   const dateSlotsRef = useRef<HTMLDivElement | null>(null);
+  const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
+  const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
@@ -144,7 +146,6 @@ export const AppointmentSlots: React.FC<
     onOpen: onServiceOptionOpen,
   } = useModal();
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const nextDisabled = useMemo(
     () =>
       serviceTypeOption?.type === EServiceType.PickUpDropOff
@@ -152,6 +153,13 @@ export const AppointmentSlots: React.FC<
         : !appointment,
     [appointment, serviceValetAppointment]
   );
+
+  const isMd = useMediaQuery(theme.breakpoints.down('md'));
+  const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
+  const isMds = useMediaQuery(theme.breakpoints.down('mds'));
+  const daysPerScreen: number = useMemo(() => {
+    return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
+  }, [isMd, isMds, isXs]);
 
   const groupedAppointments: TGroupedAppointments = useMemo(() => {
     return groupAppointments(appointmentSlots);
@@ -331,21 +339,20 @@ export const AppointmentSlots: React.FC<
 
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
-      clearData();
+      // Only clear data if we're not keeping the slot
+      if (!keepSlot) {
+        clearData();
+      }
 
-      // Convert the incoming date to UTC
       const newDate = dayjs.utc(d);
       const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
 
-      // Set the date in UTC
       setDate(newDate);
 
-      // Select the first slot if keepSlot is false
       if (!keepSlot) {
         selectFirstSlot(minDate);
       }
 
-      // Check if the month needs to be updated
       if (!newDate.isSame(dayjs.utc(month), 'month')) {
         setMonth(newDate);
       }
@@ -393,10 +400,33 @@ export const AppointmentSlots: React.FC<
     }
   };
 
-  const loadData = async () => {
+  const getApiDates = () => {
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = selectedTime ? dayjs(selectedTime) : dayjs().startOf('day');
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    return { apiStartDate, apiEndDate };
+  };
+
+  const loadData = async ({
+    requestedStartDate,
+    requestedEndDate,
+  }: {
+    requestedStartDate?: string;
+    requestedEndDate?: string;
+  }) => {
     if (id) {
-      const utcOffset = dayjs().utcOffset();
+      // Set the current range *before* loading starts
+      setCurrentApiStartDate(requestedStartDate ?? null);
+      setCurrentApiEndDate(requestedEndDate ?? null);
       setLoading(true);
+      const utcOffset = dayjs().utcOffset();
+      const fromDate = selectedTime
+        ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
+        : dayjs().startOf('day').add(utcOffset, 'minute').toISOString();
       try {
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
           ? { id: selectedPackage?.id, priceType: packagePricingType }
@@ -418,9 +448,11 @@ export const AppointmentSlots: React.FC<
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
-          fromDate: selectedTime
-            ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
-            : dayjs().startOf('day').add(utcOffset, 'minute').toISOString(),
+          fromDate: serviceTypeOption?.type === EServiceType.PickUpDropOff ? fromDate : undefined,
+          startDate:
+            serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedStartDate : undefined,
+          endDate:
+            serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedEndDate : undefined,
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -494,7 +526,9 @@ export const AppointmentSlots: React.FC<
         onMileageOpen();
       }, 1000);
     } else {
-      loadData().finally();
+      // Initial load: calculate dates and pass them to loadData
+      const { apiStartDate, apiEndDate } = getApiDates();
+      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
   }, [
     dispatch,
@@ -511,7 +545,6 @@ export const AppointmentSlots: React.FC<
     selectedSR,
     advisor,
     valueService,
-    serviceType,
     selectedTime,
     zipCode,
     address,
@@ -591,7 +624,7 @@ export const AppointmentSlots: React.FC<
 
   const loadDataForMileage = () => {
     onMileageClose();
-    loadData().finally();
+    loadData({}).finally();
   };
 
   useEffect(() => {
@@ -602,6 +635,109 @@ export const AppointmentSlots: React.FC<
       }
     }
   }, [date]);
+
+  const loadNextSlots = () => {
+    // Ensure we have a current range to base the next one on
+    if (!currentApiStartDate || !currentApiEndDate) {
+      console.error('Cannot load next slots without a current API date range.');
+      // Optionally, trigger an initial load here if needed
+      const { apiStartDate, apiEndDate } = getApiDates();
+      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
+      return;
+    }
+
+    // Calculate next range based on the *current* API range state
+    const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
+    const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
+
+    // Check if we're crossing a month boundary
+    const currentMonth = dayjs(currentApiStartDate).month();
+    const nextMonth = nextStartDate.month();
+
+    // If we're crossing to a new month, update the date state to match the new month
+    if (currentMonth !== nextMonth) {
+      // Update the date to the first day of the new month
+      setDate(nextStartDate.startOf('month').toISOString());
+    }
+
+    loadData({
+      requestedStartDate: nextStartDate.toISOString(),
+      requestedEndDate: nextEndDate.toISOString(),
+    }).finally();
+  };
+
+  const loadPreviousSlots = () => {
+    // Ensure we have a current range
+    if (!currentApiStartDate || !currentApiEndDate) {
+      console.error('Cannot load previous slots without a current API date range.');
+      return;
+    }
+
+    // Calculate previous range based on the *current* API range state
+    const previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
+    const previousEndDate = dayjs(currentApiEndDate).subtract(daysPerScreen, 'day');
+
+    // --- Prevent navigating before today ---
+    const todayStart = dayjs().startOf('day');
+
+    // Special case: If the current range doesn't include today but we can go back to include today
+    if (
+      !dayjs(currentApiStartDate).isSame(todayStart, 'day') &&
+      previousStartDate.isBefore(todayStart)
+    ) {
+      // Set the start date to today and calculate the end date
+      const adjustedStartDate = todayStart;
+      const adjustedEndDate = todayStart.add(daysPerScreen - 1, 'day');
+
+      // Update the date to show today
+      setDate(adjustedStartDate.toISOString());
+
+      // Load data with the adjusted range
+      loadData({
+        requestedStartDate: adjustedStartDate.toISOString(),
+        requestedEndDate: adjustedEndDate.toISOString(),
+      }).finally();
+
+      return;
+    }
+
+    // Special case: If the previous range would go before today,
+    // adjust it to start from today
+    if (previousStartDate.isBefore(todayStart)) {
+      const adjustedStartDate = todayStart;
+      const adjustedEndDate = todayStart.add(daysPerScreen - 1, 'day');
+
+      loadData({
+        requestedStartDate: adjustedStartDate.toISOString(),
+        requestedEndDate: adjustedEndDate.toISOString(),
+      }).finally();
+
+      return;
+    }
+
+    // We can safely go back a full range
+    loadData({
+      requestedStartDate: previousStartDate.toISOString(),
+      requestedEndDate: previousEndDate.toISOString(),
+    }).finally();
+
+    // Check if we're crossing a month boundary
+    const currentMonth = dayjs(currentApiStartDate).month();
+    const previousMonth = previousStartDate.month();
+
+    // If we're crossing to a new month, update the date state to match the new month
+    if (currentMonth !== previousMonth) {
+      // If we're going from the first days of a month to the previous month,
+      // we want to show the last days of the previous month
+      if (dayjs(currentApiStartDate).date() <= daysPerScreen) {
+        // Set the date to the last day of the previous month
+        setDate(previousStartDate.endOf('month').toISOString());
+      } else {
+        // Otherwise, set to the first day of the new month
+        setDate(previousStartDate.startOf('month').toISOString());
+      }
+    }
+  };
 
   return (
     <StepWrapper>
@@ -617,18 +753,18 @@ export const AppointmentSlots: React.FC<
         />
         <AppointmentFilters
           onChangeServiceOption={onChangeServiceOption}
-          isSm={isSm}
+          isSm={isMd}
           isServiceOptionOpen={isServiceOptionOpen}
           onServiceOptionClose={onServiceOptionClose}
         />
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
           <SVAppointmentDateSelector
             onDateRangeSet={handleDateRangeSet}
-            dateRangeUpdated={initRef.current}
             dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             date={date}
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
+            dateRangeUpdated={initRef.current}
           />
         ) : (
           <AppointmentDateSelector
@@ -639,6 +775,11 @@ export const AppointmentSlots: React.FC<
             dateRangeUpdated={initRef.current}
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
+            daysPerScreen={daysPerScreen}
+            onLoadNext={loadNextSlots}
+            onLoadPrevious={loadPreviousSlots}
+            apiStartDate={currentApiStartDate || undefined}
+            apiEndDate={currentApiEndDate || undefined}
           />
         )}
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
