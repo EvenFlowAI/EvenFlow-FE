@@ -407,7 +407,7 @@ export const AddMakeModelModal: React.FC<
                               <div className={autocompleteClasses.classes.tag}>
                                 <div
                                   style={{
-                                    maxWidth: '120px',
+                                    maxWidth: '140px',
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
@@ -462,6 +462,7 @@ export const AddMakeModelModal: React.FC<
                   })(params)
                 }
               />
+
               <Button
                 disabled={isEditing ? !modelsToAdd.length : !makesToAdd.length}
                 onClick={() => (isEditing ? addModels() : addMakes())}
