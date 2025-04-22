@@ -158,8 +158,9 @@ export interface IAppointmentSlotsRequest {
   serviceCenterId: number;
   maintenancePackageOptionId?: number | null;
   maintenancePackageOption: MPOptionShort | null;
-  startDate: ParsableDate;
+  fromDate: ParsableDate;
   endDate: ParsableDate;
+  startDate: ParsableDate;
   appointmentTimingType: EAppointmentTimingType;
   countOfDays?: number;
   offerType?: EOfferType;
@@ -198,6 +199,7 @@ export interface IAppointmentFilters {
 export type TAppointmentState = {
   sessionId: string;
   updated: boolean;
+  searchedDateRange: ISearchedDateRange | null;
   customerEnteredEmail: string;
   scProfile?: IServiceCenterProfile;
   serviceRequests: ISR[];
@@ -292,4 +294,5 @@ export interface IDropOffSettings {
 export interface ISVAppointmentResponse {
   items: IServiceValetAppointment[];
   dropOffSettings: IDropOffSettings;
+  searchedDateRange: ISearchedDateRange;
 }

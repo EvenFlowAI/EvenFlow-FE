@@ -34,6 +34,7 @@ import {
   setTopAligning,
   setWaitListSettings,
   selectSRComment,
+  setLoadedDateRange,
 } from './actions';
 import { setPackage } from '../appointmentFrameReducer/actions';
 import dayjs from 'dayjs';
@@ -58,6 +59,7 @@ const initialState: TAppointmentState = {
   sessionId: '',
   updated: false,
   serviceRequests: [],
+  searchedDateRange: null,
   customerLoadedData: null,
   customerEnteredEmail: '',
   appointmentId: null,
