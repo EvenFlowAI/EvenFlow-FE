@@ -159,6 +159,8 @@ export interface IAppointmentSlotsRequest {
   maintenancePackageOptionId?: number | null;
   maintenancePackageOption: MPOptionShort | null;
   fromDate: ParsableDate;
+  endDate: ParsableDate;
+  startDate: ParsableDate;
   startDateTest: ParsableDate;
   endDateTest: ParsableDate;
   appointmentTimingType: EAppointmentTimingType;
