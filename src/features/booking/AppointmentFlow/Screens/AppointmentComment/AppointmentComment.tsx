@@ -67,6 +67,9 @@ export const AppointmentComment: React.FC<TProps> = ({
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
     if (value.length <= MAX_COUNT_WORDS_CAPACITY) {
+      if (/\s{2,}$/.test(value)) {
+        return;
+      }
       setComment(value);
     }
   };

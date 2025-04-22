@@ -32,6 +32,9 @@ const CommentModal: React.FC<
     if (value.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
+    if (/\s{2,}$/.test(value)) {
+      return;
+    }
     setText(value);
   };
 
