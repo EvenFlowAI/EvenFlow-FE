@@ -109,8 +109,8 @@ export const AddMakeModelModal: React.FC<
     ) => {
       if (option.text === 'Select All') {
         const isAllSelected = isEditing
-          ? modelsToAdd.length === filteredGlobalModels.length
-          : makesToAdd.length === filteredGlobalMakes.length;
+          ? modelsToAdd.length === filteredGlobalModels.length && modelsToAdd.length > 0
+          : makesToAdd.length === filteredGlobalMakes.length && makesToAdd.length > 0;
 
         return (
           <li
@@ -153,16 +153,30 @@ export const AddMakeModelModal: React.FC<
   const selectAll = { text: 'Select All', id: 0 } as IData;
 
   const onChangeMakes = (value: IData[]) => {
+    // Check if Select All was clicked
     if (value.find(el => el.text === 'Select All')) {
-      setMakesToAdd(filteredGlobalMakes);
+      // If all makes are already selected, clear the selection
+      if (makesToAdd.length === filteredGlobalMakes.length) {
+        setMakesToAdd([]);
+      } else {
+        // Otherwise select all makes
+        setMakesToAdd(filteredGlobalMakes);
+      }
     } else {
       setMakesToAdd(value);
     }
   };
 
   const onChangeModels = (value: IData[]) => {
+    // Check if Select All was clicked
     if (value.find(el => el.text === 'Select All')) {
-      setModelsToAdd(filteredGlobalModels);
+      // If all models are already selected, clear the selection
+      if (modelsToAdd.length === filteredGlobalModels.length) {
+        setModelsToAdd([]);
+      } else {
+        // Otherwise select all models
+        setModelsToAdd(filteredGlobalModels);
+      }
     } else {
       setModelsToAdd(value);
     }
