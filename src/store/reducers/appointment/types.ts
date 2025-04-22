@@ -119,7 +119,7 @@ export interface ISearchedDateRange {
 
 export interface IAppointmentResponse {
   items: IAppointmentSlot[];
-  // searchedDateRange: ISearchedDateRange;
+  searchedDateRange: ISearchedDateRange;
   slotGapMinutes: number;
   advisorId?: string;
   waitlistSettings?: IWaitListData;
