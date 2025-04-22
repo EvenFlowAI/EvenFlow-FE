@@ -1,29 +1,119 @@
 import { createAction } from '@reduxjs/toolkit';
-import { AppThunk } from '../../../types/types';
-import { IMake, IMakeExtended } from '../../../api/types';
+import { AppThunk, PaginatedAPIResponse } from '../../../types/types';
+import { IMake } from '../../../api/types';
 import { ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage } from './types';
 import { loadAllSCs } from '../serviceCenters/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
+import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
+import { enqueueSnackbar } from 'notistack';
+import { mapModelsWithParentNames } from '../../../utils/utils';
 
 export const getMakes = createAction<IMake[]>('VehicleDetails/GetMakes');
+export const setAllMakes = createAction<IMake[]>('VehicleDetails/SetAllMakes');
 export const setCurrentMake = createAction<IMake | null>('VehicleDetails/SetCurrentMake');
 export const setLoading = createAction<boolean>('VehicleDetails/SetLoading');
 export const getMileage = createAction<IMileage[]>('VehicleDetails/GetMileage');
-export const setPodsMakes = createAction<IMakeExtended[]>('VehicleDetails/MakesModels');
 export const getEngineType = createAction<IEngineType[]>('VehicleDetails/EngineType');
+export const setPaging = createAction<IPagingResponse>('VehicleDetails/SetPaging');
+export const setPageData = createAction<Partial<IPageRequest>>('VehicleDetails/SetPageData');
+export const setMakeOrder = createAction<IOrder<IMake>>('VehicleDetails/SetMakeOrder');
+export const setGlobalMakes = createAction<IGlobalMake[]>('VehicleDetails/SetGlobalMakes');
+export const setGlobalModels = createAction<IGlobalModel[]>('VehicleDetails/SetGlobalModels');
 
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
-  async dispatch => {
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.Vehicles.Makes, { params: { serviceCenterId } })
-      .then(result => {
-        if (result?.data) {
-          dispatch(getMakes(result.data));
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: state.pageData.pageIndex,
+        pageSize: state.pageData.pageSize,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getMakes(response.data.result));
+          dispatch(setPaging(response.data.paging));
         }
       })
       .catch(err => {
         console.log('load makes error', err);
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+export const loadMakesAll =
+  (serviceCenterId: number): AppThunk =>
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
+    dispatch(setLoading(true));
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: 0,
+        pageSize: 0,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(setAllMakes(response.data.result));
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+export const loadMakesGlobally =
+  (serviceCenterId: number): AppThunk =>
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
+    dispatch(setLoading(true));
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: 0,
+        pageSize: 0,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getMakes(mapModelsWithParentNames(response.data.result)));
+          dispatch(setPaging(response.data.paging));
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -33,12 +123,27 @@ export const deleteMake =
   async (dispatch, getState) => {
     const { selectedSC } = getState().serviceCenters;
     if (selectedSC) {
-      Api.call(Api.endpoints.Vehicles.RemoveMake, { urlParams: { id: makeId } })
+      Api.call(Api.endpoints.Vehicles.RemoveMake, {
+        urlParams: { serviceCenterId: selectedSC.id, makeId },
+      })
         .then(result => {
-          if (result) dispatch(loadMakes(selectedSC.id));
+          if (result) {
+            dispatch(loadMakes(selectedSC.id));
+          }
         })
         .catch(err => {
-          console.log('remove make error', err);
+          enqueueSnackbar(
+            (err as any).response?.data?.message ||
+              'An error occurred while processing your request',
+            {
+              variant: 'error',
+              autoHideDuration: 3000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
         });
     }
   };
@@ -50,23 +155,85 @@ export const updateMake =
     if (selectedSC) {
       Api.call(Api.endpoints.Vehicles.UpdateMake, { urlParams: { id: makeId }, data })
         .then(result => {
-          if (result) dispatch(loadMakes(selectedSC.id));
+          if (result) {
+            dispatch(loadMakes(selectedSC.id));
+          }
         })
         .catch(err => {
-          console.log('update make error', err);
+          enqueueSnackbar(
+            (err as any).response?.data?.message ||
+              'An error occurred while processing your request',
+            {
+              variant: 'error',
+              autoHideDuration: 3000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
+        });
+    }
+  };
+
+export const updateModel =
+  (
+    serviceCenterId: number,
+    globalMakeId: number,
+    globalIds: number[],
+    onCloseModal: () => void
+  ): AppThunk =>
+  async (dispatch, getState) => {
+    const { selectedSC } = getState().serviceCenters;
+    if (selectedSC) {
+      Api.call(Api.endpoints.Vehicles.UpdateModel, {
+        data: { serviceCenterId, globalMakeId, globalIds },
+      })
+        .then(result => {
+          if (result) {
+            dispatch(loadMakes(selectedSC.id));
+            onCloseModal();
+          }
+        })
+        .catch(err => {
+          enqueueSnackbar(
+            (err as any).response?.data?.message ||
+              'An error occurred while processing your request',
+            {
+              variant: 'error',
+              autoHideDuration: 3000,
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+            }
+          );
         });
     }
   };
 
 export const createMake =
-  (data: ICreateMake): AppThunk =>
+  (data: ICreateMake, onCloseModal: () => void): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.Vehicles.CreateMake, { data })
       .then(result => {
-        if (result) dispatch(loadMakes(data.serviceCenterId));
+        if (result) {
+          dispatch(loadMakes(data.serviceCenterId));
+          onCloseModal();
+        }
       })
       .catch(err => {
-        console.log('update make error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };
 
@@ -81,7 +248,17 @@ export const loadMileage =
         }
       })
       .catch(err => {
-        console.log('load mileage error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -96,7 +273,17 @@ export const createMileage =
         }
       })
       .catch(err => {
-        console.log('create mileage error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };
 
@@ -117,19 +304,17 @@ export const removeMileage =
       })
       .catch(err => {
         onError(err);
-        console.log('remove mileage error', err);
-      });
-  };
-
-export const loadMakesForPods =
-  (serviceCenterId: number): AppThunk =>
-  dispatch => {
-    Api.call<IMakeExtended[]>(Api.endpoints.Vehicles.MakesModels, { params: { serviceCenterId } })
-      .then(result => {
-        dispatch(setPodsMakes(result.data));
-      })
-      .catch(err => {
-        console.log('get makes for pods error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };
 
@@ -144,7 +329,17 @@ export const loadEngineType =
         }
       })
       .catch(err => {
-        console.log('load engine type error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       })
       .finally(() => dispatch(setLoading(false)));
   };
@@ -166,7 +361,17 @@ export const removeEngineType =
       })
       .catch(err => {
         onError(err);
-        console.log('remove engine type error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };
 
@@ -181,7 +386,17 @@ export const createEngineType =
       })
       .catch(err => {
         onError(err);
-        console.log('create engine type error', err);
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };
 
@@ -205,6 +420,77 @@ export const updateEngineTypeFieldName =
       })
       .catch(err => {
         onError(err);
-        console.log('update engine type field name error');
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      });
+  };
+
+export const loadGlobalMakes = (): AppThunk => async dispatch => {
+  Api.call<PaginatedAPIResponse<IGlobalMake>>(Api.endpoints.GlobalVehicles.GetMakes, {
+    data: {
+      pageIndex: 0,
+      pageSize: 0,
+      isAscending: true,
+      showStandardized: true,
+    },
+  })
+    .then(result => {
+      if (result?.data) {
+        dispatch(setGlobalMakes(result.data.result));
+      }
+    })
+    .catch(err => {
+      enqueueSnackbar(
+        (err as any).response?.data?.message || 'An error occurred while processing your request',
+        {
+          variant: 'error',
+          autoHideDuration: 3000,
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+        }
+      );
+    });
+};
+
+export const loadGlobalModels =
+  (makeId: number): AppThunk =>
+  async dispatch => {
+    Api.call<PaginatedAPIResponse<IGlobalModel>>(Api.endpoints.GlobalVehicles.GetModels, {
+      data: {
+        pageIndex: 0,
+        pageSize: 0,
+        isAscending: true,
+        showStandardized: true,
+        makeIds: [makeId],
+      },
+    })
+      .then(result => {
+        if (result?.data) {
+          dispatch(setGlobalModels(result.data.result));
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
       });
   };

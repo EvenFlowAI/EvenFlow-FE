@@ -6,6 +6,7 @@ import {
   ICreateAppointmentResp,
   ICustomerLoadedData,
   IOfferForCategory,
+  IModel,
   IServiceCategory,
   IServiceCategoryShort,
   IServiceRequestIds,
@@ -44,6 +45,7 @@ export interface ISR {
   code: string;
   description?: string;
   price?: number;
+  comment?: string;
 }
 
 export interface IVehicleData {
@@ -164,7 +166,7 @@ export interface IAppointmentSlotsRequest {
   appointmentTimingType: EAppointmentTimingType;
   countOfDays?: number;
   offerType?: EOfferType;
-  serviceCategoryIds?: number[];
+  serviceCategories: IServiceRequestIds[];
   onlyOffers?: boolean;
   shorterWaitTime?: boolean;
   serviceRequests: IServiceRequestIds[];
@@ -240,10 +242,6 @@ export enum EReminderType {
 export const APPOINTMENT_STATE_KEY = 'APPOINTMENT';
 export const APPOINTMENT_STATE_SAVED_KEY = 'APPOINTMENT_SAVED';
 
-export interface IMake {
-  name: string;
-  models: string[];
-}
 
 export interface IServiceRequestPrice {
   requestName: string;

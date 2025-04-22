@@ -9,8 +9,8 @@ import { BfButtonsWrapper } from '../../../styled/BfButtonsWrapper';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
-import { setFrameDescription } from '../../../../store/reducers/appointmentFrameReducer/actions';
 import { CharactersWrapper } from './styles';
+import { setCommentsForCategories } from '../../../../store/reducers/appointmentFrameReducer/actions';
 const MAX_COUNT_WORDS_CAPACITY = 250;
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
@@ -22,15 +22,14 @@ const CommentModal: React.FC<
 
   useEffect(() => {
     setText(currentComment);
-  }, [currentComment]);
+  }, [currentComment, open]);
 
   const onCancel = () => {
-    setText(currentComment);
     onClose();
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    if (value.length > 250) {
+    if (value.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
     setText(value);
@@ -40,8 +39,8 @@ const CommentModal: React.FC<
     if (!text.length && selectedRequest?.code === 'specialCategory') {
       showError(t('Appointment Comment must not be empty'));
     } else if (selectedRequest?.code === 'specialCategory') {
-      dispatch(setFrameDescription(text));
       onClose();
+      dispatch(setCommentsForCategories({ id: selectedRequest?.id ?? 0, comment: text }));
     } else if (selectedRequest?.id) {
       dispatch(selectSRComment({ comments: { [selectedRequest.id]: text } }));
       onClose();
@@ -71,20 +70,30 @@ const CommentModal: React.FC<
 
       <BfButtonsWrapper>
         <LoadingButton
-          style={{ width: '144px' }}
           loading={false}
           onClick={onCancel}
           variant="outlined"
           color="primary"
+          sx={{
+            width: '100%',
+            '@media (min-width: 900px)': {
+              width: '144px',
+            },
+          }}
         >
           {t('Cancel')}
         </LoadingButton>
         <LoadingButton
-          style={{ width: '144px' }}
           loading={false}
           onClick={onSave}
           color="primary"
           variant="contained"
+          sx={{
+            width: '100%',
+            '@media (min-width: 900px)': {
+              width: '144px',
+            },
+          }}
         >
           {t('Save')}
         </LoadingButton>

@@ -26,8 +26,7 @@ const ServiceRequestsManaging = () => {
     packagePricingType,
     packageEMenuType,
     valueService,
-    categoriesIds,
-    description,
+    serviceCategories,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen } = useModal();
   const { allCategories } = useSelector((state: RootState) => state.categories);
@@ -56,7 +55,7 @@ const ServiceRequestsManaging = () => {
       selectedSR,
       selectedPackage,
       allCategories,
-      categoriesIds,
+      serviceCategories,
       valueService,
       packagePricingType,
       packageEMenuType,
@@ -69,7 +68,7 @@ const ServiceRequestsManaging = () => {
     selectedPackage,
     allCategories,
     packagePriceTitles,
-    categoriesIds,
+    serviceCategories,
     valueService,
     packagePricingType,
     packageEMenuType,
@@ -77,9 +76,8 @@ const ServiceRequestsManaging = () => {
   ]);
 
   const currentCategories = allCategories.filter(
-    category => categoriesIds.includes(category.id) && category.type === 0
+    category => serviceCategories.map(item => item.id).includes(category.id) && category.type === 0
   );
-  
 
   let name;
   if (selectedPackage) {
@@ -144,7 +142,11 @@ const ServiceRequestsManaging = () => {
                     onCommentOpen();
                   }}
                 >
-                  {description ? <MessageIconFilled /> : <MessageIcon />}
+                  {serviceCategories.find(el => el.id === item.id)?.comment?.trim().length ? (
+                    <MessageIconFilled />
+                  ) : (
+                    <MessageIcon />
+                  )}
                 </MessageIconWrapper>
               </ServiceItem>
             );
@@ -155,7 +157,7 @@ const ServiceRequestsManaging = () => {
         selectedRequest={selectedRequest}
         currentComment={
           selectedRequest?.code === 'specialCategory'
-            ? description
+            ? (serviceCategories.find(el => el.id === selectedRequest?.id)?.comment ?? '')
             : selectedSRComments[selectedRequest?.id ?? 0]
         }
         open={isCommentOpen}

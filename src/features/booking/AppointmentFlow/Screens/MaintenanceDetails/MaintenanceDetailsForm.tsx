@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { EUserType } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import {
   clearAppointmentSteps,
-  selectCategoriesIds,
+  selectCategories,
   selectService,
   selectSubService,
   setRecallsAreShown,
@@ -46,7 +46,7 @@ export const MaintenanceDetailsForm: React.FC<
     subService,
     userType,
     recallsAreShown,
-    categoriesIds,
+    serviceCategories,
     selectedPackage,
     selectedRecalls,
   } = useSelector((state: RootState) => state.appointmentFrame);
@@ -135,7 +135,9 @@ export const MaintenanceDetailsForm: React.FC<
   }, [service, subService]);
 
   const onlyRecallsSelected = useMemo(() => {
-    const selectedCategories = allCategories.filter(el => categoriesIds.includes(el.id));
+    const selectedCategories = allCategories.filter(el =>
+      serviceCategories.map(item => item.id).includes(el.id)
+    );
     const isGeneralCategorySelected = selectedCategories.find(
       el => el.type === EServiceCategoryType.GeneralCategory
     );
@@ -145,7 +147,7 @@ export const MaintenanceDetailsForm: React.FC<
       !isGeneralCategorySelected &&
       isRecallsCategorySelected
     );
-  }, [selectedSR, selectedPackage, isRecallsCategorySelected, categoriesIds, allCategories]);
+  }, [selectedSR, selectedPackage, isRecallsCategorySelected, serviceCategories, allCategories]);
 
   const isNextDisabled = useMemo(() => {
     return !Boolean(
@@ -212,9 +214,17 @@ export const MaintenanceDetailsForm: React.FC<
         item => item.name.toLowerCase() === selectedVehicle.make.toLowerCase()
       );
       if (currentMake)
-        setLoadedOptions(prevOptions => ({ ...prevOptions, model: currentMake.models }));
+        setLoadedOptions(prevOptions => ({
+          ...prevOptions,
+          model: currentMake.models.map(model => model.name),
+        }));
     } else {
-      setCurrentModels(() => makes.map(item => item.models).flat());
+      setCurrentModels(() =>
+        makes
+          .map(item => item.models)
+          .flat()
+          .map(item => item.name)
+      );
     }
   }, [makes, selectedVehicle]);
 
@@ -223,7 +233,7 @@ export const MaintenanceDetailsForm: React.FC<
       const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId);
       if (defaultMake) {
         selectedVehicle && dispatch(setVehicle({ ...selectedVehicle, make: defaultMake.name }));
-        setCurrentModels(defaultMake.models);
+        setCurrentModels(defaultMake.models.map(model => model.name));
       }
     }
   }, [makes, selectedVehicle]);
@@ -234,14 +244,14 @@ export const MaintenanceDetailsForm: React.FC<
       serviceCategoryPage === EServiceCategoryPage.Page1
     ) {
       dispatch(selectService(null));
-      dispatch(selectCategoriesIds(categoriesIds.filter(el => el !== service.id)));
+      dispatch(selectCategories(serviceCategories.filter(el => el.id !== service.id)));
     }
     if (
       subService?.type === EServiceCategoryType.OpenRecalls &&
       serviceCategoryPage === EServiceCategoryPage.Page2
     ) {
       dispatch(selectSubService(null));
-      dispatch(selectCategoriesIds(categoriesIds.filter(el => el !== subService.id)));
+      dispatch(selectCategories(serviceCategories.filter(el => el.id !== subService.id)));
     }
   };
 
@@ -295,7 +305,7 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleNoRecalls = () => {
-    if (categoriesIds.length < 2 && isRecallsCategorySelected) {
+    if (serviceCategories.length < 2 && isRecallsCategorySelected) {
       checkVINforRecallCategory();
     } else {
       onNext();

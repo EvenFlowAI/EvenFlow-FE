@@ -155,9 +155,6 @@ export class Api {
       UpdateSettings: { route: '/demand-management-settings', method: 'put' },
     },
     Employees: {
-      Create: { route: '/employees', method: 'post' },
-      Update: { route: '/employees/{id}', method: 'put' },
-      GetAll: { route: '/employees/by-query', method: 'post' },
       GetAssignmentSettings: {
         route: '/employees/assignment-settings/{serviceCenterId}',
         method: 'get',
@@ -318,6 +315,8 @@ export class Api {
       GetMakes: { route: '/pods/makes', method: 'get' },
       GetSummary: { route: '/pods/summary', method: 'get' },
       SetOrderIndex: { route: '/pods/order-index-assignment', method: 'patch' },
+      Deactivate: { route: '/pods/{id}/deactivate', method: 'put' },
+      Activate: { route: '/pods/{id}/activate', method: 'put' },
     },
     PricingSettings: {
       GetList: { route: '/pricing-settings', method: 'get' },
@@ -586,10 +585,13 @@ export class Api {
       GetByVIN: { route: '/vehicles/by-vin', method: 'get' },
       GetByQuery: { route: '/vehicles/by-query', method: 'post' },
       Models: { route: '/vehicles/models', method: 'get' },
-      Makes: { route: '/vehicles/makes', method: 'get' },
-      RemoveMake: { route: '/vehicles/makes/{id}', method: 'delete' },
+      Makes: { route: '/vehicles/makes-and-models/by-query', method: 'post' },
+      RemoveMake: {
+        route: '/vehicles/makes?serviceCenterId={serviceCenterId}&makeId={makeId}',
+        method: 'delete',
+      },
       UpdateMake: { route: '/vehicles/makes/{id}', method: 'put' },
-      CreateMake: { route: '/vehicles/makes', method: 'post' },
+      CreateMake: { route: '/vehicles/makes', method: 'put' },
       GetMileage: { route: '/vehicles/mileage', method: 'get' },
       RemoveMileage: { route: '/vehicles/mileage/{id}', method: 'delete' },
       CreateMileage: { route: '/vehicles/mileage', method: 'post' },
@@ -597,6 +599,7 @@ export class Api {
       GetEngineType: { route: '/vehicles/engine-type/by-query', method: 'get' },
       RemoveEngineType: { route: '/vehicles/engine-type/{id}', method: 'delete' },
       CreateEngineType: { route: '/vehicles/engine-type', method: 'post' },
+      UpdateModel: { route: '/vehicles/models', method: 'put' },
     },
     ValueService: {
       GetSeriesModels: { route: '/value-service-offers/vehicle-models', method: 'get' },
@@ -625,7 +628,7 @@ export class Api {
         });
       }
     } catch (err) {
-      if (process.env.REACT_APP_ENV === 'QA') {
+      if (['DEV'].includes(process.env.REACT_APP_ENV ?? '')) {
         enqueueSnackbar(
           (err as any).response?.data?.message || 'An error occurred while processing your request',
           {

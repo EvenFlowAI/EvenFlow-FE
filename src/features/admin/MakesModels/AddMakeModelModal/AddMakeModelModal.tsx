@@ -1,169 +1,475 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import {
   BaseModal,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button, Divider, IconButton } from '@mui/material';
+import { Button, Divider, Checkbox, Tooltip } from '@mui/material';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
-import { AddCircleOutline } from '@mui/icons-material';
-import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { Chip } from '../../../../components/wrappers/Chip/Chip';
-import { useDispatch, useSelector } from 'react-redux';
+import { Autocomplete, AutocompleteRenderOptionState } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
+import { useStyles } from './styles';
+import { ReactComponent as AttentionIcon } from '../../../../assets/img/attention.svg';
+import { ReactComponent as Delete } from '../../../../assets/img/delete.svg';
+import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
+import DragAndDrop from '../../../../components/DragAndDrop/DragAndDrop';
+import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import {
   createMake,
-  setCurrentMake,
-  updateMake,
+  loadGlobalModels,
+  updateModel,
 } from '../../../../store/reducers/vehicleDetails/actions';
-import { ICreateMake } from '../../../../store/reducers/vehicleDetails/types';
-import { IMake } from '../../../../api/types';
-import { useStyles } from './styles';
-import { useException } from '../../../../hooks/useException/useException';
+import { useDispatch } from 'react-redux';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { IData } from '../../../../components/DragAndDrop/types';
+import { setCurrentMake } from '../../../../store/reducers/vehicleDetails/actions';
+import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 type TAddMakeModalProps = DialogProps & {
   isEditing?: boolean;
 };
 
+const style = {
+  padding: 12,
+  backgroundColor: '#F7F8FB',
+  border: '1px solid #DADADA',
+  width: '317px',
+  height: '576px',
+  gap: '8px',
+  overflowX: 'auto',
+  overflowY: 'auto',
+};
+
+interface IConfirmParams {
+  title: ReactNode;
+  content?: ReactNode;
+  isRemove?: boolean;
+  onConfirm: () => void;
+}
+
 export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
 > = ({ isEditing, onClose, ...props }) => {
-  const { currentMake, makes } = useSelector((state: RootState) => state.vehicleDetails);
-  const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
-  const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-  const [make, setMake] = useState<string>('');
-  const [models, setModels] = useState<string[]>([]);
-  const [newModel, setNewModel] = useState<string>('');
-  const { classes } = useStyles();
-  const showError = useException();
   const dispatch = useDispatch();
+  const { currentMake, globalMakes, globalModels, allMakes } = useSelector(
+    (state: RootState) => state.vehicleDetails
+  );
+  const { selectedSC } = useSCs();
+  const filteredMakes = allMakes
+    .filter(el => !el.isReadOnly)
+    .map(el => ({
+      id: el.globalId,
+      text: el.name,
+    }));
 
-  useEffect(() => {
-    if (isEditing && currentMake) {
-      setMake(currentMake?.name);
-      setModels(currentMake?.models);
-    } else {
-      setMake('');
-      setModels([]);
-    }
-  }, [isEditing, currentMake]);
+  const filteredModels = currentMake?.models
+    .filter(el => !el.isReadOnly)
+    .map(el => ({
+      id: el.globalId,
+      text: el.name,
+    }));
+  const [configuredMakes, setConfiguredMakes] = useState<IData[]>(filteredMakes);
+  const [configuredModels, setConfiguredModels] = useState<IData[]>(filteredModels ?? []);
+  const [makesToAdd, setMakesToAdd] = useState<IData[]>([]);
+  const [modelsToAdd, setModelsToAdd] = useState<IData[]>([]);
+  const { askConfirm } = useConfirm();
+  const { classes } = useStyles();
+  const autocompleteClasses = useAutocompleteStyles();
+  const filteredGlobalMakes = globalMakes
+    .filter(el => !el.isReadOnly)
+    .map(el => ({
+      id: el.id,
+      text: el.vinMake,
+    }));
+  const filteredGlobalModels = globalModels
+    .filter(el => el.vinModel !== 'OTHER')
+    .map(el => ({
+      id: el.id,
+      text: el.vinModel,
+    }));
 
-  const onCancel = () => {
-    currentMake && dispatch(setCurrentMake(null));
-    setModels([]);
-    setMake('');
-    setNewModel('');
-    setFormIsChecked(false);
+  const onCloseModal = () => {
+    setModelsToAdd([]);
+    setMakesToAdd([]);
+    setConfiguredMakes([]);
+    setConfiguredModels([]);
+    dispatch(setCurrentMake(null));
     onClose();
   };
 
-  const onSave = () => {
-    setFormIsChecked(true);
-    const modelsList: string[] = newModel?.length ? [...models, newModel] : models;
-    if (make && modelsList.length) {
-      if (isEditing && currentMake?.id) {
-        const data: IMake = {
-          name: make,
-          models: modelsList,
-        };
-        dispatch(updateMake(currentMake.id, data));
-      } else {
-        if (selectedSC) {
-          if (makes.find(item => item.name.toUpperCase() === make.toUpperCase())) {
-            return showError('This make already exists');
-          }
-          const data: ICreateMake = {
-            name: make,
-            models: modelsList,
-            serviceCenterId: selectedSC.id,
-          };
-          dispatch(createMake(data));
-        }
+  const autocompleteOptionsRender =
+    (label: (el: any) => string) =>
+    (
+      props: React.HTMLAttributes<HTMLLIElement>,
+      option: any,
+      state: AutocompleteRenderOptionState
+    ) => {
+      if (option.text === 'Select All') {
+        const isAllSelected = isEditing
+          ? modelsToAdd.length === filteredGlobalModels.length
+          : makesToAdd.length === filteredGlobalMakes.length;
+
+        return (
+          <li
+            style={{ display: 'flex', alignItems: 'center' }}
+            key={option + new Date()}
+            {...props}
+          >
+            <Checkbox size="small" style={{ marginRight: 8, padding: 0 }} checked={isAllSelected} />
+            {label(option)}
+          </li>
+        );
       }
-      onCancel();
+      return (
+        <li style={{ display: 'flex', alignItems: 'center' }} key={option + new Date()} {...props}>
+          <Checkbox size="small" style={{ marginRight: 8, padding: 0 }} checked={state.selected} />
+          {label(option)}
+        </li>
+      );
+    };
+  const selectAll = { text: 'Select All', id: 0 } as IData;
+
+  const onChangeMakes = (value: IData[]) => {
+    if (value.find(el => el.text === 'Select All')) {
+      setMakesToAdd(filteredGlobalMakes);
     } else {
-      showError('Please enter make and models names');
+      setMakesToAdd(value);
     }
   };
 
-  const addModel = () => {
-    if (newModel.length) {
-      if (!models.map(item => item.toUpperCase()).includes(newModel.toUpperCase())) {
-        setModels(prev => [...prev, newModel]);
-        setNewModel('');
+  const onChangeModels = (value: IData[]) => {
+    if (value.find(el => el.text === 'Select All')) {
+      setModelsToAdd(filteredGlobalModels);
+    } else {
+      setModelsToAdd(value);
+    }
+  };
+
+  const addMakes = () => {
+    const newMakes = makesToAdd.filter(
+      newMake => !configuredMakes.some(existingMake => existingMake.id === newMake.id)
+    );
+    setConfiguredMakes(prev => [...prev, ...newMakes]);
+    setMakesToAdd([]);
+  };
+
+  const addModels = () => {
+    const newModels = modelsToAdd.filter(
+      newModel => !configuredModels.some(existingModel => existingModel.id === newModel.id)
+    );
+    setConfiguredModels(prev => [...prev, ...newModels]);
+    setModelsToAdd([]);
+  };
+
+  const removedMakes = allMakes
+    .filter(el => !el.isReadOnly)
+    .filter(make => !configuredMakes.some(configured => configured.id === make.globalId));
+
+  const removedModels = currentMake?.models
+    .filter(el => !el.isReadOnly)
+    .filter(model => !configuredModels.some(configured => configured.id === model.globalId));
+  const onSaveMakes = () => {
+    if (selectedSC?.id) {
+      const globalIds = [
+        ...configuredMakes.map(el => el.id),
+        ...globalMakes.filter(el => el.isReadOnly).map(el => el.id),
+      ];
+      if (removedMakes?.length) {
+        askConfirm({
+          isRemove: true,
+          title:
+            removedMakes?.length === 1 ? (
+              `Please confirm you want to remove make ${removedMakes[0].name}!`
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {`Please confirm you want to remove ${removedMakes.length} selected makes!`}
+                <Tooltip
+                  title={removedMakes.map(make => make.name).join(', ')}
+                  arrow
+                  placement="top"
+                >
+                  <InfoOutlinedIcon style={{ fontSize: 16, color: '#5C5C5C', cursor: 'help' }} />
+                </Tooltip>
+              </div>
+            ),
+          content: (
+            <span>
+              After removing, please check configuration settings for Packages, Service Books,
+              Consent Messages, and Recalls which may have been impacted.
+            </span>
+          ),
+          onConfirm: () =>
+            dispatch(
+              createMake(
+                {
+                  serviceCenterId: selectedSC?.id,
+                  globalIds,
+                },
+                onCloseModal
+              )
+            ),
+        });
       } else {
-        showError('This Chip already exists');
+        dispatch(
+          createMake(
+            {
+              serviceCenterId: selectedSC?.id,
+              globalIds,
+            },
+            onCloseModal
+          )
+        );
       }
     }
   };
 
-  const onMakeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setFormIsChecked(false);
-    setMake(e.target.value);
-  };
-  const onModelChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setFormIsChecked(false);
-    setNewModel(e.target.value);
+  const onSaveModels = () => {
+    if (selectedSC?.id && currentMake?.globalId) {
+      if (removedModels?.length) {
+        askConfirm({
+          isRemove: true,
+          title:
+            removedModels?.length === 1 ? (
+              `Please confirm you want to remove model ${removedModels[0].name}!`
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {`Please confirm you want to remove ${removedModels?.length} selected models!`}
+                <Tooltip
+                  title={removedModels?.map(model => model.name).join(', ')}
+                  arrow
+                  placement="top"
+                >
+                  <InfoOutlinedIcon style={{ fontSize: 16, color: '#5C5C5C', cursor: 'help' }} />
+                </Tooltip>
+              </div>
+            ),
+          content: (
+            <span>
+              After removing, please check configuration settings for Packages, Service Books,
+              Consent Messages, and Recalls which may have been impacted.
+            </span>
+          ),
+          onConfirm: () =>
+            dispatch(
+              updateModel(
+                selectedSC?.id,
+                currentMake?.globalId,
+                [
+                  ...configuredModels.map(el => el.id),
+                  ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+                ],
+                onCloseModal
+              )
+            ),
+        });
+      } else {
+        dispatch(
+          updateModel(
+            selectedSC?.id,
+            currentMake?.globalId,
+            [
+              ...configuredModels.map(el => el.id),
+              ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
+            ],
+            onCloseModal
+          )
+        );
+      }
+    }
   };
 
-  const onModelDelete = (model: string) => {
-    setModels(prev => prev.filter(item => item !== model));
-  };
+  useEffect(() => {
+    if (currentMake) {
+      dispatch(loadGlobalModels(currentMake.globalId));
+    }
+  }, [currentMake]);
 
-  const onKeyUp = (e: React.KeyboardEvent<{}>) => {
-    if (e.key === 'Enter') addModel();
-  };
+  useEffect(() => {
+    const filteredMakes = allMakes
+      .filter(el => !el.isReadOnly)
+      .map(el => ({
+        id: el.globalId,
+        text: el.name,
+      }));
+
+    setConfiguredMakes(filteredMakes);
+  }, [allMakes]);
+
+  useEffect(() => {
+    const filteredModels = currentMake?.models
+      .filter(el => !el.isReadOnly)
+      .map(el => ({
+        id: el.globalId,
+        text: el.name,
+      }));
+    setConfiguredModels(filteredModels ?? []);
+  }, [currentMake]);
 
   return (
-    <BaseModal {...props} width={540} onClose={onCancel}>
-      <DialogTitle onClose={onCancel}>{isEditing ? 'Edit' : 'Add'} Make and Model</DialogTitle>
+    <BaseModal {...props} width={810} onClose={onCloseModal}>
+      <DialogTitle onClose={onCloseModal}>
+        {isEditing ? `${currentMake?.name} Model Options` : 'Make options'}
+      </DialogTitle>
       <DialogContent>
-        <TextField
-          fullWidth
-          label="Make"
-          placeholder="Type Make"
-          error={
-            formIsChecked &&
-            (!make || !!makes.find(item => item.name.toUpperCase() === make.toUpperCase()))
-          }
-          onChange={onMakeChange}
-          value={make}
-        />
-        {Boolean(models.length) && (
-          <div className={classes.modelsWrapper}>
-            {models.map(model => (
-              <Chip key={model} name={model} onDelete={onModelDelete} />
-            ))}
+        <div className={classes.wrapper}>
+          <div className={classes.firstColumnLayout}>
+            <div className={classes.inputWrapper}>
+              <Autocomplete
+                fullWidth
+                multiple
+                disableCloseOnSelect
+                classes={{
+                  tag: autocompleteClasses.classes.tag,
+                  option: autocompleteClasses.classes.option,
+                  inputRoot: autocompleteClasses.classes.inputRoot,
+                }}
+                ChipProps={{
+                  color: 'primary',
+                  style: { borderRadius: 4 },
+                  size: 'small',
+                }}
+                options={[selectAll, ...(isEditing ? filteredGlobalModels : filteredGlobalMakes)]}
+                getOptionLabel={option => option.text}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderOption={autocompleteOptionsRender(e => e.text)}
+                renderTags={(value: IData[], getTagProps) => {
+                  const allSelected = isEditing
+                    ? value.length === filteredGlobalModels.length
+                    : value.length === filteredGlobalMakes.length;
+
+                  if (allSelected) {
+                    const props = getTagProps({ index: 0 });
+                    return (
+                      <div {...props}>
+                        <div className={autocompleteClasses.classes.tag}>
+                          {isEditing ? 'All models' : 'All makes'}
+                          <Delete
+                            onClick={() => {
+                              isEditing ? setModelsToAdd([]) : setMakesToAdd([]);
+                            }}
+                            style={{ cursor: 'pointer', marginLeft: 4 }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Dynamic max visible tags based on text length
+                  const maxVisibleTags = 1; // Default value
+
+                  const visibleTags = value.slice(0, maxVisibleTags);
+                  const remainingCount = value.length - maxVisibleTags;
+
+                  return (
+                    <>
+                      {visibleTags.map((option, index) => {
+                        const props = getTagProps({ index });
+                        return (
+                          <div {...props}>
+                            <Tooltip title={option.text} arrow placement="top">
+                              <div className={autocompleteClasses.classes.tag}>
+                                <div
+                                  style={{
+                                    maxWidth: '120px',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                  }}
+                                >
+                                  {option.text}
+                                </div>
+                                {props.onDelete && (
+                                  <Delete
+                                    onClick={props.onDelete}
+                                    style={{ cursor: 'pointer', marginLeft: 4, flexShrink: 0 }}
+                                  />
+                                )}
+                              </div>
+                            </Tooltip>
+                          </div>
+                        );
+                      })}
+                      {remainingCount > 0 && (
+                        <div {...getTagProps({ index: maxVisibleTags })}>
+                          <Tooltip
+                            title={
+                              <React.Fragment>
+                                {value.slice(maxVisibleTags).map(option => (
+                                  <div key={option.id}>{option.text}</div>
+                                ))}
+                              </React.Fragment>
+                            }
+                            arrow
+                            placement="top"
+                          >
+                            <div className={autocompleteClasses.classes.tag}>
+                              +{remainingCount} others
+                            </div>
+                          </Tooltip>
+                        </div>
+                      )}
+                    </>
+                  );
+                }}
+                onChange={(_, value) => {
+                  isEditing ? onChangeModels(value) : onChangeMakes(value);
+                }}
+                value={isEditing ? modelsToAdd : makesToAdd}
+                disabled={false}
+                renderInput={params =>
+                  autocompleteRender({
+                    ...params,
+                    label: isEditing ? 'Add Models' : 'Add Makes',
+                    fullWidth: true,
+                    placeholder: isEditing ? 'Search Models' : 'Search Makes',
+                  })(params)
+                }
+              />
+              <Button
+                disabled={isEditing ? !modelsToAdd.length : !makesToAdd.length}
+                onClick={() => (isEditing ? addModels() : addMakes())}
+                className={classes.addmakesBtn}
+              >
+                Add {isEditing ? 'models' : 'makes'}
+              </Button>
+            </div>
+            <div className={classes.attentionWrapper}>
+              You can drag and drop the configured {isEditing ? 'models' : 'makes'} to rearrange the
+              <br />
+              order that is presented in the drop-down menu on the booking flow
+              <AttentionIcon />
+            </div>
           </div>
-        )}
-        <div className={classes.addModel} role="presentation" onKeyUp={onKeyUp}>
-          <div style={{ width: '90%' }}>
-            <TextField
-              fullWidth
-              label="Model"
-              placeholder="Type Model"
-              error={formIsChecked && (!models.length || !newModel)}
-              onChange={onModelChange}
-              value={newModel}
+
+          <div>
+            <div className={classes.fieldTitle}>
+              {isEditing ? 'configured models' : 'configured makes'}
+            </div>
+            <DragAndDrop
+              currentMakeName={currentMake?.name}
+              isEditing={isEditing ?? false}
+              data={isEditing ? configuredModels : configuredMakes}
+              setData={isEditing ? setConfiguredModels : setConfiguredMakes}
+              style={style}
             />
           </div>
-          <IconButton onClick={addModel} className={classes.iconPlus} size="large">
-            <AddCircleOutline />
-          </IconButton>
         </div>
       </DialogContent>
       <Divider style={{ margin: 0 }} />
       <DialogActions>
-        <div className={classes.wrapper}>
-          <div className={classes.buttonsWrapper}>
-            <Button onClick={onCancel} className={classes.cancelButton}>
-              Cancel
-            </Button>
-            <Button onClick={onSave} className={classes.saveButton}>
-              Save
-            </Button>
-          </div>
+        <div className={classes.buttonsWrapper}>
+          <Button onClick={onCloseModal} className={classes.cancelButton}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => (isEditing ? onSaveModels() : onSaveMakes())}
+            className={classes.saveButton}
+          >
+            Save
+          </Button>
         </div>
       </DialogActions>
     </BaseModal>

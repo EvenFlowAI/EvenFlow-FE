@@ -11,6 +11,7 @@ import { ReactComponent as MessageIconFilled } from '../../../../../../assets/im
 import CommentModal from '../../../../../../components/modals/booking/CommentModal/CommentModal';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { ISR } from '../../../../../../store/reducers/appointment/types';
+import { mergeArrayById } from '../../../../../../utils/utils';
 
 const ServiceRequests = () => {
   const { appointment, serviceValetAppointment, selectedSR, selectedSRComments, serviceRequests } =
@@ -19,8 +20,7 @@ const ServiceRequests = () => {
   const {
     serviceTypeOption,
     packagePriceTitles,
-    categoriesIds,
-    description,
+    serviceCategories,
     selectedPackage,
     packagePricingType,
     selectedRecalls,
@@ -35,8 +35,12 @@ const ServiceRequests = () => {
       : appointment;
   }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
+  const serviceCategoriesWithComments = mergeArrayById(serviceCategories);
+
   const currentCategories = allCategories.filter(
-    category => categoriesIds.includes(category.id) && category.type === 0
+    category =>
+      serviceCategoriesWithComments.map(item => item.id).includes(category.id) &&
+      category.type === 0
   );
 
   let name;
@@ -102,11 +106,20 @@ const ServiceRequests = () => {
                           description: item?.name,
                           id: item.id,
                           code: 'specialCategory',
+                          comment: serviceCategoriesWithComments.find(
+                            itemWithComments => itemWithComments.id === item.id
+                          )?.comment,
                         });
                         onCommentOpen();
                       }}
                     >
-                      {description ? <MessageIconFilled /> : <MessageIcon />}
+                      {serviceCategoriesWithComments.find(
+                        itemWithComments => itemWithComments.id === item.id
+                      )?.comment ? (
+                        <MessageIconFilled />
+                      ) : (
+                        <MessageIcon />
+                      )}
                     </MessageIconWrapper>
                   </ServiceItem>
                 );
@@ -119,12 +132,13 @@ const ServiceRequests = () => {
         selectedRequest={selectedRequest}
         currentComment={
           selectedRequest?.code === 'specialCategory'
-            ? description
-            : selectedSRComments[selectedRequest?.id ?? 0]
+            ? (selectedRequest?.comment ?? '')
+            : (selectedSRComments[selectedRequest?.id ?? 0] ?? '')
         }
         open={isCommentOpen}
         onClose={() => {
           onCommentClose();
+          setSelectedRequest(null);
         }}
       />
     </>

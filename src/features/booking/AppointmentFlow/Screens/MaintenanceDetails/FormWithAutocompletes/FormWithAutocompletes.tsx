@@ -48,7 +48,10 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
           } else {
             const currentMake = makes.find(item => item.name === option);
             if (currentMake)
-              setLoadedOptions(prevOptions => ({ ...prevOptions, model: currentMake.models }));
+              setLoadedOptions(prevOptions => ({
+                ...prevOptions,
+                model: currentMake.models.map(model => model.name),
+              }));
             if (option !== selectedVehicle?.make) dispatch(updateVehicle({ model: '' }));
           }
         }

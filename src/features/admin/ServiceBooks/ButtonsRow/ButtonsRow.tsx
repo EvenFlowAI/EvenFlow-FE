@@ -9,12 +9,13 @@ import { TCallback } from '../../../../types/types';
 
 type TProps = {
   isEdit: boolean;
-  setEdit: Dispatch<SetStateAction<boolean>>;
+  setEdit: (value: boolean) => void;
   onSave: TCallback;
   onCancel: TCallback;
+  isActive: boolean;
 };
 
-const ButtonsRow: React.FC<TProps> = ({ isEdit, setEdit, onSave, onCancel }) => {
+const ButtonsRow: React.FC<TProps> = ({ isEdit, setEdit, onSave, onCancel, isActive }) => {
   const { isOpen, onClose, onOpen } = useModal();
   return (
     <Wrapper>
@@ -44,7 +45,12 @@ const ButtonsRow: React.FC<TProps> = ({ isEdit, setEdit, onSave, onCancel }) => 
           Create Service Book
         </Button>
       </ButtonsWrapper>
-      <ServiceBookModal open={isOpen} onClose={onClose} editingItemId={undefined} />
+      <ServiceBookModal
+        open={isOpen}
+        onClose={onClose}
+        editingItemId={undefined}
+        isActive={isActive}
+      />
     </Wrapper>
   );
 };

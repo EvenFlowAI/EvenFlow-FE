@@ -15,7 +15,7 @@ import AskAddService from '../../../../../components/modals/booking/AskAddServic
 import ServiceComment from '../../../../../components/modals/booking/ServiceComment/ServiceComment';
 import {
   checkCarIsValid,
-  selectCategoriesIds,
+  selectCategories,
   setAdditionalServicesChosen,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { Caption } from '../../../../../components/wrappers/Caption/Caption';
@@ -64,7 +64,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const { selectedSR, serviceRequests, search, scProfile, selectedSRComments } = useSelector(
     ({ appointment }: RootState) => appointment
   );
-  const { subService, service, categoriesIds, trackerData } = useSelector(
+  const { subService, service, serviceCategories, trackerData } = useSelector(
     ({ appointmentFrame }: RootState) => appointmentFrame
   );
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
@@ -170,16 +170,16 @@ export const SelectOpsCode: React.FC<TProps> = ({
       item => item.type === EServiceCategoryType.IndividualServices && item.page === page
     );
     const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-    let categories = [...categoriesIds];
+    let categories = [...serviceCategories];
     if (Number(value) && selectedSR.includes(Number(value))) {
       const filteredCodes = selectedSR.filter(id => id !== Number(value));
       if (!filteredCodes.find(code => diagnoseCategoryRequestsIds.includes(code))) {
-        categories = categories.filter(id => id !== diagnoseCategory?.id);
+        categories = categories.filter(id => id.id !== diagnoseCategory?.id);
       }
       if (!filteredCodes.find(code => individualRequestsIds.includes(code))) {
-        categories = categories.filter(id => id !== individualCategory?.id);
+        categories = categories.filter(id => id.id !== individualCategory?.id);
       }
-      dispatch(selectCategoriesIds(categories));
+      dispatch(selectCategories(categories));
     }
   };
 

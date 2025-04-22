@@ -3,7 +3,7 @@ import { Table } from '../../../components/tables/Table/Table';
 import { IEmployee } from '../../../store/reducers/employees/types';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadTechnicians, removeEmployee } from '../../../store/reducers/employees/actions';
+import { removeEmployee } from '../../../store/reducers/employees/actions';
 import { RootState } from '../../../store/rootReducer';
 import { MoreHoriz } from '@mui/icons-material';
 import { TableAvatar } from '../../../components/wrappers/TableAvatar/TableAvatar';
@@ -41,7 +41,7 @@ export const TechniciansTable = () => {
 
   React.useEffect(() => {
     if (selectedSC) {
-      dispatch(loadTechnicians(selectedSC.id));
+      // dispatch(loadTechnicians(selectedSC.id));
     }
   }, [dispatch, selectedSC]);
   const { techniciansList, loadingTechnicians } = useSelector(
@@ -54,7 +54,7 @@ export const TechniciansTable = () => {
 
   const reloadTechnicians = () => {
     if (selectedSC) {
-      dispatch(loadTechnicians(selectedSC.id));
+      // dispatch(loadTechnicians(selectedSC.id));
     }
   };
   const openMenu = (u: IEmployee) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -84,7 +84,7 @@ export const TechniciansTable = () => {
         showMessage(`${edit.fullName} removed.`);
         setEdit(undefined);
         if (selectedSC) {
-          dispatch(loadTechnicians(selectedSC.id));
+          // dispatch(loadTechnicians(selectedSC.id));
         }
       } catch (e) {
         showError(e);

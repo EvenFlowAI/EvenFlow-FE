@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { TextField } from '../../../../../components/styled/EndUserInputs';
@@ -8,7 +8,7 @@ import {
   checkCarIsValid,
   clearAppointmentSteps,
   setAdditionalServicesChosen,
-  setFrameDescription,
+  setCommentsForCategories,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { TArgCallback, TScreen } from '../../../../../types/types';
 import {
@@ -21,6 +21,19 @@ import AddCommentPrompt from './AddCommentPrompt/AddCommentPrompt';
 import { checkPodChanged } from '../../../../../store/reducers/appointments/actions';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
+import { mergeArrayById } from '../../../../../utils/utils';
+import styled from '@mui/material/styles/styled';
+
+const MAX_COUNT_WORDS_CAPACITY = 250;
+
+export const RemainingCharactersWrapper = styled('div')(() => ({
+  color: '#202021',
+  fontFamily: 'Proxima Nova',
+  fontSize: '14px',
+  fontStyle: 'normal',
+  fontWeight: 400,
+  alignSelf: 'flex-start',
+}));
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -36,7 +49,7 @@ export const AppointmentComment: React.FC<TProps> = ({
   handleSetScreen,
   onAddServices,
 }) => {
-  const { subService, service, description } = useSelector(
+  const { subService, service, serviceCategories } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);
@@ -46,22 +59,37 @@ export const AppointmentComment: React.FC<TProps> = ({
   const { t } = useTranslation();
   const showError = useException();
   const ref = useRef<HTMLDivElement | null>(null);
+  const [comment, setComment] = useState('');
 
   useEffect(() => {
     if (ref) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [ref]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    dispatch(setFrameDescription(value));
+    if (value.length <= MAX_COUNT_WORDS_CAPACITY) {
+      setComment(value);
+    }
   };
 
   const handleYes = () => {
+    dispatch(
+      setCommentsForCategories({
+        id: (subService?.id ? subService?.id : service?.id) ?? 0,
+        comment,
+      })
+    );
     onClose();
     dispatch(setAdditionalServicesChosen(true));
     onAddServices();
   };
 
   const handleNo = () => {
+    dispatch(
+      setCommentsForCategories({
+        id: (subService?.id ? subService?.id : service?.id) ?? 0,
+        comment,
+      })
+    );
     onClose();
     handleSetScreen('maintenanceDetails');
   };
@@ -74,14 +102,25 @@ export const AppointmentComment: React.FC<TProps> = ({
     const isCommentRequired = subService
       ? subService?.isCommentRequired
       : service?.isCommentRequired;
-    if (!description?.trim().length) {
+    if (!comment?.trim().length) {
       if (isCommentRequired) {
         return onErrorOpen();
       } else {
-        dispatch(setFrameDescription(''));
+        dispatch(
+          setCommentsForCategories({
+            id: (subService?.id ? subService?.id : service?.id) ?? 0,
+            comment,
+          })
+        );
       }
     }
     if (isManagingFlow) {
+      dispatch(
+        setCommentsForCategories({
+          id: (subService?.id ? subService?.id : service?.id) ?? 0,
+          comment,
+        })
+      );
       dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid));
     } else {
       onOpen();
@@ -99,19 +138,31 @@ export const AppointmentComment: React.FC<TProps> = ({
     handleSetScreen('serviceNeeds');
   };
 
+  useEffect(() => {
+    const mergedArray = mergeArrayById(serviceCategories);
+
+    setComment(
+      mergedArray.find(el => el.id === (subService?.id ? subService?.id : service?.id))?.comment ??
+        ''
+    );
+  }, [serviceCategories, service?.id, subService?.id]);
+
   return (
     <StepWrapper>
       <TextField
         fullWidth
         multiline
         onChange={handleChange}
-        value={description}
+        value={comment}
         rows={4}
         variant="standard"
         InputProps={{ disableUnderline: true }}
         required={scProfile?.isCommentRequired}
         placeholder={t('Enter comments')}
       />
+      <RemainingCharactersWrapper>
+        {comment?.length ?? 0} / {MAX_COUNT_WORDS_CAPACITY} characters
+      </RemainingCharactersWrapper>
       <ActionButtons onBack={handleBack} onNext={onSubmit} nextLabel={t('Next')} />
       <AskAddService onSave={handleYes} onClose={handleNo} open={isOpen} />
       <AddCommentPrompt open={isErrorOpen} onClose={onErrorClose} />

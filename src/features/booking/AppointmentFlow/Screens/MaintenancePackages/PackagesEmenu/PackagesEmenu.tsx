@@ -28,8 +28,7 @@ const PackagesEmenu: React.FC<React.PropsWithChildren<React.PropsWithChildren<TP
   const getStringByModel = useCallback(
     (str: any): string => {
       if (selectedVehicle) {
-        const modelCodes = makes.find(item => item.name === selectedVehicle.make)?.modelCodes;
-        const modelId = modelCodes?.find(item => item.name === selectedVehicle.model)?.code;
+        const modelId = makes.find(item => item.name === selectedVehicle.make)?.id;
         if (modelId) str = str + `model=${modelId}&`;
         if (selectedVehicle.year) str = str + `year=${selectedVehicle.year}&`;
       }

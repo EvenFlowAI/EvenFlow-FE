@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EServiceCategoryType } from '../../store/reducers/categories/types';
-import { collectServiceRequestIds, decodeSCID, mapRecallsForRequest } from '../../utils/utils';
+import {
+  collectServiceRequestIds,
+  getCategories,
+  decodeSCID,
+  mapRecallsForRequest,
+} from '../../utils/utils';
 import { IConsultantsRequestData } from '../../api/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
@@ -22,7 +27,7 @@ const useGetConsultantsData = (
     valueService,
     service,
     subService,
-    categoriesIds,
+    serviceCategories,
     appointmentByKey,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { selectedSR, selectedSRComments } = useSelector((state: RootState) => state.appointment);
@@ -35,7 +40,7 @@ const useGetConsultantsData = (
       .filter(category => {
         return (
           category.type === EServiceCategoryType.GeneralCategory &&
-          categoriesIds.includes(category.id)
+          serviceCategories.map(item => item.id).includes(category.id)
         );
       })
       .map(item => item.id);
@@ -69,7 +74,7 @@ const useGetConsultantsData = (
           pageSize: 0,
           serviceRequests: serviceRequestIds,
           recalls,
-          serviceCategoryIds,
+          serviceCategories: getCategories(allCategories, serviceCategories),
           maintenancePackageOption,
           serviceTypeOptionId: serviceTypeOption?.id ?? null,
           searchTerm: '',

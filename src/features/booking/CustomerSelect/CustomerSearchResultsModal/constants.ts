@@ -58,8 +58,8 @@ export const customerDataColumns: TColumn[] = [
 export const columnsNames: TSearchColumnName[] = customerDataColumns.map(el => el.name);
 
 export const initialColumnOffset = {
-  secondColumn: 150,
-  thirdColumn: 150,
+  secondColumn: 200,
+  thirdColumn: 274,
 };
 
 export const requiredColumnsNames: TSearchColumnName[] = [

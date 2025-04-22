@@ -10,5 +10,11 @@ export const CardWrapper = styled('div')({
   borderRadius: 2,
   color: '#FFFFFF',
   fontWeight: 'bold',
+  height: 37,
   cursor: 'move',
+  span: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 });

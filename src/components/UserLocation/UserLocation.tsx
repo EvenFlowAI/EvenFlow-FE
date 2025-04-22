@@ -3,7 +3,7 @@ import {
   SelectWrapper,
   useAutocompleteStyles,
 } from '../../features/booking/AppointmentFlow/Screens/YourLocation/styles';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import GooglePlacesAutocomplete, { geocodeByPlaceId } from 'react-google-places-autocomplete';
 import { Autocomplete } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { autocompleteRender } from '../../utils/autocompleteRenders';
@@ -18,6 +18,7 @@ import { RootState } from '../../store/rootReducer';
 import { useTranslation } from 'react-i18next';
 import { useLocationStyles } from '../../hooks/styling/useLocationStyles';
 import { useException } from '../../hooks/useException/useException';
+import { parseGeoCode } from '../../features/booking/AppointmentFlow/Screens/YourLocation/utils';
 
 type TProps = {
   zip: string | null;
@@ -102,9 +103,32 @@ const UserLocation: React.FC<TProps> = ({
     }
   };
 
+  const onGetZipCodesList = (list: string[], postalCode: string) => {
+    if (list.includes(postalCode)) setZip(postalCode);
+  };
+
   const handleChangeAddress = async (e: any) => {
     setFormChecked(false);
     setUserAddress(e ?? null);
+    if (e?.value?.place_id && e?.label) {
+      geocodeByPlaceId(e.value.place_id).then(res => {
+        const data = parseGeoCode(
+          res[0].address_components,
+          e.label,
+          e.value?.structured_formatting?.main_text,
+          e.value?.structured_formatting?.secondary_text
+        );
+
+        if (data.postalCode && scProfile) {
+          dispatch(
+            loadFilteredZip(
+              { serviceCenterId: scProfile.id, search: data.postalCode },
+              onGetZipCodesList
+            )
+          );
+        }
+      });
+    }
     if (e?.label) {
       loadAncillaryPrice(zip, e?.label);
     } else {

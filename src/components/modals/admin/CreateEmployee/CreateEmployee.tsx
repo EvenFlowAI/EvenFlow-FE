@@ -8,11 +8,7 @@ import { RootState } from '../../../../store/rootReducer';
 import { loadShortSC } from '../../../../store/reducers/serviceCenters/actions';
 import { TEmployeeForm } from './types';
 import { IEmployee, IEmployeeForm } from '../../../../store/reducers/employees/types';
-import {
-  createEmployee,
-  loadDMSAdvisors,
-  updateEmployee,
-} from '../../../../store/reducers/employees/actions';
+import { loadDMSAdvisors } from '../../../../store/reducers/employees/actions';
 import { IUserForm, TRole } from '../../../../store/reducers/users/types';
 import { createUser, updateUser } from '../../../../store/reducers/users/actions';
 import { checkEmail } from '../../../../utils/utils';
@@ -143,6 +139,7 @@ export const CreateEmployee: React.FC<
           email: employeeForm.email || undefined,
           serviceCenterId: employeeForm.serviceCenter?.id || null,
           dmsId: employeeForm?.dmsId ?? null,
+          role: employeeForm.role,
           employeeInfo: {
             hourlyRate: employeeForm.hourlyRate || 0,
             overtimeRate: employeeForm.overtimeRate || 0,
@@ -155,20 +152,10 @@ export const CreateEmployee: React.FC<
         data.displayOnBookingTypes = employeeForm.displayOnBookingTypes;
       }
       try {
-        if (employeeForm.role !== Roles.Technician) {
-          if (payload?.id) {
-            await dispatch(updateUser(data as IUserForm, payload.id, onSuccess, showError, avatar));
-          } else {
-            await dispatch(createUser(data as IUserForm, onSuccess, showError, avatar));
-          }
+        if (payload?.id) {
+          await dispatch(updateUser(data as IUserForm, payload.id, onSuccess, showError, avatar));
         } else {
-          if (payload?.id) {
-            await dispatch(
-              updateEmployee(data as IEmployeeForm, payload.id, onSuccess, showError, avatar)
-            );
-          } else {
-            await dispatch(createEmployee(data as IEmployeeForm, onSuccess, showError, avatar));
-          }
+          await dispatch(createUser(data as IUserForm, onSuccess, showError, avatar));
         }
         if (onAction) {
           onAction();

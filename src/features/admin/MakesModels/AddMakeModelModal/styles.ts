@@ -3,8 +3,11 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()(() => ({
   wrapper: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     paddingTop: 14,
+    gap: 24,
   },
   buttonsWrapper: {
     display: 'flex',
@@ -24,6 +27,11 @@ export const useStyles = makeStyles()(() => ({
     outline: 'none',
     '&:hover': {
       color: '#7898FF',
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#FFFFFF',
+      border: '1px solid #DADADA',
+      color: '#DADADA',
     },
   },
   addModel: {
@@ -48,5 +56,67 @@ export const useStyles = makeStyles()(() => ({
     background: '#F7F8FB',
     color: '#B8B9BF',
     padding: '6px 12px',
+  },
+  fieldTitle: {
+    color: '#252733',
+    fontFamily: 'Proxima Nova',
+    fontSize: '12px',
+    fontStyle: 'normal',
+    fontWeight: 700,
+    lineHeight: 'normal',
+    letterSpacing: '0.2px',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+  },
+  dropdown: {},
+  configuredLayout: {},
+  inputWrapper: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 24,
+  },
+  addmakesBtn: {
+    width: 114,
+    background: '#7898FF',
+    color: 'white',
+    border: '1px solid #7898FF',
+    outline: 'none',
+    alignSelf: 'flex-end',
+    '&:hover': {
+      color: '#7898FF',
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#FFFFFF',
+      border: '1px solid #DADADA',
+      color: '#DADADA',
+    },
+  },
+  firstColumnLayout: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    width: '100%',
+    flex: 1,
+    minHeight: 598,
+  },
+  attentionWrapper: {
+    marginTop: 'auto',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '12px 16px',
+    alignItems: 'center',
+    gap: 8,
+    background: '#F7F8FB',
+    color: '#252733',
+
+    /* Form placeholder filled */
+    fontFamily: 'Proxima Nova',
+    fontSize: 14,
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 'normal',
   },
 }));

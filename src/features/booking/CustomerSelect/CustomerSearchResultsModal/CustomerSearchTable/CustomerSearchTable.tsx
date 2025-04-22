@@ -102,27 +102,18 @@ const CustomerSearchTable: React.FC<
   const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
     return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize];
   }, [pageData]);
-  const firstColumn = useRef();
-  const secondColumn = useRef();
 
   useEffect(() => {
-    let width1 = 0;
-    let width2 = 0;
-    if (firstColumn.current) {
-      // @ts-ignore
-      width1 = firstColumn.current?.offsetWidth;
-    }
-    if (secondColumn.current) {
-      // @ts-ignore
-      width2 = secondColumn.current?.offsetWidth;
-    }
-    if (width1 && width2) {
-      setOffset(() => ({
-        secondColumn: width1,
-        thirdColumn: width1 + width2,
-      }));
-    }
-  }, [firstColumn.current, secondColumn.current, selectedColumns]);
+    // Fixed widths for the first three columns
+    const iconColumnWidth = 124;
+    const lastNameWidth = 150;
+    const firstNameWidth = 150;
+
+    setOffset(() => ({
+      secondColumn: iconColumnWidth,
+      thirdColumn: iconColumnWidth + lastNameWidth,
+    }));
+  }, []); // Remove dependencies since we want fixed widths
 
   useEffect(() => {
     const orderedData = customers.map((el, i) => ({ ...el, sortOrder: i }));
@@ -392,427 +383,447 @@ const CustomerSearchTable: React.FC<
     );
   };
 
+  // This function will be added to reorder the columns
+  const getOrderedColumns = (cols: TColumn[]) => {
+    // First we extract the specific columns we need to reorder
+    const lastName = cols.find(col => col.name === 'Last Name');
+    const firstName = cols.find(col => col.name === 'First Name');
+    const make = cols.find(col => col.name === 'Make');
+    const model = cols.find(col => col.name === 'Model');
+    const vin = cols.find(col => col.name === 'VIN');
+    const year = cols.find(col => col.name === 'Year');
+
+    // Then filter out these columns from the original array
+    const otherColumns = cols.filter(
+      col =>
+        col.name !== 'Last Name' &&
+        col.name !== 'First Name' &&
+        col.name !== 'Make' &&
+        col.name !== 'Model' &&
+        col.name !== 'VIN' &&
+        col.name !== 'Year'
+    );
+
+    // Now construct the new array in the desired order
+    const orderedColumns = [];
+
+    if (lastName) orderedColumns.push(lastName);
+    if (firstName) orderedColumns.push(firstName);
+    if (make) orderedColumns.push(make);
+    if (model) orderedColumns.push(model);
+    if (vin) orderedColumns.push(vin);
+    if (year) orderedColumns.push(year);
+
+    // Add the rest of the columns
+    return [...orderedColumns, ...otherColumns];
+  };
+
+  // Use the ordered columns
+  const orderedColumns = useMemo(() => getOrderedColumns(selectedColumns), [selectedColumns]);
+
+  const FIXED_COLUMNS_WIDTH = 424; // icons(124) + lastName(150) + firstName(150)
+  const MIN_TABLE_WIDTH = 1550;
+
   return isLoading ? (
     <div className={classes.emptyWrapper}>
       <Loading />
     </div>
   ) : (
-    <div style={{ overflowX: 'auto' }}>
-      <div className={classes.tableWrapper}>
-        <Table
-          className={classes.wrapper}
-          style={{ width: selectedColumns.length > 10 ? selectedColumns.length * 150 : 1550 }}
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.stickyTHeadCell} key="emptyCell" />
-              {selectedColumns.map(({ name, order }, index) => {
-                return (
-                  <TableCell
-                    key={name}
-                    className={index < 2 ? classes.stickyTHeadCell : classes.headerCell}
-                    style={{
-                      left:
-                        index === 0
+    <div className={classes.tableWrapper}>
+      <div className={classes.tableContainer}>
+        <div className={classes.tableContent}>
+          <Table
+            className={classes.wrapper}
+            style={{
+              tableLayout: 'fixed',
+              width: Math.max(
+                MIN_TABLE_WIDTH,
+                FIXED_COLUMNS_WIDTH +
+                  (selectedColumns.length > 2 ? (selectedColumns.length - 2) * 150 : 0)
+              ),
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.stickyTHeadCell} key="emptyCell" width={124} />
+                {orderedColumns.map(({ name, order }, index) => {
+                  const isLastName = name === 'Last Name';
+                  const isFirstName = name === 'First Name';
+                  return (
+                    <TableCell
+                      key={name}
+                      className={
+                        isLastName || isFirstName ? classes.stickyTHeadCell : classes.headerCell
+                      }
+                      style={{
+                        left: isLastName
                           ? offset.secondColumn
-                          : index === 1
+                          : isFirstName
                             ? offset.thirdColumn
                             : 'unset',
-                      borderRight: index === 1 ? '1px solid #828282' : '1px solid #DADADA',
-                    }}
-                    width={index > 0 && index < 5 ? 150 : 'auto'}
-                  >
-                    {order ? (
-                      <TableSortLabel
-                        direction={sorting.isAscending ? 'desc' : 'asc'}
-                        onClick={() => onSort(order)}
-                        active={order === sorting.order}
-                      >
-                        {name}
-                      </TableSortLabel>
+                      }}
+                      width={
+                        // Fixed widths for sticky columns within the map
+                        isLastName || isFirstName
+                          ? 150
+                          : // Special widths for other columns
+                            name === 'Year'
+                            ? 60
+                            : name === 'Address'
+                              ? 225
+                              : name === 'State' || name === 'ZIP' // Add State and ZIP check
+                                ? 70
+                                : // Default width for other common columns (adjust range if needed)
+                                  index > 0 && index < 7
+                                  ? 150
+                                  : // Fallback width
+                                    'auto'
+                      }
+                    >
+                      {order ? (
+                        <TableSortLabel
+                          direction={sorting.isAscending ? 'desc' : 'asc'}
+                          onClick={() => onSort(order)}
+                          active={order === sorting.order}
+                        >
+                          {name}
+                        </TableSortLabel>
+                      ) : (
+                        name
+                      )}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) => (
+                <TableRow key={customer.vin + index}>
+                  <TableCell key="icon" className={classes.stickyLeftCell} width={124}>
+                    {isNewVehicleMode ? (
+                      <IconsBlock>
+                        <Button
+                          onClick={onSelectCustomerForNewVehicle(customer)}
+                          color="primary"
+                          variant="text"
+                          size="small"
+                        >
+                          SELECT
+                        </Button>
+                      </IconsBlock>
+                    ) : getIsEdit(customer) ? (
+                      <IconsBlock>
+                        <Button
+                          style={{ fontSize: 11, minWidth: 46 }}
+                          onClick={onCancelEditing}
+                          color="secondary"
+                          variant="text"
+                          size="small"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={onSaveInfo}
+                          style={{ fontSize: 11, minWidth: 46 }}
+                          color="primary"
+                          variant="text"
+                          size="small"
+                        >
+                          Save
+                        </Button>
+                      </IconsBlock>
                     ) : (
-                      name
+                      <IconsBlock>
+                        <HtmlTooltip title="Create Appointment">
+                          <IconButton
+                            disabled={!Boolean(customer.vehicleId)}
+                            onClick={() => onCreateNewForCar(customer)}
+                            size="small"
+                            style={{ padding: '9px 3px' }}
+                          >
+                            <Create />
+                          </IconButton>
+                        </HtmlTooltip>
+                        <HtmlTooltip title="Update Appointment">
+                          <div>
+                            <IconButton
+                              disabled={!Boolean(customer.appointmentHashKey)}
+                              onClick={() => onUpdateAppForCar(customer)}
+                              size="small"
+                              style={{ padding: '9px 3px' }}
+                            >
+                              {Boolean(customer.appointmentHashKey) ? <Update /> : <EditDisabled />}
+                            </IconButton>
+                          </div>
+                        </HtmlTooltip>
+                        <HtmlTooltip title="Cancel appointment">
+                          <div>
+                            <IconButton
+                              disabled={!Boolean(customer.appointmentHashKey)}
+                              onClick={() => onCancelAppointment(customer)}
+                              size="small"
+                              style={{ padding: '9px 3px' }}
+                            >
+                              {Boolean(customer.appointmentHashKey) ? (
+                                <CancelApp />
+                              ) : (
+                                <CancelAppDisabled />
+                              )}
+                            </IconButton>
+                          </div>
+                        </HtmlTooltip>
+                        <HtmlTooltip title="Repair history">
+                          <div>
+                            <IconButton
+                              disabled={!Boolean(customer.hasOrders)}
+                              onClick={() => onViewRepairHistory(customer)}
+                              size="small"
+                              style={{ padding: '9px 3px' }}
+                            >
+                              {Boolean(customer.hasOrders) ? <Search /> : <SearchDisabled />}
+                            </IconButton>
+                          </div>
+                        </HtmlTooltip>
+                        <HtmlTooltip title="Edit customer Information">
+                          <div>
+                            <IconButton
+                              disabled={false}
+                              onClick={() => onEditData(customer)}
+                              size="small"
+                              style={{ padding: '9px 3px' }}
+                            >
+                              <Edit />
+                            </IconButton>
+                          </div>
+                        </HtmlTooltip>
+                      </IconsBlock>
                     )}
                   </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow className={classes.greyRow}>
-              <TableCell
-                key="firstColumn"
-                ref={firstColumn}
-                className={classes.stickyTHeadCell}
-                width={150}
-                style={{
-                  borderBottom: 0,
-                  borderRight: '1px solid #DADADA',
-                }}
-              />
-              <TableCell
-                key="secondColumn"
-                ref={secondColumn}
-                className={classes.stickyTHeadCell}
-                width={150}
-                style={{
-                  left: offset.secondColumn,
-                  borderBottom: 0,
-                  borderRight: '1px solid #DADADA',
-                }}
-              />
-              <TableCell
-                key="thirdColumn"
-                className={classes.stickyTHeadCell}
-                width={150}
-                style={{
-                  left: offset.thirdColumn,
-                  borderBottom: 0,
-                  borderRight: '0.5px solid #828282',
-                }}
-              />
-              {selectedColumns.slice(0, selectedColumns.length - 2).map((_, index) => (
-                <TableCell
-                  className={classes.bodyCell}
-                  width={150}
-                  style={{ borderBottom: 0 }}
-                  key={index}
-                />
+                  {orderedColumns.find(el => el.name === 'Last Name') ? (
+                    <TableCell
+                      key="last"
+                      className={classes.stickyLeftCell}
+                      width={150}
+                      style={{
+                        left: offset.secondColumn,
+                        padding: getIsEdit(customer) ? '12px 0px' : '12px 8px',
+                      }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="lastName"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'First Name') ? (
+                    <TableCell
+                      key="first"
+                      className={classes.stickyLeftCell}
+                      width={150}
+                      style={{
+                        left: offset.thirdColumn,
+                        padding: getIsEdit(customer) ? '12px 0px' : '12px 8px',
+                      }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="firstName"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Make') ? (
+                    <TableCell key="make" className={classes.bodyCell}>
+                      {customer.make ?? ''}
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Model') ? (
+                    <TableCell key="model" className={classes.bodyCell}>
+                      {customer.model ?? ''}
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'VIN') ? (
+                    <TableCell key="vin" className={classes.bodyCell}>
+                      {customer.vin ?? ''}
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Year') ? (
+                    <TableCell key="year" className={classes.bodyCell} width={60}>
+                      {customer.year ?? ''}
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Company Name') ? (
+                    <TableCell
+                      key="companyName"
+                      className={classes.bodyCell}
+                      width={150}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="companyName"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Home') ? (
+                    <TableCell
+                      key="home"
+                      className={classes.bodyCell}
+                      width={150}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="homePhone"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Cell') ? (
+                    <TableCell
+                      key="cell"
+                      className={classes.bodyCell}
+                      width={150}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="cellPhone"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Other') ? (
+                    <TableCell
+                      key="otherPhone"
+                      className={classes.bodyCell}
+                      width={150}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="otherPhone"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Email') ? (
+                    <TableCell
+                      key="email"
+                      className={classes.bodyCell}
+                      width={150}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <CustomerInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="email"
+                        isEdit={isEdit}
+                        onFieldChange={onFieldChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Address') ? (
+                    <TableCell
+                      key="address"
+                      className={classes.bodyCell}
+                      width={225}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <AddressInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="address"
+                        isEdit={isEdit}
+                        onFieldChange={onAddressChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'City') ? (
+                    <TableCell
+                      key="city"
+                      className={classes.bodyCell}
+                      width={120}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <AddressInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="city"
+                        isEdit={isEdit}
+                        onFieldChange={onAddressChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'State') ? (
+                    <TableCell
+                      key="state"
+                      className={classes.bodyCell}
+                      width={70}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <AddressInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="state"
+                        isEdit={isEdit}
+                        onFieldChange={onAddressChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'ZIP') ? (
+                    <TableCell
+                      key="zip"
+                      className={classes.bodyCell}
+                      width={70}
+                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
+                    >
+                      <AddressInputField
+                        editingElement={editingElement}
+                        customer={customer}
+                        fieldName="zipCode"
+                        isEdit={isEdit}
+                        onFieldChange={onAddressChange}
+                      />
+                    </TableCell>
+                  ) : null}
+                </TableRow>
               ))}
-            </TableRow>
-            {data.slice(currentFirstItemIndex, currentLastItemIndex).map((customer, index) => (
-              <TableRow key={customer.vin + index}>
-                <TableCell key="icon" className={classes.stickyLeftCell} width={150}>
-                  {isNewVehicleMode ? (
-                    <IconsBlock>
-                      <Button
-                        onClick={onSelectCustomerForNewVehicle(customer)}
-                        color="primary"
-                        variant="text"
-                        size="small"
-                      >
-                        SELECT
-                      </Button>
-                    </IconsBlock>
-                  ) : getIsEdit(customer) ? (
-                    <IconsBlock>
-                      <Button
-                        style={{ fontSize: 11, minWidth: 46 }}
-                        onClick={onCancelEditing}
-                        color="secondary"
-                        variant="text"
-                        size="small"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={onSaveInfo}
-                        style={{ fontSize: 11, minWidth: 46 }}
-                        color="primary"
-                        variant="text"
-                        size="small"
-                      >
-                        Save
-                      </Button>
-                    </IconsBlock>
-                  ) : (
-                    <IconsBlock>
-                      <HtmlTooltip title="Create Appointment">
-                        <IconButton
-                          style={{ padding: 4 }}
-                          onClick={() => onCreateNewForCar(customer)}
-                          size="large"
-                        >
-                          <Create />
-                        </IconButton>
-                      </HtmlTooltip>
-                      {customer.appointmentHashKey?.length ? (
-                        <HtmlTooltip title="Edit Appointment">
-                          <IconButton
-                            style={{ padding: 4 }}
-                            onClick={() => onUpdateAppForCar(customer)}
-                            size="large"
-                          >
-                            <Update />
-                          </IconButton>
-                        </HtmlTooltip>
-                      ) : (
-                        <IconButton style={{ padding: 4 }} disabled size="large">
-                          <EditDisabled />
-                        </IconButton>
-                      )}
-                      {customer.appointmentHashKey?.length ? (
-                        <HtmlTooltip title="Cancel Appointment">
-                          <IconButton
-                            style={{ padding: 4 }}
-                            onClick={() => onCancelAppointment(customer)}
-                            size="large"
-                          >
-                            <CancelApp />
-                          </IconButton>
-                        </HtmlTooltip>
-                      ) : (
-                        <IconButton style={{ padding: 4 }} disabled size="large">
-                          <CancelAppDisabled />
-                        </IconButton>
-                      )}
-                      {customer.hasOrders ? (
-                        <HtmlTooltip title="View Repair History">
-                          <IconButton
-                            style={{ padding: 4 }}
-                            onClick={() => onViewRepairHistory(customer)}
-                            size="large"
-                          >
-                            <Search />
-                          </IconButton>
-                        </HtmlTooltip>
-                      ) : (
-                        <IconButton style={{ padding: 4 }} disabled size="large">
-                          <SearchDisabled />
-                        </IconButton>
-                      )}
-                      <HtmlTooltip title="Edit Customer Information">
-                        <IconButton
-                          style={{ padding: 4 }}
-                          onClick={() => onEditData(customer)}
-                          size="large"
-                        >
-                          <Edit />
-                        </IconButton>
-                      </HtmlTooltip>
-                    </IconsBlock>
-                  )}
-                </TableCell>
-                {selectedColumns.find(el => el.name === 'Last Name') ? (
-                  <TableCell
-                    key="last"
-                    className={classes.stickyLeftCell}
-                    width={150}
-                    style={{
-                      left: offset.secondColumn,
-                      padding: getIsEdit(customer) ? '12px 0px' : '12px 8px',
-                    }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="lastName"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'First Name') ? (
-                  <TableCell
-                    key="first"
-                    className={classes.stickyLeftCell}
-                    width={150}
-                    style={{
-                      left: offset.thirdColumn,
-                      borderRight: '1px solid #828282',
-                      padding: getIsEdit(customer) ? '12px 0px' : '12px 8px',
-                    }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="firstName"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Company Name') ? (
-                  <TableCell
-                    key="companyName"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="companyName"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Home') ? (
-                  <TableCell
-                    key="home"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="homePhone"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Cell') ? (
-                  <TableCell
-                    key="cell"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="cellPhone"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Other') ? (
-                  <TableCell
-                    key="otherPhone"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="otherPhone"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Email') ? (
-                  <TableCell
-                    key="email"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <CustomerInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="email"
-                      isEdit={isEdit}
-                      onFieldChange={onFieldChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Address') ? (
-                  <TableCell
-                    key="address"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <AddressInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="address"
-                      isEdit={isEdit}
-                      onFieldChange={onAddressChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'City') ? (
-                  <TableCell
-                    key="city"
-                    className={classes.bodyCell}
-                    width={120}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <AddressInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="city"
-                      isEdit={isEdit}
-                      onFieldChange={onAddressChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'State') ? (
-                  <TableCell
-                    key="state"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <AddressInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      fieldName="state"
-                      isEdit={isEdit}
-                      onFieldChange={onAddressChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'ZIP') ? (
-                  <TableCell
-                    key="zip"
-                    className={classes.bodyCell}
-                    width={150}
-                    style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                  >
-                    <AddressInputField
-                      editingElement={editingElement}
-                      customer={customer}
-                      error={
-                        formIsChecked &&
-                        !!editingElement?.address?.zipCode &&
-                        editingElement?.address?.zipCode?.length > 10
-                      }
-                      fieldName="zipCode"
-                      isEdit={isEdit}
-                      onFieldChange={onAddressChange}
-                    />
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Year') ? (
-                  <TableCell key="year" className={classes.bodyCell}>
-                    {customer.year ?? ''}
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Make') ? (
-                  <TableCell key="make" className={classes.bodyCell}>
-                    {customer.make ?? ''}
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'Model') ? (
-                  <TableCell key="model" className={classes.bodyCell}>
-                    {customer.model ?? ''}
-                  </TableCell>
-                ) : null}
-                {selectedColumns.find(el => el.name === 'VIN') ? (
-                  <TableCell key="vin" className={classes.bodyCell}>
-                    {customer.vin ?? ''}
-                  </TableCell>
-                ) : null}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {editingElement ? (
-          <VehicleRepairHistory
-            customerId={editingElement.customerId}
-            open={isOpenHistory}
-            onClose={onCloseHistory}
-            vehicleId={editingElement.vehicleId}
-          />
-        ) : null}
-        {editingElement?.appointmentHashKey ? (
-          <CancelAppointmentModal
-            open={isOpenConfirm}
-            onClose={onCloseConfirm}
-            loadData={loadData}
-            hashKey={editingElement.appointmentHashKey}
-          />
-        ) : null}
+            </TableBody>
+          </Table>
+        </div>
       </div>
+
+      {editingElement ? (
+        <VehicleRepairHistory
+          customerId={editingElement.customerId}
+          open={isOpenHistory}
+          onClose={onCloseHistory}
+          vehicleId={editingElement.vehicleId}
+        />
+      ) : null}
+      {editingElement?.appointmentHashKey ? (
+        <CancelAppointmentModal
+          open={isOpenConfirm}
+          onClose={onCloseConfirm}
+          loadData={loadData}
+          hashKey={editingElement.appointmentHashKey}
+        />
+      ) : null}
       {paging?.numberOfRecords > 10 ? (
         <TablePagination
           className={classes.pagination}

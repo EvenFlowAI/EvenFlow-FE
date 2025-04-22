@@ -6,7 +6,6 @@ import {
   IListAppointment,
   IPackageAppointments,
   IVehicle,
-  TAppointmentAdvisor,
   IServiceRequestIds,
 } from '../../../api/types';
 import { EPackagePricingType } from '../appointmentFrameReducer/types';
@@ -40,7 +39,7 @@ type TPackageOptionRequest = {
 
 export interface ICheckPodRequest {
   serviceRequests: IServiceRequestIds[];
-  serviceCategoryIds: number[];
+  serviceCategories: IServiceRequestIds[];
   valueServiceOfferIds: number[];
   recalls: TRecallForRequest[];
   maintenancePackageOption: TPackageOptionRequest | null;
@@ -50,7 +49,7 @@ export interface ICheckPodRequest {
   zipCode: string | null;
   vehicle: IVehicle;
   serviceTypeOptionId: number | null;
-  advisor: TAppointmentAdvisor;
+  advisorId: string | null;
   transportationOptionId: number | null;
 }
 

@@ -177,7 +177,6 @@ export interface IBaseAppointment {
   serviceCenterId: number;
   transportationOption: ITransportation | null;
   isNeedCall: boolean;
-  comment: string;
   offerId: number;
   offer: IOffer;
   isEditable: boolean;
@@ -209,10 +208,10 @@ export interface IAddressData {
   originalFullAddress?: string;
 }
 
-export type TAppointmentAdvisor = {
-  isAnySelected: boolean;
-  id?: string | null;
-};
+// export type TAppointmentAdvisor = {
+//   isAnySelected: boolean;
+//   id?: string | null;
+// };
 
 export interface IAppointmentByKey extends IBaseAppointment {
   serviceCategories: ICategory[];
@@ -220,7 +219,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
   serviceTypeOption?: IFirstScreenOption;
   recalls?: string[];
   recallDescriptions?: string[];
-  advisor?: TAppointmentAdvisor | null;
+  advisorId: string | null;
   detailedPriceList?: IServiceRequestPrice[];
   serviceValetTime?: TServiceValetSlot;
   notes?: string;
@@ -329,6 +328,7 @@ export interface IServiceCategory extends IServiceCategoryShort {
   description?: string;
   offer?: IOfferForCategory;
   isCommentRequired?: boolean;
+  comment: string;
 }
 
 export interface IServiceConsultant {
@@ -351,7 +351,7 @@ export interface IConsultantsRequestData {
   pageSize: 0;
   searchTerm: string;
   serviceRequests: IServiceRequestIds[];
-  serviceCategoryIds: number[];
+  serviceCategories: IServiceRequestIds[];
   maintenancePackageOption: MPOptionShort | null;
   recalls: TRecallForRequest[];
   serviceTypeOptionId: number | null;
@@ -486,11 +486,21 @@ export type TModelCode = {
   name: string;
 };
 
+export interface IModel {
+  globalId: number;
+  isReadOnly: boolean;
+  orderIndex: number;
+  id: number;
+  name: string;
+}
+
 export interface IMake {
   name: string;
-  models: string[];
-  id?: number;
-  modelCodes?: TModelCode[];
+  models: IModel[];
+  id: number;
+  globalId: number;
+  isReadOnly: boolean;
+  orderIndex: number;
 }
 
 export interface IModel {

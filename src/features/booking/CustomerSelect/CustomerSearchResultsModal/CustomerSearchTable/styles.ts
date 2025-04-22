@@ -1,17 +1,31 @@
 import { makeStyles } from 'tss-react/mui';
 import { styled, Tooltip } from '@mui/material';
-
 import { withStyles } from 'tss-react/mui';
 
 //
 export const useStyles = makeStyles()(() => ({
-  tableWrapper: {},
+  tableWrapper: {
+    height: 'calc(100vh - 300px)',
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   wrapper: {
-    overflowX: 'auto',
-    marginTop: 16,
-    borderTop: '1px solid #DADADA',
-    borderLeft: '1px solid #DADADA',
+    border: '1px solid #DADADA',
     borderCollapse: 'unset',
+    width: '100%',
+  },
+  tableContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    position: 'relative',
+    marginBottom: 52, // Space for pagination
+  },
+  tableContent: {
+    flex: 1,
+    overflow: 'auto',
+    maxHeight: 'calc(100vh - 352px)', // Adjusted to account for pagination
   },
   emptyWrapper: {
     height: 500,
@@ -25,16 +39,21 @@ export const useStyles = makeStyles()(() => ({
     fontWeight: 'bold',
     color: '#202021',
     textTransform: 'uppercase',
-    padding: '16px 8px',
+    padding: '10px 6px',
+    backgroundColor: '#F7F8FB',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+    border: '1px solid #DADADA',
   },
   bodyCell: {
     fontSize: 12,
     color: '#202021',
-    padding: '12px 8px',
-    borderRight: '1px solid #DADADA',
+    padding: '10px 6px',
+    border: '1px solid #DADADA',
   },
   greyRow: {
-    height: 24,
+    height: 20,
     width: '100%',
   },
   input: {
@@ -43,34 +62,39 @@ export const useStyles = makeStyles()(() => ({
     fontSize: 12,
   },
   pagination: {
-    position: 'sticky',
+    position: 'absolute',
+    bottom: 0,
     left: 0,
+    right: 0,
     display: 'flex',
     justifyContent: 'flex-end',
-    flexShrink: 0,
     width: '100%',
+    backgroundColor: '#fff',
+    padding: '8px 0',
+    zIndex: 3,
   },
   stickyLeftCell: {
     position: 'sticky',
     left: 0,
-    zIndex: 1,
+    zIndex: 3,
     fontSize: 12,
     color: '#202021',
     padding: '12px 8px',
     backgroundColor: '#F7F8FB',
-    borderRight: '1px solid #DADADA',
+    border: '1px solid #DADADA',
   },
   stickyTHeadCell: {
     position: 'sticky',
     left: 0,
-    zIndex: 1,
+    zIndex: 4,
     fontSize: 12,
     fontWeight: 'bold',
     color: '#202021',
     textTransform: 'uppercase',
     backgroundColor: '#F7F8FB',
-    padding: '16px 8px',
-    borderRight: '1px solid #DADADA',
+    padding: '12px 8px',
+    border: '1px solid #DADADA',
+    top: 0,
   },
 }));
 

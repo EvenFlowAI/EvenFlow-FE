@@ -64,6 +64,7 @@ export const ConfirmModal: React.FC<
               item
               xs={10}
               className={payload.isBooking ? classes.titleBooking : classes.titleAdmin}
+              style={{ display: 'flex', alignItems: 'center' }}
             >
               {payload.title}
             </Grid>

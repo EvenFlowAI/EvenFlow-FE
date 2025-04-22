@@ -8,6 +8,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import {
   collectServiceRequestIds,
   decodeSCID,
+  getCategories,
   getClearDate,
   getClearSVDate,
   mapRecallsForRequest,
@@ -92,7 +93,7 @@ export const AppointmentSlots: React.FC<
     subService,
     selectedPackage,
     advisor,
-    categoriesIds,
+    serviceCategories,
     valueService,
     userType,
     hashKey,
@@ -376,17 +377,6 @@ export const AppointmentSlots: React.FC<
     initRef.current = v;
   }, []);
 
-  const getCategories = useCallback((): number[] => {
-    return allCategories
-      .filter(category => {
-        return (
-          category.type === EServiceCategoryType.GeneralCategory &&
-          categoriesIds.includes(category.id)
-        );
-      })
-      .map(item => item.id);
-  }, [allCategories, EServiceCategoryType, categoriesIds]);
-
   const handleError = (e: any) => {
     const internalServerError = e.response?.data?.message
       ?.toLowerCase()
@@ -472,7 +462,7 @@ export const AppointmentSlots: React.FC<
             undefined,
             selectedSRComments
           ),
-          serviceCategoryIds: getCategories(),
+          serviceCategories: getCategories(allCategories, serviceCategories),
           customerId: customerLoadedData?.id,
           warrantyExpiration: selectedVehicle?.warrantyExpiration,
           serviceTypeOptionId: serviceTypeOption?.id ?? null,

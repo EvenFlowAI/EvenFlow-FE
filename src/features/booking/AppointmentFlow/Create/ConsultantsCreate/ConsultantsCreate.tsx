@@ -1,10 +1,7 @@
 import React from 'react';
 import { TActionProps } from '../../../../../types/types';
 import { IServiceConsultant } from '../../../../../api/types';
-import {
-  setAdvisor,
-  setAnyAdvisorSelected,
-} from '../../../../../store/reducers/appointmentFrameReducer/actions';
+import { setAdvisor } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import {
   selectAppointment,
   selectServiceValetAppointment,
@@ -17,7 +14,6 @@ const ConsultantsCreate: React.FC<TActionProps> = ({ onNext, onBack }) => {
 
   const handleSelectConsultant = (consultant: IServiceConsultant | null) => {
     dispatch(setAdvisor(consultant));
-    dispatch(setAnyAdvisorSelected(!Boolean(consultant)));
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
   };

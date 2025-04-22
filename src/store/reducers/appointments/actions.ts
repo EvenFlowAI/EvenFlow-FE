@@ -159,7 +159,10 @@ export const checkPodChanged =
 
     const data: ICheckPodRequest = {
       serviceRequests: serviceRequestIds,
-      serviceCategoryIds: getCategories(categories.allCategories, appointmentFrame.categoriesIds),
+      serviceCategories: getCategories(
+        categories.allCategories,
+        appointmentFrame.serviceCategories
+      ),
       valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
         ? [appointmentFrame?.valueService?.selectedService.id]
         : [],
@@ -170,10 +173,7 @@ export const checkPodChanged =
       serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
       zipCode: appointmentFrame.zipCode ?? null,
       address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
-      advisor: {
-        id: appointmentFrame.advisor?.id,
-        isAnySelected: !Boolean(appointmentFrame.advisor),
-      },
+      advisorId: appointmentFrame.advisor?.id ?? null,
       vehicle,
       transportationOptionId:
         (appointmentFrame.serviceTypeOption?.type === EServiceType.VisitCenter ||
@@ -299,9 +299,10 @@ const loadSlotsForCloning =
         serviceRequests: currentAppointment.serviceRequests
           ? currentAppointment.serviceRequests.map(el => ({ id: el.id, comment: null }))
           : [],
-        serviceCategoryIds: currentAppointment.serviceCategories
-          ? currentAppointment.serviceCategories.map(el => el.id)
-          : [],
+        serviceCategories: currentAppointment.serviceCategories.map(el => ({
+          id: el.id,
+          comment: el.comment,
+        })),
         customerId: currentAppointment.customerId,
         serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
         recalls: mapRecallsForRequest(selectedRecalls),

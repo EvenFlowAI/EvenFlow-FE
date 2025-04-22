@@ -16,7 +16,7 @@ import {
 } from './types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { ActionCreator } from 'redux';
-
+import { mapModelsWithParentNames } from '../../../utils/utils';
 export const setPackageLoading = createAction<boolean>('Optimizer/SetPackageLoading');
 export const setAllPackagesLoading = createAction<boolean>('Optimizer/SetAllPackagesLoading');
 export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPackageById');
@@ -162,13 +162,24 @@ export const updatePackage =
 
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
-  async dispatch => {
-    Api.call(Api.endpoints.Vehicles.Makes, { params: { serviceCenterId } })
-      .then(result => {
-        if (result) dispatch(getMakes(result.data));
+  async (dispatch, getState) => {
+    const state = getState().vehicleDetails;
+    Api.call<{ result: IMake[]; paging: IPagingResponse }>(Api.endpoints.Vehicles.Makes, {
+      data: {
+        serviceCenterId,
+        orderBy: state.order.orderBy,
+        isAscending: state.order.isAscending,
+        pageIndex: 0,
+        pageSize: 0,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getMakes(mapModelsWithParentNames(response.data.result)));
+        }
       })
       .catch(err => {
-        console.log(err);
+        console.log('load makes error', err);
       });
   };
 
