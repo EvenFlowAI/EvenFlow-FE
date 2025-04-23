@@ -42,7 +42,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
   const { selectedTiming, serviceTypeOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
-  const { searchedDateRange, serviceValetAppointment } = useSelector(
+  const { serviceValetAppointment, searchedDateRange } = useSelector(
     (state: RootState) => state.appointment
   );
 
@@ -90,8 +90,9 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
         .fill(0)
         .map((e, idx) => getAppointmentDate(date, idx + 1));
     }
+
     return [daysInMonth, generatedDays];
-  }, [date, searchedDateRange, getAppointmentDate]);
+  }, [date, getAppointmentDate, searchedDateRange]);
 
   useEffect(() => {
     if (!dateRangeUpdated && searchedDateRange) {

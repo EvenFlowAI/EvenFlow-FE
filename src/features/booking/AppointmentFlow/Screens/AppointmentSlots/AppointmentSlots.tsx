@@ -338,7 +338,10 @@ export const AppointmentSlots: React.FC<
 
   const updateDate = useCallback(
     (d: TParsableDate, keepSlot?: boolean) => {
-      clearData();
+      // Only clear data if we're not keeping the slot
+      if (!keepSlot) {
+        clearData();
+      }
 
       const newDate = dayjs.utc(d);
       const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
