@@ -18,7 +18,6 @@ import dayjs from 'dayjs';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
 
-
 const App = () => {
   const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
   const { config, currentConfig, isAdvisorAvailable } = useSelector(
@@ -35,27 +34,6 @@ const App = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
-
-  useEffect(() => {
-    const checkVersion = async () => {
-      try {
-        const response = await fetch('/version.json');
-        const data = await response.json();
-        const currentVersion = localStorage.getItem('app_version');
-
-        if (currentVersion && currentVersion !== data.version) {
-          localStorage.setItem('app_version', data.version);
-          window.location.reload();
-        } else if (!currentVersion) {
-          localStorage.setItem('app_version', data.version);
-        }
-      } catch (error) {
-        console.error('Failed to check version:', error);
-      }
-    };
-
-    checkVersion();
-  }, []);
 
   const onFocus = useCallback(() => {
     const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
