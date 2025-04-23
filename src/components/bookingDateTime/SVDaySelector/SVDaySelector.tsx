@@ -130,6 +130,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
     dateRangeUpdated,
     onDateRangeSet,
     serviceValetAppointment,
+    searchedDateRange,
   ]);
 
   const handleChangeDay = (date: string) => () => {
