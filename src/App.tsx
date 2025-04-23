@@ -18,6 +18,9 @@ import dayjs from 'dayjs';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
 
+// Add version check interval (5 minutes)
+const VERSION_CHECK_INTERVAL = 5 * 60 * 1000;
+
 const App = () => {
   const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
   const { config, currentConfig, isAdvisorAvailable } = useSelector(
@@ -34,6 +37,35 @@ const App = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
+
+  // Add version check effect
+  useEffect(() => {
+    const checkVersion = async () => {
+      try {
+        const response = await fetch('/version.json', { cache: 'no-cache' });
+        const data = await response.json();
+        const currentVersion = localStorage.getItem('appVersion');
+
+        if (currentVersion && currentVersion !== data.version) {
+          // New version detected, force reload
+          window.location.reload();
+        } else if (!currentVersion) {
+          // First time load, store version
+          localStorage.setItem('appVersion', data.version);
+        }
+      } catch (error) {
+        console.error('Failed to check version:', error);
+      }
+    };
+
+    // Check version immediately
+    checkVersion();
+
+    // Set up interval for version checks
+    const intervalId = setInterval(checkVersion, VERSION_CHECK_INTERVAL);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const onFocus = useCallback(() => {
     const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
