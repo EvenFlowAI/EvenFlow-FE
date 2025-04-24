@@ -554,7 +554,25 @@ export const AppointmentSlots: React.FC<
 
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
-  }, []);
+  }, [
+    dispatch,
+    selectedVehicle,
+    customerLoadedData,
+    service,
+    packagePricingType,
+    packageEMenuType,
+    serviceTypeOption,
+    subService,
+    selectedPackage,
+    selectedSR,
+    advisor,
+    valueService,
+    zipCode,
+    address,
+    mileage,
+    transportation,
+    selectedSRComments,
+  ]);
 
   useEffect(() => {
     if (
