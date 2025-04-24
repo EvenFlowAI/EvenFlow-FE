@@ -17,7 +17,7 @@ import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser'
 import { copyTextToClipboard } from './utils';
 import { Routes } from '../../../../routes/constants';
 
-const restrictedRoles: TRole[] = ['Call Center Rep', 'Advisor', 'Manager', 'Technician'];
+const restrictedRoles: TRole[] = ['BDC Agent', 'Advisor', 'Manager', 'Technician'];
 
 export const BookingModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>

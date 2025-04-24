@@ -53,7 +53,7 @@ export type TRole =
   | 'Manager'
   | 'Advisor'
   | 'Technician'
-  | 'Call Center Rep'
+  | 'BDC Agent'
   | 'Service Director'
   | 'Call Center Administrator';
 
