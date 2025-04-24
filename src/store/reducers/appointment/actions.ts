@@ -35,7 +35,7 @@ import {
   IServiceCategory,
   IServiceCategoryShort,
 } from '../../../api/types';
-import { getSlotsGap } from '../appointmentFrameReducer/actions';
+import { getSlotsGap, setTiming, setTime } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -173,6 +173,10 @@ export const loadAppointmentSlots =
           })
         )
       );
+      if (data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
+        dispatch(setTiming(EAppointmentTimingType.PreferredDate));
+        dispatch(setTime(items[0].date as TParsableDate));
+      }
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
       dispatch(setWaitListSettings(waitlistSettings ?? null));
       dispatch(setSlotPodId(podId ?? null));
