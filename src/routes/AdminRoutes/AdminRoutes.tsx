@@ -22,7 +22,7 @@ import ApplicationRoutes from '../ApplicationRoutes/ApplicationRoutes';
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
   const currentRoleIsRestricted =
-    !!currentUser && ['Call Center Rep', 'Advisor', 'Technician'].includes(currentUser?.role);
+    !!currentUser && ['BDC Agent', 'Advisor', 'Technician'].includes(currentUser?.role);
 
   if (!currentUser) return null;
 

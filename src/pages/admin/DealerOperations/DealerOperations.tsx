@@ -17,7 +17,7 @@ export const DealerOperations: React.FC<React.PropsWithChildren<React.PropsWithC
   const { classes } = useDashboardStyles();
 
   const isCCRView: boolean = useMemo(() => {
-    return ['Call Center Rep', 'Advisor'].includes(currentUser?.role || '');
+    return ['BDC Agent', 'Advisor'].includes(currentUser?.role || '');
   }, [currentUser]);
 
   const isManager: boolean = useMemo(() => {

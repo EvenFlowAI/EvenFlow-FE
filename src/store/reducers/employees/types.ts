@@ -242,7 +242,7 @@ export enum EDmsRole {
   Technician,
   ServiceManager,
   ServiceDirector,
-  CallCenterRep,
+  BDCAgent,
 }
 
 export type TServiceBookSetting = {

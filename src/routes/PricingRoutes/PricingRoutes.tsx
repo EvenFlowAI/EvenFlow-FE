@@ -20,7 +20,7 @@ const PricingRoutes = () => {
         />
         <Redirect
           to={
-            currentUser && ['Advisor', 'Call Center Rep'].includes(currentUser?.role)
+            currentUser && ['Advisor', 'BDC Agent'].includes(currentUser?.role)
               ? Routes.Pricing.OfferManagement
               : Routes.Pricing.ServicePricingSettings
           }

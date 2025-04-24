@@ -24,7 +24,7 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
   const { classes } = useDashboardStyles();
 
   const isCCRView: boolean = useMemo(() => {
-    return ['Call Center Rep', 'Advisor'].includes(currentUser?.role || '');
+    return ['BDC Agent', 'Advisor'].includes(currentUser?.role || '');
   }, [currentUser]);
 
   const isManager: boolean = useMemo(() => {

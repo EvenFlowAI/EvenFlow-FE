@@ -16,12 +16,12 @@ export const WeekDayNames = [
   'Saturday',
 ];
 
-export const userRoles: TRole[] = ['Advisor', 'Technician', 'Call Center Rep', 'Manager'];
+export const userRoles: TRole[] = ['Advisor', 'Technician', 'BDC Agent', 'Manager'];
 
 export const widerUserRoles: TRole[] = [
   'Advisor',
   'Technician',
-  'Call Center Rep',
+  'BDC Agent',
   'Manager',
   'Service Director',
 ];
