@@ -411,6 +411,18 @@ export const AppointmentSlots: React.FC<
     return { apiStartDate, apiEndDate };
   };
 
+  const setApiDates = (startDate: TParsableDate) => {
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = startDate ? dayjs(startDate) : dayjs().startOf('day');
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    setCurrentApiStartDate(apiStartDate ?? null);
+    setCurrentApiEndDate(apiEndDate ?? null);
+  };
+
   const loadData = async ({
     requestedStartDate,
     requestedEndDate,
@@ -505,7 +517,8 @@ export const AppointmentSlots: React.FC<
               currentAppointment ? () => {} : setDateCallback,
               () => handleDateRangeSet(false),
               onLoadSlots,
-              handleError
+              handleError,
+              setApiDates
             )
           );
         }
@@ -528,12 +541,11 @@ export const AppointmentSlots: React.FC<
     } else {
       // Initial load: calculate dates and pass them to loadData
       const { apiStartDate, apiEndDate } = getApiDates();
+
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
   }, [
     dispatch,
-    id,
-    selectedTiming,
     selectedVehicle,
     customerLoadedData,
     service,
@@ -545,7 +557,6 @@ export const AppointmentSlots: React.FC<
     selectedSR,
     advisor,
     valueService,
-    selectedTime,
     zipCode,
     address,
     mileage,
@@ -642,6 +653,7 @@ export const AppointmentSlots: React.FC<
       console.error('Cannot load next slots without a current API date range.');
       // Optionally, trigger an initial load here if needed
       const { apiStartDate, apiEndDate } = getApiDates();
+
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
       return;
     }

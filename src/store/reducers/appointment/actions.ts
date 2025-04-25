@@ -35,7 +35,7 @@ import {
   IServiceCategory,
   IServiceCategoryShort,
 } from '../../../api/types';
-import { getSlotsGap } from '../appointmentFrameReducer/actions';
+import { getSlotsGap, setTiming, setTime } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -154,7 +154,8 @@ export const loadAppointmentSlots =
     cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void,
-    onError?: TArgCallback<any>
+    onError?: TArgCallback<any>,
+    setApiDates?: (startDate: TParsableDate) => void
   ): AppThunk =>
   async dispatch => {
     dispatch(setSlotsLoading(true));
@@ -173,6 +174,13 @@ export const loadAppointmentSlots =
           })
         )
       );
+      if (data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
+        const date = dayjs(items[0].date as TParsableDate);
+        dispatch(setTiming(EAppointmentTimingType.PreferredDate));
+        dispatch(setTime(date as TParsableDate));
+        dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
+        setApiDates && setApiDates(items[0].date as TParsableDate);
+      }
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
       dispatch(setWaitListSettings(waitlistSettings ?? null));
       dispatch(setSlotPodId(podId ?? null));
@@ -180,7 +188,7 @@ export const loadAppointmentSlots =
         loadCB();
       }
       if (onLoadedCb) onLoadedCb(!Boolean(items.length));
-      // searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
+      searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
       const searchDate = data.fromDate || data.startDate;
@@ -300,6 +308,7 @@ export const loadServiceValetSlots =
       .then(result => {
         const { items, dropOffSettings, searchedDateRange } = result.data;
         dispatch(getServiceValetSlots(items.map(el => ({ ...el, uniqueId: uuidv4() }))));
+        if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
         if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
         const searchDate = data.fromDate || data.startDate;
