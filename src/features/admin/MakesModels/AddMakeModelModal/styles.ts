@@ -106,7 +106,7 @@ export const useStyles = makeStyles()(() => ({
     flexDirection: 'row-reverse',
     justifyContent: 'center',
     width: '100%',
-    padding: '12px 16px',
+    padding: '12px 12px',
     alignItems: 'center',
     gap: 8,
     background: '#F7F8FB',

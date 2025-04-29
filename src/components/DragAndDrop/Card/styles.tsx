@@ -4,7 +4,7 @@ export const CardWrapper = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: '7px 16px',
+  padding: '7px 16px 7px 7px',
   marginBottom: 8,
   backgroundColor: '#7898FF',
   borderRadius: 2,
