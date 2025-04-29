@@ -218,14 +218,23 @@ export const AddMakeModelModal: React.FC<
             removedMakes?.length === 1 ? (
               `Please confirm you want to remove make ${removedMakes[0].name}!`
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div>
                 {`Please confirm you want to remove ${removedMakes.length} selected makes!`}
                 <Tooltip
                   title={removedMakes.map(make => make.name).join(', ')}
                   arrow
                   placement="top"
                 >
-                  <InfoOutlinedIcon style={{ fontSize: 16, color: '#5C5C5C', cursor: 'help' }} />
+                  <InfoOutlinedIcon
+                    style={{
+                      width: 20,
+                      height: 20,
+                      color: '#7898FF',
+                      cursor: 'help',
+                      position: 'relative',
+                      top: 3,
+                    }}
+                  />
                 </Tooltip>
               </div>
             ),
@@ -269,15 +278,25 @@ export const AddMakeModelModal: React.FC<
             removedModels?.length === 1 ? (
               `Please confirm you want to remove model ${removedModels[0].name}!`
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {`Please confirm you want to remove ${removedModels?.length} selected models!`}
+              <div>
+                {`Please confirm you want to remove ${removedModels?.length} selected models`}
                 <Tooltip
                   title={removedModels?.map(model => model.name).join(', ')}
                   arrow
                   placement="top"
                 >
-                  <InfoOutlinedIcon style={{ fontSize: 16, color: '#5C5C5C', cursor: 'help' }} />
+                  <InfoOutlinedIcon
+                    style={{
+                      width: 20,
+                      height: 20,
+                      color: '#7898FF',
+                      cursor: 'help',
+                      position: 'relative',
+                      top: 3,
+                    }}
+                  />
                 </Tooltip>
+                {`!`}
               </div>
             ),
           content: (
@@ -343,7 +362,7 @@ export const AddMakeModelModal: React.FC<
   }, [currentMake]);
 
   return (
-    <BaseModal {...props} width={810} onClose={onCloseModal}>
+    <BaseModal {...props} width={860} onClose={onCloseModal}>
       <DialogTitle onClose={onCloseModal}>
         {isEditing ? `${currentMake?.name} Model Options` : 'Make options'}
       </DialogTitle>
@@ -391,9 +410,23 @@ export const AddMakeModelModal: React.FC<
                     );
                   }
 
-                  // Dynamic max visible tags based on text length
-                  const maxVisibleTags = 1; // Default value
+                  // Calculate dynamic max visible tags based on text length
+                  const calculateMaxVisibleTags = () => {
+                    if (value.length === 0) return 0;
 
+                    // Get the average length of all tags
+                    const avgLength =
+                      value.reduce((sum, item) => sum + item.text.length, 0) / value.length;
+
+                    // If average length is very long, show only 1 tag
+                    if (avgLength > 7) return 1;
+                    // If average length is medium, show 2 tags
+
+                    // If average length is short, show 3 tags
+                    return 2;
+                  };
+
+                  const maxVisibleTags = calculateMaxVisibleTags();
                   const visibleTags = value.slice(0, maxVisibleTags);
                   const remainingCount = value.length - maxVisibleTags;
 
@@ -407,7 +440,7 @@ export const AddMakeModelModal: React.FC<
                               <div className={autocompleteClasses.classes.tag}>
                                 <div
                                   style={{
-                                    maxWidth: '140px',
+                                    maxWidth: '230px',
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
@@ -418,7 +451,7 @@ export const AddMakeModelModal: React.FC<
                                 {props.onDelete && (
                                   <Delete
                                     onClick={props.onDelete}
-                                    style={{ cursor: 'pointer', marginLeft: 4, flexShrink: 0 }}
+                                    style={{ cursor: 'pointer', flexShrink: 0 }}
                                   />
                                 )}
                               </div>
@@ -458,7 +491,13 @@ export const AddMakeModelModal: React.FC<
                     ...params,
                     label: isEditing ? 'Add Models' : 'Add Makes',
                     fullWidth: true,
-                    placeholder: isEditing ? 'Search Models' : 'Search Makes',
+                    placeholder: isEditing
+                      ? modelsToAdd.length > 0
+                        ? ''
+                        : 'Search Models'
+                      : makesToAdd.length > 0
+                        ? ''
+                        : 'Search Makes',
                   })(params)
                 }
               />

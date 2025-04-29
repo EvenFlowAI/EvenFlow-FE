@@ -88,12 +88,11 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
+    canDrag: () => id !== 0,
   });
 
   const opacity = isDragging ? 0 : 1;
   const boxShadow = isDragging ? '0px 2px 6px 0px #4D70E3' : 'none';
-
-
 
   drag(drop(ref));
 
@@ -106,7 +105,7 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
         whiteSpace: 'nowrap',
         textAlign: 'left',
         display: 'block',
-        width: 250,
+        width: 333,
         fontFamily: 'Proxima Nova',
         fontWeight: 700,
         fontSize: 16,
@@ -128,16 +127,13 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
         backgroundColor: text.toLowerCase().includes('other')
           ? '#858585'
           : (backGroundColor ?? '#7898FF'),
+        cursor: 'default',
       }}
       data-handler-id={handlerId}
     >
-      {isOverflowing ? (
-        <Tooltip title={text.length}>{textContent}</Tooltip>
-      ) : (
-        <Tooltip title={text.length}>{textContent}</Tooltip>
-      )}
+      {isOverflowing ? <Tooltip title={text}>{textContent}</Tooltip> : textContent}
       {onDelete && !text.toLowerCase().includes('other') ? (
-        <Delete onClick={() => onDelete(id)} style={{ cursor: 'pointer' }} />
+        <Delete onClick={() => onDelete(id)} style={{ cursor: 'pointer', width: 25, height: 25 }} />
       ) : null}
     </CardWrapper>
   );
