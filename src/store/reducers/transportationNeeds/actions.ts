@@ -7,7 +7,7 @@ import {
 import { AppThunk, TArgCallback, TCallback } from '../../../types/types';
 
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
-import { useSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack';
 
 export const setTransportationLoading = createAction<boolean>('TransportationNeeds/SetLoading');
 export const getTransportationOptions = createAction<ITransportationOptionFull[]>(
@@ -42,7 +42,19 @@ export const updateTransportationOption =
           dispatch(loadTransportationOptions(data.serviceCenterId));
         }
       })
-      .catch(err => {});
+      .catch(err => {
+        enqueueSnackbar(
+          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      });
   };
 
 export const editTransportationOptionRules =
