@@ -8,14 +8,14 @@ import { AppThunk, TArgCallback, TCallback } from '../../../types/types';
 
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { enqueueSnackbar } from 'notistack';
-
+export const getTransportationOptionsShort = createAction<TTransportationShort[]>(
+  'TransportationNeeds/GetOptionsShort'
+);
 export const setTransportationLoading = createAction<boolean>('TransportationNeeds/SetLoading');
 export const getTransportationOptions = createAction<ITransportationOptionFull[]>(
   'TransportationNeeds/GetOptions'
 );
-export const getTransportationOptionsShort = createAction<TTransportationShort[]>(
-  'TransportationNeeds/GetOptionsShort'
-);
+
 
 export const loadTransportationOptions =
   (serviceCenterId: number): AppThunk =>
