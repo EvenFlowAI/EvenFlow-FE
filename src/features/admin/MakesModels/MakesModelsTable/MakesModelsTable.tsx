@@ -30,7 +30,7 @@ const RowData: TableRowDataType<IMake>[] = [
     val: (el: IMake) => el.orderIndex.toString(),
     header: 'Order',
     orderId: 'OrderIndex',
-    width: '20%',
+    width: '5%',
   },
   {
     val: (el: IMake) => {
