@@ -9,13 +9,20 @@ import { RootState } from '../../../../store/rootReducer';
 type TProps = {
   onEdit: () => void;
   isLoading: boolean;
+  serviceType: string;
 };
 
-export const ZonesOpsCodesPlate: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<TProps>>
-> = ({ onEdit, isLoading }) => {
-  const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
-  const { zones } = useSelector((state: RootState) => state.serviceValet);
+export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
+  onEdit,
+  isLoading,
+  serviceType,
+}) => {
+  const { centerSettings } = useSelector((state: RootState) =>
+    serviceType === 'PickUpDropOff' ? state.capacityServiceValet : state.mobileService
+  );
+  const { zones } = useSelector((state: RootState) =>
+    serviceType === 'PickUpDropOff' ? state.serviceValet : state.mobileService
+  );
   const { classes: centerSettingsClasses } = useZonePlateStyles();
   const { classes } = useStyles();
 

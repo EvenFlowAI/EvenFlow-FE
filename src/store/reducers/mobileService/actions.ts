@@ -21,6 +21,7 @@ import { EServiceType } from '../appointmentFrameReducer/types';
 
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { TGeographicZone } from '../screenSettings/types';
+import { ICenterSettings } from '../capacityServiceValet/types';
 
 export const setCurrentZone = createAction<TZone | null>('MobileService/SetCurrentZone');
 export const setLoading = createAction<boolean>('MobileService/SetLoading');
@@ -38,6 +39,23 @@ export const setPricingOptionLoading = createAction<boolean>(
   'MobileService/SetPricingOptionLoading'
 );
 export const setMobileZonesShort = createAction<TGeographicZone[]>('MobileService/SetZonesShort');
+export const getCenterSettings = createAction<ICenterSettings | null>(
+  'MobileService/GetCenterSettings'
+);
+
+export const loadMobileServiceCenterSettings =
+  (id: number): AppThunk =>
+  dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.ServiceValet.GetMobileServiceSettings, { urlParams: { id } })
+      .then(result => {
+        if (result) dispatch(getCenterSettings(result.data));
+      })
+      .catch(err => {
+        console.log('load mobile service service center settings error', err);
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
 
 export const loadMobServiceZones =
   (id: number): AppThunk =>

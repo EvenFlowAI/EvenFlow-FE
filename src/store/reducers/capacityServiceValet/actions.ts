@@ -24,12 +24,14 @@ export const getCenterSettings = createAction<ICenterSettings | null>(
 );
 
 export const loadZonesRouting =
-  (id: number): AppThunk =>
+  (id: number, serviceType: string): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.ServiceValet.GetZoneRouting, { urlParams: { id } })
+    Api.call(Api.endpoints.ServiceValet.GetZoneRouting, {
+      urlParams: { id, serviceType },
+    })
       .then(result => {
-        if (result?.data) dispatch(getZonesRouting(result.data.zoneRoutings));
+        dispatch(getZonesRouting(result.data.zoneRouting));
       })
       .catch(err => {
         console.log('load Zones Routing for Service Valet error', err);
@@ -38,15 +40,15 @@ export const loadZonesRouting =
   };
 
 export const updateZonesRouting =
-  (id: number, data: IZonesRoutingByDay[]): AppThunk =>
+  (id: number, data: IZonesRoutingByDay[], serviceType: string): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.UpdateZoneRouting, {
-      urlParams: { id },
-      data: { zoneRoutings: data },
+      urlParams: { id, serviceType },
+      data: { serviceType, zoneRouting: data },
     })
       .then(result => {
-        if (result?.data) dispatch(loadZonesRouting(id));
+        if (result?.data) dispatch(loadZonesRouting(id, serviceType));
       })
       .catch(err => {
         console.log('load Zones Routing for Service Valet error', err);
@@ -199,6 +201,7 @@ export const updateServiceValetServiceRequest =
 export const updateServiceValetZonesOpsCodes =
   (
     id: number,
+    serviceType: string,
     zoneServiceRequests: TZonesOpsCodesRequest[],
     onSuccess: TCallback,
     onError: TArgCallback<string>
@@ -207,11 +210,12 @@ export const updateServiceValetZonesOpsCodes =
     dispatch(setLoading(true));
     Api.call(Api.endpoints.ServiceValet.UpdateZonesServiceRequests, {
       urlParams: { id },
-      data: { zoneServiceRequests },
+      data: { serviceType, zoneServiceRequests },
     })
       .then(result => {
-        if (result) dispatch(loadCenterSettings(id));
-        onSuccess();
+        if (result) {
+          onSuccess();
+        }
       })
       .catch(err => {
         onError(err);
