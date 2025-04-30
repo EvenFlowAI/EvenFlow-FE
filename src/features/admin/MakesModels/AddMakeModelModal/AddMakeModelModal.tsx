@@ -279,7 +279,7 @@ export const AddMakeModelModal: React.FC<
               `Please confirm you want to remove model ${removedModels[0].name}!`
             ) : (
               <div>
-                {`Please confirm you want to remove ${removedModels?.length} selected models`}
+                {`Please confirm you want to remove ${removedModels?.length} selected models!`}
                 <Tooltip
                   title={removedModels?.map(model => model.name).join(', ')}
                   arrow
@@ -296,7 +296,6 @@ export const AddMakeModelModal: React.FC<
                     }}
                   />
                 </Tooltip>
-                {`!`}
               </div>
             ),
           content: (
@@ -381,8 +380,24 @@ export const AddMakeModelModal: React.FC<
                 }}
                 ChipProps={{
                   color: 'primary',
-                  style: { borderRadius: 4 },
+                  style: {
+                    borderRadius: 4,
+                    maxWidth: '100%',
+                  },
                   size: 'small',
+                }}
+                sx={{
+                  '& .MuiAutocomplete-tag': {
+                    maxWidth: '100%',
+                  },
+                  '& .MuiAutocomplete-inputRoot': {
+                    flexWrap: 'nowrap',
+                    overflowX: 'auto',
+                    '&::-webkit-scrollbar': {
+                      display: 'none',
+                    },
+                    scrollbarWidth: 'none',
+                  },
                 }}
                 options={[selectAll, ...(isEditing ? filteredGlobalModels : filteredGlobalMakes)]}
                 getOptionLabel={option => option.text}
@@ -414,15 +429,21 @@ export const AddMakeModelModal: React.FC<
                   const calculateMaxVisibleTags = () => {
                     if (value.length === 0) return 0;
 
-                    // Get the average length of all tags
-                    const avgLength =
-                      value.reduce((sum, item) => sum + item.text.length, 0) / value.length;
+                    // Get the total length of all tags
+                    const totalLength = value.reduce((sum, item) => sum + item.text.length, 0);
 
-                    // If average length is very long, show only 1 tag
-                    if (avgLength > 7) return 1;
-                    // If average length is medium, show 2 tags
+                    // If we have 3 or fewer items and all are very short (under 5 chars), show all
+                    if (value.length <= 3 && value.every(item => item.text.length <= 5)) {
+                      return value.length;
+                    }
 
-                    // If average length is short, show 3 tags
+                    // If average length is very long (over 15 chars), show only 1 tag
+                    if (totalLength / value.length > 15) return 1;
+
+                    // If average length is medium (over 8 chars), show 2 tags
+                    if (totalLength / value.length > 8) return 2;
+
+                    // For shorter text, show up to 3 tags
                     return 2;
                   };
 
@@ -440,7 +461,7 @@ export const AddMakeModelModal: React.FC<
                               <div className={autocompleteClasses.classes.tag}>
                                 <div
                                   style={{
-                                    maxWidth: '230px',
+                                    maxWidth: value.length > 1 ? '150px' : '230px',
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
