@@ -6,6 +6,7 @@ export const useAutocompleteStyles = makeStyles()(() => ({
     alignItems: 'center',
     backgroundColor: '#7898FF',
     borderRadius: 4,
+    whiteSpace: 'nowrap',
     color: 'white',
     fontWeight: 'bold',
     margin: '1px 2px',
