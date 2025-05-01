@@ -103,6 +103,7 @@ const ServiceRequests = () => {
                     <MessageIconWrapper
                       onClick={() => {
                         setSelectedRequest({
+                          isCommentRequired: item?.isCommentRequired ?? false,
                           description: item?.name,
                           id: item.id,
                           code: 'specialCategory',

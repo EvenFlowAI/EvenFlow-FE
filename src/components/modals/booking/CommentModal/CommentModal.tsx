@@ -39,14 +39,19 @@ const CommentModal: React.FC<
   };
 
   const onSave = () => {
-    if (!text.length && selectedRequest?.code === 'specialCategory') {
+    
+    if (
+      !text.length &&
+      selectedRequest?.code === 'specialCategory' &&
+      selectedRequest?.isCommentRequired
+    ) {
       showError(t('Appointment Comment must not be empty'));
     } else if (selectedRequest?.code === 'specialCategory') {
       onClose();
       dispatch(setCommentsForCategories({ id: selectedRequest?.id ?? 0, comment: text }));
     } else if (selectedRequest?.id) {
-      dispatch(selectSRComment({ comments: { [selectedRequest.id]: text } }));
       onClose();
+      dispatch(selectSRComment({ comments: { [selectedRequest.id]: text } }));
     }
   };
 
