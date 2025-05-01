@@ -103,22 +103,24 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   return (
     <Grid container spacing={3}>
       <>
-        {centerSettingsList.map(k => {
-          const plate = optContent[k];
-          return (
-            <CenterSettingsPlate
-              key={k}
-              onEdit={() => getPlateEdit(k)}
-              title={plate.title}
-              count={getCount(k)}
-              label={plate.label}
-              prefix={plate.prefix}
-              suffix={plate.suffix}
-              helperText={plate.helperText}
-              isLoading={isLoading}
-            />
-          );
-        })}
+        {serviceType === 'PickUpDropOff'
+          ? centerSettingsList.map(k => {
+              const plate = optContent[k];
+              return (
+                <CenterSettingsPlate
+                  key={k}
+                  onEdit={() => getPlateEdit(k)}
+                  title={plate.title}
+                  count={getCount(k)}
+                  label={plate.label}
+                  prefix={plate.prefix}
+                  suffix={plate.suffix}
+                  helperText={plate.helperText}
+                  isLoading={isLoading}
+                />
+              );
+            })
+          : null}
         <ZonesOpsCodesPlate
           serviceType={serviceType}
           onEdit={onServiceValetOpsCodeOpen}
