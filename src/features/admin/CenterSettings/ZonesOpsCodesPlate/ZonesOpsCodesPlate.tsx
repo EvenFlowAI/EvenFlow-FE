@@ -44,7 +44,9 @@ export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWit
   return (
     <Grid item xs={6} md={4}>
       <Paper className={centerSettingsClasses.paper} variant={'outlined'}>
-        <h3 className={centerSettingsClasses.title}>Service Valet Op Code</h3>
+        <h3 className={centerSettingsClasses.title}>
+          {serviceType === 'PickUpDropOff' ? 'Service Valet Op Code' : 'Mobile Service Op Code'}
+        </h3>
         <Button
           className={centerSettingsClasses.edit}
           color="primary"
