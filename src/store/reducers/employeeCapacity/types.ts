@@ -22,7 +22,7 @@ export interface ITechnicianCapacity {
   efficiency: number;
   employeeName: string;
   serviceBookName: string;
-  avarageBillHoursPerRO: number;
+  averageBillHoursPerRO: number;
   dailyCapacity: { [key: string]: number };
   localId: number;
 }
