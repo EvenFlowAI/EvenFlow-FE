@@ -105,7 +105,7 @@ const ZonesOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildre
     <BaseModal onClose={onCancel} open={open} width={425}>
       <DialogTitle>
         <TopWrapper>
-          Service Valet Op Code
+          {serviceType === 'PickUpDropOff' ? 'Service Valet Op Code' : 'Mobile Service Op Code'}
           <ButtonsWrapper>
             <Button
               variant="text"
