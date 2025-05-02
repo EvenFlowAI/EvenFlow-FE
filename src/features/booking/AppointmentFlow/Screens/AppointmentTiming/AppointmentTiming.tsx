@@ -7,6 +7,7 @@ import {
   setSideBarSteps,
   setTime,
   setTiming,
+  setInitialTiming,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { EAppointmentTimingType } from '../../../../../store/reducers/appointment/types';
 import { clearAppointmentSlots } from '../../../../../store/reducers/appointment/actions';
@@ -26,9 +27,8 @@ type TProps = {
 
 export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack }) => {
   const { appointment } = useSelector((state: RootState) => state.appointment);
-  const { selectedTiming, selectedTime, serviceTypeOption, sideBarSteps, trackerData } =
+  const { selectedInitialTiming, selectedTime, serviceTypeOption, sideBarSteps, trackerData } =
     useSelector((state: RootState) => state.appointmentFrame);
-
   const [isLoading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -40,6 +40,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
   const handleSelectTiming = useCallback(
     (t: EAppointmentTimingType) => () => {
       dispatch(setTiming(t));
+      dispatch(setInitialTiming(t));
       if (t === EAppointmentTimingType.FirstAvailable) dispatch(setTime(null));
     },
     []
@@ -49,6 +50,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
     (t: unknown) => {
       const date = dayjs(t as TParsableDate);
       dispatch(setTiming(EAppointmentTimingType.PreferredDate));
+      dispatch(setInitialTiming(EAppointmentTimingType.PreferredDate));
       dispatch(setTime(date));
       if (!dayjs.utc(selectedTime).isSame(t as TParsableDate, 'date')) {
         dispatch(clearAppointmentSlots());
@@ -58,8 +60,8 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
   );
 
   const isTimingValid = Boolean(
-    selectedTiming !== null &&
-      (selectedTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
+    selectedInitialTiming !== null &&
+      (selectedInitialTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
   );
 
   const handleSideBar = () => {
@@ -71,12 +73,12 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
   };
 
   const handleGA = () => {
-    if (selectedTiming) {
+    if (selectedInitialTiming) {
       ReactGA.event(
         {
           category: 'EvenFlow User',
           action: 'Selected Timing Type',
-          label: `Selected ${timingTypes[selectedTiming]}`,
+          label: `Selected ${timingTypes[selectedInitialTiming]}`,
         },
         trackerData.ids
       );
@@ -85,12 +87,12 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
 
   const onSubmit = useCallback((): void => {
     handleGA();
-    if (appointment?.timingType !== selectedTiming) {
+    if (appointment?.timingType !== selectedInitialTiming) {
       dispatch(clearAppointmentSlots());
     }
     handleSideBar();
     onNext();
-  }, [appointment, dispatch, onNext, selectedTiming, handleGA]);
+  }, [appointment, dispatch, onNext, selectedInitialTiming, handleGA]);
 
   return (
     <StepWrapper>
@@ -109,8 +111,10 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
               card={card}
               isLoading={isLoading}
               onChangeTime={handleChangeTime}
-              selectedTime={selectedTime}
-              active={selectedTiming === card.name}
+              selectedTime={
+                selectedInitialTiming === EAppointmentTimingType.PreferredDate ? selectedTime : null
+              }
+              active={selectedInitialTiming === card.name}
               key={card.name}
             />
           );

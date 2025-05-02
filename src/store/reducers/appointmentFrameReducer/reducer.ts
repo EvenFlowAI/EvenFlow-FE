@@ -36,6 +36,7 @@ import {
   setFiltersVisibility,
   setHashKey,
   setHoursOfOperations,
+  setInitialTiming,
   setLoadingPackages,
   setMaintenanceDetails,
   setMobileServiceAvailability,
@@ -88,6 +89,7 @@ const initialState: TState = {
   advisor: null,
   selectedTime: null,
   selectedTiming: null,
+  selectedInitialTiming: null,
   selectedVehicle: null,
   customer: {
     fullName: '',
@@ -190,6 +192,15 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setTiming, (state, { payload }) => {
       return {
         ...state,
+        selectedTiming: payload,
+        selectedInitialTiming: payload,
+        selectedTime: payload !== EAppointmentTimingType.PreferredDate ? null : state.selectedTime,
+      };
+    })
+    .addCase(setInitialTiming, (state, { payload }) => {
+      return {
+        ...state,
+        selectedInitialTiming: payload,
         selectedTiming: payload,
         selectedTime: payload !== EAppointmentTimingType.PreferredDate ? null : state.selectedTime,
       };
@@ -465,6 +476,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         address: payload.address,
         zipCode: payload.zip,
         selectedTiming: payload.timing,
+        selectedInitialTiming: payload.timing,
         advisor: payload.advisor,
         isAnyAdvisorSelected: !Boolean(payload.advisor),
         transportation: payload.transportation,

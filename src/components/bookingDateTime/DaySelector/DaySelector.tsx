@@ -10,6 +10,7 @@ import { EAppointmentTimingType } from '../../../store/reducers/appointment/type
 import PromptNewSearchModal from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/PromptNewSearchModal/PromptNewSearchModal';
 import {
   setCurrentFrameScreen,
+  setInitialTiming,
   setTiming,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {
@@ -148,6 +149,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   // Reset appointment selection handler
   const handleResetAppointment = useCallback(() => {
     dispatch(setTiming(EAppointmentTimingType.PreferredDate));
+    dispatch(setInitialTiming(EAppointmentTimingType.PreferredDate));
     dispatch(setCurrentFrameScreen('appointmentTiming'));
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));

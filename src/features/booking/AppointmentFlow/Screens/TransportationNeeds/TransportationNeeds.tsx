@@ -9,6 +9,7 @@ import { ITransportation } from '../../../../../api/types';
 import {
   loadActiveTransportations,
   setCurrentFrameScreen,
+  setInitialTiming,
   setSideBarSteps,
   setTiming,
   setTransportation,
@@ -69,6 +70,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
     if (!transportation && index > -1 && sideBarSteps.length > index + 1) {
       dispatch(setSideBarSteps(sideBarSteps.slice(0, index + 1)));
       dispatch(setTiming(null));
+      dispatch(setInitialTiming(null));
     }
   }, [transportation]);
 
