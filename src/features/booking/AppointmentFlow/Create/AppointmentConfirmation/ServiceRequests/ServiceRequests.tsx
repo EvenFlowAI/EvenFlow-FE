@@ -52,6 +52,17 @@ const ServiceRequests = () => {
     }
   }
 
+  // const currentAppointmentServiceRequestsWithComment =
+  //   currentAppointment?.serviceRequestPrices?.map(item => {
+  //     const currentServiceRequest = serviceRequests.find(
+  //       serviceRequest => serviceRequest.description === item.requestName
+  //     );
+  //     return {
+  //       ...item,
+  //       comment: selectedSRComments[currentServiceRequest?.id ?? 0] ?? '',
+  //       id: currentServiceRequest?.id ?? 0,
+  //     };
+  //   });
   return currentAppointment?.serviceRequestPrices?.length ? (
     <>
       <ConfirmationItemWrapper>
@@ -60,13 +71,31 @@ const ServiceRequests = () => {
         </TitleWrapper>
         <List>
           {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
-            currentAppointment?.serviceRequestPrices?.map(item => (
-              <ServiceItem key={item.requestName}>
-                {item.requestName.includes('Going')
-                  ? t('My Description of Needs')
-                  : item.requestName}
-              </ServiceItem>
-            ))
+            currentAppointment?.serviceRequestPrices?.map(item => {
+              const currentServiceRequest =
+                serviceRequests.find(
+                  serviceRequest => serviceRequest.description === item.requestName
+                ) ?? null;
+              return (
+                <ServiceItem key={item.requestName}>
+                  {item.requestName.includes('Going')
+                    ? t('My Description of Needs')
+                    : item.requestName}
+                  <MessageIconWrapper
+                    onClick={() => {
+                      setSelectedRequest(currentServiceRequest);
+                      onCommentOpen();
+                    }}
+                  >
+                    {selectedSRComments[currentServiceRequest?.id ?? 0] ? (
+                      <MessageIconFilled />
+                    ) : (
+                      <MessageIcon />
+                    )}
+                  </MessageIconWrapper>
+                </ServiceItem>
+              );
+            })
           ) : (
             <>
               {selectedRecalls.map(el => (
