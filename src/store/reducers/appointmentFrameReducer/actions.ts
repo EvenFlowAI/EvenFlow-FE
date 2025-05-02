@@ -611,6 +611,9 @@ export const loadAncillaryPriceByZip =
           onError(err);
         }
         console.log('get ancillary price by zip code error', err);
+      })
+      .finally(() => {
+        dispatch(setAncillaryPriceLoading(false));
       });
   };
 
