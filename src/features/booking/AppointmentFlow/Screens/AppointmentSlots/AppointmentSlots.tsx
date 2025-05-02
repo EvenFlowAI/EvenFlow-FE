@@ -127,7 +127,6 @@ export const AppointmentSlots: React.FC<
   const dateSlotsRef = useRef<HTMLDivElement | null>(null);
   const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
   const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
-
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
     [serviceTypeOption]
