@@ -35,7 +35,12 @@ import {
   IServiceCategory,
   IServiceCategoryShort,
 } from '../../../api/types';
-import { getSlotsGap, setTiming, setTime } from '../appointmentFrameReducer/actions';
+import {
+  getSlotsGap,
+  setTiming,
+  setTime,
+  setInitialTiming,
+} from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
@@ -177,6 +182,7 @@ export const loadAppointmentSlots =
       if (data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
         const date = dayjs(items[0].date as TParsableDate);
         dispatch(setTiming(EAppointmentTimingType.PreferredDate));
+        dispatch(setInitialTiming(EAppointmentTimingType.FirstAvailable));
         dispatch(setTime(date as TParsableDate));
         dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
         setApiDates && setApiDates(items[0].date as TParsableDate);
