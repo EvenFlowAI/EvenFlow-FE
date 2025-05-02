@@ -3,11 +3,11 @@ import EligibleCustomerSegment from '../EligibleCustomerSegment/EligibleCustomer
 import Zones from '../Zones/Zones';
 import { TZipCode, TZone } from '../../../../store/reducers/mobileService/types';
 import AddEditGeographicZone from '../../../../components/modals/admin/EditGeographicZone/AddEditGeographicZone';
-import RemoveZipCode from '../../../../components/modals/admin/RemoveZipCode/RemoveZipCode';
 import { useDispatch } from 'react-redux';
 import {
   loadServiceValetZones,
   removeServiceValetZone,
+  removeZipFromServiceValetZone,
   setCurrentZone,
 } from '../../../../store/reducers/serviceValet/actions';
 import GeographicZonesButtons from '../../../../components/buttons/GeographicZonesButtons/GeographicZonesButtons';
@@ -33,11 +33,6 @@ const GeographicZones: React.FC<
   const [selectedZone, setSelectedZone] = useState<TZone | null>(null);
   const [currentZip, setCurrentZip] = useState<TZipCode | null>(null);
   const { onOpen: onEditZoneOpen, onClose: onEditZoneClose, isOpen: isEditZoneOpen } = useModal();
-  const {
-    onOpen: onRemoveZipOpen,
-    onClose: onRemoveZipClose,
-    isOpen: isRemoveZipOpen,
-  } = useModal();
 
   const { selectedSC } = useSCs();
   const { askConfirm } = useConfirm();
@@ -70,6 +65,22 @@ const GeographicZones: React.FC<
       });
     }
   };
+
+  const onRemoveZip = async () => {
+    if (selectedZone?.id && selectedSC && currentZip) {
+      await dispatch(removeZipFromServiceValetZone(selectedSC.id, currentZip));
+    }
+  };
+
+  const askRemoveZip = (zone: TZone) => {
+    if (currentZip) {
+      askConfirm({
+        onConfirm: onRemoveZip,
+        isRemove: true,
+        title: `Please confirm you want to remove Zip code from the ${zone.name}`,
+      });
+    }
+  };
   return (
     <div>
       <TabHeaderWrapper>
@@ -88,7 +99,7 @@ const GeographicZones: React.FC<
         <Zones
           selectedZone={selectedZone}
           setSelectedZone={setSelectedZone}
-          onRemoveZip={onRemoveZipOpen}
+          onRemoveZip={askRemoveZip}
           setCurrentZip={setCurrentZip}
         />
       </GeographicZonesWrapper>
@@ -98,17 +109,15 @@ const GeographicZones: React.FC<
         onClose={onEditZoneClose}
         isEdit
         zone={selectedZone}
-        onRemoveZipOpen={onRemoveZipOpen}
         setCurrentZip={setCurrentZip}
         currentZip={currentZip}
       />
-      <RemoveZipCode
-        open={isRemoveZipOpen}
-        onClose={onRemoveZipClose}
+      {/* <RemoveZipCode
+        onClose={askRemoveZip}
         zone={selectedZone}
         zip={currentZip}
         serviceType="serviceValet"
-      />
+      /> */}
     </div>
   );
 };

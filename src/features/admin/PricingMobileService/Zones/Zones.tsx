@@ -7,7 +7,7 @@ import { Loading } from '../../../../components/wrappers/Loading/Loading';
 import { useStyles } from './styles';
 
 type TZonesProps = {
-  onRemoveZip: () => void;
+  onRemoveZip: (zone: TZone) => void;
   setCurrentZip: Dispatch<SetStateAction<TZipCode | null>>;
   selectedZone: TZone | null;
   setSelectedZone: Dispatch<SetStateAction<TZone | null>>;
@@ -32,7 +32,7 @@ const Zones: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZonesProp
             zone={item}
             key={item.id}
             setCurrentZip={setCurrentZip}
-            onRemoveZip={onRemoveZip}
+            onRemoveZip={() => onRemoveZip(item)}
             zipCodes={item.zipCodes}
             setSelectedZone={setSelectedZone}
             isSelected={selectedZone?.id === item.id}

@@ -7,7 +7,7 @@ import GeographicZone from '../../../../components/wrappers/GeographicZone/Geogr
 import { useStyles } from './styles';
 
 type TZonesProps = {
-  onRemoveZip: () => void;
+  onRemoveZip: (zone: TZone) => void;
   setCurrentZip: Dispatch<SetStateAction<TZipCode | null>>;
   setSelectedZone: Dispatch<SetStateAction<TZone | null>>;
   selectedZone: TZone | null;
@@ -33,7 +33,7 @@ const Zones: React.FC<React.PropsWithChildren<React.PropsWithChildren<TZonesProp
             key={item.id}
             setSelectedZone={setSelectedZone}
             setCurrentZip={setCurrentZip}
-            onRemoveZip={onRemoveZip}
+            onRemoveZip={() => onRemoveZip(item)}
             zipCodes={item.zipCodes}
             isSelected={selectedZone?.id === item.id}
           />
