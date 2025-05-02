@@ -185,8 +185,8 @@ export const loadAppointmentSlots =
         dispatch(setInitialTiming(EAppointmentTimingType.FirstAvailable));
         dispatch(setTime(date as TParsableDate));
         dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
-        setApiDates && setApiDates(items[0].date as TParsableDate);
       }
+      setApiDates && setApiDates(items[0].date as TParsableDate);
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
       dispatch(setWaitListSettings(waitlistSettings ?? null));
       dispatch(setSlotPodId(podId ?? null));
