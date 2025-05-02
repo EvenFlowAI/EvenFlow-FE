@@ -9,7 +9,7 @@ export interface ICapacitySetting {
   appointmentLeadTime: number;
   cutOffTime?: string;
   technicianEfficiency: number;
-  avarageBillHoursPerRO: number;
+  averageBillHoursPerRO: number;
   isAdvisorStaffingFactor?: string;
   serviceBookId?: number;
 }
@@ -26,7 +26,7 @@ export interface ICapacitySettingById {
   appointmentLeadTime: number;
   cutOffTime: TCutOff[];
   technicianEfficiency: number;
-  avarageBillHoursPerRO: number;
+  averageBillHoursPerRO: number;
   isAdvisorStaffingFactor?: boolean;
   serviceBookId?: number;
 }
@@ -39,7 +39,7 @@ export interface ICapacitySettingRequestData {
   appointmentLeadTime?: number;
   cutOffTime?: TCutOff[];
   technicianEfficiency?: number;
-  avarageBillHoursPerRO?: number;
+  averageBillHoursPerRO?: number;
   isAdvisorStaffingFactor?: boolean;
   serviceBookId?: number;
 }
