@@ -14,7 +14,7 @@ export const SlotGapMap = {
 export const RowData: TableRowDataType<ICapacitySetting>[] = [
   {
     header: 'ID',
-    val: el => (el.serviceBookId ? el.serviceBookId.toString() : '-'),
+    val: el => (el.serviceBookId ? el.serviceBookId?.toString() : '-'),
     align: 'center',
   },
   {
@@ -31,13 +31,13 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
   },
   {
     header: 'Appointments Per Slot',
-    val: el => el.appointmentsPerSlot.toString(),
+    val: el => el.appointmentsPerSlot?.toString(),
     align: 'left',
     width: 120,
   },
   {
     header: 'Appointment Lead Time',
-    val: el => el.appointmentLeadTime.toString(),
+    val: el => el.appointmentLeadTime?.toString(),
     align: 'left',
     width: 120,
   },
@@ -49,12 +49,12 @@ export const RowData: TableRowDataType<ICapacitySetting>[] = [
   },
   {
     header: 'Technician Efficiency',
-    val: el => `${el.technicianEfficiency.toString()}%`,
+    val: el => `${el.technicianEfficiency?.toString()}%`,
     align: 'left',
   },
   {
     header: 'Average RO Hours',
-    val: el => el.averageBillHoursPerRO.toString(),
+    val: el => el.averageBillHoursPerRO?.toString(),
     align: 'left',
   },
   {
