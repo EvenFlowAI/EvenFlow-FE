@@ -6,7 +6,7 @@ export const initialForm: TForm = {
   appointmentsPerSlot: null,
   appointmentLeadTime: null,
   technicianEfficiency: null,
-  avarageBillHoursPerRO: null,
+  averageBillHoursPerRO: null,
   cutOffTime: [],
 };
 export const daysList = [0, 1, 2, 3, 4, 5, 6];

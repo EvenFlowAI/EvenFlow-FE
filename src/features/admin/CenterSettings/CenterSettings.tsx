@@ -19,8 +19,11 @@ import ZonesOpsCodeModal from './ZonesOpsCodesModal/ZonesOpsCodeModal';
 import { TParsableDate } from '../../../types/types';
 import ClockTimePicker from '../../../components/pickers/ClockTimePicker/ClockTimePicker';
 import dayjs from 'dayjs';
-
-const CenterSettings = () => {
+import {
+  loadMobServiceZones,
+  loadMobileServiceCenterSettings,
+} from '../../../store/reducers/mobileService/actions';
+const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   const { centerSettings, isLoading } = useSelector(
     (state: RootState) => state.capacityServiceValet
   );
@@ -45,10 +48,16 @@ const CenterSettings = () => {
 
   useEffect(() => {
     if (selectedSC) {
-      dispatch(loadCenterSettings(selectedSC.id));
-      dispatch(loadServiceValetZones(selectedSC.id));
+      if (serviceType === 'PickUpDropOff') {
+        dispatch(loadCenterSettings(selectedSC.id));
+        dispatch(loadServiceValetZones(selectedSC.id));
+      }
+      if (serviceType === 'MobileService') {
+        dispatch(loadMobileServiceCenterSettings(selectedSC.id));
+        dispatch(loadMobServiceZones(selectedSC.id));
+      }
     }
-  }, [selectedSC]);
+  }, [selectedSC, serviceType, dispatch]);
 
   const optContent: TOptContent = {
     [ECenterSettingType.ShowDropOffTime]: {
@@ -91,27 +100,32 @@ const CenterSettings = () => {
       dispatch(updateDmsAppointmentTime(selectedSC.id, data, onClose, showError));
     }
   };
-
   return (
     <Grid container spacing={3}>
       <>
-        {centerSettingsList.map(k => {
-          const plate = optContent[k];
-          return (
-            <CenterSettingsPlate
-              key={k}
-              onEdit={() => getPlateEdit(k)}
-              title={plate.title}
-              count={getCount(k)}
-              label={plate.label}
-              prefix={plate.prefix}
-              suffix={plate.suffix}
-              helperText={plate.helperText}
-              isLoading={isLoading}
-            />
-          );
-        })}
-        <ZonesOpsCodesPlate onEdit={onServiceValetOpsCodeOpen} isLoading={isLoading} />
+        {serviceType === 'PickUpDropOff'
+          ? centerSettingsList.map(k => {
+              const plate = optContent[k];
+              return (
+                <CenterSettingsPlate
+                  key={k}
+                  onEdit={() => getPlateEdit(k)}
+                  title={plate.title}
+                  count={getCount(k)}
+                  label={plate.label}
+                  prefix={plate.prefix}
+                  suffix={plate.suffix}
+                  helperText={plate.helperText}
+                  isLoading={isLoading}
+                />
+              );
+            })
+          : null}
+        <ZonesOpsCodesPlate
+          serviceType={serviceType}
+          onEdit={onServiceValetOpsCodeOpen}
+          isLoading={isLoading}
+        />
       </>
       <div style={{ visibility: 'hidden' }}></div>
       <ClockTimePicker
@@ -124,7 +138,11 @@ const CenterSettings = () => {
         onClose={onClose}
       />
       <ShowDropOffTimeModal open={isShowTimeOpen} onClose={isShowTimeClose} />
-      <ZonesOpsCodeModal open={isServiceValetOpsCodeOpen} onClose={onServiceValetOpsCodeClose} />
+      <ZonesOpsCodeModal
+        serviceType={serviceType}
+        open={isServiceValetOpsCodeOpen}
+        onClose={onServiceValetOpsCodeClose}
+      />
     </Grid>
   );
 };

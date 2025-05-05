@@ -9,13 +9,20 @@ import { RootState } from '../../../../store/rootReducer';
 type TProps = {
   onEdit: () => void;
   isLoading: boolean;
+  serviceType: string;
 };
 
-export const ZonesOpsCodesPlate: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<TProps>>
-> = ({ onEdit, isLoading }) => {
-  const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
-  const { zones } = useSelector((state: RootState) => state.serviceValet);
+export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
+  onEdit,
+  isLoading,
+  serviceType,
+}) => {
+  const { centerSettings } = useSelector((state: RootState) =>
+    serviceType === 'PickUpDropOff' ? state.capacityServiceValet : state.mobileService
+  );
+  const { zones } = useSelector((state: RootState) =>
+    serviceType === 'PickUpDropOff' ? state.serviceValet : state.mobileService
+  );
   const { classes: centerSettingsClasses } = useZonePlateStyles();
   const { classes } = useStyles();
 
@@ -37,7 +44,9 @@ export const ZonesOpsCodesPlate: React.FC<
   return (
     <Grid item xs={6} md={4}>
       <Paper className={centerSettingsClasses.paper} variant={'outlined'}>
-        <h3 className={centerSettingsClasses.title}>Service Valet Op Code</h3>
+        <h3 className={centerSettingsClasses.title}>
+          {serviceType === 'PickUpDropOff' ? 'Service Valet Op Code' : 'Mobile Service Op Code'}
+        </h3>
         <Button
           className={centerSettingsClasses.edit}
           color="primary"

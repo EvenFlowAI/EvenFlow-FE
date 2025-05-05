@@ -16,8 +16,13 @@ import { TSlot } from '../../../features/booking/AppointmentFlow/Screens/Appoint
 import { TimeSlotsWrapper } from './styles';
 import { TParsableDate } from '../../../types/types';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { useTimeSelectorStyles } from '../../../hooks/styling/useTmeSelectorStyles';
 import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 type TProps = {
   date: TParsableDate;
@@ -65,19 +70,51 @@ export const AppointmentTimeSelector: React.FC<
     endMinutes: number | string
   ): TSlot[] => {
     const slots: TSlot[] = [];
-    let start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0);
-    const end = dayjs.utc(date).hour(+endHours).minute(+endMinutes).second(0).millisecond(0);
-    let cDate = dayjs.utc(start);
+    // Use browser's timezone
+    const localTimezone = dayjs.tz.guess();
+
+    // Create start and end times in local timezone
+    let start = dayjs(date)
+      .tz(localTimezone)
+      .hour(+startHours)
+      .minute(+startMinutes)
+      .second(0)
+      .millisecond(0);
+
+    const end = dayjs(date)
+      .tz(localTimezone)
+      .hour(+endHours)
+      .minute(+endMinutes)
+      .second(0)
+      .millisecond(0);
+
+    let cDate = start;
+
     while (dayjs(cDate).isSameOrBefore(end, 'minute')) {
-      slots.push({ date: dayjs.utc(cDate), label: dayjs.utc(cDate).format('h:mm a') });
-      cDate = dayjs.utc(cDate).add(gap ?? 0, 'minute');
+      // Store the UTC date for backend communication
+      const utcDate = cDate.utc();
+
+      // Format the label in local timezone
+      const label = cDate.format('h:mm a');
+
+      slots.push({
+        date: utcDate,
+        label,
+      });
+
+      cDate = cDate.add(gap ?? 0, 'minute');
     }
     return slots;
   };
 
   const slots: TSlot[] = useMemo(() => {
     let slots: TSlot[] = [];
-    const currentSCSchedule = hoursOfOperations.find(item => item.dayOfWeek === dayjs(date).day());
+    const currentSCSchedule = hoursOfOperations.find(item => {
+      // Use browser's timezone for day of week calculation
+      const localDate = dayjs(date).tz(dayjs.tz.guess());
+      return item.dayOfWeek === localDate.day();
+    });
+
     if (gap) {
       if (currentSCSchedule) {
         const [startHours, startMinutes] = currentSCSchedule.from.split(':');
@@ -116,13 +153,16 @@ export const AppointmentTimeSelector: React.FC<
     }
   };
 
+  // Use browser's timezone for display
+  const localDate = dayjs(date).tz(dayjs.tz.guess());
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.titleWrapper}>
         <h4 className={classes.title}>{t('Select Time')}</h4>
         <div>
-          {dayjs(date).format('ddd')},{' '}
-          <span className={classes.boldText}>{dayjs(date).format('MMM DD')}</span>
+          {localDate.format('ddd')},{' '}
+          <span className={classes.boldText}>{localDate.format('MMM DD')}</span>
         </div>
       </div>
       {!loading ? (

@@ -112,6 +112,9 @@ export const setPackagePricingType = createAction<EPackagePricingType | null>(
 );
 export const setAdvisor = createAction<IServiceConsultant | null>('fAppointment/setAdvisor');
 export const setTiming = createAction<EAppointmentTimingType | null>('fAppointment/setTiming');
+export const setInitialTiming = createAction<EAppointmentTimingType | null>(
+  'fAppointment/setInitialTiming'
+);
 export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
@@ -569,6 +572,7 @@ export const clearAppointmentData =
     dispatch(setAcceptedConsentIds([]));
     dispatch(selectServiceValetAppointment(null));
     dispatch(setTiming(null));
+    dispatch(setInitialTiming(null));
     dispatch(setHashKey(''));
     dispatch(setAppointmentByKey(null));
     dispatch(setUsualFlowNeeded(false));
@@ -611,6 +615,9 @@ export const loadAncillaryPriceByZip =
           onError(err);
         }
         console.log('get ancillary price by zip code error', err);
+      })
+      .finally(() => {
+        dispatch(setAncillaryPriceLoading(false));
       });
   };
 

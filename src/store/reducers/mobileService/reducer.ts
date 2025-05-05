@@ -8,6 +8,7 @@ import {
   setPricingOptionLoading,
   setZones,
   setMobileZonesShort,
+  getCenterSettings,
 } from './actions';
 import { EAncillaryPriceType, TState } from './types';
 
@@ -20,12 +21,16 @@ const initialState: TState = {
   isPricingByZoneLoading: false,
   ancillaryPriceType: EAncillaryPriceType.Zone,
   mobileZonesShort: [],
+  centerSettings: null,
 };
 
 export const mobileServiceReducer = createReducer<TState>(initialState, builder =>
   builder
     .addCase(setCurrentZone, (state, { payload }) => {
       return { ...state, currentZone: payload };
+    })
+    .addCase(getCenterSettings, (state, { payload }) => {
+      return { ...state, centerSettings: payload };
     })
     .addCase(setLoading, (state, { payload }) => {
       return { ...state, isLoading: payload };

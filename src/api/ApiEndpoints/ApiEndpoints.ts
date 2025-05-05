@@ -531,8 +531,11 @@ export class Api {
       GetSlotsGap: { route: '/slot-scoring/gap', method: 'get' },
     },
     ServiceValet: {
-      GetZoneRouting: { route: '/service-valet/{id}/zone-routing', method: 'get' },
-      UpdateZoneRouting: { route: '/service-valet/{id}/zone-routing', method: 'put' },
+      GetZoneRouting: {
+        route: '/geographical-zone-settings/routing/{id}?serviceType={serviceType}',
+        method: 'get',
+      },
+      UpdateZoneRouting: { route: '/geographical-zone-settings/routing/{id}', method: 'put' },
       GatAllCapacity: { route: '/service-valet/{id}/capacity/get-all', method: 'get' },
       GetCapacityById: { route: '/service-valet/capacity/{id}', method: 'get' },
       CreateCapacity: { route: '/service-valet/capacity', method: 'post' },
@@ -542,9 +545,10 @@ export class Api {
       ChangeDmsTimeStamp: { route: 'service-valet/{id}/dms-time', method: 'put' },
       GetServiceValetSettings: { route: 'service-valet/{id}/settings', method: 'get' },
       UpdateZonesServiceRequests: {
-        route: 'service-valet/{id}/zone-service-requests',
+        route: 'geographical-zone-settings/service-requests/{id}',
         method: 'put',
       },
+      GetMobileServiceSettings: { route: 'mobile-service/{id}/settings', method: 'get' },
     },
     TransportationOptions: {
       Edit: { route: '/transportation-options', method: 'put' },

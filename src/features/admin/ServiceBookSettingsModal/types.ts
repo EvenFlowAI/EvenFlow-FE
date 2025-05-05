@@ -16,7 +16,7 @@ export interface TForm {
   appointmentsPerSlot: number | null;
   appointmentLeadTime: number | null;
   technicianEfficiency: number | null;
-  avarageBillHoursPerRO: number | null;
+  averageBillHoursPerRO: number | null;
   cutOffTime: TDayTime[];
   isAdvisorStaffingFactor?: boolean;
 }

@@ -6,7 +6,6 @@ import {
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { Button } from '@mui/material';
 import { ButtonsWrapper, TopWrapper } from '../styles';
-import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import {
@@ -20,13 +19,32 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { loadServiceValetZones } from '../../../../store/reducers/serviceValet/actions';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
 import OpsCodeInput from './OpsCodeInput/OpsCodeInput';
-import { updateServiceValetZonesOpsCodes } from '../../../../store/reducers/capacityServiceValet/actions';
+import {
+  loadCenterSettings,
+  updateServiceValetZonesOpsCodes,
+} from '../../../../store/reducers/capacityServiceValet/actions';
+import {
+  loadMobServiceZones,
+  loadMobileServiceCenterSettings,
+} from '../../../../store/reducers/mobileService/actions';
 
-const ZonesOpsCodeModal: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ onClose, open }) => {
-  const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
-  const { zones, isLoading } = useSelector((state: RootState) => state.serviceValet);
+type TProps = {
+  onClose: () => void;
+  open: boolean;
+  serviceType: string;
+};
+
+const ZonesOpsCodeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
+  onClose,
+  open,
+  serviceType,
+}) => {
+  const { centerSettings } = useSelector((state: RootState) =>
+    serviceType === 'PickUpDropOff' ? state.capacityServiceValet : state.mobileService
+  );
+  const { zones, isLoading } = useSelector((state: RootState) =>
+    serviceType === 'PickUpDropOff' ? state.serviceValet : state.mobileService
+  );
   const [zonesOpsCodes, setZonesOpsCodes] = useState<ISVZoneDefaultOpsCode[]>([]);
   const [formChecked, setFormChecked] = useState<boolean>(false);
   const { selectedSC } = useSCs();
@@ -36,9 +54,14 @@ const ZonesOpsCodeModal: React.FC<
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadAllAssignedServiceRequests(selectedSC.id));
-      dispatch(loadServiceValetZones(selectedSC.id));
+      if (serviceType === 'PickUpDropOff') {
+        dispatch(loadServiceValetZones(selectedSC.id));
+      }
+      if (serviceType === 'MobileService') {
+        dispatch(loadMobServiceZones(selectedSC.id));
+      }
     }
-  }, [selectedSC]);
+  }, [selectedSC, serviceType, dispatch]);
 
   useEffect(() => {
     if (centerSettings?.zoneServiceRequests) {
@@ -50,17 +73,28 @@ const ZonesOpsCodeModal: React.FC<
     setFormChecked(false);
     setZonesOpsCodes(centerSettings?.zoneServiceRequests ?? []);
     onClose();
+    if (selectedSC) {
+      if (serviceType === 'PickUpDropOff') {
+        dispatch(loadServiceValetZones(selectedSC.id));
+        dispatch(loadCenterSettings(selectedSC.id));
+      }
+      if (serviceType === 'MobileService') {
+        dispatch(loadMobServiceZones(selectedSC.id));
+        dispatch(loadMobileServiceCenterSettings(selectedSC.id));
+      }
+    }
   };
-
   const onSave = () => {
     setFormChecked(true);
     if (selectedSC) {
       if (zonesOpsCodes.length) {
         const data: TZonesOpsCodesRequest[] = zonesOpsCodes.map(el => ({
           zoneId: el.zone.id,
-          serviceRequestId: el.serviceRequest.id,
+          serviceRequestId: el?.serviceRequest?.id,
         }));
-        dispatch(updateServiceValetZonesOpsCodes(selectedSC.id, data, onCancel, showError));
+        dispatch(
+          updateServiceValetZonesOpsCodes(selectedSC.id, serviceType, data, onCancel, showError)
+        );
       } else {
         showError('All Service Valet Zones should have assigned Op Code');
       }
@@ -71,7 +105,7 @@ const ZonesOpsCodeModal: React.FC<
     <BaseModal onClose={onCancel} open={open} width={425}>
       <DialogTitle>
         <TopWrapper>
-          Service Valet Op Code
+          {serviceType === 'PickUpDropOff' ? 'Service Valet Op Code' : 'Mobile Service Op Code'}
           <ButtonsWrapper>
             <Button
               variant="text"
