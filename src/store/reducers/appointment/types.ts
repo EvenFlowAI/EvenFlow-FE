@@ -145,10 +145,10 @@ export interface IVehicleForSlots {
 }
 
 export type TRecallForRequest = {
-  serviceRequestId: number;
-  number: string | undefined;
+  serviceRequestId?: number;
+  number?: string;
   id?: number;
-  recallComponent: string;
+  recallComponent?: string;
 };
 
 export type MPOptionShort = {

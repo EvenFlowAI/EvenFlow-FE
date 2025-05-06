@@ -255,8 +255,6 @@ export const loadConsultantsForCloning =
   (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk =>
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
-    const { selectedRecalls, serviceCategories } = getState().appointmentFrame;
-    const { allCategories } = getState().categories;
 
     const {
       serviceRequests,
@@ -265,7 +263,10 @@ export const loadConsultantsForCloning =
       vehicle,
       address,
       hashKey,
+      serviceCategories,
+      recalls,
     } = appointment;
+
     const data: IConsultantsRequestData = {
       serviceCenterId: decodeSCID(serviceCenterId),
       pageIndex: 0,
@@ -273,8 +274,8 @@ export const loadConsultantsForCloning =
       serviceRequests: serviceRequests
         ? serviceRequests.map(el => ({ id: el.id, comment: null }))
         : [],
-      recalls: mapRecallsForRequest(selectedRecalls),
-      serviceCategories: getCategories(allCategories, serviceCategories),
+      recalls: recalls?.map(el => ({ number: el })) ?? [],
+      serviceCategories: serviceCategories.map(el => el.id),
       maintenancePackageOption: maintenancePackageOption,
       serviceTypeOptionId: serviceTypeOption?.id ?? null,
       searchTerm: '',
@@ -302,7 +303,11 @@ export const loadConsultantsForCloning =
         dispatch(setConsultantsLoading(false));
         dispatch(setCurrentAppointmentLoading(false));
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log(err))
+      .finally(() => {
+        dispatch(setConsultantsLoading(false));
+        dispatch(setCurrentAppointmentLoading(false));
+      });
   };
 
 export const loadConsultantsForUpdating =
