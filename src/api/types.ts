@@ -351,7 +351,7 @@ export interface IConsultantsRequestData {
   pageSize: 0;
   searchTerm: string;
   serviceRequests: IServiceRequestIds[];
-  serviceCategories: IServiceRequestIds[];
+  serviceCategories: IServiceRequestIds[] | number[];
   maintenancePackageOption: MPOptionShort | null;
   recalls: TRecallForRequest[];
   serviceTypeOptionId: number | null;
