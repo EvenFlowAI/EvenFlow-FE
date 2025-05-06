@@ -137,7 +137,7 @@ const CapacityTechniciansTable: React.FC<{ selectedTab: string }> = ({ selectedT
     },
     {
       header: 'Average Hours per RO',
-      val: el => (el.averageBillHoursPerRO ? el.averageBillHoursPerRO.toString() : ''),
+      val: el => (el.avarageBillHoursPerRO ? el.avarageBillHoursPerRO.toString() : ''),
       width: 130,
     },
     {
