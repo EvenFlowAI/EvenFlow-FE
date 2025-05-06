@@ -710,7 +710,7 @@ export const getMaintenanceList = (
         item &&
         services.push({
           id: item.id,
-          name: item.description ?? item.code,
+          name: item.description ?? item.code ?? '',
           type: 'service',
         })
     );
