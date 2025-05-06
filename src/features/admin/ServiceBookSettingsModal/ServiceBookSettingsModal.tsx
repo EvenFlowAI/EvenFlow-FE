@@ -65,14 +65,14 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
           appointmentLeadTime,
           appointmentsPerSlot,
           technicianEfficiency,
-          averageBillHoursPerRO,
+          avarageBillHoursPerRO,
         } = currentSetting;
         return {
           serviceBookName,
           appointmentLeadTime,
           appointmentsPerSlot,
           technicianEfficiency,
-          averageBillHoursPerRO,
+          avarageBillHoursPerRO,
           isAdvisorStaffingFactor: isAdvisorStaffingFactor,
           cutOffTime: currentSetting.cutOffTime.map(el => ({ day: el.day, time: el.value })),
           gapSlotsType:
@@ -175,7 +175,7 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
       isValid = false;
       showError('"Service Book Name" must not be empty');
     }
-    if (form.averageBillHoursPerRO && form.averageBillHoursPerRO < 0) {
+    if (form.avarageBillHoursPerRO && form.avarageBillHoursPerRO < 0) {
       isValid = false;
       showError('"Average Bill Per RO" must be equal or more than 0');
     }
@@ -226,8 +226,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
         data.serviceBookName = form.serviceBookName;
       if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0)
         data.technicianEfficiency = form.technicianEfficiency;
-      if (form.averageBillHoursPerRO !== null && form.averageBillHoursPerRO >= 0)
-        data.averageBillHoursPerRO = form.averageBillHoursPerRO;
+      if (form.avarageBillHoursPerRO !== null && form.avarageBillHoursPerRO >= 0)
+        data.avarageBillHoursPerRO = form.avarageBillHoursPerRO;
       if (form.appointmentLeadTime !== null && form.appointmentLeadTime >= 0)
         data.appointmentLeadTime = form.appointmentLeadTime;
       if (form.appointmentsPerSlot !== null && form.appointmentsPerSlot >= 0)
@@ -365,8 +365,8 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
             </Grid>
             <Grid item xs={12} md={6}>
               <TextField
-                id="averageBillHoursPerRO"
-                name="averageBillHoursPerRO"
+                id="avarageBillHoursPerRO"
+                name="avarageBillHoursPerRO"
                 label="Average RO Hours"
                 placeholder="Type RO Hours"
                 fullWidth
@@ -375,10 +375,10 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
                 onChange={handleChange}
                 error={
                   formIsChecked &&
-                  form.averageBillHoursPerRO !== null &&
-                  form.averageBillHoursPerRO < 0
+                  form.avarageBillHoursPerRO !== null &&
+                  form.avarageBillHoursPerRO < 0
                 }
-                value={form.averageBillHoursPerRO}
+                value={form.avarageBillHoursPerRO}
               />
             </Grid>
             <Grid item xs={12} md={6}>
