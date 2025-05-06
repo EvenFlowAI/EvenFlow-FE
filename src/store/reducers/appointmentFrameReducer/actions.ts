@@ -275,7 +275,7 @@ export const loadConsultantsForCloning =
         ? serviceRequests.map(el => ({ id: el.id, comment: null }))
         : [],
       recalls: recalls?.map(el => ({ number: el })) ?? [],
-      serviceCategories: serviceCategories.map(el => el.id),
+      serviceCategories: serviceCategories.map(el => ({ id: el.id, comment: null })),
       maintenancePackageOption: maintenancePackageOption,
       serviceTypeOptionId: serviceTypeOption?.id ?? null,
       searchTerm: '',
