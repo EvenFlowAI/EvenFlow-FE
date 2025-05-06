@@ -63,6 +63,7 @@ const ServiceRequests = () => {
   //       id: currentServiceRequest?.id ?? 0,
   //     };
   //   });
+
   return currentAppointment?.serviceRequestPrices?.length ? (
     <>
       <ConfirmationItemWrapper>
@@ -73,8 +74,8 @@ const ServiceRequests = () => {
           {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
             currentAppointment?.serviceRequestPrices?.map(item => {
               const currentServiceRequest =
-                serviceRequests.find(
-                  serviceRequest => serviceRequest.description === item.requestName
+                serviceCategoriesWithComments.find(
+                  serviceRequest => serviceRequest.name === item.requestName
                 ) ?? null;
               return (
                 <ServiceItem key={item.requestName}>
@@ -83,15 +84,17 @@ const ServiceRequests = () => {
                     : item.requestName}
                   <MessageIconWrapper
                     onClick={() => {
-                      setSelectedRequest(currentServiceRequest);
+                      setSelectedRequest({
+                        isCommentRequired: currentServiceRequest?.isCommentRequired ?? false,
+                        description: currentServiceRequest?.description ?? '',
+                        id: currentServiceRequest?.id ?? 0,
+                        code: 'specialCategory',
+                        comment: currentServiceRequest?.comment ?? '',
+                      });
                       onCommentOpen();
                     }}
                   >
-                    {selectedSRComments[currentServiceRequest?.id ?? 0] ? (
-                      <MessageIconFilled />
-                    ) : (
-                      <MessageIcon />
-                    )}
+                    {currentServiceRequest?.comment ? <MessageIconFilled /> : <MessageIcon />}
                   </MessageIconWrapper>
                 </ServiceItem>
               );
