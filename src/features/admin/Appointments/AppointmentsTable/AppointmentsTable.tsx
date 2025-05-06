@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { Table } from '../../../../components/tables/Table/Table';
 import { EReportingStatus, IAppointment } from '../../../../api/types';
 import { IconButton, Menu, MenuItem } from '@mui/material';
@@ -131,6 +131,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
   const handleSort = (data: IOrder<IAppointment>) => () => {
     setOrder(data);
   };
+
 
   return appointments.length ? (
     <>
