@@ -132,9 +132,6 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     setOrder(data);
   };
 
-  useEffect(() => {
-    showMessage('Appointments updated');
-  }, []);
 
   return appointments.length ? (
     <>
