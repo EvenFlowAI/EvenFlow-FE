@@ -42,7 +42,7 @@ export interface IServiceCenterProfile {
 
 export interface ISR {
   id: number;
-  code: string;
+  code?: string;
   description?: string;
   price?: number;
   comment?: string;

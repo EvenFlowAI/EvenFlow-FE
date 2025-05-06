@@ -52,17 +52,17 @@ const ServiceRequests = () => {
     }
   }
 
-  // const currentAppointmentServiceRequestsWithComment =
-  //   currentAppointment?.serviceRequestPrices?.map(item => {
-  //     const currentServiceRequest = serviceRequests.find(
-  //       serviceRequest => serviceRequest.description === item.requestName
-  //     );
-  //     return {
-  //       ...item,
-  //       comment: selectedSRComments[currentServiceRequest?.id ?? 0] ?? '',
-  //       id: currentServiceRequest?.id ?? 0,
-  //     };
-  //   });
+  const currentAppointmentServiceRequestsWithComment =
+    currentAppointment?.serviceRequestPrices?.map(item => {
+      const currentServiceRequest = serviceRequests.find(
+        serviceRequest => serviceRequest.description === item.requestName
+      );
+      return {
+        ...item,
+        comment: selectedSRComments[currentServiceRequest?.id ?? 0] ?? '',
+        id: currentServiceRequest?.id ?? 0,
+      };
+    });
 
   return currentAppointment?.serviceRequestPrices?.length ? (
     <>
@@ -77,6 +77,11 @@ const ServiceRequests = () => {
                 serviceCategoriesWithComments.find(
                   serviceRequest => serviceRequest.name === item.requestName
                 ) ?? null;
+              const currentCategory = currentAppointmentServiceRequestsWithComment?.find(
+                serviceRequest => serviceRequest.requestName === item.requestName
+              );
+              const comment = currentCategory?.comment || currentServiceRequest?.comment;
+
               return (
                 <ServiceItem key={item.requestName}>
                   {item.requestName.includes('Going')
@@ -84,17 +89,27 @@ const ServiceRequests = () => {
                     : item.requestName}
                   <MessageIconWrapper
                     onClick={() => {
-                      setSelectedRequest({
-                        isCommentRequired: currentServiceRequest?.isCommentRequired ?? false,
-                        description: currentServiceRequest?.description ?? '',
-                        id: currentServiceRequest?.id ?? 0,
-                        code: 'specialCategory',
-                        comment: currentServiceRequest?.comment ?? '',
-                      });
+                      if (currentServiceRequest?.type === 0) {
+                        setSelectedRequest({
+                          isCommentRequired: currentServiceRequest?.isCommentRequired ?? false,
+                          description: currentServiceRequest?.description ?? '',
+                          id: currentServiceRequest?.id ?? 0,
+                          code: 'specialCategory',
+                          comment: comment ?? '',
+                        });
+                      } else {
+                        setSelectedRequest({
+                          isCommentRequired: false,
+                          description: currentCategory?.requestName ?? '',
+                          id: currentCategory?.id ?? 0,
+                          comment: comment ?? '',
+                        });
+                      }
+
                       onCommentOpen();
                     }}
                   >
-                    {currentServiceRequest?.comment ? <MessageIconFilled /> : <MessageIcon />}
+                    {comment ? <MessageIconFilled /> : <MessageIcon />}
                   </MessageIconWrapper>
                 </ServiceItem>
               );
