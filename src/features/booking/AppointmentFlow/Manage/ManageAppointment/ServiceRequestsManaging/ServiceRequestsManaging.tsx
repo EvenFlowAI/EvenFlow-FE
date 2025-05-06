@@ -10,7 +10,7 @@ import {
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { Edit } from '@mui/icons-material';
 import { List, TitleWrapper, ServiceItem, MessageIconWrapper } from './styles';
-import { getMaintenanceDescription } from '../../../../../../utils/utils';
+import { getMaintenanceDescription, mergeArrayById } from '../../../../../../utils/utils';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { ReactComponent as MessageIcon } from '../../../../../../assets/img/comment_icon.svg';
@@ -46,6 +46,7 @@ const ServiceRequestsManaging = () => {
     dispatch(setEditingPosition('serviceRequests'));
     dispatch(setCurrentFrameScreen('serviceNeeds'));
   };
+  const serviceCategoriesWithComments = mergeArrayById(serviceCategories);
 
   const servicesList = useMemo(() => {
     return getMaintenanceDescription(
@@ -76,7 +77,9 @@ const ServiceRequestsManaging = () => {
   ]);
 
   const currentCategories = allCategories.filter(
-    category => serviceCategories.map(item => item.id).includes(category.id) && category.type === 0
+    category =>
+      serviceCategoriesWithComments.map(item => item.id).includes(category.id) &&
+      category.type === 0
   );
 
   let name;
@@ -142,7 +145,8 @@ const ServiceRequestsManaging = () => {
                     onCommentOpen();
                   }}
                 >
-                  {serviceCategories.find(el => el.id === item.id)?.comment?.trim().length ? (
+                  {serviceCategoriesWithComments.find(el => el.id === item.id)?.comment?.trim()
+                    .length ? (
                     <MessageIconFilled />
                   ) : (
                     <MessageIcon />
@@ -157,7 +161,8 @@ const ServiceRequestsManaging = () => {
         selectedRequest={selectedRequest}
         currentComment={
           selectedRequest?.code === 'specialCategory'
-            ? (serviceCategories.find(el => el.id === selectedRequest?.id)?.comment ?? '')
+            ? (serviceCategoriesWithComments.find(el => el.id === selectedRequest?.id)?.comment ??
+              '')
             : selectedSRComments[selectedRequest?.id ?? 0]
         }
         open={isCommentOpen}
