@@ -140,6 +140,7 @@ const ServiceRequestsManaging = () => {
                     setSelectedRequest({
                       description: item?.name,
                       id: item.id,
+                      isCommentRequired: item?.isCommentRequired ?? false,
                       code: 'specialCategory',
                     });
                     onCommentOpen();
