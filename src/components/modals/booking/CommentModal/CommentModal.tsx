@@ -12,6 +12,7 @@ import { selectSRComment } from '../../../../store/reducers/appointment/actions'
 import { CharactersWrapper } from './styles';
 import { setCommentsForCategories } from '../../../../store/reducers/appointmentFrameReducer/actions';
 const MAX_COUNT_WORDS_CAPACITY = 250;
+
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
 > = ({ open, onClose, selectedRequest, currentComment }) => {
