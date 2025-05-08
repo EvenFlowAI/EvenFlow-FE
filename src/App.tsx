@@ -36,13 +36,19 @@ const App = () => {
   const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
 
   const onFocus = useCallback(() => {
+    fetch('/version.json')
+      .then(response => response.json())
+      .then(data => {
+        console.log('App version:', data.version);
+      })
+      .catch(error => console.error('Error loading version:', error));
     const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
     const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day');
     if (isBefore && itIsTimeToReload) {
       localStorage.setItem('timestamp', dayjs().utc(true).toISOString());
-      history.go(0);
+      window.location.reload();
     }
-  }, [history, lastLoadingTime]);
+  }, [history, lastLoadingTime]); 
 
   useEffect(() => {
     if (process.env.REACT_APP_ENV === 'production') {
