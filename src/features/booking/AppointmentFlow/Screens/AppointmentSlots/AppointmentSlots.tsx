@@ -127,10 +127,10 @@ export const AppointmentSlots: React.FC<
   const dateSlotsRef = useRef<HTMLDivElement | null>(null);
   const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
   const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  // const serviceType = useMemo(
+  //   () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
+  //   [serviceTypeOption]
+  // );
   const { id } = useParams<{ id: string }>();
   const initRef = useRef<boolean>(false);
   const isMount = useRef(true);
@@ -309,7 +309,7 @@ export const AppointmentSlots: React.FC<
     slotsTransportationId,
     transportation,
   ]);
-  
+
   useEffect(() => {
     let timeoutId: any = null;
     const isTodaySlot = dayjs(appointment?.date).isSame(dayjs.utc(), 'day');
@@ -643,13 +643,9 @@ export const AppointmentSlots: React.FC<
     const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
     const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
 
-    const currentMonth = dayjs(currentApiStartDate).month();
-    const nextMonth = nextStartDate.month();
-
-    if (currentMonth !== nextMonth) {
-      setDate(nextStartDate.startOf('month').toISOString());
-    }
-
+    // const currentMonth = dayjs(currentApiStartDate).month();
+    // const nextMonth = nextStartDate.month();
+    setDate(nextStartDate.startOf('month').toISOString());
     loadData({
       requestedStartDate: nextStartDate.toISOString(),
       requestedEndDate: nextEndDate.toISOString(),
@@ -663,7 +659,7 @@ export const AppointmentSlots: React.FC<
 
     const previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
     const previousEndDate = dayjs(currentApiEndDate).subtract(daysPerScreen, 'day');
-
+    setDate(previousStartDate.startOf('month').toISOString());
     const todayStart = dayjs().startOf('day');
 
     if (
@@ -679,7 +675,6 @@ export const AppointmentSlots: React.FC<
         requestedStartDate: adjustedStartDate.toISOString(),
         requestedEndDate: adjustedEndDate.toISOString(),
       }).finally();
-
       return;
     }
 
@@ -691,7 +686,6 @@ export const AppointmentSlots: React.FC<
         requestedStartDate: adjustedStartDate.toISOString(),
         requestedEndDate: adjustedEndDate.toISOString(),
       }).finally();
-
       return;
     }
 
@@ -699,7 +693,6 @@ export const AppointmentSlots: React.FC<
       requestedStartDate: previousStartDate.toISOString(),
       requestedEndDate: previousEndDate.toISOString(),
     }).finally();
-
     const currentMonth = dayjs(currentApiStartDate).month();
     const previousMonth = previousStartDate.month();
 
@@ -711,7 +704,6 @@ export const AppointmentSlots: React.FC<
       }
     }
   };
-
 
   return (
     <StepWrapper>
