@@ -141,8 +141,7 @@ export const AppointmentTimeSelector: React.FC<
     }
   };
 
-  // Use browser's timezone for display
-  const localDate = dayjs(date).tz(dayjs.tz.guess());
+  const localDate = dayjs(date);
 
   return (
     <div className={classes.wrapper}>
