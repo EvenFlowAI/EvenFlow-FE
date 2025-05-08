@@ -3,7 +3,7 @@ import './App.css';
 import { Container, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { ConfirmModal } from './components/modals/common/ConfirmModal/ConfirmModal';
-import { SnackbarProvider } from 'notistack';
+import { enqueueSnackbar, SnackbarProvider } from 'notistack';
 import { Close } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store/rootReducer';
@@ -34,6 +34,13 @@ const App = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
+
+  useEffect(() => {
+    const version = localStorage.getItem('app_version');
+    enqueueSnackbar(`Application version: ${version}. Reloading...`, {
+      variant: 'info',
+    });
+  }, []);
 
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
