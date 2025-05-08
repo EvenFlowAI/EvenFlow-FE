@@ -159,8 +159,7 @@ export const loadAppointmentSlots =
     cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void,
-    onError?: TArgCallback<any>,
-    setApiDates?: (startDate: TParsableDate) => void
+    onError?: TArgCallback<any>
   ): AppThunk =>
   async dispatch => {
     dispatch(setSlotsLoading(true));
@@ -186,7 +185,6 @@ export const loadAppointmentSlots =
         dispatch(setTime(date as TParsableDate));
         dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
       }
-      setApiDates && setApiDates(items[0].date as TParsableDate);
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
       dispatch(setWaitListSettings(waitlistSettings ?? null));
       dispatch(setSlotPodId(podId ?? null));

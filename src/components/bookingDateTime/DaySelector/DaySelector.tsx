@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useMemo, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { DaySelectCard } from '../DaySelectCard/DaySelectCard';
 import { TArgCallback, TParsableDate } from '../../../types/types';
@@ -17,10 +17,8 @@ import {
   selectAppointment,
   selectServiceValetAppointment,
 } from '../../../store/reducers/appointment/actions';
-import { WHILE_LIMIT } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/constants';
 import { DaySelectorWrapper } from '../../styled/DaySelectorWrapper';
 import { DateSelectArrow } from '../../styled/DateSelectArrow';
-import { getAppointmentDate } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/utils';
 import { useModal } from '../../../hooks/useModal/useModal';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router-dom';
@@ -61,7 +59,6 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const isAdminPanel = history.location.pathname.includes('admin');
 
   const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
-  const { appointment } = useSelector((state: RootState) => state.appointment);
 
   // Flag to prevent rerendering visible days when selecting a date
   const ignoreSelection = useRef(false);
@@ -127,8 +124,6 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   // Override the onDateChange to prevent re-rendering when selecting a visible date
   const handleDateChange = useCallback(
     (selectedDate: TParsableDate) => {
-      const selectedDateStr = dayjs.utc(selectedDate).startOf('day').toISOString();
-
       // Set the flag before calling onDateChange
       ignoreSelection.current = true;
 
