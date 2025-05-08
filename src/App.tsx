@@ -35,20 +35,63 @@ const App = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
 
-  const onFocus = useCallback(() => {
-    fetch('/version.json')
-      .then(response => response.json())
-      .then(data => {
-        console.log('App version:', data.version);
+  // Check version once every 2 hours and reload if version changed
+  const checkVersion = useCallback(() => {
+    const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+    const lastCheck = localStorage.getItem('version_last_check');
+    const currentTime = new Date().getTime();
+    const currentCachedVersion = localStorage.getItem('app_version');
+
+    if (!lastCheck || currentTime - parseInt(lastCheck, 10) > TWO_HOURS) {
+      fetch('/version.json', {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
       })
-      .catch(error => console.error('Error loading version:', error));
+        .then(response => response.json())
+        .then(data => {
+          // First visit - just save the version
+          if (!currentCachedVersion) {
+            localStorage.setItem('app_version', data.version);
+            localStorage.setItem('version_last_check', currentTime.toString());
+            return;
+          }
+
+          // Compare versions and reload if different
+          if (currentCachedVersion !== data.version) {
+            localStorage.setItem('app_version', data.version);
+            localStorage.setItem('version_last_check', currentTime.toString());
+            window.location.reload();
+          } else {
+            localStorage.setItem('version_last_check', currentTime.toString());
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching version:', error);
+        });
+    }
+  }, []);
+
+  const onFocus = useCallback(() => {
+    checkVersion();
     const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
     const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day');
     if (isBefore && itIsTimeToReload) {
       localStorage.setItem('timestamp', dayjs().utc(true).toISOString());
       window.location.reload();
     }
-  }, [history, lastLoadingTime]); 
+  }, [history, lastLoadingTime, checkVersion]);
+
+  const onOnline = useCallback(() => {
+    checkVersion();
+    window.location.reload();
+  }, [checkVersion]);
+
+  useEffect(() => {
+    checkVersion();
+  }, [checkVersion]);
 
   useEffect(() => {
     if (process.env.REACT_APP_ENV === 'production') {
@@ -80,8 +123,8 @@ const App = () => {
 
   useEffect(() => {
     window.addEventListener('focus', onFocus);
-    window.addEventListener('online', () => history.go(0));
-  }, [lastLoadingTime, history, onFocus]);
+    window.addEventListener('online', onOnline);
+  }, [onFocus, onOnline]);
 
   useEffect(() => {
     const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
