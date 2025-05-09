@@ -265,6 +265,7 @@ export const loadConsultantsForCloning =
       hashKey,
       serviceCategories,
       recalls,
+      recallsModel
     } = appointment;
 
     const data: IConsultantsRequestData = {
@@ -274,7 +275,7 @@ export const loadConsultantsForCloning =
       serviceRequests: serviceRequests
         ? serviceRequests.map(el => ({ id: el.id, comment: null }))
         : [],
-      recalls: recalls?.map(el => ({ number: el })) ?? [],
+      recalls: recallsModel ?? [],
       serviceCategories: serviceCategories.map(el => ({ id: el.id, comment: null })),
       maintenancePackageOption: maintenancePackageOption,
       serviceTypeOptionId: serviceTypeOption?.id ?? null,
