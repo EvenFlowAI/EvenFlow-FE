@@ -305,7 +305,7 @@ const loadSlotsForCloning =
         })),
         customerId: currentAppointment.customerId,
         serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
-        recalls: mapRecallsForRequest(selectedRecalls),
+        recalls: currentAppointment.recallsModel ?? [],
         appointmentHashKey: currentAppointment.hashKey,
         transportationOptionId:
           (currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter ||
