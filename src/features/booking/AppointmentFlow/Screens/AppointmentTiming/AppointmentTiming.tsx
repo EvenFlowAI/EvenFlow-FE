@@ -27,8 +27,14 @@ type TProps = {
 
 export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack }) => {
   const { appointment } = useSelector((state: RootState) => state.appointment);
-  const { selectedInitialTiming, selectedTime, serviceTypeOption, sideBarSteps, trackerData } =
-    useSelector((state: RootState) => state.appointmentFrame);
+  const {
+    selectedInitialTiming,
+    selectedTime,
+    serviceTypeOption,
+    sideBarSteps,
+    trackerData,
+    selectedTiming,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const [isLoading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
