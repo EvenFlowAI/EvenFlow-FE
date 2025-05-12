@@ -1,6 +1,6 @@
 {
   "name": "even_flow_ai",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "private": true,
   "dependencies": {
     "@date-io/moment": "1.x",
