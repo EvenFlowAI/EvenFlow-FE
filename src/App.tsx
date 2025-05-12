@@ -35,12 +35,6 @@ const App = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
 
-  useEffect(() => {
-    const version = localStorage.getItem('app_version');
-    enqueueSnackbar(`Application version: ${version}. Reloading...`, {
-      variant: 'info',
-    });
-  }, []);
 
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
