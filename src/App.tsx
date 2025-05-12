@@ -56,7 +56,7 @@ const App = () => {
         .then(data => {
           // First visit - just save the version
           enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
-            variant: 'error',
+            variant: 'info',
           });
           if (!currentCachedVersion) {
             localStorage.setItem('app_version', data.version);
