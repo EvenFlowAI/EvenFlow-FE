@@ -28,38 +28,59 @@ export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selec
   const isOffPeak = Boolean(slot?.price.amountOfSavingMoney);
   const isWaitList = Boolean(slot?.isOverbookingApplied && waitListSettings?.isEnabled);
   const slotRef = useRef<HTMLDivElement | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Determine if the slot is for today
   const isTodaySlot = useMemo(
     () =>
       slot?.date &&
       dayjs(slot?.date).isSame(dayjs.utc(), 'day') &&
       dayjs(date).isSame(dayjs.utc(), 'day'),
-    [slot, date]
+    [slot?.date, date]
   );
-  let everySlotTimoutId: any = null;
 
+  // Check if the slot time has passed and set up timer for today's slots
   useEffect(() => {
-    if (isTodaySlot) {
-      const differenceInMSeconds = dayjs(dayjs(slot?.date).format('YYYY-MM-DDTHH:mm:ss')).diff(
-        dayjs.utc()
-      );
-      if (differenceInMSeconds > 0) {
-        everySlotTimoutId = setTimeout(() => setTimePassed(true), differenceInMSeconds);
-      } else {
-        setTimePassed(true);
-      }
-    } else {
-      setTimePassed(false);
+    // Clear any existing timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
-  }, [date, selected, isTodaySlot]);
 
-  useEffect(() => {
+    if (!isTodaySlot) {
+      setTimePassed(false);
+      return;
+    }
+
+    if (!slot?.date) {
+      setTimePassed(true);
+      return;
+    }
+
+    // Format the date as ISO string to ensure consistent timezone handling
+    const slotDateTime = dayjs(dayjs(slot.date).format('YYYY-MM-DDTHH:mm:ss'));
+    const currentTime = dayjs.utc();
+    const differenceInMSeconds = slotDateTime.diff(currentTime);
+
+    if (differenceInMSeconds <= 0) {
+      // Slot time has already passed
+      setTimePassed(true);
+    } else {
+      // Set a timeout to mark the slot as passed when the time comes
+      setTimePassed(false);
+      timeoutRef.current = setTimeout(() => setTimePassed(true), differenceInMSeconds);
+    }
+
+    // Cleanup function
     return () => {
-      if (everySlotTimoutId) {
-        clearTimeout(everySlotTimoutId);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     };
-  }, [selected, everySlotTimoutId]);
+  }, [isTodaySlot, slot?.date]);
 
+  // Scroll selected slot into view if not visible
   useEffect(() => {
     const rect = slotRef.current?.getBoundingClientRect();
     const parentHeight = slotRef.current?.parentElement?.clientHeight;
@@ -76,10 +97,8 @@ export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selec
       rect?.bottom <= parentHeight &&
       rect?.right <= parentWidth;
 
-    if (slotRef.current && selected) {
-      if (!isVisible) {
-        slotRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+    if (slotRef.current && selected && !isVisible) {
+      slotRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [selected]);
 
@@ -105,7 +124,7 @@ export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selec
       waitListTextColor={waitListSettings?.textHex}
       selected={selected}
       offPeak={isOffPeak && !timePassed}
-      onClick={() => (timePassed ? {} : onSelect(slot ?? null))}
+      onClick={timePassed || !slot ? undefined : () => onSelect(slot)}
     >
       <div ref={slotRef}>{timeSlot.label}</div>
       <HtmlTooltip
@@ -129,7 +148,7 @@ export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selec
       isWaitList={isWaitList && !timePassed}
       selected={selected}
       offPeak={isOffPeak && !timePassed}
-      onClick={() => (timePassed ? {} : onSelect(slot ?? null))}
+      onClick={timePassed || !slot ? undefined : () => onSelect(slot)}
     >
       <div ref={slotRef}>{timeSlot.label}</div>
       <div className="availability">
