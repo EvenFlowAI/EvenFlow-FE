@@ -159,7 +159,8 @@ export const loadAppointmentSlots =
     cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void,
-    onError?: TArgCallback<any>
+    onError?: TArgCallback<any>,
+    setApiDates?: (newStartDate: string) => void
   ): AppThunk =>
   async dispatch => {
     dispatch(setSlotsLoading(true));
@@ -179,11 +180,20 @@ export const loadAppointmentSlots =
         )
       );
       if (data.appointmentTimingType === EAppointmentTimingType.FirstAvailable) {
-        const date = dayjs(items[0].date as TParsableDate);
+        const nearestDate = items.find(item => dayjs(item.date as TParsableDate).isAfter(dayjs()));
+        const date = dayjs(nearestDate?.date as TParsableDate);
         dispatch(setTiming(EAppointmentTimingType.PreferredDate));
         dispatch(setInitialTiming(EAppointmentTimingType.FirstAvailable));
         dispatch(setTime(date as TParsableDate));
         dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
+        if (items.length > 0 && data.startDate && data.endDate && setApiDates) {
+          const firstSlotDate = dayjs(String(items[0].date));
+          const startDate = dayjs(String(data.startDate));
+          const endDate = dayjs(String(data.endDate));
+          if (firstSlotDate.isAfter(endDate) || firstSlotDate.isBefore(startDate)) {
+            setApiDates(String(items[0].date));
+          }
+        }
       }
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
       dispatch(setWaitListSettings(waitlistSettings ?? null));
