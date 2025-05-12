@@ -170,6 +170,7 @@ const ServiceCenters = {
   FremontToyotaLander: 725,
   FremontToyotaSheridan: 726,
   PerformanceKingHonda: 592,
+  BurnsHonda: 823,
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
@@ -313,6 +314,9 @@ export const getTrackersForParentSite = (id: string): GATrackers[] => {
     if (decodedId === ServiceCenters.PerformanceKingHonda) {
       return [{ measurementId: 'G-VDWW9J4VCF' }];
     }
+    if (decodedId === ServiceCenters.BurnsHonda) {
+      return [{ measurementId: 'G-P3GKP7QE4Y' }];
+    }
     return [{ measurementId: 'G-DWX0X9CBTT' }];
   } else {
     return [{ measurementId: 'G-LS5EEY1SRM' }];
@@ -366,6 +370,7 @@ export const getTrackerById = (id: string): string => {
     if (decodedId === ServiceCenters.FremontToyotaSheridan) return 'G-45JZX8MWV8';
     if (decodedId === ServiceCenters.FremontCDJRRawlins) return 'G-ZS6J1SKGXV';
     if (decodedId === ServiceCenters.PerformanceKingHonda) return 'G-VDWW9J4VCF';
+    if (decodedId === ServiceCenters.BurnsHonda) return 'G-P3GKP7QE4Y';
     return 'G-DWX0X9CBTT';
   } else {
     return 'G-LS5EEY1SRM';
