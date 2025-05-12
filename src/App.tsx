@@ -60,9 +60,13 @@ const App = () => {
         .then(response => response.json())
         .then(data => {
           // First visit - just save the version
+          // enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
+          //   variant: 'info',
+          // });
           if (!currentCachedVersion) {
             localStorage.setItem('app_version', data.version);
             localStorage.setItem('version_last_check', currentTime.toString());
+            window.location.reload();
             return;
           }
 
