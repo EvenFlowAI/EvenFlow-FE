@@ -38,12 +38,13 @@ const App = () => {
 
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
-    const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+    // const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+    const ONE_MINUTE = 1 * 60 * 1000; // 1 minute in milliseconds
     const lastCheck = localStorage.getItem('version_last_check');
     const currentTime = new Date().getTime();
     const currentCachedVersion = localStorage.getItem('app_version');
 
-    if (!lastCheck || currentTime - parseInt(lastCheck, 10) > TWO_HOURS) {
+    if (!lastCheck || currentTime - parseInt(lastCheck, 10) > ONE_MINUTE) {
       fetch('/version.json', {
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -54,9 +55,9 @@ const App = () => {
         .then(response => response.json())
         .then(data => {
           // First visit - just save the version
-          // enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
-          //   variant: 'info',
-          // });
+          enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
+            variant: 'info',
+          });
           if (!currentCachedVersion) {
             localStorage.setItem('app_version', data.version);
             localStorage.setItem('version_last_check', currentTime.toString());
