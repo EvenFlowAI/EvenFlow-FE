@@ -42,6 +42,7 @@ import {
   clearAppointmentSteps,
   loadActiveTransportations,
   setServiceTypeOption,
+  setTime,
   setWelcomeScreenView,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useTranslation } from 'react-i18next';
@@ -410,6 +411,18 @@ export const AppointmentSlots: React.FC<
     return { apiStartDate, apiEndDate };
   };
 
+  const setApiDates = (newStartDate: string) => {
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = dayjs(newStartDate);
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    setCurrentApiStartDate(apiStartDate);
+    setCurrentApiEndDate(apiEndDate);
+  };
+
   const loadData = async ({
     requestedStartDate,
     requestedEndDate,
@@ -420,7 +433,6 @@ export const AppointmentSlots: React.FC<
     if (id) {
       setCurrentApiStartDate(requestedStartDate ?? null);
       setCurrentApiEndDate(requestedEndDate ?? null);
-
       setLoading(true);
       const utcOffset = dayjs().utcOffset();
       const fromDate = selectedTime
@@ -504,7 +516,8 @@ export const AppointmentSlots: React.FC<
               currentAppointment ? () => {} : setDateCallback,
               () => handleDateRangeSet(false),
               onLoadSlots,
-              handleError
+              handleError,
+              setApiDates
             )
           );
         }
@@ -526,7 +539,6 @@ export const AppointmentSlots: React.FC<
       }, 1000);
     } else {
       const { apiStartDate, apiEndDate } = getApiDates();
-
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
   }, [
@@ -599,6 +611,7 @@ export const AppointmentSlots: React.FC<
 
   const handleBack = useCallback((): void => {
     handleGABack();
+    dispatch(setTime(null));
     if (!isManaging) {
       dispatch(selectAppointment(null));
       dispatch(selectServiceValetAppointment(null));
@@ -620,6 +633,7 @@ export const AppointmentSlots: React.FC<
 
   const loadDataForMileage = () => {
     onMileageClose();
+
     loadData({}).finally();
   };
 
@@ -635,7 +649,6 @@ export const AppointmentSlots: React.FC<
   const loadNextSlots = () => {
     if (!currentApiStartDate || !currentApiEndDate) {
       const { apiStartDate, apiEndDate } = getApiDates();
-
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
       return;
     }
@@ -643,8 +656,6 @@ export const AppointmentSlots: React.FC<
     const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
     const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
 
-    // const currentMonth = dayjs(currentApiStartDate).month();
-    // const nextMonth = nextStartDate.month();
     setDate(nextStartDate.startOf('month').toISOString());
     loadData({
       requestedStartDate: nextStartDate.toISOString(),
@@ -657,42 +668,21 @@ export const AppointmentSlots: React.FC<
       return;
     }
 
-    const previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
-    const previousEndDate = dayjs(currentApiEndDate).subtract(daysPerScreen, 'day');
-    setDate(previousStartDate.startOf('month').toISOString());
     const todayStart = dayjs().startOf('day');
 
-    if (
-      !dayjs(currentApiStartDate).isSame(todayStart, 'day') &&
-      previousStartDate.isBefore(todayStart)
-    ) {
-      const adjustedStartDate = todayStart;
-      const adjustedEndDate = todayStart.add(daysPerScreen - 1, 'day');
-
-      setDate(adjustedStartDate.toISOString());
-
-      loadData({
-        requestedStartDate: adjustedStartDate.toISOString(),
-        requestedEndDate: adjustedEndDate.toISOString(),
-      }).finally();
-      return;
-    }
+    let previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
 
     if (previousStartDate.isBefore(todayStart)) {
-      const adjustedStartDate = todayStart;
-      const adjustedEndDate = todayStart.add(daysPerScreen - 1, 'day');
-
-      loadData({
-        requestedStartDate: adjustedStartDate.toISOString(),
-        requestedEndDate: adjustedEndDate.toISOString(),
-      }).finally();
-      return;
+      previousStartDate = todayStart;
     }
+    const previousEndDate = previousStartDate.add(daysPerScreen - 1, 'day');
+    setDate(previousStartDate.toISOString());
 
     loadData({
       requestedStartDate: previousStartDate.toISOString(),
       requestedEndDate: previousEndDate.toISOString(),
     }).finally();
+
     const currentMonth = dayjs(currentApiStartDate).month();
     const previousMonth = previousStartDate.month();
 
