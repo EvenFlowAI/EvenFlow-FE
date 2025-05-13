@@ -191,10 +191,7 @@ export const loadAppointmentSlots =
         dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
       }
       if (data.appointmentTimingType === EAppointmentTimingType.PreferredDate) {
-        const nearestDate = items.find(item => {
-          const slotDateTime = dayjs(`${item.date}T${item.time}`);
-          return slotDateTime.isAfter(dayjs());
-        });
+        const nearestDate = items.find(item => dayjs(item.date as TParsableDate).isAfter(dayjs()));
         const date = dayjs(nearestDate?.date as TParsableDate);
         dispatch(setTime(date as TParsableDate));
       }
