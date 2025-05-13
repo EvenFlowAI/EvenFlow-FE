@@ -1,6 +1,6 @@
 {
   "name": "even_flow_ai",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "private": true,
   "dependencies": {
     "@date-io/moment": "1.x",
@@ -61,6 +61,7 @@
     "startDev": "REACT_APP_ENV=Dev react-scripts --max_old_space_size=4096 start",
     "increment-version": "node scripts/increment-version.js",
     "generate-version-json": "node scripts/generate-version-json.js",
+    "setup-hooks": "node scripts/setup-git-hooks.js",
     "build": "react-scripts build && npm run generate-version-json",
     "startpreprod": "REACT_APP_ENV=PreProd react-scripts start",
     "test": "react-scripts test",
