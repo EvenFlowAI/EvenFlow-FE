@@ -32,10 +32,9 @@ const App = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
-
+  const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
-    // const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
     // const ONE_MINUTE = 1 * 60 * 1000; // 1 minute in milliseconds
     // const lastCheck = localStorage.getItem('version_last_check');
     // const currentTime = new Date().getTime();
@@ -51,9 +50,6 @@ const App = () => {
       .then(response => response.json())
       .then(data => {
         // First visit - just save the version
-        enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
-          variant: 'error',
-        });
         if (!currentCachedVersion) {
           localStorage.setItem('app_version', data.version);
           // localStorage.setItem('version_last_check', currentTime.toString());
@@ -82,7 +78,7 @@ const App = () => {
     // Then check periodically (every minute)
     const intervalId = setInterval(() => {
       checkVersion();
-    }, 60000); // 60 seconds
+    }, TWO_HOURS); // 60 seconds
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
