@@ -30,73 +30,62 @@ const App = () => {
     useState<TScreen>('serviceNeeds');
   const notificationsRef = useRef<SnackbarProvider | null>(null);
   const dispatch = useDispatch();
-  const history = useHistory();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
-  const lastLoadingTime = useMemo(() => dayjs().utc().toISOString(), []);
-
 
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
     // const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
-    const ONE_MINUTE = 1 * 60 * 1000; // 1 minute in milliseconds
-    const lastCheck = localStorage.getItem('version_last_check');
-    const currentTime = new Date().getTime();
+    // const ONE_MINUTE = 1 * 60 * 1000; // 1 minute in milliseconds
+    // const lastCheck = localStorage.getItem('version_last_check');
+    // const currentTime = new Date().getTime();
     const currentCachedVersion = localStorage.getItem('app_version');
-
-    if (!lastCheck || currentTime - parseInt(lastCheck, 10) > ONE_MINUTE) {
-      fetch('/version.json', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
-        },
-      })
-        .then(response => response.json())
-        .then(data => {
-          // First visit - just save the version
-          enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
-            variant: 'info',
-          });
-          if (!currentCachedVersion) {
-            localStorage.setItem('app_version', data.version);
-            localStorage.setItem('version_last_check', currentTime.toString());
-            window.location.reload();
-            return;
-          }
-
-          // Compare versions and reload if different
-          if (currentCachedVersion !== data.version) {
-            localStorage.setItem('app_version', data.version);
-            localStorage.setItem('version_last_check', currentTime.toString());
-            window.location.reload();
-          } else {
-            localStorage.setItem('version_last_check', currentTime.toString());
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching version:', error);
+    // if (!lastCheck || currentTime - parseInt(lastCheck, 10) > ONE_MINUTE) {
+    fetch('/version.json', {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        // First visit - just save the version
+        enqueueSnackbar(`Application version: ${currentCachedVersion}. Reloading...`, {
+          variant: 'error',
         });
-    }
+        if (!currentCachedVersion) {
+          localStorage.setItem('app_version', data.version);
+          // localStorage.setItem('version_last_check', currentTime.toString());
+          window.location.reload();
+          return;
+        }
+
+        // Compare versions and reload if different
+        if (currentCachedVersion !== data.version) {
+          localStorage.setItem('app_version', data.version);
+          // localStorage.setItem('version_last_check', currentTime.toString());
+          window.location.reload();
+        } else {
+          // localStorage.setItem('version_last_check', currentTime.toString());
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching version:', error);
+      });
   }, []);
 
-  const onFocus = useCallback(() => {
-    checkVersion();
-    const itIsTimeToReload = dayjs().utc(true).get('hour') > 2;
-    const isBefore = dayjs(lastLoadingTime).utc().isBefore(dayjs().utc(), 'day');
-    if (isBefore && itIsTimeToReload) {
-      localStorage.setItem('timestamp', dayjs().utc(true).toISOString());
-      window.location.reload();
-    }
-  }, [history, lastLoadingTime, checkVersion]);
-
-  const onOnline = useCallback(() => {
-    checkVersion();
-    window.location.reload();
-  }, [checkVersion]);
-
   useEffect(() => {
+    // Run initial check
     checkVersion();
+
+    // Then check periodically (every minute)
+    const intervalId = setInterval(() => {
+      checkVersion();
+    }, 60000); // 60 seconds
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
   }, [checkVersion]);
 
   useEffect(() => {
@@ -126,11 +115,6 @@ const App = () => {
       }
     }
   }, [process.env.REACT_APP_ENV]);
-
-  useEffect(() => {
-    window.addEventListener('focus', onFocus);
-    window.addEventListener('online', onOnline);
-  }, [onFocus, onOnline]);
 
   useEffect(() => {
     const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
