@@ -128,6 +128,7 @@ export const AppointmentSlots: React.FC<
   const dateSlotsRef = useRef<HTMLDivElement | null>(null);
   const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
   const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
+  const apiDatesSetRef = useRef<boolean>(false);
   // const serviceType = useMemo(
   //   () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
   //   [serviceTypeOption]
@@ -412,6 +413,13 @@ export const AppointmentSlots: React.FC<
   };
 
   const setApiDates = (newStartDate: string) => {
+    // Only run once per session/component mount
+    if (apiDatesSetRef.current) {
+      return;
+    }
+
+    apiDatesSetRef.current = true;
+
     const utcOffset = dayjs().utcOffset();
     const anchorTime = dayjs(newStartDate);
     const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
