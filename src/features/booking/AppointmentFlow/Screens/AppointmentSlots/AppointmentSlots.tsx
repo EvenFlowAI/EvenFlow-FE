@@ -392,12 +392,12 @@ export const AppointmentSlots: React.FC<
   };
 
   const onLoadSlots = (isEmptyList: boolean) => {
-    const isPossibleToChangeType =
-      firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
-    const isMobileServiceType = serviceTypeOption?.type === EServiceType.MobileService;
-    if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
-      onServiceOptionOpen();
-    }
+    // const isPossibleToChangeType =
+    //   firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
+    // const isMobileServiceType = serviceTypeOption?.type === EServiceType.MobileService;
+    // if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
+    //   onServiceOptionOpen();
+    // }
   };
 
   const getApiDates = () => {
@@ -668,7 +668,7 @@ export const AppointmentSlots: React.FC<
       return;
     }
 
-    const todayStart = dayjs().startOf('day');
+    const todayStart = dayjs().utc().startOf('day');
 
     let previousStartDate = dayjs(currentApiStartDate).subtract(daysPerScreen, 'day');
 
@@ -677,7 +677,6 @@ export const AppointmentSlots: React.FC<
     }
     const previousEndDate = previousStartDate.add(daysPerScreen - 1, 'day');
     setDate(previousStartDate.toISOString());
-
     loadData({
       requestedStartDate: previousStartDate.toISOString(),
       requestedEndDate: previousEndDate.toISOString(),
