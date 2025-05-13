@@ -35,6 +35,7 @@ const App = () => {
   const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
+    if (window.location.hostname === 'localhost') return;
     // const lastCheck = localStorage.getItem('version_last_check');
     // const currentTime = new Date().getTime();
     const currentCachedVersion = localStorage.getItem('app_version');
