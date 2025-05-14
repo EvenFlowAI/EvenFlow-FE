@@ -38,10 +38,7 @@ const YourLocationCreate: React.FC<TYourLocationProps> = ({
 
   const changedToPickUpFromSlots = useMemo(
     () =>
-      serviceOptionChangedFromSlotPage &&
-      [EServiceType.PickUpDropOff, EServiceType.MobileService].includes(
-        serviceTypeOption?.type as EServiceType
-      ),
+      serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff,
     [serviceOptionChangedFromSlotPage, serviceTypeOption]
   );
 
