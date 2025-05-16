@@ -46,7 +46,7 @@ const Consultant: React.FC<TProps> = ({
   const data = useGetConsultantsData(newOption, address, zipCode ?? '');
 
   useEffect(() => {
-    if (data) {
+    if (data && open) {
       setLoading(true);
       Api.call<PaginatedAPIResponse<IServiceConsultant>>(
         Api.endpoints.ServiceConsultants.GetByQuery,
