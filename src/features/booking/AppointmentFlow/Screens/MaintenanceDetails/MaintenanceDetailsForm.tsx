@@ -390,6 +390,7 @@ export const MaintenanceDetailsForm: React.FC<
                 },
               }
             );
+            setLoading(false);
             return;
             // onEmptyRecalls();
           }
