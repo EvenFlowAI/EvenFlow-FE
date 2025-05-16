@@ -173,6 +173,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     clearData();
     clearDate();
     onClose();
+    onUnavailableServiceClose();
   };
 
   const handleClose = () => {
@@ -260,8 +261,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     setZip(null);
     setAddressValid(false);
     onUnavailableServiceClose();
-  };
-
+  };  
+  
   return (
     <BaseModal open={open} onClose={onCancel} width={700}>
       <DialogTitle onClose={onCancel} style={{ fontSize: 24, padding: '16px 36px 0 36px' }}>

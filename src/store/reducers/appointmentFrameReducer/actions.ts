@@ -615,8 +615,11 @@ export const loadAncillaryPriceByZip =
         dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
-        onUnavailableOpen();
-        onError(err);
+        if (err.response?.data?.errorCode === 12) {
+          onUnavailableOpen();
+        } else {
+          onError(err);
+        }
         console.log('get ancillary price by zip code error', err);
       })
       .finally(() => {
