@@ -34,6 +34,7 @@ import { FormWithSelectors } from './FormWithSelectors/FormWithSelectors';
 import FormWithAutocompletes from './FormWithAutocompletes/FormWithAutocompletes';
 import { blankOptions } from './constants';
 import VinCodeInput from './VinCodeInput/VinCodeInput';
+import { enqueueSnackbar } from 'notistack';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -377,8 +378,20 @@ export const MaintenanceDetailsForm: React.FC<
               onEmptyRecalls();
             }
           } catch (err) {
-            console.log(err);
-            onEmptyRecalls();
+            enqueueSnackbar(
+              (err as any).response?.data?.message ||
+                'An error occurred while processing your request',
+              {
+                variant: 'error',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                  vertical: 'top',
+                  horizontal: 'right',
+                },
+              }
+            );
+            return;
+            // onEmptyRecalls();
           }
         } else {
           handleNoRecalls();
