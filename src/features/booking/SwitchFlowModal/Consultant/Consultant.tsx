@@ -21,6 +21,7 @@ type TProps = {
   zipCode?: string | null;
   open: boolean;
   setAdvisorVisible: Dispatch<SetStateAction<boolean>>;
+  onServiceIsUnavailable: () => void;
 };
 
 const Consultant: React.FC<TProps> = ({
@@ -33,6 +34,7 @@ const Consultant: React.FC<TProps> = ({
   zipCode,
   open,
   setAdvisorVisible,
+  onServiceIsUnavailable,
 }) => {
   const { advisor } = useSelector((state: RootState) => state.appointmentFrame);
   const { t } = useTranslation();
@@ -58,7 +60,9 @@ const Consultant: React.FC<TProps> = ({
           const currentAdvisor = result.find(el => el.id === advisor?.id);
           setConsultant(currentAdvisor ?? null);
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          onServiceIsUnavailable();
+        })
         .finally(() => setLoading(false));
     } else {
       setConsultant(null);

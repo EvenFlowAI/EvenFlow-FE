@@ -302,6 +302,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
                   setConsultant={setConsultant}
                   isVisible
                   setAdvisorVisible={setAdvisorVisible}
+                  onServiceIsUnavailable={onServiceIsUnavailable}
                   address={userAddress}
                   zipCode={zip}
                   disabled={selectedOption?.type === EServiceType.PickUpDropOff && !isAddressValid}
