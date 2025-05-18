@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
 import {
   BaseModal,
@@ -69,6 +69,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   const [isCalendarOpen, setCalendarOpen] = useState<boolean>(false);
   const [isAddressValid, setAddressValid] = useState<boolean>(false);
   const [isAdvisorVisible, setAdvisorVisible] = useState<boolean>(false);
+  const [pendingAncillaryPrice, setPendingAncillaryPrice] = useState<TAncillaryPriceByZip | null>(
+    null
+  );
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -151,8 +154,23 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
       setAddressValid(false);
       setZip(null);
       setUserAddress(null);
+      setPendingAncillaryPrice(null);
     };
   }, [open, zipCodeValue, address]);
+
+  useEffect(() => {
+    if (!isUnavailableServiceOpen && pendingAncillaryPrice && !isAncillaryPriceOpen) {
+      if (
+        pendingAncillaryPrice.feeAmount === 0 &&
+        pendingAncillaryPrice.feeType === EAncillaryType.Amount
+      ) {
+        setAddressValid(true);
+      } else {
+        onAncillaryPriceOpen();
+      }
+      setPendingAncillaryPrice(null);
+    }
+  }, [isUnavailableServiceOpen, pendingAncillaryPrice, isAncillaryPriceOpen]);
 
   const clearData = () => {
     setConsultant(null);
@@ -162,6 +180,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     dispatch(setFilteredZipCodes([]));
     setCalendarOpen(false);
     setAddressValid(selectedOption?.type !== EServiceType.PickUpDropOff);
+    setPendingAncillaryPrice(null);
   };
 
   const clearDate = () => {
@@ -174,6 +193,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     clearDate();
     onClose();
     onUnavailableServiceClose();
+    onAncillaryPriceClose();
   };
 
   const handleClose = () => {
@@ -224,18 +244,27 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     }
   };
 
-  const onSuccess = (data: TAncillaryPriceByZip) => {
-    if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-      setAddressValid(true);
-    } else {
-      onAncillaryPriceOpen();
-    }
-  };
+  const onSuccess = useCallback(
+    (data: TAncillaryPriceByZip) => {
+      if (isUnavailableServiceOpen) {
+        setPendingAncillaryPrice(data);
+      } else {
+        if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
+          setAddressValid(true);
+        } else {
+          onAncillaryPriceOpen();
+        }
+      }
+    },
+    [isUnavailableServiceOpen, onAncillaryPriceOpen]
+  );
 
-  const onServiceIsUnavailable = () => {
+  const onServiceIsUnavailable = useCallback(() => {
+    onAncillaryPriceClose();
+    setPendingAncillaryPrice(null);
     setAddressValid(false);
     onUnavailableServiceOpen();
-  };
+  }, [onAncillaryPriceClose, onUnavailableServiceOpen]);
 
   const loadAncillaryPrice = (zipCode: string | null, address: any) => {
     if (scProfile) {
@@ -261,8 +290,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     setZip(null);
     setAddressValid(false);
     onUnavailableServiceClose();
-  };  
-  
+  };
+
   return (
     <BaseModal open={open} onClose={onCancel} width={700}>
       <DialogTitle onClose={onCancel} style={{ fontSize: 24, padding: '16px 36px 0 36px' }}>
@@ -284,7 +313,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
                   setZip={setZip}
                   setAddressValid={setAddressValid}
                   userAddress={userAddress}
-                  disabled={isAncillaryPriceOpen}
+                  disabled={isAncillaryPriceOpen || isUnavailableServiceOpen}
                   setUserAddress={setUserAddress}
                 />
               </Grid>
@@ -306,7 +335,10 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
                   onServiceIsUnavailable={onServiceIsUnavailable}
                   address={userAddress}
                   zipCode={zip}
-                  disabled={selectedOption?.type === EServiceType.PickUpDropOff && !isAddressValid}
+                  disabled={
+                    selectedOption?.type === EServiceType.PickUpDropOff &&
+                    (!isAddressValid || isUnavailableServiceOpen || isAncillaryPriceOpen)
+                  }
                 />
               </Grid>
             </>
@@ -333,7 +365,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
               <Grid item xs={12} sm={6}>
                 <Timing
                   disabled={
-                    selectedOption?.type === EServiceType.PickUpDropOff && (!userAddress || !zip)
+                    selectedOption?.type === EServiceType.PickUpDropOff &&
+                    (!userAddress || !zip || isUnavailableServiceOpen || isAncillaryPriceOpen)
                   }
                   timingType={timingType}
                   setTimingType={setTimingType}
@@ -365,7 +398,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
       />
       <AncillaryPriceModal
         onNext={onAncillaryPriceAccepted}
-        open={isAncillaryPriceOpen}
+        open={isAncillaryPriceOpen && !isUnavailableServiceOpen}
         onClose={onAncillaryPriceClose}
         serviceString={t('Pick Up / Drop Off')}
         onBack={onCancel}
