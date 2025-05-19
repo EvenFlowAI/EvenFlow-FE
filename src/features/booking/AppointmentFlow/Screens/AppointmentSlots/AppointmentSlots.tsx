@@ -750,7 +750,7 @@ export const AppointmentSlots: React.FC<
         ) : (
           <AppointmentTimeSelector
             appointments={
-              groupedAppointments[dayjs(date).startOf('day').toISOString().replace('.000', '')]
+              groupedAppointments[dayjs.utc(date).startOf('day').toISOString().replace('.000', '')]
             }
             selectFirstSlot={selectFirstSlot}
             date={date}
