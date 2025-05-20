@@ -2,24 +2,17 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { TArgCallback, TParsableDate } from '../../../types/types';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import {
-  EAppointmentTimingType,
-  IServiceValetAppointment,
+  IServiceValetAppointment
 } from '../../../store/reducers/appointment/types';
-import PromptNewSearchModal from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/PromptNewSearchModal/PromptNewSearchModal';
-import { setCurrentFrameScreen } from '../../../store/reducers/appointmentFrameReducer/actions';
-import { selectServiceValetAppointment } from '../../../store/reducers/appointment/actions';
 import { SVDaySelectCard } from '../SVDaySelectCard/SVDaySelectCard';
-import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
 import { WHILE_LIMIT } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/constants';
 import { DaySelectorWrapper } from '../../styled/DaySelectorWrapper';
 import { DateSelectArrow } from '../../styled/DateSelectArrow';
 import { getAppointmentDate } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/utils';
-import { useModal } from '../../../hooks/useModal/useModal';
 import dayjs from 'dayjs';
-import { useHistory } from 'react-router-dom';
 
 type TProps = {
   date: TParsableDate;
@@ -38,34 +31,20 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
   dateRangeUpdated,
   onDateRangeSet,
 }) => {
-  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const { selectedTiming, serviceTypeOption } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
   const { serviceValetAppointment, searchedDateRange } = useSelector(
     (state: RootState) => state.appointment
   );
 
   const [sliceIdx, setSliceIdx] = useState<number>(0);
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const { onOpen, isOpen, onClose } = useModal();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isXs = useMediaQuery(theme.breakpoints.down('xsm'));
   const isMds = useMediaQuery(theme.breakpoints.down('mds'));
-  const history = useHistory();
-  const utcOffset = dayjs().utcOffset();
 
-  const isAdminPanel = history.location.pathname.includes('admin');
   const daysPerScreen: number = useMemo(() => {
     return isXs ? 3 : isMd ? 4 : isMds ? 5 : 6;
   }, [isSm, isMds, isMd]);
-
-  const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
-  const currentConfig = config.find(
-    item => item.serviceType?.toString() === serviceType.toString()
-  );
 
   const [daysInMonth, days]: [number, string[]] = useMemo(() => {
     let daysInMonth: number = dayjs(date).daysInMonth();
@@ -149,8 +128,6 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
         const nS = prevIndex + daysPerScreen * 2;
         return nS <= daysInMonth ? prevIndex + daysPerScreen : daysInMonth - daysPerScreen;
       });
-    } else {
-      if (currentConfig?.appointmentSelection && !isAdminPanel) onOpen();
     }
   };
   const handlePrev = () => {
@@ -159,16 +136,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
         const pS = s - daysPerScreen;
         return pS >= 0 ? pS : 0;
       });
-    } else {
-      if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
-        onOpen();
-      }
     }
-  };
-
-  const handleYes = () => {
-    dispatch(setCurrentFrameScreen('appointmentTiming'));
-    dispatch(selectServiceValetAppointment(null));
   };
 
   return (
@@ -189,7 +157,6 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
       <DateSelectArrow onClick={handleNext} disabled={!nextAvailable()}>
         <ChevronRight />
       </DateSelectArrow>
-      <PromptNewSearchModal onClose={onClose} open={isOpen} onSave={handleYes} />
     </DaySelectorWrapper>
   );
 };
