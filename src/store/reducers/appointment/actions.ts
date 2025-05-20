@@ -187,6 +187,7 @@ export const loadAppointmentSlots =
         const date = dayjs(nearestDate?.date as TParsableDate);
         dispatch(setTiming(EAppointmentTimingType.PreferredDate));
         dispatch(setInitialTiming(EAppointmentTimingType.FirstAvailable));
+        console.log('TEST 44444');
         dispatch(setTime(date as TParsableDate));
         dispatch(setSlotsSearchDate(items[0].date as TParsableDate));
       }

@@ -217,16 +217,20 @@ export const AppointmentSlots: React.FC<
   }, [selectedTime]);
 
   const selectFirstSlot = useCallback(
-    (date?: TParsableDate, newServiceOption?: IFirstScreenOption) => {
+    (date?: TParsableDate, newServiceOption?: IFirstScreenOption, haveToOffsetConverter?: boolean) => {
       const serviceOption = newServiceOption ?? serviceTypeOption;
       const currentSlots =
         serviceOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
       if (currentSlots?.length) {
+        const utcOffset = dayjs().utcOffset();
         const newDate = date ?? dayjs();
 
+        // added a hook with Math.abs, and a flag that we only give in "Choose a preferred date" when the time zones differ by more than eight hours
         const dateWithOffset = dayjs(newDate).isSame(dayjs(), 'date')
-          ? dayjs()
-          : getClearDate(newDate);
+          ? dayjs() :
+          (haveToOffsetConverter ? Math.abs(utcOffset) : utcOffset) > 0
+            ? dayjs(newDate)
+            : getClearDate(newDate);
 
         let firstAvailableSlot = null;
         if (serviceOption?.type === EServiceType.PickUpDropOff) {
@@ -247,13 +251,7 @@ export const AppointmentSlots: React.FC<
           const sorted = [...appointmentSlots].sort(sortAppointments);
           firstAvailableSlot = sorted.find(slot => {
             const formatted = getClearDate(slot?.date);
-            // for date with -8 offsetTimezone and high
-            const utcOffset = dayjs(dateWithOffset).utcOffset();
-            if (utcOffset < 0) {
-              return dayjs(formatted).isAfter(getClearDate(utcOffset));
-            } else {
-              return dayjs(formatted).isAfter(dateWithOffset);
-            }
+            return dayjs(formatted).isAfter(dateWithOffset);
           });
           if (firstAvailableSlot) {
             dispatch(selectAppointment(firstAvailableSlot));
@@ -296,12 +294,12 @@ export const AppointmentSlots: React.FC<
           }
         } else {
           selectedTime
-            ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
+            ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime, undefined, true)
             : selectFirstSlot();
         }
       } else {
         selectedTime
-          ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime)
+          ? selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime, undefined,true)
           : selectFirstSlot();
       }
       isMount.current = false;
