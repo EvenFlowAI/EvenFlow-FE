@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   handleUpdatedMileageForCloning,
   loadAppointmentByKey,
+  loadSCProfile
 } from '../../../../store/reducers/appointments/actions';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { encodeSCID } from '../../../../utils/utils';
@@ -92,7 +93,8 @@ export const ViewAppointmentsModal: React.FC<
   const onClone = async () => {
     if (payload?.hashKey && selectedSC) {
       const { apiStartDate, apiEndDate } = getApiDates();
-      await dispatch(
+      dispatch(loadSCProfile(selectedSC.id));
+      dispatch(
         loadAppointmentByKey(
           payload?.hashKey,
           encodeSCID(selectedSC.id),
