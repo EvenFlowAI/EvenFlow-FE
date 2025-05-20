@@ -48,7 +48,12 @@ import {
   loadServiceValetSlots,
   selectAppointment,
   selectServiceValetAppointment,
+  setProfileLoading,
+  getServiceCenterProfile,
 } from '../appointment/actions';
+import {
+  IServiceCenterProfile
+} from '../appointment/types';
 import { getRecallsByVin } from '../recall/actions';
 import dayjs from 'dayjs';
 
@@ -422,3 +427,19 @@ export const clearAfterCloning = (): AppThunk => dispatch => {
   dispatch(getRecallsByVin([]));
   dispatch(setSelectedRecalls([]));
 };
+
+export const loadSCProfile =  (id: number):
+  AppThunk => async dispatch => {
+    dispatch(setProfileLoading(true));
+     try {      
+      const { data } = await Api.call<IServiceCenterProfile>(
+        Api.endpoints.ServiceCenters.Retrieve,
+        { urlParams: { id } }
+      );
+      dispatch(getServiceCenterProfile(data));
+    } catch (err) {
+      console.log('load sc profile err', err);
+    } finally {
+      dispatch(setProfileLoading(false));
+    }
+  }
