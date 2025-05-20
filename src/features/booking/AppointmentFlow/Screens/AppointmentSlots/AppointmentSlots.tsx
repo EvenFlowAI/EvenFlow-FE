@@ -686,8 +686,16 @@ export const AppointmentSlots: React.FC<
     if (previousStartDate.isBefore(todayStart)) {
       previousStartDate = todayStart;
     }
+
+    const utcOffset = dayjs().utcOffset();
     const previousEndDate = previousStartDate.add(daysPerScreen - 1, 'day');
-    setDate(previousStartDate.toISOString());
+
+    // Added clearDate converter for user with other time zones
+    setDate(utcOffset < 0 ? dayjs(getClearDate(previousStartDate)).toISOString() : previousStartDate.toISOString());
+
+    // Added setTime for right set selectedSlot using backward button
+    dispatch(setTime((utcOffset < 0 ? getClearDate(previousStartDate) : previousStartDate.toISOString())))
+
     loadData({
       requestedStartDate: previousStartDate.toISOString(),
       requestedEndDate: previousEndDate.toISOString(),
