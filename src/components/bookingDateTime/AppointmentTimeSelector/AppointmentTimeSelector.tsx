@@ -72,8 +72,9 @@ export const AppointmentTimeSelector: React.FC<
     const slots: TSlot[] = [];
 
     // Create start and end times in local timezone
-    let start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0)
-    const end = dayjs.utc(date).hour(+endHours).minute(+endMinutes).second(0).millisecond(0);
+    let start = dayjs(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0);
+
+    const end = dayjs(date).hour(+endHours).minute(+endMinutes).second(0).millisecond(0);
 
     let cDate = start;
 
@@ -155,9 +156,8 @@ export const AppointmentTimeSelector: React.FC<
         <TimeSlotsWrapper>
           {slots.map(timeSlot => {
             const appointment = appointments?.appointments.find(a =>
-              dayjs.utc(a.date).isSame(dayjs.utc(timeSlot.date), 'minute')
+              dayjs.utc(a.date).isSame(timeSlot.date, 'minute')
             );
-
             return (
               <TimeSlotCard
                 date={date}
