@@ -222,13 +222,12 @@ export const AppointmentSlots: React.FC<
       const currentSlots =
         serviceOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
       if (currentSlots?.length) {
-        const utcOffset = dayjs().utcOffset();
         const newDate = date ?? dayjs();
+
         const dateWithOffset = dayjs(newDate).isSame(dayjs(), 'date')
           ? dayjs()
-          : utcOffset > 0
-            ? dayjs(newDate)
-            : getClearDate(newDate);
+          : getClearDate(newDate);
+
         let firstAvailableSlot = null;
         if (serviceOption?.type === EServiceType.PickUpDropOff) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
@@ -248,7 +247,13 @@ export const AppointmentSlots: React.FC<
           const sorted = [...appointmentSlots].sort(sortAppointments);
           firstAvailableSlot = sorted.find(slot => {
             const formatted = getClearDate(slot?.date);
-            return dayjs(formatted).isAfter(dateWithOffset);
+            // for date with -8 offsetTimezone and high
+            const utcOffset = dayjs(dateWithOffset).utcOffset();
+            if (utcOffset < 0) {
+              return dayjs(formatted).isAfter(getClearDate(utcOffset));
+            } else {
+              return dayjs(formatted).isAfter(dateWithOffset);
+            }
           });
           if (firstAvailableSlot) {
             dispatch(selectAppointment(firstAvailableSlot));
