@@ -8,9 +8,7 @@ import { MonthSelector } from '../MonthSelector/MonthSelector';
 import { TMonthProps } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types';
 
 type TProps = {
-  onDateRangeSet: TArgCallback<boolean>;
   appointments: TGroupedAppointments;
-  dateRangeUpdated: boolean;
   dateChangeDisabled: boolean;
   daysPerScreen: number;
   onLoadNext: () => void;
@@ -27,8 +25,6 @@ export const AppointmentDateSelector: React.FC<
   onDateChange,
   appointments,
   dateChangeDisabled,
-  dateRangeUpdated,
-  onDateRangeSet,
   daysPerScreen,
   onLoadNext,
   onLoadPrevious,
@@ -57,7 +53,6 @@ export const AppointmentDateSelector: React.FC<
       <DaySelector
         date={date}
         appointments={appointments}
-        loading={loading}
         onDateChange={onDateChange}
         daysPerScreen={daysPerScreen}
         onLoadNext={onLoadNext}

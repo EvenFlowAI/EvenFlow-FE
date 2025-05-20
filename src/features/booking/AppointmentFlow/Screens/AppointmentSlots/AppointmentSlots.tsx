@@ -737,8 +737,6 @@ export const AppointmentSlots: React.FC<
             dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             appointments={groupedAppointments}
             date={date}
-            onDateRangeSet={handleDateRangeSet}
-            dateRangeUpdated={initRef.current}
             loading={loading || isConsentsLoading}
             onDateChange={updateDate}
             daysPerScreen={daysPerScreen}

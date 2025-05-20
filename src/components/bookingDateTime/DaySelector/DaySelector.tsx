@@ -4,22 +4,10 @@ import { DaySelectCard } from '../DaySelectCard/DaySelectCard';
 import { TArgCallback, TParsableDate } from '../../../types/types';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { TGroupedAppointments } from '../../../utils/types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
-import { EAppointmentTimingType } from '../../../store/reducers/appointment/types';
-import PromptNewSearchModal from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/PromptNewSearchModal/PromptNewSearchModal';
-import {
-  setCurrentFrameScreen,
-  setInitialTiming,
-  setTiming,
-} from '../../../store/reducers/appointmentFrameReducer/actions';
-import {
-  selectAppointment,
-  selectServiceValetAppointment,
-} from '../../../store/reducers/appointment/actions';
 import { DaySelectorWrapper } from '../../styled/DaySelectorWrapper';
 import { DateSelectArrow } from '../../styled/DateSelectArrow';
-import { useModal } from '../../../hooks/useModal/useModal';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router-dom';
 import utc from 'dayjs/plugin/utc';
@@ -29,7 +17,6 @@ dayjs.extend(utc);
 interface DaySelectorProps {
   date: TParsableDate;
   onDateChange: TArgCallback<TParsableDate>;
-  loading: boolean;
   appointments: TGroupedAppointments;
   daysPerScreen: number;
   onLoadNext: () => void;
@@ -42,7 +29,6 @@ interface DaySelectorProps {
 export const DaySelector: React.FC<DaySelectorProps> = ({
   date,
   onDateChange,
-  loading,
   appointments,
   daysPerScreen,
   onLoadNext,
@@ -52,9 +38,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   apiEndDate,
 }) => {
   const theme = useTheme();
-  const dispatch = useDispatch();
   const history = useHistory();
-  const { onOpen, isOpen, onClose } = useModal();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isAdminPanel = history.location.pathname.includes('admin');
 
@@ -116,10 +100,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
 
     if (canGoBack) {
       onLoadPrevious();
-    } else if (selectedTiming === EAppointmentTimingType.PreferredDate && !isAdminPanel) {
-      onOpen();
     }
-  }, [date, selectedTiming, isAdminPanel, onLoadPrevious, onOpen, visibleDays]);
+  }, [date, selectedTiming, isAdminPanel, onLoadPrevious, visibleDays]);
 
   // Override the onDateChange to prevent re-rendering when selecting a visible date
   const handleDateChange = useCallback(
@@ -140,15 +122,6 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     },
     [handleDateChange]
   );
-
-  // Reset appointment selection handler
-  const handleResetAppointment = useCallback(() => {
-    dispatch(setTiming(EAppointmentTimingType.PreferredDate));
-    dispatch(setInitialTiming(EAppointmentTimingType.PreferredDate));
-    dispatch(setCurrentFrameScreen('appointmentTiming'));
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
-  }, [dispatch]);
 
   return (
     <DaySelectorWrapper>
@@ -176,8 +149,6 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
       <DateSelectArrow onClick={handleNext} disabled={false}>
         <ChevronRight />
       </DateSelectArrow>
-
-      <PromptNewSearchModal onClose={onClose} open={isOpen} onSave={handleResetAppointment} />
     </DaySelectorWrapper>
   );
 };
