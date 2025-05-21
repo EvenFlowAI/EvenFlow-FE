@@ -181,7 +181,6 @@ const CustomerSearchTable: React.FC<
       } else {
         if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
           await dispatch(setServiceTypeOption(firstScreenOptions[0]));
-          console.log('test');
           await onRedirect();
         } else {
           await dispatch(setWelcomeScreenView('serviceSelect'));
