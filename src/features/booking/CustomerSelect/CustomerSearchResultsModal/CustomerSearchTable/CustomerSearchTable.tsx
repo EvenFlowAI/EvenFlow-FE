@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IAddressData, ICustomerLoadedData } from '../../../../../api/types';
 import {
   clearAppointmentData,
-  setAddress,
+  setAddress, setCurrentFrameScreen,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -181,6 +181,7 @@ const CustomerSearchTable: React.FC<
       } else {
         if (firstScreenOptions[0].type === EServiceType.VisitCenter) {
           await dispatch(setServiceTypeOption(firstScreenOptions[0]));
+          await dispatch(setCurrentFrameScreen('serviceNeeds'));
           await onRedirect();
         } else {
           await dispatch(setWelcomeScreenView('serviceSelect'));
