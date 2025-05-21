@@ -301,10 +301,8 @@ export const loadConsultantsForCloning =
       .then(({ data: { result } }) => {
         dispatch(setConsultants(result));
         cb();
-        dispatch(setConsultantsLoading(false));
-        dispatch(setCurrentAppointmentLoading(false));
       })
-      .catch(err => console.log(err))
+      .catch(err => {console.log(err); throw err;})
       .finally(() => {
         dispatch(setConsultantsLoading(false));
         dispatch(setCurrentAppointmentLoading(false));
