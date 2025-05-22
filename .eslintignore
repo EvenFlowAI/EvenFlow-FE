@@ -12,11 +12,15 @@ src/components
 src/config
 src/features
 src/hooks
-src/pages/admin
 src/routes
 src/store
 src/theme
 src/types
 src/utils
+src/App.test.tsx
+src/App.tsx
+src/serviceWorker.ts
 .eslintrc.js
 .eslintignore
+
+src/pages/admin
