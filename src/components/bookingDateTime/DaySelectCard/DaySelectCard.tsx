@@ -7,6 +7,7 @@ import { monthDayFormat } from '../../../features/booking/AppointmentFlow/Screen
 import { Date, Day, DayCard } from '../../styled/DayCard';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { getClearDate } from '../../../utils/utils';
 
 dayjs.extend(utc);
 
@@ -25,9 +26,14 @@ export const DaySelectCard: React.FC<TProps> = ({ day, onClick, appointment, isC
     return utcDay.format('ddd');
   };
 
-  const isAvailable = Boolean(
-    appointment?.appointments?.find(slot => dayjs.utc(slot?.date).isAfter(utcDay))
-  );
+  const utcNow = dayjs.utc();
+
+  // for finding last slot with time
+  const lastSlot = appointment?.appointments[appointment?.appointments?.length - 1].date;
+
+  // added getClearDate for convert lastSlot to utc
+  const isAvailable = lastSlot ? utcNow.isBefore(getClearDate(lastSlot)) : false;
+
 
   const isOffPeak =
     isAvailable && Boolean(appointment?.appointments?.find(el => el.price?.amountOfSavingMoney));
