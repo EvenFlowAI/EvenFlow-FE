@@ -25,7 +25,7 @@ module.exports = {
     },
   },
   rules: {
-    'max-lines': ['error', { max: 250, skipBlankLines: true, skipComments: true }],
+    'max-lines': ['error', { max: 250 }],
     "react-hooks/rules-of-hooks": "error",
     "react/no-children-prop": "off",
     "@typescript-eslint/no-unused-vars": "error",
