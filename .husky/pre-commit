@@ -2,4 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run all-fix
+npm run increment-version
 npm run git-add
