@@ -16,9 +16,13 @@ Clone project from git
 
 ```
 cd <project_dirrectory>
-yarn install
-yarn start
+yarn install or npm install --legacy-peer-deps
+yarn start or npm start
 ```
+
+### Husky Pre-Commit hook
+After installing dependencies, make sure to run: `npm run prepare`.
+  This command sets up Husky and installs the Git pre-commit hook, which will automatically run linters and formatters before each commit. Make sure this step is not skipped, otherwise the hooks will not work.
 
 ### Version System
 
@@ -27,17 +31,7 @@ The project includes an automatic version management system with the following f
 #### Automatic Version Incrementation
 
 - Each commit automatically increments the patch version in `package.json`
-- This is handled by a Git pre-commit hook
-
-#### Setup Git Hooks
-
-To set up the Git hooks on a new development environment:
-
-```
-npm run setup-hooks
-```
-
-This installs the pre-commit hook that increments the version number before each commit.
+- This is handled by a husky pre-commit hook
 
 #### Version Checking
 
@@ -51,7 +45,6 @@ The application includes a system that:
 
 - `npm run increment-version` - Manually increment the patch version
 - `npm run generate-version-json` - Generate the version.json file
-- `npm run setup-hooks` - Set up the Git hooks for automatic versioning
 
 #### Build Process
 
