@@ -265,7 +265,7 @@ export const loadConsultantsForCloning =
       hashKey,
       serviceCategories,
       recalls,
-      recallsModel
+      recallsModel,
     } = appointment;
 
     const data: IConsultantsRequestData = {
@@ -302,7 +302,10 @@ export const loadConsultantsForCloning =
         dispatch(setConsultants(result));
         cb();
       })
-      .catch(err => {console.log(err); throw err;})
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
       .finally(() => {
         dispatch(setConsultantsLoading(false));
         dispatch(setCurrentAppointmentLoading(false));

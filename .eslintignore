@@ -24,3 +24,5 @@ src/serviceWorker.ts
 .eslintignore
 
 src/pages/admin
+
+src/pages/booking

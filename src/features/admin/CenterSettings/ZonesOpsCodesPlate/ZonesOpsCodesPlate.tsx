@@ -12,11 +12,9 @@ type TProps = {
   serviceType: string;
 };
 
-export const ZonesOpsCodesPlate: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
-  onEdit,
-  isLoading,
-  serviceType,
-}) => {
+export const ZonesOpsCodesPlate: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TProps>>
+> = ({ onEdit, isLoading, serviceType }) => {
   const { centerSettings } = useSelector((state: RootState) =>
     serviceType === 'PickUpDropOff' ? state.capacityServiceValet : state.mobileService
   );

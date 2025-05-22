@@ -132,7 +132,6 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     setOrder(data);
   };
 
-
   return appointments.length ? (
     <>
       <Table<IAppointment>

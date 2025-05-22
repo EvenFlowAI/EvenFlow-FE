@@ -229,7 +229,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
   isWaitlist?: boolean;
   waitlistTextSettings?: Partial<IWaitListData>;
   podId?: number;
-  recallsModel?: TRecallForRequest[]
+  recallsModel?: TRecallForRequest[];
 }
 
 export interface IAppointmentByQuery extends IBaseAppointment {

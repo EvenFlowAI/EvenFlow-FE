@@ -23,7 +23,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IAddressData, ICustomerLoadedData } from '../../../../../api/types';
 import {
   clearAppointmentData,
-  setAddress, setCurrentFrameScreen,
+  setAddress,
+  setCurrentFrameScreen,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,

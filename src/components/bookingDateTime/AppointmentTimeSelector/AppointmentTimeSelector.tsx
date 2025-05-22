@@ -72,7 +72,7 @@ export const AppointmentTimeSelector: React.FC<
     const slots: TSlot[] = [];
 
     // Create start and end times in local timezone
-    let start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0)
+    let start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0);
     const end = dayjs.utc(date).hour(+endHours).minute(+endMinutes).second(0).millisecond(0);
 
     let cDate = start;
