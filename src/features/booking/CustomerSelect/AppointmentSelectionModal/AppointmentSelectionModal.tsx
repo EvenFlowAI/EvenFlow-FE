@@ -1,33 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { BaseModal, DialogContent, DialogTitle } from '../../../../components/modals/BaseModal/BaseModal';
-import { Loading } from '../../../../components/wrappers/Loading/Loading';
-import { NoData } from '../../../../components/wrappers/NoData/NoData';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
 import { useStyles } from './styles';
 import { useDialogStyles } from '../../../../hooks/styling/useDialogStyles';
+import { formatFullDate, formatTime } from './helper';
+import { AppointmentSummaryI } from '../../utils/types';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentSelectionModal: React.FC<
   React.PropsWithChildren<
-    React.PropsWithChildren<DialogProps & { appointments: {
-        appointmentHashKey: string,
-        plannedDate: string
-      }[] }>
+    React.PropsWithChildren<DialogProps & { appointments: AppointmentSummaryI[], handleCancelAppointment: (appointmentHashKey: string) => void }>
   >
-> = ({ open, onClose, appointments }) => {
+> = ({ open, onClose, appointments, handleCancelAppointment }) => {
   const { classes } = useStyles();
   const { classes: dialogClasses } = useDialogStyles();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const handleCancel = () => {
     onClose()
   }
-
-  useEffect(() => {
-    if (open && appointments) {
-      console.log('first useEffect', appointments);
-    }
-  }, [open]);
 
   return (
     <BaseModal
@@ -37,18 +29,20 @@ const AppointmentSelectionModal: React.FC<
       onClose={onClose}
       classes={{ root: dialogClasses.root, paper: dialogClasses.dialogPaper }}
     >
-      <DialogTitle onClose={onClose} />
-      {loading ? (
-        <Loading />
-      ) : appointments ? (
+      <DialogTitle onClose={onClose}>{t('Which appointment do you wish to cancel?')}</DialogTitle>
+
         <DialogContent>
-          <div>TEST</div>
+          <div className={classes.wrapper}>
+            {appointments.map((appointment) => (
+              <button type='button' onClick={() => handleCancelAppointment(appointment.appointmentHashKey)} className={classes.wrapperItem} key={appointment.appointmentHashKey}>
+                <span>{formatFullDate(appointment.plannedDate)}</span>
+                <span>{formatTime(appointment.plannedDate)}</span>
+              </button>
+            ))}
+          </div>
         </DialogContent>
-      ) : (
-        <NoData />
-      )}
-      <div className={classes.actionsWrapper}>
-        <LoadingButton onClick={handleCancel} loading={loading}>
+      <div className={classes.footer}>
+        <LoadingButton onClick={handleCancel}>
           Cancel
         </LoadingButton>
       </div>

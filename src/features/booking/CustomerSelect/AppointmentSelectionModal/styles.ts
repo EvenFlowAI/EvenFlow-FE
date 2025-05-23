@@ -1,40 +1,44 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
-  info: {
+  header: {
+    marginBottom: 12
+  },
+  wrapper: {
+    width: '50%',
+    margin: '0 auto',
+    display: 'grid',
+    gridTemplateColumns: '46% 46%',
+    justifyContent: 'space-between',
+    gap: 24,
+
+    '@media (max-width: 768px)': {
+      gridTemplateColumns: '100%',
+      width: '90%',
+    },
+  },
+
+  wrapperItem: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    borderRadius: 6,
+    gap: 10,
+    padding: '4px 0px',
+    background: '#36454f',
+    fontSize: 16,
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
+
+    '@media (max-width: 768px)': {
+      width: '60%',
+      margin: '0 auto'
+    },
   },
-  question: {
-    marginTop: 20,
-    textAlign: 'center',
-  },
-  actionsWrapper: {
+  footer: {
     display: 'flex',
-    justifyContent: 'center',
-    marginBottom: 30,
-    '& > div:first-child': {
-      marginRight: 12,
-    },
-    [`${theme.breakpoints.down('md')} and (orientation: portrait)`]: {
-      flexDirection: 'column',
-      '& > div': {
-        flexDirection: 'column',
-        padding: '0 16px',
-        '& > button:first-child': {
-          order: 2,
-        },
-      },
-      '& > div:first-child': {
-        marginBottom: 12,
-        marginRight: 0,
-      },
-    },
-  },
+    alignSelf: 'flex-end',
+    marginRight: 10
+  }
 }));

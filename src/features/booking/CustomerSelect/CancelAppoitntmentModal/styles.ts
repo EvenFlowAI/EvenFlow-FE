@@ -15,6 +15,9 @@ export const useStyles = makeStyles()(theme => ({
     marginTop: 20,
     textAlign: 'center',
   },
+  loader: {
+    margin: '10px 0'
+  },
   actionsWrapper: {
     display: 'flex',
     justifyContent: 'center',
