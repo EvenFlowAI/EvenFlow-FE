@@ -27,7 +27,8 @@ export interface IApiEndpoints {
     | 'GetByKey'
     | 'CheckPodChanged'
     | 'GetServiceBooks'
-    | 'GetSchedulers',
+    | 'GetSchedulers'
+    | 'GetShortByQuery',
     TApiEndpoint
   >;
   AppointmentAllocation: Record<

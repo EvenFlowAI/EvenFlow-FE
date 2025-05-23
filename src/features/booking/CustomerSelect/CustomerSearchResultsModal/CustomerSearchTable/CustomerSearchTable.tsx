@@ -61,6 +61,9 @@ import { usePagination } from '../../../../../hooks/usePaginations/usePagination
 import { useException } from '../../../../../hooks/useException/useException';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 import { useTranslation } from 'react-i18next';
+import AppointmentSelectionModal from '../../AppointmentSelectionModal/AppointmentSelectionModal';
+import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
+import { getScheduler, setAppointmentsLoading } from '../../../../../store/reducers/appointments/actions';
 
 type TCustomerSearchTableProps = {
   onClose: TCallback;
@@ -85,6 +88,11 @@ const CustomerSearchTable: React.FC<
   const [editingElement, setEditingElement] = useState<ICustomerWithPhones | null>(null);
   const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
   const [formIsChecked, setFormChecked] = useState<boolean>(false);
+  const [hashIdForSelectedAppointment, setHashIdForSelectedAppointment] = useState<string | null>()
+  const [selectedAppointmentsForCancel, setSelectedAppointmentsForCancel] = useState<{
+    appointmentHashKey: string,
+    plannedDate: string
+  }[]>([])
 
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.customers.pageData,
@@ -92,6 +100,7 @@ const CustomerSearchTable: React.FC<
   );
   const { onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory } = useModal();
   const { onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm } = useModal();
+  const { onOpen: onOpenAppointmentSelection, onClose: onCloseAppointmentSelection, isOpen: isOpenAppointmentSelection } = useModal();
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const showError = useException();
@@ -219,11 +228,47 @@ const CustomerSearchTable: React.FC<
   };
 
   const onCancelAppointment = async (item: ICustomerWithPhones) => {
-    setFormChecked(false);
-    if (item.appointmentHashKey) {
-      await setEditingElement(item);
-      await onOpenConfirm();
-    }
+    console.log('customer item', item);
+    console.log('vehicle id', item.vehicleId);
+    console.log('customer id', item.customerId);
+    console.log('service center id', scProfile?.id);
+    Api.call(Api.endpoints.Appointments.GetShortByQuery, {
+      params: {
+        vehicleId: item.vehicleId,
+        customerId: item.customerId,
+        serviceCenterId: scProfile?.id
+      },
+    })
+      .then(async (result) => {
+        if (result) {
+          const appointments = [...result.data.result]
+          if (appointments.length) {
+            if (appointments.length === 1) {
+              const firstAppointment = appointments[0];
+              setHashIdForSelectedAppointment(firstAppointment.appointmentHashKey);
+              await setEditingElement(item);
+              await onOpenConfirm();
+              return;
+            }
+            if (appointments.length > 1) {
+              setSelectedAppointmentsForCancel(appointments)
+              onOpenAppointmentSelection()
+            }
+          }
+        }
+      })
+      .catch(e => {
+        console.log('get appointment finding list error', e);
+      })
+    // await onOpenAppointmentSelection()
+    return
+
+
+    // setFormChecked(false);
+    // if (item.appointmentHashKey) {
+    //   await setEditingElement(item);
+    //   await onOpenConfirm();
+    // }
   };
 
   const onAddressChange =
@@ -561,16 +606,12 @@ const CustomerSearchTable: React.FC<
                         <HtmlTooltip title="Cancel appointment">
                           <div>
                             <IconButton
-                              disabled={!Boolean(customer.appointmentHashKey)}
+                              // disabled={Boolean(customer.appointmentHashKey)}
                               onClick={() => onCancelAppointment(customer)}
                               size="small"
                               style={{ padding: '9px 3px' }}
                             >
-                              {Boolean(customer.appointmentHashKey) ? (
-                                <CancelApp />
-                              ) : (
-                                <CancelAppDisabled />
-                              )}
+                              <CancelApp />
                             </IconButton>
                           </div>
                         </HtmlTooltip>
@@ -818,14 +859,16 @@ const CustomerSearchTable: React.FC<
           vehicleId={editingElement.vehicleId}
         />
       ) : null}
-      {editingElement?.appointmentHashKey ? (
-        <CancelAppointmentModal
+      {hashIdForSelectedAppointment && <CancelAppointmentModal
           open={isOpenConfirm}
           onClose={onCloseConfirm}
           loadData={loadData}
-          hashKey={editingElement.appointmentHashKey}
-        />
-      ) : null}
+          hashKey={hashIdForSelectedAppointment}
+        /> }
+      )
+      {selectedAppointmentsForCancel.length && <AppointmentSelectionModal open={isOpenAppointmentSelection}
+                                 onClose={onCloseAppointmentSelection}
+                                 appointments={selectedAppointmentsForCancel} />}
       {paging?.numberOfRecords > 10 ? (
         <TablePagination
           className={classes.pagination}
