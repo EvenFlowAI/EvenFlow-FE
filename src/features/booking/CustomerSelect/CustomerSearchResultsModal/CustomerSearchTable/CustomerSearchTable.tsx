@@ -601,12 +601,12 @@ const CustomerSearchTable: React.FC<
                         <HtmlTooltip title="Update Appointment">
                           <div>
                             <IconButton
-                              disabled={!Boolean(customer.appointmentHashKey)}
+                              disabled={!Boolean(customer.hasPlannedAppointment)}
                               onClick={() => onUpdateAppForCar(customer)}
                               size="small"
                               style={{ padding: '9px 3px' }}
                             >
-                              {Boolean(customer.appointmentHashKey) ? <Update /> : <EditDisabled />}
+                              {Boolean(customer.hasPlannedAppointment) ? <Update /> : <EditDisabled />}
                             </IconButton>
                           </div>
                         </HtmlTooltip>
