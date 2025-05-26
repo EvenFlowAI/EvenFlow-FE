@@ -222,6 +222,8 @@ export const AppointmentSlots: React.FC<
       newServiceOption?: IFirstScreenOption,
       haveToOffsetConverter?: boolean
     ) => {
+
+      console.log('SELECT FIRST SLOT RENDER');
       const serviceOption = newServiceOption ?? serviceTypeOption;
       const currentSlots =
         serviceOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
@@ -261,8 +263,12 @@ export const AppointmentSlots: React.FC<
             dispatch(selectAppointment(firstAvailableSlot));
 
             setDate(firstAvailableSlot.date);
+          } else {
+            if (date) loadNextSlots()
           }
         }
+      } else {
+        console.log('test');
       }
     },
     [serviceValetSlots, appointmentSlots, currentSlots]
@@ -288,6 +294,7 @@ export const AppointmentSlots: React.FC<
         const theSameTransportation = slotsTransportationId === transportation?.id;
         if (theSameServiceOption && sameSearchDate && slotTimeIsValid) {
           if (theSameTransportation) {
+            console.log(5);
             selectedTime
               ? selectFirstSlot(
                   dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime
@@ -297,6 +304,7 @@ export const AppointmentSlots: React.FC<
             setDate(dayjs.utc(currentAppointment.date).startOf('day'));
           }
         } else {
+          console.log(6);
           selectedTime
             ? selectFirstSlot(
                 dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime,
@@ -306,6 +314,7 @@ export const AppointmentSlots: React.FC<
             : selectFirstSlot();
         }
       } else {
+        console.log(7);
         selectedTime
           ? selectFirstSlot(
               dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime,
@@ -335,6 +344,7 @@ export const AppointmentSlots: React.FC<
     );
     if (isTodaySlot && differenceInMSeconds > 0) {
       timeoutId = setTimeout(() => {
+        console.log(8);
         selectFirstSlot(date);
       }, differenceInMSeconds);
     } else {
@@ -366,6 +376,7 @@ export const AppointmentSlots: React.FC<
       setDate(newDate);
 
       if (!keepSlot) {
+        console.log(9);
         selectFirstSlot(minDate);
       }
 
@@ -669,18 +680,23 @@ export const AppointmentSlots: React.FC<
     }
   }, [date]);
 
-  const loadNextSlots = () => {
+  const loadNextSlots = async () => {
+    console.log('action: load next slots');
     if (!currentApiStartDate || !currentApiEndDate) {
+      console.log(1);
       const { apiStartDate, apiEndDate } = getApiDates();
-      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
+      await loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
       return;
     }
 
     const nextStartDate = dayjs(currentApiStartDate).add(daysPerScreen, 'day');
     const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
 
+    console.log('currentApiStartDate', currentApiStartDate);
+    console.log('currentApiEndDate', currentApiEndDate);
+
     setDate(nextStartDate.startOf('month').toISOString());
-    loadData({
+    await loadData({
       requestedStartDate: nextStartDate.toISOString(),
       requestedEndDate: nextEndDate.toISOString(),
     }).finally();
