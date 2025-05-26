@@ -22,9 +22,9 @@ import { LoadingButton } from '../../../../components/buttons/LoadingButton/Load
 
 const CancelAppointmentModal: React.FC<
   React.PropsWithChildren<
-    React.PropsWithChildren<DialogProps & { hashKey: string; loadData: TArgCallback<boolean> }>
+    React.PropsWithChildren<DialogProps & { hashKey: string; loadData: TArgCallback<boolean>, resetSelectedAppointmentData: () => void }>
   >
-> = ({ open, onClose, hashKey, loadData }) => {
+> = ({ open, onClose, hashKey, loadData, resetSelectedAppointmentData }) => {
   const { customerSearchData } = useSelector((state: RootState) => state.customers);
   const [data, setData] = useState<IAppointmentByQuery | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,6 +56,7 @@ const CancelAppointmentModal: React.FC<
         loadData(
           Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length)
         );
+        resetSelectedAppointmentData()
         onClose();
       })
       .catch(err => showError(err))
@@ -89,7 +90,9 @@ const CancelAppointmentModal: React.FC<
     >
       <DialogTitle onClose={onClose} />
       {loading ? (
-        <Loading />
+        <div className={classes.loader}>
+          <Loading />
+        </div>
       ) : data ? (
         <DialogContent>
           <div className={classes.info}>
@@ -103,10 +106,10 @@ const CancelAppointmentModal: React.FC<
         <NoData />
       )}
       <div className={classes.actionsWrapper}>
-        <LoadingButton onClick={onClose} loading={loading} variant="outlined">
+        <LoadingButton onClick={onClose} variant="outlined">
           Back
         </LoadingButton>
-        <LoadingButton onClick={handleSubmit} loading={loading}>
+        <LoadingButton onClick={handleSubmit}>
           Cancel Appointment
         </LoadingButton>
       </div>

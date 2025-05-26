@@ -43,6 +43,7 @@ export class Api {
       CheckPodChanged: { route: '/appointments/{key}/check-pod-changed', method: 'post' },
       GetServiceBooks: { route: '/appointments-filter/{id}/service-book-list', method: 'get' },
       GetSchedulers: { route: '/appointments-filter/scheduler-list', method: 'get' },
+      GetShortByQuery: { route: '/appointments/short-by-query', method: 'get' },
     },
     AppointmentAllocation: {
       SetTimeWindows: { route: '/appointment-allocations/time-windows', method: 'put' },

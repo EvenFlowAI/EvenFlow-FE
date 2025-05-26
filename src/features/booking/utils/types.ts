@@ -11,3 +11,8 @@ export interface ICurrentMenu {
   appointmentConfirmation?: string;
   manageAppointment?: string;
 }
+
+export interface AppointmentSummaryI {
+  appointmentHashKey: string,
+  plannedDate: string
+}

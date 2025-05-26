@@ -7,6 +7,7 @@ import { ReactComponent as Search } from '../../../../../assets/img/repair_histo
 import { ReactComponent as SearchDisabled } from '../../../../../assets/img/searchInfoIconDisabled.svg';
 import { ReactComponent as CancelApp } from '../../../../../assets/img/cancel_appointment.svg';
 import { ReactComponent as CancelAppDisabled } from '../../../../../assets/img/Disabled-Cancel-appointment.svg';
+
 import {
   Button,
   IconButton,
@@ -61,6 +62,9 @@ import { usePagination } from '../../../../../hooks/usePaginations/usePagination
 import { useException } from '../../../../../hooks/useException/useException';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 import { useTranslation } from 'react-i18next';
+import AppointmentSelectionModal from '../../AppointmentSelectionModal/AppointmentSelectionModal';
+import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
+import { AppointmentSummaryI } from '../../../utils/types';
 
 type TCustomerSearchTableProps = {
   onClose: TCallback;
@@ -85,6 +89,9 @@ const CustomerSearchTable: React.FC<
   const [editingElement, setEditingElement] = useState<ICustomerWithPhones | null>(null);
   const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
   const [formIsChecked, setFormChecked] = useState<boolean>(false);
+  const [hashIdForSelectedAppointment, setHashIdForSelectedAppointment] = useState<string | null>()
+  const [loadedAppointmentsByCar, setLoadedAppointmentsByCar] = useState<AppointmentSummaryI[]>([])
+  const [selectedAppointmentForCancel, setSelectedAppointmentForCancel] = useState<ICustomerWithPhones | null>()
 
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.customers.pageData,
@@ -92,6 +99,7 @@ const CustomerSearchTable: React.FC<
   );
   const { onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory } = useModal();
   const { onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm } = useModal();
+  const { onOpen: onOpenAppointmentSelection, onClose: onCloseAppointmentSelection, isOpen: isOpenAppointmentSelection } = useModal();
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const showError = useException();
@@ -219,12 +227,56 @@ const CustomerSearchTable: React.FC<
   };
 
   const onCancelAppointment = async (item: ICustomerWithPhones) => {
-    setFormChecked(false);
-    if (item.appointmentHashKey) {
-      await setEditingElement(item);
-      await onOpenConfirm();
-    }
+    Api.call(Api.endpoints.Appointments.GetShortByQuery, {
+      params: {
+        vehicleId: item.vehicleId,
+        customerId: item.customerId,
+        serviceCenterId: scProfile?.id
+      },
+    })
+      .then(async (result) => {
+        if (result) {
+          const appointments = result.data.result ?? [];
+
+          if (!appointments.length) {
+           console.error('Not appointments from request')
+            return
+          }
+
+          if (appointments.length === 1) {
+            const [firstAppointment] = appointments;
+            setHashIdForSelectedAppointment(firstAppointment.appointmentHashKey);
+            await setEditingElement(item);
+            await onOpenConfirm();
+          } else {
+            setSelectedAppointmentForCancel(item)
+            setLoadedAppointmentsByCar(appointments);
+            onOpenAppointmentSelection();
+          }
+        }
+      })
+      .catch(e => {
+        console.error('Error while fetching appointment list:', e);
+      })
   };
+
+  const handleCancelAppointment = async (appointmentHashKey: string) => {
+    if (appointmentHashKey && selectedAppointmentForCancel) {
+      setHashIdForSelectedAppointment(appointmentHashKey);
+      await setEditingElement(selectedAppointmentForCancel);
+      await onOpenConfirm();
+    } else {
+      console.error('Can not find appointment for cancel or appointmentHashKey');
+    }
+  }
+
+  const resetSelectedAppointmentData = () => {
+    setHashIdForSelectedAppointment('')
+    setEditingElement(null)
+    setSelectedAppointmentForCancel(null)
+    setLoadedAppointmentsByCar([])
+    onCloseAppointmentSelection()
+  }
 
   const onAddressChange =
     (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -561,12 +613,12 @@ const CustomerSearchTable: React.FC<
                         <HtmlTooltip title="Cancel appointment">
                           <div>
                             <IconButton
-                              disabled={!Boolean(customer.appointmentHashKey)}
+                              disabled={!customer.hasPlannedAppointment}
                               onClick={() => onCancelAppointment(customer)}
                               size="small"
                               style={{ padding: '9px 3px' }}
                             >
-                              {Boolean(customer.appointmentHashKey) ? (
+                              {customer.hasPlannedAppointment ? (
                                 <CancelApp />
                               ) : (
                                 <CancelAppDisabled />
@@ -818,14 +870,18 @@ const CustomerSearchTable: React.FC<
           vehicleId={editingElement.vehicleId}
         />
       ) : null}
-      {editingElement?.appointmentHashKey ? (
-        <CancelAppointmentModal
+      {hashIdForSelectedAppointment && <CancelAppointmentModal
           open={isOpenConfirm}
+          resetSelectedAppointmentData={resetSelectedAppointmentData}
           onClose={onCloseConfirm}
           loadData={loadData}
-          hashKey={editingElement.appointmentHashKey}
-        />
-      ) : null}
+          hashKey={hashIdForSelectedAppointment}
+        /> }
+      {loadedAppointmentsByCar.length &&
+        <AppointmentSelectionModal open={isOpenAppointmentSelection}
+                                   handleCancelAppointment={handleCancelAppointment}
+                                   onClose={onCloseAppointmentSelection}
+                                   appointments={loadedAppointmentsByCar} />}
       {paging?.numberOfRecords > 10 ? (
         <TablePagination
           className={classes.pagination}
