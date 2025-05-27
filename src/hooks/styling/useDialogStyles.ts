@@ -33,4 +33,12 @@ export const useDialogStyles = makeStyles()(theme => ({
       paddingBottom: 12,
     },
   },
+  dialogPaperWhite: {
+    backgroundColor: '#FFFFFF',
+    maxWidth: 525,
+    paddingBottom: 24,
+    [`${theme.breakpoints.down('md')} and (orientation: landscape)`]: {
+      paddingBottom: 12,
+    },
+  },
 }));
