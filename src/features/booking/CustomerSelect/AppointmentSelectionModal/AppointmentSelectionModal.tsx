@@ -1,6 +1,10 @@
 import React from 'react';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
-import { BaseModal, DialogContent, DialogTitle } from '../../../../components/modals/BaseModal/BaseModal';
+import {
+  BaseModal,
+  DialogContent,
+  DialogTitle,
+} from '../../../../components/modals/BaseModal/BaseModal';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
 import { useStyles } from './styles';
 import { useDialogStyles } from '../../../../hooks/styling/useDialogStyles';
@@ -8,19 +12,49 @@ import { formatFullDate, formatTime } from './helper';
 import { AppointmentSummaryI } from '../../utils/types';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as Union } from '../../../../assets/img/Union.svg';
+import { ICustomerWithPhones } from '../../../../store/reducers/enhancedCustomerSearch/types';
 
 const AppointmentSelectionModal: React.FC<
   React.PropsWithChildren<
-    React.PropsWithChildren<DialogProps & { appointments: AppointmentSummaryI[], handleCancelAppointment: (appointmentHashKey: string) => void }>
+    React.PropsWithChildren<
+      DialogProps & {
+        appointments: AppointmentSummaryI[];
+        handleCancelAppointment: (appointmentHashKey: string) => void;
+        handleUpdateAppointment: (item: ICustomerWithPhones) => void;
+        isEditAppointment: boolean;
+        selectedAppointmentForCancelOrEdit: ICustomerWithPhones | null;
+      }
+    >
   >
-> = ({ open, onClose, appointments, handleCancelAppointment }) => {
+> = ({
+  open,
+  onClose,
+  appointments,
+  handleCancelAppointment,
+  handleUpdateAppointment,
+  isEditAppointment,
+  selectedAppointmentForCancelOrEdit,
+}) => {
   const { classes } = useStyles();
   const { classes: dialogClasses } = useDialogStyles();
   const { t } = useTranslation();
 
   const handleCancel = () => {
-    onClose()
-  }
+    onClose();
+  };
+
+  const handleClick = (appointmentHashKey: string) => {
+    if (isEditAppointment) {
+      if (selectedAppointmentForCancelOrEdit) {
+        handleUpdateAppointment({
+          ...selectedAppointmentForCancelOrEdit,
+          appointmentHashKey: appointmentHashKey,
+        });
+      }
+    } else {
+      handleCancelAppointment(appointmentHashKey);
+    }
+  };
 
   return (
     <BaseModal
@@ -34,26 +68,33 @@ const AppointmentSelectionModal: React.FC<
         <p className={classes.title}>{t('Which appointment do you wish to cancel?')}</p>
       </DialogTitle>
 
-        <DialogContent>
-          <div className={classes.wrapper}>
-            {appointments.map((appointment) => (
-              <button type='button' onClick={() => handleCancelAppointment(appointment.appointmentHashKey)} className={classes.wrapperItem} key={appointment.appointmentHashKey}>
-                  <p className={classes.iconWrapper}><Union /></p>
-                  <div className={classes.dateAndTimeWrapper}>
-                    <span>{formatFullDate(appointment.plannedDate)}</span>
-                    <span>{formatTime(appointment.plannedDate).toLowerCase()}</span>
-                  </div>
-              </button>
-            ))}
-          </div>
-        </DialogContent>
+      <DialogContent>
+        <div className={classes.wrapper}>
+          {appointments.map(appointment => (
+            <button
+              type="button"
+              onClick={() => handleClick(appointment.appointmentHashKey)}
+              className={classes.wrapperItem}
+              key={appointment.appointmentHashKey}
+            >
+              <p className={classes.iconWrapper}>
+                <Union />
+              </p>
+              <div className={classes.dateAndTimeWrapper}>
+                <span>{formatFullDate(appointment.plannedDate)}</span>
+                <span>{formatTime(appointment.plannedDate).toLowerCase()}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </DialogContent>
       <div className={classes.footer}>
-        <LoadingButton onClick={handleCancel} color="primary" variant='outlined'>
+        <LoadingButton onClick={handleCancel} color="primary" variant="outlined">
           Cancel
         </LoadingButton>
       </div>
     </BaseModal>
-  )
+  );
 };
 
 export default AppointmentSelectionModal;

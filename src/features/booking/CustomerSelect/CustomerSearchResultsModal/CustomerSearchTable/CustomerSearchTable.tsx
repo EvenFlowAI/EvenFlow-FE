@@ -91,7 +91,8 @@ const CustomerSearchTable: React.FC<
   const [formIsChecked, setFormChecked] = useState<boolean>(false);
   const [hashIdForSelectedAppointment, setHashIdForSelectedAppointment] = useState<string | null>()
   const [loadedAppointmentsByCar, setLoadedAppointmentsByCar] = useState<AppointmentSummaryI[]>([])
-  const [selectedAppointmentForCancel, setSelectedAppointmentForCancel] = useState<ICustomerWithPhones | null>()
+  const [selectedAppointmentForCancelOrEdit, setSelectedAppointmentForCancelOrEdit] = useState<ICustomerWithPhones | null>(null)
+  const [isEditAppointment, setIsEditAppointment] = useState<boolean>(false)
 
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.customers.pageData,
@@ -203,6 +204,40 @@ const CustomerSearchTable: React.FC<
   };
 
   const onUpdateAppForCar = (item: ICustomerWithPhones) => {
+    setIsEditAppointment(false)
+    Api.call(Api.endpoints.Appointments.GetShortByQuery, {
+      params: {
+        vehicleId: item.vehicleId,
+        customerId: item.customerId,
+        serviceCenterId: scProfile?.id
+      },
+    })
+      .then(async (result) => {
+        if (result) {
+          const appointments = result.data.result ?? [];
+
+          if (!appointments.length) {
+            console.error('Not appointments from request')
+            return
+          }
+
+          if (appointments.length === 1) {
+            const [firstAppointment] = appointments;
+            handleUpdateAppointment({...item, appointmentHashKey: firstAppointment.appointmentHashKey})
+          } else {
+            setIsEditAppointment(true)
+            setSelectedAppointmentForCancelOrEdit(item)
+            setLoadedAppointmentsByCar(appointments);
+            onOpenAppointmentSelection();
+          }
+        }
+      })
+      .catch(e => {
+        console.error('Error while fetching appointment list:', e);
+      })
+  };
+
+  const handleUpdateAppointment = (item: ICustomerWithPhones) => {
     setFormChecked(false);
     if (scProfile) {
       dispatch(setUserType(EUserType.Existing));
@@ -212,7 +247,7 @@ const CustomerSearchTable: React.FC<
         onClose();
       });
     }
-  };
+  }
 
   const onViewRepairHistory = async (item: ICustomerWithPhones) => {
     setFormChecked(false);
@@ -227,6 +262,7 @@ const CustomerSearchTable: React.FC<
   };
 
   const onCancelAppointment = async (item: ICustomerWithPhones) => {
+    setIsEditAppointment(false)
     Api.call(Api.endpoints.Appointments.GetShortByQuery, {
       params: {
         vehicleId: item.vehicleId,
@@ -249,7 +285,7 @@ const CustomerSearchTable: React.FC<
             await setEditingElement(item);
             await onOpenConfirm();
           } else {
-            setSelectedAppointmentForCancel(item)
+            setSelectedAppointmentForCancelOrEdit(item)
             setLoadedAppointmentsByCar(appointments);
             onOpenAppointmentSelection();
           }
@@ -261,9 +297,9 @@ const CustomerSearchTable: React.FC<
   };
 
   const handleCancelAppointment = async (appointmentHashKey: string) => {
-    if (appointmentHashKey && selectedAppointmentForCancel) {
+    if (appointmentHashKey && selectedAppointmentForCancelOrEdit) {
       setHashIdForSelectedAppointment(appointmentHashKey);
-      await setEditingElement(selectedAppointmentForCancel);
+      await setEditingElement(selectedAppointmentForCancelOrEdit);
       await onOpenConfirm();
     } else {
       console.error('Can not find appointment for cancel or appointmentHashKey');
@@ -273,7 +309,7 @@ const CustomerSearchTable: React.FC<
   const resetSelectedAppointmentData = () => {
     setHashIdForSelectedAppointment('')
     setEditingElement(null)
-    setSelectedAppointmentForCancel(null)
+    setSelectedAppointmentForCancelOrEdit(null)
     setLoadedAppointmentsByCar([])
     onCloseAppointmentSelection()
   }
@@ -879,7 +915,10 @@ const CustomerSearchTable: React.FC<
         /> }
       {loadedAppointmentsByCar.length &&
         <AppointmentSelectionModal open={isOpenAppointmentSelection}
+                                   isEditAppointment={isEditAppointment}
+                                   selectedAppointmentForCancelOrEdit={selectedAppointmentForCancelOrEdit}
                                    handleCancelAppointment={handleCancelAppointment}
+                                   handleUpdateAppointment={handleUpdateAppointment}
                                    onClose={onCloseAppointmentSelection}
                                    appointments={loadedAppointmentsByCar} />}
       {paging?.numberOfRecords > 10 ? (
