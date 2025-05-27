@@ -7,6 +7,7 @@ import { useDialogStyles } from '../../../../hooks/styling/useDialogStyles';
 import { formatFullDate, formatTime } from './helper';
 import { AppointmentSummaryI } from '../../utils/types';
 import { useTranslation } from 'react-i18next';
+import { ReactComponent as Union } from '../../../../assets/img/Union.svg';
 
 const AppointmentSelectionModal: React.FC<
   React.PropsWithChildren<
@@ -23,26 +24,31 @@ const AppointmentSelectionModal: React.FC<
 
   return (
     <BaseModal
-      width={800}
+      width={700}
       open={open}
       style={{ paddingBottom: 20 }}
       onClose={onClose}
-      classes={{ root: dialogClasses.root, paper: dialogClasses.dialogPaper }}
+      classes={{ root: dialogClasses.root, paper: dialogClasses.dialogPaperWhite }}
     >
-      <DialogTitle onClose={onClose}>{t('Which appointment do you wish to cancel?')}</DialogTitle>
+      <DialogTitle onClose={onClose}>
+        <p className={classes.title}>{t('Which appointment do you wish to cancel?')}</p>
+      </DialogTitle>
 
         <DialogContent>
           <div className={classes.wrapper}>
             {appointments.map((appointment) => (
               <button type='button' onClick={() => handleCancelAppointment(appointment.appointmentHashKey)} className={classes.wrapperItem} key={appointment.appointmentHashKey}>
-                <span>{formatFullDate(appointment.plannedDate)}</span>
-                <span>{formatTime(appointment.plannedDate)}</span>
+                  <p className={classes.iconWrapper}><Union /></p>
+                  <div className={classes.dateAndTimeWrapper}>
+                    <span>{formatFullDate(appointment.plannedDate)}</span>
+                    <span>{formatTime(appointment.plannedDate).toLowerCase()}</span>
+                  </div>
               </button>
             ))}
           </div>
         </DialogContent>
       <div className={classes.footer}>
-        <LoadingButton onClick={handleCancel}>
+        <LoadingButton onClick={handleCancel} color="primary" variant='outlined'>
           Cancel
         </LoadingButton>
       </div>
