@@ -48,7 +48,7 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           Schedule {isSm ? 'Appointment' : null}
         </Button>
         <StyledButton onClick={onButtonClick} disabled={!car.appointmentHashKeys.length}>
-          Manage {isSm ? 'Appointment' : null}
+          Change/Cancel {isSm ? 'Appointment' : null}
         </StyledButton>
       </CardBtnWrapper>
     </Wrapper>
