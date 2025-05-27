@@ -93,7 +93,7 @@ export const EditAppointment = () => {
         dispatch(setUpdateAppointment(data));
         const vehicle: ILoadedVehicle = {
           ...data.vehicle,
-          appointmentHashKeys: [data.hashKey],
+          appointmentHashKeys: [data.hashKey]
         };
         const customer: ICustomerLoadedData = {
           ...data.driver,

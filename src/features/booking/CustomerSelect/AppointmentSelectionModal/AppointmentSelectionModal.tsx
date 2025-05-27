@@ -20,9 +20,9 @@ const AppointmentSelectionModal: React.FC<
       DialogProps & {
         appointments: AppointmentSummaryI[];
         handleCancelAppointment: (appointmentHashKey: string) => void;
-        handleUpdateAppointment: (item: ICustomerWithPhones) => void;
-        isEditAppointment: boolean;
-        selectedAppointmentForCancelOrEdit: ICustomerWithPhones | null;
+        handleUpdateAppointment?: (item: ICustomerWithPhones) => void;
+        isEditAppointment?: boolean;
+        selectedAppointmentForCancelOrEdit?: ICustomerWithPhones | null;
       }
     >
   >
@@ -45,7 +45,7 @@ const AppointmentSelectionModal: React.FC<
 
   const handleClick = (appointmentHashKey: string) => {
     if (isEditAppointment) {
-      if (selectedAppointmentForCancelOrEdit) {
+      if (selectedAppointmentForCancelOrEdit && handleUpdateAppointment) {
         handleUpdateAppointment({
           ...selectedAppointmentForCancelOrEdit,
           appointmentHashKey: appointmentHashKey,

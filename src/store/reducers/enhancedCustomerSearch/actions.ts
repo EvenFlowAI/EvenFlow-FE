@@ -117,6 +117,8 @@ export const loadCustomersByPhoneOrEmail =
               mileage: item.mileage,
               engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
               appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
+              hasPlannedAppointment: item.hasPlannedAppointment,
+              customerId: item.customerId,
               id: item.vehicleId,
               dmsId: item.vehicleDmsId,
             };

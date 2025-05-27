@@ -113,6 +113,7 @@ const AppointmentFlow: React.FC<TProps> = ({
   useEffect(() => {
     if (!customerLoadedData) {
       const data = getCustomerCache();
+      console.log('data', data);
       if (data) {
         dispatch(setCustomerLoadedData(data));
         dispatch(setVehicle(getBlankVehicle()));

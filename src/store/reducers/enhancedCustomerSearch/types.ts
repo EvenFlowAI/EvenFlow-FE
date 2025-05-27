@@ -57,12 +57,14 @@ export interface ICustomerVehicle {
   vin: string;
   year: number;
   appointmentHashKey?: string;
+  hasPlannedAppointment?: boolean;
   mileage: number | null;
   hasOrders: boolean;
   transmission: string | null;
   driveType: string | null;
   engineTypeId: string | null;
   warrantyExpiration: ParsableDate | null;
+  customerId?: string;
 }
 
 export interface ICustomerWithVehicles {
