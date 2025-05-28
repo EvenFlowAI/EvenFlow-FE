@@ -12,7 +12,7 @@ export const useStyles = makeStyles()(theme => ({
   },
   wrapper: {
     width: '100%',
-    margin: '0 auto',
+    margin: '0 auto 8px',
     display: 'grid',
     gridTemplateColumns: '48% 48%',
     justifyContent: 'space-between',
