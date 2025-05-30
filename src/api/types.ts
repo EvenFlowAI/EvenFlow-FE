@@ -101,6 +101,8 @@ export interface ILoadedVehicle extends IVehicle {
   hasRepairOrders?: boolean;
   hasOrders?: boolean;
   vehicleDmsId?: string;
+  hasPlannedAppointment?: boolean;
+  customerId?: string;
 }
 
 export interface IVehicleForRequest extends IVehicle {

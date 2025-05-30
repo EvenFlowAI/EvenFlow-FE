@@ -262,6 +262,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
                     clearData={clearData}
                     car={vehicle}
                     key={vehicle.dmsId || new Date().toISOString() + index}
+                    customerId={customerLoadedData.id}
                   />
                 ))}
                 {!isSm ? (
