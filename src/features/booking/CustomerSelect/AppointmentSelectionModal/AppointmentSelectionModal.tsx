@@ -65,7 +65,9 @@ const AppointmentSelectionModal: React.FC<
       classes={{ root: dialogClasses.root, paper: dialogClasses.dialogPaperWhite }}
     >
       <DialogTitle onClose={onClose}>
-        <p className={classes.title}>{t('Which appointment do you wish to cancel?')}</p>
+        {isEditAppointment ?
+          <p className={classes.title}>{t('Which appointment do you wish to manage?')}</p> :
+          <p className={classes.title}>{t('Which appointment do you wish to cancel?')}</p>}
       </DialogTitle>
 
       <DialogContent>
