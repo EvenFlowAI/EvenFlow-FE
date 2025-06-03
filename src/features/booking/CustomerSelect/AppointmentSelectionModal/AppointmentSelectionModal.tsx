@@ -99,7 +99,7 @@ const AppointmentSelectionModal: React.FC<
       </DialogContent>
       <BfButtonsWrapper>
         <LoadingButton onClick={handleCancel} color="primary" variant="outlined">
-          Cancel
+          Close
         </LoadingButton>
       </BfButtonsWrapper>
     </BaseModal>
