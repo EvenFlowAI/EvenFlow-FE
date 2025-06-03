@@ -12,7 +12,7 @@ export const useStyles = makeStyles()(theme => ({
   },
   wrapper: {
     width: '100%',
-    margin: '0 auto 8px',
+    margin: '3px auto 8px',
     display: 'grid',
     gridTemplateColumns: '48% 48%',
     justifyContent: 'space-between',
@@ -43,11 +43,13 @@ export const useStyles = makeStyles()(theme => ({
     fontWeight: 600,
   },
   wrapperItem: {
+    width: '302px',
+    height: '124px',
     display: 'flex',
+    justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: 12,
-    padding: '20px 0px',
     background: '#F7F8FB',
     fontSize: 16,
     fontFamily: 'Proxima Nova',
