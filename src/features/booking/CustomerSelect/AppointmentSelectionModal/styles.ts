@@ -55,6 +55,8 @@ export const useStyles = makeStyles()(theme => ({
     fontFamily: 'Proxima Nova',
     color: '#202021',
     border: '1px solid #DADADA',
+    margin: '0 auto',
+    padding: 0,
     cursor: 'pointer',
     '&:hover': {
       background: '#DADADA'
@@ -62,7 +64,6 @@ export const useStyles = makeStyles()(theme => ({
 
     '@media (max-width: 768px)': {
       width: '100%',
-      margin: '0 auto'
     },
   },
   footer: {
