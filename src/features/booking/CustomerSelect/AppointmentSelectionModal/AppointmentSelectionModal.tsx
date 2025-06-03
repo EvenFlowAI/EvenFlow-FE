@@ -97,11 +97,13 @@ const AppointmentSelectionModal: React.FC<
           ))}
         </div>
       </DialogContent>
-      <BfButtonsWrapper>
-        <LoadingButton onClick={handleCancel} color="primary" variant="outlined">
-          Close
-        </LoadingButton>
-      </BfButtonsWrapper>
+     <div>
+       <BfButtonsWrapper style={{ padding: '10px 14px 25px'}}>
+         <LoadingButton onClick={handleCancel} color="primary" variant="outlined">
+           Close
+         </LoadingButton>
+       </BfButtonsWrapper>
+     </div>
     </BaseModal>
   );
 };

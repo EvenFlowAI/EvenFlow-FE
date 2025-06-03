@@ -5,7 +5,7 @@ export const useStyles = makeStyles()(theme => ({
     marginBottom: 12
   },
   title: {
-    margin: 0,
+    margin: '0 0 0 6px',
     textAlign: 'left',
     fontSize: '24px',
     color: '#202021'
