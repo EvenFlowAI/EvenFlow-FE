@@ -20,7 +20,7 @@ export const useStyles = makeStyles()(theme => ({
 
     '@media (max-width: 768px)': {
       gridTemplateColumns: '100%',
-      width: '90%',
+      width: '100%',
     },
   },
   iconWrapper: {
@@ -59,13 +59,17 @@ export const useStyles = makeStyles()(theme => ({
     },
 
     '@media (max-width: 768px)': {
-      width: '60%',
+      width: '100%',
       margin: '0 auto'
     },
   },
   footer: {
     display: 'flex',
     alignSelf: 'flex-end',
-    marginRight: 10
-  }
+    marginRight: 10,
+
+    '@media (max-width: 768px)': {
+      width: '100%',
+    },
+  },
 }));

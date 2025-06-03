@@ -13,6 +13,7 @@ import { AppointmentSummaryI } from '../../utils/types';
 import { useTranslation } from 'react-i18next';
 import { ReactComponent as Union } from '../../../../assets/img/Union.svg';
 import { ICustomerWithPhones } from '../../../../store/reducers/enhancedCustomerSearch/types';
+import { BfButtonsWrapper } from '../../../../components/styled/BfButtonsWrapper';
 
 const AppointmentSelectionModal: React.FC<
   React.PropsWithChildren<
@@ -92,11 +93,11 @@ const AppointmentSelectionModal: React.FC<
           ))}
         </div>
       </DialogContent>
-      <div className={classes.footer}>
+      <BfButtonsWrapper>
         <LoadingButton onClick={handleCancel} color="primary" variant="outlined">
           Cancel
         </LoadingButton>
-      </div>
+      </BfButtonsWrapper>
     </BaseModal>
   );
 };
