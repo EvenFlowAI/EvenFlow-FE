@@ -116,7 +116,7 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           handleCancelAppointment={onEdit}
           onClose={onCloseAppointmentSelection}
           appointments={loadedAppointmentsByCar}
-          isEditAppointment={true}
+          isEditAndCancelAppointment={true}
         />
       ) : (
         <></>

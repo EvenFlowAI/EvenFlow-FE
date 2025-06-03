@@ -913,14 +913,14 @@ const CustomerSearchTable: React.FC<
           loadData={loadData}
           hashKey={hashIdForSelectedAppointment}
         /> }
-      {loadedAppointmentsByCar.length &&
+      {loadedAppointmentsByCar.length ?
         <AppointmentSelectionModal open={isOpenAppointmentSelection}
                                    isEditAppointment={isEditAppointment}
                                    selectedAppointmentForCancelOrEdit={selectedAppointmentForCancelOrEdit}
                                    handleCancelAppointment={handleCancelAppointment}
                                    handleUpdateAppointment={handleUpdateAppointment}
                                    onClose={onCloseAppointmentSelection}
-                                   appointments={loadedAppointmentsByCar} />}
+                                   appointments={loadedAppointmentsByCar} /> : <></>}
       {paging?.numberOfRecords > 10 ? (
         <TablePagination
           className={classes.pagination}

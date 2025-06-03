@@ -18,23 +18,25 @@ const AppointmentSelectionModal: React.FC<
   React.PropsWithChildren<
     React.PropsWithChildren<
       DialogProps & {
-        appointments: AppointmentSummaryI[];
-        handleCancelAppointment: (appointmentHashKey: string) => void;
-        handleUpdateAppointment?: (item: ICustomerWithPhones) => void;
-        isEditAppointment?: boolean;
-        selectedAppointmentForCancelOrEdit?: ICustomerWithPhones | null;
-      }
+      appointments: AppointmentSummaryI[];
+      handleCancelAppointment: (appointmentHashKey: string) => void;
+      handleUpdateAppointment?: (item: ICustomerWithPhones) => void;
+      isEditAppointment?: boolean;
+      isEditAndCancelAppointment?: boolean;
+      selectedAppointmentForCancelOrEdit?: ICustomerWithPhones | null;
+    }
     >
   >
 > = ({
-  open,
-  onClose,
-  appointments,
-  handleCancelAppointment,
-  handleUpdateAppointment,
-  isEditAppointment,
-  selectedAppointmentForCancelOrEdit,
-}) => {
+       open,
+       onClose,
+       appointments,
+       handleCancelAppointment,
+       handleUpdateAppointment,
+       isEditAppointment,
+       isEditAndCancelAppointment,
+       selectedAppointmentForCancelOrEdit,
+     }) => {
   const { classes } = useStyles();
   const { classes: dialogClasses } = useDialogStyles();
   const { t } = useTranslation();
@@ -65,7 +67,7 @@ const AppointmentSelectionModal: React.FC<
       classes={{ root: dialogClasses.root, paper: dialogClasses.dialogPaperWhite }}
     >
       <DialogTitle onClose={onClose}>
-        {isEditAppointment ?
+        {isEditAppointment || isEditAndCancelAppointment ?
           <p className={classes.title}>{t('Which appointment do you wish to manage?')}</p> :
           <p className={classes.title}>{t('Which appointment do you wish to cancel?')}</p>}
       </DialogTitle>
