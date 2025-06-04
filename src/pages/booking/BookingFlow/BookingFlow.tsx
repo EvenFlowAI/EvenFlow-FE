@@ -35,6 +35,7 @@ export const BookingFlow = () => {
       try {
         dispatch(loadShortSC(false, scProfile.dealershipId));
       } catch (e) {
+        console.error(`setWelcomeScreenView('select'), ${e}}`);
         dispatch(setWelcomeScreenView('select'));
       }
     }

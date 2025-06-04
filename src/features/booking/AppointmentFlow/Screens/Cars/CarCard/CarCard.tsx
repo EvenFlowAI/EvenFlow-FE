@@ -73,7 +73,7 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           }
 
           if (appointments.length === 1) {
-              onEdit(appointments[0].appointmentHashKey);
+            onEdit(appointments[0].appointmentHashKey);
             return;
           }
 
@@ -96,17 +96,10 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
         </CarInfo>
       </CarDataWithBtn>
       <CardBtnWrapper>
-        <Button
-          color="info"
-          variant="contained"
-          onClick={onSchedule}
-        >
+        <Button color="info" variant="contained" onClick={onSchedule}>
           Schedule {isSm ? 'Appointment' : null}
         </Button>
-        <StyledButton
-          onClick={handleSelectAppointment}
-          disabled={!car.hasPlannedAppointment}
-        >
+        <StyledButton onClick={handleSelectAppointment} disabled={!car.hasPlannedAppointment}>
           Change/Cancel {isSm ? 'Appointment' : null}
         </StyledButton>
       </CardBtnWrapper>

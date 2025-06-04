@@ -39,7 +39,7 @@ export interface ICustomerWithPhones extends ICustomerByName {
   warrantyExpiration: ParsableDate | null;
   sortOrder?: number;
   companyName?: string;
-  hasPlannedAppointment: boolean
+  hasPlannedAppointment: boolean;
 }
 
 export interface ICustomerForTable

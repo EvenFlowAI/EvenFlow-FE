@@ -25,4 +25,11 @@ src/serviceWorker.ts
 
 src/pages/admin
 
-src/pages/booking
+#src/pages/booking/AppointmentFlow
+#src/pages/booking/BookingFlow
+src/pages/booking/CancelAppointment
+src/pages/booking/CreateAppointmentFlow
+src/pages/booking/ManageAppointmentFlow
+src/pages/booking/ValueService
+src/pages/booking/Welcome
+src/pages/booking/types.ts

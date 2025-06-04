@@ -13,6 +13,6 @@ export interface ICurrentMenu {
 }
 
 export interface AppointmentSummaryI {
-  appointmentHashKey: string,
-  plannedDate: string
+  appointmentHashKey: string;
+  plannedDate: string;
 }
