@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   handleUpdatedMileageForCloning,
   loadAppointmentByKey,
-  loadSCProfile
+  loadSCProfile,
 } from '../../../../store/reducers/appointments/actions';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { encodeSCID } from '../../../../utils/utils';

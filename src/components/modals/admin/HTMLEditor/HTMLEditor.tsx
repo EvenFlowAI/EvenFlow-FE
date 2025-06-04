@@ -22,78 +22,74 @@ const useStyles = makeStyles()({
   },
 });
 
-    const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTMLEditor>>> = ({
-      open,
-      onClose,
-      title,
-      onSave,
-      isLoading,
-      payload,
-    }) => {
-      const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
-      const showError = useException();
-      const { classes: styles, cx } = useStyles();
+const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTMLEditor>>> = ({
+  open,
+  onClose,
+  title,
+  onSave,
+  isLoading,
+  payload,
+}) => {
+  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
+  const showError = useException();
+  const { classes: styles, cx } = useStyles();
 
-      useEffect(() => {
-        if (open) {
-          if (payload) {
-            setEditorState(EditorState.createWithContent(convertFromHTML(payload)));
-          } else {
-            setEditorState(EditorState.createEmpty());
-          }
-        }
-      }, [payload, convertFromHTML, setEditorState, open]);
+  useEffect(() => {
+    if (open) {
+      if (payload) {
+        setEditorState(EditorState.createWithContent(convertFromHTML(payload)));
+      } else {
+        setEditorState(EditorState.createEmpty());
+      }
+    }
+  }, [payload, convertFromHTML, setEditorState, open]);
 
-      const onEditorStateChange = (value: EditorState) => {
-        setEditorState(value);
-      };
+  const onEditorStateChange = (value: EditorState) => {
+    setEditorState(value);
+  };
 
-      const onCancel = () => {
-        onClose();
-      };
+  const onCancel = () => {
+    onClose();
+  };
 
-      const checkEditorState = () => {
-        const data = convertToRaw(editorState.getCurrentContent());
-        return !!data.blocks
-          .map(item => ({ ...item, text: item.text.trim() }))
-          .find(item => item.text);
-      };
+  const checkEditorState = () => {
+    const data = convertToRaw(editorState.getCurrentContent());
+    return !!data.blocks.map(item => ({ ...item, text: item.text.trim() })).find(item => item.text);
+  };
 
-      const onSubmit = () => {
-        if (checkEditorState()) {
-          onSave(convertToHTML(editorState.getCurrentContent()));
-        } else {
-          showError('Please enter the text');
-        }
-      };
+  const onSubmit = () => {
+    if (checkEditorState()) {
+      onSave(convertToHTML(editorState.getCurrentContent()));
+    } else {
+      showError('Please enter the text');
+    }
+  };
 
-      return (
-        <BaseModal onClose={onCancel} open={open}>
-          <DialogTitle onClose={onCancel}>{title}</DialogTitle>
-          <DialogContent>
-            <div>
-              <DraftEditor
-                placeholder="Type Here..."
-                editorState={editorState}
-                wrapperClassName="wrapper-class"
-                editorClassName={cx('editor-class', styles.editor)}
-                toolbarClassName="toolbar-class"
-                onEditorStateChange={onEditorStateChange}
-              />
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="outlined" onClick={onCancel} color="primary">
-              Cancel
-            </Button>
-            <LoadingButton variant="contained" onClick={onSubmit} loading={isLoading}>
-              Save
-            </LoadingButton>
-          </DialogActions>
-        </BaseModal>
-      );
-    };
-
-    
+  return (
+    <BaseModal onClose={onCancel} open={open}>
+      <DialogTitle onClose={onCancel}>{title}</DialogTitle>
+      <DialogContent>
+        <div>
+          <DraftEditor
+            placeholder="Type Here..."
+            editorState={editorState}
+            wrapperClassName="wrapper-class"
+            editorClassName={cx('editor-class', styles.editor)}
+            toolbarClassName="toolbar-class"
+            onEditorStateChange={onEditorStateChange}
+          />
+        </div>
+      </DialogContent>
+      <DialogActions>
+        <Button variant="outlined" onClick={onCancel} color="primary">
+          Cancel
+        </Button>
+        <LoadingButton variant="contained" onClick={onSubmit} loading={isLoading}>
+          Save
+        </LoadingButton>
+      </DialogActions>
+    </BaseModal>
+  );
+};
 
 export default HtmlEditor;

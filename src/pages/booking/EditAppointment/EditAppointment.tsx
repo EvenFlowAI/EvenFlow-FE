@@ -93,7 +93,7 @@ export const EditAppointment = () => {
         dispatch(setUpdateAppointment(data));
         const vehicle: ILoadedVehicle = {
           ...data.vehicle,
-          appointmentHashKeys: [data.hashKey]
+          appointmentHashKeys: [data.hashKey],
         };
         const customer: ICustomerLoadedData = {
           ...data.driver,
@@ -131,7 +131,7 @@ export const EditAppointment = () => {
             Routes.EndUser.ManageAppointmentFrame.replace(':id', encodeSCID(selectedScId))
           );
       })
-      .catch(e => {
+      .catch(() => {
         setState('error');
       });
   }, [id, dispatch, history, allCategories, isAuth]);

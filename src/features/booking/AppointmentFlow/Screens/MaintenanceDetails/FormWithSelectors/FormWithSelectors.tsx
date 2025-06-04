@@ -9,7 +9,9 @@ import { useStyles } from '../styles';
 import { TFormProps, TKey } from '../types';
 import { MenuProps } from '../constants';
 
-export const FormWithSelectors: React.FC<React.PropsWithChildren<React.PropsWithChildren<TFormProps>>> = ({
+export const FormWithSelectors: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TFormProps>>
+> = ({
   orderMapStyles,
   isExistingVehicle,
   requiredFields,

@@ -75,7 +75,6 @@ export const CreateEmployeeForm: React.FC<
     setEmployeeForm(prev => ({ ...prev, serviceCenter: value ?? null }));
   };
 
-
   const handleSelfServiceChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
     setEmployeeForm(prev => ({

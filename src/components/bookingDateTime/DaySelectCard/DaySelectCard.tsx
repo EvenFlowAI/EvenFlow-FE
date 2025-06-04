@@ -34,7 +34,6 @@ export const DaySelectCard: React.FC<TProps> = ({ day, onClick, appointment, isC
   // added getClearDate for convert lastSlot to utc
   const isAvailable = lastSlot ? utcNow.isBefore(getClearDate(lastSlot)) : false;
 
-
   const isOffPeak =
     isAvailable && Boolean(appointment?.appointments?.find(el => el.price?.amountOfSavingMoney));
 

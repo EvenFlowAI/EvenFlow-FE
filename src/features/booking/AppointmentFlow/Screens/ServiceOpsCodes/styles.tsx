@@ -124,4 +124,3 @@ export const RemainingCharactersWrapper = styled('div')<CodeWrapperProps>(({ ope
   fontStyle: 'normal',
   fontWeight: 400,
 }));
-

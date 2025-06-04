@@ -4,7 +4,7 @@ import { LocalTokens } from '../types/types';
 import { authService } from './AuthService/AuthService';
 
 // List of endpoints that don't require authentication
-const skipCallIfNoToken = ['/accounts/profile', '/service-centers']
+const skipCallIfNoToken = ['/accounts/profile', '/service-centers'];
 
 export const request = axios.create({
   baseURL: APIUrl,

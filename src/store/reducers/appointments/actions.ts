@@ -51,9 +51,7 @@ import {
   setProfileLoading,
   getServiceCenterProfile,
 } from '../appointment/actions';
-import {
-  IServiceCenterProfile
-} from '../appointment/types';
+import { IServiceCenterProfile } from '../appointment/types';
 import { getRecallsByVin } from '../recall/actions';
 import dayjs from 'dayjs';
 
@@ -428,10 +426,11 @@ export const clearAfterCloning = (): AppThunk => dispatch => {
   dispatch(setSelectedRecalls([]));
 };
 
-export const loadSCProfile =  (id: number):
-  AppThunk => async dispatch => {
+export const loadSCProfile =
+  (id: number): AppThunk =>
+  async dispatch => {
     dispatch(setProfileLoading(true));
-     try {      
+    try {
       const { data } = await Api.call<IServiceCenterProfile>(
         Api.endpoints.ServiceCenters.Retrieve,
         { urlParams: { id } }
@@ -442,4 +441,4 @@ export const loadSCProfile =  (id: number):
     } finally {
       dispatch(setProfileLoading(false));
     }
-  }
+  };

@@ -188,8 +188,9 @@ const AppointmentFlow = () => {
   );
 
   const onSelectAppointment = async (car: ILoadedVehicle) => {
-    customerLoadedData &&
+    if (customerLoadedData) {
       dispatch(setCustomerLoadedData({ ...customerLoadedData, isUpdating: true }));
+    }
     await onUpdateAppointment(car);
     dispatch(setCurrentFrameScreen('manageAppointment'));
     history.push('/f/appointment-manage/' + id);

@@ -2,13 +2,13 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(theme => ({
   header: {
-    marginBottom: 12
+    marginBottom: 12,
   },
   title: {
     margin: '0 0 0 6px',
     textAlign: 'left',
     fontSize: '24px',
-    color: '#202021'
+    color: '#202021',
   },
   wrapper: {
     width: '100%',
@@ -59,7 +59,7 @@ export const useStyles = makeStyles()(theme => ({
     padding: 0,
     cursor: 'pointer',
     '&:hover': {
-      background: '#DADADA'
+      background: '#DADADA',
     },
 
     '@media (max-width: 768px)': {
