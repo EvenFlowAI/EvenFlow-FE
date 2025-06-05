@@ -17,6 +17,7 @@ const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
 > = ({ open, onClose, selectedRequest, currentComment }) => {
   const [text, setText] = useState<string>('');
+  const [selectedRequestState, setSelectedRequestState] = useState(selectedRequest);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const showError = useException();
@@ -24,6 +25,12 @@ const CommentModal: React.FC<
   useEffect(() => {
     setText(currentComment);
   }, [currentComment, open]);
+
+  useEffect(() => {
+    if (selectedRequest?.description?.length) {
+      setSelectedRequestState(selectedRequest);
+    }
+  }, [selectedRequest]);
 
   const onCancel = () => {
     onClose();
@@ -59,7 +66,7 @@ const CommentModal: React.FC<
   return (
     <BaseModal open={open} onClose={onCancel} width={700}>
       <DialogTitle onClose={onCancel} style={{ fontSize: 24 }}>
-        {selectedRequest?.description} Comment
+        {selectedRequestState?.description} Comment
       </DialogTitle>
       <DialogContent>
         <TextFieldWhite
