@@ -7,6 +7,8 @@ import { RootState } from '../../../../../store/rootReducer';
 import {
   checkCarIsValid,
   clearAppointmentSteps,
+  selectCategories,
+  selectService,
   setAdditionalServicesChosen,
   setCommentsForCategories,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
@@ -23,6 +25,7 @@ import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { mergeArrayById } from '../../../../../utils/utils';
 import styled from '@mui/material/styles/styled';
+import { TServiceCategory } from '../../../../../store/reducers/appointmentFrameReducer/types';
 
 const MAX_COUNT_WORDS_CAPACITY = 250;
 
@@ -131,6 +134,21 @@ export const AppointmentComment: React.FC<TProps> = ({
   };
 
   const clearData = () => {
+    const selectedService = subService?.id ? subService : service;
+    if (selectedService) {
+      if (selectedService.isCommentRequired && !comment.length) {
+        dispatch(selectCategories(serviceCategories.filter(sc => sc.id !== selectedService.id)));
+        dispatch(selectService(null));
+      }
+      if (selectedService.isCommentRequired && comment.length) {
+        dispatch(
+          setCommentsForCategories({
+            id: (subService?.id ? subService?.id : service?.id) ?? 0,
+            comment,
+          })
+        );
+      }
+    }
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
     dispatch(clearAppointmentSteps('serviceNeeds'));
