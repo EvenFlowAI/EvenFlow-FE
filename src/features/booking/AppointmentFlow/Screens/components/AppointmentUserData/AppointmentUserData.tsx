@@ -30,12 +30,15 @@ export const AppointmentUserData: React.FC<
 
   useEffect(() => {
     if (customerLoadedData) {
+      const driverEmail =
+        customer.email || (customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : '');
+
       const data: ICustomer = {
         ...customer,
         fullName:
           customerLoadedData?.fullName ??
           `${customerLoadedData.firstName} ${customerLoadedData.lastName}`,
-        email: customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : '',
+        email: driverEmail,
         phoneNumber: customerLoadedData?.phoneNumbers?.length
           ? customerLoadedData.phoneNumbers[0]
           : '',
