@@ -22,7 +22,13 @@ import { LoadingButton } from '../../../../components/buttons/LoadingButton/Load
 
 const CancelAppointmentModal: React.FC<
   React.PropsWithChildren<
-    React.PropsWithChildren<DialogProps & { hashKey: string; loadData: TArgCallback<boolean>, resetSelectedAppointmentData: () => void }>
+    React.PropsWithChildren<
+      DialogProps & {
+        hashKey: string;
+        loadData: TArgCallback<boolean>;
+        resetSelectedAppointmentData: () => void;
+      }
+    >
   >
 > = ({ open, onClose, hashKey, loadData, resetSelectedAppointmentData }) => {
   const { customerSearchData } = useSelector((state: RootState) => state.customers);
@@ -56,7 +62,7 @@ const CancelAppointmentModal: React.FC<
         loadData(
           Boolean(customerSearchData.firstName.length || customerSearchData.lastName.length)
         );
-        resetSelectedAppointmentData()
+        resetSelectedAppointmentData();
         onClose();
       })
       .catch(err => showError(err))
@@ -109,9 +115,7 @@ const CancelAppointmentModal: React.FC<
         <LoadingButton onClick={onClose} variant="outlined">
           Back
         </LoadingButton>
-        <LoadingButton onClick={handleSubmit}>
-          Cancel Appointment
-        </LoadingButton>
+        <LoadingButton onClick={handleSubmit}>Cancel Appointment</LoadingButton>
       </div>
     </BaseModal>
   );

@@ -4,9 +4,7 @@ import { TArgCallback, TParsableDate } from '../../../types/types';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
-import {
-  IServiceValetAppointment
-} from '../../../store/reducers/appointment/types';
+import { IServiceValetAppointment } from '../../../store/reducers/appointment/types';
 import { SVDaySelectCard } from '../SVDaySelectCard/SVDaySelectCard';
 import { WHILE_LIMIT } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/constants';
 import { DaySelectorWrapper } from '../../styled/DaySelectorWrapper';

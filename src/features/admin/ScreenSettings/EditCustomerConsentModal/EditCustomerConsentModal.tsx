@@ -394,7 +394,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
     setForm(prev => ({ ...prev, message: value }));
   };
 
-
   return (
     <BaseModal open={open} width={940} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>{consentId ? 'Edit' : 'Add'} Customer Consent</DialogTitle>

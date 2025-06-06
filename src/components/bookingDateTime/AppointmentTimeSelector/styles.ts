@@ -1,7 +1,5 @@
 import { styled } from '@mui/material';
 
-
-
 export const TimeSlotsWrapper = styled('div')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(6, 1fr)',

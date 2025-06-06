@@ -873,4 +873,3 @@ export const mapModelsWithParentNames = (makes: IMake[]) => {
     };
   });
 };
-

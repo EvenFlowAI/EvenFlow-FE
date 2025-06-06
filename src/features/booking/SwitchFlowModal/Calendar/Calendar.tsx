@@ -15,7 +15,7 @@ type TProps = {
 
 const Calendar: React.FC<TProps> = ({ time, setTime, isCalendarOpen, setCalendarOpen, onNext }) => {
   const onTimeChange = (value: TParsableDate) => {
-      setTime(value);
+    setTime(value);
   };
 
   return (

@@ -47,7 +47,6 @@ const CommentModal: React.FC<
   };
 
   const onSave = () => {
-    
     if (
       !text.length &&
       selectedRequest?.code === 'specialCategory' &&

@@ -16,7 +16,6 @@ export const getTransportationOptions = createAction<ITransportationOptionFull[]
   'TransportationNeeds/GetOptions'
 );
 
-
 export const loadTransportationOptions =
   (serviceCenterId: number): AppThunk =>
   dispatch => {

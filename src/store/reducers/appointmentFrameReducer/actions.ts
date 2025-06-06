@@ -265,7 +265,7 @@ export const loadConsultantsForCloning =
       hashKey,
       serviceCategories,
       recalls,
-      recallsModel
+      recallsModel,
     } = appointment;
 
     const data: IConsultantsRequestData = {
@@ -302,7 +302,10 @@ export const loadConsultantsForCloning =
         dispatch(setConsultants(result));
         cb();
       })
-      .catch(err => {console.log(err); throw err;})
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
       .finally(() => {
         dispatch(setConsultantsLoading(false));
         dispatch(setCurrentAppointmentLoading(false));
@@ -729,6 +732,11 @@ export const handleAppointmentResponse =
       }
       if (!updatedData.emails?.length) {
         updatedData.emails = [customer.email];
+      }
+      if (updatedData.emails?.length) {
+        if (updatedData.emails[0] !== customer.email) {
+          updatedData.emails = [customer.email];
+        }
       }
       updatedData.fullName = data.driver?.fullName;
       updatedData.id = data.customerId;
