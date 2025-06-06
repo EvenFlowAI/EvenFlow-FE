@@ -1,6 +1,6 @@
 {
   "name": "even_flow_ai",
-  "version": "0.4.43",
+  "version": "0.4.44",
   "private": true,
   "description": "EvenFlow AI frontend application. Run 'npm run setup-hooks' after cloning to enable automatic version incrementation.",
   "dependencies": {
@@ -59,7 +59,8 @@
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
-    "startDev": "REACT_APP_ENV=Dev react-scripts --max_old_space_size=4096 start",
+    "startDev": "cross-env REACT_APP_ENV=Dev react-scripts --max_old_space_size=4096 start",
+    "startUat": "cross-env REACT_APP_ENV=uat react-scripts --max_old_space_size=4096 start",
     "increment-version": "node scripts/increment-version.js",
     "generate-version-json": "node scripts/generate-version-json.js",
     "build": "react-scripts build && npm run generate-version-json",

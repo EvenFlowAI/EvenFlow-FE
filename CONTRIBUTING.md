@@ -8,61 +8,83 @@ This document provides guidelines and information for contributors to the EvenFl
 
 1. Clone the repository
 2. Install dependencies:
-   ```
+   ```bash
    yarn install
    ```
-3. Set up Git hooks:
+3. Install cross-env globally:
+   ```bash
+   yarn global add cross-env
    ```
-   npm run setup-hooks
+   or
+
+   ```bash
+   npm install -g cross-env
    ```
 4. Start the development server:
-   ```
+   ```bash
    yarn start
    ```
 
-## Versioning System
+### Husky Pre-Commit Hook Setup
 
-### Automatic Version Incrementation
+To set up Husky and ensure your code is automatically linted and formatted before every commit, follow these steps after installing dependencies:
 
-The project uses automatic version incrementation with every commit:
+1. **Install Husky and lint-staged globally:**
 
-1. When you make a commit, a pre-commit hook runs automatically
-2. The hook increments the patch version in `package.json`
-3. The updated `package.json` is added to your commit
+    ```bash
+    yarn global add husky lint-staged
+    ```
+   
+   or
 
-This ensures that:
-- Each commit has a unique version number
-- The version is always increasing
-- The build process always includes the latest version
+   ```bash
+    npm install -g husky lint-staged 
+    ```
 
-### How It Works
+2. **Initialize Husky in your project:**
 
-The versioning system consists of:
+    ```bash
+    npx husky install
+    ```
 
-1. **Pre-commit Hook**: Runs `npm run increment-version` before each commit
-2. **Version Incrementer**: Increments the patch number in package.json
-3. **Version.json Generator**: Creates a version.json file during build
-4. **Version Checker**: App checks for version changes at runtime
+3. **Create the pre-commit hook script:**
 
-### Runtime Version Checking
+   Inside the `.husky` directory, create a file named `pre-commit` with the following content:
 
-The application implements a version checking system that:
-- Fetches version.json periodically (with cache-control headers to prevent caching)
-- Compares the current version with the cached version
-- Automatically reloads the app when a new version is detected
-- Uses a check interval to avoid excessive version checks
+    ```
+    npm run all-fix
+    npm run increment-version
+    git add .
+    ```
 
-## Important Scripts
+These steps set up Husky on your local machine and install a Git pre-commit hook that automatically runs linters and formatters before each commit. Note that these hooks run only locally and are not executed in Continuous Integration (CI) environments.
 
-- `npm run increment-version` - Manually increment the version
-- `npm run generate-version-json` - Generate version.json file
-- `npm run setup-hooks` - Install Git hooks for versioning
+**Important:** Do not skip this setup, or the pre-commit hooks will not function correctly.
 
-## Build Process
+## Version System
 
-When building the application (`yarn build`):
-1. The React application is built normally
-2. The version.json generator runs automatically
-3. The version.json file is created with the current version from package.json
+The project includes an automatic version management system with the following features:
 
-This ensures that deployed builds include the correct version information for runtime checking. 
+#### Automatic Version Incrementation
+
+- Each commit automatically increments the patch version in `package.json`
+- This is handled by a husky pre-commit hook
+
+#### Version Checking
+
+The application includes a system that:
+
+- Generates a `version.json` file during the build process containing the current version number
+- Checks for version updates at runtime
+- Automatically reloads the application when a new version is detected
+
+#### Version-related npm Scripts
+
+- `npm run increment-version` - Manually increment the patch version
+- `npm run generate-version-json` - Generate the version.json file
+
+#### Build Process
+
+The build script:
+1. Builds the React application
+2. Generates the version.json file with the current version from package.json

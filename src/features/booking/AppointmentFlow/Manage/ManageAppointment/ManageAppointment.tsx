@@ -137,7 +137,7 @@ export const ManageAppointment: React.FC<
   useEffect(() => {
     if (currentConfig && scProfile && !firstScreenOptions.length)
       dispatch(loadFirstScreenOptionsByQuery(scProfile.id));
-  }, [currentConfig, scProfile, firstScreenOptions]);
+  }, [currentConfig, scProfile, firstScreenOptions?.length]);
 
   useEffect(() => {
     if (scProfile && appointmentWasChanged) {
