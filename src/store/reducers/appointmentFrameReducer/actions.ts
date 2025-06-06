@@ -733,6 +733,11 @@ export const handleAppointmentResponse =
       if (!updatedData.emails?.length) {
         updatedData.emails = [customer.email];
       }
+      if (updatedData.emails?.length) {
+        if (updatedData.emails[0] !== customer.email) {
+          updatedData.emails = [customer.email];
+        }
+      }
       updatedData.fullName = data.driver?.fullName;
       updatedData.id = data.customerId;
       updatedData.phoneNumbers = [data.driver?.phoneNumber];
