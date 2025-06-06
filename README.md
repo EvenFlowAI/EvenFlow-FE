@@ -6,8 +6,8 @@
 
 ### Deployment
 Build project from source
-```
-yarn build
+```bash
+  yarn build
 ```
 and push into environment through FTP or SFTP
 
@@ -17,8 +17,44 @@ Clone project from git
 ```
 cd <project_dirrectory>
 yarn install
+yarn global add cross-env or npm install -g cross-env 
 yarn start
 ```
+
+### Husky Pre-Commit Hook Setup
+
+To set up Husky and ensure your code is automatically linted and formatted before every commit, follow these steps after installing dependencies:
+
+1. **Install Husky and lint-staged globally:**
+    ```bash
+    yarn global add husky lint-staged
+    ```
+
+   or
+
+   ```bash
+    npm install -g husky lint-staged 
+    ```
+
+2. **Initialize Husky in your project:**
+
+    ```bash
+    npx husky install
+    ```
+
+3. **Create the pre-commit hook script:**
+
+   Inside the `.husky` directory, create a file named `pre-commit` with the following content:
+
+    ```
+    npm run all-fix
+    npm run increment-version
+    git add .
+    ```
+
+These steps set up Husky on your local machine and install a Git pre-commit hook that automatically runs linters and formatters before each commit. Note that these hooks run only locally and are not executed in Continuous Integration (CI) environments.
+
+**Important:** Do not skip this setup, or the pre-commit hooks will not function correctly.
 
 ### Version System
 
