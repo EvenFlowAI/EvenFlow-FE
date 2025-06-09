@@ -38,9 +38,19 @@ export const DaySelectCard: React.FC<TProps> = ({ day, onClick, appointment, isC
     isAvailable && Boolean(appointment?.appointments?.find(el => el.price?.amountOfSavingMoney));
 
   return (
-    <DayCard available={isAvailable} isCurrent={isCurrent} isOffPeak={isOffPeak} onClick={onClick}>
+    <DayCard
+      available={isAvailable}
+      isCurrent={isCurrent}
+      isOffPeak={isOffPeak}
+      onClick={!isAvailable ? () => {} : onClick}
+    >
       <Date>{utcDay.format(monthDayFormat)}</Date>
-      <Day available={isAvailable} isCurrent={isCurrent} isOffPeak={isOffPeak} onClick={onClick}>
+      <Day
+        available={isAvailable}
+        isCurrent={isCurrent}
+        isOffPeak={isOffPeak}
+        onClick={!isAvailable ? () => {} : onClick}
+      >
         {isCurrent ? <CalendarIconWhite /> : <CalendarIcon />}
         {getLabel()}
         {isXs ? <div className="padding" /> : null}

@@ -669,10 +669,10 @@ export const AppointmentSlots: React.FC<
     }
   }, [date]);
 
-  const loadNextSlots = () => {
+  const loadNextSlots = async () => {
     if (!currentApiStartDate || !currentApiEndDate) {
       const { apiStartDate, apiEndDate } = getApiDates();
-      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
+      await loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
       return;
     }
 
@@ -680,7 +680,7 @@ export const AppointmentSlots: React.FC<
     const nextEndDate = dayjs(currentApiEndDate).add(daysPerScreen, 'day');
 
     setDate(nextStartDate.startOf('month').toISOString());
-    loadData({
+    await loadData({
       requestedStartDate: nextStartDate.toISOString(),
       requestedEndDate: nextEndDate.toISOString(),
     }).finally();
