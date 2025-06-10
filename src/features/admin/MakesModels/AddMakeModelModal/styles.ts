@@ -45,7 +45,7 @@ export const useStyles = makeStyles()(() => ({
     },
   },
   modelsWrapper: {
-    height: 124,
+    height: 'auto',
     display: 'flex',
     alignItems: 'start',
     alignContent: 'start',
