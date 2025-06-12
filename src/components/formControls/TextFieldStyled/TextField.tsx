@@ -6,7 +6,7 @@ import { TextInputProps } from '../types';
 import { CustomInputLabel } from '../../styled/CustomInputLabel';
 
 export const TextField = forwardRef<unknown, TextInputProps>(
-  ({ label, params, hideLabel, spacing, isLowerCase, ...props }, ref) => {
+  ({ label, params, hideLabel, spacing, isLowerCase, labelFitContent, ...props }, ref) => {
     const { InputProps = {}, InputLabelProps = {}, ...p } = params || {};
 
     return (
@@ -14,6 +14,13 @@ export const TextField = forwardRef<unknown, TextInputProps>(
         {label && (
           <CustomInputLabel
             shrink
+            style={
+              labelFitContent
+                ? {
+                    width: 'fit-content',
+                  }
+                : {}
+            }
             htmlFor={props.id}
             {...InputLabelProps}
             visible={Boolean(!hideLabel)}

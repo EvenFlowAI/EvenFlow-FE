@@ -66,14 +66,21 @@ export class Api {
         route: '/appointment-allocations/demand-segments/{id}',
         method: 'delete',
       },
-      SetUnplanned: { route: '/appointment-allocations/unplanned-demand-segments', method: 'put' },
-      GetUnplanned: { route: '/appointment-allocations/unplanned-demand-segments', method: 'get' },
+      SetUnplanned: {
+        route: '/demand-management-settings/unplanned-demand-segments',
+        method: 'put',
+      },
+      GetUnplanned: {
+        route: '/demand-management-settings/unplanned-demand-segments',
+        method: 'get',
+      },
+      GetCapacity: { route: '/demand-management-settings/capacity', method: 'get' },
       GetUnplannedSlotsByDay: {
-        route: '/appointment-allocations/unplanned-demand-slots',
+        route: '/demand-management-settings/unplanned-demand-slots',
         method: 'get',
       },
       UpdateUnplannedSlots: {
-        route: '/appointment-allocations/unplanned-demand-slots',
+        route: '/demand-management-settings/unplanned-demand-slots',
         method: 'put',
       },
     },
@@ -152,8 +159,8 @@ export class Api {
       UploadAvatar: { route: '/dealerships/{id}/avatar', method: 'patch' },
     },
     DemandManagement: {
-      GetSettings: { route: '/demand-management-settings', method: 'get' },
-      UpdateSettings: { route: '/demand-management-settings', method: 'put' },
+      GetSettings: { route: '/demand-management-settings/predictions', method: 'get' },
+      UpdateSettings: { route: '/demand-management-settings/predictions', method: 'put' },
     },
     Employees: {
       GetAssignmentSettings: {
@@ -289,8 +296,8 @@ export class Api {
     OptimizationWindows: {
       GetParams: { route: '/optimization-windows', method: 'get' },
       SetParams: { route: '/optimization-windows', method: 'put' },
-      GetOverbooking: { route: '/optimization-windows/overbooking-factor', method: 'get' },
-      SetOverbooking: { route: '/optimization-windows/overbooking-factor', method: 'put' },
+      GetOverbooking: { route: '/demand-management-settings/overbooking-factor', method: 'get' },
+      SetOverbooking: { route: '/demand-management-settings/overbooking-factor', method: 'put' },
       GetAppointmentCutoff: { route: '/optimization-windows/appointment-cutoff', method: 'get' },
       SetAppointmentCutoff: { route: '/optimization-windows/appointment-cutoff', method: 'put' },
     },
