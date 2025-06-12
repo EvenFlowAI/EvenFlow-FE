@@ -13,12 +13,15 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { RootState } from '../../../../store/rootReducer';
 import { updateDemandManagementSettings } from '../../../../store/reducers/demandManagement/actions';
 import { LinksWrapper } from './styles';
-import { setAllocationTab } from '../../../../store/reducers/adminPanel/actions';
+import { setAllocationTab, setLocalTab } from '../../../../store/reducers/adminPanel/actions';
 import { useHistory } from 'react-router-dom';
 import { Routes } from '../../../../routes/constants';
 import { setSelectedPod } from '../../../../store/reducers/pods/actions';
 
-export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({ item }) => {
+export const DemandPredictedCell: React.FC<{
+  item: IDemandPrediction;
+  handleTabChange: (e: React.ChangeEvent<{}> | null, tab: string) => void;
+}> = ({ item, handleTabChange }) => {
   const { settings } = useSelector((state: RootState) => state.demandManagement);
   const { shortPodsList } = useSelector((state: RootState) => state.pods);
   const dispatch = useDispatch();
@@ -37,11 +40,13 @@ export const DemandPredictedCell: React.FC<{ item: IDemandPrediction }> = ({ ite
   const onPredictedClick = () => {
     const pod = shortPodsList.find(el => el.id === item.podId);
     dispatch(setSelectedPod(pod ?? null));
-    dispatch(setAllocationTab('1'));
-    history.push(Routes.CapacityManagement.AppointmentAllocation);
+    handleTabChange(null, '2');
   };
 
-  const onProbabilityClick = () => {};
+  const onProbabilityClick = () => {
+    // TODO: uncomment when probability logic will be approved
+    // dispatch(setLocalTab('2'));
+  };
 
   const handleChangePredictedDemandMethod =
     (id: number | undefined) => (e: React.ChangeEvent<HTMLInputElement>) => {

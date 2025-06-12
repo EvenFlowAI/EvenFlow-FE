@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
+  EDay,
   IDemandSegment,
   IDemandSegmentForm,
   ISetDemandSegmentRequest,
@@ -13,6 +14,7 @@ import {
 import { AppThunk, TArgCallback, TCallback } from '../../../types/types';
 
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { DemandCapacityI } from '../../../features/admin/UnplannedDemand/types';
 
 export const loadingDemandSegments = createAction<boolean>('DemandSegments/Loading');
 export const getDemandSegments = createAction<IDemandSegment[]>('DemandSegments/GetDemandSegments');
@@ -84,6 +86,9 @@ export const setTimeWindow =
 export const getUnplannedDemand = createAction<IUnplannedDemand[]>(
   'DemandSegments/GetUnplannedDemands'
 );
+export const getDemandCapacity = createAction<DemandCapacityI[]>(
+  'DemandSegments/getDemandCapacity'
+);
 export const loadUnplannedDemand =
   (serviceCenterId: number, podId?: number): AppThunk =>
   async dispatch => {
@@ -97,6 +102,22 @@ export const loadUnplannedDemand =
       console.log('load unplanned demand err', err);
     }
   };
+
+export const loadDemandCapacity =
+  (serviceCenterId: number, podId?: number): AppThunk =>
+  async dispatch => {
+    try {
+      const { data } = await Api.call<DemandCapacityI[]>(
+        Api.endpoints.AppointmentAllocation.GetCapacity,
+        { params: { serviceCenterId, podId } }
+      );
+      console.log('data', data);
+      dispatch(getDemandCapacity(data));
+    } catch (err) {
+      console.log('load unplanned demand err', err);
+    }
+  };
+
 export const setUnplannedDemand =
   (data: IUnplannedDemandRequest): AppThunk =>
   async dispatch => {
