@@ -26,8 +26,7 @@ import {
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import { loadCategoriesByQuery } from '../../../store/reducers/categories/actions';
 import { useTranslation } from 'react-i18next';
-import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
-import { EServiceType, EUserType } from '../../../store/reducers/appointmentFrameReducer/types';
+import { EUserType } from '../../../store/reducers/appointmentFrameReducer/types';
 import { dateTimeFormat } from '../../../features/admin/Appointments/ViewAppointmentsModal/AppointmentDetails/AppointmentDetails';
 import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { Routes } from '../../../routes/constants';
@@ -67,14 +66,6 @@ export const EditAppointment = () => {
 
   useStorage();
 
-  const setFrameScreen = (serviceTypeOption: IFirstScreenOption | undefined) => {
-    dispatch(
-      setCurrentFrameScreen(
-        serviceTypeOption?.type !== EServiceType.VisitCenter ? 'location' : 'serviceNeeds'
-      )
-    );
-  };
-
   useEffect(() => {
     if (selectedScId) {
       dispatch(loadCategoriesByQuery(selectedScId));
@@ -88,53 +79,54 @@ export const EditAppointment = () => {
         : API.appointment.getFromEmail;
     requestFunc(id)
       .then(async ({ data }) => {
-        await dispatch(loadSCProfile(data.serviceCenterId));
-        dispatch(setUserType(EUserType.Existing));
-        dispatch(setUpdateAppointment(data));
-        const vehicle: ILoadedVehicle = {
-          ...data.vehicle,
-          appointmentHashKeys: [data.hashKey],
-        };
-        const customer: ICustomerLoadedData = {
-          ...data.driver,
-          id: data.customerId,
-          vehicles: [vehicle],
-          phoneNumbers: [data.driver.phoneNumber],
-          emails: [data.driver.email],
-          fullName: data.driver.fullName,
-          fromSearchByName: isFromAdmin,
-          companyName: data.driver.companyName,
-          isUpdating: isAuth,
-        };
-        if (data.address) customer.address = data.address;
-        dispatch(setCustomerLoadedData(customer));
-        dispatch(setVehicle({ ...vehicle }));
-        saveCustomerCache(customer);
-        if (isFromAdmin) setFrameScreen(data.serviceTypeOption);
-        if (data.appointmentStatus === AppointmentStatus.Cancelled) {
-          setState('canceled');
-          return;
+        if (data) {
+          dispatch(loadSCProfile(data.serviceCenterId));
+          dispatch(setUserType(EUserType.Existing));
+          dispatch(setUpdateAppointment(data));
+          const vehicle: ILoadedVehicle = {
+            ...data.vehicle,
+            appointmentHashKeys: [data.hashKey],
+          };
+          const customer: ICustomerLoadedData = {
+            ...data.driver,
+            id: data.customerId,
+            vehicles: [vehicle],
+            phoneNumbers: [data.driver.phoneNumber],
+            emails: [data.driver.email],
+            fullName: data.driver.fullName,
+            fromSearchByName: isFromAdmin,
+            companyName: data.driver.companyName,
+            isUpdating: isAuth,
+          };
+          if (data.address) customer.address = data.address;
+          dispatch(setCustomerLoadedData({ ...customer, isUpdating: true }));
+          dispatch(setVehicle({ ...vehicle }));
+          saveCustomerCache(customer);
+          dispatch(setCurrentFrameScreen('manageAppointment'));
+          if (data.appointmentStatus === AppointmentStatus.Cancelled) {
+            setState('canceled');
+            return;
+          }
+          const [hours, minutes] = data.timeSlot.split(':');
+          const formattedDate = dayjs(data.dateInUtc).format();
+          const dateTime = dayjs
+            .utc(formattedDate)
+            .hour(+hours)
+            .minute(+minutes)
+            .format(dateTimeFormat);
+          if (dayjs.utc().diff(dateTime) >= 0) {
+            setState('passed');
+            return;
+          }
+          if (selectedScId) {
+            history.push('/f/appointment-manage/' + encodeSCID(selectedScId));
+          }
         }
-        const [hours, minutes] = data.timeSlot.split(':');
-        const formattedDate = dayjs(data.dateInUtc).format();
-        const dateTime = dayjs
-          .utc(formattedDate)
-          .hour(+hours)
-          .minute(+minutes)
-          .format(dateTimeFormat);
-        if (dayjs.utc().diff(dateTime) >= 0) {
-          setState('passed');
-          return;
-        }
-        if (selectedScId)
-          history.push(
-            Routes.EndUser.ManageAppointmentFrame.replace(':id', encodeSCID(selectedScId))
-          );
       })
       .catch(() => {
         setState('error');
       });
-  }, [id, dispatch, history, allCategories, isAuth]);
+  }, [id, allCategories, isAuth]);
 
   const handleCreateNew = () => {
     if (selectedScId) {
