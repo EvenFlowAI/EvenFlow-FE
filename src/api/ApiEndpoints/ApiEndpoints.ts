@@ -94,6 +94,7 @@ export class Api {
     Authentications: {
       Request: { route: '/authentications', method: 'post' },
       Refresh: { route: '/authentications/refresh', method: 'post' },
+      Anonymous: { route: '/authentications/anonymous ', method: 'post' },
     },
     Bays: {
       Create: { route: '/bays', method: 'post' },

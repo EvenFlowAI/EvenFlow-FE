@@ -1,15 +1,33 @@
-import { ICredentials, IRefreshTokenData, ITokens, LocalTokens } from '../../types/types';
+import {
+  ICredentials,
+  IRefreshTokenData,
+  ITokens,
+  LocalTokens,
+  SelfCustomTokens,
+} from '../../types/types';
 import { API } from '../api';
 import { request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';
 
 class AuthService {
   getLocalToken(): string {
-    return localStorage.getItem(LocalTokens.authToken) || '';
+    return (
+      localStorage.getItem(LocalTokens.authToken) ||
+      sessionStorage.getItem(SelfCustomTokens.authToken) ||
+      ''
+    );
+  }
+
+  isSelfCustomerPage() {
+    return sessionStorage.getItem(SelfCustomTokens.authToken);
   }
 
   getRefreshToken(): string {
-    return localStorage.getItem(LocalTokens.refreshToken) || '';
+    return (
+      localStorage.getItem(LocalTokens.refreshToken) ||
+      sessionStorage.getItem(SelfCustomTokens.refreshToken) ||
+      ''
+    );
   }
 
   setTokens({ accessToken, refreshToken }: ITokens): void {
