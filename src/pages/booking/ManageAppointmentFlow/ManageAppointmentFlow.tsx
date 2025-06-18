@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Cars } from '../../../features/booking/AppointmentFlow/Screens/Cars/Cars';
 import { AppointmentConfirmation } from '../../../features/booking/AppointmentFlow/Create/AppointmentConfirmation/AppointmentConfirmation';
 import { AppointmentComment } from '../../../features/booking/AppointmentFlow/Screens/AppointmentComment/AppointmentComment';
@@ -49,10 +49,13 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
 
   useEffect(() => {
     if (selectedVehicle && customerLoadedData?.isUpdating) {
-      if (customerLoadedData?.fromSearchByName)
+      if (customerLoadedData?.fromSearchByName) {
         dispatch(setCustomerLoadedData({ ...customerLoadedData, fromSearchByName: false }));
-      welcomeScreenView !== 'serviceSelect' &&
+      }
+
+      if (welcomeScreenView !== 'serviceSelect') {
         onUpdateAppointment(selectedVehicle).then(() => handleSetScreen('manageAppointment'));
+      }
     }
   }, [customerLoadedData, selectedVehicle?.make, welcomeScreenView]);
 

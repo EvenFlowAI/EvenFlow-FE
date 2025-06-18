@@ -133,6 +133,7 @@ export const Welcome = () => {
           onOpen
         )
       );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       dispatch(setSessionId(''));
       if (err.response?.data?.errorCode === 6) {
