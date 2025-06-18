@@ -15,9 +15,7 @@ import { LoadingButton } from '../../../components/buttons/LoadingButton/Loading
 import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { useException } from '../../../hooks/useException/useException';
 import { Routes } from '../../../routes/constants';
-import dayjs from 'dayjs';
 import { ContentContainer, Info } from './styles';
-import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
 
 type TState = 'loading' | 'new' | 'canceled' | 'already_canceled' | 'error';
 
