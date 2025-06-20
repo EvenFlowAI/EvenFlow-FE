@@ -103,8 +103,13 @@ const UserLocation: React.FC<TProps> = ({
     }
   };
 
-  const onGetZipCodesList = (list: string[], postalCode: string) => {
+  const onGetZipCodesList = (list: string[], postalCode: string, label?: string) => {
     if (list.includes(postalCode)) setZip(postalCode);
+    if (label && postalCode.length === 5) {
+      loadAncillaryPrice(postalCode, label);
+    } else {
+      setAddressValid(false);
+    }
   };
 
   const handleChangeAddress = async (e: any) => {
@@ -122,17 +127,12 @@ const UserLocation: React.FC<TProps> = ({
         if (data.postalCode && scProfile) {
           dispatch(
             loadFilteredZip(
-              { serviceCenterId: scProfile.id, search: data.postalCode },
+              { serviceCenterId: scProfile.id, search: data.postalCode, label: e?.label },
               onGetZipCodesList
             )
           );
         }
       });
-    }
-    if (e?.label) {
-      loadAncillaryPrice(zip, e?.label);
-    } else {
-      setAddressValid(false);
     }
   };
 
