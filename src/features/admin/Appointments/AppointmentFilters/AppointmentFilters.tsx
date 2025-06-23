@@ -74,32 +74,28 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
   useEffect(() => {
     if (currentUser) {
       if (currentUser?.role === 'Advisor' && serviceAdvisors.length) {
-        if (!currentUser.dmsId) {
-          showError('The user does not have DMS ID assigned');
+        const currentAdvisor = serviceAdvisors.find(
+          el => el.dmsId.toString() === currentUser.dmsId
+        );
+        if (currentAdvisor) {
+          dispatch(setAppointmentsLoading(true));
+          setFilters(prev => ({ ...prev, advisor: currentAdvisor, initialFiltersSet: true }));
         } else {
-          const currentAdvisor = serviceAdvisors.find(
-            el => el.dmsId.toString() === currentUser.dmsId
-          );
-          if (currentAdvisor) {
-            dispatch(setAppointmentsLoading(true));
-            setFilters(prev => ({ ...prev, advisor: currentAdvisor, initialFiltersSet: true }));
-          }
+          dispatch(setAppointmentsLoading(true));
+          setFilters(prev => ({ ...prev, initialFiltersSet: true }));
         }
       } else if (currentUser?.role === 'Technician' && technicians.length) {
-        if (!currentUser.dmsId) {
-          showError('The user does not have DMS ID assigned');
+        const currentTechnician = technicians.find(el => el.dmsId.toString() === currentUser.dmsId);
+        if (currentTechnician) {
+          dispatch(setAppointmentsLoading(true));
+          setFilters(prev => ({
+            ...prev,
+            technician: currentTechnician,
+            initialFiltersSet: true,
+          }));
         } else {
-          const currentTechnician = technicians.find(
-            el => el.dmsId.toString() === currentUser.dmsId
-          );
-          if (currentTechnician) {
-            dispatch(setAppointmentsLoading(true));
-            setFilters(prev => ({
-              ...prev,
-              technician: currentTechnician,
-              initialFiltersSet: true,
-            }));
-          }
+          dispatch(setAppointmentsLoading(true));
+          setFilters(prev => ({ ...prev, initialFiltersSet: true }));
         }
       } else {
         setFilters(prev => ({ ...prev, initialFiltersSet: true }));
