@@ -4,6 +4,7 @@ import { TTitle } from '../../../types/types';
 
 export const collectParents = (title: TTitle): JSX.Element => {
   const link = <Link to={title.to}>{title.title}</Link>;
+
   if (title.parent) {
     return (
       <>

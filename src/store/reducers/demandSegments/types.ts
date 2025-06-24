@@ -39,7 +39,6 @@ export interface IUnplannedDemand {
   day: EDay;
   optimizerSetting?: number;
   serviceCenterId: number;
-  historicalWalkInScheduleBlocks: number;
   podId?: number;
 }
 export interface IUnplannedDemandForm {

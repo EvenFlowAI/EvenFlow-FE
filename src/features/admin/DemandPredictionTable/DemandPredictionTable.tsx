@@ -33,7 +33,11 @@ import { DemandPredictedCell } from './DemandPredictedCell/DemandPredictedCell';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
 import { loadPodsShort } from '../../../store/reducers/pods/actions';
 
-const DemandPredictionTable = () => {
+const DemandPredictionTable = ({
+  handleTabChange,
+}: {
+  handleTabChange: (e: React.ChangeEvent<{}> | null, tab: string) => void;
+}) => {
   const { isLoading, settings } = useSelector((state: RootState) => state.demandManagement);
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
@@ -153,7 +157,7 @@ const DemandPredictionTable = () => {
                 </RadioGroupStyled>
               </StyledTableCell>
 
-              <DemandPredictedCell item={item} />
+              <DemandPredictedCell item={item} handleTabChange={handleTabChange} />
 
               <StyledTableCell key="evenflowAppontments" style={{ padding: 0 }} width={124}>
                 <SubCellWhite

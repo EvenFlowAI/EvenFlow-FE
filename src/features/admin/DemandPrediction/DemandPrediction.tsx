@@ -1,10 +1,14 @@
 import React from 'react';
 import DemandPredictionTable from '../DemandPredictionTable/DemandPredictionTable';
 
-const DemandPrediction = () => {
+const DemandPrediction = ({
+  handleTabChange,
+}: {
+  handleTabChange: (e: React.ChangeEvent<{}> | null, tab: string) => void;
+}) => {
   return (
     <div>
-      <DemandPredictionTable />
+      <DemandPredictionTable handleTabChange={handleTabChange} />
     </div>
   );
 };

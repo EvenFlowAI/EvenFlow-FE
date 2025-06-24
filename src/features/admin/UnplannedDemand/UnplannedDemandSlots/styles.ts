@@ -31,3 +31,11 @@ export const UnplannedTableCell = withStyles(TC, {
     textAlign: 'center',
   },
 });
+
+export const UnplannedTableCellLeft = withStyles(TC, {
+  root: {
+    border: 'none !important',
+    padding: '20px 16px !important',
+    textAlign: 'left',
+  },
+});

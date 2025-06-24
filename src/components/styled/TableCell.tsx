@@ -9,3 +9,11 @@ export const TableCell = withStyles(TC, {
     textAlign: 'center',
   },
 });
+
+export const TableCellLeft = withStyles(TC, {
+  root: {
+    border: 'none !important',
+    padding: '12px 16px !important',
+    textAlign: 'left',
+  },
+});

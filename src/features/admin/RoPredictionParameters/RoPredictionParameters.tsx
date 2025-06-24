@@ -17,6 +17,7 @@ import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEdi
 
 import { useMessage } from '../../../hooks/useMessage/useMessage';
 import { useException } from '../../../hooks/useException/useException';
+import { PodSelector } from '../NavBar/PodSelector/PodSelector';
 
 const fixedToTwo = /(^-?\d*\.?\d{1,2}?)$/;
 
@@ -108,7 +109,7 @@ const RoPredictionParameters = () => {
   return (
     <div>
       <div className={classes.laborPerHour}>
-        Labor Rate Per Hour: ${selectedSC?.laborRatePerHour}
+        <PodSelector individualStyles />
       </div>
       {predictionParamsLoading ? (
         <Loading />

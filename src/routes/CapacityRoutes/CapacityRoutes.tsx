@@ -27,10 +27,6 @@ export const CapacityRoutes = () => {
           path={Routes.CapacityManagement.PartsAvailability}
           component={PartsAvailabilityPage}
         />
-        <PrivateRoute
-          path={Routes.CapacityManagement.AppointmentAllocation}
-          component={AppointmentAllocation}
-        />
         <PrivateRoute path={Routes.CapacityManagement.Pods} component={ServiceBooks} />
         <PrivateRoute
           path={Routes.CapacityManagement.RequestDifferentiation}
