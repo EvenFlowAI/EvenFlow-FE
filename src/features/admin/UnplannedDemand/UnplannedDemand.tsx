@@ -226,13 +226,9 @@ export const UnplannedDemand = () => {
                       </p>
                     </UnplannedTableCell>
                     <TableCell>
-                      <p>
+                      <p className={classes.overBookingFactorWrapper}>
                         {!isEditOverbooking ? (
-                          <span
-                            style={{
-                              marginRight: '50px',
-                            }}
-                          >
+                          <span className={classes.overBookingValue}>
                             {form[idx as EDay].overbookingFactorValue
                               ? form[idx as EDay].overbookingFactorValue + '%'
                               : '0%'}
@@ -250,14 +246,17 @@ export const UnplannedDemand = () => {
                           />
                         )}
                         {!isEditOverbooking ? (
-                          <SaveEditBlock
-                            onSave={handleSave}
-                            isLowerCase={true}
-                            onEdit={() => setEditOverBooking(true)}
-                            onCancel={handleCancel}
-                            isEdit={isEditOverbooking}
-                            isSaving={saving}
-                          />
+                          <div className={classes.editOverBooking}>
+                            {' '}
+                            <SaveEditBlock
+                              onSave={handleSave}
+                              isLowerCase={true}
+                              onEdit={() => setEditOverBooking(true)}
+                              onCancel={handleCancel}
+                              isEdit={isEditOverbooking}
+                              isSaving={saving}
+                            />
+                          </div>
                         ) : null}
                       </p>
                     </TableCell>
