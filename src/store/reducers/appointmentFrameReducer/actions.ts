@@ -313,7 +313,12 @@ export const loadConsultantsForCloning =
   };
 
 export const loadConsultantsForUpdating =
-  (id: string, serviceTypeOptionId: number | null, appointment: IAppointmentByKey): AppThunk =>
+  (
+    id: string,
+    serviceTypeOptionId: number | null,
+    appointment: IAppointmentByKey,
+    onSuccess?: () => void
+  ): AppThunk =>
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
@@ -362,6 +367,9 @@ export const loadConsultantsForUpdating =
           )
             .then(({ data: { result } }) => {
               dispatch(setConsultants(result));
+              if (onSuccess) {
+                onSuccess();
+              }
               if (!result.length) {
                 dispatch(setAdvisorAvailable(false));
               } else {
@@ -1617,8 +1625,11 @@ export const handleAppointmentUpdate =
             );
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
-            dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
-            dispatch(updateConsultant(data.advisorId));
+            dispatch(
+              loadConsultantsForUpdating(id, option ? option.id : null, data, () => {
+                dispatch(updateConsultant(data.advisorId));
+              })
+            );
             dispatch(checkCarIsValid());
             setLoadingCar(false);
             dispatch(setAppointmentSaving(false));
