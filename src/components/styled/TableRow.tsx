@@ -16,3 +16,18 @@ export const TableRow = withStyles(TR, theme => ({
     },
   },
 }));
+
+export const TableRowWithoutBorder = withStyles(TR, theme => ({
+  root: {
+    '&:nth-child(2n) .MuiTableCell-root': {
+      backgroundColor: '#F2F3F7',
+    },
+    '& .MuiButton-root': {
+      textTransform: 'none',
+      fontSize: 14,
+    },
+    '&.MuiTableRow-head': {
+      borderBottom: `none`,
+    },
+  },
+}));

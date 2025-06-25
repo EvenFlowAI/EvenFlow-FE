@@ -32,3 +32,9 @@ export const DenseTableWithPadding = withStyles(StyledTable, {
     },
   },
 });
+
+export const DemandTableWithoutBorder = withStyles(StyledTable, theme => ({
+  root: {
+    border: 'none',
+  },
+}));
