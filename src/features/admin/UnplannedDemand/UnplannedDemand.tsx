@@ -14,8 +14,8 @@ import {
 } from '../../../store/reducers/demandSegments/types';
 import UnplannedDemandEditing from './UnplannedDemandEditing/UnplannedDemandEditing';
 import { remapSegments } from './utils';
-import { DemandTable } from '../../../components/styled/DemandTable';
-import { TableRow } from '../../../components/styled/TableRow';
+import { DemandTableWithoutBorder } from '../../../components/styled/DemandTable';
+import { TableRow, TableRowWithoutBorder } from '../../../components/styled/TableRow';
 import { TableCell } from '../../../components/styled/TableCell';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useSelectedPod } from '../../../hooks/useSelectedPod/useSelectedPod';
@@ -177,9 +177,9 @@ export const UnplannedDemand = () => {
       </div>
       {!isEdit ? (
         <>
-          <DemandTable>
+          <DemandTableWithoutBorder>
             <TableHead>
-              <TableRow>
+              <TableRowWithoutBorder>
                 <TableCell>Day</TableCell>
                 <TableCell>Appointment Capacity</TableCell>
                 <TableCell>Production capacity</TableCell>
@@ -196,7 +196,7 @@ export const UnplannedDemand = () => {
                     />
                   </TableCell>
                 ) : null}
-              </TableRow>
+              </TableRowWithoutBorder>
             </TableHead>
             <TableBody>
               {dayjs.weekdays().map((d, idx) => {
@@ -265,7 +265,7 @@ export const UnplannedDemand = () => {
                 );
               })}
             </TableBody>
-          </DemandTable>
+          </DemandTableWithoutBorder>
         </>
       ) : (
         <UnplannedDemandEditing setEdit={setEdit} isEdit={isEdit} editingElement={editingElement} />
