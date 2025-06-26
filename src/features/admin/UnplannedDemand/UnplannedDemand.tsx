@@ -262,6 +262,8 @@ export const UnplannedDemand = () => {
                         ) : null}
                       </p>
                     </TableCell>
+                    {/* empty column to continue row styles */}
+                    {isEditOverbooking ? <TableCell></TableCell> : null}
                   </TableRow>
                 );
               })}
