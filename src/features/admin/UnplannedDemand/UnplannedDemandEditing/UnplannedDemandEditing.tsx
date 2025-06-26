@@ -5,7 +5,10 @@ import {
 } from '../../../../store/reducers/demandSegments/types';
 import UnplannedDemandSlots from '../UnplannedDemandSlots/UnplannedDemandSlots';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeUnplannedSlots } from '../../../../store/reducers/demandSegments/actions';
+import {
+  changeUnplannedSlots,
+  loadDemandCapacity,
+} from '../../../../store/reducers/demandSegments/actions';
 import { RootState } from '../../../../store/rootReducer';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
 import { Divider } from '@mui/material';
@@ -60,6 +63,9 @@ const UnplannedDemandEditing: React.FC<
   const onSuccess = () => {
     showMessage('Unplanned Demand Updated');
     handleCancel();
+    if (selectedSC) {
+      dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id));
+    }
   };
 
   const handleSave = () => {

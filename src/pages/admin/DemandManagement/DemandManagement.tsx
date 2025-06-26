@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
 import { TabContext, TabPanel } from '@mui/lab';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
-import { capacityManagementRoot } from '../../../utils/constants';
+import { capacityManagementRoot, demandManagementRoot } from '../../../utils/constants';
 import { TabList } from '../../../components/styled/Tabs';
 import { Tab } from '@mui/material';
 import DemandPrediction from '../../../features/admin/DemandPrediction/DemandPrediction';
+import RoPredictionParameters from '../../../features/admin/RoPredictionParameters/RoPredictionParameters';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/rootReducer';
+import { OverbookingFactor } from '../../../features/admin/OverbookingFactor/OverbookingFactor';
+import { UnplannedDemand } from '../../../features/admin/UnplannedDemand/UnplannedDemand';
+import ProbabilityApproach from '../../../features/admin/ProbabilityApproach/ProbabilityApproach';
 
 const DemandManagement = () => {
   const [selectedTab, setTab] = useState<string>('0');
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = (e: React.ChangeEvent<{}> | null, tab: string) => {
     setTab(tab);
   };
+  const { localTab } = useSelector((state: RootState) => state.adminPanel);
 
   return (
     <TabContext value={selectedTab}>
@@ -23,12 +30,20 @@ const DemandManagement = () => {
       >
         <Tab label="Demand Prediction" value="0" />
         <Tab label="Demand Adjustments" value="1" />
+        <Tab label="RO Prediction Parameters" value="2" />
       </TabList>
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="0">
-        <DemandPrediction />
+        {localTab === '2' ? (
+          <ProbabilityApproach />
+        ) : (
+          <DemandPrediction handleTabChange={handleTabChange} />
+        )}
       </TabPanel>
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="1">
-        <div />
+        <UnplannedDemand />
+      </TabPanel>
+      <TabPanel style={{ width: '100%', padding: '24px 0' }} value="2">
+        <RoPredictionParameters />
       </TabPanel>
     </TabContext>
   );

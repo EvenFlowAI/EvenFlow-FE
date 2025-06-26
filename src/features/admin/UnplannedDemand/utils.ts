@@ -9,7 +9,6 @@ import dayjs from 'dayjs';
 export const remapSegments = (sl: IUnplannedDemand[]): IUnplannedDemand[] => {
   const blankDemand: IUnplannedDemand = {
     day: EDay.Sunday,
-    historicalWalkInScheduleBlocks: 0,
     optimizerSetting: 0,
     serviceCenterId: 0,
   };

@@ -313,7 +313,12 @@ export const loadConsultantsForCloning =
   };
 
 export const loadConsultantsForUpdating =
-  (id: string, serviceTypeOptionId: number | null, appointment: IAppointmentByKey): AppThunk =>
+  (
+    id: string,
+    serviceTypeOptionId: number | null,
+    appointment: IAppointmentByKey,
+    onSuccess?: () => void
+  ): AppThunk =>
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
@@ -362,6 +367,9 @@ export const loadConsultantsForUpdating =
           )
             .then(({ data: { result } }) => {
               dispatch(setConsultants(result));
+              if (onSuccess) {
+                onSuccess();
+              }
               if (!result.length) {
                 dispatch(setAdvisorAvailable(false));
               } else {
@@ -630,15 +638,15 @@ export const loadAncillaryPriceByZip =
 
 export const loadFilteredZip =
   (
-    data: { serviceCenterId: number; search: string },
-    onSuccess?: (list: string[], postalCode: string) => void
+    data: { serviceCenterId: number; search: string; label?: string },
+    onSuccess?: (list: string[], postalCode: string, label?: string) => void
   ): AppThunk =>
   dispatch => {
     dispatch(setAncillaryPriceLoading(true));
     Api.call(Api.endpoints.ZipCodes.GetFiltered, { data })
       .then(result => {
         if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes));
-        if (onSuccess) onSuccess(result.data.zipCodes, data.search);
+        if (onSuccess) onSuccess(result.data.zipCodes, data.search, data.label);
         dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
@@ -1617,8 +1625,11 @@ export const handleAppointmentUpdate =
             );
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
-            dispatch(loadConsultantsForUpdating(id, option ? option.id : null, data));
-            dispatch(updateConsultant(data.advisorId));
+            dispatch(
+              loadConsultantsForUpdating(id, option ? option.id : null, data, () => {
+                dispatch(updateConsultant(data.advisorId));
+              })
+            );
             dispatch(checkCarIsValid());
             setLoadingCar(false);
             dispatch(setAppointmentSaving(false));

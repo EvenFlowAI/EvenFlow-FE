@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableBody, TableHead, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  loadDemandCapacity,
   loadUnplannedDemand,
   loadUnplannedSlots,
 } from '../../../store/reducers/demandSegments/actions';
@@ -13,16 +14,33 @@ import {
 } from '../../../store/reducers/demandSegments/types';
 import UnplannedDemandEditing from './UnplannedDemandEditing/UnplannedDemandEditing';
 import { remapSegments } from './utils';
-import { DemandTable } from '../../../components/styled/DemandTable';
-import { TableRow } from '../../../components/styled/TableRow';
+import { DemandTableWithoutBorder } from '../../../components/styled/DemandTable';
+import { TableRow, TableRowWithoutBorder } from '../../../components/styled/TableRow';
 import { TableCell } from '../../../components/styled/TableCell';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useSelectedPod } from '../../../hooks/useSelectedPod/useSelectedPod';
 import dayjs from 'dayjs';
 import { UnplannedTableCell } from './UnplannedDemandSlots/styles';
+import { useStyles } from './styles';
+import { STextField } from '../AncillaryPriceByDistance/styles';
+import { TForm } from '../OverbookingFactor/types';
+import { initialState } from '../OverbookingFactor/constants';
+import { useMessage } from '../../../hooks/useMessage/useMessage';
+import { useException } from '../../../hooks/useException/useException';
+import {
+  loadOverbookingFactor,
+  setOverbookingFactor,
+} from '../../../store/reducers/optimizationWindows/actions';
+import { SC_UNDEFINED } from '../../../utils/constants';
+import { IOverbookingFactor } from '../../../store/reducers/optimizationWindows/types';
+import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEditBlock';
+import { PodSelector } from '../NavBar/PodSelector/PodSelector';
+import { DForm } from './types';
+import { initialStateByCapacity } from './constants';
 
 export const UnplannedDemand = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
+  const [isEditOverbooking, setEditOverBooking] = useState<boolean>(false);
   const [editingElement, setEditingElement] = useState<IUnplannedDemand | null>(null);
   const { selectedSC } = useSCs();
   const { selectedPod } = useSelectedPod();
@@ -30,6 +48,9 @@ export const UnplannedDemand = () => {
   const unplannedSegments = useSelector(
     (state: RootState) => state.demandSegments.unplannedDemands
   );
+
+  const { classes } = useStyles();
+
   const segments: IUnplannedDemand[] = useMemo(() => {
     return remapSegments(unplannedSegments);
   }, [unplannedSegments]);
@@ -37,6 +58,7 @@ export const UnplannedDemand = () => {
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadUnplannedDemand(selectedSC.id, selectedPod?.id));
+      dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id));
     }
   }, [dispatch, selectedSC, selectedPod]);
 
@@ -59,37 +81,195 @@ export const UnplannedDemand = () => {
     }
   };
 
+  const [saving, setSaving] = useState<boolean>(false);
+  const [form, setForm] = useState<TForm>(initialState);
+  const [demandForm, setDemandForm] = useState<DForm>(initialStateByCapacity);
+  const overbookingList = useSelector(
+    (state: RootState) => state.optimizationWindows.overbookingFactor
+  );
+  const demandCapacity = useSelector((state: RootState) => state.demandSegments.demandCapacity);
+
+  const showMessage = useMessage();
+  const showError = useException();
+
+  useEffect(() => {
+    if (selectedSC) {
+      dispatch(loadOverbookingFactor(selectedSC.id, selectedPod?.id));
+    }
+  }, [selectedSC, selectedPod, dispatch]);
+
+  const setInitialData = useCallback(() => {
+    const nForm = {} as TForm;
+    if (overbookingList.length) {
+      for (let overbookingItem of overbookingList) {
+        nForm[overbookingItem.day] = overbookingItem;
+      }
+      setForm(nForm);
+    } else {
+      setForm(initialState);
+    }
+  }, [overbookingList]);
+
+  const setDemandCapacity = useCallback(() => {
+    const nForm = {} as DForm;
+    if (demandCapacity.length) {
+      for (let item of demandCapacity) {
+        nForm[item.dayOfWeek] = item;
+      }
+      setDemandForm(nForm);
+    } else {
+      setDemandForm(initialStateByCapacity);
+    }
+  }, [demandCapacity]);
+
+  useEffect(() => {
+    setInitialData();
+  }, [overbookingList]);
+
+  useEffect(() => {
+    setDemandCapacity();
+  }, [demandCapacity]);
+
+  const handleCancel = () => {
+    setInitialData();
+    setEditOverBooking(false);
+  };
+
+  const handleChange =
+    (day: EDay) =>
+    ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
+      setForm({ ...form, [day]: { ...form[day], [name]: Number(value) } });
+    };
+
+  const onSuccess = () => {
+    setSaving(false);
+    showMessage('Saved');
+    setEditOverBooking(false);
+    if (selectedSC) {
+      dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id));
+    }
+  };
+
+  const onError = (err: string) => {
+    setSaving(false);
+    showError(err);
+  };
+
+  const handleSave = async () => {
+    if (!selectedSC) {
+      showError(SC_UNDEFINED);
+    } else {
+      setSaving(true);
+      const data: IOverbookingFactor[] = Object.values(form).map(di => ({
+        ...di,
+        serviceCenterId: selectedSC.id,
+        podId: selectedPod?.id,
+        overbookingFactorValue: di.overbookingFactorValue || 0,
+      }));
+      dispatch(setOverbookingFactor(data, onSuccess, onError));
+    }
+  };
+
   return (
     <div style={{ overflowX: 'auto' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <PodSelector individualStyles />
+      </div>
       {!isEdit ? (
-        <DemandTable>
-          <TableHead>
-            <TableRow>
-              <TableCell>Day</TableCell>
-              <TableCell>Historical Walk-in Schedule Blocks</TableCell>
-              <TableCell>Optimizer Setting</TableCell>
-              <TableCell width={200} style={{ textAlign: 'right' }} />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dayjs.weekdays().map((d, idx) => {
-              return (
-                <TableRow key={d}>
-                  <UnplannedTableCell>{d}</UnplannedTableCell>
-                  <UnplannedTableCell>
-                    {segments[idx].historicalWalkInScheduleBlocks}
-                  </UnplannedTableCell>
-                  <UnplannedTableCell>{segments[idx].optimizerSetting || 0}</UnplannedTableCell>
-                  <UnplannedTableCell>
-                    <Button variant="text" color="primary" onClick={() => onEdit(idx)}>
-                      Edit
-                    </Button>
-                  </UnplannedTableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </DemandTable>
+        <>
+          <DemandTableWithoutBorder>
+            <TableHead>
+              <TableRowWithoutBorder>
+                <TableCell>Day</TableCell>
+                <TableCell>Appointment Capacity</TableCell>
+                <TableCell>Production capacity</TableCell>
+                <TableCell>Unplanned Demand</TableCell>
+                <TableCell>Overbooking Factor</TableCell>
+                {isEditOverbooking ? (
+                  <TableCell width="15%" style={{ textAlign: 'right' }}>
+                    <SaveEditBlock
+                      onSave={handleSave}
+                      onEdit={() => setEdit(true)}
+                      onCancel={handleCancel}
+                      isEdit={isEditOverbooking}
+                      isSaving={saving}
+                    />
+                  </TableCell>
+                ) : null}
+              </TableRowWithoutBorder>
+            </TableHead>
+            <TableBody>
+              {dayjs.weekdays().map((d, idx) => {
+                return (
+                  <TableRow key={d}>
+                    <UnplannedTableCell>{d}</UnplannedTableCell>
+                    <UnplannedTableCell>
+                      <span>
+                        {demandForm[idx as EDay].appointmentCapacity
+                          ? demandForm[idx as EDay].appointmentCapacity
+                          : '0'}
+                      </span>
+                    </UnplannedTableCell>
+                    <UnplannedTableCell>
+                      <span>
+                        {demandForm[idx as EDay].productionCapacity
+                          ? demandForm[idx as EDay].productionCapacity
+                          : '0'}
+                      </span>
+                    </UnplannedTableCell>
+                    <UnplannedTableCell>
+                      <p className={classes.overBookingFactorWrapper}>
+                        <span className={classes.overBookingValue}>
+                          {segments[idx].optimizerSetting || 0}
+                        </span>
+                        <Button variant="text" color="primary" onClick={() => onEdit(idx)}>
+                          Edit
+                        </Button>
+                      </p>
+                    </UnplannedTableCell>
+                    <TableCell>
+                      <p className={classes.overBookingFactorWrapper}>
+                        {!isEditOverbooking ? (
+                          <span className={classes.overBookingValue}>
+                            {form[idx as EDay].overbookingFactorValue
+                              ? form[idx as EDay].overbookingFactorValue + '%'
+                              : '0%'}
+                          </span>
+                        ) : (
+                          <STextField
+                            type="number"
+                            inputProps={{
+                              min: 0,
+                            }}
+                            name="overbookingFactorValue"
+                            id="overbookingFactorValue"
+                            value={form[idx as EDay].overbookingFactorValue ?? ''}
+                            onChange={handleChange(idx as EDay)}
+                          />
+                        )}
+                        {!isEditOverbooking ? (
+                          <div className={classes.editOverBooking}>
+                            {' '}
+                            <SaveEditBlock
+                              onSave={handleSave}
+                              isLowerCase={true}
+                              onEdit={() => setEditOverBooking(true)}
+                              onCancel={handleCancel}
+                              isEdit={isEditOverbooking}
+                              isSaving={saving}
+                            />
+                          </div>
+                        ) : null}
+                      </p>
+                    </TableCell>
+                    {/* empty column to continue row styles */}
+                    {isEditOverbooking ? <TableCell></TableCell> : null}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </DemandTableWithoutBorder>
+        </>
       ) : (
         <UnplannedDemandEditing setEdit={setEdit} isEdit={isEdit} editingElement={editingElement} />
       )}

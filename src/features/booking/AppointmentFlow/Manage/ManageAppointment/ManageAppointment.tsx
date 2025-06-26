@@ -157,14 +157,16 @@ export const ManageAppointment: React.FC<
 
   const handleConsultants = async () => {
     if (appointmentByKey) {
-      await dispatch(
+      dispatch(
         loadConsultantsForUpdating(
           id,
           appointmentByKey?.serviceTypeOption ? appointmentByKey?.serviceTypeOption.id : null,
-          appointmentByKey
+          appointmentByKey,
+          () => {
+            dispatch(updateConsultant(appointmentByKey.advisorId));
+          }
         )
       );
-      await dispatch(updateConsultant(appointmentByKey.advisorId));
     }
   };
 
