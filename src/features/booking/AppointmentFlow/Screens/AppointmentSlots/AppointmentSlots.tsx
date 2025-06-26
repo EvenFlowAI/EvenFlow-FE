@@ -246,9 +246,10 @@ export const AppointmentSlots: React.FC<
               dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
             );
           });
-          if (firstAvailableSlot) {
+          if (!firstAvailableSlot) {
+            console.info('Can not assign first available slot for pickUpDropOff');
+          } else {
             dispatch(selectServiceValetAppointment(firstAvailableSlot));
-
             setDate(firstAvailableSlot.date);
           }
         } else {
@@ -257,9 +258,10 @@ export const AppointmentSlots: React.FC<
             const formatted = getClearDate(slot?.date);
             return dayjs(formatted).isAfter(dateWithOffset);
           });
-          if (firstAvailableSlot) {
+          if (!firstAvailableSlot) {
+            console.info('Can not assign first available slot for general');
+          } else {
             dispatch(selectAppointment(firstAvailableSlot));
-
             setDate(firstAvailableSlot.date);
           }
         }
