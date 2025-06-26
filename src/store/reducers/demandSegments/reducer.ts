@@ -1,6 +1,13 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { IDemandSegment, ITimeWindow, IUnplannedDemand, IUnplannedDemandBySlot } from './types';
 import {
+  EDay,
+  IDemandSegment,
+  ITimeWindow,
+  IUnplannedDemand,
+  IUnplannedDemandBySlot,
+} from './types';
+import {
+  getDemandCapacity,
   getDemandSegments,
   getTimeWindow,
   getUnplannedDemand,
@@ -10,6 +17,7 @@ import {
   setUnplannedLoading,
   setUnplannedSlots,
 } from './actions';
+import { DemandCapacityI } from '../../../features/admin/UnplannedDemand/types';
 
 type TState = {
   demandSegmentList: IDemandSegment[];
@@ -17,6 +25,7 @@ type TState = {
   timeWindow: ITimeWindow;
   unplannedDemands: IUnplannedDemand[];
   unplannedSlots: IUnplannedDemandBySlot[];
+  demandCapacity: DemandCapacityI[];
   isSlotsLoading: boolean;
   isRecalculationLoading: boolean;
   isTimeWindowLoading: boolean;
@@ -41,6 +50,7 @@ const initialState: TState = {
     startInHours: 0,
   },
   unplannedDemands: [],
+  demandCapacity: [],
   unplannedSlots: [],
   isSlotsLoading: false,
   isRecalculationLoading: false,
@@ -59,6 +69,9 @@ export const demandSegmentsReducer = createReducer(initialState, builder =>
     })
     .addCase(getUnplannedDemand, (state, { payload }) => {
       return { ...state, unplannedDemands: payload };
+    })
+    .addCase(getDemandCapacity, (state, { payload }) => {
+      return { ...state, demandCapacity: payload };
     })
     .addCase(setUnplannedLoading, (state, { payload }) => {
       return { ...state, isSlotsLoading: payload };

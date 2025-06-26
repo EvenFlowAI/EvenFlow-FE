@@ -12,4 +12,5 @@ export type TextInputProps = {
   spacing?: 'normal' | 'none' | undefined;
   params?: AutocompleteRenderInputParams;
   isLowerCase?: boolean;
+  labelFitContent?: boolean;
 } & InputBaseProps;

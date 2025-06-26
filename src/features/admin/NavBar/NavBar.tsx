@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import {
   AppBar,
   Avatar,
@@ -10,7 +10,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useHistory } from 'react-router-dom';
+import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { getInitials } from '../../../utils/utils';
@@ -60,6 +60,17 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({ sideBarOpened, onOpe
     window.location.reload();
   };
 
+  const { pathname } = useLocation();
+
+  const selectedRoutesForCustomLocation: string[] = [Routes.CapacityManagement.DemandManagement];
+
+  const isCustomLocationRoute = useMemo(() => {
+    for (let route of selectedRoutesForCustomLocation) {
+      if (Boolean(matchPath(pathname, route))) return false;
+    }
+    return true;
+  }, [pathname]);
+
   return (
     <>
       <AppBar ref={ref} className={clsx(classes.root, { [classes.openedRoot]: sideBarOpened })}>
@@ -68,9 +79,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({ sideBarOpened, onOpe
             <MenuIcon />
           </IconButton>
         ) : null}
-        <Toolbar>
-          <PodSelector />
-        </Toolbar>
+        <Toolbar>{isCustomLocationRoute ? <PodSelector /> : null}</Toolbar>
         <Toolbar className={classes.toolbar}>
           <ServiceCenterSelector />
           <Typography className={classes.name} variant="h4">

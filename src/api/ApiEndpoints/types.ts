@@ -43,7 +43,8 @@ export interface IApiEndpoints {
     | 'SetUnplanned'
     | 'GetUnplanned'
     | 'GetUnplannedSlotsByDay'
-    | 'UpdateUnplannedSlots',
+    | 'UpdateUnplannedSlots'
+    | 'GetCapacity',
     TApiEndpoint
   >;
   AppointmentPricing: Record<'GetPriceList', TApiEndpoint>;

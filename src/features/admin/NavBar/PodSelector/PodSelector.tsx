@@ -12,12 +12,12 @@ import { Routes } from '../../../../routes/constants';
 const selectedRoutes: string[] = [
   Routes.CapacityManagement.RequestDifferentiation,
   Routes.CapacityManagement.TimeDifferentiation,
-  Routes.CapacityManagement.AppointmentAllocation,
   Routes.CapacityManagement.OptimizationWindows,
   Routes.BookingFlow.ScreenSettings,
+  Routes.CapacityManagement.DemandManagement,
 ];
 
-export const PodSelector = () => {
+export const PodSelector = ({ individualStyles }: { individualStyles?: boolean }) => {
   const { selectedPod } = useSelectedPod();
   const { shortPodsList: pods } = useSelector((state: RootState) => state.pods);
   const dispatch = useDispatch();
@@ -41,7 +41,19 @@ export const PodSelector = () => {
 
   return (
     <div>
-      <span className={classes.label}>Changes for:</span>
+      <span
+        className={classes.label}
+        style={
+          individualStyles
+            ? {
+                fontSize: '16px',
+                color: '#858585',
+              }
+            : {}
+        }
+      >
+        {individualStyles ? 'Changes for' : 'Changes for:'}
+      </span>
       <Select onChange={handleSelectPod} value={selectedPod?.id || 0} input={<TextField />}>
         <MenuItem value={0}>Service Center</MenuItem>
         {pods.map(p => (

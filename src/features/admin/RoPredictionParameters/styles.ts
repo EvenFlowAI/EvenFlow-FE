@@ -3,13 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 //
 export const useStyles = makeStyles()(() => ({
   laborPerHour: {
-    width: 'fit-content',
-    fontSize: 18,
-    fontWeight: 'bold',
-    background: '#FFFFFF',
-    borderRadius: 3,
-    padding: 16,
-    marginBottom: 30,
+    marginBottom: 20,
   },
   note: {
     display: 'flex',
@@ -26,5 +20,13 @@ export const useStyles = makeStyles()(() => ({
     textDecoration: 'underline',
     marginLeft: 10,
     cursor: 'pointer',
+  },
+  backWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    '&> span': {
+      lineHeight: 'normal',
+    },
   },
 }));

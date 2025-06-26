@@ -34,10 +34,6 @@ export const PERMISSIONS: TRouteRoleMap[] = [
   { route: Routes.Account.Verification, roles: true },
 
   {
-    route: Routes.CapacityManagement.AppointmentAllocation,
-    roles: ['Owner', 'Manager', 'Service Director'],
-  },
-  {
     route: Routes.CapacityManagement.AppointmentValue,
     roles: ['Owner', 'Manager', 'Service Director'],
   },
