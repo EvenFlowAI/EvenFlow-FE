@@ -638,15 +638,15 @@ export const loadAncillaryPriceByZip =
 
 export const loadFilteredZip =
   (
-    data: { serviceCenterId: number; search: string },
-    onSuccess?: (list: string[], postalCode: string) => void
+    data: { serviceCenterId: number; search: string; label?: string },
+    onSuccess?: (list: string[], postalCode: string, label?: string) => void
   ): AppThunk =>
   dispatch => {
     dispatch(setAncillaryPriceLoading(true));
     Api.call(Api.endpoints.ZipCodes.GetFiltered, { data })
       .then(result => {
         if (result?.data?.zipCodes) dispatch(setFilteredZipCodes(result.data.zipCodes));
-        if (onSuccess) onSuccess(result.data.zipCodes, data.search);
+        if (onSuccess) onSuccess(result.data.zipCodes, data.search, data.label);
         dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
