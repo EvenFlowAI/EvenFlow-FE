@@ -218,8 +218,10 @@ export const UnplannedDemand = () => {
                       </span>
                     </UnplannedTableCell>
                     <UnplannedTableCell>
-                      <p className={classes.unplannedDemandWrapper}>
-                        <span>{segments[idx].optimizerSetting || 0}</span>
+                      <p className={classes.overBookingFactorWrapper}>
+                        <span className={classes.overBookingValue}>
+                          {segments[idx].optimizerSetting || 0}
+                        </span>
                         <Button variant="text" color="primary" onClick={() => onEdit(idx)}>
                           Edit
                         </Button>
