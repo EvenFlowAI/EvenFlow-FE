@@ -28,14 +28,16 @@ export const ServiceCategoriesPage = () => {
   const { selectedSC } = useSCs();
 
   useEffect(() => {
-    selectedSC && dispatch(loadCategoriesByPage(EServiceType.VisitCenter));
+    if (selectedSC) {
+      dispatch(loadCategoriesByPage(EServiceType.VisitCenter));
+    }
     return () => {
       setTab('0');
       dispatch(setCategoriesPage(0));
     };
   }, [selectedSC]);
 
-  const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = async (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
     const isVisitCenter = visitCenterTabs.includes(tab);
     await dispatch(

@@ -12,7 +12,7 @@ const tabNames = ['Service Advisors', 'Technicians'];
 const EmployeeCapacity = () => {
   const [selectedTab, setTab] = useState<string>('0');
 
-  const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = async (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
   };
   return (

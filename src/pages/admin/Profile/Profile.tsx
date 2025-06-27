@@ -24,7 +24,7 @@ export const Profile = () => {
     if (currentUser?.role !== 'Owner') setTab('2');
   }, [currentUser, tabs]);
 
-  const handleChangeTab = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleChangeTab = (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
   };
 

@@ -38,7 +38,7 @@ const MobileService = () => {
     { id: '4', label: 'Convenience Fees', component: <AncillaryPrice /> },
   ];
 
-  const handleTabChange = (e: any, value: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, value: string) => {
     selectTab(value);
   };
 

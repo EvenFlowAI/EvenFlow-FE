@@ -21,7 +21,7 @@ export const AppointmentAllocation = () => {
     };
   }, []);
 
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, tab: string) => {
     dispatch(setAllocationTab(tab));
   };
 

@@ -17,7 +17,7 @@ const ApplicationVehicles = () => {
   const [tab, setTab] = useState<string>('0');
   const dispatch = useDispatch();
 
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => setTab(tab);
+  const handleTabChange = (e: React.SyntheticEvent, tab: string) => setTab(tab);
 
   useEffect(() => {
     dispatch(loadAllGlobalMakes());

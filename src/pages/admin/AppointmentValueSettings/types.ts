@@ -6,7 +6,7 @@ export type TTab = {
   component: React.ComponentType<
     React.PropsWithChildren<
       React.PropsWithChildren<{
-        onTabChange?: (e: any, tab: string) => void;
+        onTabChange?: (e: React.SyntheticEvent, tab: string) => void;
       }>
     >
   >;

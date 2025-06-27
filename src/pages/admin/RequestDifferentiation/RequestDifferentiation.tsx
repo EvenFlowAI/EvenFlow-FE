@@ -33,7 +33,7 @@ const RequestDifferentiation = () => {
     { id: '5', label: 'End of Warranty', component: <EndOfWarranty /> },
   ];
 
-  const handleTabChange = (e: any, value: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, value: string) => {
     selectTab(value);
   };
 

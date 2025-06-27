@@ -43,10 +43,10 @@ export const ServicePricingSettings = () => {
   const showError = useException();
   const showMessage = useMessage();
 
-  const handleTabChange = (e: any, value: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, value: string) => {
     selectTab(value);
   };
-  const handlePricingOptChange = async (e: any, checked: boolean) => {
+  const handlePricingOptChange = async (e: React.SyntheticEvent, checked: boolean) => {
     if (selectedSC) {
       try {
         setSaving(true);
@@ -68,7 +68,9 @@ export const ServicePricingSettings = () => {
   };
 
   const onUpdateMaxPriceClick = () => {
-    selectedSC && dispatch(updateMaxPrice(selectedSC.id, onSuccessUpdate, onErrorUpdate));
+    if (selectedSC) {
+      dispatch(updateMaxPrice(selectedSC.id, onSuccessUpdate, onErrorUpdate));
+    }
   };
 
   const actions = (

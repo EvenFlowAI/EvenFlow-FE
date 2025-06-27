@@ -7,7 +7,7 @@ type TStyleProps = {
 
 const Title = styled('h4', {
   shouldForwardProp: prop => prop !== 'nPd',
-})<TStyleProps>(({ theme, nPd }) => ({
+})<TStyleProps>(({ nPd }) => ({
   fontSize: 16,
   fontWeight: 'bold',
   textTransform: 'uppercase',

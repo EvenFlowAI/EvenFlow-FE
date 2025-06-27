@@ -36,7 +36,7 @@ import { loadPodsShort } from '../../../store/reducers/pods/actions';
 const DemandPredictionTable = ({
   handleTabChange,
 }: {
-  handleTabChange: (e: React.ChangeEvent<{}> | null, tab: string) => void;
+  handleTabChange: (e: React.SyntheticEvent | null, tab: string) => void;
 }) => {
   const { isLoading, settings } = useSelector((state: RootState) => state.demandManagement);
   const { selectedSC } = useSCs();

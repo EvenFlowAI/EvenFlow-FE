@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { TabContext, TabPanel } from '@mui/lab';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
-import { capacityManagementRoot, demandManagementRoot } from '../../../utils/constants';
+import { capacityManagementRoot } from '../../../utils/constants';
 import { TabList } from '../../../components/styled/Tabs';
 import { Tab } from '@mui/material';
 import DemandPrediction from '../../../features/admin/DemandPrediction/DemandPrediction';
 import RoPredictionParameters from '../../../features/admin/RoPredictionParameters/RoPredictionParameters';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
-import { OverbookingFactor } from '../../../features/admin/OverbookingFactor/OverbookingFactor';
 import { UnplannedDemand } from '../../../features/admin/UnplannedDemand/UnplannedDemand';
 import ProbabilityApproach from '../../../features/admin/ProbabilityApproach/ProbabilityApproach';
 
 const DemandManagement = () => {
   const [selectedTab, setTab] = useState<string>('0');
-  const handleTabChange = (e: React.ChangeEvent<{}> | null, tab: string) => {
+  const handleTabChange = (e: React.SyntheticEvent | null, tab: string) => {
     setTab(tab);
   };
   const { localTab } = useSelector((state: RootState) => state.adminPanel);
