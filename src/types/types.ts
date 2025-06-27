@@ -11,7 +11,6 @@ import { Dayjs } from 'dayjs';
 import { TTimePeriod } from '../store/reducers/schedules/types';
 import { TDayType } from '../features/admin/AvailableStaffCalendar/types';
 import { EServiceType } from '../store/reducers/appointmentFrameReducer/types';
-import { ClientId } from '../config/tokens';
 
 export type LinkType = {
   to: string;
@@ -47,7 +46,6 @@ export interface IRefreshTokenData {
 export interface ICredentials {
   email: string;
   password: string;
-  ClientId: string;
 }
 
 export enum LocalTokens {
@@ -55,11 +53,6 @@ export enum LocalTokens {
   refreshToken = 'rt',
   suToken = 'st',
   sessionId = 'sessionId',
-}
-
-export enum SelfCustomTokens {
-  authToken = 'at',
-  refreshToken = 'rt',
 }
 
 export interface ITimeSpan {
