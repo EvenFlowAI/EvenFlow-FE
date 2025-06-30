@@ -37,12 +37,14 @@ import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEdi
 import { PodSelector } from '../NavBar/PodSelector/PodSelector';
 import { DForm } from './types';
 import { initialStateByCapacity } from './constants';
+import { Loading } from '../../../components/wrappers/Loading/Loading';
 
 export const UnplannedDemand = () => {
   const [isEdit, setEdit] = useState<boolean>(false);
   const [isEditOverbooking, setEditOverBooking] = useState<boolean>(false);
   const [editingElement, setEditingElement] = useState<IUnplannedDemand | null>(null);
   const { selectedSC } = useSCs();
+  const [loading, setLoading] = useState(false);
   const { selectedPod } = useSelectedPod();
   const dispatch = useDispatch();
   const unplannedSegments = useSelector(
@@ -55,10 +57,19 @@ export const UnplannedDemand = () => {
     return remapSegments(unplannedSegments);
   }, [unplannedSegments]);
 
+  const loadingStart = () => {
+    setLoading(true)
+  }
+
+  const loadingStop = () => {
+    setLoading(false)
+  }
+
   useEffect(() => {
     if (selectedSC) {
-      dispatch(loadUnplannedDemand(selectedSC.id, selectedPod?.id));
-      dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id));
+      loadingStart()
+      dispatch(loadUnplannedDemand(selectedSC.id, selectedPod?.id, loadingStop));
+      dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id, loadingStop));
     }
   }, [dispatch, selectedSC, selectedPod]);
 
@@ -147,6 +158,7 @@ export const UnplannedDemand = () => {
     setEditOverBooking(false);
     if (selectedSC) {
       dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id));
+      loadingStop()
     }
   };
 
@@ -176,100 +188,104 @@ export const UnplannedDemand = () => {
         <PodSelector individualStyles />
       </div>
       {!isEdit ? (
-        <>
-          <DemandTableWithoutBorder>
-            <TableHead>
-              <TableRowWithoutBorder>
-                <TableCell>Day</TableCell>
-                <TableCell>Appointment Capacity</TableCell>
-                <TableCell>Production capacity</TableCell>
-                <TableCell>Unplanned Demand</TableCell>
-                <TableCell>Overbooking Factor</TableCell>
-                {isEditOverbooking ? (
-                  <TableCell width="15%" style={{ textAlign: 'right' }}>
-                    <SaveEditBlock
-                      onSave={handleSave}
-                      onEdit={() => setEdit(true)}
-                      onCancel={handleCancel}
-                      isEdit={isEditOverbooking}
-                      isSaving={saving}
-                    />
-                  </TableCell>
-                ) : null}
-              </TableRowWithoutBorder>
-            </TableHead>
-            <TableBody>
-              {dayjs.weekdays().map((d, idx) => {
-                return (
-                  <TableRow key={d}>
-                    <UnplannedTableCell>{d}</UnplannedTableCell>
-                    <UnplannedTableCell>
+        loading ? (
+          <Loading />
+        ) : (
+          <>
+            <DemandTableWithoutBorder>
+              <TableHead>
+                <TableRowWithoutBorder>
+                  <TableCell>Day</TableCell>
+                  <TableCell>Appointment Capacity</TableCell>
+                  <TableCell>Production capacity</TableCell>
+                  <TableCell>Unplanned Demand</TableCell>
+                  <TableCell>Overbooking Factor</TableCell>
+                  {isEditOverbooking ? (
+                    <TableCell width="15%" style={{ textAlign: 'right' }}>
+                      <SaveEditBlock
+                        onSave={handleSave}
+                        onEdit={() => setEdit(true)}
+                        onCancel={handleCancel}
+                        isEdit={isEditOverbooking}
+                        isSaving={saving}
+                      />
+                    </TableCell>
+                  ) : null}
+                </TableRowWithoutBorder>
+              </TableHead>
+              <TableBody>
+                {dayjs.weekdays().map((d, idx) => {
+                  return (
+                    <TableRow key={d}>
+                      <UnplannedTableCell>{d}</UnplannedTableCell>
+                      <UnplannedTableCell>
                       <span>
                         {demandForm[idx as EDay].appointmentCapacity
                           ? demandForm[idx as EDay].appointmentCapacity
                           : '0'}
                       </span>
-                    </UnplannedTableCell>
-                    <UnplannedTableCell>
+                      </UnplannedTableCell>
+                      <UnplannedTableCell>
                       <span>
                         {demandForm[idx as EDay].productionCapacity
                           ? demandForm[idx as EDay].productionCapacity
                           : '0'}
                       </span>
-                    </UnplannedTableCell>
-                    <UnplannedTableCell>
-                      <p className={classes.overBookingFactorWrapper}>
+                      </UnplannedTableCell>
+                      <UnplannedTableCell>
+                        <p className={classes.overBookingFactorWrapper}>
                         <span className={classes.overBookingValue}>
                           {segments[idx].optimizerSetting || 0}
                         </span>
-                        <Button variant="text" color="primary" onClick={() => onEdit(idx)}>
-                          Edit
-                        </Button>
-                      </p>
-                    </UnplannedTableCell>
-                    <TableCell>
-                      <p className={classes.overBookingFactorWrapper}>
-                        {!isEditOverbooking ? (
-                          <span className={classes.overBookingValue}>
+                          <Button variant="text" color="primary" onClick={() => onEdit(idx)}>
+                            Edit
+                          </Button>
+                        </p>
+                      </UnplannedTableCell>
+                      <TableCell>
+                        <p className={classes.overBookingFactorWrapper}>
+                          {!isEditOverbooking ? (
+                            <span className={classes.overBookingValue}>
                             {form[idx as EDay].overbookingFactorValue
                               ? form[idx as EDay].overbookingFactorValue + '%'
                               : '0%'}
                           </span>
-                        ) : (
-                          <STextField
-                            type="number"
-                            inputProps={{
-                              min: 0,
-                            }}
-                            name="overbookingFactorValue"
-                            id="overbookingFactorValue"
-                            value={form[idx as EDay].overbookingFactorValue ?? ''}
-                            onChange={handleChange(idx as EDay)}
-                          />
-                        )}
-                        {!isEditOverbooking ? (
-                          <div className={classes.editOverBooking}>
-                            {' '}
-                            <SaveEditBlock
-                              onSave={handleSave}
-                              isLowerCase={true}
-                              onEdit={() => setEditOverBooking(true)}
-                              onCancel={handleCancel}
-                              isEdit={isEditOverbooking}
-                              isSaving={saving}
+                          ) : (
+                            <STextField
+                              type="number"
+                              inputProps={{
+                                min: 0,
+                              }}
+                              name="overbookingFactorValue"
+                              id="overbookingFactorValue"
+                              value={form[idx as EDay].overbookingFactorValue ?? ''}
+                              onChange={handleChange(idx as EDay)}
                             />
-                          </div>
-                        ) : null}
-                      </p>
-                    </TableCell>
-                    {/* empty column to continue row styles */}
-                    {isEditOverbooking ? <TableCell></TableCell> : null}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </DemandTableWithoutBorder>
-        </>
+                          )}
+                          {!isEditOverbooking ? (
+                            <div className={classes.editOverBooking}>
+                              {' '}
+                              <SaveEditBlock
+                                onSave={handleSave}
+                                isLowerCase={true}
+                                onEdit={() => setEditOverBooking(true)}
+                                onCancel={handleCancel}
+                                isEdit={isEditOverbooking}
+                                isSaving={saving}
+                              />
+                            </div>
+                          ) : null}
+                        </p>
+                      </TableCell>
+                      {/* empty column to continue row styles */}
+                      {isEditOverbooking ? <TableCell></TableCell> : null}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </DemandTableWithoutBorder>
+          </>
+        )
       ) : (
         <UnplannedDemandEditing setEdit={setEdit} isEdit={isEdit} editingElement={editingElement} />
       )}
