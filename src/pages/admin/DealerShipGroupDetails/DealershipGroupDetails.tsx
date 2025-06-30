@@ -53,7 +53,7 @@ export const DealershipGroupDetails = () => {
     dispatch(loadDealershipSCs(id, pageDData));
   }, [id, dispatch, pageDData]);
 
-  const handleChangeTab = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleChangeTab = (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
   };
 

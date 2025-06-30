@@ -20,7 +20,7 @@ import { setSelectedPod } from '../../../../store/reducers/pods/actions';
 
 export const DemandPredictedCell: React.FC<{
   item: IDemandPrediction;
-  handleTabChange: (e: React.ChangeEvent<{}> | null, tab: string) => void;
+  handleTabChange: (e: React.SyntheticEvent | null, tab: string) => void;
 }> = ({ item, handleTabChange }) => {
   const { settings } = useSelector((state: RootState) => state.demandManagement);
   const { shortPodsList } = useSelector((state: RootState) => state.pods);

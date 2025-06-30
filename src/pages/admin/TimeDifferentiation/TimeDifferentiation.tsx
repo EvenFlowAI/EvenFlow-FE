@@ -23,7 +23,7 @@ const tabs: TTab[] = [
 const TimeDifferentiation = () => {
   const [selectedTab, selectTab] = useState<string>('0');
 
-  const handleTabChange = (e: any, value: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, value: string) => {
     selectTab(value);
   };
 

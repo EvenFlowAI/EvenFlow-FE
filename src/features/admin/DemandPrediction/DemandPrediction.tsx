@@ -4,7 +4,7 @@ import DemandPredictionTable from '../DemandPredictionTable/DemandPredictionTabl
 const DemandPrediction = ({
   handleTabChange,
 }: {
-  handleTabChange: (e: React.ChangeEvent<{}> | null, tab: string) => void;
+  handleTabChange: (e: React.SyntheticEvent | null, tab: string) => void;
 }) => {
   return (
     <div>

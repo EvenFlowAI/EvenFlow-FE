@@ -12,7 +12,7 @@ const tabNames = ['Base Schedule Summary', 'Base Schedule by Employee'];
 const EmployeesScheduleSetUp = () => {
   const [selectedTab, setTab] = useState<string>('0');
 
-  const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = async (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
   };
   return (

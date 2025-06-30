@@ -59,7 +59,7 @@ const ServiceValet = () => {
     },
   ];
 
-  const handleTabChange = (e: any, value: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, value: string) => {
     setQuery(QueryTypes.selectedTab, value);
   };
 

@@ -17,7 +17,7 @@ export const VehicleServices = () => {
   const { vehicleServicesTab } = useSelector((state: RootState) => state.adminPanel);
   const dispatch = useDispatch();
 
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, tab: string) => {
     dispatch(setVehicleServicesTab(tab));
   };
 

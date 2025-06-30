@@ -11,7 +11,7 @@ import { MakesModels } from '../../../features/admin/MakesModels/MakesModels';
 export const Vehicles = () => {
   const [selectedTab, setTab] = useState<string>('0');
 
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
   };
 

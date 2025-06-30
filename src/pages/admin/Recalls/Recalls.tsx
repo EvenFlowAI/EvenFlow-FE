@@ -10,7 +10,7 @@ import { capacityManagementRoot } from '../../../utils/constants';
 const Recalls = () => {
   const [selectedTab, setTab] = useState<string>('0');
 
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = (e: React.SyntheticEvent, tab: string) => {
     setTab(tab);
   };
 
