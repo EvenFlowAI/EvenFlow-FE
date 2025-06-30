@@ -12,6 +12,8 @@ const setSelfCustomerToken = () => {
     if (resp.data) {
       sessionStorage.setItem(SelfCustomTokens.authToken, resp.data.accessToken);
       sessionStorage.setItem(SelfCustomTokens.refreshToken, resp.data.refreshToken);
+      // for setting token
+      window.location.reload();
     }
   });
 };
