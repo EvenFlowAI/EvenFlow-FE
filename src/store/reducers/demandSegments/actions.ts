@@ -90,7 +90,7 @@ export const getDemandCapacity = createAction<DemandCapacityI[]>(
   'DemandSegments/getDemandCapacity'
 );
 export const loadUnplannedDemand =
-  (serviceCenterId: number, podId?: number): AppThunk =>
+  (serviceCenterId: number, podId?: number, onSuccess?: () => void): AppThunk =>
   async dispatch => {
     try {
       const { data } = await Api.call<IUnplannedDemand[]>(
@@ -98,21 +98,22 @@ export const loadUnplannedDemand =
         { params: { serviceCenterId, podId } }
       );
       dispatch(getUnplannedDemand(data));
+      if (onSuccess) onSuccess()
     } catch (err) {
       console.log('load unplanned demand err', err);
     }
   };
 
 export const loadDemandCapacity =
-  (serviceCenterId: number, podId?: number): AppThunk =>
+  (serviceCenterId: number, podId?: number, onSuccess?: () => void): AppThunk =>
   async dispatch => {
     try {
       const { data } = await Api.call<DemandCapacityI[]>(
         Api.endpoints.AppointmentAllocation.GetCapacity,
         { params: { serviceCenterId, podId } }
       );
-      console.log('data', data);
       dispatch(getDemandCapacity(data));
+      if (onSuccess) onSuccess()
     } catch (err) {
       console.log('load unplanned demand err', err);
     }
