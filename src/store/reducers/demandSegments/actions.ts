@@ -98,7 +98,7 @@ export const loadUnplannedDemand =
         { params: { serviceCenterId, podId } }
       );
       dispatch(getUnplannedDemand(data));
-      if (onSuccess) onSuccess()
+      if (onSuccess) onSuccess();
     } catch (err) {
       console.log('load unplanned demand err', err);
     }
@@ -113,7 +113,7 @@ export const loadDemandCapacity =
         { params: { serviceCenterId, podId } }
       );
       dispatch(getDemandCapacity(data));
-      if (onSuccess) onSuccess()
+      if (onSuccess) onSuccess();
     } catch (err) {
       console.log('load unplanned demand err', err);
     }
