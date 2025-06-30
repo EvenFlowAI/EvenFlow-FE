@@ -183,7 +183,7 @@ export const UnplannedDemand = () => {
   };
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ overflowX: 'auto', overflowY: loading ? 'hidden' : 'auto' }}>
       <div style={{ marginBottom: '20px' }}>
         <PodSelector individualStyles />
       </div>
