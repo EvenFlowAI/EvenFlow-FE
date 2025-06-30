@@ -46,6 +46,7 @@ export interface IRefreshTokenData {
 export interface ICredentials {
   email: string;
   password: string;
+  ClientId: string;
 }
 
 export enum LocalTokens {
@@ -53,6 +54,11 @@ export enum LocalTokens {
   refreshToken = 'rt',
   suToken = 'st',
   sessionId = 'sessionId',
+}
+
+export enum SelfCustomTokens {
+  authToken = 'at',
+  refreshToken = 'rt',
 }
 
 export interface ITimeSpan {

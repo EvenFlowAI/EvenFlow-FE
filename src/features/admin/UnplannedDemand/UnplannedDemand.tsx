@@ -58,16 +58,16 @@ export const UnplannedDemand = () => {
   }, [unplannedSegments]);
 
   const loadingStart = () => {
-    setLoading(true)
-  }
+    setLoading(true);
+  };
 
   const loadingStop = () => {
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (selectedSC) {
-      loadingStart()
+      loadingStart();
       dispatch(loadUnplannedDemand(selectedSC.id, selectedPod?.id, loadingStop));
       dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id, loadingStop));
     }
@@ -158,7 +158,7 @@ export const UnplannedDemand = () => {
     setEditOverBooking(false);
     if (selectedSC) {
       dispatch(loadDemandCapacity(selectedSC.id, selectedPod?.id));
-      loadingStop()
+      loadingStop();
     }
   };
 
@@ -219,24 +219,24 @@ export const UnplannedDemand = () => {
                     <TableRow key={d}>
                       <UnplannedTableCell>{d}</UnplannedTableCell>
                       <UnplannedTableCell>
-                      <span>
-                        {demandForm[idx as EDay].appointmentCapacity
-                          ? demandForm[idx as EDay].appointmentCapacity
-                          : '0'}
-                      </span>
+                        <span>
+                          {demandForm[idx as EDay].appointmentCapacity
+                            ? demandForm[idx as EDay].appointmentCapacity
+                            : '0'}
+                        </span>
                       </UnplannedTableCell>
                       <UnplannedTableCell>
-                      <span>
-                        {demandForm[idx as EDay].productionCapacity
-                          ? demandForm[idx as EDay].productionCapacity
-                          : '0'}
-                      </span>
+                        <span>
+                          {demandForm[idx as EDay].productionCapacity
+                            ? demandForm[idx as EDay].productionCapacity
+                            : '0'}
+                        </span>
                       </UnplannedTableCell>
                       <UnplannedTableCell>
                         <p className={classes.overBookingFactorWrapper}>
-                        <span className={classes.overBookingValue}>
-                          {segments[idx].optimizerSetting || 0}
-                        </span>
+                          <span className={classes.overBookingValue}>
+                            {segments[idx].optimizerSetting || 0}
+                          </span>
                           <Button variant="text" color="primary" onClick={() => onEdit(idx)}>
                             Edit
                           </Button>
@@ -246,10 +246,10 @@ export const UnplannedDemand = () => {
                         <p className={classes.overBookingFactorWrapper}>
                           {!isEditOverbooking ? (
                             <span className={classes.overBookingValue}>
-                            {form[idx as EDay].overbookingFactorValue
-                              ? form[idx as EDay].overbookingFactorValue + '%'
-                              : '0%'}
-                          </span>
+                              {form[idx as EDay].overbookingFactorValue
+                                ? form[idx as EDay].overbookingFactorValue + '%'
+                                : '0%'}
+                            </span>
                           ) : (
                             <STextField
                               type="number"

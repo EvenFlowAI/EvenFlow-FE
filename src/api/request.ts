@@ -1,7 +1,20 @@
 import axios from 'axios';
 import { APIUrl } from '../config/config';
-import { LocalTokens } from '../types/types';
+import { ITokens, LocalTokens, SelfCustomTokens } from '../types/types';
 import { authService } from './AuthService/AuthService';
+import { Api } from './ApiEndpoints/ApiEndpoints';
+import { ClientId } from '../config/tokens';
+
+const setSelfCustomerToken = () => {
+  Api.call<ITokens>(Api.endpoints.Authentications.Anonymous, {
+    data: { ClientId: ClientId },
+  }).then(resp => {
+    if (resp.data) {
+      sessionStorage.setItem(SelfCustomTokens.authToken, resp.data.accessToken);
+      sessionStorage.setItem(SelfCustomTokens.refreshToken, resp.data.refreshToken);
+    }
+  });
+};
 
 // List of endpoints that don't require authentication
 const skipCallIfNoToken = ['/accounts/profile', '/service-centers'];
@@ -17,9 +30,32 @@ export const request = axios.create({
 
 request.interceptors.request.use(request => {
   const sessionId = sessionStorage.getItem(LocalTokens.sessionId);
-  if (sessionId?.length) request.headers['SessionId'] = sessionId;
-  if (skipCallIfNoToken.includes(request.url ?? '') && !authService.getLocalToken()) {
-    return Promise.reject(new Error('Skipping request - no token available'));
+  if (sessionId?.length) {
+    request.headers['SessionId'] = sessionId;
+  }
+
+  const url = request.url ?? '';
+  const isSkippable = skipCallIfNoToken.includes(url);
+
+  const token = authService.getLocalToken();
+  const tokenInLocalStorage = localStorage.getItem(LocalTokens.authToken) != null;
+  const tokenInSessionStorage = sessionStorage.getItem(SelfCustomTokens.authToken) != null;
+
+  if (isSkippable) {
+    if (!tokenInLocalStorage && !tokenInSessionStorage) {
+      // first enter - self booking, if user has not token
+      setSelfCustomerToken();
+      return Promise.reject(
+        new Error('Skipping request - token not set yet (initial self booking)')
+      );
+    }
+
+    if (!tokenInLocalStorage && tokenInSessionStorage) {
+      // second or next requests in self-booking - have been canceled
+      return Promise.reject(new Error('Skipping request - self booking flow'));
+    }
+
+    // if token in localStorage - don't do anything (admin flow)
   }
 
   return request;
