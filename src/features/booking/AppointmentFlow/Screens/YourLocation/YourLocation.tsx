@@ -94,6 +94,11 @@ const YourLocation: React.FC<
     if (!zip && zipCodeValue) {
       setZip(zipCodeValue);
     }
+
+    // for cleaning zipCode if user clicks 'Try another location'
+    if (!zipCodeValue) {
+      setZip('')
+    }
   }, [zipCodeValue]);
 
   useEffect(() => {
@@ -106,6 +111,12 @@ const YourLocation: React.FC<
         )
       );
     }
+
+    // for cleaning address if user clicks 'Try another location'
+    if (!address) {
+      dispatch(setAddress(null))
+    }
+
     if (customerLoadedData?.address?.zipCode && !zipCodeValue) {
       dispatch(
         setZipCode(

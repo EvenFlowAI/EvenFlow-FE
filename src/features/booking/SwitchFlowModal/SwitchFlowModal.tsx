@@ -406,7 +406,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
       <UnavailableServiceModal
         onTryAnotherLocation={onTryAnotherLocation}
         open={isUnavailableServiceOpen}
-        onClose={onUnavailableServiceClose}
+        onClose={onTryAnotherLocation}
         onVisitCenter={onCancel}
         serviceString={t('Pick Up / Drop Off')}
       />
