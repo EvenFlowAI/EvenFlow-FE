@@ -62,8 +62,7 @@ export const UnplannedDemand = () => {
   return (
     <div style={{ overflowX: 'auto' }}>
       {!isEdit ? (
-        <DemandTable>
-          <TableHead>
+        <DemandTable><TableHead>
             <TableRow>
               <TableCell>Day</TableCell>
               <TableCell>Historical Walk-in Schedule Blocks</TableCell>
