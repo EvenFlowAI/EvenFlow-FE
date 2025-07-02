@@ -97,7 +97,7 @@ const YourLocation: React.FC<
 
     // for cleaning zipCode if user clicks 'Try another location'
     if (!zipCodeValue) {
-      setZip('')
+      setZip('');
     }
   }, [zipCodeValue]);
 
@@ -114,7 +114,7 @@ const YourLocation: React.FC<
 
     // for cleaning address if user clicks 'Try another location'
     if (!address) {
-      dispatch(setAddress(null))
+      dispatch(setAddress(null));
     }
 
     if (customerLoadedData?.address?.zipCode && !zipCodeValue) {
