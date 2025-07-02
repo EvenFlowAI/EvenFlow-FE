@@ -133,6 +133,9 @@ const UserLocation: React.FC<TProps> = ({
           );
         }
       });
+    } else {
+      // for making next button inactive if clear address field
+      setAddressValid(false);
     }
   };
 
