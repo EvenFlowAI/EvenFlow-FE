@@ -144,6 +144,7 @@ const YourLocation: React.FC<
     setFormChecked(false);
     dispatch(setAddress(e ?? null));
     dispatch(setZipCode(''));
+    setZip('');
     if (e?.value?.place_id && e?.label) {
       geocodeByPlaceId(e.value.place_id).then(res => {
         const data = parseGeoCode(
@@ -155,6 +156,7 @@ const YourLocation: React.FC<
         if (data.city) dispatch(setCity(data.city));
         if (data.state) dispatch(setPoliticalState(data.state));
         if (data.address) dispatch(setStreetName(data.address));
+
         if (data.postalCode && scProfile) {
           dispatch(
             loadFilteredZip(

@@ -134,7 +134,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   }, [isDateSelectionOn]);
 
   useEffect(() => {
-    const addressIsSelectedByUser = userAddress?.label === address?.label;
+    const addressIsSelectedByUser =
+      userAddress != null && address != null && userAddress.label === address.label;
     const zipIsSelectedByUser = zip === zipCodeValue && zipCodeValue?.length === 5;
     if (open && zipIsSelectedByUser && addressIsSelectedByUser) {
       loadAncillaryPrice(zipCodeValue, address);
