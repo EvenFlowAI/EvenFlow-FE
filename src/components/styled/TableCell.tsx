@@ -10,6 +10,14 @@ export const TableCell = withStyles(TC, {
   },
 });
 
+export const TableCellWithLittlePadding = withStyles(TC, {
+  root: {
+    border: 'none !important',
+    padding: '7px 16px !important',
+    textAlign: 'center',
+  },
+});
+
 export const TableCellLeft = withStyles(TC, {
   root: {
     border: 'none !important',

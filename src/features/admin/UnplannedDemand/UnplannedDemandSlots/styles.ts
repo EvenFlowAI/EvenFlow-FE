@@ -39,3 +39,11 @@ export const UnplannedTableCellLeft = withStyles(TC, {
     textAlign: 'left',
   },
 });
+
+export const UnplannedTableCellWithLittlePadding = withStyles(TC, {
+  root: {
+    border: 'none !important',
+    padding: '7px 16px !important',
+    textAlign: 'center',
+  },
+});

@@ -16,11 +16,14 @@ import UnplannedDemandEditing from './UnplannedDemandEditing/UnplannedDemandEdit
 import { remapSegments } from './utils';
 import { DemandTableWithoutBorder } from '../../../components/styled/DemandTable';
 import { TableRow, TableRowWithoutBorder } from '../../../components/styled/TableRow';
-import { TableCell } from '../../../components/styled/TableCell';
+import { TableCell, TableCellWithLittlePadding } from '../../../components/styled/TableCell';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useSelectedPod } from '../../../hooks/useSelectedPod/useSelectedPod';
 import dayjs from 'dayjs';
-import { UnplannedTableCell } from './UnplannedDemandSlots/styles';
+import {
+  UnplannedTableCell,
+  UnplannedTableCellWithLittlePadding,
+} from './UnplannedDemandSlots/styles';
 import { useStyles } from './styles';
 import { STextField } from '../AncillaryPriceByDistance/styles';
 import { TForm } from '../OverbookingFactor/types';
@@ -217,22 +220,22 @@ export const UnplannedDemand = () => {
                 {dayjs.weekdays().map((d, idx) => {
                   return (
                     <TableRow key={d}>
-                      <UnplannedTableCell>{d}</UnplannedTableCell>
-                      <UnplannedTableCell>
+                      <UnplannedTableCellWithLittlePadding>{d}</UnplannedTableCellWithLittlePadding>
+                      <UnplannedTableCellWithLittlePadding>
                         <span>
                           {demandForm[idx as EDay].appointmentCapacity
                             ? demandForm[idx as EDay].appointmentCapacity
                             : '0'}
                         </span>
-                      </UnplannedTableCell>
-                      <UnplannedTableCell>
+                      </UnplannedTableCellWithLittlePadding>
+                      <UnplannedTableCellWithLittlePadding>
                         <span>
                           {demandForm[idx as EDay].productionCapacity
                             ? demandForm[idx as EDay].productionCapacity
                             : '0'}
                         </span>
-                      </UnplannedTableCell>
-                      <UnplannedTableCell>
+                      </UnplannedTableCellWithLittlePadding>
+                      <UnplannedTableCellWithLittlePadding>
                         <p className={classes.overBookingFactorWrapper}>
                           <span className={classes.overBookingValue}>
                             {segments[idx].optimizerSetting || 0}
@@ -241,8 +244,8 @@ export const UnplannedDemand = () => {
                             Edit
                           </Button>
                         </p>
-                      </UnplannedTableCell>
-                      <TableCell>
+                      </UnplannedTableCellWithLittlePadding>
+                      <UnplannedTableCellWithLittlePadding>
                         <p className={classes.overBookingFactorWrapper}>
                           {!isEditOverbooking ? (
                             <span className={classes.overBookingValue}>
@@ -276,9 +279,11 @@ export const UnplannedDemand = () => {
                             </div>
                           ) : null}
                         </p>
-                      </TableCell>
+                      </UnplannedTableCellWithLittlePadding>
                       {/* empty column to continue row styles */}
-                      {isEditOverbooking ? <TableCell></TableCell> : null}
+                      {isEditOverbooking ? (
+                        <TableCellWithLittlePadding></TableCellWithLittlePadding>
+                      ) : null}
                     </TableRow>
                   );
                 })}
