@@ -9,34 +9,40 @@ import {
 import { API } from '../api';
 import { request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';
+import { authChannel } from '../../index';
+import { ADMIN_TOKEN_UPDATED } from '../../config/data';
 
 class AuthService {
   getLocalToken(): string {
     return (
       localStorage.getItem(LocalTokens.authToken) ||
-      sessionStorage.getItem(SelfCustomTokens.authToken) ||
+      localStorage.getItem(SelfCustomTokens.authToken) ||
       ''
     );
-  }
-
-  isSelfCustomerPage() {
-    return sessionStorage.getItem(SelfCustomTokens.authToken);
   }
 
   getRefreshToken(): string {
     return (
       localStorage.getItem(LocalTokens.refreshToken) ||
-      sessionStorage.getItem(SelfCustomTokens.refreshToken) ||
+      localStorage.getItem(SelfCustomTokens.refreshToken) ||
       ''
     );
   }
 
   setTokens({ accessToken, refreshToken, isAdminToken }: ITokensWithLoginFlag): void {
     if (isAdminToken) {
+      // set token for admin
       localStorage.setItem(LocalTokens.authToken, accessToken);
       localStorage.setItem(LocalTokens.refreshToken, refreshToken);
-      sessionStorage.removeItem(SelfCustomTokens.authToken);
-      sessionStorage.removeItem(SelfCustomTokens.refreshToken);
+
+      // remove token for self customer
+      localStorage.removeItem(SelfCustomTokens.authToken);
+      localStorage.removeItem(SelfCustomTokens.refreshToken);
+
+      // send a message for reload all pages with opened self-customer pages
+      authChannel.postMessage({
+        type: ADMIN_TOKEN_UPDATED,
+      });
       return;
     }
 
@@ -45,9 +51,9 @@ class AuthService {
       localStorage.setItem(LocalTokens.authToken, accessToken);
       localStorage.setItem(LocalTokens.refreshToken, refreshToken);
     }
-    if (sessionStorage.getItem(SelfCustomTokens.authToken)) {
-      sessionStorage.setItem(SelfCustomTokens.authToken, accessToken);
-      sessionStorage.setItem(SelfCustomTokens.refreshToken, refreshToken);
+    if (localStorage.getItem(SelfCustomTokens.authToken)) {
+      localStorage.setItem(SelfCustomTokens.authToken, accessToken);
+      localStorage.setItem(SelfCustomTokens.refreshToken, refreshToken);
     }
   }
 
@@ -111,6 +117,13 @@ class AuthService {
     if (suTokens) {
       localStorage.removeItem(LocalTokens.suToken);
       this.setTokens({ ...(JSON.parse(suTokens) as ITokens), isAdminToken: true });
+      authChannel.postMessage({
+        type: ADMIN_TOKEN_UPDATED,
+      });
+    } else {
+      authChannel.postMessage({
+        type: ADMIN_TOKEN_UPDATED,
+      });
     }
     this.refreshRequest();
   }
