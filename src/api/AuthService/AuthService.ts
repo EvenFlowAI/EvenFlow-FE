@@ -31,8 +31,14 @@ class AuthService {
   }
 
   setTokens({ accessToken, refreshToken }: ITokens): void {
-    localStorage.setItem(LocalTokens.authToken, accessToken);
-    localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+    if (localStorage.getItem(LocalTokens.authToken)) {
+      localStorage.setItem(LocalTokens.authToken, accessToken);
+      localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+    }
+    if (sessionStorage.getItem(SelfCustomTokens.authToken)) {
+      sessionStorage.setItem(SelfCustomTokens.authToken, accessToken);
+      sessionStorage.setItem(SelfCustomTokens.refreshToken, refreshToken);
+    }
   }
 
   setDealershipTokens({ accessToken, refreshToken }: ITokens) {
