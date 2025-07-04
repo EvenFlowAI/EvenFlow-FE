@@ -35,6 +35,8 @@ class AuthService {
     if (isAdminToken) {
       localStorage.setItem(LocalTokens.authToken, accessToken);
       localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+      sessionStorage.removeItem(SelfCustomTokens.authToken);
+      sessionStorage.removeItem(SelfCustomTokens.refreshToken);
       return;
     }
 
