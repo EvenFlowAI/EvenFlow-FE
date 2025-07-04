@@ -95,9 +95,12 @@ const UserLocation: React.FC<TProps> = ({
               loadAncillaryPrice(value, userAddress);
             }
           }
+        } else {
+          setZip('');
+          setAddressValid(false);
         }
       } else if (reason === 'clear') {
-        setZip(null);
+        setZip('');
         setAddressValid(false);
       }
     }
@@ -123,6 +126,12 @@ const UserLocation: React.FC<TProps> = ({
           e.value?.structured_formatting?.main_text,
           e.value?.structured_formatting?.secondary_text
         );
+
+        if (!data.postalCode) {
+          setZip('');
+          setAddressValid(false);
+          return;
+        }
 
         if (data.postalCode && scProfile) {
           dispatch(
