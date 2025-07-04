@@ -21,6 +21,7 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import weekday from 'dayjs/plugin/weekday';
 import { ErrorBoundary } from 'react-error-boundary';
 import FallBack from './components/FallBack/FallBack';
+import { ADMIN_TOKEN_UPDATED } from './config/data';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -33,6 +34,14 @@ dayjs.extend(weekday);
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
+export const authChannel = new BroadcastChannel('auth-updates');
+
+// reload self-customer pages when user login or logout as admin
+authChannel.onmessage = event => {
+  if (event.data.type === ADMIN_TOKEN_UPDATED) {
+    window.location.reload();
+  }
+};
 
 root.render(
   <React.StrictMode>

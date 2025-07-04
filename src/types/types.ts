@@ -62,8 +62,8 @@ export enum LocalTokens {
 }
 
 export enum SelfCustomTokens {
-  authToken = 'at',
-  refreshToken = 'rt',
+  authToken = 'at_self',
+  refreshToken = 'rt_self',
 }
 
 export interface ITimeSpan {

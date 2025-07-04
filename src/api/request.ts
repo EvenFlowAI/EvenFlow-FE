@@ -10,8 +10,8 @@ const setSelfCustomerToken = () => {
     data: { ClientId: ClientId },
   }).then(resp => {
     if (resp.data) {
-      sessionStorage.setItem(SelfCustomTokens.authToken, resp.data.accessToken);
-      sessionStorage.setItem(SelfCustomTokens.refreshToken, resp.data.refreshToken);
+      localStorage.setItem(SelfCustomTokens.authToken, resp.data.accessToken);
+      localStorage.setItem(SelfCustomTokens.refreshToken, resp.data.refreshToken);
       // for setting token
       window.location.reload();
     }
@@ -40,11 +40,11 @@ request.interceptors.request.use(request => {
   const isSkippable = skipCallIfNoToken.includes(url);
 
   const token = authService.getLocalToken();
-  const tokenInLocalStorage = localStorage.getItem(LocalTokens.authToken) != null;
-  const tokenInSessionStorage = sessionStorage.getItem(SelfCustomTokens.authToken) != null;
+  const isAdmin = localStorage.getItem(LocalTokens.authToken) != null;
+  const isSelfCustomer = localStorage.getItem(SelfCustomTokens.authToken) != null;
 
   if (isSkippable) {
-    if (!tokenInLocalStorage && !tokenInSessionStorage) {
+    if (!isAdmin && !isSelfCustomer) {
       // first enter - self booking, if user has not token
       setSelfCustomerToken();
       return Promise.reject(
@@ -52,7 +52,7 @@ request.interceptors.request.use(request => {
       );
     }
 
-    if (!tokenInLocalStorage && tokenInSessionStorage) {
+    if (!isAdmin && isSelfCustomer) {
       // second or next requests in self-booking - have been canceled
       return Promise.reject(new Error('Skipping request - self booking flow'));
     }
