@@ -39,6 +39,12 @@ export interface ITokens {
   refreshToken: string;
 }
 
+export interface ITokensWithLoginFlag {
+  accessToken: string;
+  refreshToken: string;
+  isAdminToken?: boolean;
+}
+
 export interface IRefreshTokenData {
   token: string;
 }
@@ -46,7 +52,6 @@ export interface IRefreshTokenData {
 export interface ICredentials {
   email: string;
   password: string;
-  ClientId: string;
 }
 
 export enum LocalTokens {

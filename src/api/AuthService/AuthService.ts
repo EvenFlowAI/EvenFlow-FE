@@ -2,6 +2,7 @@ import {
   ICredentials,
   IRefreshTokenData,
   ITokens,
+  ITokensWithLoginFlag,
   LocalTokens,
   SelfCustomTokens,
 } from '../../types/types';
@@ -30,7 +31,14 @@ class AuthService {
     );
   }
 
-  setTokens({ accessToken, refreshToken }: ITokens): void {
+  setTokens({ accessToken, refreshToken, isAdminToken }: ITokensWithLoginFlag): void {
+    if (isAdminToken) {
+      localStorage.setItem(LocalTokens.authToken, accessToken);
+      localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+      return;
+    }
+
+    // for refresh token
     if (localStorage.getItem(LocalTokens.authToken)) {
       localStorage.setItem(LocalTokens.authToken, accessToken);
       localStorage.setItem(LocalTokens.refreshToken, refreshToken);
@@ -90,7 +98,7 @@ class AuthService {
 
   async login(data: ICredentials) {
     const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, { data });
-    this.setTokens(resp.data);
+    this.setTokens({ ...resp.data, isAdminToken: true });
     this.refreshRequest();
   }
 
@@ -100,7 +108,7 @@ class AuthService {
     const suTokens = localStorage.getItem(LocalTokens.suToken);
     if (suTokens) {
       localStorage.removeItem(LocalTokens.suToken);
-      this.setTokens(JSON.parse(suTokens) as ITokens);
+      this.setTokens({ ...(JSON.parse(suTokens) as ITokens), isAdminToken: true });
     }
     this.refreshRequest();
   }

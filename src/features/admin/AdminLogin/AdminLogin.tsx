@@ -10,14 +10,12 @@ import { ICredentials } from '../../../types/types';
 import { Routes } from '../../../routes/constants';
 import { authService } from '../../../api/AuthService/AuthService';
 import { useException } from '../../../hooks/useException/useException';
-import { ClientId } from '../../../config/tokens';
 
 export const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<ICredentials>({
     email: '',
     password: '',
-    ClientId,
   });
   const showError = useException();
   const history = useHistory();
