@@ -68,7 +68,7 @@ class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getLocalToken();
+    return !!localStorage.getItem(LocalTokens.authToken);
   }
 
   refreshRequest(): void {
