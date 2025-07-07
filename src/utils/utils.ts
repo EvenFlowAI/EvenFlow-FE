@@ -172,6 +172,7 @@ const ServiceCenters = {
   PerformanceKingHonda: 592,
   BurnsHonda: 823,
   WalserToyota: 790,
+  WolfchaseHyundaiDealertrack: 824,
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
@@ -321,6 +322,9 @@ export const getTrackersForParentSite = (id: string): GATrackers[] => {
     if (decodedId === ServiceCenters.WalserToyota) {
       return [{ measurementId: 'G-6X6C6FF8BC' }];
     }
+    if (decodedId === ServiceCenters.WolfchaseHyundaiDealertrack) {
+      return [{ measurementId: 'G-ELP8LE5GW8' }];
+    }
     return [{ measurementId: 'G-DWX0X9CBTT' }];
   } else {
     return [{ measurementId: 'G-LS5EEY1SRM' }];
@@ -376,6 +380,7 @@ export const getTrackerById = (id: string): string => {
     if (decodedId === ServiceCenters.PerformanceKingHonda) return 'G-VDWW9J4VCF';
     if (decodedId === ServiceCenters.BurnsHonda) return 'G-P3GKP7QE4Y';
     if (decodedId === ServiceCenters.WalserToyota) return 'G-6X6C6FF8BC';
+    if (decodedId === ServiceCenters.WolfchaseHyundaiDealertrack) return 'G-ELP8LE5GW8';
     return 'G-DWX0X9CBTT';
   } else {
     return 'G-LS5EEY1SRM';
