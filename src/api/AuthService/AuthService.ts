@@ -105,6 +105,14 @@ class AuthService {
   }
 
   async login(data: ICredentials) {
+    if (sessionStorage.getItem(LocalTokens.authToken)) {
+      sessionStorage.setItem(LocalTokens.authToken, '');
+    }
+
+    if (sessionStorage.getItem(LocalTokens.refreshToken)) {
+      sessionStorage.setItem(LocalTokens.refreshToken, '');
+    }
+
     const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, { data });
     this.setTokens({ ...resp.data, isAdminToken: true });
     this.refreshRequest();
