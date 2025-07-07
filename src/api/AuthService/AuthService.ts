@@ -98,6 +98,9 @@ class AuthService {
     try {
       const { data: tokens } = await API.authentication.dealership(dealershipId);
       this.setDealershipTokens(tokens);
+      authChannel.postMessage({
+        type: ADMIN_TOKEN_UPDATED,
+      });
       this.refreshRequest();
     } catch (e) {
       console.error(e);
