@@ -89,7 +89,15 @@ class AuthService {
       this.setTokens(resp.data);
       this.refreshRequest();
     } catch (e) {
-      this.logout();
+      // for refresh dead token
+      localStorage.removeItem(LocalTokens.authToken);
+      localStorage.removeItem(LocalTokens.refreshToken);
+      localStorage.removeItem(SelfCustomTokens.authToken);
+      localStorage.removeItem(SelfCustomTokens.refreshToken);
+      authChannel.postMessage({
+        type: ADMIN_TOKEN_UPDATED,
+      });
+      window.location.reload();
       console.log('refresh error', e);
     }
   }

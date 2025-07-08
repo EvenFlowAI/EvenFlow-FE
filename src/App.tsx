@@ -17,6 +17,7 @@ import AppRoutes from './routes/AppRoutes/AppRoutes';
 import dayjs from 'dayjs';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
+import { authService } from './api/AuthService/AuthService';
 
 const App = () => {
   const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
