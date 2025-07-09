@@ -36,7 +36,7 @@ const container = document.getElementById('root');
 const root = createRoot(container!);
 export const authChannel = new BroadcastChannel('auth-updates');
 
-// reload self-customer pages when user login or logout as admin
+// tracking when we have to reload the page if user login or logout
 authChannel.onmessage = event => {
   if (event.data.type === ADMIN_TOKEN_UPDATED) {
     window.location.reload();

@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import { Container, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import { useHistory } from 'react-router-dom';
 import { ConfirmModal } from './components/modals/common/ConfirmModal/ConfirmModal';
-import { enqueueSnackbar, SnackbarProvider } from 'notistack';
+import { SnackbarProvider } from 'notistack';
 import { Close } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store/rootReducer';
@@ -14,10 +13,8 @@ import {
 } from './store/reducers/bookingFlowConfig/actions';
 import { TScreen } from './types/types';
 import AppRoutes from './routes/AppRoutes/AppRoutes';
-import dayjs from 'dayjs';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
-import { authService } from './api/AuthService/AuthService';
 
 const App = () => {
   const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
