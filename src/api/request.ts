@@ -4,18 +4,26 @@ import { ITokens, LocalTokens, SelfCustomTokens } from '../types/types';
 import { authService } from './AuthService/AuthService';
 import { Api } from './ApiEndpoints/ApiEndpoints';
 import { ClientId } from '../config/tokens';
+import {
+  getAuthenticationTokenForAdmin,
+  getAuthenticationTokenForSelfCustomer,
+  setAuthenticationTokenForSelfCustomer,
+  setRefreshTokenForSelfCustomer,
+} from './helper';
 
 const setSelfCustomerToken = () => {
   Api.call<ITokens>(Api.endpoints.Authentications.Anonymous, {
     data: { ClientId: ClientId },
-  }).then(resp => {
-    if (resp.data) {
-      localStorage.setItem(SelfCustomTokens.authToken, resp.data.accessToken);
-      localStorage.setItem(SelfCustomTokens.refreshToken, resp.data.refreshToken);
-      // for setting token
-      window.location.reload();
-    }
-  });
+  })
+    .then(resp => {
+      if (resp.data) {
+        setAuthenticationTokenForSelfCustomer(resp.data.accessToken);
+        setRefreshTokenForSelfCustomer(resp.data.refreshToken);
+        // for setting token
+        window.location.reload();
+      }
+    })
+    .catch(err => console.error('Token for self customer page loading error: ', err));
 };
 
 // List of endpoints that don't require authentication
@@ -39,9 +47,8 @@ request.interceptors.request.use(request => {
   const url = request.url ?? '';
   const isSkippable = skipCallIfNoToken.includes(url);
 
-  const token = authService.getLocalToken();
-  const isAdmin = localStorage.getItem(LocalTokens.authToken) != null;
-  const isSelfCustomer = localStorage.getItem(SelfCustomTokens.authToken) != null;
+  const isAdmin = getAuthenticationTokenForAdmin() != null;
+  const isSelfCustomer = getAuthenticationTokenForSelfCustomer() != null;
 
   if (isSkippable) {
     if (!isAdmin && !isSelfCustomer) {

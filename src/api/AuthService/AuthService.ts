@@ -11,50 +11,57 @@ import { request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';
 import { authChannel } from '../../index';
 import { ADMIN_TOKEN_UPDATED } from '../../config/data';
+import {
+  getAuthenticationTokenForAdmin,
+  getAuthenticationTokenForSelfCustomer,
+  getRefreshTokenForAdmin,
+  getRefreshTokenForSelfCustomer,
+  getSuTokens,
+  removeAuthenticationTokenForAdmin,
+  removeAuthenticationTokenForSelfCustomer,
+  removeRefreshTokenForAdmin,
+  removeRefreshTokenForSelfCustomer,
+  removeSuTokens,
+  setAuthenticationTokenForAdmin,
+  setAuthenticationTokenForSelfCustomer,
+  setRefreshTokenForAdmin,
+  setRefreshTokenForSelfCustomer,
+  setSuTokens,
+} from '../helper';
 
 class AuthService {
   getLocalToken(): string {
-    return (
-      localStorage.getItem(LocalTokens.authToken) ||
-      localStorage.getItem(SelfCustomTokens.authToken) ||
-      ''
-    );
+    return getAuthenticationTokenForAdmin() || getAuthenticationTokenForSelfCustomer() || '';
   }
 
   getRefreshToken(): string {
-    return (
-      localStorage.getItem(LocalTokens.refreshToken) ||
-      localStorage.getItem(SelfCustomTokens.refreshToken) ||
-      ''
-    );
+    return getRefreshTokenForAdmin() || getRefreshTokenForSelfCustomer() || '';
   }
 
-  setTokens({ accessToken, refreshToken, isAdminToken }: ITokensWithLoginFlag): void {
-    if (isAdminToken) {
-      // set token for admin
-      localStorage.setItem(LocalTokens.authToken, accessToken);
-      localStorage.setItem(LocalTokens.refreshToken, refreshToken);
-
-      // remove token for self customer
-      localStorage.removeItem(SelfCustomTokens.authToken);
-      localStorage.removeItem(SelfCustomTokens.refreshToken);
-
-      // send a message for reload all pages with opened self-customer pages
-      authChannel.postMessage({
-        type: ADMIN_TOKEN_UPDATED,
-      });
-      return;
+  setTokenForRefresh({ accessToken, refreshToken }: ITokens) {
+    if (getAuthenticationTokenForAdmin()) {
+      setAuthenticationTokenForAdmin(accessToken);
+      setRefreshTokenForAdmin(refreshToken);
     }
+    if (getAuthenticationTokenForSelfCustomer()) {
+      setAuthenticationTokenForSelfCustomer(accessToken);
+      setRefreshTokenForSelfCustomer(refreshToken);
+    }
+  }
 
-    // for refresh token
-    if (localStorage.getItem(LocalTokens.authToken)) {
-      localStorage.setItem(LocalTokens.authToken, accessToken);
-      localStorage.setItem(LocalTokens.refreshToken, refreshToken);
-    }
-    if (localStorage.getItem(SelfCustomTokens.authToken)) {
-      localStorage.setItem(SelfCustomTokens.authToken, accessToken);
-      localStorage.setItem(SelfCustomTokens.refreshToken, refreshToken);
-    }
+  setTokens({ accessToken, refreshToken }: ITokens): void {
+    // set token for admin
+    setAuthenticationTokenForAdmin(accessToken);
+    setRefreshTokenForAdmin(refreshToken);
+
+    // remove token for self-customer, because it is an admin login
+    removeAuthenticationTokenForSelfCustomer();
+    removeRefreshTokenForSelfCustomer();
+
+    // send a message for reload all pages with opened booking/admin-panel
+    authChannel.postMessage({
+      type: ADMIN_TOKEN_UPDATED,
+    });
   }
 
   setDealershipTokens({ accessToken, refreshToken }: ITokens) {
@@ -62,13 +69,13 @@ class AuthService {
       accessToken: this.getLocalToken(),
       refreshToken: this.getRefreshToken(),
     };
-    localStorage.setItem(LocalTokens.suToken, JSON.stringify(tokens));
-    localStorage.setItem(LocalTokens.authToken, accessToken);
-    localStorage.setItem(LocalTokens.refreshToken, refreshToken);
+    setSuTokens(JSON.stringify(tokens));
+    setAuthenticationTokenForAdmin(accessToken);
+    setRefreshTokenForAdmin(refreshToken);
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(LocalTokens.authToken);
+    return !!getAuthenticationTokenForAdmin();
   }
 
   refreshRequest(): void {
@@ -86,19 +93,22 @@ class AuthService {
     try {
       const data: IRefreshTokenData = { token: this.getRefreshToken() };
       const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Refresh, { data });
-      this.setTokens(resp.data);
+      this.setTokenForRefresh(resp.data);
       this.refreshRequest();
     } catch (e) {
       // for refresh dead token
-      localStorage.removeItem(LocalTokens.authToken);
-      localStorage.removeItem(LocalTokens.refreshToken);
-      localStorage.removeItem(SelfCustomTokens.authToken);
-      localStorage.removeItem(SelfCustomTokens.refreshToken);
+      removeAuthenticationTokenForSelfCustomer();
+      removeRefreshTokenForSelfCustomer();
+      removeAuthenticationTokenForAdmin();
+      removeRefreshTokenForAdmin();
+
+      // send a message for reload all pages with opened booking/admin-panel
       authChannel.postMessage({
         type: ADMIN_TOKEN_UPDATED,
       });
+
+      // reload current page
       window.location.reload();
-      console.log('refresh error', e);
     }
   }
 
@@ -106,6 +116,8 @@ class AuthService {
     try {
       const { data: tokens } = await API.authentication.dealership(dealershipId);
       this.setDealershipTokens(tokens);
+
+      // send a message for reload all pages with opened booking/admin-panel
       authChannel.postMessage({
         type: ADMIN_TOKEN_UPDATED,
       });
@@ -116,26 +128,29 @@ class AuthService {
   }
 
   async login(data: ICredentials) {
+    // TODO: IT IS TEMPORARY FIX, FOR CLEAR ALL SESSION STORAGE REGARDING OUR PAST LOGIC, delete it after 15.07.2025
     if (sessionStorage.getItem(LocalTokens.authToken)) {
-      sessionStorage.setItem(LocalTokens.authToken, '');
+      sessionStorage.removeItem(LocalTokens.authToken);
     }
 
     if (sessionStorage.getItem(LocalTokens.refreshToken)) {
-      sessionStorage.setItem(LocalTokens.refreshToken, '');
+      sessionStorage.removeItem(LocalTokens.refreshToken);
     }
 
     const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, { data });
-    this.setTokens({ ...resp.data, isAdminToken: true });
+    this.setTokens(resp.data);
     this.refreshRequest();
   }
 
   logout(): void {
-    localStorage.removeItem(LocalTokens.authToken);
-    localStorage.removeItem(LocalTokens.refreshToken);
-    const suTokens = localStorage.getItem(LocalTokens.suToken);
+    // remove admin tokens
+    removeAuthenticationTokenForAdmin();
+    removeRefreshTokenForAdmin();
+
+    const suTokens = getSuTokens();
     if (suTokens) {
-      localStorage.removeItem(LocalTokens.suToken);
-      this.setTokens({ ...(JSON.parse(suTokens) as ITokens), isAdminToken: true });
+      removeSuTokens();
+      this.setTokens(JSON.parse(suTokens) as ITokens);
       authChannel.postMessage({
         type: ADMIN_TOKEN_UPDATED,
       });
