@@ -6,12 +6,12 @@ import {
   checkCarIsValid,
   setCurrentFrameScreen,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
-import { getMaintenanceList } from '../../../../../utils/utils';
 import { EServiceCategoryPage, IServiceCategory } from '../../../../../api/types';
 import { useTranslation } from 'react-i18next';
 import { checkPodChanged } from '../../../../../store/reducers/appointments/actions';
 import { useException } from '../../../../../hooks/useException/useException';
 import { ServiceNeedsCards } from '../../Screens/ServiceNeedsCards/ServiceNeedsCards';
+import { getMaintenanceList } from '../../helper';
 
 type TProps = {
   onSelect: TArgCallback<TScreen>;

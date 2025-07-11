@@ -120,3 +120,22 @@ export const DealershipsIds: IServiceCenterFlag = {
   Walser: [150],
   TomWoodVW: [217],
 };
+
+export const parentOrigins = {
+  bmwofschererville: 'bmwofschererville',
+  riverviewford: 'riverviewford',
+  scherervilleEvenflow: 'bmw-schererville.evenflow',
+  fremontchryslerdodgejeepcasper: 'fremontchryslerdodgejeepcasper',
+  fremontchryslerdodgejeeprocksprings: 'fremontchryslerdodgejeeprocksprings',
+  janssenchryslerjeepdodge: 'janssenchryslerjeepdodge',
+  janssenfordholdrege: 'janssenfordholdrege',
+  lakepowellford: 'lakepowellford',
+  larnedford: 'morrissmithfordoflarned',
+  performancekingshonda: 'performancekingshonda',
+  performancehondastore: 'performancehondastore',
+  performancelexus: 'performancelexus',
+  performancelexusrivercenter: 'performancelexusrivercenter',
+  performancechryslerjeepcenterville: 'performancechryslerjeepcenterville',
+  performancetoyotastore: 'performancetoyotastore',
+  subaru: 'subaru',
+};

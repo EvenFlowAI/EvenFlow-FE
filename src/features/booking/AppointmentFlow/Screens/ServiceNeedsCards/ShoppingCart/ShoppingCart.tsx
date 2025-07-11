@@ -23,8 +23,8 @@ import { useTranslation } from 'react-i18next';
 import { useStyles } from './styles';
 import { CartItem } from './ShoppingCartItem/ShoppingCartItem';
 import { IMaintenanceItem } from '../../../../../../types/types';
-import { getMaintenanceList } from '../../../../../../utils/utils';
 import { useConfirm } from '../../../../../../hooks/useConfirm/useConfirm';
+import { getMaintenanceList } from '../../../helper';
 
 const ShoppingCart = () => {
   const {

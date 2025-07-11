@@ -10,13 +10,14 @@ import {
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { Edit } from '@mui/icons-material';
 import { List, TitleWrapper, ServiceItem, MessageIconWrapper } from './styles';
-import { getMaintenanceDescription, mergeArrayById } from '../../../../../../utils/utils';
+import { mergeArrayById } from '../../../../../../utils/utils';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { ReactComponent as MessageIcon } from '../../../../../../assets/img/comment_icon.svg';
 import { ReactComponent as MessageIconFilled } from '../../../../../../assets/img/comment_icon_filled.svg';
 import CommentModal from '../../../../../../components/modals/booking/CommentModal/CommentModal';
 import { ISR } from '../../../../../../store/reducers/appointment/types';
+import { getMaintenanceDescription } from '../../../../../../utils/getMaintenanceDescription';
 
 const ServiceRequestsManaging = () => {
   const {

@@ -13,7 +13,7 @@ import {
   setUserType,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { ServiceCard } from './ServiceCard/ServiceCard';
-import { decodeSCID, getMaintenanceList } from '../../../../../utils/utils';
+import { decodeSCID } from '../../../../../utils/utils';
 import { useHistory, useParams } from 'react-router-dom';
 import { EServiceCategoryPage, IServiceCategory } from '../../../../../api/types';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
@@ -32,6 +32,7 @@ import {
 import { Routes } from '../../../../../routes/constants';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { CardsWrapper } from '../../../../../components/wrappers/CardsWrapper/CardsWrapper';
+import { getMaintenanceList } from '../../helper';
 
 type TProps = {
   onSelect: TArgCallback<TScreen>;
