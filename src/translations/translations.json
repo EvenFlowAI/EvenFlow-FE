@@ -376,7 +376,7 @@
       "Which appointment do you wish to manage?": "Which appointment do you wish to manage?",
       "Which appointment do you wish to change or cancel?": "Which appointment do you wish to change or cancel?",
       "and also agree to our Privacy Policy & Terms of Service. Message frequency may vary. Message and data rates apply. Reply STOP to unsubscribe. Text HELP for support.": "and also agree to our Privacy Policy & Terms of Service. Message frequency may vary. Message and data rates apply. Reply STOP to unsubscribe. Text HELP for support.",
-      "to confirm, cancel and reschedule your upcoming service appointment from": "to confirm, cancel and reschedule your upcoming service appointment from",
+      "to confirm, cancel and reschedule your upcoming service appointment from": "to confirm, cancel and reschedule your upcoming service appointment from {{serviceCenterName}}",
       "and also agree to our Privacy Policy & Terms of Service.": "and also agree to our Privacy Policy & Terms of Service."
     }
   },

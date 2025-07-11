@@ -71,7 +71,7 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
         {t('By checking the box, you agree to receive')} <strong>{t('text messages')}</strong>{' '}
         {t('to confirm, cancel and reschedule your upcoming service appointment from', {
           serviceCenterName: scProfile?.name ?? '',
-        })}
+        })}{' '}
         {t(
           'and also agree to our Privacy Policy & Terms of Service. Message frequency may vary. Message and data rates apply. Reply STOP to unsubscribe. Text HELP for support.'
         )}
@@ -93,7 +93,7 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
         {t('By checking the box, you agree to receive')} <strong>{t('emails')}</strong>{' '}
         {t('to confirm, cancel and reschedule your upcoming service appointment from', {
           serviceCenterName: scProfile?.name ?? '',
-        })}
+        })}{' '}
         {t('and also agree to our Privacy Policy & Terms of Service.')}
       </Info>
     </div>
