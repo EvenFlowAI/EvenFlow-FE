@@ -12,7 +12,7 @@ import { PickUpSlotsWrapper } from './styles';
 import { TParsableDate } from '../../../types/types';
 import dayjs from 'dayjs';
 import { useTimeSelectorStyles } from '../../../hooks/styling/useTmeSelectorStyles';
-import { getClearSVDate } from '../../../utils/utils';
+import { getClearSVDate } from '../../../utils/svAppointments';
 
 type TProps = {
   date: TParsableDate;

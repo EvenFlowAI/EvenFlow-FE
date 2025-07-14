@@ -18,7 +18,7 @@ import {
 import { RootState } from '../../../../../store/rootReducer';
 import { useParams } from 'react-router-dom';
 import { EServiceCategoryPage, EServiceCenterName, ILoadedVehicle } from '../../../../../api/types';
-import { checkVin, decodeSCID } from '../../../../../utils/utils';
+import { decodeSCID } from '../../../../../utils/utils';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import { useTranslation } from 'react-i18next';
 import { IEngineType } from '../../../../../store/reducers/vehicleDetails/types';
@@ -35,6 +35,7 @@ import FormWithAutocompletes from './FormWithAutocompletes/FormWithAutocompletes
 import { blankOptions } from './constants';
 import VinCodeInput from './VinCodeInput/VinCodeInput';
 import { enqueueSnackbar } from 'notistack';
+import { checkVin } from '../../../../../utils/svAppointments';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>

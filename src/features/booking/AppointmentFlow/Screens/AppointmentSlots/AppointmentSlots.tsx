@@ -9,11 +9,7 @@ import {
   collectServiceRequestIds,
   decodeSCID,
   getCategories,
-  getClearDate,
-  getClearSVDate,
   mapRecallsForRequest,
-  sortAppointments,
-  sortSVAppointments,
 } from '../../../../../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
@@ -58,6 +54,12 @@ import utc from 'dayjs/plugin/utc';
 import { useException } from '../../../../../hooks/useException/useException';
 import AppointmentFilters from './AppointmentFilters/AppointmentFilters';
 import { useMediaQuery, useTheme } from '@mui/material';
+import {
+  getClearDate,
+  getClearSVDate,
+  sortAppointments,
+  sortSVAppointments,
+} from '../../../../../utils/svAppointments';
 
 dayjs.extend(utc);
 

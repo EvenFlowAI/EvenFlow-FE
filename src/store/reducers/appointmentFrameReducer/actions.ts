@@ -61,7 +61,6 @@ import {
 } from '../../../types/types';
 import {
   collectServiceRequestIds,
-  collectServiceRequestsForConsents,
   decodeSCID,
   getCategories,
   getVehicleData,
@@ -100,6 +99,7 @@ import { API } from '../../../api/api';
 import { Dispatch, SetStateAction } from 'react';
 import { TTransportationData } from '../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
 import { ETransportationType } from '../transportationNeeds/types';
+import { collectServiceRequestsForConsents } from '../../../utils/collectServiceRequestsForConsents';
 
 export const selectService = createAction<IServiceCategory | null>('fAppointment/selectService');
 export const selectSubService = createAction<IServiceCategory | null>(

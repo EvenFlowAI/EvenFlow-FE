@@ -1,10 +1,11 @@
-import { getTrackerById, getTrackersForParentSite } from '../../utils/utils';
 import ReactGA from 'react-ga4';
 import TagManager from 'react-gtm-module';
 import { useEffect } from 'react';
 import { options } from '../../utils/constants';
 import { TReactGATracker } from '../../utils/types';
 import { TArgCallback } from '../../types/types';
+import { getTrackersForParentSite } from '../../utils/getTrackersForParentSite';
+import { getTrackerById } from '../../utils/getTrackerById';
 
 export const useAnalyticsBySCId = (
   id: string,

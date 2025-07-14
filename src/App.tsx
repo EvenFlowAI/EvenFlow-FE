@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import { Container, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { ConfirmModal } from './components/modals/common/ConfirmModal/ConfirmModal';
@@ -98,12 +98,8 @@ const App = () => {
         const APPLICATION_VERSION: string = '1.0.0';
         const APPLICATION_REGION: string = 'us-east-2';
 
-        const awsRum: AwsRum = new AwsRum(
-          APPLICATION_ID,
-          APPLICATION_VERSION,
-          APPLICATION_REGION,
-          config
-        );
+        new AwsRum(APPLICATION_ID, APPLICATION_VERSION, APPLICATION_REGION, config);
+        // eslint-disable-next-line
       } catch (error) {
         // Ignore errors thrown during CloudWatch RUM web client initialization
       }

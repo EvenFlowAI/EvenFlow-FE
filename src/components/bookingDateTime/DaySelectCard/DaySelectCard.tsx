@@ -7,7 +7,7 @@ import { monthDayFormat } from '../../../features/booking/AppointmentFlow/Screen
 import { Date, Day, DayCard } from '../../styled/DayCard';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { getClearDate } from '../../../utils/utils';
+import { getClearDate } from '../../../utils/svAppointments';
 
 dayjs.extend(utc);
 

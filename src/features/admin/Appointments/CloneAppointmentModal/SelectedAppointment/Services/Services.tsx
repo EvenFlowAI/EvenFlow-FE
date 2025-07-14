@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
-import { getServicesForCloning } from '../../../../../../utils/utils';
 import { loadSCProfile } from '../../../../../../store/reducers/appointment/actions';
 import { useSCs } from '../../../../../../hooks/useSCs/useSCs';
+import { getServicesForCloning } from './helper';
 
 const ServicesList = () => {
   const { currentAppointment } = useSelector((state: RootState) => state.appointments);

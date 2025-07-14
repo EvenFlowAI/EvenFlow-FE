@@ -24,22 +24,24 @@ export const autocompleteRender =
   };
 
 export const autocompleteOptionsRender =
+  // eslint-disable-next-line
   (label: (el: any) => string) =>
-  (
-    props: React.HTMLAttributes<HTMLLIElement>,
-    option: any,
-    state: AutocompleteRenderOptionState
-  ) => {
-    return (
-      <li style={{ display: 'flex', alignItems: 'center' }} key={option + new Date()} {...props}>
-        <Checkbox
-          size="small"
-          icon={<CheckBoxOutlineBlank fontSize="small" />}
-          checkedIcon={<CheckBoxOutlined fontSize="small" color="primary" />}
-          style={{ marginRight: 8, padding: 0 }}
-          checked={state.selected}
-        />
-        {label(option)}
-      </li>
-    );
-  };
+    (
+      props: React.HTMLAttributes<HTMLLIElement>,
+      // eslint-disable-next-line
+      option: any,
+      state: AutocompleteRenderOptionState
+    ) => {
+      return (
+        <li style={{ display: 'flex', alignItems: 'center' }} key={option + new Date()} {...props}>
+          <Checkbox
+            size="small"
+            icon={<CheckBoxOutlineBlank fontSize="small" />}
+            checkedIcon={<CheckBoxOutlined fontSize="small" color="primary" />}
+            style={{ marginRight: 8, padding: 0 }}
+            checked={state.selected}
+          />
+          {label(option)}
+        </li>
+      );
+    };

@@ -3,9 +3,9 @@ build/
 dist/
 .idea/
 .vscode/
-deploy-scripts/
-public/
 scripts/
+.eslintrc.js
+
 src/api
 src/assets
 src/components
@@ -16,9 +16,3 @@ src/routes
 src/store
 src/theme
 src/types
-src/utils
-src/App.test.tsx
-src/App.tsx
-src/serviceWorker.ts
-.eslintrc.js
-.eslintignore

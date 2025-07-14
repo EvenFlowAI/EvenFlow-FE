@@ -3,7 +3,7 @@ import ReactGA from 'react-ga4';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { concatAddress, getMaintenanceDescription } from '../../../../../utils/utils';
+import { concatAddress } from '../../../../../utils/utils';
 import { TArgCallback } from '../../../../../types/types';
 import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import { useTranslation } from 'react-i18next';
@@ -25,6 +25,7 @@ import {
 import dayjs from 'dayjs';
 import { ESettingType } from '../../../../../store/reducers/generalSettings/types';
 import { EPricingDisplayType } from '../../../../../store/reducers/pricingSettings/types';
+import { getMaintenanceDescription } from '../../../../../utils/getMaintenanceDescription';
 
 type TProps = {
   onUpdateAppointment: TArgCallback<ILoadedVehicle>;
