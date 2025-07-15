@@ -11,7 +11,7 @@ import {
   loadBookingFlowConfig,
   setConfiguration,
 } from './store/reducers/bookingFlowConfig/actions';
-import { TScreen } from './types/types';
+import { TScreen } from './types/screens';
 import AppRoutes from './routes/AppRoutes/AppRoutes';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';

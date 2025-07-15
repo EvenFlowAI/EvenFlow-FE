@@ -164,6 +164,7 @@ export const updatePartsAvailability =
   (
     serviceCenterId: number,
     data: TUpdateRecall[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>

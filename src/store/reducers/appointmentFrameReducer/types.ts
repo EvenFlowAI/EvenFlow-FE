@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import {
   EMaintenanceOptionType,
   IAddressData,
@@ -18,7 +20,8 @@ import {
   IServiceRequestPrice,
   TRecallForRequest,
 } from '../appointment/types';
-import { IRecallByVin, ParsableDate, TParsableDate, TScreen, TView } from '../../../types/types';
+import { IRecallByVin, ParsableDate, TParsableDate, TView } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { IHOODataForm } from '../serviceCenters/types';
 import { IFirstScreenOption } from '../serviceTypes/types';
 import { TPackagePrice } from '../packages/types';
@@ -162,6 +165,8 @@ export type TState = {
   hashKey?: string;
   gap: number | undefined;
   userType: EUserType | undefined;
+  // TODO: fix address type here
+  // eslint-disable-next-line
   address: any;
   politicalState: string;
   city: string;
@@ -303,7 +308,7 @@ export interface ILoadSlotsRequestData {
   date: TParsableDate;
   advisor: IServiceConsultant | null;
   transportation: ITransportation | null;
-  address: any;
+  address: string | null;
   zip: string;
   serviceTypeOption: IFirstScreenOption | null;
 }

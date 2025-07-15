@@ -73,8 +73,6 @@ export interface IBaseEmployeeSchedule {
   finishAt?: string;
 }
 
-export interface IEmployeeScheduledHours extends IBaseEmployeeSchedule {}
-
 export interface IScheduleByDate extends IBaseEmployeeSchedule {
   employeeName: string;
   role: string;
@@ -91,5 +89,5 @@ export interface IUpdateByDateRequest {
   date: TParsableDate;
   serviceCenterId: number;
   isSetForWeek: boolean;
-  employeeScheduledHours: IEmployeeScheduledHours[];
+  employeeScheduledHours: IBaseEmployeeSchedule[];
 }

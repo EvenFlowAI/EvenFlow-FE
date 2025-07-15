@@ -12,7 +12,8 @@ import {
   setAdditionalServicesChosen,
   setCommentsForCategories,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
-import { TArgCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import {
   selectAppointment,
   selectServiceValetAppointment,

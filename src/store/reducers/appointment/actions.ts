@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   APPOINTMENT_STATE_KEY,
@@ -159,6 +162,7 @@ export const loadAppointmentSlots =
     cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: TArgCallback<any>,
     setApiDates?: (newStartDate: string) => void
   ): AppThunk =>
@@ -209,8 +213,12 @@ export const loadAppointmentSlots =
       if (loadCB) {
         loadCB();
       }
-      if (onLoadedCb) onLoadedCb(!Boolean(items.length));
-      searchedDateRange && (await dispatch(setLoadedDateRange(searchedDateRange)));
+      if (onLoadedCb) {
+        onLoadedCb(!items.length);
+      }
+      if (searchedDateRange) {
+        dispatch(setLoadedDateRange(searchedDateRange));
+      }
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
       const searchDate = data.fromDate || data.startDate;
@@ -224,8 +232,12 @@ export const loadAppointmentSlots =
       }
       return res;
     } catch (err) {
-      onError && onError(err);
-      onLoadedCb && onLoadedCb(true);
+      if (onError) {
+        onError(err);
+      }
+      if (onLoadedCb) {
+        onLoadedCb(true);
+      }
       dispatch(setSlotsServiceTypeOptionId(null));
       dispatch(setSlotsTransportationId(null));
       dispatch(setSlotsSearchDate(null));
@@ -319,9 +331,9 @@ export const getDropOffSettings = createAction<IDropOffSettings>('Appointment/Ge
 export const loadServiceValetSlots =
   (
     data: IAppointmentSlotsRequest,
-    cb?: (d: TParsableDate) => void,
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: TArgCallback<any>
   ): AppThunk =>
   dispatch => {
@@ -335,17 +347,27 @@ export const loadServiceValetSlots =
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
         const searchDate = data.fromDate || data.startDate;
         dispatch(setSlotsSearchDate(searchDate as TParsableDate));
-        loadCB && loadCB();
-        if (onLoadedCb) onLoadedCb(!Boolean(items.length));
+        if (loadCB) {
+          loadCB();
+        }
+        if (onLoadedCb) {
+          onLoadedCb(!items.length);
+        }
       })
       .catch(err => {
-        onError && onError(err);
-        onLoadedCb && onLoadedCb(true);
+        if (onError) {
+          onError(err);
+        }
+        if (onLoadedCb) {
+          onLoadedCb(true);
+        }
         dispatch(getServiceValetSlots([]));
         console.log('get service valet slots err', err);
       })
       .finally(() => {
-        loadCB && loadCB();
+        if (loadCB) {
+          loadCB();
+        }
         dispatch(setSlotPodId(null));
         dispatch(setSlotsLoading(false));
       });
@@ -353,6 +375,10 @@ export const loadServiceValetSlots =
 
 export const clearAppointmentSlots = (): AppThunk => (dispatch, getState) => {
   const { appointment, serviceValetAppointment } = getState().appointment;
-  appointment && dispatch(selectAppointment(null));
-  serviceValetAppointment && dispatch(selectServiceValetAppointment(null));
+  if (appointment) {
+    dispatch(selectAppointment(null));
+  }
+  if (serviceValetAppointment) {
+    dispatch(selectServiceValetAppointment(null));
+  }
 };

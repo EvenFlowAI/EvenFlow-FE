@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   EDemandCategory,
@@ -354,22 +356,23 @@ export const loadRoundPriceSetting =
   };
 
 export const changeRoundPriceSetting =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (id: number, isRoundPrice: boolean, onError: TArgCallback<any>): AppThunk =>
-  dispatch => {
-    dispatch(setRoundPriceLoading(true));
-    Api.call(Api.endpoints.ServiceCenters.ChangeRoundPrice, {
-      urlParams: { id },
-      data: { isRoundPrice },
-    })
-      .then(result => {
-        if (result) dispatch(loadRoundPriceSetting(id));
+    dispatch => {
+      dispatch(setRoundPriceLoading(true));
+      Api.call(Api.endpoints.ServiceCenters.ChangeRoundPrice, {
+        urlParams: { id },
+        data: { isRoundPrice },
       })
-      .catch(err => {
-        onError(err);
-        dispatch(setRoundPriceLoading(false));
-        console.log('change round price setting error', err);
-      });
-  };
+        .then(result => {
+          if (result) dispatch(loadRoundPriceSetting(id));
+        })
+        .catch(err => {
+          onError(err);
+          dispatch(setRoundPriceLoading(false));
+          console.log('change round price setting error', err);
+        });
+    };
 
 export const getPackagePricingLevels = createAction<IPackagePricingLevels[]>(
   'PricingSettings/GetPackagePricingSettings'

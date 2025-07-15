@@ -11,7 +11,7 @@ import {
   setTrackerCreated,
   setValueService,
 } from '../../store/reducers/appointmentFrameReducer/actions';
-import { TScreen } from '../../types/types';
+import { TScreen } from '../../types/screens';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes } from '../constants';
 import { useAnalyticsForParentSite } from '../../hooks/useAnalyticsBySCId/useAnalyticsBySCId';

@@ -71,12 +71,16 @@ export const setOverbookingFactor =
     })
       .then(res => {
         if (res) {
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
           dispatch(loadOverbookingFactor(data[0].serviceCenterId, data[0].podId));
         }
       })
       .catch(err => {
-        onError && onError(err);
+        if (onError) {
+          onError(err);
+        }
         console.log('set overbooking factor error', err);
       });
   };
@@ -129,21 +133,22 @@ export const loadMaxPriceDateRange =
   };
 
 export const updateMaxPriceDateRange =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (id: number, daysCount: number, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk =>
-  dispatch => {
-    Api.call(Api.endpoints.ServiceCenters.UpdateMaxPriceDateRange, {
-      urlParams: { id },
-      data: { daysCount },
-    })
-      .then(result => {
-        if (result) dispatch(loadMaxPriceDateRange(id));
-        onSuccess();
+    dispatch => {
+      Api.call(Api.endpoints.ServiceCenters.UpdateMaxPriceDateRange, {
+        urlParams: { id },
+        data: { daysCount },
       })
-      .catch(err => {
-        onError(err);
-        console.log('update max price date range error', err);
-      });
-  };
+        .then(result => {
+          if (result) dispatch(loadMaxPriceDateRange(id));
+          onSuccess();
+        })
+        .catch(err => {
+          onError(err);
+          console.log('update max price date range error', err);
+        });
+    };
 
 export const getWaitListSettings = createAction<IWaitListSettings>(
   'OptimizationWindows/GetWaitListSettings'

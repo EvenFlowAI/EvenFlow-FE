@@ -1,5 +1,6 @@
 import { TForm } from './types';
-import { getOptions, getYearOptions } from '../../../../utils/utils';
+import { getYearOptions } from '../../../../utils/getDate';
+import { getOptions } from '../../../../utils/utils';
 import { TOption } from '../../ServiceBookModal/types';
 import { EUserType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { EDay } from '../../../../store/reducers/demandSegments/types';

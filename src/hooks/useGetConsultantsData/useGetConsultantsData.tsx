@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { EServiceCategoryType } from '../../store/reducers/categories/types';
-import {
-  collectServiceRequestIds,
-  getCategories,
-  decodeSCID,
-  mapRecallsForRequest,
-} from '../../utils/utils';
+import { getCategories, decodeSCID, mapRecallsForRequest } from '../../utils/utils';
+import { collectServiceRequestIds } from '../../utils/collectServiceRequestIds';
 import { IConsultantsRequestData } from '../../api/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { APIUrl } from '../config/config';
-import { ITokens, LocalTokens, SelfCustomTokens } from '../types/types';
+import { ITokens, LocalTokens } from '../types/auth';
 import { authService } from './AuthService/AuthService';
 import { Api } from './ApiEndpoints/ApiEndpoints';
 import { ClientId } from '../config/tokens';

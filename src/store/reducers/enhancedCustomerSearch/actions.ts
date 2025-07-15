@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
+  ICustomerVehicle,
   ICustomerWithPhones,
   ICustomerWithVehicles,
   IRepairHistory,
@@ -24,6 +25,7 @@ import {
   setZipCode,
 } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { AppDispatch } from '../../store';
 
 export const getCustomers = createAction<ICustomerWithPhones[]>('CustomerSearch/GetCustomers');
 export const setCurrentCustomer = createAction<ICustomerWithPhones | null>(
@@ -50,6 +52,7 @@ export const loadCustomersBySearchTerm =
   (
     serviceCenterId: number,
     onSuccess: (count: number) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => void,
     firstName?: string,
     lastName?: string,
@@ -89,6 +92,40 @@ export const loadCustomersBySearchTerm =
     }
   };
 
+const normalizeVehicles = (vehicles: ICustomerVehicle[]) => {
+  const vehiclesData = vehicles.map(item => {
+    const vehicle: ILoadedVehicle = {
+      vin: item.vin,
+      year: item.year,
+      make: item.make,
+      model: item.model,
+      mileage: item.mileage,
+      engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
+      appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
+      hasPlannedAppointment: item.hasPlannedAppointment,
+      customerId: item.customerId,
+      id: item.vehicleId,
+      dmsId: item.vehicleDmsId,
+    };
+    if (item.hasOrders) vehicle.hasRepairOrders = true;
+    return vehicle;
+  });
+  return vehiclesData;
+};
+
+const normalizeAddress = (customer: ICustomerWithVehicles, dispatch: AppDispatch) => {
+  if (customer.address) {
+    const { city, state, zipCode, fullAddress } = customer.address;
+    dispatch(setCity(city ?? ''));
+    dispatch(setPoliticalState(state ?? ''));
+    dispatch(setAddress(fullAddress ?? null));
+    dispatch(setZipCode(zipCode ?? ''));
+    return customer.address;
+  } else {
+    return null;
+  }
+};
+
 export const loadCustomersByPhoneOrEmail =
   (
     serviceCenterId: number,
@@ -108,23 +145,7 @@ export const loadCustomersByPhoneOrEmail =
           const customer = result.data.result;
           const { cellPhone, homePhone, otherPhone, vehicles } = customer;
           const phoneNumber = cellPhone ?? homePhone ?? otherPhone;
-          const vehiclesData = vehicles.map(item => {
-            const vehicle: ILoadedVehicle = {
-              vin: item.vin,
-              year: item.year,
-              make: item.make,
-              model: item.model,
-              mileage: item.mileage,
-              engineTypeId: item.engineTypeId ? +item.engineTypeId : null,
-              appointmentHashKeys: item.appointmentHashKey ? [item.appointmentHashKey] : [],
-              hasPlannedAppointment: item.hasPlannedAppointment,
-              customerId: item.customerId,
-              id: item.vehicleId,
-              dmsId: item.vehicleDmsId,
-            };
-            if (item.hasOrders) vehicle.hasRepairOrders = true;
-            return vehicle;
-          });
+          const vehiclesData = normalizeVehicles(vehicles);
           const data: ICustomerLoadedData = {
             emails: customer.email ? [customer.email] : [],
             firstName: customer.firstName,
@@ -134,18 +155,13 @@ export const loadCustomersByPhoneOrEmail =
             phoneNumbers: phoneNumber ? [phoneNumber] : [],
             vehicles: vehiclesData,
           };
-          if (customer.address) {
-            data.address = customer.address;
-            const { city, state, zipCode, fullAddress } = customer.address;
-            dispatch(setCity(city ?? ''));
-            dispatch(setPoliticalState(state ?? ''));
-            dispatch(setAddress(fullAddress ?? null));
-            dispatch(setZipCode(zipCode ?? ''));
-          }
+          data.address = normalizeAddress(customer, dispatch);
           dispatch(setCustomerLoadedData(data));
           dispatch(saveAppointmentReducer());
           dispatch(setCurrentFrameScreen('carSelection'));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         } else if (onNullResult) onNullResult();
       })
       .catch(err => {

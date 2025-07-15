@@ -66,10 +66,16 @@ export const loadAll = (): AppThunk => (dispatch, getState) => {
     data,
   })
     .then(result => {
-      const { result: dealerships, paging } = result?.data;
-      paging && dispatch(changePaging(paging));
-      dealerships && dispatch(getAll(dealerships));
-      dispatch(loading(false));
+      if (result?.data) {
+        const { result: dealerships, paging } = result.data;
+        if (paging) {
+          dispatch(changePaging(paging));
+        }
+        if (dealerships) {
+          dispatch(getAll(dealerships));
+        }
+        dispatch(loading(false));
+      }
     })
     .catch(err => {
       dispatch(loading(false));
@@ -80,26 +86,27 @@ export const loadAll = (): AppThunk => (dispatch, getState) => {
 export const createDealership: ActionCreator<
   ThunkAction<void, RootState, void, DealershipActions>
 > =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (data: IDealershipGroupForm, onError: TArgCallback<any>, onSuccess: TArgCallback<number>) =>
-  async dispatch => {
-    dispatch(saving(true));
-    const mappedData = {
-      contactPerson: { ...data.contactPerson, phoneNumber: data.contactPerson.personPhoneNumber },
-      dealership: { ...data.dealership, phoneNumber: data.dealership.dealershipPhoneNumber },
+    async dispatch => {
+      dispatch(saving(true));
+      const mappedData = {
+        contactPerson: { ...data.contactPerson, phoneNumber: data.contactPerson.personPhoneNumber },
+        dealership: { ...data.dealership, phoneNumber: data.dealership.dealershipPhoneNumber },
+      };
+      Api.call(Api.endpoints.Dealerships.Create, { data: mappedData })
+        .then(res => {
+          if (res?.data?.id) onSuccess(res.data.id);
+          dispatch(loadAll());
+        })
+        .catch(err => {
+          onError(err);
+          console.log('create dealership error', err);
+        })
+        .finally(() => {
+          dispatch(saving(false));
+        });
     };
-    Api.call(Api.endpoints.Dealerships.Create, { data: mappedData })
-      .then(res => {
-        if (res?.data?.id) onSuccess(res.data.id);
-        dispatch(loadAll());
-      })
-      .catch(err => {
-        onError(err);
-        console.log('create dealership error', err);
-      })
-      .finally(() => {
-        dispatch(saving(false));
-      });
-  };
 
 const _remove = (payload: number): DealershipActions => ({
   type: 'Dealership/Remove',
@@ -140,16 +147,19 @@ export const updateDealership =
   };
 
 export const updateDealershipAvatar =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (avatar: File, id: number, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk =>
-  async dispatch => {
-    try {
-      const data = new FormData();
-      data.append('file', avatar, avatar.name);
-      await Api.call(Api.endpoints.Dealerships.UploadAvatar, { urlParams: { id }, data });
-      onSuccess && onSuccess();
-      dispatch(loadDealershipProfile());
-    } catch (err) {
-      console.log(err);
-      onError(err);
-    }
-  };
+    async dispatch => {
+      try {
+        const data = new FormData();
+        data.append('file', avatar, avatar.name);
+        await Api.call(Api.endpoints.Dealerships.UploadAvatar, { urlParams: { id }, data });
+        if (onSuccess) {
+          onSuccess();
+        }
+        dispatch(loadDealershipProfile());
+      } catch (err) {
+        console.log(err);
+        onError(err);
+      }
+    };

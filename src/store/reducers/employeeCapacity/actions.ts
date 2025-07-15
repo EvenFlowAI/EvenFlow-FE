@@ -73,27 +73,31 @@ export const loadTechniciansCapacity =
   };
 
 export const updateAdvisorsCapacity =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (data: TAdvisorCapacityPayload, onError: TArgCallback<any>, onSuccess?: TCallback): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.EmployeeCapacity.UpdateAdvisorsCapacity, { data })
-      .then(res => {
-        if (res) {
-          dispatch(loadAdvisorsCapacity(data.serviceCenterId));
-          onSuccess && onSuccess();
-        }
-      })
-      .catch(err => {
-        console.log('update advisors capacity error', err);
-        onError(err);
-        dispatch(setLoading(false));
-      });
-  };
+    dispatch => {
+      dispatch(setLoading(true));
+      Api.call(Api.endpoints.EmployeeCapacity.UpdateAdvisorsCapacity, { data })
+        .then(res => {
+          if (res) {
+            dispatch(loadAdvisorsCapacity(data.serviceCenterId));
+            if (onSuccess) {
+              onSuccess();
+            }
+          }
+        })
+        .catch(err => {
+          console.log('update advisors capacity error', err);
+          onError(err);
+          dispatch(setLoading(false));
+        });
+    };
 
 export const updateTechniciansCapacity =
   (
     data: ITechniciansPayload,
     capacityType: ECapacityType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -103,7 +107,9 @@ export const updateTechniciansCapacity =
       .then(res => {
         if (res) {
           dispatch(loadTechniciansCapacity(data.serviceCenterId, capacityType));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {
@@ -118,6 +124,7 @@ export const updateTechniciansCapacityType =
     serviceCenterId: number,
     type: ECapacityType,
     tab: ECapacityType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -129,7 +136,9 @@ export const updateTechniciansCapacityType =
       .then(res => {
         if (res) {
           dispatch(loadTechniciansCapacity(serviceCenterId, tab));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {

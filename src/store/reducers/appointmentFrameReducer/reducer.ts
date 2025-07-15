@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createReducer } from '@reduxjs/toolkit';
 import {
   deleteLastScreen,
@@ -478,7 +480,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         selectedTiming: payload.timing,
         selectedInitialTiming: payload.timing,
         advisor: payload.advisor,
-        isAnyAdvisorSelected: !Boolean(payload.advisor),
+        isAnyAdvisorSelected: payload.advisor,
         transportation: payload.transportation,
         selectedTime: payload.date,
         serviceTypeOption: payload.serviceTypeOption,

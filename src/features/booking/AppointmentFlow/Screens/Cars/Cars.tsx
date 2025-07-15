@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo } from 'react';
 import { CarCard } from './CarCard/CarCard';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
-import { TArgCallback, TCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback, TCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';

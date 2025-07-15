@@ -59,7 +59,7 @@ export const loadDesirability =
   ): AppThunk =>
   async dispatch => {
     dispatch(setLoading(true));
-    let params =
+    const params =
       dayOfWeek !== null ? { serviceCenterId, podId, dayOfWeek } : { serviceCenterId, podId };
     Api.call<IDesirability[]>(Api.endpoints.SlotScoring.GetDesirability, { params })
       .then(({ data }) => {
@@ -68,7 +68,9 @@ export const loadDesirability =
       .catch(err => {
         console.log('err load desirability', err);
         dispatch(getDesirability([]));
-        errorCallback && errorCallback(err);
+        if (errorCallback) {
+          errorCallback(err);
+        }
         dispatch(setLoading(false));
       });
   };
@@ -92,12 +94,16 @@ export const saveDesirability =
     if (dayOfWeek !== null) data.dayOfWeek = dayOfWeek;
     Api.call(Api.endpoints.SlotScoring.SetDesirability, { data })
       .then(() => {
-        callback && callback();
+        if (callback) {
+          callback();
+        }
         dispatch(loadDesirability(serviceCenterId, dayOfWeek, podId));
       })
       .catch(err => {
         console.log(err);
-        errCallback && errCallback(err);
+        if (errCallback) {
+          errCallback(err);
+        }
       });
   };
 

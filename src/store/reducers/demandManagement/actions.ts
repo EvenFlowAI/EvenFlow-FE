@@ -25,7 +25,7 @@ export const updateDemandManagementSettings =
   dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.DemandManagement.UpdateSettings, { data })
-      .then(res => {
+      .then(() => {
         if (data.serviceCenterId) dispatch(loadDemandManagementSettings(data.serviceCenterId));
       })
       .catch(err => {

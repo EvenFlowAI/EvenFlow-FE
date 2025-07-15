@@ -12,7 +12,7 @@ import '../../../features/booking/AppointmentFlow/AppointmentFlow.css';
 import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
 import PaymentScreen from '../../../features/booking/AppointmentFlow/Screens/PaymentScreen/PaymentScreen';
 import OfferProductPage from '../../../features/booking/AppointmentFlow/Screens/OfferProductPage/OfferProductPage';
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { ServiceNeedsCreate } from '../../../features/booking/AppointmentFlow/Create/ServiceNeedsCreate/ServiceNeedsCreate';
 import MaintenanceCreate from '../../../features/booking/AppointmentFlow/Create/MaintenanceCreate/MaintenanceCreate';
 import ConsultantsCreate from '../../../features/booking/AppointmentFlow/Create/ConsultantsCreate/ConsultantsCreate';

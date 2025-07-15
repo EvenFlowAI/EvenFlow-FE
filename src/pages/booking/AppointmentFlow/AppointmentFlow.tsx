@@ -18,7 +18,9 @@ import {
   updatePackageOption,
   updateRecalls,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import { TMobileScreen, TScreen, TView } from '../../../types/types';
+import { TView } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
+import { TMobileScreen } from '../../../types/screens';
 import { encodeSCID } from '../../../utils/utils';
 import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
 import { setTransportationAvailable } from '../../../store/reducers/bookingFlowConfig/actions';

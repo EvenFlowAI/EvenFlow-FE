@@ -115,6 +115,7 @@ export const updateMakes =
     order: IOrder<IGlobalMake>,
     reviewStatus: TReviewOption | null,
     makeIds: number[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>
@@ -220,6 +221,7 @@ export const updateModels =
     reviewStatus: TReviewOption | null,
     makeIds: number[],
     modelIds: number[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>

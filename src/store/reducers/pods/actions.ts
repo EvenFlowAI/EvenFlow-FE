@@ -53,23 +53,26 @@ export const updatePod =
     dispatch(loadPodsSummary(data.serviceCenterId, active));
   };
 export const removePod =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (id: number, active: boolean, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
-  async (dispatch, getState) => {
-    dispatch(setPodsLoading(true));
-    Api.call(Api.endpoints.Pods.Remove, { urlParams: { id } })
-      .then(() => {
-        if (getState().pods.selectedPod?.id === id) {
-          dispatch(setSelectedPod(null));
-        }
-        if (serviceCenterId) {
-          dispatch(loadPodsSummary(serviceCenterId, active));
-        }
-      })
-      .catch(err => {
-        onError && onError(err);
-        dispatch(setPodsLoading(false));
-      });
-  };
+    async (dispatch, getState) => {
+      dispatch(setPodsLoading(true));
+      Api.call(Api.endpoints.Pods.Remove, { urlParams: { id } })
+        .then(() => {
+          if (getState().pods.selectedPod?.id === id) {
+            dispatch(setSelectedPod(null));
+          }
+          if (serviceCenterId) {
+            dispatch(loadPodsSummary(serviceCenterId, active));
+          }
+        })
+        .catch(err => {
+          if (onError) {
+            onError(err);
+          }
+          dispatch(setPodsLoading(false));
+        });
+    };
 
 export const loadPodsShort =
   (serviceCenterId: number): AppThunk =>
@@ -115,43 +118,50 @@ export const loadPodsSummary =
   };
 
 export const deactivatePod =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (active: boolean, id?: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
-  async dispatch => {
-    dispatch(setPodsLoading(true));
-    Api.call(Api.endpoints.Pods.Deactivate, { urlParams: { id } })
-      .then(() => {
-        if (serviceCenterId) {
-          console.log('deactivatePod', serviceCenterId, active);
-          dispatch(loadPodsSummary(serviceCenterId, active));
-        }
-      })
-      .catch(err => {
-        onError && onError(err);
-        dispatch(setPodsLoading(false));
-      });
-  };
+    async dispatch => {
+      dispatch(setPodsLoading(true));
+      Api.call(Api.endpoints.Pods.Deactivate, { urlParams: { id } })
+        .then(() => {
+          if (serviceCenterId) {
+            console.log('deactivatePod', serviceCenterId, active);
+            dispatch(loadPodsSummary(serviceCenterId, active));
+          }
+        })
+        .catch(err => {
+          if (onError) {
+            onError(err);
+          }
+          dispatch(setPodsLoading(false));
+        });
+    };
 
 export const activatePod =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (active: boolean, id?: number, serviceCenterId?: number, onError?: TArgCallback<any>): AppThunk =>
-  async dispatch => {
-    dispatch(setPodsLoading(true));
-    Api.call(Api.endpoints.Pods.Activate, { urlParams: { id } })
-      .then(() => {
-        if (serviceCenterId) {
-          dispatch(loadPodsSummary(serviceCenterId, active));
-        }
-      })
-      .catch(err => {
-        onError && onError(err);
-        dispatch(setPodsLoading(false));
-      });
-  };
+    async dispatch => {
+      dispatch(setPodsLoading(true));
+      Api.call(Api.endpoints.Pods.Activate, { urlParams: { id } })
+        .then(() => {
+          if (serviceCenterId) {
+            dispatch(loadPodsSummary(serviceCenterId, active));
+          }
+        })
+        .catch(err => {
+          if (onError) {
+            onError(err);
+          }
+          dispatch(setPodsLoading(false));
+        });
+    };
 
 export const setPodsOrderIndex =
   (
     serviceCenterId: number,
     serviceBooks: TPodOrder[],
     active: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>

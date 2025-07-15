@@ -11,7 +11,7 @@ import { AppointmentConfirmed } from '../../../features/booking/AppointmentFlow/
 import { IServiceCategory } from '../../../api/types';
 import PaymentScreen from '../../../features/booking/AppointmentFlow/Screens/PaymentScreen/PaymentScreen';
 import OfferProductPage from '../../../features/booking/AppointmentFlow/Screens/OfferProductPage/OfferProductPage';
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import YourLocationManage from '../../../features/booking/AppointmentFlow/Manage/YourLocationManage/YourLocationManage';
 import TransportationsManage from '../../../features/booking/AppointmentFlow/Manage/TransportationsManage/TransportationsManage';
 import AppointmentSlotsManage from '../../../features/booking/AppointmentFlow/Manage/AppointmentSlotsManage/AppointmentSlotsManage';

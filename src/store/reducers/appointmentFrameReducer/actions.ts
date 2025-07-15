@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   EMaintenanceOptionType,
@@ -56,18 +59,17 @@ import {
   TArgCallback,
   TCallback,
   TParsableDate,
-  TScreen,
   TView,
 } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import {
-  collectServiceRequestIds,
   decodeSCID,
   getCategories,
   getVehicleData,
-  getYearOptions,
   mapModelsWithParentNames,
   mapRecallsForRequest,
 } from '../../../utils/utils';
+import { getYearOptions } from '../../../utils/getDate';
 import {
   getAppointmentSlots,
   getServiceValetSlots,
@@ -100,6 +102,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { TTransportationData } from '../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
 import { ETransportationType } from '../transportationNeeds/types';
 import { collectServiceRequestsForConsents } from '../../../utils/collectServiceRequestsForConsents';
+import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
 
 export const selectService = createAction<IServiceCategory | null>('fAppointment/selectService');
 export const selectSubService = createAction<IServiceCategory | null>(
@@ -161,7 +164,7 @@ export const setSelectedServiceTypeOptions = createAction<IFirstScreenOption[]>(
   'fAppointment/SetSelectedServiceTypeOptions'
 );
 export const setZipCode = createAction<string>('fAppointment/SetZipCode');
-export const setAddress = createAction<any>('fAppointment/SetAddress');
+export const setAddress = createAction<string | null>('fAppointment/SetAddress');
 export const setPoliticalState = createAction<string>('fAppointment/SetPoliticalState');
 export const setCity = createAction<string>('fAppointment/SetCity');
 export const setStreetName = createAction<string>('fAppointment/SetStreetName');
@@ -253,7 +256,7 @@ export const setValueServicePartial =
 
 export const loadConsultantsForCloning =
   (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk =>
-  (dispatch, getState) => {
+  dispatch => {
     dispatch(setConsultantsLoading(true));
 
     const {
@@ -264,7 +267,6 @@ export const loadConsultantsForCloning =
       address,
       hashKey,
       serviceCategories,
-      recalls,
       recallsModel,
     } = appointment;
 
@@ -483,11 +485,15 @@ export const loadConsultants =
           .then(({ data: { result } }) => {
             dispatch(setConsultants(result));
             if (!result.length) {
-              onEmptyList && onEmptyList();
+              if (onEmptyList) {
+                onEmptyList();
+              }
               dispatch(setAdvisorAvailable(false));
               dispatch(setAdvisor(null));
             } else {
-              onSuccess && onSuccess(result);
+              if (onSuccess) {
+                onSuccess(result);
+              }
               if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
                 dispatch(
                   setSideBarSteps(
@@ -876,7 +882,9 @@ export const deleteIndService =
     const { serviceCategories, service, subService } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
     const services = selectedSR.filter(sr => sr !== item.id);
-    item.id && dispatch(selectSR(item.id));
+    if (item.id) {
+      dispatch(selectSR(item.id));
+    }
     dispatch(clearAppointmentsWhileCreating());
     const indServiceCategory = allCategories.find(category => {
       return (
@@ -961,7 +969,9 @@ export const deleteRecall =
     const selectedCategories = allCategories.filter(el =>
       serviceCategories.map(item => item.id).includes(el.id)
     );
-    item.campaignNumber && dispatch(setSelectedRecalls(recalls));
+    if (item.campaignNumber) {
+      dispatch(setSelectedRecalls(recalls));
+    }
 
     if (!recalls.length) {
       dispatch(setRecallsAreShown(false));
@@ -1022,7 +1032,9 @@ const findSelectedConsultant =
   (dispatch, getState) => {
     const { consultants } = getState().appointmentFrame;
     const selected = consultants.find(item => item.id === id);
-    selected && dispatch(setAdvisor(selected));
+    if (selected) {
+      dispatch(setAdvisor(selected));
+    }
   };
 
 export const updateConsultant =
@@ -1037,6 +1049,7 @@ export const createOrUpdateAppointment =
   (
     id: number,
     onNext: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (e: any) => void,
     isMobile: boolean,
     isAdmin: boolean
@@ -1226,7 +1239,11 @@ export const checkCarIsValid =
     } else {
       carIsValid = false;
     }
-    carIsValid ? onCarIsValid() : onCarIsInvalid();
+    if (carIsValid) {
+      onCarIsValid();
+    } else {
+      onCarIsInvalid();
+    }
     dispatch(setCarIsValidForUpdate(carIsValid));
   };
 
@@ -1427,114 +1444,115 @@ export const searchForCustomerConsents =
   };
 
 export const cloneAppointment =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (id: number, onNext: TArgCallback<string>, onError: TArgCallback<any>): AppThunk =>
-  (dispatch, getState) => {
-    const { currentAppointment } = getState().appointments;
-    const appointment = getState().appointment;
-    const { selectedRecalls, consultants } = getState().appointmentFrame;
-    if (currentAppointment) {
-      dispatch(setAppointmentSaving(true));
+    (dispatch, getState) => {
+      const { currentAppointment } = getState().appointments;
+      const appointment = getState().appointment;
+      const { selectedRecalls, consultants } = getState().appointmentFrame;
+      if (currentAppointment) {
+        dispatch(setAppointmentSaving(true));
 
-      const vehicle: TVehicleForRequest = {
-        dmsId: currentAppointment?.vehicle?.dmsId ?? null,
-        engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
-        model: currentAppointment?.vehicle?.model ?? null,
-        make: currentAppointment?.vehicle?.make ?? null,
-        year: currentAppointment?.vehicle?.year
-          ? currentAppointment?.vehicle?.year.toString()
-          : null,
-        vin: currentAppointment?.vehicle?.vin ?? '',
-        mileage: currentAppointment?.vehicle?.mileage ?? null,
-        modelDetails: '',
-      };
+        const vehicle: TVehicleForRequest = {
+          dmsId: currentAppointment?.vehicle?.dmsId ?? null,
+          engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
+          model: currentAppointment?.vehicle?.model ?? null,
+          make: currentAppointment?.vehicle?.make ?? null,
+          year: currentAppointment?.vehicle?.year
+            ? currentAppointment?.vehicle?.year.toString()
+            : null,
+          vin: currentAppointment?.vehicle?.vin ?? '',
+          mileage: currentAppointment?.vehicle?.mileage ?? null,
+          modelDetails: '',
+        };
 
-      const driver: TDriverForRequest = {
-        fullName: currentAppointment?.driver?.fullName ?? '',
-        phoneNumber: currentAppointment?.driver?.phoneNumber ?? '',
-        city: currentAppointment?.driver?.city ?? '',
-        email: currentAppointment?.driver?.email ?? null,
-      };
+        const driver: TDriverForRequest = {
+          fullName: currentAppointment?.driver?.fullName ?? '',
+          phoneNumber: currentAppointment?.driver?.phoneNumber ?? '',
+          city: currentAppointment?.driver?.city ?? '',
+          email: currentAppointment?.driver?.email ?? null,
+        };
 
-      const date =
-        currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff &&
-        appointment.serviceValetAppointment
-          ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split('T')[0] || ''
-          : appointment.appointment?.id.split('|')[0] || '';
+        const date =
+          currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+          appointment.serviceValetAppointment
+            ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split('T')[0] || ''
+            : appointment.appointment?.id.split('|')[0] || '';
 
-      const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
-      const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
-      const serviceRequests = currentAppointment?.serviceRequests
-        ? currentAppointment?.serviceRequests.map(el => ({ id: el.id, comment: null }))
-        : [];
-      const maintenancePackageOption = currentAppointment.maintenancePackageOption
-        ? {
-            id: currentAppointment.maintenancePackageOption.id,
-            priceType: currentAppointment.maintenancePackageOption.priceType ?? null,
-          }
-        : null;
+        const appointmentTimingType = EAppointmentTimingType.FirstAvailable;
+        const transportationOptionId = currentAppointment?.transportationOption?.id ?? null;
+        const serviceRequests = currentAppointment?.serviceRequests
+          ? currentAppointment?.serviceRequests.map(el => ({ id: el.id, comment: null }))
+          : [];
+        const maintenancePackageOption = currentAppointment.maintenancePackageOption
+          ? {
+              id: currentAppointment.maintenancePackageOption.id,
+              priceType: currentAppointment.maintenancePackageOption.priceType ?? null,
+            }
+          : null;
 
-      const slot =
-        currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff
-          ? '00:00:00'
-          : appointment.appointment?.id
-            ? appointment.appointment?.id.split('|')[1]
-            : '00:00:00';
-      const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled);
-      const isWaitListSlotSelected =
-        appointment.appointment?.isOverbookingApplied && settingsEnabled;
-      const isVisitCenterAppointment =
-        currentAppointment?.serviceTypeOption?.type === EServiceType.VisitCenter ||
-        !currentAppointment.serviceTypeOption;
+        const slot =
+          currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? '00:00:00'
+            : appointment.appointment?.id
+              ? appointment.appointment?.id.split('|')[1]
+              : '00:00:00';
+        const settingsEnabled = Boolean(appointment.waitListSettings?.isEnabled);
+        const isWaitListSlotSelected =
+          appointment.appointment?.isOverbookingApplied && settingsEnabled;
+        const isVisitCenterAppointment =
+          currentAppointment?.serviceTypeOption?.type === EServiceType.VisitCenter ||
+          !currentAppointment.serviceTypeOption;
 
-      const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
+        const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
 
-      const advisor = consultants.find(el => el.id === currentAppointment?.advisorId)?.id;
+        const advisor = consultants.find(el => el.id === currentAppointment?.advisorId)?.id;
 
-      const data: ICreateAppointmentRequest = {
-        id: currentAppointment.id,
-        appointmentTimingType,
-        customerId: currentAppointment.driver?.id ?? null,
-        driver,
-        vehicle,
-        gmt: dayjs().utcOffset(),
-        offerId: appointment.appointment?.offer?.id ?? null,
-        reminderTypes: currentAppointment.reminderTypes,
-        serviceCenterId: id,
-        advisorId: advisor ? advisor : null,
-        transportationOptionId,
-        slot,
-        serviceRequests,
-        date,
-        serviceCategories: currentAppointment.serviceCategories.map(el => ({
-          id: el.id,
-          comment: el.comment,
-        })),
-        maintenancePackageOption,
-        searchTerm: '',
-        serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
-        recalls: mapRecallsForRequest(selectedRecalls),
-        notes: currentAppointment.notes ?? '',
-        valueServiceOfferIds: [],
-        address: currentAppointment.address ?? null,
-        isWaitlist: Boolean(isWaitlist),
-        customerConsentIds: [],
-        isAppointmentClone: true,
-      };
+        const data: ICreateAppointmentRequest = {
+          id: currentAppointment.id,
+          appointmentTimingType,
+          customerId: currentAppointment.driver?.id ?? null,
+          driver,
+          vehicle,
+          gmt: dayjs().utcOffset(),
+          offerId: appointment.appointment?.offer?.id ?? null,
+          reminderTypes: currentAppointment.reminderTypes,
+          serviceCenterId: id,
+          advisorId: advisor ? advisor : null,
+          transportationOptionId,
+          slot,
+          serviceRequests,
+          date,
+          serviceCategories: currentAppointment.serviceCategories.map(el => ({
+            id: el.id,
+            comment: el.comment,
+          })),
+          maintenancePackageOption,
+          searchTerm: '',
+          serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
+          recalls: mapRecallsForRequest(selectedRecalls),
+          notes: currentAppointment.notes ?? '',
+          valueServiceOfferIds: [],
+          address: currentAppointment.address ?? null,
+          isWaitlist: Boolean(isWaitlist),
+          customerConsentIds: [],
+          isAppointmentClone: true,
+        };
 
-      Api.call<ICreateAppointmentResp>(Api.endpoints.Appointments.Create, {
-        data,
-        urlParams: { id: currentAppointment.hashKey },
-      })
-        .then(({ data }) => {
-          dispatch(setEditingPosition(null));
-          onNext(data.hashKey);
-          dispatch(setAppointmentSaving(false));
+        Api.call<ICreateAppointmentResp>(Api.endpoints.Appointments.Create, {
+          data,
+          urlParams: { id: currentAppointment.hashKey },
         })
-        .catch(e => {
-          onError(e);
-        });
-    }
-  };
+          .then(({ data }) => {
+            dispatch(setEditingPosition(null));
+            onNext(data.hashKey);
+            dispatch(setAppointmentSaving(false));
+          })
+          .catch(e => {
+            onError(e);
+          });
+      }
+    };
 
 export const clearAddress = (): AppThunk => dispatch => {
   dispatch(setAddress(null));
@@ -1588,6 +1606,7 @@ export const handleAppointmentUpdate =
     isAuth: boolean,
     id: string,
     handleServiceTypeOption: TArgCallback<IAppointmentByKey>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     showError: TArgCallback<any>
   ): AppThunk =>
   (dispatch, getState) => {
@@ -1617,7 +1636,7 @@ export const handleAppointmentUpdate =
             dispatch(setAppointmentByKey(data));
             dispatch(updatePackageOption(data.maintenancePackageOption));
             const comments = data.serviceRequests.reduce((acc: { [key: number]: string }, item) => {
-              acc[item.id] = (item as any).comment || '';
+              acc[item.id] = item.comment || '';
               return acc;
             }, {});
             dispatch(

@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   EServiceStatus,
@@ -71,7 +73,7 @@ export const loadNonSelectedServiceRequests =
       dispatch(setLoadingNonSelected(false));
     } catch (e) {
       setLoadingNonSelected(false);
-      console.log('loadNonSelectedServiceRequests', e);
+      console.log('loadNonSelectedServiceRequests', e, isAssigned);
     }
   };
 
@@ -178,14 +180,18 @@ export const updateAssignedServiceRequest =
     Api.call(Api.endpoints.ServiceRequests.EditOverrides, { data, urlParams: { id } })
       .then(res => {
         if (res) {
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
           if (serviceCenterId) {
             dispatch(loadAssignedServiceRequests(serviceCenterId));
           }
         }
       })
       .catch(err => {
-        onError && onError(err);
+        if (onError) {
+          onError(err);
+        }
         console.log('update assigned service request error', err);
       });
   };

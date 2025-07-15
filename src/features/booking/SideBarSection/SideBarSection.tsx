@@ -6,7 +6,7 @@ import AppointmentNotes from '../AppointmentFlow/Screens/components/AppointmentN
 import VehicleRepairHistory from '../../../components/modals/common/VehicleRepairHistory/VehicleRepairHistory';
 import { useTranslation } from 'react-i18next';
 import CustomerInfo from './CustomerInfo/CustomerInfo';
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { RoHistoryLink, SectionWrapper } from './styles';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';

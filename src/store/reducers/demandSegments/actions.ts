@@ -1,6 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
-  EDay,
   IDemandSegment,
   IDemandSegmentForm,
   ISetDemandSegmentRequest,

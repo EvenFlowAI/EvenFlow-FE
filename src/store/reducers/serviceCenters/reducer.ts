@@ -39,6 +39,7 @@ const initialState: TServiceCenterState = {
   advisorAssignmentLoading: false,
 };
 
+/* eslint-disable complexity */
 export const serviceCenterReducer = (
   state = initialState,
   action: TServiceCenterActions

@@ -4,27 +4,29 @@ import { loadComplimentary, getAllComplimentary } from '../packages/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 
 export const addComplimentaryManually =
-  (data: TComplimentary, callback: () => void, errCallback = (err: string) => {}): AppThunk =>
-  dispatch => {
-    Api.call(Api.endpoints.ComplimentaryServices.Create, { data })
-      .then(result => {
-        if (result) {
-          dispatch(loadComplimentary(data.serviceCenterId));
-          callback();
-        }
-      })
-      .catch(err => {
-        errCallback(err);
-        console.log('add complimentary manually error', err);
-      });
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (data: TComplimentary, callback: () => void, errCallback: (err: any) => void): AppThunk =>
+    dispatch => {
+      Api.call(Api.endpoints.ComplimentaryServices.Create, { data })
+        .then(result => {
+          if (result) {
+            dispatch(loadComplimentary(data.serviceCenterId));
+            callback();
+          }
+        })
+        .catch(err => {
+          errCallback(err);
+          console.log('add complimentary manually error', err);
+        });
+    };
 
 export const editComplimentary =
   (
     id: number,
     data: TComplimentary,
     callback: () => void,
-    errCallback = (err: string) => {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    errCallback: (err: any) => void
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.ComplimentaryServices.Update, { urlParams: { id }, data })
@@ -44,7 +46,8 @@ export const addOpsCodeFromList =
   (
     serviceRequests: number[],
     serviceCenterId: number,
-    errorCallback = (err: string) => {},
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    errorCallback: (err: any) => void,
     successCallback = () => {}
   ): AppThunk =>
   dispatch => {
@@ -59,7 +62,9 @@ export const addOpsCodeFromList =
       })
       .catch(err => {
         console.log('add op code to complimentary error', err);
-        errorCallback && errorCallback(err);
+        if (errorCallback) {
+          errorCallback(err);
+        }
       });
   };
 

@@ -7,7 +7,8 @@ import {
   setTrackerCreated,
   setWelcomeScreenView,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import { LocalTokens, TCallback } from '../../../types/types';
+import { TCallback } from '../../../types/types';
+import { LocalTokens } from '../../../types/auth';
 import { v4 as uuidv4 } from 'uuid';
 import { EServiceType, EUserType } from '../../../store/reducers/appointmentFrameReducer/types';
 import { RootState } from '../../../store/rootReducer';

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { collectServiceRequestIds, getCategories, mapRecallsForRequest } from '../../utils/utils';
+import { getCategories, mapRecallsForRequest } from '../../utils/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { TTransportationData } from '../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
+import { collectServiceRequestIds } from '../../utils/collectServiceRequestIds';
 
 const useGetTransportationsData = () => {
   const {

@@ -54,6 +54,7 @@ export const updateCategory =
     id: number,
     data: TUpdateCategoryData,
     serviceType: EServiceType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -62,7 +63,9 @@ export const updateCategory =
       .then(result => {
         if (result) {
           dispatch(loadCategoriesByPage(serviceType));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {
@@ -76,6 +79,7 @@ export const createCategory =
     data: TNewCategory,
     callback: TSuccessCallback,
     serviceType: EServiceType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -85,7 +89,9 @@ export const createCategory =
         if (result) {
           dispatch(loadCategoriesByPage(serviceType));
           if (result.data?.id) callback(result.data.id);
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {
@@ -99,6 +105,7 @@ export const updateCategoryIcon =
     id: number,
     file: File,
     serviceType: EServiceType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -109,7 +116,9 @@ export const updateCategoryIcon =
       .then(result => {
         if (result) {
           dispatch(loadCategoriesByPage(serviceType));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {

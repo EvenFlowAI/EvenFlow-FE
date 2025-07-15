@@ -14,7 +14,7 @@ import { RootState } from '../../../store/rootReducer';
 import { loadSCProfile } from '../../../store/reducers/appointment/actions';
 import { decodeSCID } from '../../../utils/utils';
 import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { TValueServiceScreen } from './types';
 import { Container } from './styles';
 

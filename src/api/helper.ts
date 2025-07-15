@@ -1,4 +1,4 @@
-import { LocalTokens, SelfCustomTokens } from '../types/types';
+import { LocalTokens, SelfCustomTokens } from '../types/auth';
 
 // SET TOKENS BLOCK
 export const setAuthenticationTokenForAdmin = (accessToken: string) => {

@@ -32,6 +32,7 @@ const initialState: TEmployeesState = {
   assignmentSettings: [],
 };
 
+/* eslint-disable complexity */
 export const employeesReducer = (
   state = initialState,
   action: TEmployeeActions

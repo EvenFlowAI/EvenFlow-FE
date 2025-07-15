@@ -79,7 +79,7 @@ const AncillaryPriceByDistance: React.FC<
     if (editedItem) onItemDelete(editedItem.id);
   };
 
-  const handleSlide = (t: number) => (e: any, value: number | number[]) => {
+  const handleSlide = (t: number) => (e: Event, value: number | number[]) => {
     const item = distanceData.find(item => item.id === t);
     if (typeof value === 'number' && item) {
       const updated = { ...item, serviceMultiplier: value };

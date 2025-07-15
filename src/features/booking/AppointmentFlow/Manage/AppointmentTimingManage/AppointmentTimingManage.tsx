@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { TArgCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { AppointmentTiming } from '../../Screens/AppointmentTiming/AppointmentTiming';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';

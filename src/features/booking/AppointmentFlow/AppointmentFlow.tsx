@@ -11,7 +11,8 @@ import SideBarSection from '../SideBarSection/SideBarSection';
 import AskChangesCompleted from '../../../components/modals/booking/AskChangesCompleted/AskChangesCompleted';
 import SlotImpactedWarning from '../../../components/modals/booking/SlotImpactedWarning/SlotImpactedWarning';
 import ServiceImpactedWarning from '../../../components/modals/booking/ServiceImpactedWarning/ServiceImpactedWarning';
-import { TCallback, TScreen } from '../../../types/types';
+import { TCallback } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { useTranslation } from 'react-i18next';
 import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
 import {

@@ -6,7 +6,6 @@ import {
   ICreateAppointmentResp,
   ICustomerLoadedData,
   IOfferForCategory,
-  IModel,
   IServiceCategory,
   IServiceCategoryShort,
   IServiceRequestIds,

@@ -1,8 +1,9 @@
 import { TRole } from '../store/reducers/users/types';
-import { EStates, TTitle } from '../types/types';
+import { EStates } from '../types/states';
 import { IServiceCenterFlag, TGAOptions } from './types';
 import { Routes } from '../routes/constants';
 import { TReviewOption } from '../store/reducers/globalVehicles/types';
+import { TTitle } from '../types/types';
 
 export const states = Object.values(EStates);
 

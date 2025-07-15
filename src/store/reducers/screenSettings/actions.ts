@@ -132,57 +132,61 @@ export const loadZonesByServiceType =
   };
 
 export const createCustomerConsent =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (data: IBaseCustomerConsent, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.CustomerConsent.Create, { data })
-      .then(res => {
-        if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId));
-        onSuccess();
-      })
-      .catch(err => {
-        console.log('create customer consent error', err);
-        onError(err);
-      })
-      .finally(() => dispatch(setLoading(false)));
-  };
+    dispatch => {
+      dispatch(setLoading(true));
+      Api.call(Api.endpoints.CustomerConsent.Create, { data })
+        .then(res => {
+          if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId));
+          onSuccess();
+        })
+        .catch(err => {
+          console.log('create customer consent error', err);
+          onError(err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+    };
 
 export const updateCustomerConsent =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (data: ICustomerConsentById, onError: TArgCallback<any>, onSuccess: TCallback): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.CustomerConsent.Update, { data, urlParams: { id: data.id } })
-      .then(res => {
-        if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId));
-        onSuccess();
-      })
-      .catch(err => {
-        console.log('update customer consent error', err);
-        onError(err);
-      })
-      .finally(() => dispatch(setLoading(false)));
-  };
+    dispatch => {
+      dispatch(setLoading(true));
+      Api.call(Api.endpoints.CustomerConsent.Update, { data, urlParams: { id: data.id } })
+        .then(res => {
+          if (res) dispatch(loadConsentsList(data.serviceCenterId, data.podId));
+          onSuccess();
+        })
+        .catch(err => {
+          console.log('update customer consent error', err);
+          onError(err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+    };
 
 export const removeCustomerConsent =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (id: number, serviceCenterId: number, onError: TArgCallback<any>, podId?: number): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.CustomerConsent.Remove, { params: { id, serviceCenterId } })
-      .then(res => {
-        if (res) dispatch(loadConsentsList(serviceCenterId, podId));
-      })
-      .catch(err => {
-        console.log('delete customer consent error', err);
-        onError(err);
-      })
-      .finally(() => dispatch(setLoading(false)));
-  };
+    dispatch => {
+      dispatch(setLoading(true));
+      Api.call(Api.endpoints.CustomerConsent.Remove, { params: { id, serviceCenterId } })
+        .then(res => {
+          if (res) dispatch(loadConsentsList(serviceCenterId, podId));
+        })
+        .catch(err => {
+          console.log('delete customer consent error', err);
+          onError(err);
+        })
+        .finally(() => dispatch(setLoading(false)));
+    };
 
 export const toggleCustomerConsent =
   (
     serviceCenterId: number,
     id: number,
     isEnabled: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     podId?: number
   ): AppThunk =>

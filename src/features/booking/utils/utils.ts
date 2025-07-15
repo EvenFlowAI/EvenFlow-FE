@@ -1,5 +1,5 @@
 import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { ICurrentMenu, TData } from './types';
 
 export const getCurrentMenu = (

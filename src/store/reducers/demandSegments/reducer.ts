@@ -1,11 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import {
-  EDay,
-  IDemandSegment,
-  ITimeWindow,
-  IUnplannedDemand,
-  IUnplannedDemandBySlot,
-} from './types';
+import { IDemandSegment, ITimeWindow, IUnplannedDemand, IUnplannedDemandBySlot } from './types';
 import {
   getDemandCapacity,
   getDemandSegments,

@@ -24,6 +24,7 @@ export interface IServiceRequestShort {
   priority: IServiceRequestPriority;
   price: number;
   orderIndex?: number;
+  comment?: string;
 }
 export interface IServiceRequestNonAddedFilter {
   searchTerm: string;

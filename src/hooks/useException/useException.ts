@@ -5,7 +5,7 @@ import { getAPIException } from '../../utils/utils';
 export function useException(preventDuplicate?: boolean) {
   const { enqueueSnackbar } = useSnackbar();
   return useCallback(
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
       let showId = e?.response?.status === 500;
       if (e && e.response?.data?.errors && e.response.data.errors.length) {

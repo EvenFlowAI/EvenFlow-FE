@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
-import { TArgCallback, TCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback, TCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import {
