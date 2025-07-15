@@ -454,7 +454,8 @@ const CustomerSearchTable: React.FC<
         }
       }
     } else {
-      redirect();
+      await dispatch(setCurrentFrameScreen('serviceNeeds'));
+      await onRedirect();
     }
   };
 
