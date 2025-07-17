@@ -34,38 +34,6 @@ export type ValidationKeyPairs<U> = {
   message: string;
 };
 
-export interface ITokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
-export interface ITokensWithLoginFlag {
-  accessToken: string;
-  refreshToken: string;
-  isAdminToken?: boolean;
-}
-
-export interface IRefreshTokenData {
-  token: string;
-}
-
-export interface ICredentials {
-  email: string;
-  password: string;
-}
-
-export enum LocalTokens {
-  authToken = 'at',
-  refreshToken = 'rt',
-  suToken = 'st',
-  sessionId = 'sessionId',
-}
-
-export enum SelfCustomTokens {
-  authToken = 'at_self',
-  refreshToken = 'rt_self',
-}
-
 export interface ITimeSpan {
   ticks: number;
   days: number;
@@ -108,10 +76,11 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action<string>
 >;
 
-export interface IOrder<D = {}> {
+export interface IOrder<D = object> {
   orderBy?: keyof D | string;
   isAscending: boolean;
 }
+
 export type TOption = {
   name: string;
   value: string;
@@ -120,7 +89,7 @@ export type TCallback = () => void;
 export type TArgCallback<T> = (arg: T) => void;
 
 export type TSelectChange = (
-  e: React.ChangeEvent<{}>,
+  e: React.ChangeEvent<object>,
   value: string | null,
   reason: AutocompleteChangeReason,
   details?: AutocompleteChangeDetails<string> | undefined
@@ -198,39 +167,6 @@ export interface ITableProps<Data> {
   verticalPadding?: number;
 }
 
-export type TBaseScreen =
-  | 'carSelection'
-  | 'serviceNeeds'
-  | 'maintenanceDetails'
-  | 'packageSelection'
-  | 'describeMore'
-  | 'opsCode'
-  | 'consultantSelection'
-  | 'appointmentTiming'
-  | 'appointmentSelection'
-  | 'transportationNeeds'
-  | 'appointmentConfirmed'
-  | 'location'
-  | 'payment'
-  | 'serviceOfferProductPage';
-
-export type TScreen = TBaseScreen | 'appointmentConfirmation' | 'manageAppointment';
-
-export type TMobileScreen =
-  | 'carSelection'
-  | 'serviceNeeds'
-  | 'maintenanceDetails'
-  | 'packageSelection'
-  | 'describeMore'
-  | 'opsCode'
-  | 'appointmentTiming'
-  | 'appointmentSelection'
-  | 'appointmentConfirmation'
-  | 'appointmentConfirmed'
-  | 'location'
-  | 'payment'
-  | 'serviceOfferProductPage';
-
 export interface TError {
   field: string;
   message: string;
@@ -261,7 +197,7 @@ export interface IRecallByVin {
 
 export type TActionProps = {
   onBack: () => void;
-  onNext: any;
+  onNext: () => void;
   nextDisabled?: boolean;
   nextLabel?: string;
   loading?: boolean;
@@ -296,59 +232,6 @@ export enum Titles {
 
 export enum LocalItems {
   selectedSC = 'SSCID',
-}
-
-export enum EStates {
-  AL = 'Alabama',
-  AK = 'Alaska',
-  AZ = 'Arizona',
-  AR = 'Arkansas',
-  CA = 'California',
-  CO = 'Colorado',
-  CT = 'Connecticut',
-  DE = 'Delaware',
-  FL = 'Florida',
-  GA = 'Georgia',
-  HI = 'Hawaii',
-  ID = 'Idaho',
-  IL = 'Illinois',
-  IN = 'Indiana',
-  IA = 'Iowa',
-  KS = 'Kansas',
-  KY = 'Kentucky',
-  LA = 'Louisiana',
-  ME = 'Maine',
-  MD = 'Maryland',
-  MA = 'Massachusetts',
-  MI = 'Michigan',
-  MN = 'Minnesota',
-  MS = 'Mississippi',
-  MO = 'Missouri',
-  MT = 'Montana',
-  NE = 'Nebraska',
-  NV = 'Nevada',
-  NH = 'New Hampshire',
-  NJ = 'New Jersey',
-  NM = 'New Mexico',
-  NY = 'New York',
-  NC = 'North Carolina',
-  ND = 'North Dakota',
-  OH = 'Ohio',
-  OK = 'Oklahoma',
-  OR = 'Oregon',
-  PA = 'Pennsylvania',
-  RI = 'Rhode Island',
-  SC = 'South Carolina',
-  SD = 'South Dakota',
-  TN = 'Tennessee',
-  TX = 'Texas',
-  UT = 'Utah',
-  VT = 'Vermont',
-  VA = 'Virginia',
-  WA = 'Washington',
-  WV = 'West Virginia',
-  WI = 'Wisconsin',
-  WY = 'Wyoming',
 }
 
 export type TIdAndName = {

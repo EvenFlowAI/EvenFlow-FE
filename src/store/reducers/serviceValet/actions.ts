@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   EAncillaryPriceType,
@@ -306,10 +308,12 @@ export const addServiceValetDistanceRange =
   };
 
 export const saveLinkToServiceValetMap =
+  // eslint-disable-next-line
   (id: number, link: string, onErr: (err: string) => void, onSuccess: () => void): AppThunk =>
-  dispatch => {
-    // todo request
-  };
+    // eslint-disable-next-line
+    dispatch => {
+      // todo request
+    };
 
 export const loadServiceValetPricingOption =
   (id: number): AppThunk =>

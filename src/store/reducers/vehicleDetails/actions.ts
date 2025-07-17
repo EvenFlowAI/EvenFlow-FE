@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import { AppThunk, PaginatedAPIResponse } from '../../../types/types';
 import { IMake } from '../../../api/types';
@@ -68,7 +70,7 @@ export const loadMakesAll =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -104,7 +106,7 @@ export const loadMakesGlobally =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -133,8 +135,7 @@ export const deleteMake =
         })
         .catch(err => {
           enqueueSnackbar(
-            (err as any).response?.data?.message ||
-              'An error occurred while processing your request',
+            err.response?.data?.message || 'An error occurred while processing your request',
             {
               variant: 'error',
               autoHideDuration: 3000,
@@ -148,33 +149,32 @@ export const deleteMake =
     }
   };
 
-export const updateMake =
-  (makeId: number, data: IMake): AppThunk =>
-  async (dispatch, getState) => {
-    const { selectedSC } = getState().serviceCenters;
-    if (selectedSC) {
-      Api.call(Api.endpoints.Vehicles.UpdateMake, { urlParams: { id: makeId }, data })
-        .then(result => {
-          if (result) {
-            dispatch(loadMakes(selectedSC.id));
-          }
-        })
-        .catch(err => {
-          enqueueSnackbar(
-            (err as any).response?.data?.message ||
-              'An error occurred while processing your request',
-            {
-              variant: 'error',
-              autoHideDuration: 3000,
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-              },
-            }
-          );
-        });
-    }
-  };
+// export const updateMake =
+//   (makeId: number, data: IMake): AppThunk =>
+//   async (dispatch, getState) => {
+//     const { selectedSC } = getState().serviceCenters;
+//     if (selectedSC) {
+//       Api.call(Api.endpoints.Vehicles.UpdateMake, { urlParams: { id: makeId }, data })
+//         .then(result => {
+//           if (result) {
+//             dispatch(loadMakes(selectedSC.id));
+//           }
+//         })
+//         .catch(err => {
+//           enqueueSnackbar(
+//             err.response?.data?.message || 'An error occurred while processing your request',
+//             {
+//               variant: 'error',
+//               autoHideDuration: 3000,
+//               anchorOrigin: {
+//                 vertical: 'top',
+//                 horizontal: 'right',
+//               },
+//             }
+//           );
+//         });
+//     }
+//   };
 
 export const updateModel =
   (
@@ -197,8 +197,7 @@ export const updateModel =
         })
         .catch(err => {
           enqueueSnackbar(
-            (err as any).response?.data?.message ||
-              'An error occurred while processing your request',
+            err.response?.data?.message || 'An error occurred while processing your request',
             {
               variant: 'error',
               autoHideDuration: 3000,
@@ -224,7 +223,7 @@ export const createMake =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -249,7 +248,7 @@ export const loadMileage =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -274,7 +273,7 @@ export const createMileage =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -305,7 +304,7 @@ export const removeMileage =
       .catch(err => {
         onError(err);
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -330,7 +329,7 @@ export const loadEngineType =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -362,7 +361,7 @@ export const removeEngineType =
       .catch(err => {
         onError(err);
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -387,7 +386,7 @@ export const createEngineType =
       .catch(err => {
         onError(err);
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -421,7 +420,7 @@ export const updateEngineTypeFieldName =
       .catch(err => {
         onError(err);
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -450,7 +449,7 @@ export const loadGlobalMakes = (): AppThunk => async dispatch => {
     })
     .catch(err => {
       enqueueSnackbar(
-        (err as any).response?.data?.message || 'An error occurred while processing your request',
+        err.response?.data?.message || 'An error occurred while processing your request',
         {
           variant: 'error',
           autoHideDuration: 3000,
@@ -482,7 +481,7 @@ export const loadGlobalModels =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,

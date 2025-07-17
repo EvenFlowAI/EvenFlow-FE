@@ -8,7 +8,7 @@ import { RootState } from '../../../../store/rootReducer';
 import { useHistory, useParams } from 'react-router-dom';
 import { useStyles } from './styles';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
-import { TScreen } from '../../../../types/types';
+import { TScreen } from '../../../../types/screens';
 
 const SlotImpactedWarning = () => {
   const { isSlotsWarningOpen } = useSelector((state: RootState) => state.modals);

@@ -1,11 +1,4 @@
-import {
-  ICredentials,
-  IRefreshTokenData,
-  ITokens,
-  ITokensWithLoginFlag,
-  LocalTokens,
-  SelfCustomTokens,
-} from '../../types/types';
+import { ICredentials, IRefreshTokenData, ITokens, LocalTokens } from '../../types/auth';
 import { API } from '../api';
 import { request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';

@@ -120,18 +120,19 @@ export const createFirstScreenOption =
   };
 
 export const updateFirstScreenOptionIcon =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (id: number, serviceCenterId: number, file: File, onError: TArgCallback<any>): AppThunk =>
-  dispatch => {
-    const data = new FormData();
-    data.append('file', file, file.name);
-    Api.call(Api.endpoints.ServiceTypes.UpdateIcon, { params: { id, serviceCenterId }, data })
-      .then(result => {
-        if (result) {
-          dispatch(loadFirstScreenOptionsList(serviceCenterId));
-        }
-      })
-      .catch(err => {
-        onError(err);
-        console.log('update service type icon error', err);
-      });
-  };
+    dispatch => {
+      const data = new FormData();
+      data.append('file', file, file.name);
+      Api.call(Api.endpoints.ServiceTypes.UpdateIcon, { params: { id, serviceCenterId }, data })
+        .then(result => {
+          if (result) {
+            dispatch(loadFirstScreenOptionsList(serviceCenterId));
+          }
+        })
+        .catch(err => {
+          onError(err);
+          console.log('update service type icon error', err);
+        });
+    };

@@ -10,8 +10,6 @@ import {
   IMake,
   IModel,
   IOfferForCategory,
-  IPackageOptions,
-  IServiceCategory,
 } from '../api/types';
 import { decode, encode } from 'url-safe-base64';
 import { ETransportationType } from '../store/reducers/transportationNeeds/types';
@@ -22,7 +20,7 @@ import {
   IValueService,
   TServiceCategory,
 } from '../store/reducers/appointmentFrameReducer/types';
-import { IRecallByVin, TParsableDate } from '../types/types';
+import { IRecallByVin } from '../types/types';
 import { TOption } from './types';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -42,7 +40,7 @@ export const getInitials = (name?: string) => {
 };
 
 const defaultException = 'Something went wrong';
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getAPIException = (e: any): string => {
   const showId = e?.response?.status === 500;
   return e
@@ -57,7 +55,7 @@ export const getAPIException = (e: any): string => {
 export const concatAddress = (address?: IAddress, def?: string): string =>
   address ? `${address.street}, ${address.city}, ${address.zipCode}` : def || '';
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const pathReplace = (path: string, data?: Record<string, any>): string => {
   if (!data) return path;
   const keys = Object.keys(data).map(k => `{${k}}`);
@@ -139,56 +137,6 @@ export const getTransportationOptionString = (option: string) => {
   return array.join('');
 };
 
-export const getStartEndDates = (date: TParsableDate, isXS: boolean): [string, string] => {
-  const utcOffset = dayjs(date).utcOffset();
-  if (isXS) {
-    return [
-      dayjs.utc(date).startOf('day').add(utcOffset, 'minute').toISOString(),
-      dayjs.utc(date).endOf('day').add(utcOffset, 'minute').toISOString(),
-    ];
-  }
-  let correctedDate = date;
-  const dayOfWeek = dayjs(date).day();
-  if (dayOfWeek === 0) correctedDate = dayjs(date).subtract(1, 'day');
-  return [
-    dayjs(correctedDate).startOf('week').add(1, 'days').add(utcOffset, 'minute').toISOString(),
-    dayjs(correctedDate).endOf('week').add(1, 'days').add(utcOffset, 'minute').toISOString(),
-  ];
-};
-
-export const getYearOptions = () => {
-  const year = dayjs().utc().add(1, 'year').year();
-  const YEARS = year - 1982;
-  return Array(YEARS)
-    .fill(0)
-    .map((_, idx) => String(year - idx));
-};
-
-export const collectServiceRequestIds = (
-  s: IServiceCategory | null,
-  sub: IServiceCategory | null,
-  selectedPackage?: IPackageOptions | null,
-  individualOpsCodes?: number[],
-  selectedRecalls?: IRecallByVin[],
-  individualOpsCodesComments?: Record<number, string>
-): IServiceRequestIds[] => {
-  const ids = [];
-
-  if (selectedRecalls?.length) {
-    selectedRecalls.forEach(item => ids.push(item.serviceRequestId));
-  }
-  if (individualOpsCodes?.length) {
-    for (const c of individualOpsCodes) {
-      ids.push(c);
-    }
-  }
-  const set = new Set(ids);
-  return Array.from(set).map(i => {
-    const currComment = individualOpsCodesComments ? individualOpsCodesComments[i] : null;
-    return { id: i, comment: currComment ?? '' };
-  });
-};
-
 export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean): string => {
   switch (offer.type) {
     case EOfferType.AmountOff:
@@ -223,12 +171,12 @@ export const getCategories = (
     .filter(category => {
       return (
         category.type === EServiceCategoryType.GeneralCategory &&
-        // eslint-disable-next-line
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         mergedArray.map((item: any) => item.id).includes(category.id)
       );
     })
     .map(item => {
-      // eslint-disable-next-line
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const comment = mergedArray.find((el: any) => el.id === item.id)?.comment ?? '';
       return { id: item.id, comment };
     });
@@ -297,13 +245,13 @@ export const getAppointmentDate = (
 interface IMergedCategory {
   id: number;
   comment?: string;
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mergeArrayById = (array: any[]): IMergedCategory[] => {
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const groupedById = array.reduce((acc: { [key: number]: any }, item) => {
     if (!acc[item.id]) {
       acc[item.id] = { id: item.id };

@@ -28,6 +28,7 @@ export const loadCustomerLifetimes =
         params: { serviceCenterId, podId },
       });
       dispatch(getCustomerLifetimes(data));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e.response?.status === 400) {
         dispatch(getCustomerLifetimes(undefined));
@@ -55,6 +56,7 @@ export const loadNewLostCustomers =
         params: { serviceCenterId, podId },
       });
       dispatch(getNewLostCustomers(data));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e?.response?.status === 400) {
         dispatch(getNewLostCustomers([]));
@@ -82,6 +84,7 @@ export const loadEndOfWarranty =
         params: { serviceCenterId, podId },
       });
       dispatch(getEndOfWarranty(data[0]));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e?.response?.status === 400) {
         dispatch(getEndOfWarranty(undefined));

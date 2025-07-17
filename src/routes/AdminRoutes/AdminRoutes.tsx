@@ -21,64 +21,59 @@ import ApplicationRoutes from '../ApplicationRoutes/ApplicationRoutes';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
-  const currentRoleIsRestricted =
-    !!currentUser && ['BDC Agent', 'Advisor', 'Technician'].includes(currentUser?.role);
 
   if (!currentUser) return null;
+
+  const isRestrictedRole = ['BDC Agent', 'Advisor', 'Technician'].includes(currentUser.role);
+  const isSuperUser = currentUser.isSuperUser;
+
+  const superUserRoutes = [
+    { path: Routes.Admin.DealershipGroups, exact: true, component: DealershipGroups },
+    { path: Routes.Admin.Application, component: ApplicationRoutes },
+    { path: Routes.Admin.ServiceCenters, exact: true, component: ServiceCenters },
+    { path: `${Routes.Admin.DealershipGroups}/:id`, component: DealershipGroupDetails },
+  ];
+
+  const regularRoutes = [
+    { path: Routes.Employees.Base, component: EmployeesRoutes, condition: !isRestrictedRole },
+    { path: Routes.CenterProfile.Base, component: CenterProfileRoutes },
+    { path: Routes.Admin.Appointments, component: AppointmentsPage },
+    {
+      path: Routes.Dealer.Base,
+      exact: true,
+      component: DealerOperations,
+      condition: !isRestrictedRole,
+    },
+    { path: Routes.Pricing.Base, component: PricingRoutes, condition: !isRestrictedRole },
+    {
+      path: Routes.BookingFlow.Base,
+      component: BookingFlowSettingsRoutes,
+      condition: !isRestrictedRole,
+    },
+    { path: Routes.Admin.Reporting, component: ReportingPage, condition: !isRestrictedRole },
+    {
+      path: Routes.CapacityManagement.Base,
+      component: CapacityRoutes,
+      condition: !isRestrictedRole,
+    },
+    { path: Routes.Services.Base, component: ServicesRoutes, condition: !isRestrictedRole },
+  ];
+
+  const redirectPath = isSuperUser ? Routes.Admin.DealershipGroups : Routes.Admin.Appointments;
 
   return (
     <ContentContainer>
       <Switch>
-        {currentUser.isSuperUser ? (
-          <PrivateRoute path={Routes.Admin.DealershipGroups} exact component={DealershipGroups} />
-        ) : null}
-        {currentUser.isSuperUser ? (
-          <PrivateRoute path={Routes.Admin.Application} component={ApplicationRoutes} />
-        ) : null}
-        {currentUser.isSuperUser ? (
-          <PrivateRoute path={Routes.Admin.ServiceCenters} exact component={ServiceCenters} />
-        ) : null}
-        {currentUser.isSuperUser ? (
-          <PrivateRoute
-            path={`${Routes.Admin.DealershipGroups}/:id`}
-            component={DealershipGroupDetails}
-          />
-        ) : null}
-        {!currentRoleIsRestricted && (
-          <PrivateRoute path={Routes.Employees.Base} component={EmployeesRoutes} />
-        )}
-        {!currentUser.isSuperUser ? (
-          <PrivateRoute path={Routes.CenterProfile.Base} component={CenterProfileRoutes} />
-        ) : null}
-        {!currentUser.isSuperUser ? (
-          <PrivateRoute path={Routes.Admin.Appointments} component={AppointmentsPage} />
-        ) : null}
-        {!currentUser.isSuperUser && !currentRoleIsRestricted ? (
-          <PrivateRoute path={Routes.Dealer.Base} exact component={DealerOperations} />
-        ) : null}
-        {!currentUser.isSuperUser && !currentRoleIsRestricted ? (
-          <PrivateRoute path={Routes.Pricing.Base} component={PricingRoutes} />
-        ) : null}
-        {!currentUser.isSuperUser && !currentRoleIsRestricted ? (
-          <PrivateRoute path={Routes.BookingFlow.Base} component={BookingFlowSettingsRoutes} />
-        ) : null}
-        {!currentUser.isSuperUser && !currentRoleIsRestricted ? (
-          <PrivateRoute path={Routes.Admin.Reporting} component={ReportingPage} />
-        ) : null}
-        {!currentUser.isSuperUser && !currentRoleIsRestricted ? (
-          <PrivateRoute path={Routes.CapacityManagement.Base} component={CapacityRoutes} />
-        ) : null}
-        {!currentUser.isSuperUser && !currentRoleIsRestricted ? (
-          <PrivateRoute path={Routes.Services.Base} component={ServicesRoutes} />
-        ) : null}
+        {isSuperUser && superUserRoutes.map(route => <PrivateRoute key={route.path} {...route} />)}
+
+        {!isSuperUser &&
+          regularRoutes
+            .filter(route => route.condition !== false)
+            .map(route => <PrivateRoute key={route.path} {...route} />)}
+
         <PrivateRoute path={Routes.Admin.Profile} component={Profile} />
-        {currentUser.isSuperUser ? (
-          <Redirect to={Routes.Admin.DealershipGroups} />
-        ) : currentRoleIsRestricted ? (
-          <Redirect to={Routes.Admin.Appointments} />
-        ) : (
-          <Redirect to={Routes.Admin.Appointments} />
-        )}
+
+        <Redirect to={redirectPath} />
       </Switch>
     </ContentContainer>
   );

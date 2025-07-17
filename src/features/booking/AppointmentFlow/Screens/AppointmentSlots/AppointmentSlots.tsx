@@ -5,12 +5,7 @@ import { SelectedAppointment } from './SelectedAppointment/SelectedAppointment';
 import { AppointmentDateSelector } from '../../../../../components/bookingDateTime/AppointmentDateSelector/AppointmentDateSelector';
 import { AppointmentTimeSelector } from '../../../../../components/bookingDateTime/AppointmentTimeSelector/AppointmentTimeSelector';
 import { useHistory, useParams } from 'react-router-dom';
-import {
-  collectServiceRequestIds,
-  decodeSCID,
-  getCategories,
-  mapRecallsForRequest,
-} from '../../../../../utils/utils';
+import { decodeSCID, getCategories, mapRecallsForRequest } from '../../../../../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import {
@@ -31,7 +26,8 @@ import {
   EServiceType,
   EUserType,
 } from '../../../../../store/reducers/appointmentFrameReducer/types';
-import { TArgCallback, TCallback, TParsableDate, TScreen } from '../../../../../types/types';
+import { TArgCallback, TCallback, TParsableDate } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { SVAppointmentDateSelector } from '../../../../../components/bookingDateTime/SVAppointmentDateSelector/SVAppointmentDateSelector';
 import { SVAppointmentTimeSelector } from '../../../../../components/bookingDateTime/SVAppointmentTimeSelector/SVAppointmentTimeSelector';
 import {
@@ -60,6 +56,7 @@ import {
   sortAppointments,
   sortSVAppointments,
 } from '../../../../../utils/svAppointments';
+import { collectServiceRequestIds } from '../../../../../utils/collectServiceRequestIds';
 
 dayjs.extend(utc);
 
@@ -533,9 +530,7 @@ export const AppointmentSlots: React.FC<
           data.searchTerm = customerEnteredEmail;
         if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
           if (data.address && data.zipCode)
-            await dispatch(
-              loadServiceValetSlots(data, undefined, undefined, onLoadSlots, handleError)
-            );
+            await dispatch(loadServiceValetSlots(data, undefined, onLoadSlots, handleError));
         } else {
           await dispatch(
             loadAppointmentSlots(

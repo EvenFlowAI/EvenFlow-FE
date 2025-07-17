@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   IPackageById,
@@ -148,14 +150,18 @@ export const updatePackage =
     Api.call(Api.endpoints.MaintenancePackages.Update, { urlParams: { id }, data })
       .then(result => {
         if (result) {
-          callback && callback();
+          if (callback) {
+            callback();
+          }
           dispatch(loadPackages(serviceCenterId));
           dispatch(loadPackageById(id));
         }
       })
       .catch(err => {
         console.log(err);
-        errCallback && errCallback(err);
+        if (errCallback) {
+          errCallback(err);
+        }
       })
       .finally(() => dispatch(setPackageLoading(false)));
   };
@@ -201,7 +207,9 @@ export const createPackage =
       })
       .catch(err => {
         console.log(err);
-        errCallback && errCallback(err);
+        if (errCallback) {
+          errCallback(err);
+        }
       })
       .finally(() => dispatch(setPackageLoading(false)));
   };
@@ -249,7 +257,9 @@ export const updatePackageSRDescription =
       .then(result => {
         if (result) {
           dispatch(loadPackageById(id));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {
@@ -276,7 +286,9 @@ export const updatePackageComplimentaryDescription =
       .then(result => {
         if (result) {
           dispatch(loadPackageById(id));
-          onSuccess && onSuccess();
+          if (onSuccess) {
+            onSuccess();
+          }
         }
       })
       .catch(err => {

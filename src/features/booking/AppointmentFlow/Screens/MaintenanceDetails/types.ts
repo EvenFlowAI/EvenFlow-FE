@@ -2,7 +2,8 @@ import { TMaintenanceDetails } from '../../../../../store/reducers/appointmentFr
 import { EServiceCategoryPage, ILoadedVehicle } from '../../../../../api/types';
 import { IEngineType } from '../../../../../store/reducers/vehicleDetails/types';
 import { Dispatch, SetStateAction } from 'react';
-import { TArgCallback, TCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback, TCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 
 export type TKey = keyof TMaintenanceDetails | keyof ILoadedVehicle;
 export type TOptionsState = { [s: string]: string[] };

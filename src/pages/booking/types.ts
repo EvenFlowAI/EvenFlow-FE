@@ -1,4 +1,5 @@
-import { TArgCallback, TCallback, TScreen, TView } from '../../types/types';
+import { TArgCallback, TCallback, TView } from '../../types/types';
+import { TScreen } from '../../types/screens';
 import { EServiceCategoryPage, ILoadedVehicle } from '../../api/types';
 import { Dispatch, SetStateAction } from 'react';
 

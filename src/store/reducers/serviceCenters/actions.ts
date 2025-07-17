@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import {
   IAdvisorAssignment,
   ILaborRate,
@@ -111,6 +113,7 @@ export const createSC =
     payload: IServiceCenterForm,
     avatar: File | null,
     onSuccess: TCallback,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>
   ): AppThunk =>
   async dispatch => {
@@ -169,6 +172,7 @@ export const loadShortSC: ActionCreator<
 };
 
 export const removeSC: ActionCreator<AppThunk> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (serviceCenterId: number, onSuccess: TCallback, onError: TArgCallback<any>) => async dispatch => {
     try {
       await Api.call(Api.endpoints.ServiceCenters.Remove, { urlParams: { id: serviceCenterId } });
@@ -186,6 +190,7 @@ export const updateSC =
     id: number,
     avatar: File | null,
     onSuccess: TCallback,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>
   ): AppThunk =>
   async dispatch => {
@@ -450,9 +455,11 @@ export const updatePredictionParams =
     Api.call(Api.endpoints.ServiceCenters.UpdatePredictionParams, { urlParams: { id }, data })
       .then(result => {
         if (result?.data) {
-          data.podId
-            ? dispatch(loadPredictionParams(id, data.podId))
-            : dispatch(loadPredictionParams(id));
+          if (data.podId) {
+            dispatch(loadPredictionParams(id, data.podId));
+          } else {
+            dispatch(loadPredictionParams(id));
+          }
           onSuccess();
         }
       })

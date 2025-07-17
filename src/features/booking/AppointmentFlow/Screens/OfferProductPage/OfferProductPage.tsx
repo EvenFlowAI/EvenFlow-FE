@@ -10,7 +10,7 @@ import {
   setAdditionalServicesChosen,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import ReactGA from 'react-ga4';
-import { TScreen } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { CarName } from '../../../../../components/styled/CarName';
 import { ChangeButton } from '../../../../../components/styled/ChangeButton';
 import { OfferPageWrapper } from '../../../../../components/styled/OfferPageWrapper';

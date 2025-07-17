@@ -1,6 +1,7 @@
 import React from 'react';
 import { MaintenanceDetailsForm } from '../../Screens/MaintenanceDetails/MaintenanceDetailsForm';
-import { TArgCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { EServiceCategoryPage } from '../../../../../api/types';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';

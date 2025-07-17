@@ -8,7 +8,7 @@ import {
   IUpdateByDateRequest,
 } from './types';
 import { AppThunk, TParsableDate } from '../../../types/types';
-import { getStartEndDates } from '../../../utils/utils';
+import { getStartEndDates } from '../../../utils/getDate';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
 import { loading } from '../employees/actions';
@@ -89,6 +89,7 @@ export const updateScheduleByDate =
     startDate: string,
     endDate: string,
     onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => void
   ): AppThunk =>
   dispatch => {

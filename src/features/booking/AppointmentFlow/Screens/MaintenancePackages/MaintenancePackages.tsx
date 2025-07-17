@@ -25,7 +25,8 @@ import PackagesTotalMaintenance from './PackagesTotalMaintenance/PackagesTotalMa
 import PackagesComplimentary from './PackagesComplimentary/PackagesComplimentary';
 import PackagesTotalComplimentary from './PackagesTotalComplimentary/PackagesTotalComplimentary';
 import { useTranslation } from 'react-i18next';
-import { TArgCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import PackagesIntervalUpsells from './PackagesIntervalUpsells/PackagesIntervalUpsells';
 import PackagesTotalPriceRow from './PackagesTotalPriceRow/PackagesTotalPriceRow';
 import PackagesTotalPriceWithFee from './PackagesTotalPriceWithFee/PackagesTotalPriceWithFee';

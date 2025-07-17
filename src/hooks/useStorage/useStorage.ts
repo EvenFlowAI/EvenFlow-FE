@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { LocalTokens } from '../../types/types';
+import { LocalTokens } from '../../types/auth';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useStorage = () => {

@@ -9,9 +9,9 @@ const initialState: IUsersState = {
 };
 
 export function usersReducer(state = initialState, action: TUserActions): IUsersState {
+  const additional: Partial<ICurrentUser> = {};
   switch (action.type) {
     case 'User/GetCurrentUser':
-      const additional: Partial<ICurrentUser> = {};
       if (action.payload.role === superUser) {
         if (action.payload.dealershipId) {
           additional.role = Roles.Owner;

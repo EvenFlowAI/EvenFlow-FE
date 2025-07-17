@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { LoginTitle } from '../../../components/wrappers/LoginTitle/LoginTitle';
 import { LoginContainer } from '../../../components/styled/LoginContainer';
 import { LoginButton } from '../../../components/styled/LoginButton';
-import { ICredentials } from '../../../types/types';
+import { ICredentials } from '../../../types/auth';
 import { Routes } from '../../../routes/constants';
 import { authService } from '../../../api/AuthService/AuthService';
 import { useException } from '../../../hooks/useException/useException';

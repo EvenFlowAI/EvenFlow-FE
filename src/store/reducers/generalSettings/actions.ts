@@ -10,7 +10,7 @@ export const loadGeneralSettings =
   (serviceCenterId: number, settingTypes: ESettingType[]): AppThunk =>
   dispatch => {
     dispatch(setSettingsLoading(true));
-    let params = new URLSearchParams();
+    const params = new URLSearchParams();
     params.append('serviceCenterId', `${serviceCenterId}`);
     settingTypes.forEach(el => params.append('settingTypes', `${el}`));
     Api.call<IGeneralSetting[]>(Api.endpoints.GeneralSettings.Get, { params })
@@ -32,6 +32,7 @@ export const updateGeneralSettings =
     serviceCenterId: number,
     podId: number | null,
     data: IGeneralSetting[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>

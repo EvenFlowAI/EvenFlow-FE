@@ -133,7 +133,7 @@ export const appointmentReducer = createReducer(initialState, builder =>
       return { ...state, searchedDateRange: payload };
     })
     .addCase(getAppointmentSlots, (state, { payload }) => {
-      let appointmentSlots = payload.map(sl => {
+      const appointmentSlots = payload.map(sl => {
         const date = `${String(sl.date).split('T')[0]}T${sl.time}Z`;
         const uniqueId = uuidv4();
         return { ...sl, id: `${sl.date}|${sl.time}`, date: dayjs.utc(date), uniqueId };

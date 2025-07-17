@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   IAppointment,
@@ -18,9 +21,9 @@ import {
   IPageRequest,
   TArgCallback,
   TCallback,
-  TScreen,
   TParsableDate,
 } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { API } from '../../../api/api';
 import { EServiceType } from '../appointmentFrameReducer/types';
 import { EAppointmentTimingType, IAppointmentSlotsRequest } from '../appointment/types';
@@ -34,7 +37,6 @@ import {
 } from '../appointmentFrameReducer/actions';
 import { setChangesCompletedOpen, setSlotsWarningOpen } from '../modals/actions';
 import {
-  collectServiceRequestIds,
   decodeSCID,
   getCategories,
   getVehicleData,
@@ -54,6 +56,7 @@ import {
 import { IServiceCenterProfile } from '../appointment/types';
 import { getRecallsByVin } from '../recall/actions';
 import dayjs from 'dayjs';
+import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
 
 export const getAppointments = createAction<IAppointment[]>('Appointments/GetAppointments');
 export const getAllAppointments = createAction<IAppointment[]>('Appointments/GetAllAppointments');
@@ -106,6 +109,7 @@ export const loadAppointments =
 export const checkPodChanged =
   (
     serviceCenterId: number,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onPodKept?: TCallback,
     onPodChanged?: TCallback
@@ -203,7 +207,9 @@ export const checkPodChanged =
                     ? 'appointmentTiming'
                     : 'appointmentSelection';
               dispatch(setCurrentFrameScreen(nextScreen));
-              onPodChanged && onPodChanged();
+              if (onPodChanged) {
+                onPodChanged();
+              }
             } else {
               dispatch(setSlotsWarningOpen(true));
             }
@@ -282,7 +288,7 @@ const loadSlotsForCloning =
     endDate: TParsableDate
   ): AppThunk =>
   (dispatch, getState) => {
-    const { selectedRecalls, consultants } = getState().appointmentFrame;
+    const { consultants } = getState().appointmentFrame;
     const { currentAppointment } = getState().appointments;
     const utcOffset = dayjs().utcOffset();
     const fromDate =

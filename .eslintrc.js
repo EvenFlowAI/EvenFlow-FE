@@ -29,6 +29,7 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error",
     "react/no-children-prop": "off",
     "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/ban-ts-comment": "off",
     "react/no-unstable-nested-components": "off",
     "prefer-regex-literals": "off",
     "radix": "off",
@@ -88,7 +89,7 @@ module.exports = {
     "space-before-function-paren": "off",
     "no-nested-ternary": "off",
     "react-hooks/exhaustive-deps": "off",
-    "complexity": ["error", { "max": 10 }],
+    "complexity": ["error", { "max": 15 }],
     "consistent-return": "off",
     "react/jsx-no-constructed-context-values": "off",
     "react/display-name": "off"

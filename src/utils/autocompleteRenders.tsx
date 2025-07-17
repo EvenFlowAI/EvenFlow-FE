@@ -24,11 +24,11 @@ export const autocompleteRender =
   };
 
 export const autocompleteOptionsRender =
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (label: (el: any) => string) =>
     (
       props: React.HTMLAttributes<HTMLLIElement>,
-      // eslint-disable-next-line
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       option: any,
       state: AutocompleteRenderOptionState
     ) => {

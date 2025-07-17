@@ -42,11 +42,10 @@ export interface ICustomerWithPhones extends ICustomerByName {
   hasPlannedAppointment: boolean;
 }
 
-export interface ICustomerForTable
-  extends Omit<
-    ICustomerWithPhones,
-    'communications' | 'warrantyExpiration' | 'address' | 'appointmentAddress'
-  > {}
+export type ICustomerForTable = Omit<
+  ICustomerWithPhones,
+  'communications' | 'warrantyExpiration' | 'address' | 'appointmentAddress'
+>;
 
 export interface ICustomerVehicle {
   vehicleId: string;

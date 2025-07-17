@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { getCurrentMenu, getStepsMap, getStepsScreen } from '../utils/utils';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
 import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 import { MobileSteps } from './MobileSteps/MobileSteps';
 import { Index, Wrapper } from './styles';
 

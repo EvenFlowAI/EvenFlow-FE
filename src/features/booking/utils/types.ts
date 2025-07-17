@@ -1,4 +1,4 @@
-import { TScreen } from '../../../types/types';
+import { TScreen } from '../../../types/screens';
 
 export type TData = { [K in TScreen]: number };
 

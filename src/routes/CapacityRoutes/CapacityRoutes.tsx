@@ -3,7 +3,6 @@ import { ContentContainer } from '../../components/wrappers/ContentContainer/Con
 import { Switch, Redirect } from 'react-router-dom';
 import { PrivateRoute } from '../PrivateRoute/PrivateRoute';
 import { CapacitySettings } from '../../pages/admin/CapacitySettings/CapacitySettings';
-import { AppointmentAllocation } from '../../pages/admin/AppointmentAllocation/AppointmentAllocation';
 import { Routes } from '../constants';
 import RequestDifferentiation from '../../pages/admin/RequestDifferentiation/RequestDifferentiation';
 import TimeDifferentiation from '../../pages/admin/TimeDifferentiation/TimeDifferentiation';

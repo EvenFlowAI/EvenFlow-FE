@@ -39,30 +39,37 @@ export const getCurrentUser =
           }
         }
       }
+      // eslint-disable-next-line
     } catch (e) {
     } finally {
       dispatch(loading(false));
     }
   };
 export const saveEmployeeAvatar =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (avatar: File, id: string, onError?: TArgCallback<any>, onSuccess?: TCallback): AppThunk =>
-  async dispatch => {
-    try {
-      const fd = new FormData();
-      fd.append('file', avatar, avatar.name);
-      await Api.call(Api.endpoints.Users.Avatar, { urlParams: { id }, data: fd });
-      dispatch(getCurrentUser());
-      onSuccess && onSuccess();
-    } catch (err) {
-      onError && onError(err);
-      console.log('save employee avatar err', err);
-    }
-  };
+    async dispatch => {
+      try {
+        const fd = new FormData();
+        fd.append('file', avatar, avatar.name);
+        await Api.call(Api.endpoints.Users.Avatar, { urlParams: { id }, data: fd });
+        dispatch(getCurrentUser());
+        if (onSuccess) {
+          onSuccess();
+        }
+      } catch (err) {
+        if (onError) {
+          onError(err);
+        }
+        console.log('save employee avatar err', err);
+      }
+    };
 const saving = (payload: boolean): TUserActions => ({ type: 'User/Saving', payload });
 export const createUser =
   (
     payload: IUserForm,
     onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => void,
     avatar?: File
   ): AppThunk =>
@@ -91,6 +98,7 @@ export const updateUser =
     payload: IUserForm,
     id: string,
     onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => void,
     avatar?: File
   ): AppThunk =>

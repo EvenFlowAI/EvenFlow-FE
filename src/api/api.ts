@@ -9,7 +9,8 @@ import {
   IAppointmentByKey,
 } from './types';
 import { request } from './request';
-import { ITokens, PaginatedAPIResponse } from '../types/types';
+import { PaginatedAPIResponse } from '../types/types';
+import { ITokens } from '../types/auth';
 
 const accounts = {
   passwordRecovery: (data: IPasswordRecoveryData): TApiResponse<IPasswordRecoveryResp> =>

@@ -43,7 +43,7 @@ export const updateTransportationOption =
       })
       .catch(err => {
         enqueueSnackbar(
-          (err as any).response?.data?.message || 'An error occurred while processing your request',
+          err.response?.data?.message || 'An error occurred while processing your request',
           {
             variant: 'error',
             autoHideDuration: 3000,
@@ -62,6 +62,7 @@ export const editTransportationOptionRules =
     serviceCenterId: number,
     data: ITransportationOptionRules,
     successCallback = () => {},
+    // eslint-disable-next-line
     errorCallback = (err: { code: number; errorMessage: string }) => {}
   ): AppThunk =>
   dispatch => {
@@ -83,6 +84,7 @@ export const updateTransportationDescription =
     optionId: number,
     data: ITransportationOptionFull,
     onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>
   ): AppThunk =>
   dispatch => {
@@ -120,6 +122,7 @@ export const updateTransportationIcon =
     id: number,
     serviceCenterId: number,
     file: File,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>

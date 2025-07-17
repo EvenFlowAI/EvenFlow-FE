@@ -7,12 +7,6 @@ scripts/
 .eslintrc.js
 
 src/api
-src/assets
 src/components
-src/config
 src/features
 src/hooks
-src/routes
-src/store
-src/theme
-src/types

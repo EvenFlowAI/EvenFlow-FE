@@ -1,5 +1,6 @@
 import React from 'react';
-import { TCallback, TScreen } from '../../../../../types/types';
+import { TCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import {
   setAdvisor,
   setCurrentFrameScreen,

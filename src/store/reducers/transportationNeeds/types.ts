@@ -5,8 +5,8 @@ export interface ITransportationOptionRules {
     end: string;
   };
   timeOfDay?: {
-    start: any;
-    end: any;
+    start: string;
+    end: string;
   };
   customerSegments?: ECustomerSegment[];
   dayOfWeeks?: number[];

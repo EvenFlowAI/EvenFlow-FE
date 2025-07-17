@@ -14,19 +14,22 @@ export const setCurrentSetting = createAction<ICapacitySettingById | null>(
 );
 
 export const loadCapacitySettings =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (serviceCenterId: number, day: string, onError?: TArgCallback<any>): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.CapacitySettings.GetAll, { params: { serviceCenterId, day } })
-      .then(res => {
-        if (res.data) dispatch(getCapacitySettings(res.data));
-      })
-      .catch(err => {
-        console.log('load capacity settings err', err);
-        onError && onError(err);
-      })
-      .finally(() => dispatch(setLoading(false)));
-  };
+    dispatch => {
+      dispatch(setLoading(true));
+      Api.call(Api.endpoints.CapacitySettings.GetAll, { params: { serviceCenterId, day } })
+        .then(res => {
+          if (res.data) dispatch(getCapacitySettings(res.data));
+        })
+        .catch(err => {
+          console.log('load capacity settings err', err);
+          if (onError) {
+            onError(err);
+          }
+        })
+        .finally(() => dispatch(setLoading(false)));
+    };
 
 export const loadCapacitySettingById =
   (id: number, serviceBookId: number | undefined): AppThunk =>

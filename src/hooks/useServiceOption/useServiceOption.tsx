@@ -1,4 +1,4 @@
-import { TScreen } from '../../types/types';
+import { TScreen } from '../../types/screens';
 import { IFirstScreenOption } from '../../store/reducers/serviceTypes/types';
 import { useException } from '../useException/useException';
 import { useParams } from 'react-router-dom';

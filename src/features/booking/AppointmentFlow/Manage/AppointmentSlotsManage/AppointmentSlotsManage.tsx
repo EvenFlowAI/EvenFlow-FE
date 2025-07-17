@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { TArgCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import { AppointmentSlots } from '../../Screens/AppointmentSlots/AppointmentSlots';
 import { setChangesCompletedOpen } from '../../../../../store/reducers/modals/actions';
 import { useDispatch, useSelector } from 'react-redux';

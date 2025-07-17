@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { ActionCreator } from 'redux';
 import { changePageDataGeneric, changePagingGeneric } from '../utils';
 import {
@@ -268,20 +270,21 @@ export const loadBaseEmployeeSchedule =
   };
 
 export const updateBaseEmployeeSchedule =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (data: TSetScheduleData, onSuccess: () => void, onError: (err: any) => void): AppThunk =>
-  dispatch => {
-    dispatch(loading(true));
-    Api.call(Api.endpoints.EmployeeSchedule.SetTimeScheduleByEmployee, { data })
-      .then(() => {
-        dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId));
-        onSuccess();
-      })
-      .catch(err => {
-        onError(err);
-        console.log('load base employee schedule error', err);
-      })
-      .finally(() => dispatch(loading(false)));
-  };
+    dispatch => {
+      dispatch(loading(true));
+      Api.call(Api.endpoints.EmployeeSchedule.SetTimeScheduleByEmployee, { data })
+        .then(() => {
+          dispatch(loadBaseEmployeeSchedule(data.serviceCenterId, data.employeeId));
+          onSuccess();
+        })
+        .catch(err => {
+          onError(err);
+          console.log('load base employee schedule error', err);
+        })
+        .finally(() => dispatch(loading(false)));
+    };
 
 export const getAssignmentSettings = createAction<IEmployeeAssignmentSetting[]>(
   'Employees/GetAssignmentSettings'
@@ -303,6 +306,7 @@ export const loadAssignmentSettings =
 export const updateAssignmentSettings =
   (
     data: TUpdateAssignmentSettingsData,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>

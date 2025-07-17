@@ -7,7 +7,8 @@ import { handleSearch, selectSRMultiple } from '../../../../../store/reducers/ap
 import { Checkbox, IconButton } from '@mui/material';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { InfoOutlined, Search } from '@mui/icons-material';
-import { TArgCallback, TScreen } from '../../../../../types/types';
+import { TArgCallback } from '../../../../../types/types';
+import { TScreen } from '../../../../../types/screens';
 import ReactGA from 'react-ga4';
 import { IServiceRequest } from '../../../../../store/reducers/serviceRequests/types';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
