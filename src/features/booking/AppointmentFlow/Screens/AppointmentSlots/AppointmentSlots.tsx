@@ -257,9 +257,18 @@ export const AppointmentSlots: React.FC<
             const formatted = getClearDate(slot?.date);
             return dayjs(formatted).isAfter(dateWithOffset);
           });
+
+          // console.log('appointmentSlots1', appointmentSlots);
+          // console.log('sorted', sorted);
+          // console.log('firstAvailableSlot', firstAvailableSlot);
+          // console.log('slotsSearchedDate', slotsSearchedDate);
+
           if (!firstAvailableSlot) {
             console.info('Can not assign first available slot for general');
           } else {
+            console.log('sorted', sorted);
+            console.log('1', currentApiStartDate, currentApiEndDate);
+            console.log('checking', dayjs(sorted[0].appointmentDate).isAfter(currentApiEndDate));
             dispatch(selectAppointment(firstAvailableSlot));
             setDate(firstAvailableSlot.date);
           }
@@ -295,6 +304,7 @@ export const AppointmentSlots: React.FC<
                 )
               : selectFirstSlot();
           } else {
+            console.log('2');
             setDate(dayjs.utc(currentAppointment.date).startOf('day'));
           }
         } else {
@@ -364,6 +374,7 @@ export const AppointmentSlots: React.FC<
 
       const newDate = dayjs.utc(d);
       const minDate = newDate.isSame(dayjs.utc(), 'date') ? dayjs.utc() : newDate;
+      console.log('3');
       setDate(newDate);
 
       if (!keepSlot) {
@@ -384,6 +395,7 @@ export const AppointmentSlots: React.FC<
   const setDateCallback = useCallback(
     (d: TParsableDate) => {
       if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
+        console.log('4');
         setDate(dayjs(d).startOf('day'));
       }
     },
@@ -450,9 +462,11 @@ export const AppointmentSlots: React.FC<
   const loadData = async ({
     requestedStartDate,
     requestedEndDate,
+    test,
   }: {
     requestedStartDate?: string;
     requestedEndDate?: string;
+    test?: boolean;
   }) => {
     if (id) {
       setCurrentApiStartDate(requestedStartDate ?? null);
@@ -539,7 +553,8 @@ export const AppointmentSlots: React.FC<
               () => handleDateRangeSet(false),
               onLoadSlots,
               handleError,
-              setApiDates
+              setApiDates,
+              test
             )
           );
         }
@@ -671,7 +686,11 @@ export const AppointmentSlots: React.FC<
   const loadNextSlots = async () => {
     if (!currentApiStartDate || !currentApiEndDate) {
       const { apiStartDate, apiEndDate } = getApiDates();
-      await loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
+      await loadData({
+        requestedStartDate: apiStartDate,
+        requestedEndDate: apiEndDate,
+        test: true,
+      }).finally();
       return;
     }
 
@@ -682,6 +701,7 @@ export const AppointmentSlots: React.FC<
     await loadData({
       requestedStartDate: nextStartDate.toISOString(),
       requestedEndDate: nextEndDate.toISOString(),
+      test: true,
     }).finally();
   };
 
@@ -716,6 +736,7 @@ export const AppointmentSlots: React.FC<
     loadData({
       requestedStartDate: previousStartDate.toISOString(),
       requestedEndDate: previousEndDate.toISOString(),
+      test: true,
     }).finally();
 
     const currentMonth = dayjs(currentApiStartDate).month();

@@ -164,7 +164,8 @@ export const loadAppointmentSlots =
     onLoadedCb?: (isEmptyList: boolean) => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: TArgCallback<any>,
-    setApiDates?: (newStartDate: string) => void
+    setApiDates?: (newStartDate: string) => void,
+    test?: boolean
   ): AppThunk =>
   async dispatch => {
     dispatch(setSlotsLoading(true));
@@ -176,9 +177,11 @@ export const loadAppointmentSlots =
         getAppointmentSlots(
           items.map(item => {
             const searchDate = data.fromDate || data.startDate;
+            const searchDateEnd = data.endDate;
             return {
               ...item,
               searchDate: searchDate as TParsableDate,
+              searchDateEnd: test ? searchDateEnd : undefined,
             };
           })
         )

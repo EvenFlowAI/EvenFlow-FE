@@ -191,6 +191,7 @@ export interface IRemappedAppointmentSlot extends IAppointmentSlot {
   serviceRequestPrices?: IServiceRequestPrice[];
   timingType?: number;
   appointmentDate?: string;
+  searchDateEnd?: string;
 }
 
 export interface IAppointmentFilters {

@@ -157,11 +157,20 @@ export const AppointmentTimeSelector: React.FC<
             const appointment = appointments?.appointments.find(a =>
               dayjs.utc(a.date).isSame(dayjs.utc(timeSlot.date), 'minute')
             );
+            let notAvailableSlot = false;
+
+            console.log(162, appointment?.searchDateEnd);
+
+            if (appointment?.searchDateEnd) {
+              notAvailableSlot = dayjs(appointment?.appointmentDate).isAfter(
+                appointment?.searchDateEnd
+              );
+            }
 
             return (
               <TimeSlotCard
                 date={date}
-                slot={appointment}
+                slot={notAvailableSlot ? undefined : appointment}
                 onSelect={handleSelect}
                 selected={Boolean(
                   selectedAppointment && appointment?.id === selectedAppointment.id
