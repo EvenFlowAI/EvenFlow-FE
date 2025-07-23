@@ -16,7 +16,7 @@ import {
 } from '../../../api/types';
 import {
   EAppointmentTimingType,
-  EReminderType,
+  EContactMethodTypes,
   IServiceRequestPrice,
   TRecallForRequest,
 } from '../appointment/types';
@@ -143,7 +143,7 @@ export type TState = {
   selectedTime: TParsableDate;
   selectedVehicle: ILoadedVehicle | null;
   customer: ICustomer;
-  reminders: EReminderType[];
+  reminders: EContactMethodTypes[];
   transportation: ITransportation | null;
   transportations: ITransportation[];
   isTransportationsLoading: boolean;
@@ -251,7 +251,7 @@ export interface ICreateAppointmentRequest {
   vehicle: TVehicleForRequest;
   gmt: ParsableDate;
   offerId: number | null;
-  reminderTypes: EReminderType[];
+  contactMethodTypes: EContactMethodTypes[];
   serviceCenterId: number;
   advisorId: string | null;
   transportationOptionId: number | null;
