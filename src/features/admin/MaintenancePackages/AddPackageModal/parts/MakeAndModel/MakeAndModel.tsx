@@ -6,12 +6,14 @@ import { RootState } from '../../../../../../store/rootReducer';
 import Checkbox from '../../../../../../components/formControls/Checkbox/Checkbox';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import { IMake } from '../../../../../../api/types';
-import { removeDuplicates, upperCase } from './utils';
+import { removeDuplicates, removeDuplicatesV2, upperCase } from './utils';
 import { useAutocompleteStyles } from '../../../../../../hooks/styling/useAutocompleteStyles';
 import { ApplyToAll } from '../constants';
 
 type MakeAndModelProps = {
   setSelectedMakes: Dispatch<SetStateAction<string[]>>;
+  setSelectedMakesV2: Dispatch<SetStateAction<number[]>>;
+  setSelectedModelsV2: Dispatch<SetStateAction<number[]>>;
   setSelectedModels: Dispatch<SetStateAction<string[]>>;
   selectedModels: string[];
   selectedMakes: string[];
@@ -24,6 +26,8 @@ const MakeAndModel: React.FC<
 > = ({
   disabled,
   setSelectedMakes,
+  setSelectedMakesV2,
+  setSelectedModelsV2,
   selectedModels,
   selectedMakes,
   setSelectedModels,
@@ -163,27 +167,42 @@ const MakeAndModel: React.FC<
       if (makesFromDB.length && value.length === makesFromDB.length + 1) {
         setSelectedModels([]);
         setSelectedMakes([]);
+        setSelectedMakesV2([]);
+        setSelectedModelsV2([]);
       } else {
         setSelectedMakes(() => makesFromDB.map(item => item.name));
+        setSelectedMakesV2(() => makesFromDB.map(item => item.id));
         setInitialModels();
       }
     } else {
       setSelectedMakes(value);
+      setSelectedMakesV2(
+        value.map(make => makesFromDB.find(makeFromDB => makeFromDB.name === make)?.id || 0)
+      );
     }
   };
 
   const onModelChange = (e: React.SyntheticEvent, value: string[]) => {
     setFormIsChecked(false);
     const filteredModels = filteredMakes.map(item => item.models.map(model => model.name)).flat(1);
+    const filteredModelsV2 = filteredMakes.map(item => item.models.map(model => model.id)).flat(1);
     const modelsSet = removeDuplicates(filteredModels);
+    const modelsSetV2 = removeDuplicatesV2(filteredModelsV2);
     if (value.includes(ApplyToAll)) {
       if (modelsSet.length && value.length === modelsSet.length + 1) {
         setSelectedModels([]);
+        setSelectedModelsV2([]);
       } else {
         setSelectedModels(modelsSet);
+        setSelectedModelsV2(modelsSetV2);
       }
     } else {
       setSelectedModels(value);
+      setSelectedModelsV2(
+        filteredMakes.flatMap(make =>
+          make.models.filter(model => value.includes(model.name)).map(model => model.id)
+        )
+      );
     }
   };
 
@@ -202,8 +221,8 @@ const MakeAndModel: React.FC<
         renderOption={renderMakeOption}
         value={selectedMakes}
         renderInput={autocompleteRender({
-          label: 'Make',
-          placeholder: 'Select Make',
+          label: 'Vehicle Make',
+          placeholder: 'Select Vehicle Make',
         })}
       />
       <Autocomplete
@@ -220,8 +239,8 @@ const MakeAndModel: React.FC<
         isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
         value={selectedModels}
         renderInput={autocompleteRender({
-          label: 'Model',
-          placeholder: 'Select Model',
+          label: 'Vehicle Model',
+          placeholder: 'Select Vehicle Model',
         })}
       />
     </div>
