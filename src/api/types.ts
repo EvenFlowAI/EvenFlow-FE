@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import {
-  EReminderType,
+  EContactMethodTypes,
   IServiceRequestPrice,
   IVehicleData,
   IVehicleForSlots,
@@ -182,7 +182,7 @@ export interface IBaseAppointment {
   offerId: number;
   offer: IOffer;
   isEditable: boolean;
-  reminderTypes: EReminderType[];
+  contactMethodTypes: EContactMethodTypes[];
   serviceRequests: IServiceRequestShort[];
   createdBy: string;
   user?: ICurrentUser;
