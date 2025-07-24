@@ -49,6 +49,7 @@ export const ServiceCenters = {
   FowlerHondaDealertrack: 889,
   HondaOfResedaRR: 922,
   JannsenFordOfYorkDominion: 890,
+  SharpeBMWRR: 891,
 };
 
 const parentTrackersMap: Record<number, GATrackers[]> = {
@@ -116,6 +117,7 @@ const parentTrackersMap: Record<number, GATrackers[]> = {
   [ServiceCenters.FowlerHondaDealertrack]: [{ measurementId: 'G-GXEKFX70F8' }],
   [ServiceCenters.HondaOfResedaRR]: [{ measurementId: 'G-EGMWS8SGWR' }],
   [ServiceCenters.JannsenFordOfYorkDominion]: [{ measurementId: 'G-XXZTG63KCY' }],
+  [ServiceCenters.SharpeBMWRR]: [{ measurementId: 'G-6J2P1R95K2' }],
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
