@@ -497,6 +497,7 @@ export interface IModel {
   orderIndex: number;
   id: number;
   name: string;
+  code: string;
 }
 
 export interface IMake {
