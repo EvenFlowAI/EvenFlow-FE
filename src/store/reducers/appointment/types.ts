@@ -233,9 +233,8 @@ export type TAppointmentState = {
   slotsSearchedDate: ParsableDate;
 };
 
-export enum EReminderType {
+export enum EContactMethodTypes {
   Email,
-  Phone,
   Sms,
 }
 
