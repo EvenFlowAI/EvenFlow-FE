@@ -20,6 +20,9 @@ type TProps = {
 
 export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selected, date }) => {
   const { waitListSettings } = useSelector((state: RootState) => state.appointment);
+  const { currentScreen: currentFrameScreen } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const [timePassed, setTimePassed] = useState<boolean>(false);
   const { t } = useTranslation();
   const title = t(
@@ -98,7 +101,11 @@ export const TimeSlotCard: React.FC<TProps> = ({ timeSlot, slot, onSelect, selec
       rect?.right <= parentWidth;
 
     if (slotRef.current && selected && !isVisible) {
-      slotRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (currentFrameScreen === 'appointmentConfirmation') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        slotRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }, [selected]);
 

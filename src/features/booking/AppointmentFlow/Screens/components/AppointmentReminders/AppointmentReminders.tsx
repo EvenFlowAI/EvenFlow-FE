@@ -3,7 +3,7 @@ import { Checkbox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
 import { setReminders } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
-import { EReminderType } from '../../../../../../store/reducers/appointment/types';
+import { EContactMethodTypes } from '../../../../../../store/reducers/appointment/types';
 import { useTranslation } from 'react-i18next';
 import { StyledLabel } from './styles';
 import { ReactComponent as CheckboxIcon } from '../../../../../../assets/img/checkbox_outlined.svg';
@@ -18,33 +18,33 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const emailReminder = useMemo(() => {
-    const reminder = reminders.find(el => el.toString() === EReminderType.Email.toString());
+    const reminder = reminders.find(el => el.toString() === EContactMethodTypes.Email.toString());
     return typeof reminder !== 'undefined';
   }, [reminders]);
 
   const textChecked = useMemo(
-    () => scProfile?.isSendReminders && reminders.includes(EReminderType.Sms),
+    () => scProfile?.isSendReminders && reminders.includes(EContactMethodTypes.Sms),
     [scProfile, reminders]
   );
   const emailChecked = useMemo(
-    () => scProfile?.isSendReminders && reminders.includes(EReminderType.Email),
+    () => scProfile?.isSendReminders && reminders.includes(EContactMethodTypes.Email),
     [scProfile, reminders]
   );
 
   useEffect(() => {
     if (!isEmailRequired && emailReminder && !customer?.email) {
       dispatch(
-        setReminders(reminders.filter(el => el.toString() !== EReminderType.Email.toString()))
+        setReminders(reminders.filter(el => el.toString() !== EContactMethodTypes.Email.toString()))
       );
     }
   }, [isEmailRequired, emailReminder, customer]);
 
   useEffect(() => {
     if (customer?.email)
-      dispatch(setReminders(Array.from(new Set([...reminders, EReminderType.Email]))));
+      dispatch(setReminders(Array.from(new Set([...reminders, EContactMethodTypes.Email]))));
   }, [customer?.email]);
 
-  const handleChange = (t: EReminderType) => () => {
+  const handleChange = (t: EContactMethodTypes) => () => {
     if (reminders.includes(t)) {
       dispatch(setReminders(reminders.filter(r => r !== t)));
     } else {
@@ -62,7 +62,7 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
             icon={<CheckboxEmptyIcon />}
             checkedIcon={<CheckboxIcon />}
             checked={textChecked}
-            onChange={handleChange(EReminderType.Sms)}
+            onChange={handleChange(EContactMethodTypes.Sms)}
             color="primary"
           />
         }
@@ -84,7 +84,7 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
             checked={emailChecked}
             icon={<CheckboxEmptyIcon />}
             checkedIcon={<CheckboxIcon />}
-            onChange={handleChange(EReminderType.Email)}
+            onChange={handleChange(EContactMethodTypes.Email)}
             color="primary"
           />
         }

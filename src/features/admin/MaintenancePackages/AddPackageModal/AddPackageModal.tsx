@@ -51,14 +51,18 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useAutocompleteStyles, useStyles } from './styles';
 import { IVehiclesData, TModalProps } from './types';
 import { criteriaOptions, initialValues, yearOptions } from './constants';
+import { upperCase } from './parts/MakeAndModel/utils';
 
 const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TModalProps>>> = ({
   isEditing,
   ...props
 }) => {
-  const { packages, currentPackage, isPackageLoading } = useSelector(
-    (state: RootState) => state.packages
-  );
+  const {
+    packages,
+    currentPackage,
+    isPackageLoading,
+    makes: makesFromDB,
+  } = useSelector((state: RootState) => state.packages);
   const { allAssignedList, intervalUpsellList } = useSelector(
     (state: RootState) => state.serviceRequests
   );
@@ -75,6 +79,8 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [isApplyBusinessRules, setApplyBusinessRules] = useState<boolean>(false);
   const [selectedMakes, setSelectedMakes] = useState<string[]>([]);
+  const [selectedMakesV2, setSelectedMakesV2] = useState<number[]>([]);
+  const [selectedModelsV2, setSelectedModelsV2] = useState<number[]>([]);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedMileages, setSelectedMileages] = useState<string[]>([]);
   const [optionError, setOptionError] = useState<boolean>(false);
@@ -130,8 +136,57 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
         });
       }
       if (currentPackage.businessRules) {
-        setSelectedMakes(currentPackage.businessRules.vehicleMakes);
-        setSelectedModels(currentPackage.businessRules.vehicleModels);
+        // setSelectedMakes(currentPackage.businessRules.vehicleMakes);
+
+        if (currentPackage.businessRules.vehicleMakesV2?.length) {
+          setSelectedMakes(
+            currentPackage.businessRules.vehicleMakesV2.map(id => {
+              return makesFromDB.find(makeFromDB => makeFromDB.id === id)?.name || '';
+            })
+          );
+          setSelectedMakesV2(currentPackage.businessRules.vehicleMakesV2);
+        } else {
+          if (currentPackage.businessRules.vehicleMakes) {
+            setSelectedMakesV2(
+              currentPackage.businessRules.vehicleMakes.map(make => {
+                return makesFromDB.find(makeFromDB => makeFromDB.name === make)?.id || 0;
+              })
+            );
+          } else {
+            setSelectedMakesV2([]);
+          }
+        }
+
+        // setSelectedModels(currentPackage.businessRules.vehicleModels);
+        if (currentPackage.businessRules.vehicleModelsV2?.length) {
+          const filteredMakes = makesFromDB.filter(item =>
+            upperCase(selectedMakes).includes(item.name.toUpperCase())
+          );
+          setSelectedModels(
+            filteredMakes.flatMap(make =>
+              make.models
+                .filter(model => currentPackage?.businessRules?.vehicleModelsV2?.includes(model.id))
+                .map(model => model.name)
+            )
+          );
+          setSelectedModelsV2(currentPackage.businessRules.vehicleModelsV2);
+        } else {
+          if (currentPackage.businessRules.vehicleModels) {
+            const filteredMakes = makesFromDB.filter(item =>
+              upperCase(selectedMakes).includes(item.name.toUpperCase())
+            );
+            setSelectedModelsV2(
+              filteredMakes.flatMap(make =>
+                make.models
+                  .filter(model => currentPackage.businessRules.vehicleModels.includes(model.name))
+                  .map(model => model.id)
+              )
+            );
+          } else {
+            setSelectedModelsV2([]);
+          }
+        }
+
         setSelectedMileages(
           currentPackage.businessRules.vehicleMileageValues.map(item => item.toString())
         );
@@ -167,6 +222,8 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
     setOpsCodes([]);
     setSelectedModels([]);
     setSelectedMakes([]);
+    setSelectedModelsV2([]);
+    setSelectedMakesV2([]);
     setApplyBusinessRules(false);
     setSelectedMileages([]);
     setSelectedEngineTypes([]);
@@ -268,6 +325,8 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
         if (isApplyBusinessRules && isBusinessRulesValid()) {
           data.businessRules = {
             vehicleMakes: selectedMakes,
+            vehicleMakesV2: selectedMakesV2,
+            vehicleModelsV2: selectedModelsV2,
             vehicleModels: selectedModels,
             vehicleYearRange: {
               from: +vehiclesData.yearFrom,
@@ -416,6 +475,8 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
             selectedMakes={selectedMakes}
             selectedModels={selectedModels}
             setSelectedMakes={setSelectedMakes}
+            setSelectedMakesV2={setSelectedMakesV2}
+            setSelectedModelsV2={setSelectedModelsV2}
             setSelectedModels={setSelectedModels}
             setFormIsChecked={setFormIsChecked}
             disabled={!isApplyBusinessRules}

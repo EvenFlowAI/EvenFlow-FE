@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import {
-  EReminderType,
+  EContactMethodTypes,
   IServiceRequestPrice,
   IVehicleData,
   IVehicleForSlots,
@@ -182,7 +182,7 @@ export interface IBaseAppointment {
   offerId: number;
   offer: IOffer;
   isEditable: boolean;
-  reminderTypes: EReminderType[];
+  contactMethodTypes: EContactMethodTypes[];
   serviceRequests: IServiceRequestShort[];
   createdBy: string;
   user?: ICurrentUser;
@@ -389,7 +389,9 @@ export interface IYearRange {
 
 export interface IBusinessRule {
   vehicleMakes: string[];
+  vehicleMakesV2?: number[];
   vehicleModels: string[];
+  vehicleModelsV2?: number[];
   vehicleYearRange: IYearRange;
   vehicleMileageValues: string[];
   customerCriteria: ECustomerCriteria;
@@ -495,6 +497,7 @@ export interface IModel {
   orderIndex: number;
   id: number;
   name: string;
+  code: string;
 }
 
 export interface IMake {

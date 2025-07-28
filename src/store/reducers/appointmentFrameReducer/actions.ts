@@ -22,7 +22,7 @@ import {
 } from '../../../api/types';
 import {
   EAppointmentTimingType,
-  EReminderType,
+  EContactMethodTypes,
   IServiceRequestPrice,
   IVehicle,
 } from '../appointment/types';
@@ -122,7 +122,7 @@ export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
 export const setCustomer = createAction<ICustomer>('fAppointment/setCustomer');
-export const setReminders = createAction<EReminderType[]>('fAppointment/setReminders');
+export const setReminders = createAction<EContactMethodTypes[]>('fAppointment/setReminders');
 export const setAppointmentId = createAction<IAppointmentId>('fAppointment/setAppointmentId');
 export const setTransportation = createAction<ITransportation | null>(
   'fAppointment/setTransportation'
@@ -1155,7 +1155,7 @@ export const createOrUpdateAppointment =
       vehicle,
       gmt: dayjs().utcOffset(),
       offerId: appointment.appointment?.offer?.id ?? null,
-      reminderTypes: appointmentFrame.reminders,
+      contactMethodTypes: appointmentFrame.reminders,
       serviceCenterId: id,
       advisorId: appointmentFrame.advisor?.id ?? null,
       transportationOptionId,
@@ -1516,7 +1516,7 @@ export const cloneAppointment =
           vehicle,
           gmt: dayjs().utcOffset(),
           offerId: appointment.appointment?.offer?.id ?? null,
-          reminderTypes: currentAppointment.reminderTypes,
+          contactMethodTypes: currentAppointment.contactMethodTypes,
           serviceCenterId: id,
           advisorId: advisor ? advisor : null,
           transportationOptionId,

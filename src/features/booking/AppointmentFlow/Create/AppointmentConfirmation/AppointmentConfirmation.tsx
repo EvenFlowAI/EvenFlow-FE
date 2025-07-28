@@ -71,7 +71,7 @@ export const AppointmentConfirmation: React.FC<
   }, [scProfile]);
 
   useEffect(() => {
-    dispatch(setReminders([0, 2]));
+    dispatch(setReminders([0, 1]));
   }, []);
 
   const checkIsValid = () => {

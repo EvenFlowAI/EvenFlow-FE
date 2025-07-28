@@ -146,7 +146,7 @@ export const ManageAppointment: React.FC<
   }, [scProfile, appointmentWasChanged]);
 
   useEffect(() => {
-    dispatch(setReminders([0, 2]));
+    dispatch(setReminders([0, 1]));
   }, []);
 
   useEffect(() => {
