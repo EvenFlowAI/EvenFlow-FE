@@ -341,14 +341,7 @@ const loadSlotsForCloning =
       if (currentAppointment.driver?.email) data.searchTerm = currentAppointment.driver?.email;
       if (currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
         if (data.address && data.zipCode)
-          dispatch(
-            loadServiceValetSlots(
-              data,
-              () => {},
-              () => {},
-              onEmptyList
-            )
-          );
+          dispatch(loadServiceValetSlots(data, () => {}, onEmptyList));
       } else {
         dispatch(
           loadAppointmentSlots(
