@@ -146,6 +146,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
           );
           setSelectedMakesV2(currentPackage.businessRules.vehicleMakesV2);
         } else {
+          // TODO remove when all SC will have vehicleMakesV2
           if (currentPackage.businessRules.vehicleMakes) {
             setSelectedMakesV2(
               currentPackage.businessRules.vehicleMakes.map(make => {
@@ -171,6 +172,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
           );
           setSelectedModelsV2(currentPackage.businessRules.vehicleModelsV2);
         } else {
+          // TODO remove when all SC will have vehicleModelsV2
           if (currentPackage.businessRules.vehicleModels) {
             const filteredMakes = makesFromDB.filter(item =>
               upperCase(selectedMakes).includes(item.name.toUpperCase())
