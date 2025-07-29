@@ -229,7 +229,7 @@ export const ServiceBookModal: React.FC<
           globalId: sourceModel.globalId,
           isReadOnly: sourceModel.isReadOnly,
           orderIndex: sourceModel.orderIndex,
-          code: sourceModel.code
+          code: sourceModel.code,
         };
       });
       setSelectedModels(selectedModels);
