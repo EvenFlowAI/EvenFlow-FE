@@ -176,9 +176,34 @@ const MakeAndModel: React.FC<
       }
     } else {
       setSelectedMakes(value);
-      setSelectedMakesV2(
-        value.map(make => makesFromDB.find(makeFromDB => makeFromDB.name === make)?.id || 0)
+
+      const selectedMakeIds = value.map(
+        make => makesFromDB.find(makeFromDB => makeFromDB.name === make)?.id || 0
       );
+      setSelectedMakesV2(selectedMakeIds);
+
+      // for clear models when delete makes
+      setSelectedModelsV2(prev =>
+        prev.filter(modelId => {
+          return filteredMakes.some(
+            make => value.includes(make.name) && make.models.some(model => model.id === modelId)
+          );
+        })
+      );
+
+      setSelectedModels(prev =>
+        prev.filter(modelName => {
+          return filteredMakes.some(
+            make => value.includes(make.name) && make.models.some(model => model.name === modelName)
+          );
+        })
+      );
+
+      // for all clears
+      if (value.length === 0) {
+        setSelectedModelsV2([]);
+        setSelectedModels([]);
+      }
     }
   };
 
