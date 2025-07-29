@@ -73,7 +73,7 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
           serviceCenterName: scProfile?.name ?? '',
         })}{' '}
         {t(
-          'and also agree to our Privacy Policy & Terms of Service. Message frequency may vary. Message and data rates apply. Reply STOP to unsubscribe. Text HELP for support.'
+          'and your information will not be shared with a 3rd party for any other purpose, and our Privacy Policy & Terms of Service. Message frequency may vary. Message and data rates apply. Reply STOP to unsubscribe. Text HELP for support.'
         )}
       </Info>
       <StyledLabel
@@ -94,7 +94,9 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
         {t('to confirm, cancel and reschedule your upcoming service appointment from', {
           serviceCenterName: scProfile?.name ?? '',
         })}{' '}
-        {t('and also agree to our Privacy Policy & Terms of Service.')}
+        {t(
+          'and your information will not be shared with a 3rd party for any other purpose, and our Privacy Policy & Terms of Service.'
+        )}
       </Info>
     </div>
   );
