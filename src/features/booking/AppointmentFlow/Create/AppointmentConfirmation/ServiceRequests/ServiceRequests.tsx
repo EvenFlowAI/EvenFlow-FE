@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
 import { useTranslation } from 'react-i18next';
 import { EServiceType } from '../../../../../../store/reducers/appointmentFrameReducer/types';
-import { List, ServiceItem, TitleWrapper, MessageIconWrapper } from './styles';
+import { List, MessageIconWrapper, ServiceItem, TitleWrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { ReactComponent as MessageIcon } from '../../../../../../assets/img/comment_icon.svg';
 import { ReactComponent as MessageIconFilled } from '../../../../../../assets/img/comment_icon_filled.svg';
@@ -12,6 +12,7 @@ import CommentModal from '../../../../../../components/modals/booking/CommentMod
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { ISR } from '../../../../../../store/reducers/appointment/types';
 import { mergeArrayById } from '../../../../../../utils/utils';
+import i18n from '../../../../../../i18n';
 
 const ServiceRequests = () => {
   const { appointment, serviceValetAppointment, selectedSR, selectedSRComments, serviceRequests } =
@@ -24,7 +25,9 @@ const ServiceRequests = () => {
     selectedPackage,
     packagePricingType,
     selectedRecalls,
+    packageEMenuType,
   } = useSelector((state: RootState) => state.appointmentFrame);
+  const { scProfile } = useSelector((state: RootState) => state.appointment);
   const [selectedRequest, setSelectedRequest] = useState<ISR | null>(null);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { t } = useTranslation();
@@ -51,6 +54,19 @@ const ServiceRequests = () => {
       if (price) name = name + ` (${price.title})`;
     }
   }
+
+  const getPackageLabel = () => {
+    if (selectedPackage?.name) {
+      return selectedPackage?.name;
+    }
+    if (packageEMenuType !== null && scProfile?.maintenancePackageOptionTypes?.length) {
+      const firstOption = scProfile?.maintenancePackageOptionTypes[0];
+      return packageEMenuType === firstOption
+        ? i18n.t('Factory Package')
+        : i18n.t('Dealer Package');
+    }
+    return null;
+  };
 
   const currentAppointmentServiceRequestsWithComment =
     currentAppointment?.serviceRequestPrices?.map(item => {
@@ -119,7 +135,7 @@ const ServiceRequests = () => {
               {selectedRecalls.map(el => (
                 <ServiceItem key={el.id}>{el.recallComponent}</ServiceItem>
               ))}
-              {selectedPackage?.name ? <ServiceItem>{name}</ServiceItem> : null}
+              <ServiceItem>{getPackageLabel()}</ServiceItem>
               {selectedSR.map(item => {
                 const currentServiceRequest = serviceRequests.find(
                   serviceRequest => serviceRequest.id === item
