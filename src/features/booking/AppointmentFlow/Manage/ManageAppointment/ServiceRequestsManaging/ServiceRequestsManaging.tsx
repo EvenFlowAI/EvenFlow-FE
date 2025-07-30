@@ -18,6 +18,7 @@ import { ReactComponent as MessageIconFilled } from '../../../../../../assets/im
 import CommentModal from '../../../../../../components/modals/booking/CommentModal/CommentModal';
 import { ISR } from '../../../../../../store/reducers/appointment/types';
 import { getMaintenanceDescription } from '../../../../../../utils/getMaintenanceDescription';
+import i18n from '../../../../../../i18n';
 
 const ServiceRequestsManaging = () => {
   const {
@@ -92,6 +93,19 @@ const ServiceRequestsManaging = () => {
     }
   }
 
+  const getPackageLabel = () => {
+    if (selectedPackage?.name) {
+      return selectedPackage?.name;
+    }
+    if (packageEMenuType !== null && scProfile?.maintenancePackageOptionTypes?.length) {
+      const firstOption = scProfile?.maintenancePackageOptionTypes[0];
+      return packageEMenuType === firstOption
+        ? i18n.t('Factory Package')
+        : i18n.t('Dealer Package');
+    }
+    return null;
+  };
+
   return servicesList?.length ? (
     <ConfirmationItemWrapper>
       <TitleWrapper>
@@ -108,7 +122,8 @@ const ServiceRequestsManaging = () => {
           {selectedRecalls.map(el => (
             <ServiceItem key={el.id}>{el.recallComponent}</ServiceItem>
           ))}
-          {selectedPackage?.name ? <ServiceItem>{name}</ServiceItem> : null}
+          <ServiceItem>{getPackageLabel()}</ServiceItem>
+
           {selectedSR.map(item => {
             const currentServiceRequest = serviceRequests.find(
               serviceRequest => serviceRequest.id === item
