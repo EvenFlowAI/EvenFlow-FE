@@ -61,6 +61,11 @@ export const bookingFlowRoot: TTitle = {
   title: 'Booking Experience',
 };
 
+export const dealerOperationsRoot: TTitle = {
+  to: Routes.Dealer.Base,
+  title: 'Dealer Operations',
+};
+
 export const pricingRoot: TTitle = {
   to: Routes.Pricing.Base,
   title: 'Dynamic Pricing',

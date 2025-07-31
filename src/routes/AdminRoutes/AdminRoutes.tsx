@@ -13,11 +13,11 @@ import DealershipGroups from '../../pages/admin/DealershipGroups/DealershipGroup
 import { useCurrentUser } from '../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../constants';
 import EmployeesRoutes from '../EmployeesRoutes/EmployeesRoutes';
-import { DealerOperations } from '../../pages/admin/DealerOperations/DealerOperations';
 import ServicesRoutes from '../ServicesRoutes/ServicesRoutes';
 import CenterProfileRoutes from '../CenterProfileRoutes/CenterProfileRoutes';
 import { ServiceCenters } from '../../pages/admin/ServiceCenters/ServiceCenters';
 import ApplicationRoutes from '../ApplicationRoutes/ApplicationRoutes';
+import { DealerOperationsRoutes } from '../DealerOperationsRoutes/DealerOperationsRoutes';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
@@ -40,8 +40,7 @@ export const AdminRoutes = () => {
     { path: Routes.Admin.Appointments, component: AppointmentsPage },
     {
       path: Routes.Dealer.Base,
-      exact: true,
-      component: DealerOperations,
+      component: DealerOperationsRoutes,
       condition: !isRestrictedRole,
     },
     { path: Routes.Pricing.Base, component: PricingRoutes, condition: !isRestrictedRole },

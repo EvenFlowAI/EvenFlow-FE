@@ -11,8 +11,11 @@ import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { useDashboardStyles } from '../../../hooks/styling/useDashboardStyles';
 import { TDashboardItem } from '../../../types/types';
+import { dealerOperationsRoot } from '../../../utils/constants';
 
-export const DealerOperations: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
+export const DealerOperationsInternal: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren>
+> = () => {
   const currentUser = useCurrentUser();
   const { classes } = useDashboardStyles();
 
@@ -52,7 +55,7 @@ export const DealerOperations: React.FC<React.PropsWithChildren<React.PropsWithC
 
   return (
     <div style={{ width: '100%' }}>
-      <TitleContainer title="Dealer Operations" pad />
+      <TitleContainer title="Internal" pad parent={dealerOperationsRoot} />
       <Grid container spacing={2}>
         {items.map(item => (
           <Grid item xs={12} sm={4} md={3} key={item.label}>
