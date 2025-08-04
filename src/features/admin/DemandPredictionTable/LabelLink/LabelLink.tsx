@@ -4,9 +4,10 @@ import { SubLabel } from './styles';
 
 type TProps = {
   subText: string;
-  icon: ReactElement;
+  icon?: ReactElement;
   onClick: TCallback;
   color: string;
+  style?: any;
 };
 
 const LabelLink: React.FC<TProps> = props => {
@@ -17,8 +18,13 @@ const LabelLink: React.FC<TProps> = props => {
     props.onClick();
   };
   return (
-    <SubLabel color={props.color} role="presentation" onClick={onClick}>
-      <div>{props.icon}</div>
+    <SubLabel
+      style={props.style ? props.style : null}
+      color={props.color}
+      role="presentation"
+      onClick={onClick}
+    >
+      {props.icon ? <div>{props.icon}</div> : null}
       <div>{props.subText}</div>
     </SubLabel>
   );

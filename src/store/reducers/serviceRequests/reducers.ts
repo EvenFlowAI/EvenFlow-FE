@@ -46,6 +46,7 @@ type TState = {
   nonSelectedLoading: boolean;
   nonSelectedPaging: IPagingResponse;
   nonSelectedPageData: IPageRequest;
+  dealerOperationPageData: IPageRequest;
   nonSelectedOrder: IOrder<IServiceRequest>;
   nonSelectedFilter: IServiceRequestNonAddedFilter;
   assignedList: IAssignedServiceRequest[];
@@ -78,6 +79,7 @@ const initialState: TState = {
   nonSelectedLoading: false,
   nonSelectedPaging: { ...defaultPaging },
   nonSelectedPageData: { ...defaultPageData },
+  dealerOperationPageData: { ...defaultPageData },
   nonSelectedFilter: { searchTerm: '' },
   assignedList: [],
   allAssignedList: [],
