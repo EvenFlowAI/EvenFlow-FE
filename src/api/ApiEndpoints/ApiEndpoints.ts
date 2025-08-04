@@ -250,6 +250,7 @@ export class Api {
       ByVehicle: { route: '/maintenance-packages/by-vehicle', method: 'post' },
       GetShortByQuery: { route: '/maintenance-packages/short-by-query', method: 'post' },
       GetOptionsByQuery: { route: '/maintenance-packages/options-by-query', method: 'post' },
+      EMenuMaintenancePackage: { route: '/emenu-maintenance-packages', method: 'post' },
       ChangePricingDisplayType: {
         route: '/maintenance-packages/{id}/pricing-display-type',
         method: 'patch',

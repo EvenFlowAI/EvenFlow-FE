@@ -139,6 +139,7 @@ export interface IApiEndpoints {
     | 'GetByQuery'
     | 'PackageOptions'
     | 'ByVehicle'
+    | 'EMenuMaintenancePackage'
     | 'GetShortByQuery'
     | 'GetOptionsByQuery'
     | 'ChangePricingDisplayType'
