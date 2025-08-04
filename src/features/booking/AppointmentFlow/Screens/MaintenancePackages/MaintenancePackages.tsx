@@ -39,6 +39,7 @@ import { getPackagesData } from './utils';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
+import { setPackageEMenuType } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 
 type TPackageSelectionProps = {
   onNext: TArgCallback<TScreen>;
@@ -105,9 +106,12 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   }, [selectedPackage, packagePricingType]);
 
   useEffect(() => {
-    if (!scProfile?.eMenuEnabled) {
+    if (!scProfile?.eMenuPDF) {
       setLoading(true);
-      Api.call<IPackage[]>(Api.endpoints.MaintenancePackages.ByVehicle, {
+      const endpoint = !scProfile?.eMenuEnabled
+       ? Api.endpoints.MaintenancePackages.ByVehicle
+       : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
+      Api.call<IPackage[]>(endpoint, {
         data: {
           serviceCenterId: decodeSCID(id),
           vehicle: {
@@ -216,12 +220,17 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
         packageOptionType !== localSelectedPackage.type
       ) {
         onOpen();
-      } else {
+      }         
+      if(!scProfile?.eMenuEnabled)
+      {
         dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
         dispatch(setPackage(localSelectedPackage));
         dispatch(setPackagePricingType(localSelectedPricingType));
-        onSelectionCompleted();
       }
+      else{
+        dispatch(setPackageEMenuType(localSelectedPackage.type));
+      }
+      onSelectionCompleted();
     }
   };
 
@@ -266,7 +275,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
 
   return (
     <PackagesStepWrapper>
-      {!scProfile?.eMenuEnabled ? (
+      {!(scProfile?.eMenuEnabled && scProfile?.eMenuPDF) ? (
         <NoItemsLoading
           wrapperStyles={{ marginTop: 20 }}
           items={packages}
@@ -274,7 +283,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           label={t('There are no packages available')}
         />
       ) : null}
-      {scProfile?.eMenuEnabled ? (
+      {(scProfile?.eMenuEnabled && scProfile?.eMenuPDF) ? (
         <React.Fragment>
           <PackagesEmenu onBack={handleBack} onNext={onEMenuNext} />
         </React.Fragment>
@@ -384,7 +393,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           )}
         </React.Fragment>
       ) : null}
-      {scProfile?.eMenuEnabled ? null : (
+      {(scProfile?.eMenuEnabled && scProfile?.eMenuPDF) ? null : (
         <ActionButtons
           onBack={handleBack}
           nextLabel={t('Next')}
