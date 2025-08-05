@@ -55,6 +55,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   isManagingFlow,
 }) => {
   const { scProfile } = useSelector((state: RootState) => state.appointment);
+  const { makes } = useSelector((state: RootState) => state.appointmentFrame);
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const {
@@ -114,6 +115,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       Api.call<IPackage[]>(endpoint, {
         data: {
           serviceCenterId: decodeSCID(id),
+          modelCode: getModelCode(),
           vehicle: {
             ...selectedVehicle,
             mileage: selectedVehicle?.mileage,
@@ -138,6 +140,13 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       return `${cls} selected`;
     }
     return cls;
+  };
+
+   const getModelCode = (): string | undefined => {
+    return makes
+      .find(item => item.name == selectedVehicle?.make)
+      ?.models?.find(model => model.name == selectedVehicle?.model)
+      ?.code;
   };
 
   const handleBack = (): void => {
