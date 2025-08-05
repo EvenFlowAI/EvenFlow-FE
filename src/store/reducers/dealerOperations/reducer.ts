@@ -1,16 +1,19 @@
 import { TState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
-import { getDashboardItems, getDealerOperationsPaging } from './actions';
-import { setPageData } from '../packages/actions';
+import {
+  getDashboardItems,
+  getCustomerCommunicationPaging,
+  setCustomerCommunicationDashboardPageData,
+} from './actions';
 import { defaultPaging } from '../constants';
 
 const initialState: TState = {
   dashboardItems: [],
-  dealerOperationsPageData: {
+  customerCommunicationPageData: {
     pageSize: 5,
     pageIndex: 0,
   },
-  dealerOperationsPaging: { ...defaultPaging },
+  customerCommunicationPaging: { ...defaultPaging },
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -18,13 +21,13 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     .addCase(getDashboardItems, (state, { payload }) => {
       return { ...state, dashboardItems: payload };
     })
-    .addCase(setPageData, (state, { payload }) => {
+    .addCase(setCustomerCommunicationDashboardPageData, (state, { payload }) => {
       return {
         ...state,
-        dealerOperationsPageData: { ...state.dealerOperationsPageData, ...payload },
+        customerCommunicationPageData: { ...state.customerCommunicationPageData, ...payload },
       };
     })
-    .addCase(getDealerOperationsPaging, (state, { payload }) => {
-      return { ...state, dealerOperationsPaging: payload };
+    .addCase(getCustomerCommunicationPaging, (state, { payload }) => {
+      return { ...state, customerCommunicationPaging: payload };
     })
 );

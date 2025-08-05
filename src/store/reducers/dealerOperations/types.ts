@@ -2,8 +2,8 @@ import { IPageRequest, IPagingResponse } from '../../../types/types';
 
 export type TState = {
   dashboardItems: DashboardItemI[];
-  dealerOperationsPageData: IPageRequest;
-  dealerOperationsPaging: IPagingResponse;
+  customerCommunicationPageData: IPageRequest;
+  customerCommunicationPaging: IPagingResponse;
 };
 
 export interface DashboardItemI {

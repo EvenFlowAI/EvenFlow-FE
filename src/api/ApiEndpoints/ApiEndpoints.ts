@@ -627,6 +627,10 @@ export class Api {
     ZipCodes: {
       GetFiltered: { route: '/zip-codes/by-query/', method: 'post' },
     },
+    DealerOperations: {
+      CreateEvent: { route: '/outbound-events', method: 'post' },
+      GetEvents: { route: '/outbound-events', method: 'get' },
+    },
   };
 
   static async call<RValue = any>(r: TApiEndpoint, options?: TOptions) {

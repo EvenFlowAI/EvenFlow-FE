@@ -1,46 +1,74 @@
 import { createAction } from '@reduxjs/toolkit';
 import { DashboardItemI } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
-import { data } from '../../../TEMP_DATA';
 import { ActionCreator } from 'redux';
+import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 
 export const getDashboardItems = createAction<DashboardItemI[]>(
   'DealerOperations/GetDashboardItems'
 );
 
-export const setDealerOperationsPageData = createAction<Partial<IPageRequest>>(
-  'Optimizer/DealerOperationsSetPageData'
+export const setCustomerCommunicationDashboardPageData = createAction<Partial<IPageRequest>>(
+  'Optimizer/setCustomerCommunicationDashboardPageData'
 );
-export const getDealerOperationsPaging = createAction<IPagingResponse>(
-  'Optimizer/GetDealerOperationsPaging'
+export const getCustomerCommunicationPaging = createAction<IPagingResponse>(
+  'Optimizer/getCustomerCommunicationPaging'
 );
 
 export const loadDashboardItems =
   (serviceCenterId: number): AppThunk =>
   async (dispatch, getState) => {
-    const { dealerOperationsPageData } = getState().dealerOperations;
+    const { customerCommunicationPageData } = getState().dealerOperations;
+    const data = {
+      serviceCenterId,
+      pageIndex: customerCommunicationPageData.pageIndex,
+      pageSize: customerCommunicationPageData.pageSize,
+    };
 
-    console.log('loadDashboardItems -> serviceCenterId', serviceCenterId);
-    dispatch(getDashboardItems(data.result));
-    dispatch(getDealerOperationsPaging(data.paging));
-    if (
-      data.paging.numberOfPages > 0 &&
-      data.paging.numberOfPages < dealerOperationsPageData.pageIndex + 1
-    ) {
-      dispatch(
-        setDealerOperationsPageData({
-          ...dealerOperationsPageData,
-          pageIndex: data.paging.numberOfPages - 1,
-        })
-      );
-    }
+    Api.call(Api.endpoints.DealerOperations.GetEvents, { params: data })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getDashboardItems(response.data.result));
+          dispatch(getCustomerCommunicationPaging(response.data.paging));
+          if (
+            response.data.paging.numberOfPages > 0 &&
+            response.data.paging.numberOfPages < customerCommunicationPageData.pageIndex + 1
+          ) {
+            dispatch(
+              setCustomerCommunicationDashboardPageData({
+                ...customerCommunicationPageData,
+                pageIndex: response.data.paging.numberOfPages - 1,
+              })
+            );
+          }
+        } else {
+          console.log('No data with events');
+        }
+      })
+      .catch(e => {
+        console.log('Loading dashboard items error', e);
+      });
+  };
+
+export const createCustomerEvent =
+  (data: { serviceCenterId: number; name: string }, onClose: () => void): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.CreateEvent, {
+      data,
+    })
+      .then(() => {
+        dispatch(loadDashboardItems(data.serviceCenterId));
+        onClose();
+      })
+      .catch(e => {
+        console.log('Creating Customer Event error', e);
+      });
   };
 
 export const changeDealerOperationsPageData: ActionCreator<AppThunk> = (
   payload: Partial<IPageRequest>
 ) => {
   return async dispatch => {
-    console.log(payload);
-    await dispatch(setDealerOperationsPageData(payload));
+    await dispatch(setCustomerCommunicationDashboardPageData(payload));
   };
 };

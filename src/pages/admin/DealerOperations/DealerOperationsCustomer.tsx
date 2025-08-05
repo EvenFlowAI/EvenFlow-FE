@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { dealerOperationsRoot } from '../../../utils/constants';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { DenseTable } from '../../../components/styled/DemandTable';
@@ -11,31 +11,36 @@ import { ReactComponent as GreyCross } from '../../../assets/img/greyCross.svg';
 import { TableRow } from '../../../components/styled/TableRow';
 import {
   changeDealerOperationsPageData,
+  createCustomerEvent,
   loadDashboardItems,
 } from '../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { usePagination } from '../../../hooks/usePaginations/usePaginations';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
+import { useModal } from '../../../hooks/useModal/useModal';
+import AddCustomerEventModal from '../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
+  const { onOpen, onClose, isOpen } = useModal();
 
-  const { dashboardItems, dealerOperationsPaging, dealerOperationsPageData } = useSelector(
-    (state: RootState) => state.dealerOperations
-  );
+  const { dashboardItems, customerCommunicationPaging, customerCommunicationPageData } =
+    useSelector((state: RootState) => state.dealerOperations);
 
   const { changeRowsPerPage, changePage } = usePagination(
-    (s: RootState) => s.dealerOperations.dealerOperationsPageData,
+    (s: RootState) => s.dealerOperations.customerCommunicationPageData,
     changeDealerOperationsPageData
   );
+
+  const [newEventName, setNewEventName] = useState('');
 
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadDashboardItems(selectedSC.id));
     }
-  }, [selectedSC, dealerOperationsPageData]);
+  }, [selectedSC, customerCommunicationPageData]);
 
   const handleChangePage = async (
     e: React.MouseEvent<Element, MouseEvent> | null,
@@ -55,6 +60,26 @@ const DealerOperationsCustomer = () => {
     console.log(id);
   };
 
+  const handleCloseModal = () => {
+    onClose();
+    setNewEventName('');
+  };
+
+  const handleSaveNewEvent = () => {
+    if (!selectedSC?.id) {
+      throw new Error('Selected SC is not defined');
+    }
+
+    if (newEventName?.length > 2) {
+      dispatch(
+        createCustomerEvent(
+          { serviceCenterId: selectedSC?.id, name: newEventName },
+          handleCloseModal
+        )
+      );
+    }
+  };
+
   return (
     <div style={{ width: '100%' }}>
       <TitleContainer title="Customer" pad parent={dealerOperationsRoot} />
@@ -71,7 +96,7 @@ const DealerOperationsCustomer = () => {
         <p style={{ fontSize: '18px', fontWeight: 700, margin: 0, textTransform: 'uppercase' }}>
           Customer Communication Dashboard
         </p>
-        <Button variant="contained" onClick={() => {}}>
+        <Button variant="contained" onClick={onOpen}>
           Add Event
         </Button>
       </div>
@@ -147,14 +172,14 @@ const DealerOperationsCustomer = () => {
                     >
                       <LabelLink
                         subText={
-                          el.communicationDetails.textMessage ? 'Configured' : 'Not Configured'
+                          el.communicationDetails?.textMessage ? 'Configured' : 'Not Configured'
                         }
-                        color={el.communicationDetails.textMessage ? '#7898FF' : '#C71062'}
-                        icon={el.communicationDetails.textMessage ? <CheckIcon /> : <RedCross />}
+                        color={el.communicationDetails?.textMessage ? '#7898FF' : '#C71062'}
+                        icon={el.communicationDetails?.textMessage ? <CheckIcon /> : <RedCross />}
                         onClick={() => {}}
                       />
                       <Switch
-                        disabled={!el.communicationDetails.textMessage}
+                        disabled={!el.communicationDetails?.textMessage}
                         onClick={() => textSwitchChange(el.id)}
                         checked={el.isTextEnabled}
                         color="primary"
@@ -181,18 +206,26 @@ const DealerOperationsCustomer = () => {
         </DenseTable>
       </div>
 
-      {dealerOperationsPaging.numberOfRecords > 5 ? (
+      {customerCommunicationPaging.numberOfRecords > 5 ? (
         <TablePagination
           // className={classes.pagination}
           component="div"
-          count={dealerOperationsPaging.numberOfRecords}
-          page={dealerOperationsPageData.pageIndex}
+          count={customerCommunicationPaging.numberOfRecords}
+          page={customerCommunicationPageData.pageIndex}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 20, 50]}
           onRowsPerPageChange={handleChangeRows}
-          rowsPerPage={dealerOperationsPageData.pageSize}
+          rowsPerPage={customerCommunicationPageData.pageSize}
         />
       ) : null}
+
+      <AddCustomerEventModal
+        onClose={onClose}
+        open={isOpen}
+        setNewEventName={setNewEventName}
+        newEventName={newEventName}
+        handleSaveNewEvent={handleSaveNewEvent}
+      ></AddCustomerEventModal>
     </div>
   );
 };
