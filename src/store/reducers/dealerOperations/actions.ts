@@ -65,6 +65,18 @@ export const createCustomerEvent =
       });
   };
 
+export const deleteCustomerEvent =
+  (data: { serviceCenterId: number; id: number }): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.DeleteEvent, { urlParams: { id: data.id } })
+      .then(() => {
+        dispatch(loadDashboardItems(data.serviceCenterId));
+      })
+      .catch(e => {
+        console.log('Deleting Customer Event error', e);
+      });
+  };
+
 export const changeDealerOperationsPageData: ActionCreator<AppThunk> = (
   payload: Partial<IPageRequest>
 ) => {

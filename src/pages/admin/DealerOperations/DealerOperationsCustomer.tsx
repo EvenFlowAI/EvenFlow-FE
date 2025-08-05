@@ -12,6 +12,7 @@ import { TableRow } from '../../../components/styled/TableRow';
 import {
   changeDealerOperationsPageData,
   createCustomerEvent,
+  deleteCustomerEvent,
   loadDashboardItems,
 } from '../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,7 +38,7 @@ const DealerOperationsCustomer = () => {
   const [newEventName, setNewEventName] = useState('');
 
   useEffect(() => {
-    if (selectedSC) {
+    if (selectedSC?.id) {
       dispatch(loadDashboardItems(selectedSC.id));
     }
   }, [selectedSC, customerCommunicationPageData]);
@@ -48,6 +49,7 @@ const DealerOperationsCustomer = () => {
   ) => {
     await changePage(e, pageNumber);
   };
+
   const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await changeRowsPerPage(e);
   };
@@ -57,7 +59,11 @@ const DealerOperationsCustomer = () => {
   };
 
   const elementRemove = (id: number) => {
-    console.log(id);
+    if (!selectedSC?.id) {
+      throw new Error('Selected SC is not defined');
+    }
+
+    dispatch(deleteCustomerEvent({ serviceCenterId: selectedSC?.id, id }));
   };
 
   const handleCloseModal = () => {

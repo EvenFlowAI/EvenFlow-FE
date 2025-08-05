@@ -630,6 +630,7 @@ export class Api {
     DealerOperations: {
       CreateEvent: { route: '/outbound-events', method: 'post' },
       GetEvents: { route: '/outbound-events', method: 'get' },
+      DeleteEvent: { route: '/outbound-events/{id}', method: 'delete' },
     },
   };
 
