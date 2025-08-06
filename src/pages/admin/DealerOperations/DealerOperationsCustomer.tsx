@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import React, { useEffect, useState } from 'react';
 import { dealerOperationsRoot } from '../../../utils/constants';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
@@ -11,9 +13,10 @@ import { ReactComponent as GreyCross } from '../../../assets/img/greyCross.svg';
 import { TableRow } from '../../../components/styled/TableRow';
 import {
   changeDealerOperationsPageData,
-  createCustomerEvent,
   deleteCustomerEvent,
   loadDashboardItems,
+  setNewEventName,
+  updateCustomerEvent,
 } from '../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
@@ -21,11 +24,22 @@ import { usePagination } from '../../../hooks/usePaginations/usePaginations';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useModal } from '../../../hooks/useModal/useModal';
 import AddCustomerEventModal from '../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
+import CustomerTextConfiguration from '../../../components/modals/admin/CustomerTextConfiguration/CustomerTextConfiguration';
+import { DashboardItemI } from '../../../store/reducers/dealerOperations/types';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const { onOpen, onClose, isOpen } = useModal();
+  const {
+    onOpen: onOpenNewCustomerEventModal,
+    onClose: onCloseNewCustomerEventModal,
+    isOpen: isOpenNewCustomerEventModal,
+  } = useModal();
+  const {
+    onOpen: onOpenTextConfigurationModal,
+    onClose: onCloseTextConfigurationModal,
+    isOpen: isOpenTextConfigurationModal,
+  } = useModal();
 
   const { dashboardItems, customerCommunicationPaging, customerCommunicationPageData } =
     useSelector((state: RootState) => state.dealerOperations);
@@ -35,7 +49,10 @@ const DealerOperationsCustomer = () => {
     changeDealerOperationsPageData
   );
 
-  const [newEventName, setNewEventName] = useState('');
+  const [fromPhoneNumber, setFromPhoneNumber] = useState<string>('');
+  const [selectedTag, setSelectedTag] = useState<string>('');
+  const [textMessage, setTextMessage] = useState<string>('');
+  const [eventForConfiguration, setEventForConfiguration] = useState<DashboardItemI | null>(null);
 
   useEffect(() => {
     if (selectedSC?.id) {
@@ -47,18 +64,34 @@ const DealerOperationsCustomer = () => {
     e: React.MouseEvent<Element, MouseEvent> | null,
     pageNumber: number
   ) => {
-    await changePage(e, pageNumber);
+    changePage(e, pageNumber);
   };
 
   const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    await changeRowsPerPage(e);
+    changeRowsPerPage(e);
   };
 
-  const textSwitchChange = (id: number) => {
-    console.log(id);
+  const textSwitchChange = (event: DashboardItemI) => {
+    if (!selectedSC?.id) {
+      throw new Error('Selected SC is not defined');
+    }
+
+    if (event) {
+      const updatedEvent = { isTextEnabled: !event.isTextEnabled };
+      dispatch(
+        updateCustomerEvent(
+          {
+            serviceCenterId: selectedSC?.id,
+            eventId: event.id,
+            updatedData: updatedEvent,
+          },
+          () => {}
+        )
+      );
+    }
   };
 
-  const elementRemove = (id: number) => {
+  const handleDeleteCustomerEvent = (id: number) => {
     if (!selectedSC?.id) {
       throw new Error('Selected SC is not defined');
     }
@@ -66,21 +99,49 @@ const DealerOperationsCustomer = () => {
     dispatch(deleteCustomerEvent({ serviceCenterId: selectedSC?.id, id }));
   };
 
-  const handleCloseModal = () => {
-    onClose();
-    setNewEventName('');
+  const handleCloseNewCustomerEventModal = () => {
+    onCloseNewCustomerEventModal();
+    dispatch(setNewEventName(''));
   };
 
-  const handleSaveNewEvent = () => {
+  const handleClickTextConfiguration = (event: DashboardItemI) => {
     if (!selectedSC?.id) {
       throw new Error('Selected SC is not defined');
     }
 
-    if (newEventName?.length > 2) {
+    setEventForConfiguration(event);
+    setTextMessage(event.communicationDetails?.textMessage ?? '');
+    setFromPhoneNumber(event.communicationDetails?.textFrom ?? '');
+    onOpenTextConfigurationModal();
+  };
+
+  const handleCloseConfigurationTextModal = () => {
+    setTextMessage('');
+    setFromPhoneNumber('');
+    onCloseTextConfigurationModal();
+  };
+
+  const handleSaveText = () => {
+    if (!selectedSC?.id) {
+      throw new Error('Selected SC is not defined');
+    }
+
+    if (eventForConfiguration) {
+      const updatedEvent = {
+        communicationDetails: {
+          textFrom: fromPhoneNumber,
+          textMessage: textMessage,
+        },
+      };
+
       dispatch(
-        createCustomerEvent(
-          { serviceCenterId: selectedSC?.id, name: newEventName },
-          handleCloseModal
+        updateCustomerEvent(
+          {
+            serviceCenterId: selectedSC?.id,
+            eventId: eventForConfiguration.id,
+            updatedData: updatedEvent,
+          },
+          handleCloseConfigurationTextModal
         )
       );
     }
@@ -102,7 +163,7 @@ const DealerOperationsCustomer = () => {
         <p style={{ fontSize: '18px', fontWeight: 700, margin: 0, textTransform: 'uppercase' }}>
           Customer Communication Dashboard
         </p>
-        <Button variant="contained" onClick={onOpen}>
+        <Button variant="contained" onClick={onOpenNewCustomerEventModal}>
           Add Event
         </Button>
       </div>
@@ -136,16 +197,16 @@ const DealerOperationsCustomer = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dashboardItems.map(el => {
+            {dashboardItems.map(event => {
               return (
-                <TableRow key={el.id}>
-                  <StyledTableCell>{el.name}</StyledTableCell>
+                <TableRow key={event.id}>
+                  <StyledTableCell>{event.name}</StyledTableCell>
                   <StyledTableCell>
                     <LabelLink
                       style={{ textTransform: 'upperCase', fontWeight: '700' }}
-                      subText={el.triggers.length ? 'Configured' : 'Not Configured'}
-                      color={el.triggers.length ? '#7898FF' : '#C71062'}
-                      icon={el.triggers.length ? <CheckIcon /> : <RedCross />}
+                      subText={event.triggers.length ? 'Configured' : 'Not Configured'}
+                      color={event.triggers.length ? '#7898FF' : '#C71062'}
+                      icon={event.triggers.length ? <CheckIcon /> : <RedCross />}
                       onClick={() => {}}
                     />
                   </StyledTableCell>
@@ -178,16 +239,18 @@ const DealerOperationsCustomer = () => {
                     >
                       <LabelLink
                         subText={
-                          el.communicationDetails?.textMessage ? 'Configured' : 'Not Configured'
+                          event.communicationDetails?.textMessage ? 'Configured' : 'Not Configured'
                         }
-                        color={el.communicationDetails?.textMessage ? '#7898FF' : '#C71062'}
-                        icon={el.communicationDetails?.textMessage ? <CheckIcon /> : <RedCross />}
-                        onClick={() => {}}
+                        color={event.communicationDetails?.textMessage ? '#7898FF' : '#C71062'}
+                        icon={
+                          event.communicationDetails?.textMessage ? <CheckIcon /> : <RedCross />
+                        }
+                        onClick={() => handleClickTextConfiguration(event)}
                       />
                       <Switch
-                        disabled={!el.communicationDetails?.textMessage}
-                        onClick={() => textSwitchChange(el.id)}
-                        checked={el.isTextEnabled}
+                        disabled={!event.communicationDetails?.textMessage}
+                        onClick={() => textSwitchChange(event)}
+                        checked={event.isTextEnabled}
                         color="primary"
                       />
                     </div>
@@ -202,7 +265,7 @@ const DealerOperationsCustomer = () => {
                       style={{ textTransform: 'upperCase', fontWeight: '700' }}
                       subText={'Remove'}
                       color={'#7898FF'}
-                      onClick={() => elementRemove(el.id)}
+                      onClick={() => handleDeleteCustomerEvent(event.id)}
                     />
                   </StyledTableCell>
                 </TableRow>
@@ -214,7 +277,6 @@ const DealerOperationsCustomer = () => {
 
       {customerCommunicationPaging.numberOfRecords > 5 ? (
         <TablePagination
-          // className={classes.pagination}
           component="div"
           count={customerCommunicationPaging.numberOfRecords}
           page={customerCommunicationPageData.pageIndex}
@@ -226,12 +288,22 @@ const DealerOperationsCustomer = () => {
       ) : null}
 
       <AddCustomerEventModal
-        onClose={onClose}
-        open={isOpen}
-        setNewEventName={setNewEventName}
-        newEventName={newEventName}
-        handleSaveNewEvent={handleSaveNewEvent}
+        onClose={handleCloseNewCustomerEventModal}
+        open={isOpenNewCustomerEventModal}
       ></AddCustomerEventModal>
+
+      <CustomerTextConfiguration
+        onClose={onCloseTextConfigurationModal}
+        open={isOpenTextConfigurationModal}
+        event={eventForConfiguration}
+        setFromPhoneNumber={setFromPhoneNumber}
+        fromPhoneNumber={fromPhoneNumber}
+        setSelectedTag={setSelectedTag}
+        selectedTag={selectedTag}
+        setTextMessage={setTextMessage}
+        textMessage={textMessage}
+        handleSaveText={handleSaveText}
+      ></CustomerTextConfiguration>
     </div>
   );
 };

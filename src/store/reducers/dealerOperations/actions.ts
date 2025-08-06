@@ -11,9 +11,12 @@ export const getDashboardItems = createAction<DashboardItemI[]>(
 export const setCustomerCommunicationDashboardPageData = createAction<Partial<IPageRequest>>(
   'Optimizer/setCustomerCommunicationDashboardPageData'
 );
+
 export const getCustomerCommunicationPaging = createAction<IPagingResponse>(
   'Optimizer/getCustomerCommunicationPaging'
 );
+
+export const setNewEventName = createAction<string>('DealerOperations/SetNewEventName');
 
 export const loadDashboardItems =
   (serviceCenterId: number): AppThunk =>
@@ -74,6 +77,36 @@ export const deleteCustomerEvent =
       })
       .catch(e => {
         console.log('Deleting Customer Event error', e);
+      });
+  };
+
+export const updateCustomerEvent =
+  (
+    data: {
+      serviceCenterId: number;
+      eventId: number;
+      updatedData:
+        | {
+            communicationDetails: {
+              textFrom: string;
+              textMessage: string;
+            };
+          }
+        | { isTextEnabled: boolean };
+    },
+    onClear: () => void
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
+      urlParams: { id: data.eventId },
+      data: { ...data.updatedData, id: data.eventId, serviceCenterId: data.serviceCenterId },
+    })
+      .then(() => {
+        dispatch(loadDashboardItems(data.serviceCenterId));
+        onClear();
+      })
+      .catch(e => {
+        console.log('Update Customer Event error', e);
       });
   };
 

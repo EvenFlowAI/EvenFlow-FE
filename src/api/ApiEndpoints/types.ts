@@ -357,5 +357,8 @@ export interface IApiEndpoints {
   ValueService: Record<'GetSeriesModels' | 'GetValueServiceOffers', TApiEndpoint>;
   WaitListSettings: Record<'Get' | 'Update' | 'Toggle', TApiEndpoint>;
   ZipCodes: Record<'GetFiltered', TApiEndpoint>;
-  DealerOperations: Record<'GetEvents' | 'CreateEvent' | 'DeleteEvent', TApiEndpoint>;
+  DealerOperations: Record<
+    'GetEvents' | 'CreateEvent' | 'DeleteEvent' | 'UpdateEvent',
+    TApiEndpoint
+  >;
 }

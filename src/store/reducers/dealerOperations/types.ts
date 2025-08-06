@@ -4,6 +4,7 @@ export type TState = {
   dashboardItems: DashboardItemI[];
   customerCommunicationPageData: IPageRequest;
   customerCommunicationPaging: IPagingResponse;
+  newEventName: string;
 };
 
 export interface DashboardItemI {
@@ -14,6 +15,7 @@ export interface DashboardItemI {
     textFrom: string;
     textMessage: string;
   };
+
   filterRules: {
     id: number;
     type: number;

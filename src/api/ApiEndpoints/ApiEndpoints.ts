@@ -631,6 +631,7 @@ export class Api {
       CreateEvent: { route: '/outbound-events', method: 'post' },
       GetEvents: { route: '/outbound-events', method: 'get' },
       DeleteEvent: { route: '/outbound-events/{id}', method: 'delete' },
+      UpdateEvent: { route: '/outbound-events/{id}', method: 'put' },
     },
   };
 

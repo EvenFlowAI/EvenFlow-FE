@@ -4,6 +4,7 @@ import {
   getDashboardItems,
   getCustomerCommunicationPaging,
   setCustomerCommunicationDashboardPageData,
+  setNewEventName,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -14,6 +15,7 @@ const initialState: TState = {
     pageIndex: 0,
   },
   customerCommunicationPaging: { ...defaultPaging },
+  newEventName: '',
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -29,5 +31,8 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(getCustomerCommunicationPaging, (state, { payload }) => {
       return { ...state, customerCommunicationPaging: payload };
+    })
+    .addCase(setNewEventName, (state, { payload }) => {
+      return { ...state, newEventName: payload };
     })
 );
