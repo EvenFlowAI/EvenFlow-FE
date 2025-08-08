@@ -37,6 +37,7 @@ import { demandManagementReducer } from './reducers/demandManagement/reducer';
 import { adminPanelReducer } from './reducers/adminPanel/reducer';
 import { generalSettingsReducer } from './reducers/generalSettings/reducer';
 import { globalVehiclesReducer } from './reducers/globalVehicles/reducer';
+import { dealerOperationsReducer } from './reducers/dealerOperations/reducer';
 
 export const rootReducer = combineReducers({
   appointment: appointmentReducer,
@@ -66,6 +67,7 @@ export const rootReducer = combineReducers({
   categories: categoriesReducer,
   bookingFlowConfig: bookingFlowConfigReducer,
   mobileService: mobileServiceReducer,
+  dealerOperations: dealerOperationsReducer,
   serviceValet: serviceValetReducer,
   recalls: recallsReducer,
   serviceTypes: firstScreenOptionsReducer,

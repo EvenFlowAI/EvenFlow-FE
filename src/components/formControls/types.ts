@@ -1,5 +1,6 @@
 import { InputBaseProps } from '@mui/material/InputBase/InputBase';
 import { AutocompleteRenderInputParams } from '@mui/material/Autocomplete/Autocomplete';
+import { Ref } from 'react';
 
 export interface IIconState {
   file: File | null;
@@ -7,6 +8,7 @@ export interface IIconState {
 }
 
 export type TextInputProps = {
+  ref?: Ref<HTMLInputElement>;
   label?: string;
   hideLabel?: boolean;
   spacing?: 'normal' | 'none' | undefined;

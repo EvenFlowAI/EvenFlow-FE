@@ -10,6 +10,14 @@ type TTitleProps = {
   subtitle?: string;
 };
 
+type TTitleForDealerOperationsProps = {
+  title: string;
+  parent: TTitle;
+  secondParent: TTitle;
+  subtitle?: string;
+  actions?: () => void;
+};
+
 export const ContentTitle: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTitleProps>>
 > = props => {
@@ -27,6 +35,28 @@ export const ContentTitle: React.FC<
           {props.subtitle}
         </Typography>
       ) : null}
+    </div>
+  );
+};
+
+export const ContentTitleForDealerOperation: React.FC<
+  React.PropsWithChildren<React.PropsWithChildren<TTitleForDealerOperationsProps>>
+> = props => {
+  const { classes } = useStyles();
+  return (
+    <div className={classes.titleContainer}>
+      <Typography className={classes.title} variant="h2">
+        {props.parent ? (
+          <span className={classes.rootTitle}>
+            {collectParents(props.secondParent)} /{' '}
+            <span className={classes.secondParent} onClick={props.actions}>
+              {props.parent.title}
+            </span>{' '}
+            /{' '}
+          </span>
+        ) : null}
+        {props.title}
+      </Typography>
     </div>
   );
 };

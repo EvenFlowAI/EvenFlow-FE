@@ -225,6 +225,22 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
     to: Routes.Dealer.Base,
     name: 'Dealer Operations',
     roles: ['Owner', 'Manager', 'Service Director'],
+    subLinks: [
+      {
+        to: Routes.Dealer.DealerInternal,
+        name: 'Internal',
+        exact: true,
+        sub: true,
+        roles: ['Owner', 'Manager', 'Service Director'],
+      },
+      {
+        to: Routes.Dealer.DealerCustomer,
+        name: 'Customer',
+        exact: true,
+        sub: true,
+        roles: ['Owner', 'Manager', 'Service Director'],
+      },
+    ],
   },
   { to: Routes.Admin.Appointments, name: 'Appointments', roles: true },
 ];
