@@ -16,6 +16,13 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   subtitle: {},
+  secondParent: {
+    fontWeight: 'normal',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
   titleContainer: {
     display: 'flex',
     flexDirection: 'column',

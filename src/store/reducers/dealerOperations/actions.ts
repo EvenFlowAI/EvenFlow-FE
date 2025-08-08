@@ -18,6 +18,16 @@ export const getCustomerCommunicationPaging = createAction<IPagingResponse>(
 
 export const setNewEventName = createAction<string>('DealerOperations/SetNewEventName');
 
+export enum EventFilterTypeE {
+  DaysToFutureAppointment = 1,
+  DaysFromLastNoShowAppointment,
+}
+export enum ComparisonOperatorE {
+  Less,
+  Equal,
+  Greater,
+}
+
 export const loadDashboardItems =
   (serviceCenterId: number): AppThunk =>
   async (dispatch, getState) => {
@@ -104,6 +114,42 @@ export const updateCustomerEvent =
       .then(() => {
         dispatch(loadDashboardItems(data.serviceCenterId));
         onClear();
+      })
+      .catch(e => {
+        console.log('Update Customer Event error', e);
+      });
+  };
+
+export const updateCustomerEventRulesC =
+  (
+    data: {
+      serviceCenterId: number;
+      eventId: number;
+      filterRules: {
+        type: string;
+        operator: string;
+        value: string;
+        isCriteria?: boolean;
+      }[];
+    },
+    onSuccess: () => void
+  ): AppThunk =>
+  async dispatch => {
+    const filterRules = data.filterRules.map(el => {
+      return {
+        ...el,
+        type: EventFilterTypeE[el.type as keyof typeof EventFilterTypeE],
+        operator: 1,
+      };
+    });
+
+    Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
+      urlParams: { id: data.eventId },
+      data: { filterRules, id: data.eventId, serviceCenterId: data.serviceCenterId },
+    })
+      .then(() => {
+        dispatch(loadDashboardItems(data.serviceCenterId));
+        onSuccess();
       })
       .catch(e => {
         console.log('Update Customer Event error', e);

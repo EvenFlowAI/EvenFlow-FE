@@ -66,6 +66,11 @@ export const dealerOperationsRoot: TTitle = {
   title: 'Dealer Operations',
 };
 
+export const dealerOperationsCustomer: TTitle = {
+  to: Routes.Dealer.DealerCustomer,
+  title: 'Customer',
+};
+
 export const pricingRoot: TTitle = {
   to: Routes.Pricing.Base,
   title: 'Dynamic Pricing',

@@ -26,6 +26,7 @@ import { useModal } from '../../../hooks/useModal/useModal';
 import AddCustomerEventModal from '../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
 import CustomerTextConfiguration from '../../../components/modals/admin/CustomerTextConfiguration/CustomerTextConfiguration';
 import { DashboardItemI } from '../../../store/reducers/dealerOperations/types';
+import DealerCustomerTriggers from './DealerCustomerTriggers';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
@@ -52,7 +53,12 @@ const DealerOperationsCustomer = () => {
   const [fromPhoneNumber, setFromPhoneNumber] = useState<string>('');
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [textMessage, setTextMessage] = useState<string>('');
-  const [eventForConfiguration, setEventForConfiguration] = useState<DashboardItemI | null>(null);
+  const [eventForTextConfiguration, setEventForTextConfiguration] = useState<DashboardItemI | null>(
+    null
+  );
+  const [eventIdForRulesConfiguration, setEventIdForRulesConfiguration] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     if (selectedSC?.id) {
@@ -109,7 +115,7 @@ const DealerOperationsCustomer = () => {
       throw new Error('Selected SC is not defined');
     }
 
-    setEventForConfiguration(event);
+    setEventForTextConfiguration(event);
     setTextMessage(event.communicationDetails?.textMessage ?? '');
     setFromPhoneNumber(event.communicationDetails?.textFrom ?? '');
     onOpenTextConfigurationModal();
@@ -126,7 +132,7 @@ const DealerOperationsCustomer = () => {
       throw new Error('Selected SC is not defined');
     }
 
-    if (eventForConfiguration) {
+    if (eventForTextConfiguration) {
       const updatedEvent = {
         communicationDetails: {
           textFrom: fromPhoneNumber,
@@ -138,7 +144,7 @@ const DealerOperationsCustomer = () => {
         updateCustomerEvent(
           {
             serviceCenterId: selectedSC?.id,
-            eventId: eventForConfiguration.id,
+            eventId: eventForTextConfiguration.id,
             updatedData: updatedEvent,
           },
           handleCloseConfigurationTextModal
@@ -146,6 +152,15 @@ const DealerOperationsCustomer = () => {
       );
     }
   };
+
+  if (eventIdForRulesConfiguration) {
+    return (
+      <DealerCustomerTriggers
+        eventId={eventIdForRulesConfiguration}
+        setEventIdForRulesConfiguration={setEventIdForRulesConfiguration}
+      />
+    );
+  }
 
   return (
     <div style={{ width: '100%' }}>
@@ -207,7 +222,7 @@ const DealerOperationsCustomer = () => {
                       subText={event.triggers.length ? 'Configured' : 'Not Configured'}
                       color={event.triggers.length ? '#7898FF' : '#C71062'}
                       icon={event.triggers.length ? <CheckIcon /> : <RedCross />}
-                      onClick={() => {}}
+                      onClick={() => setEventIdForRulesConfiguration(event.id)}
                     />
                   </StyledTableCell>
 
@@ -295,7 +310,7 @@ const DealerOperationsCustomer = () => {
       <CustomerTextConfiguration
         onClose={onCloseTextConfigurationModal}
         open={isOpenTextConfigurationModal}
-        event={eventForConfiguration}
+        event={eventForTextConfiguration}
         setFromPhoneNumber={setFromPhoneNumber}
         fromPhoneNumber={fromPhoneNumber}
         setSelectedTag={setSelectedTag}

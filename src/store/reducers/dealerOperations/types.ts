@@ -17,11 +17,10 @@ export interface DashboardItemI {
   };
 
   filterRules: {
-    id: number;
     type: number;
     operator: number;
     value: string;
-    isCriteria: boolean;
+    isCriteria?: boolean;
   }[];
   triggers: {
     id: number;
