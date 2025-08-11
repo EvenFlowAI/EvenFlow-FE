@@ -538,6 +538,23 @@ export const updatePackagePriceDetails =
       .finally(() => dispatch(loading(false)));
   };
 
+export const updateEMenuEnabledValue =
+  (id: number, isEnabled: boolean, onError: (err: string) => void): AppThunk =>
+  dispatch => {
+    dispatch(loading(true));
+    Api.call(Api.endpoints.ServiceCenters.UpdateEMenuEnabledValue, {
+      urlParams: { id },
+      data: { isEnabled },
+    })
+      .then(result => {
+        if (result) dispatch(loadAllSCs());
+      })
+      .catch(err => {
+        onError(err);
+      })
+      .finally(() => dispatch(loading(false)));
+  };
+
 export const updateDefaultRecallOpsCode =
   (id: number, serviceRequestId: number): AppThunk =>
   dispatch => {

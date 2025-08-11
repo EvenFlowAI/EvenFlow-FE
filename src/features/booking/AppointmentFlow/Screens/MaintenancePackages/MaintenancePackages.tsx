@@ -110,8 +110,8 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     if (!scProfile?.eMenuPDF) {
       setLoading(true);
       const endpoint = !scProfile?.eMenuEnabled
-       ? Api.endpoints.MaintenancePackages.ByVehicle
-       : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
+        ? Api.endpoints.MaintenancePackages.ByVehicle
+        : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
       Api.call<IPackage[]>(endpoint, {
         data: {
           serviceCenterId: decodeSCID(id),
@@ -142,11 +142,10 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     return cls;
   };
 
-   const getModelCode = (): string | undefined => {
+  const getModelCode = (): string | undefined => {
     return makes
       .find(item => item.name == selectedVehicle?.make)
-      ?.models?.find(model => model.name == selectedVehicle?.model)
-      ?.code;
+      ?.models?.find(model => model.name == selectedVehicle?.model)?.code;
   };
 
   const handleBack = (): void => {
@@ -229,14 +228,12 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
         packageOptionType !== localSelectedPackage.type
       ) {
         onOpen();
-      }         
-      if(!scProfile?.eMenuEnabled)
-      {
+      }
+      if (!scProfile?.eMenuEnabled) {
         dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
         dispatch(setPackage(localSelectedPackage));
         dispatch(setPackagePricingType(localSelectedPricingType));
-      }
-      else{
+      } else {
         dispatch(setPackageEMenuType(localSelectedPackage.type));
       }
       onSelectionCompleted();
@@ -292,7 +289,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           label={t('There are no packages available')}
         />
       ) : null}
-      {(scProfile?.eMenuEnabled && scProfile?.eMenuPDF) ? (
+      {scProfile?.eMenuEnabled && scProfile?.eMenuPDF ? (
         <React.Fragment>
           <PackagesEmenu onBack={handleBack} onNext={onEMenuNext} />
         </React.Fragment>
@@ -402,7 +399,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           )}
         </React.Fragment>
       ) : null}
-      {(scProfile?.eMenuEnabled && scProfile?.eMenuPDF) ? null : (
+      {scProfile?.eMenuEnabled && scProfile?.eMenuPDF ? null : (
         <ActionButtons
           onBack={handleBack}
           nextLabel={t('Next')}

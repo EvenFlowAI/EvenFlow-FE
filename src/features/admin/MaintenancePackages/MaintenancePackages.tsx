@@ -8,6 +8,7 @@ import { IPackageByQuery } from '../../../api/types';
 import { loadPackages } from '../../../store/reducers/packages/actions';
 import {
   updateAvailablePackageOptions,
+  updateEMenuEnabledValue,
   updatePackagePriceDetails,
 } from '../../../store/reducers/serviceCenters/actions';
 import AddPackageModal from './AddPackageModal/AddPackageModal';
@@ -87,9 +88,15 @@ export const MaintenancePackages = () => {
 
   const handleAddDisclaimer = () => setDisclaimerOpen(!isDisclaimerOpen);
 
-  const handleSwitch = (e: any, value: boolean) => {
+  const handlePriceDetailsSwitch = (e: any, value: boolean) => {
     if (selectedSC) {
       dispatch(updatePackagePriceDetails(selectedSC.id, value, showError));
+    }
+  };
+
+  const handleEMenuSwitch = (e: any, value: boolean) => {
+    if (selectedSC) {
+      dispatch(updateEMenuEnabledValue(selectedSC.id, value, showError));
     }
   };
 
@@ -181,14 +188,24 @@ export const MaintenancePackages = () => {
           {loading ? (
             <Loading />
           ) : (
-            <React.Fragment>
-              <p className={classes.showPriceLabel}>Show Price Details</p>
-              <Switch
-                onChange={handleSwitch}
-                checked={selectedSC?.isShowPriceDetails}
-                color="primary"
-              />
-            </React.Fragment>
+            <>
+              <div className={classes.toggleItem}>
+                <p className={classes.showPriceLabel}>Show Price Details</p>
+                <Switch
+                  onChange={handlePriceDetailsSwitch}
+                  checked={selectedSC?.isShowPriceDetails}
+                  color="primary"
+                />
+              </div>
+              <div className={classes.toggleItem}>
+                <p className={classes.showPriceLabel}>eMenu Package</p>
+                <Switch
+                  onChange={handleEMenuSwitch}
+                  checked={selectedSC?.isEMenuEnabled}
+                  color="primary"
+                />
+              </div>
+            </>
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>

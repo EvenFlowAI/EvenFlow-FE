@@ -26,6 +26,7 @@ export interface IServiceCenter {
   maintenancePackageOptionTypes: EMaintenanceOptionType[];
   engineTypeFieldName?: string;
   emailRequirement?: TEmailRequirement;
+  isEMenuEnabled: boolean;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
   countOfManagers: number;
