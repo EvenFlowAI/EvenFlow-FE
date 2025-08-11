@@ -262,6 +262,7 @@ export interface IApiEndpoints {
     | 'GetAncillaryPriceType'
     | 'UpdateAncillaryPriceType'
     | 'UpdatePackagePriceDetails'
+    | 'UpdateEMenuEnabledValue'
     | 'UpdateDefaultOpsCode'
     | 'UpdateDefaultMake'
     | 'UpdatePresentedPackageOptions'

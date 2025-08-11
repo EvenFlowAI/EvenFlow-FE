@@ -22,13 +22,18 @@ export const useMaintenancePackagesStyles = makeStyles()(() => ({
   },
   toggleWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'space-between',
+  },
+  toggleItem: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   showPriceLabel: {
     fontSize: 14,
     fontWeight: 700,
     textTransform: 'uppercase',
+    marginTop: 10,
   },
   optionsLabel: {
     fontSize: 12,
