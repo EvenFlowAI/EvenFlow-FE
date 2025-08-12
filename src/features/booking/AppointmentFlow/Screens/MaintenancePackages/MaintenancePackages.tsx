@@ -235,6 +235,8 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
         dispatch(setPackagePricingType(localSelectedPricingType));
       } else {
         dispatch(setPackageEMenuType(localSelectedPackage.type));
+        dispatch(setPackage(localSelectedPackage));
+        dispatch(setPackagePricingType(localSelectedPricingType));
       }
       onSelectionCompleted();
     }

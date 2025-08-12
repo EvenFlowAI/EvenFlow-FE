@@ -16,7 +16,9 @@ import { WaitListLabel } from '../WaitListLabel/WaitListLabel';
 import dayjs from 'dayjs';
 
 export const SelectedAppointment = () => {
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, selectedPackage, packageEMenuType } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { appointment, serviceValetAppointment } = useSelector(
     (state: RootState) => state.appointment
   );
@@ -28,7 +30,11 @@ export const SelectedAppointment = () => {
   const price =
     serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
       ? (serviceValetAppointment?.price.value ?? 0)
-      : (appointment?.price.value ?? 0);
+      : (appointment?.price.value ?? 0) === 0
+        ? packageEMenuType != null
+          ? (selectedPackage?.price ?? 0)
+          : 0
+        : (appointment?.price.value ?? 0);
   const ancillaryPrice =
     serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
       ? (serviceValetAppointment?.price.ancillaryPrice ?? 0)
