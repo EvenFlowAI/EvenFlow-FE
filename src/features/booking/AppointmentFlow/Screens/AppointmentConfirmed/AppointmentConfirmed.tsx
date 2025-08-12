@@ -201,6 +201,10 @@ export const AppointmentConfirmed: React.FC<
       price = scProfile?.isRoundPrice
         ? `$${appointment?.price?.value}`
         : `$${appointment?.price?.value.toFixed(2)}`;
+    } else if ((appointment?.price?.value ?? 0) === 0 && packageEMenuType != null) {
+      price = scProfile?.isRoundPrice
+        ? `$${selectedPackage?.price ?? 0}`
+        : `$${(selectedPackage?.price ?? 0).toFixed(2)}`;
     }
     return price;
   };
