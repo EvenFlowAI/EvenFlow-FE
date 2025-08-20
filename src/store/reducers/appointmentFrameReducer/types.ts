@@ -236,6 +236,7 @@ export type TVehicleForRequest = {
   dmsId: string | null;
   engineTypeId: number | null;
   model: string | null;
+  modelCode: string | null;
   make: string | null;
   year: string | null;
   vin: string;
