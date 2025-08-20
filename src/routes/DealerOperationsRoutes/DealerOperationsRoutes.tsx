@@ -3,8 +3,8 @@ import { ContentContainer } from '../../components/wrappers/ContentContainer/Con
 import { Redirect, Switch } from 'react-router-dom';
 import { PrivateRoute } from '../PrivateRoute/PrivateRoute';
 import { Routes } from '../constants';
-import { DealerOperationsInternal } from '../../pages/admin/DealerOperations/DealerOperationsInternal';
-import DealerOperationsCustomer from '../../pages/admin/DealerOperations/DealerOperationsCustomer';
+import { DealerOperationsInternal } from '../../pages/admin/DealerOperations/Internal/DealerOperationsInternal';
+import DealerOperationsCustomer from '../../pages/admin/DealerOperations/Customer/DealerOperationsCustomer';
 
 export const DealerOperationsRoutes = () => {
   return (
