@@ -2,7 +2,7 @@ import { IAddress } from '../store/reducers/dealershipGroups/types';
 import { ICurrentUser } from '../store/reducers/users/types';
 import { PERMISSIONS } from '../permissions';
 import { matchPath } from 'react-router-dom';
-import { TRecallForRequest } from '../store/reducers/appointment/types';
+import { IVehicleData, TRecallForRequest } from '../store/reducers/appointment/types';
 import {
   IAppointmentByKey,
   IAppointmentByQuery,
@@ -283,4 +283,15 @@ export const mapModelsWithParentNames = (makes: IMake[]) => {
       })),
     };
   });
+};
+
+export const getModelCode = (
+  makes: IMake[],
+  selectedVehicle: ILoadedVehicle | IVehicleData | null
+): string | null => {
+  return (
+    makes
+      .find(item => item.name == selectedVehicle?.make)
+      ?.models?.find(model => model.name == selectedVehicle?.model)?.code ?? '0'
+  );
 };

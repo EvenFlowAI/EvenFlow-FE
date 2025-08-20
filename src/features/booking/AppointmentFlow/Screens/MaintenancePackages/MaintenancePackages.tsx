@@ -12,7 +12,7 @@ import {
   setSelectedPackagePriceTitles,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useParams } from 'react-router-dom';
-import { decodeSCID } from '../../../../../utils/utils';
+import { decodeSCID, getModelCode } from '../../../../../utils/utils';
 import { NoItemsLoading } from '../../../../../components/wrappers/NoItemsLoading/NoItemsLoading';
 import { EServiceCenterName, IPackage, IPackageOptions } from '../../../../../api/types';
 import MaintenancePackagesMobile from '../MaintenancePackagesMobile/MaintenancePackagesMobile';
@@ -115,7 +115,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       Api.call<IPackage[]>(endpoint, {
         data: {
           serviceCenterId: decodeSCID(id),
-          modelCode: getModelCode(),
+          modelCode: getModelCode(makes, selectedVehicle),
           vehicle: {
             ...selectedVehicle,
             mileage: selectedVehicle?.mileage,
@@ -140,12 +140,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       return `${cls} selected`;
     }
     return cls;
-  };
-
-  const getModelCode = (): string | undefined => {
-    return makes
-      .find(item => item.name == selectedVehicle?.make)
-      ?.models?.find(model => model.name == selectedVehicle?.model)?.code;
   };
 
   const handleBack = (): void => {

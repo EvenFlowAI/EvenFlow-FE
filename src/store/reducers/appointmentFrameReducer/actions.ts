@@ -65,6 +65,7 @@ import { TScreen } from '../../../types/screens';
 import {
   decodeSCID,
   getCategories,
+  getModelCode,
   getVehicleData,
   mapModelsWithParentNames,
   mapRecallsForRequest,
@@ -1073,6 +1074,7 @@ export const createOrUpdateAppointment =
         ? Number(appointmentFrame.selectedVehicle?.engineTypeId)
         : null,
       model,
+      modelCode: getModelCode(appointmentFrame?.makes, appointmentFrame?.selectedVehicle),
       make,
       year,
       vin: appointmentFrame.selectedVehicle?.vin ?? '',
@@ -1449,7 +1451,7 @@ export const cloneAppointment =
     (dispatch, getState) => {
       const { currentAppointment } = getState().appointments;
       const appointment = getState().appointment;
-      const { selectedRecalls, consultants } = getState().appointmentFrame;
+      const { selectedRecalls, consultants, makes } = getState().appointmentFrame;
       if (currentAppointment) {
         dispatch(setAppointmentSaving(true));
 
@@ -1457,6 +1459,7 @@ export const cloneAppointment =
           dmsId: currentAppointment?.vehicle?.dmsId ?? null,
           engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
           model: currentAppointment?.vehicle?.model ?? null,
+          modelCode: getModelCode(makes, currentAppointment?.vehicle),
           make: currentAppointment?.vehicle?.make ?? null,
           year: currentAppointment?.vehicle?.year
             ? currentAppointment?.vehicle?.year.toString()
