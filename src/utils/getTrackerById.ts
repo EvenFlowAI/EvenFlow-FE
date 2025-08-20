@@ -50,6 +50,7 @@ const productionTrackerMap: Record<string, string> = {
   [ServiceCenters.JannsenFordOfYorkDominion]: 'G-XXZTG63KCY',
   [ServiceCenters.HondaOfResedaRR]: 'G-EGMWS8SGWR',
   [ServiceCenters.SharpeBMWRR]: 'G-6J2P1R95K2',
+  [ServiceCenters.SouthDaytonToyotaDealerBuilt]: 'G-DBCQZNFP0Y',
 };
 
 export const getTrackerById = (id: string): string => {
