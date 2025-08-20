@@ -219,9 +219,21 @@ const DealerOperationsCustomer = () => {
                   <StyledTableCell>
                     <LabelLink
                       style={{ textTransform: 'upperCase', fontWeight: '700' }}
-                      subText={event.triggers.length ? 'Configured' : 'Not Configured'}
-                      color={event.triggers.length ? '#7898FF' : '#C71062'}
-                      icon={event.triggers.length ? <CheckIcon /> : <RedCross />}
+                      subText={
+                        event.triggers.length && event.filterRules.length
+                          ? 'Configured'
+                          : 'Not Configured'
+                      }
+                      color={
+                        event.triggers.length && event.filterRules.length ? '#7898FF' : '#C71062'
+                      }
+                      icon={
+                        event.triggers.length && event.filterRules.length ? (
+                          <CheckIcon />
+                        ) : (
+                          <RedCross />
+                        )
+                      }
                       onClick={() => setEventIdForRulesConfiguration(event.id)}
                     />
                   </StyledTableCell>
@@ -263,7 +275,11 @@ const DealerOperationsCustomer = () => {
                         onClick={() => handleClickTextConfiguration(event)}
                       />
                       <Switch
-                        disabled={!event.communicationDetails?.textMessage}
+                        disabled={
+                          !event.communicationDetails?.textMessage ||
+                          !event.filterRules.length ||
+                          !event.triggers.length
+                        }
                         onClick={() => textSwitchChange(event)}
                         checked={event.isTextEnabled}
                         color="primary"
@@ -290,13 +306,13 @@ const DealerOperationsCustomer = () => {
         </DenseTable>
       </div>
 
-      {customerCommunicationPaging.numberOfRecords > 5 ? (
+      {customerCommunicationPaging.numberOfRecords > 15 ? (
         <TablePagination
           component="div"
           count={customerCommunicationPaging.numberOfRecords}
           page={customerCommunicationPageData.pageIndex}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 20, 50]}
+          rowsPerPageOptions={[15, 25, 100]}
           onRowsPerPageChange={handleChangeRows}
           rowsPerPage={customerCommunicationPageData.pageSize}
         />
