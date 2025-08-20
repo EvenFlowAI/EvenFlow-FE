@@ -11,7 +11,7 @@ import { defaultPaging } from '../constants';
 const initialState: TState = {
   dashboardItems: [],
   customerCommunicationPageData: {
-    pageSize: 5,
+    pageSize: 15,
     pageIndex: 0,
   },
   customerCommunicationPaging: { ...defaultPaging },
