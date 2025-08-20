@@ -23,7 +23,6 @@ export interface DashboardItemI {
     isCriteria?: boolean;
   }[];
   triggers: {
-    id: number;
     daysFromListGeneration: number;
     scheduledTime: string;
   }[];

@@ -18,14 +18,22 @@ export const getCustomerCommunicationPaging = createAction<IPagingResponse>(
 
 export const setNewEventName = createAction<string>('DealerOperations/SetNewEventName');
 
-export enum EventFilterTypeE {
+export enum EventAudienceFilterTypeE {
+  DaysToFutureAppointment = 1,
+}
+
+export enum EventRulesFilterTypeE {
   DaysToFutureAppointment = 1,
   DaysFromLastNoShowAppointment,
+  DaysFromLastCancelAppointment,
+  DaysFromLastShowedAppointment,
+  DaysFromLastOpenRo,
 }
+
 export enum ComparisonOperatorE {
-  Less,
-  Equal,
-  Greater,
+  'Less than',
+  'Equal',
+  'More than',
 }
 
 export const loadDashboardItems =
@@ -131,6 +139,11 @@ export const updateCustomerEventRulesC =
         value: string;
         isCriteria?: boolean;
       }[];
+      triggers: {
+        id?: string;
+        daysFromListGeneration: number;
+        scheduledTime: string;
+      }[];
     },
     onSuccess: () => void
   ): AppThunk =>
@@ -138,14 +151,20 @@ export const updateCustomerEventRulesC =
     const filterRules = data.filterRules.map(el => {
       return {
         ...el,
-        type: EventFilterTypeE[el.type as keyof typeof EventFilterTypeE],
-        operator: 1,
+        type: EventRulesFilterTypeE[el.type as keyof typeof EventRulesFilterTypeE],
+        operator: ComparisonOperatorE[el.operator as keyof typeof ComparisonOperatorE],
+        value: el.value || '0',
       };
     });
 
     Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
       urlParams: { id: data.eventId },
-      data: { filterRules, id: data.eventId, serviceCenterId: data.serviceCenterId },
+      data: {
+        filterRules,
+        triggers: data.triggers,
+        id: data.eventId,
+        serviceCenterId: data.serviceCenterId,
+      },
     })
       .then(() => {
         dispatch(loadDashboardItems(data.serviceCenterId));

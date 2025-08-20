@@ -1,17 +1,17 @@
 import React, { useMemo } from 'react';
 import { Grid, Paper } from '@mui/material';
-import { ReactComponent as RemindersIcon } from '../../../assets/img/Icon_36px_Appointment_reminders.svg';
-import { ReactComponent as AdvisorIcon } from '../../../assets/img/advisor_assignment.svg';
-import { ReactComponent as NotificationsIcon } from '../../../assets/img/notifications.svg';
-import RemindersModal from '../../../features/admin/RemindersModal/RemindersModal';
-import EmployeeAssignmentModal from '../../../features/admin/EmployeeAssignmentModal/EmployeeAssignmentModal';
-import NotificationsModal from '../../../features/admin/NotificationsModal/NotificationsModal';
-import { useModal } from '../../../hooks/useModal/useModal';
-import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
-import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
-import { useDashboardStyles } from '../../../hooks/styling/useDashboardStyles';
-import { TDashboardItem } from '../../../types/types';
-import { dealerOperationsRoot } from '../../../utils/constants';
+import { ReactComponent as RemindersIcon } from '../../../../assets/img/Icon_36px_Appointment_reminders.svg';
+import { ReactComponent as AdvisorIcon } from '../../../../assets/img/advisor_assignment.svg';
+import { ReactComponent as NotificationsIcon } from '../../../../assets/img/notifications.svg';
+import RemindersModal from '../../../../features/admin/RemindersModal/RemindersModal';
+import EmployeeAssignmentModal from '../../../../features/admin/EmployeeAssignmentModal/EmployeeAssignmentModal';
+import NotificationsModal from '../../../../features/admin/NotificationsModal/NotificationsModal';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
+import { TitleContainer } from '../../../../components/wrappers/TitleContainer/TitleContainer';
+import { useDashboardStyles } from '../../../../hooks/styling/useDashboardStyles';
+import { TDashboardItem } from '../../../../types/types';
+import { dealerOperationsRoot } from '../../../../utils/constants';
 
 export const DealerOperationsInternal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren>

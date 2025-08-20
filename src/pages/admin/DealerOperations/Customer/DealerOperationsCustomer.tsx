@@ -1,32 +1,32 @@
 /* eslint-disable max-lines */
 
 import React, { useEffect, useState } from 'react';
-import { dealerOperationsRoot } from '../../../utils/constants';
-import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
-import { DenseTable } from '../../../components/styled/DemandTable';
-import { StyledTableCell } from '../../../features/admin/DemandPredictionTable/styles';
+import { dealerOperationsRoot } from '../../../../utils/constants';
+import { TitleContainer } from '../../../../components/wrappers/TitleContainer/TitleContainer';
+import { DenseTable } from '../../../../components/styled/DemandTable';
+import { StyledTableCell } from '../../../../features/admin/DemandPredictionTable/styles';
 import { Button, Switch, TableBody, TableHead, TablePagination } from '@mui/material';
-import LabelLink from '../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
-import { ReactComponent as CheckIcon } from '../../../assets/img/checkboxSmall.svg';
-import { ReactComponent as RedCross } from '../../../assets/img/redCross.svg';
-import { ReactComponent as GreyCross } from '../../../assets/img/greyCross.svg';
-import { TableRow } from '../../../components/styled/TableRow';
+import LabelLink from '../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
+import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
+import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
+import { ReactComponent as GreyCross } from '../../../../assets/img/greyCross.svg';
+import { TableRow } from '../../../../components/styled/TableRow';
 import {
   changeDealerOperationsPageData,
   deleteCustomerEvent,
   loadDashboardItems,
   setNewEventName,
   updateCustomerEvent,
-} from '../../../store/reducers/dealerOperations/actions';
+} from '../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/rootReducer';
-import { usePagination } from '../../../hooks/usePaginations/usePaginations';
-import { useSCs } from '../../../hooks/useSCs/useSCs';
-import { useModal } from '../../../hooks/useModal/useModal';
-import AddCustomerEventModal from '../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
-import CustomerTextConfiguration from '../../../components/modals/admin/CustomerTextConfiguration/CustomerTextConfiguration';
-import { DashboardItemI } from '../../../store/reducers/dealerOperations/types';
-import DealerCustomerTriggers from './DealerCustomerTriggers';
+import { RootState } from '../../../../store/rootReducer';
+import { usePagination } from '../../../../hooks/usePaginations/usePaginations';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import AddCustomerEventModal from '../../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
+import CustomerTextConfiguration from '../../../../components/modals/admin/CustomerTextConfiguration/CustomerTextConfiguration';
+import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
+import DealerCustomerTriggers from './AudienceAndTriggers/DealerCustomerTriggers';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
