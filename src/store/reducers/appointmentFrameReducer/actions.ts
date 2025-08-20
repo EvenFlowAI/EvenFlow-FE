@@ -829,9 +829,8 @@ export const updatePackageOption =
         scProfile.eMenuEnabled
       ) {
         dispatch(setPackageEMenuType(maintenancePackageOption.type));
-      } else {
-        dispatch(setPackage(maintenancePackageOption));
       }
+      dispatch(setPackage(maintenancePackageOption));
     }
   };
 
