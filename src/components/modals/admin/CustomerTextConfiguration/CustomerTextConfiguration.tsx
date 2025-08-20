@@ -145,7 +145,7 @@ const CustomerTextConfiguration = ({
               }}
               value={selectedTag}
               renderInput={autocompleteRender({
-                label: 'Tag',
+                label: 'Instert Tag',
                 fullWidth: true,
                 placeholder: 'Tag List',
               })}
@@ -159,7 +159,7 @@ const CustomerTextConfiguration = ({
             multiline
             style={{ marginBottom: 4 }}
             placeholder="Enter text message"
-            label="Text Message"
+            label="Message"
             onChange={e => {
               setTextMessage(e.target.value);
             }}
@@ -175,7 +175,7 @@ const CustomerTextConfiguration = ({
             fontWeight: 300,
           }}
         >
-          <span>Approximate Characters: {textMessage?.trim().length || 0}</span>
+          <span>Approximate Characters: {textMessage?.length || 0}</span>
         </div>
       </DialogContent>
       <DialogActions>

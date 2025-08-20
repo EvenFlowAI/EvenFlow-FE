@@ -58,7 +58,7 @@ const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) =>
                   disabled={!isEditTable}
                   style={{ width: '56%' }}
                   value={criteria.type}
-                  options={['DaysToFutureAppointment']}
+                  options={['DaysFromLastNoShowAppointment']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'type', v || '')}

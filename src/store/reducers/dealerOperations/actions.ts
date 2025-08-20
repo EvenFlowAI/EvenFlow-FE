@@ -23,7 +23,7 @@ export enum EventAudienceFilterTypeE {
 }
 
 export enum EventRulesFilterTypeE {
-  DaysToFutureAppointment = 1,
+  DaysToFutureAppointment,
   DaysFromLastNoShowAppointment,
   DaysFromLastCancelAppointment,
   DaysFromLastShowedAppointment,
