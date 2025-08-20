@@ -63,7 +63,7 @@ export const getMaintenanceList = (
       type: 'valueService',
     });
   }
-  if (packageEMenuType !== null && optionTypes?.length) {
+  if (selectedPackage === null && packageEMenuType !== null && optionTypes?.length) {
     const firstOption = optionTypes[0];
     services.push({
       type: 'package',
