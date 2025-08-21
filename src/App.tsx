@@ -46,7 +46,10 @@ const App = () => {
         Expires: '0',
       },
     })
-      .then(response => response.json())
+      .then(response => {
+        console.log('response', response);
+        return response.json();
+      })
       .then(data => {
         console.log('data', data);
         // First visit - just save the version
