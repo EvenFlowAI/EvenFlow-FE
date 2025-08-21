@@ -1,13 +1,13 @@
 import React from 'react';
-import { numberToOrdinalWord } from '../../../helper';
+import { numberToOrdinalWord } from '../../helper';
 import { IconButton } from '@mui/material';
 import { AddCircleOutline, QueryBuilder } from '@mui/icons-material';
 import { TriggerI } from '../types';
-import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
-import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
+import ClockTimePicker from '../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
+import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
+import { ReactComponent as CloseNew } from '../../../../../assets/img/close-new.svg';
 import dayjs from 'dayjs';
-import { useStyles } from '../../../styles';
+import { useStyles } from '../../styles';
 
 interface TriggersI {
   triggers: TriggerI[];

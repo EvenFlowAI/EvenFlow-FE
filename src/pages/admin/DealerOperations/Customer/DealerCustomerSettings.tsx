@@ -1,34 +1,34 @@
 /* eslint-disable max-lines */
 
 import React, { useEffect, useState } from 'react';
-import { TitleContainerForDealerOperation } from '../../../../../components/wrappers/TitleContainer/TitleContainer';
-import { dealerOperationsCustomer, dealerOperationsRoot } from '../../../../../utils/constants';
+import { TitleContainerForDealerOperation } from '../../../../components/wrappers/TitleContainer/TitleContainer';
+import { dealerOperationsCustomer, dealerOperationsRoot } from '../../../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../../store/rootReducer';
-import { DashboardItemI } from '../../../../../store/reducers/dealerOperations/types';
+import { RootState } from '../../../../store/rootReducer';
+import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
 import { Button } from '@mui/material';
-import { useStyles } from '../../styles';
-import { ReactComponent as ArrowLeft } from '../../../../../assets/img/arrow-left.svg';
+import { useStyles } from '../styles';
+import { ReactComponent as ArrowLeft } from '../../../../assets/img/arrow-left.svg';
 import {
   ComparisonOperatorE,
   EventRulesFilterTypeE,
   updateCustomerEventRulesC,
-} from '../../../../../store/reducers/dealerOperations/actions';
-import { useSCs } from '../../../../../hooks/useSCs/useSCs';
+} from '../../../../store/reducers/dealerOperations/actions';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import AudienceForm from './Forms/AudienceForm';
 import { CriteriaI, TriggerI } from './types';
 import RulesForm from './Forms/RulesForm';
 import Triggers from './Forms/Triggers';
 
-interface DealerCustomerTriggersI {
+interface DealerCustomerSettingsI {
   eventId: number | null;
   setEventIdForRulesConfiguration: (eventIdForRulesConfiguration: number | null) => void;
 }
 
-const DealerCustomerTriggers = ({
+const DealerCustomerSettings = ({
   eventId,
   setEventIdForRulesConfiguration,
-}: DealerCustomerTriggersI) => {
+}: DealerCustomerSettingsI) => {
   const { dashboardItems } = useSelector((state: RootState) => state.dealerOperations);
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
@@ -161,12 +161,7 @@ const DealerCustomerTriggers = ({
                 isEditTable={isEditTable}
                 setCriteria={setCriteria}
               />
-              <RulesForm
-                rules={rules}
-                criterias={criterias}
-                isEditTable={isEditTable}
-                setRules={setRules}
-              />
+              <RulesForm rules={rules} isEditTable={isEditTable} setRules={setRules} />
             </div>
 
             <hr
@@ -192,4 +187,4 @@ const DealerCustomerTriggers = ({
   return <></>;
 };
 
-export default DealerCustomerTriggers;
+export default DealerCustomerSettings;
