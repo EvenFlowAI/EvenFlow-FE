@@ -30,13 +30,14 @@ const App = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
-  const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+  const THIRTY_SECONDS = 30 * 1000; // 30 seconds in milliseconds
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
     if (window.location.hostname === 'localhost') return;
     // const lastCheck = localStorage.getItem('version_last_check');
     // const currentTime = new Date().getTime();
     const currentCachedVersion = localStorage.getItem('app_version');
+    console.log('currentCachedVersion', currentCachedVersion);
     // if (!lastCheck || currentTime - parseInt(lastCheck, 10) > ONE_MINUTE) {
     fetch('/version.json', {
       headers: {
@@ -47,8 +48,10 @@ const App = () => {
     })
       .then(response => response.json())
       .then(data => {
+        console.log('data', data);
         // First visit - just save the version
         if (!currentCachedVersion) {
+          console.log('first visit');
           localStorage.setItem('app_version', data.version);
           // localStorage.setItem('version_last_check', currentTime.toString());
           window.location.reload();
@@ -57,6 +60,7 @@ const App = () => {
 
         // Compare versions and reload if different
         if (currentCachedVersion !== data.version) {
+          console.log('version changed');
           localStorage.setItem('app_version', data.version);
           // localStorage.setItem('version_last_check', currentTime.toString());
           window.location.reload();
@@ -76,7 +80,7 @@ const App = () => {
     // Then check periodically (every minute)
     const intervalId = setInterval(() => {
       checkVersion();
-    }, TWO_HOURS); // 60 seconds
+    }, THIRTY_SECONDS); // 60 seconds
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
