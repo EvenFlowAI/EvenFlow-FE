@@ -167,7 +167,7 @@ const DealerOperationsCustomer = () => {
   }
 
   return (
-    <div style={{ width: '100%', display: 'none' }}>
+    <div style={{ width: '100%' }}>
       <TabContext value={activeTab}>
         <TitleContainer title="Customer" pad parent={dealerOperationsRoot} />
         <TabList
