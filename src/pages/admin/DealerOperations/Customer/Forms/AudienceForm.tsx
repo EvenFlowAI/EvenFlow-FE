@@ -1,65 +1,48 @@
 import React from 'react';
+import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete, IconButton } from '@mui/material';
-import { autocompleteRender } from '../../../../../../utils/autocompleteRenders';
-import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
-import { CriteriaI } from '../types';
-import { EventRulesFilterTypeE } from '../../../../../../store/reducers/dealerOperations/actions';
 import { AddCircleOutline } from '@mui/icons-material';
-import { useStyles } from '../../../styles';
-import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
+import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
+import { ReactComponent as CloseNew } from '../../../../../assets/img/close-new.svg';
+import { useStyles } from '../../styles';
+import { CriteriaI } from '../types';
 
-interface RulesFormI {
+interface AudienceFormI {
   criterias: CriteriaI[];
-  rules: CriteriaI[];
   isEditTable: boolean;
-  setRules: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
+  setCriteria: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
 }
 
-const RulesForm = ({ criterias, rules, isEditTable, setRules }: RulesFormI) => {
+const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) => {
   const { classes } = useStyles();
 
-  const getAvailableFilterRules = () => {
-    const allValues = Object.values(EventRulesFilterTypeE).filter(
-      v => typeof v === 'string'
-    ) as string[];
-
-    const takenNames = new Set([...criterias.map(c => c.type), ...rules.map(r => r.type)]);
-
-    return allValues.filter(val => !takenNames.has(val));
+  const handleAddCriteria = () => {
+    setCriteria(prev => [...prev, { type: '', operator: '', value: '', isCriteria: true }]);
   };
 
-  const handleAddRule = () => {
-    setRules(prev => [...prev, { type: '', operator: '', value: '' }]);
+  const handleRemoveCriteria = (index: number) => {
+    if (criterias.length > 1) {
+      setCriteria(prev => prev.filter((criteria, i) => i !== index));
+    }
   };
 
-  const handleRemoveRule = (index: number) => {
-    setRules(prev => prev.filter((rule, i) => i !== index));
-  };
-
-  const handleRuleChange = (index: number, field: keyof CriteriaI, newValue: string) => {
-    const updated = [...rules];
+  const handleCriteriaChange = (index: number, field: keyof CriteriaI, newValue: string) => {
+    const updated = [...criterias];
     if (field === 'type' || field === 'operator' || field === 'value') {
       updated[index][field] = newValue;
-      setRules(updated);
+      setCriteria(updated);
     }
   };
 
   return (
     <>
-      <span
-        style={{
-          textTransform: 'uppercase',
-          fontSize: '16px',
-          fontWeight: 700,
-          marginTop: '60px',
-        }}
-      >
-        Audience Filter Rules
+      <span style={{ textTransform: 'uppercase', fontSize: '18px', fontWeight: 700 }}>
+        Audience
       </span>
 
-      {rules.length ? (
+      {criterias.length ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {rules.map((rule, index) => {
+          {criterias.map((criteria, index) => {
             return (
               <div
                 key={index}
@@ -74,25 +57,24 @@ const RulesForm = ({ criterias, rules, isEditTable, setRules }: RulesFormI) => {
                 <Autocomplete
                   disabled={!isEditTable}
                   style={{ width: '56%' }}
-                  value={rule.type}
-                  options={getAvailableFilterRules()}
+                  value={criteria.type}
+                  options={['DaysFromLastNoShowAppointment']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
-                  onChange={(e, v) => handleRuleChange(index, 'type', v || '')}
+                  onChange={(e, v) => handleCriteriaChange(index, 'type', v || '')}
                   renderInput={autocompleteRender({
-                    label: 'Filter Rule',
+                    label: 'Audience Criteria',
                     placeholder: 'Not selected',
                   })}
                 />
                 <Autocomplete
                   style={{ width: '25%' }}
                   disabled={!isEditTable}
-                  // value={criteria.operator}
-                  value={rule.operator}
-                  options={['Equal', 'Less than', 'More than']}
+                  value={criteria.operator}
+                  options={['Equal']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
-                  onChange={(e, v) => handleRuleChange(index, 'operator', v || '')}
+                  onChange={(e, v) => handleCriteriaChange(index, 'operator', v || '')}
                   renderInput={autocompleteRender({
                     label: 'Operator',
                     placeholder: '',
@@ -106,14 +88,14 @@ const RulesForm = ({ criterias, rules, isEditTable, setRules }: RulesFormI) => {
                     inputProps={{ min: 0 }}
                     label="Value"
                     placeholder=""
-                    onChange={e => handleRuleChange(index, 'value', e.target.value || '')}
-                    value={+rule.value}
+                    onChange={e => handleCriteriaChange(index, 'value', e.target.value || '')}
+                    value={+criteria.value}
                   />
                 </div>
                 {isEditTable ? (
                   <div
                     style={{ marginTop: '30px', cursor: 'pointer' }}
-                    onClick={() => handleRemoveRule(index)}
+                    onClick={() => handleRemoveCriteria(index)}
                   >
                     <CloseNew />
                   </div>
@@ -126,17 +108,17 @@ const RulesForm = ({ criterias, rules, isEditTable, setRules }: RulesFormI) => {
 
       {isEditTable ? (
         <IconButton
-          onClick={handleAddRule}
-          disabled={rules.length === 4}
+          onClick={handleAddCriteria}
+          disabled={!!criterias.length}
           className={classes.iconPlus}
           size="large"
         >
-          <AddCircleOutline className={rules.length === 4 ? 'isDisabled' : ''} />
+          <AddCircleOutline className={criterias.length ? 'isDisabled' : ''} />
           <span
-            className={rules.length === 4 ? 'isDisabled' : ''}
+            className={criterias.length ? 'isDisabled' : ''}
             style={{ fontWeight: 700, color: '#7898FF' }}
           >
-            Add Filter Criteria
+            Audience Criteria
           </span>
         </IconButton>
       ) : null}
@@ -144,4 +126,4 @@ const RulesForm = ({ criterias, rules, isEditTable, setRules }: RulesFormI) => {
   );
 };
 
-export default RulesForm;
+export default AudienceForm;

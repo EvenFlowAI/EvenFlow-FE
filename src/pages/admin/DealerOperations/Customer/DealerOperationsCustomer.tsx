@@ -5,7 +5,7 @@ import { dealerOperationsRoot } from '../../../../utils/constants';
 import { TitleContainer } from '../../../../components/wrappers/TitleContainer/TitleContainer';
 import { DenseTable } from '../../../../components/styled/DemandTable';
 import { StyledTableCell } from '../../../../features/admin/DemandPredictionTable/styles';
-import { Button, Switch, TableBody, TableHead, TablePagination } from '@mui/material';
+import { Button, Switch, Tab, TableBody, TableHead, TablePagination } from '@mui/material';
 import LabelLink from '../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
 import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
@@ -26,7 +26,10 @@ import { useModal } from '../../../../hooks/useModal/useModal';
 import AddCustomerEventModal from '../../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
 import CustomerTextConfiguration from '../../../../components/modals/admin/CustomerTextConfiguration/CustomerTextConfiguration';
 import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
-import DealerCustomerTriggers from './AudienceAndTriggers/DealerCustomerTriggers';
+import { TabContext, TabPanel } from '@mui/lab';
+import { TabList } from '../../../../components/styled/Tabs';
+import TextIntegration from './TextIntegration/TextIntegration';
+import DealerCustomerSettings from './DealerCustomerSettings';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
@@ -59,6 +62,7 @@ const DealerOperationsCustomer = () => {
   const [eventIdForRulesConfiguration, setEventIdForRulesConfiguration] = useState<number | null>(
     null
   );
+  const [activeTab, setActiveTab] = useState<string>('0');
 
   useEffect(() => {
     if (selectedSC?.id) {
@@ -155,7 +159,7 @@ const DealerOperationsCustomer = () => {
 
   if (eventIdForRulesConfiguration) {
     return (
-      <DealerCustomerTriggers
+      <DealerCustomerSettings
         eventId={eventIdForRulesConfiguration}
         setEventIdForRulesConfiguration={setEventIdForRulesConfiguration}
       />
@@ -163,160 +167,189 @@ const DealerOperationsCustomer = () => {
   }
 
   return (
-    <div style={{ width: '100%' }}>
-      <TitleContainer title="Customer" pad parent={dealerOperationsRoot} />
-
-      <div
-        style={{
-          width: '100%',
-          marginBottom: 24,
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          display: 'flex',
-        }}
-      >
-        <p style={{ fontSize: '18px', fontWeight: 700, margin: 0, textTransform: 'uppercase' }}>
-          Customer Communication Dashboard
-        </p>
-        <Button variant="contained" onClick={onOpenNewCustomerEventModal}>
-          Add Event
-        </Button>
-      </div>
-
-      <div>
-        <DenseTable>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell key="Event" style={{ textTransform: 'capitalize', width: '26%' }}>
-                Event
-              </StyledTableCell>
-              <StyledTableCell
-                key="Audience & Triggers"
-                style={{ textTransform: 'capitalize', width: '18%' }}
-              >
-                Audience & Triggers
-              </StyledTableCell>
-              <StyledTableCell key="Email" style={{ textTransform: 'capitalize', width: '21%' }}>
-                Email
-              </StyledTableCell>
-              <StyledTableCell key="Text" style={{ textTransform: 'capitalize', width: '21%' }}>
-                Text
-              </StyledTableCell>
-              <StyledTableCell key="BDC" style={{ textTransform: 'capitalize', width: '7%' }}>
-                BDC
-              </StyledTableCell>
-              <StyledTableCell
-                key="Remove"
-                style={{ textTransform: 'capitalize' }}
-              ></StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dashboardItems.map(event => {
-              return (
-                <TableRow key={event.id}>
-                  <StyledTableCell>{event.name}</StyledTableCell>
-                  <StyledTableCell>
-                    <LabelLink
-                      style={{ textTransform: 'upperCase', fontWeight: '700' }}
-                      subText={
-                        event.triggers.length && event.filterRules.length
-                          ? 'Configured'
-                          : 'Not Configured'
-                      }
-                      color={
-                        event.triggers.length && event.filterRules.length ? '#7898FF' : '#C71062'
-                      }
-                      icon={
-                        event.triggers.length && event.filterRules.length ? (
-                          <CheckIcon />
-                        ) : (
-                          <RedCross />
-                        )
-                      }
-                      onClick={() => setEventIdForRulesConfiguration(event.id)}
-                    />
+    <div style={{ width: '100%', display: 'none' }}>
+      <TabContext value={activeTab}>
+        <TitleContainer title="Customer" pad parent={dealerOperationsRoot} />
+        <TabList
+          onChange={(e, tab) => setActiveTab(tab)}
+          indicatorColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab label="Communication Dashboard" value="0" />
+          <Tab label="Text Integration" value="1" />
+        </TabList>
+        <TabPanel style={{ width: '100%', padding: '24px 0' }} value="0">
+          <>
+            <div
+              style={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'flex-end',
+                paddingBottom: '24px',
+              }}
+            >
+              <Button variant="contained" onClick={onOpenNewCustomerEventModal}>
+                Add Event
+              </Button>
+            </div>
+            <DenseTable>
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell
+                    key="Event"
+                    style={{ textTransform: 'capitalize', width: '26%' }}
+                  >
+                    Event
                   </StyledTableCell>
-
-                  <StyledTableCell>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <LabelLink
-                        subText={'Not Configured'}
-                        color={'#B8B9BF'}
-                        icon={<GreyCross />}
-                        onClick={() => {}}
-                      />
-                      <Switch disabled={true} onClick={() => {}} checked={false} color="primary" />
-                    </div>
+                  <StyledTableCell
+                    key="Audience & Triggers"
+                    style={{ textTransform: 'capitalize', width: '18%' }}
+                  >
+                    Audience & Triggers
                   </StyledTableCell>
-
-                  <StyledTableCell>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <LabelLink
-                        subText={
-                          event.communicationDetails?.textMessage ? 'Configured' : 'Not Configured'
-                        }
-                        color={event.communicationDetails?.textMessage ? '#7898FF' : '#C71062'}
-                        icon={
-                          event.communicationDetails?.textMessage ? <CheckIcon /> : <RedCross />
-                        }
-                        onClick={() => handleClickTextConfiguration(event)}
-                      />
-                      <Switch
-                        disabled={
-                          !event.communicationDetails?.textMessage ||
-                          !event.filterRules.length ||
-                          !event.triggers.length
-                        }
-                        onClick={() => textSwitchChange(event)}
-                        checked={event.isTextEnabled}
-                        color="primary"
-                      />
-                    </div>
+                  <StyledTableCell
+                    key="Email"
+                    style={{ textTransform: 'capitalize', width: '21%' }}
+                  >
+                    Email
                   </StyledTableCell>
-
-                  <StyledTableCell>
-                    <Switch disabled={true} onClick={() => {}} checked={false} color="primary" />
+                  <StyledTableCell key="Text" style={{ textTransform: 'capitalize', width: '21%' }}>
+                    Text
                   </StyledTableCell>
-
-                  <StyledTableCell>
-                    <LabelLink
-                      style={{ textTransform: 'upperCase', fontWeight: '700' }}
-                      subText={'Remove'}
-                      color={'#7898FF'}
-                      onClick={() => handleDeleteCustomerEvent(event.id)}
-                    />
+                  <StyledTableCell key="BDC" style={{ textTransform: 'capitalize', width: '7%' }}>
+                    BDC
                   </StyledTableCell>
+                  <StyledTableCell
+                    key="Remove"
+                    style={{ textTransform: 'capitalize' }}
+                  ></StyledTableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-        </DenseTable>
-      </div>
+              </TableHead>
+              <TableBody>
+                {dashboardItems.map(event => {
+                  return (
+                    <TableRow key={event.id}>
+                      <StyledTableCell>{event.name}</StyledTableCell>
+                      <StyledTableCell>
+                        <LabelLink
+                          style={{ textTransform: 'upperCase', fontWeight: '700' }}
+                          subText={
+                            event.triggers.length && event.filterRules.length
+                              ? 'Configured'
+                              : 'Not Configured'
+                          }
+                          color={
+                            event.triggers.length && event.filterRules.length
+                              ? '#7898FF'
+                              : '#C71062'
+                          }
+                          icon={
+                            event.triggers.length && event.filterRules.length ? (
+                              <CheckIcon />
+                            ) : (
+                              <RedCross />
+                            )
+                          }
+                          onClick={() => setEventIdForRulesConfiguration(event.id)}
+                        />
+                      </StyledTableCell>
 
-      {customerCommunicationPaging.numberOfRecords > 15 ? (
-        <TablePagination
-          component="div"
-          count={customerCommunicationPaging.numberOfRecords}
-          page={customerCommunicationPageData.pageIndex}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[15, 25, 100]}
-          onRowsPerPageChange={handleChangeRows}
-          rowsPerPage={customerCommunicationPageData.pageSize}
-        />
-      ) : null}
+                      <StyledTableCell>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <LabelLink
+                            subText={'Not Configured'}
+                            color={'#B8B9BF'}
+                            icon={<GreyCross />}
+                            onClick={() => {}}
+                          />
+                          <Switch
+                            disabled={true}
+                            onClick={() => {}}
+                            checked={false}
+                            color="primary"
+                          />
+                        </div>
+                      </StyledTableCell>
+
+                      <StyledTableCell>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <LabelLink
+                            subText={
+                              event.communicationDetails?.textMessage
+                                ? 'Configured'
+                                : 'Not Configured'
+                            }
+                            color={event.communicationDetails?.textMessage ? '#7898FF' : '#C71062'}
+                            icon={
+                              event.communicationDetails?.textMessage ? <CheckIcon /> : <RedCross />
+                            }
+                            onClick={() => handleClickTextConfiguration(event)}
+                          />
+                          <Switch
+                            disabled={
+                              !event.communicationDetails?.textMessage ||
+                              !event.filterRules.length ||
+                              !event.triggers.length
+                            }
+                            onClick={() => textSwitchChange(event)}
+                            checked={event.isTextEnabled}
+                            color="primary"
+                          />
+                        </div>
+                      </StyledTableCell>
+
+                      <StyledTableCell>
+                        <Switch
+                          disabled={true}
+                          onClick={() => {}}
+                          checked={false}
+                          color="primary"
+                        />
+                      </StyledTableCell>
+
+                      <StyledTableCell>
+                        <LabelLink
+                          style={{ textTransform: 'upperCase', fontWeight: '700' }}
+                          subText={'Remove'}
+                          color={'#7898FF'}
+                          onClick={() => handleDeleteCustomerEvent(event.id)}
+                        />
+                      </StyledTableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </DenseTable>
+            {customerCommunicationPaging.numberOfRecords > 15 ? (
+              <TablePagination
+                component="div"
+                count={customerCommunicationPaging.numberOfRecords}
+                page={customerCommunicationPageData.pageIndex}
+                onPageChange={handleChangePage}
+                rowsPerPageOptions={[15, 25, 100]}
+                onRowsPerPageChange={handleChangeRows}
+                rowsPerPage={customerCommunicationPageData.pageSize}
+              />
+            ) : null}
+          </>
+        </TabPanel>
+        <TabPanel style={{ width: '100%', padding: '24px 0' }} value="1">
+          <TextIntegration />
+        </TabPanel>
+      </TabContext>
 
       <AddCustomerEventModal
         onClose={handleCloseNewCustomerEventModal}
