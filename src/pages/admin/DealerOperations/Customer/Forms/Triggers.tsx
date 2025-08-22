@@ -91,7 +91,7 @@ const Triggers = ({ triggers, setTriggers, isEditTable }: TriggersI) => {
                       labelFitContent={true}
                       disabled={!isEditTable}
                       type="number"
-                      inputProps={{ min: 1 }}
+                      inputProps={{ min: 0 }}
                       label="Days from list generation"
                       placeholder=""
                       onChange={e =>
