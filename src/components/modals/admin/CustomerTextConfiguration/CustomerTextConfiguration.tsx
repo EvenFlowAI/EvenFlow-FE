@@ -161,7 +161,7 @@ const CustomerTextConfiguration = ({
             placeholder="Enter text message"
             label="Message"
             onChange={e => {
-              setTextMessage(e.target.value);
+              if (e.target.value.length <= 1000) setTextMessage(e.target.value);
             }}
             value={textMessage}
             rows={7}
@@ -175,7 +175,7 @@ const CustomerTextConfiguration = ({
             fontWeight: 300,
           }}
         >
-          <span>Approximate Characters: {textMessage?.length || 0}</span>
+          <span>Approximate Characters: {textMessage?.length || 0}/1000</span>
         </div>
       </DialogContent>
       <DialogActions>
