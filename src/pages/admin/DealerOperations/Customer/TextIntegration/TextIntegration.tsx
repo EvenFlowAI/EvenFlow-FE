@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import React, { useEffect } from 'react';
 import { useStyles } from './styles';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
