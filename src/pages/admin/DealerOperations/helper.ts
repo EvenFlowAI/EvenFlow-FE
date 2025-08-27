@@ -24,3 +24,7 @@ export function numberToOrdinalWord(num: number): string {
       return num.toString();
   }
 }
+
+export const validateGroup = <T>(arr: T[], validator: (el: T) => boolean): boolean => {
+  return arr.length === 0 || arr.every(validator);
+};
