@@ -92,6 +92,7 @@ const Triggers = ({ triggers, setTriggers, isEditTable }: TriggersI) => {
                       disabled={!isEditTable}
                       type="number"
                       inputProps={{ min: 0 }}
+                      error={!Number.isInteger(Number(trigger.daysFromListGeneration))}
                       label="Days from list generation"
                       placeholder=""
                       onChange={e =>

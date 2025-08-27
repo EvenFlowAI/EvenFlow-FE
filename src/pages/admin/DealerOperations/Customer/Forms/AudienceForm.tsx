@@ -85,6 +85,7 @@ const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) =>
                     fullWidth
                     disabled={!isEditTable}
                     type="number"
+                    error={!Number.isInteger(Number(criteria.value))}
                     inputProps={{ min: 0 }}
                     label="Value"
                     placeholder=""

@@ -101,6 +101,7 @@ const RulesForm = ({ rules, isEditTable, setRules }: RulesFormI) => {
                     disabled={!isEditTable}
                     type="number"
                     inputProps={{ min: 0 }}
+                    error={!Number.isInteger(Number(rule.value))}
                     label="Value"
                     placeholder=""
                     onChange={e => handleRuleChange(index, 'value', e.target.value || '')}

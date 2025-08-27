@@ -29,7 +29,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
       throw new Error('Selected SC is not defined');
     }
 
-    if (newEventName?.length > 2) {
+    if (newEventName?.length > 2 && newEventName?.length < 51) {
       dispatch(
         createCustomerEvent({ serviceCenterId: selectedSC?.id, name: newEventName }, onClose)
       );
@@ -46,6 +46,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
           label="Event"
           placeholder="Enter name"
           fullWidth
+          error={newEventName.length > 50}
           onChange={handleChange}
           value={newEventName}
         />

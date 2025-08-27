@@ -19,6 +19,10 @@ import AudienceForm from './Forms/AudienceForm';
 import { CriteriaI, TriggerI } from './types';
 import RulesForm from './Forms/RulesForm';
 import Triggers from './Forms/Triggers';
+import { useException } from '../../../../hooks/useException/useException';
+import { validateGroup } from '../helper';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import LeaveWithoutSaving from '../../../../components/modals/admin/LeaveWithoutSaving/LeaveWithoutSaving';
 
 interface DealerCustomerSettingsI {
   eventId: number | null;
@@ -58,6 +62,12 @@ const DealerCustomerSettings = ({
   const [criterias, setCriteria] = useState<CriteriaI[]>([]);
   const [rules, setRules] = useState<CriteriaI[]>([]);
   const [triggers, setTriggers] = useState<TriggerI[]>([]);
+  const showError = useException();
+  const {
+    onOpen: onOpenLeaveWithoutSavingModal,
+    onClose: onCloseLeaveWithoutSavingModal,
+    isOpen: isOpenLeaveWithoutSavingModal,
+  } = useModal();
 
   const handleCancelChanges = () => {
     setIsEditTable(false);
@@ -85,22 +95,54 @@ const DealerCustomerSettings = ({
       throw new Error('Selected SC is not defined');
     }
 
-    dispatch(
-      updateCustomerEventRulesC(
-        {
-          serviceCenterId: selectedSC?.id,
-          eventId: eventForConfiguration?.id,
-          filterRules: [...criterias, ...rules].filter(rule => rule.operator && rule.type),
-          triggers: triggers.filter(trigger => trigger.scheduledTime),
-        },
-        handleOnSuccess
-      )
-    );
+    if (
+      validateGroup(criterias, c => Number.isInteger(Number(c.value))) &&
+      validateGroup(rules, r => Number.isInteger(Number(r.value))) &&
+      validateGroup(triggers, t => Number.isInteger(Number(t.daysFromListGeneration)))
+    ) {
+      if (triggers.length) {
+        const isValid = triggers.every((t, i) => {
+          if (i === 0) return true;
 
-    // for validation fields without operator and scheduled time
-    setRules(prev => prev.filter(rule => rule.operator && rule.type));
-    setCriteria(prev => prev.filter(criteria => criteria.operator));
-    setTriggers(prev => prev.filter(trigger => trigger.scheduledTime));
+          const prev = triggers[i - 1];
+
+          if (t.daysFromListGeneration > prev.daysFromListGeneration) {
+            return true;
+          }
+
+          if (t.daysFromListGeneration === prev.daysFromListGeneration) {
+            const [h1, m1] = prev.scheduledTime.split(':').map(Number);
+            const [h2, m2] = t.scheduledTime.split(':').map(Number);
+
+            const prevMinutes = h1 * 60 + m1;
+            const currMinutes = h2 * 60 + m2;
+
+            return currMinutes - prevMinutes >= 60;
+          }
+
+          return false;
+        });
+
+        if (!isValid) {
+          showError(
+            'Subsequent contact triggers must be at least one hour after the preceding configured contact.'
+          );
+          return;
+        }
+      }
+
+      dispatch(
+        updateCustomerEventRulesC(
+          {
+            serviceCenterId: selectedSC?.id,
+            eventId: eventForConfiguration?.id,
+            filterRules: [...criterias, ...rules].filter(rule => rule.operator && rule.type),
+            triggers: triggers.filter(trigger => trigger.scheduledTime),
+          },
+          handleOnSuccess
+        )
+      );
+    }
   };
 
   const { classes } = useStyles();
@@ -120,7 +162,9 @@ const DealerCustomerSettings = ({
           <Button
             variant="text"
             className={classes.backWrapper}
-            onClick={() => setEventIdForRulesConfiguration(null)}
+            onClick={() =>
+              isEditTable ? onOpenLeaveWithoutSavingModal() : setEventIdForRulesConfiguration(null)
+            }
           >
             <ArrowLeft />
             <span>Back to Customer Communication Dashboard</span>
@@ -180,6 +224,11 @@ const DealerCustomerSettings = ({
             </div>
           </div>
         </div>
+        <LeaveWithoutSaving
+          open={isOpenLeaveWithoutSavingModal}
+          onClose={onCloseLeaveWithoutSavingModal}
+          handleLeave={() => setEventIdForRulesConfiguration(null)}
+        />
       </div>
     );
   }
