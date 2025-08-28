@@ -86,7 +86,7 @@ const RulesForm = ({ rules, isEditTable, setRules }: RulesFormI) => {
                   disabled={!isEditTable}
                   // value={criteria.operator}
                   value={rule.operator}
-                  options={['Equal', 'Less than', 'More than']}
+                  options={['Equal', 'Less than', 'Greater than']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleRuleChange(index, 'operator', v || '')}
@@ -125,13 +125,13 @@ const RulesForm = ({ rules, isEditTable, setRules }: RulesFormI) => {
       {isEditTable ? (
         <IconButton
           onClick={handleAddRule}
-          disabled={rules.length === 4}
+          disabled={rules.length === 5}
           className={classes.iconPlus}
           size="large"
         >
-          <AddCircleOutline className={rules.length === 4 ? 'isDisabled' : ''} />
+          <AddCircleOutline className={rules.length === 5 ? 'isDisabled' : ''} />
           <span
-            className={rules.length === 4 ? 'isDisabled' : ''}
+            className={rules.length === 5 ? 'isDisabled' : ''}
             style={{ fontWeight: 700, color: '#7898FF' }}
           >
             Add Filter Criteria

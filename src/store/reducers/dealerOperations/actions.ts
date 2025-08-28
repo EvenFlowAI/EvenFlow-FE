@@ -33,7 +33,7 @@ export enum EventRulesFilterTypeE {
 export enum ComparisonOperatorE {
   'Less than',
   'Equal',
-  'More than',
+  'Greater than',
 }
 
 export const loadDashboardItems =
