@@ -636,6 +636,9 @@ export class Api {
       GetEvents: { route: '/outbound-events', method: 'get' },
       DeleteEvent: { route: '/outbound-events/{id}', method: 'delete' },
       UpdateEvent: { route: '/outbound-events/{id}', method: 'put' },
+      GetTextIntegration: { route: '/text-integration', method: 'get' },
+      SetTextIntegration: { route: '/text-integration', method: 'put' },
+      GetPhoneNumbers: { route: '/text-integration/phone-numbers', method: 'post' },
     },
   };
 

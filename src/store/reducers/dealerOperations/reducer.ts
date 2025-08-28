@@ -5,6 +5,8 @@ import {
   getCustomerCommunicationPaging,
   setCustomerCommunicationDashboardPageData,
   setNewEventName,
+  getTextIntegrationSettings,
+  getAvailablePhoneNumberList,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -16,6 +18,8 @@ const initialState: TState = {
   },
   customerCommunicationPaging: { ...defaultPaging },
   newEventName: '',
+  textIntegrationSettings: null,
+  availablePhoneNumberList: [],
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -34,5 +38,11 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(setNewEventName, (state, { payload }) => {
       return { ...state, newEventName: payload };
+    })
+    .addCase(getTextIntegrationSettings, (state, { payload }) => {
+      return { ...state, textIntegrationSettings: payload };
+    })
+    .addCase(getAvailablePhoneNumberList, (state, { payload }) => {
+      return { ...state, availablePhoneNumberList: payload };
     })
 );

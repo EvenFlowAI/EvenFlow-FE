@@ -5,101 +5,131 @@ import { useStyles } from './styles';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete, Button } from '@mui/material';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-
-const phoneNumberList = ['38011', '55565', '21254'];
-
-const states = [
-  'AL',
-  'AK',
-  'AZ',
-  'AR',
-  'CA',
-  'CO',
-  'CT',
-  'DE',
-  'FL',
-  'GA',
-  'HI',
-  'ID',
-  'IL',
-  'IN',
-  'IA',
-  'KS',
-  'KY',
-  'LA',
-  'ME',
-  'MD',
-  'MA',
-  'MI',
-  'MN',
-  'MS',
-  'MO',
-  'MT',
-  'NE',
-  'NV',
-  'NH',
-  'NJ',
-  'NM',
-  'NY',
-  'NC',
-  'ND',
-  'OH',
-  'OK',
-  'OR',
-  'PA',
-  'RI',
-  'SC',
-  'SD',
-  'TN',
-  'TX',
-  'UT',
-  'VT',
-  'VA',
-  'WA',
-  'WI',
-  'WY',
-];
+import {
+  getAvailablePhoneNumberList,
+  getPhoneNumbers,
+  loadTextIntegrationSettings,
+  updateTextIntegrationSettings,
+} from '../../../../../store/reducers/dealerOperations/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSCs } from '../../../../../hooks/useSCs/useSCs';
+import { RootState } from '../../../../../store/rootReducer';
+import { states } from '../../helper';
 
 const TextIntegration = () => {
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+  const { textIntegrationSettings, availablePhoneNumberList } = useSelector(
+    (state: RootState) => state.dealerOperations
+  );
+
+  useEffect(() => {
+    if (selectedSC?.id) {
+      dispatch(loadTextIntegrationSettings(selectedSC.id));
+    }
+  }, [selectedSC]);
+
   const { classes } = useStyles();
   const [isEditTable, setIsEditTable] = React.useState(false);
-  const [legalName, setLegalName] = React.useState('');
-  const [dba, setDba] = React.useState('');
-  const [address, setAddress] = React.useState('');
-  const [city, setCity] = React.useState('');
-  const [contactEmail, setContactEmail] = React.useState('');
-  const [website, setWebsite] = React.useState('');
-  const [ein, setEin] = React.useState('');
-  const [state, setState] = React.useState('');
-  const [zip, setZip] = React.useState('');
-  const [contactPhone, setContactPhone] = React.useState('');
-  const [accountSID, setAccountSID] = React.useState('');
-  const [authToken, setAuthToken] = React.useState('');
-  const [webhook, setWebhook] = React.useState('');
+  const [legalName, setLegalName] = React.useState(''); // +
+  const [dba, setDba] = React.useState(''); // +
+  const [address, setAddress] = React.useState(''); // +
+  const [city, setCity] = React.useState(''); // +
+  const [contactEmail, setContactEmail] = React.useState(''); // +
+  const [website, setWebsite] = React.useState(''); // +
+  const [ein, setEin] = React.useState(''); // +
+  const [state, setState] = React.useState(''); // +
+  const [zip, setZip] = React.useState(''); /// +
+  const [contactPhone, setContactPhone] = React.useState(''); // +
+  const [accountSID, setAccountSID] = React.useState(''); // +
+  const [authToken, setAuthToken] = React.useState(''); // +
+  const [webhook, setWebhook] = React.useState(''); // +
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [shortlink, setShortlink] = React.useState('');
 
+  // set data when visit tab
+  // eslint-disable-next-line complexity
+  useEffect(() => {
+    if (textIntegrationSettings) {
+      setLegalName(textIntegrationSettings.legalCompanyName || '');
+      setWebsite(textIntegrationSettings.website || '');
+      setDba(textIntegrationSettings.dba || '');
+      setEin(textIntegrationSettings.ein || '');
+      setAddress(textIntegrationSettings.addressStreet || '');
+      setCity(textIntegrationSettings.city || '');
+      setState(textIntegrationSettings.state || '');
+      setZip(textIntegrationSettings.zip || '');
+      setContactPhone(textIntegrationSettings.contactPhone || '');
+      setContactEmail(textIntegrationSettings.contactEmail || '');
+      setAccountSID(textIntegrationSettings.accountSid || '');
+      setAuthToken(textIntegrationSettings.authToken || '');
+      setWebhook(textIntegrationSettings.webhookSecret || '');
+      setPhoneNumber(textIntegrationSettings.fromPhoneNumber || '');
+      setShortlink(textIntegrationSettings.schedulingPageShortLink || '');
+    }
+  }, [textIntegrationSettings]);
+
+  // clean number, if phone list in empthy
+  useEffect(() => {
+    if (!availablePhoneNumberList.length) {
+      setPhoneNumber('');
+    }
+  }, [availablePhoneNumberList]);
+
+  // eslint-disable-next-line complexity
+  const handleCancelChanges = () => {
+    if (textIntegrationSettings) {
+      setLegalName(textIntegrationSettings?.legalCompanyName || '');
+      setWebsite(textIntegrationSettings?.website || '');
+      setDba(textIntegrationSettings?.dba || '');
+      setEin(textIntegrationSettings?.ein || '');
+      setAddress(textIntegrationSettings?.addressStreet || '');
+      setCity(textIntegrationSettings?.city || '');
+      setState(textIntegrationSettings?.state || '');
+      setZip(textIntegrationSettings?.zip || '');
+      setContactPhone(textIntegrationSettings?.contactPhone || '');
+      setContactEmail(textIntegrationSettings?.contactEmail || '');
+      setAccountSID(textIntegrationSettings?.accountSid || '');
+      setAuthToken(textIntegrationSettings?.authToken || '');
+      setWebhook(textIntegrationSettings?.webhookSecret || '');
+      setPhoneNumber(textIntegrationSettings?.fromPhoneNumber || '');
+      setShortlink(textIntegrationSettings?.schedulingPageShortLink || '');
+
+      // return to prev phone or clean field when user press cancel
+      if (textIntegrationSettings.authToken && textIntegrationSettings.accountSid) {
+        dispatch(
+          getPhoneNumbers(textIntegrationSettings.accountSid, textIntegrationSettings.authToken)
+        );
+      } else {
+        dispatch(getAvailablePhoneNumberList([]));
+      }
+    } else {
+      dispatch(getAvailablePhoneNumberList([]));
+    }
+  };
+
   const handleSave = () => {
-    const requiredFields = [
-      legalName,
-      dba,
-      address,
-      city,
-      contactEmail,
-      website,
-      ein,
-      state,
-      zip,
-      contactPhone,
-      accountSID,
-      authToken,
-      phoneNumber,
-    ];
+    if (selectedSC?.id) {
+      const data = {
+        serviceCenterId: selectedSC.id,
+        schedulingPageShortLink: shortlink,
+        fromPhoneNumber: phoneNumber,
+        webhookSecret: webhook,
+        authToken: authToken,
+        accountSid: accountSID,
+        contactPhone: contactPhone,
+        contactEmail: contactEmail,
+        zip: zip,
+        state: state,
+        ein: ein,
+        website: website,
+        dba: dba,
+        addressStreet: address,
+        city: city,
+        legalCompanyName: legalName,
+      };
 
-    const allFilled = requiredFields.every(field => field.length);
-
-    if (allFilled) {
-      console.log('save success');
+      dispatch(updateTextIntegrationSettings({ ...data }));
     }
 
     setIsEditTable(false);
@@ -107,16 +137,17 @@ const TextIntegration = () => {
 
   // debounce
   useEffect(() => {
-    if (!accountSID.length || !authToken.length) return;
+    if (!accountSID?.length || !authToken?.length) return;
 
     const timeout = setTimeout(() => {
-      console.log('process phoneNumber');
+      dispatch(getPhoneNumbers(accountSID, authToken));
     }, 1000);
 
     return () => clearTimeout(timeout);
   }, [accountSID, authToken]);
 
   const handleCancel = () => {
+    handleCancelChanges();
     setIsEditTable(false);
   };
 
@@ -298,9 +329,9 @@ const TextIntegration = () => {
             <div>
               <Autocomplete
                 fullWidth
-                disabled={!isEditTable}
+                disabled={!isEditTable || !availablePhoneNumberList.length}
                 value={phoneNumber}
-                options={phoneNumberList}
+                options={availablePhoneNumberList}
                 isOptionEqualToValue={(o, v) => String(o) === String(v)}
                 getOptionLabel={o => o}
                 onChange={(e, selectedPhoneNumber) => setPhoneNumber(selectedPhoneNumber || '')}
