@@ -18,7 +18,7 @@ const NewCustomerForAdmin: React.FC<
   return (
     <Grid item xs={12} sm={12} md={6} style={{ maxWidth: 440, padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.button}>
-        <span style={{ fontSize: isSm ? 28 : 32 }}>{t('New customer')}</span>
+        <span style={{ fontSize: isSm ? 28 : 32 }}>{t('New Customer')}</span>
         {isSm ? null : (
           <div className={returningClasses.greyText}>
             {t('Click button to start', { button: `"${t('Next')}"` })}

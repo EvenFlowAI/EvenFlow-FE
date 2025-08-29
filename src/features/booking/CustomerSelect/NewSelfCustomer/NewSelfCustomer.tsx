@@ -14,7 +14,7 @@ const NewSelfCustomer: React.FC<
   return (
     <Grid item xs={12} sm={12} md={6} style={{ padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.button}>
-        <span>{t('I`m a new customer')}</span>
+        <span>{t('I’m a New Customer')}</span>
         <Button
           variant="contained"
           color="primary"
