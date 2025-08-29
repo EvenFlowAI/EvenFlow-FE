@@ -21,7 +21,9 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEventNameValue = e.target?.value;
-    dispatch(setNewEventName(newEventNameValue));
+    if (newEventNameValue.length < 51) {
+      dispatch(setNewEventName(newEventNameValue));
+    }
   };
 
   const handleSaveNewEvent = () => {
@@ -46,10 +48,20 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
           label="Event"
           placeholder="Enter name"
           fullWidth
-          error={newEventName.length > 50}
           onChange={handleChange}
           value={newEventName}
         />
+        <span
+          style={{
+            textAlign: 'right',
+            width: '100%',
+            display: 'block',
+            color: 'rgb(133, 133, 133)',
+            marginTop: '4px',
+          }}
+        >
+          Approximate Characters: {newEventName.length}/50
+        </span>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="info">
