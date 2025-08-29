@@ -55,7 +55,7 @@ const DealerCustomerSettings = ({
         setTriggers(event.triggers);
       }
     }
-  }, []);
+  }, [dashboardItems]);
 
   const [eventForConfiguration, setEventForConfiguration] = useState<DashboardItemI | null>(null);
   const [isEditTable, setIsEditTable] = useState<boolean>(false);

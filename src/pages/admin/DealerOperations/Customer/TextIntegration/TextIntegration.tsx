@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { RootState } from '../../../../../store/rootReducer';
 import { states } from '../../helper';
+import { useException } from '../../../../../hooks/useException/useException';
 
 const TextIntegration = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,11 @@ const TextIntegration = () => {
   const [webhook, setWebhook] = React.useState(''); // +
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [shortlink, setShortlink] = React.useState('');
+  const showError = useException();
+  const [sidError, setSidError] = React.useState(false);
+  const [authTokenError, setAuthTokenError] = React.useState(false);
+  const [webhookError, setWebhookError] = React.useState(false);
+  const [fromPhoneNumberError, setFromNumberError] = React.useState(false);
 
   // set data when visit tab
   // eslint-disable-next-line complexity
@@ -69,7 +75,7 @@ const TextIntegration = () => {
     }
   }, [textIntegrationSettings]);
 
-  // clean number, if phone list in empthy
+  // clean number, if phone list is empty
   useEffect(() => {
     if (!availablePhoneNumberList.length) {
       setPhoneNumber('');
@@ -96,7 +102,11 @@ const TextIntegration = () => {
       setShortlink(textIntegrationSettings?.schedulingPageShortLink || '');
 
       // return to prev phone or clean field when user press cancel
-      if (textIntegrationSettings.authToken && textIntegrationSettings.accountSid) {
+      if (
+        textIntegrationSettings.authToken.length &&
+        textIntegrationSettings.accountSid.length &&
+        textIntegrationSettings.webhookSecret.length
+      ) {
         dispatch(
           getPhoneNumbers(textIntegrationSettings.accountSid, textIntegrationSettings.authToken)
         );
@@ -105,49 +115,103 @@ const TextIntegration = () => {
       }
     } else {
       dispatch(getAvailablePhoneNumberList([]));
+
+      setLegalName('');
+      setWebsite('');
+      setDba('');
+      setEin('');
+      setAddress('');
+      setCity('');
+      setState('');
+      setZip('');
+      setContactPhone('');
+      setContactEmail('');
+      setAccountSID('');
+      setAuthToken('');
+      setWebhook('');
+      setPhoneNumber('');
+      setShortlink('');
     }
   };
 
+  /* eslint-disable complexity */
   const handleSave = () => {
     if (selectedSC?.id) {
-      const data = {
-        serviceCenterId: selectedSC.id,
-        schedulingPageShortLink: shortlink,
-        fromPhoneNumber: phoneNumber,
-        webhookSecret: webhook,
-        authToken: authToken,
-        accountSid: accountSID,
-        contactPhone: contactPhone,
-        contactEmail: contactEmail,
-        zip: zip,
-        state: state,
-        ein: ein,
-        website: website,
-        dba: dba,
-        addressStreet: address,
-        city: city,
-        legalCompanyName: legalName,
-      };
+      console.log(
+        !accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length
+      );
 
-      dispatch(updateTextIntegrationSettings({ ...data }));
+      if (
+        (!accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length) ||
+        (accountSID.length && authToken.length && webhook.length && phoneNumber.length)
+      ) {
+        const data = {
+          serviceCenterId: selectedSC.id,
+          schedulingPageShortLink: shortlink,
+          fromPhoneNumber: phoneNumber,
+          webhookSecret: webhook,
+          authToken: authToken,
+          accountSid: accountSID,
+          contactPhone: contactPhone,
+          contactEmail: contactEmail,
+          zip: zip,
+          state: state,
+          ein: ein,
+          website: website,
+          dba: dba,
+          addressStreet: address,
+          city: city,
+          legalCompanyName: legalName,
+        };
+
+        dispatch(updateTextIntegrationSettings({ ...data }));
+        setIsEditTable(false);
+      } else {
+        if (!accountSID.length || !authToken.length || !webhook.length || !phoneNumber.length) {
+          if (!accountSID.length) {
+            showError('Account SID is required.');
+            setSidError(true);
+          }
+          if (!authToken.length) {
+            showError('Auth token is required.');
+            setAuthTokenError(true);
+          }
+          if (!webhook.length) {
+            showError('Webhook secret is required.');
+            setWebhookError(true);
+          }
+          if (!phoneNumber.length) {
+            showError('From phone number is required.');
+            setFromNumberError(true);
+          }
+          return;
+        }
+      }
     }
-
-    setIsEditTable(false);
   };
 
   // debounce
   useEffect(() => {
-    if (!accountSID?.length || !authToken?.length) return;
+    if (!accountSID?.length || !authToken?.length || !webhook?.length) {
+      dispatch(getAvailablePhoneNumberList([]));
+      return;
+    }
 
     const timeout = setTimeout(() => {
       dispatch(getPhoneNumbers(accountSID, authToken));
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [accountSID, authToken]);
+  }, [accountSID, authToken, webhook]);
 
   const handleCancel = () => {
     handleCancelChanges();
+
+    setWebhookError(false);
+    setSidError(false);
+    setFromNumberError(false);
+    setAuthTokenError(false);
+
     setIsEditTable(false);
   };
 
@@ -302,7 +366,11 @@ const TextIntegration = () => {
                 disabled={!isEditTable}
                 label="Account SID"
                 placeholder="Account SID"
-                onChange={e => setAccountSID(e.target.value)}
+                onChange={e => {
+                  setSidError(false);
+                  setAccountSID(e.target.value);
+                }}
+                error={sidError}
                 value={accountSID}
               />
             </div>
@@ -312,7 +380,11 @@ const TextIntegration = () => {
                 disabled={!isEditTable}
                 label="Auth Token"
                 placeholder="Auth token"
-                onChange={e => setAuthToken(e.target.value)}
+                error={authTokenError}
+                onChange={e => {
+                  setAuthTokenError(false);
+                  setAuthToken(e.target.value);
+                }}
                 value={authToken}
               />
             </div>
@@ -322,7 +394,11 @@ const TextIntegration = () => {
                 disabled={!isEditTable}
                 label="Webhook secret"
                 placeholder="Webhook Secret"
-                onChange={e => setWebhook(e.target.value)}
+                error={webhookError}
+                onChange={e => {
+                  setWebhookError(false);
+                  setWebhook(e.target.value);
+                }}
                 value={webhook}
               />
             </div>
@@ -334,10 +410,14 @@ const TextIntegration = () => {
                 options={availablePhoneNumberList}
                 isOptionEqualToValue={(o, v) => String(o) === String(v)}
                 getOptionLabel={o => o}
-                onChange={(e, selectedPhoneNumber) => setPhoneNumber(selectedPhoneNumber || '')}
+                onChange={(e, selectedPhoneNumber) => {
+                  setFromNumberError(false);
+                  setPhoneNumber(selectedPhoneNumber || '');
+                }}
                 renderInput={autocompleteRender({
                   label: 'From Phone Numbers',
                   placeholder: 'Phone Number',
+                  error: fromPhoneNumberError,
                 })}
               />
             </div>
