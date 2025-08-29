@@ -52,7 +52,7 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   return (
     <Grid item xs={12} sm={12} md={6} style={{ padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.existing}>
-        <span>{t('I`m a returning customer')}</span>
+        <span>{t('I’m an Existing Customer')}</span>
         <TextField
           style={{ marginTop: 20, marginBottom: 20 }}
           placeholder={`${t('Enter your')} ${t('Email or ')}${t('Phone')}`}
