@@ -3,44 +3,73 @@ import { makeStyles } from 'tss-react/mui';
 export const useMaintenancePackagesStyles = makeStyles()(() => ({
   titleWrapper: {
     marginBottom: 16,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   nonExpanded: {
     backgroundColor: '#E5E5E5',
   },
   topLineWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  select: {
+    width: '100%',
+    borderRadius: 0,
+    '&:before': {
+      display: 'none',
+    },
+    '& > div': {
+      '&:focus': {
+        backgroundColor: 'transparent',
+      },
+    },
   },
   selectWrapper: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginBottom: 10,
-    marginTop: 30,
   },
-  toggleWrapper: {
+  controlsRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 24,
+    marginBottom: 8,
+  },
+  controlColumn: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
   },
-  toggleItem: {
+  actionsWrapper: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    paddingBottom: 8,
   },
-  showPriceLabel: {
+  actionsButtons: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 16,
+  },
+  toggleRightRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+  },
+  toggleRightLabel: {
     fontSize: 14,
     fontWeight: 700,
     textTransform: 'uppercase',
-    marginTop: 10,
+    margin: 0,
+    whiteSpace: 'nowrap',
   },
   optionsLabel: {
     fontSize: 12,
     fontWeight: 'bold',
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
-    marginRight: 10,
+    marginBottom: 6,
   },
   pagination: {
     marginTop: 24,

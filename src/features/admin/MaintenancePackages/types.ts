@@ -1,4 +1,4 @@
-import { EMaintenanceOptionType } from '../../../api/types';
+import { EMaintenanceOptionType, PackageSourceType } from '../../../api/types';
 
 export type TExpandedState = {
   id?: number;
@@ -8,6 +8,11 @@ export type TExpandedState = {
 export type TOption = {
   value: EMaintenanceOptionType;
   name: string;
+};
+
+export type TPackageSource = {
+  name: string;
+  value: PackageSourceType;
 };
 
 export type TSummaryCell = {

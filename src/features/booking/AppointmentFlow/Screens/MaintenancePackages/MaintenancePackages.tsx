@@ -6,6 +6,7 @@ import { RootState } from '../../../../../store/rootReducer';
 import {
   setAdditionalServicesChosen,
   setPackage,
+  setPackageEMenuType,
   setPackageIsSelected,
   setPackagePricingType,
   setSelectedPackageOptionType,
@@ -14,7 +15,12 @@ import {
 import { useParams } from 'react-router-dom';
 import { decodeSCID, getModelCode } from '../../../../../utils/utils';
 import { NoItemsLoading } from '../../../../../components/wrappers/NoItemsLoading/NoItemsLoading';
-import { EServiceCenterName, IPackage, IPackageOptions } from '../../../../../api/types';
+import {
+  EServiceCenterName,
+  IPackage,
+  IPackageOptions,
+  PackageSourceType,
+} from '../../../../../api/types';
 import MaintenancePackagesMobile from '../MaintenancePackagesMobile/MaintenancePackagesMobile';
 import ReactGA from 'react-ga4';
 import ConfirmChangeOption from './ConfirmChangeOption/ConfirmChangeOption';
@@ -39,7 +45,6 @@ import { getPackagesData } from './utils';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
-import { setPackageEMenuType } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 
 type TPackageSelectionProps = {
   onNext: TArgCallback<TScreen>;
@@ -109,9 +114,10 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   useEffect(() => {
     if (!scProfile?.eMenuPDF) {
       setLoading(true);
-      const endpoint = !scProfile?.eMenuEnabled
-        ? Api.endpoints.MaintenancePackages.ByVehicle
-        : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
+      const endpoint =
+        scProfile?.packageSource !== PackageSourceType.eMenu
+          ? Api.endpoints.MaintenancePackages.ByVehicle
+          : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
       Api.call<IPackage[]>(endpoint, {
         data: {
           serviceCenterId: decodeSCID(id),
@@ -223,15 +229,13 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       ) {
         onOpen();
       }
-      if (!scProfile?.eMenuEnabled) {
-        dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
-        dispatch(setPackage(localSelectedPackage));
-        dispatch(setPackagePricingType(localSelectedPricingType));
-      } else {
+      if (scProfile?.packageSource === PackageSourceType.eMenu) {
         dispatch(setPackageEMenuType(localSelectedPackage.type));
-        dispatch(setPackage(localSelectedPackage));
-        dispatch(setPackagePricingType(localSelectedPricingType));
+      } else {
+        dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
       }
+      dispatch(setPackage(localSelectedPackage));
+      dispatch(setPackagePricingType(localSelectedPricingType));
       onSelectionCompleted();
     }
   };
@@ -277,7 +281,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
 
   return (
     <PackagesStepWrapper>
-      {!(scProfile?.eMenuEnabled && scProfile?.eMenuPDF) ? (
+      {!(scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF) ? (
         <NoItemsLoading
           wrapperStyles={{ marginTop: 20 }}
           items={packages}
@@ -285,7 +289,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           label={t('There are no packages available')}
         />
       ) : null}
-      {scProfile?.eMenuEnabled && scProfile?.eMenuPDF ? (
+      {scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF ? (
         <React.Fragment>
           <PackagesEmenu onBack={handleBack} onNext={onEMenuNext} />
         </React.Fragment>
@@ -395,7 +399,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           )}
         </React.Fragment>
       ) : null}
-      {scProfile?.eMenuEnabled && scProfile?.eMenuPDF ? null : (
+      {scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF ? null : (
         <ActionButtons
           onBack={handleBack}
           nextLabel={t('Next')}

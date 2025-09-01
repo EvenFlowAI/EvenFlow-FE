@@ -19,6 +19,7 @@ import {
   IServiceCategory,
   IServiceConsultant,
   ITransportation,
+  PackageSourceType,
 } from '../../../api/types';
 import {
   EAppointmentTimingType,
@@ -826,7 +827,7 @@ export const updatePackageOption =
     if (maintenancePackageOption && scProfile) {
       if (
         scProfile.serviceCenterFlag === EServiceCenterName.DealerBuilt &&
-        scProfile.eMenuEnabled
+        scProfile.packageSource === PackageSourceType.eMenu
       ) {
         dispatch(setPackageEMenuType(maintenancePackageOption.type));
       }
