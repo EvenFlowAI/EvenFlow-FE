@@ -101,7 +101,7 @@ const AudienceForm = ({
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'type', v || '')}
                   renderInput={autocompleteRender({
-                    error: criteriaTypeErrors[index], // <- підсвічуємо, якщо є помилка
+                    error: criteriaTypeErrors[index],
                     label: 'Audience Criteria',
                     placeholder: 'Not selected',
                   })}
@@ -117,7 +117,7 @@ const AudienceForm = ({
                   renderInput={autocompleteRender({
                     label: 'Operator',
                     placeholder: '',
-                    error: criteriaOperatorErrors[index], // <- підсвічуємо, якщо є помилка
+                    error: criteriaOperatorErrors[index],
                   })}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', width: '15%' }}>
