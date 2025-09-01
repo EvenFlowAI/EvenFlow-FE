@@ -91,6 +91,12 @@ const DealerCustomerSettings = ({
       setRules(updatedFilterRules.filter(rule => !rule.isCriteria));
       setTriggers(eventForConfiguration.triggers);
     }
+    // for reset all errors
+    setCriteriaTypeErrors({});
+    setCriteriaOperatorErrors({});
+    setRuleOperatorErrors({});
+    setRuleTypeErrors({});
+    setFirstTriggerDateError({});
   };
 
   const handleOnSuccess = () => {
