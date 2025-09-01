@@ -25,7 +25,7 @@ import { changePageDataGeneric, changePagingGeneric } from '../utils';
 import { setSelectedPod } from '../pods/actions';
 import { createAction } from '@reduxjs/toolkit';
 import { EDay } from '../demandSegments/types';
-import { EMaintenanceOptionType } from '../../../api/types';
+import { EMaintenanceOptionType, PackageSourceType } from '../../../api/types';
 import { setWelcomeScreenView } from '../appointmentFrameReducer/actions';
 import { Api, TOptions } from '../../../api/ApiEndpoints/ApiEndpoints';
 
@@ -538,13 +538,17 @@ export const updatePackagePriceDetails =
       .finally(() => dispatch(loading(false)));
   };
 
-export const updateEMenuEnabledValue =
-  (id: number, isEnabled: boolean, onError: (err: string) => void): AppThunk =>
+export const setPackageSource =
+  (
+    id: number,
+    packageSource: PackageSourceType | undefined,
+    onError: (err: string) => void
+  ): AppThunk =>
   dispatch => {
     dispatch(loading(true));
-    Api.call(Api.endpoints.ServiceCenters.UpdateEMenuEnabledValue, {
+    Api.call(Api.endpoints.ServiceCenters.SetPackageSourceType, {
       urlParams: { id },
-      data: { isEnabled },
+      data: { packageSource },
     })
       .then(result => {
         if (result) dispatch(loadAllSCs());

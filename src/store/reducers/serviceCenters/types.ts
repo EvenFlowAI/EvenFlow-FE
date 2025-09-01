@@ -1,6 +1,6 @@
 import { IAddress, IDealershipGroupShort } from '../dealershipGroups/types';
 import { IOrder, IPageRequest, IPagingResponse } from '../../../types/types';
-import { EMaintenanceOptionType } from '../../../api/types';
+import { EMaintenanceOptionType, PackageSourceType } from '../../../api/types';
 import { TEmailRequirement } from '../screenSettings/types';
 import { TChangePageDataGeneric, TChangePagingGeneric } from '../types';
 import { EDay } from '../demandSegments/types';
@@ -26,7 +26,7 @@ export interface IServiceCenter {
   maintenancePackageOptionTypes: EMaintenanceOptionType[];
   engineTypeFieldName?: string;
   emailRequirement?: TEmailRequirement;
-  isEMenuEnabled: boolean;
+  packageSource: PackageSourceType;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
   countOfManagers: number;
