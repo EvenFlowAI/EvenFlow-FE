@@ -103,15 +103,15 @@ const DealerCustomerSettings = ({
     const errorsCriteriaOperator: { [index: number]: boolean } = {};
     criterias.forEach((c, i) => {
       if (!c.operator) {
-        errorsCriteriaOperator[i] = true; // тут помилка
+        errorsCriteriaOperator[i] = true;
       }
     });
-    setCriteriaOperatorErrors(errorsCriteriaOperator);
+    setCriteriaOperatorErrors(errorsCriteriaOperator || {});
 
     const errorsCriteriaType: { [index: number]: boolean } = {};
     criterias.forEach((c, i) => {
       if (!c.type) {
-        errorsCriteriaType[i] = true; // тут помилка
+        errorsCriteriaType[i] = true;
       }
     });
     setCriteriaTypeErrors(errorsCriteriaType);
@@ -119,7 +119,7 @@ const DealerCustomerSettings = ({
     const errorsRuleType: { [index: number]: boolean } = {};
     rules.forEach((c, i) => {
       if (!c.type) {
-        errorsRuleType[i] = true; // тут помилка
+        errorsRuleType[i] = true;
       }
     });
     setRuleTypeErrors(errorsRuleType);
@@ -127,7 +127,7 @@ const DealerCustomerSettings = ({
     const errorsRuleOperator: { [index: number]: boolean } = {};
     rules.forEach((c, i) => {
       if (!c.operator) {
-        errorsRuleOperator[i] = true; // тут помилка
+        errorsRuleOperator[i] = true;
       }
     });
     setRuleOperatorErrors(errorsRuleOperator);
@@ -190,7 +190,8 @@ const DealerCustomerSettings = ({
             const prevMinutes = h1 * 60 + m1;
             const currMinutes = h2 * 60 + m2;
 
-            return currMinutes - prevMinutes >= 60;
+            // return currMinutes - prevMinutes >= 60; // 1 hour
+            return currMinutes - prevMinutes >= 1; // 1 minute
           }
 
           return false;

@@ -32,19 +32,19 @@ const TextIntegration = () => {
 
   const { classes } = useStyles();
   const [isEditTable, setIsEditTable] = React.useState(false);
-  const [legalName, setLegalName] = React.useState(''); // +
-  const [dba, setDba] = React.useState(''); // +
-  const [address, setAddress] = React.useState(''); // +
-  const [city, setCity] = React.useState(''); // +
-  const [contactEmail, setContactEmail] = React.useState(''); // +
-  const [website, setWebsite] = React.useState(''); // +
-  const [ein, setEin] = React.useState(''); // +
-  const [state, setState] = React.useState(''); // +
-  const [zip, setZip] = React.useState(''); /// +
-  const [contactPhone, setContactPhone] = React.useState(''); // +
-  const [accountSID, setAccountSID] = React.useState(''); // +
-  const [authToken, setAuthToken] = React.useState(''); // +
-  const [webhook, setWebhook] = React.useState(''); // +
+  const [legalName, setLegalName] = React.useState('');
+  const [dba, setDba] = React.useState('');
+  const [address, setAddress] = React.useState('');
+  const [city, setCity] = React.useState('');
+  const [contactEmail, setContactEmail] = React.useState('');
+  const [website, setWebsite] = React.useState('');
+  const [ein, setEin] = React.useState('');
+  const [state, setState] = React.useState('');
+  const [zip, setZip] = React.useState('');
+  const [contactPhone, setContactPhone] = React.useState('');
+  const [accountSID, setAccountSID] = React.useState('');
+  const [authToken, setAuthToken] = React.useState('');
+  const [webhook, setWebhook] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [shortlink, setShortlink] = React.useState('');
   const showError = useException();
@@ -75,7 +75,7 @@ const TextIntegration = () => {
     }
   }, [textIntegrationSettings]);
 
-  // clean number, if phone list is empty
+  // clean number, if a phone number list is empty
   useEffect(() => {
     if (!availablePhoneNumberList.length) {
       setPhoneNumber('');
@@ -145,6 +145,11 @@ const TextIntegration = () => {
         (!accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length) ||
         (accountSID.length && authToken.length && webhook.length && phoneNumber.length)
       ) {
+        setSidError(false);
+        setAuthTokenError(false);
+        setWebhookError(false);
+        setFromNumberError(false);
+
         const data = {
           serviceCenterId: selectedSC.id,
           schedulingPageShortLink: shortlink,
@@ -306,10 +311,20 @@ const TextIntegration = () => {
                   <TextField
                     fullWidth
                     disabled={!isEditTable}
-                    label="Ein"
+                    label="EIN"
                     placeholder="XX-XXXXXXX"
-                    onChange={e => setEin(e.target.value)}
                     value={ein}
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 9) val = val.slice(0, 9);
+
+                      let formatted = val;
+                      if (val.length > 2) {
+                        formatted = val.slice(0, 2) + '-' + val.slice(2);
+                      }
+
+                      setEin(formatted);
+                    }}
                   />
                 </div>
                 <div>
@@ -333,8 +348,14 @@ const TextIntegration = () => {
                     disabled={!isEditTable}
                     label="Zip"
                     placeholder="ZIP"
-                    onChange={e => setZip(e.target.value)}
                     value={zip}
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+
+                      if (val.length > 5) val = val.slice(0, 5);
+                      setZip(val);
+                    }}
+                    inputProps={{ maxLength: 5 }}
                   />
                 </div>
                 <div className={classes.extraMarginTop}>
@@ -343,8 +364,13 @@ const TextIntegration = () => {
                     disabled={!isEditTable}
                     label="Contact Phone"
                     placeholder="1xxxxxxxxxx"
-                    onChange={e => setContactPhone(e.target.value)}
                     value={contactPhone}
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 11) val = val.slice(0, 11);
+                      setContactPhone(val);
+                    }}
+                    inputProps={{ maxLength: 11 }}
                   />
                 </div>
               </div>

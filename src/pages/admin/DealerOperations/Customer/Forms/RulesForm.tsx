@@ -54,6 +54,16 @@ const RulesForm = ({
   };
 
   const handleRemoveRule = (index: number) => {
+    setRuleOperatorErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+
+    setRuleTypeErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+
     setRules(prev => prev.filter((rule, i) => i !== index));
   };
 
@@ -117,13 +127,12 @@ const RulesForm = ({
                   renderInput={autocompleteRender({
                     label: 'Filter Rule',
                     placeholder: 'Not selected',
-                    error: ruleTypeErrors[index], // <- підсвічуємо, якщо є помилка
+                    error: ruleTypeErrors[index],
                   })}
                 />
                 <Autocomplete
                   style={{ width: '25%' }}
                   disabled={!isEditTable}
-                  // value={criteria.operator}
                   value={rule.operator}
                   options={['Less than', 'Equal', 'Greater than']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
@@ -132,7 +141,7 @@ const RulesForm = ({
                   renderInput={autocompleteRender({
                     label: 'Operator',
                     placeholder: '',
-                    error: ruleOperatorErrors[index], // <- підсвічуємо, якщо є помилка
+                    error: ruleOperatorErrors[index],
                   })}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', width: '15%' }}>
