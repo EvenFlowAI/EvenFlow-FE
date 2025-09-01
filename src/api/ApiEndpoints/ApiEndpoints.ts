@@ -464,8 +464,8 @@ export class Api {
         route: '/service-centers/{id}/maintenance-package-price-details',
         method: 'patch',
       },
-      UpdateEMenuEnabledValue: {
-        route: '/service-centers/{id}/e-menu-enabled',
+      SetPackageSourceType: {
+        route: '/service-centers/{id}/maintenance-package-source-type',
         method: 'patch',
       },
       UpdateDefaultOpsCode: {

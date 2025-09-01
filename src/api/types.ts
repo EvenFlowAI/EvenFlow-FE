@@ -61,6 +61,11 @@ export enum EMaintenanceOptionType {
   Preferred,
 }
 
+export enum PackageSourceType {
+  EvenFlow,
+  eMenu,
+}
+
 export interface ICreateAppointmentResp extends IAppointmentByQuery {
   id: number;
   hashKey: string;
