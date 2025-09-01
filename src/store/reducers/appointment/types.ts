@@ -9,6 +9,7 @@ import {
   IServiceCategory,
   IServiceCategoryShort,
   IServiceRequestIds,
+  PackageSourceType,
 } from '../../../api/types';
 import { EPackagePricingType } from '../appointmentFrameReducer/types';
 import { TEmailRequirement } from '../screenSettings/types';
@@ -35,7 +36,7 @@ export interface IServiceCenterProfile {
   engineTypeFieldName?: string;
   dmsId?: string;
   maintenancePackageOptionTypes: EMaintenanceOptionType[];
-  eMenuEnabled?: boolean;
+  packageSource: PackageSourceType;
   eMenuPDF?: boolean;
   emailRequirement?: TEmailRequirement;
 }

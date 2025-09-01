@@ -1,4 +1,4 @@
-import { EMaintenanceOptionType } from '../../../api/types';
+import { EMaintenanceOptionType, PackageSourceType } from '../../../api/types';
 
 export const MaintenanceOptionTypes = [
   {
@@ -12,6 +12,17 @@ export const MaintenanceOptionTypes = [
   {
     name: 'Preferred',
     value: EMaintenanceOptionType.Preferred,
+  },
+];
+
+export const PackageSourceTypes = [
+  {
+    name: 'EvenFlow',
+    value: PackageSourceType.EvenFlow,
+  },
+  {
+    name: 'eMenu',
+    value: PackageSourceType.eMenu,
   },
 ];
 

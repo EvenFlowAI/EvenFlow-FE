@@ -1,4 +1,8 @@
-import { EServiceCenterName, IAppointmentByKey } from '../../../../../../api/types';
+import {
+  EServiceCenterName,
+  IAppointmentByKey,
+  PackageSourceType,
+} from '../../../../../../api/types';
 import { IServiceCenterProfile } from '../../../../../../store/reducers/appointment/types';
 import i18n from '../../../../../../i18n';
 import { EServiceCategoryType } from '../../../../../../store/reducers/categories/types';
@@ -14,7 +18,7 @@ export const getServicesForCloning = (
       let name = '';
       if (
         scProfile.serviceCenterFlag === EServiceCenterName.DealerBuilt &&
-        scProfile.eMenuEnabled &&
+        scProfile.packageSource === PackageSourceType.eMenu &&
         scProfile?.maintenancePackageOptionTypes?.length
       ) {
         const firstOption = scProfile?.maintenancePackageOptionTypes[0];

@@ -1,31 +1,37 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Switch, TablePagination } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Switch,
+  TablePagination,
+} from '@mui/material';
 import { ContentTitle } from '../../../components/wrappers/ContentTitle/ContentTitle';
 import { RootState } from '../../../store/rootReducer';
 import { PackageAccordion } from './PackageAccordion/PackageAccordion';
 import { IPackageByQuery } from '../../../api/types';
-import { loadPackages } from '../../../store/reducers/packages/actions';
+import { changePageData, loadPackages } from '../../../store/reducers/packages/actions';
 import {
   updateAvailablePackageOptions,
-  updateEMenuEnabledValue,
+  setPackageSource,
   updatePackagePriceDetails,
 } from '../../../store/reducers/serviceCenters/actions';
 import AddPackageModal from './AddPackageModal/AddPackageModal';
 import Disclaimer from './Disclaimer/Disclaimer';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
 import { autocompleteRender } from '../../../utils/autocompleteRenders';
-import { Autocomplete } from '@mui/material';
 import { useMaintenancePackagesStyles } from './styles';
-import { MaintenanceOptionTypes } from './constants';
-import { TExpandedState, TOption } from './types';
+import { MaintenanceOptionTypes, PackageSourceTypes } from './constants';
+import { TExpandedState, TOption, TPackageSource } from './types';
 import { useAutocompleteStyles } from '../../../hooks/styling/useAutocompleteStyles';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useConfirm } from '../../../hooks/useConfirm/useConfirm';
 import { useException } from '../../../hooks/useException/useException';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { usePagination } from '../../../hooks/usePaginations/usePaginations';
-import { changePageData } from '../../../store/reducers/packages/actions';
 
 export const MaintenancePackages = () => {
   const {
@@ -42,6 +48,9 @@ export const MaintenancePackages = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isDisclaimerOpen, setDisclaimerOpen] = useState<boolean>(false);
   const [presentedOptions, setPresentedOptions] = useState<TOption[]>([]);
+  const [packageSourceType, setPackageSourceType] = useState<TPackageSource>(
+    PackageSourceTypes.at(0)!
+  );
   const { classes } = useMaintenancePackagesStyles();
   const { classes: autocompleteClasses } = useAutocompleteStyles();
   const dispatch = useDispatch();
@@ -62,6 +71,8 @@ export const MaintenancePackages = () => {
         selectedSC.maintenancePackageOptionTypes?.includes(item.value)
       );
       setPresentedOptions(options);
+      const source = PackageSourceTypes.find(p => p.value === selectedSC.packageSource);
+      setPackageSourceType(source!!);
     }
   }, [selectedSC, packagesPageData]);
 
@@ -94,10 +105,13 @@ export const MaintenancePackages = () => {
     }
   };
 
-  const handleEMenuSwitch = (e: any, value: boolean) => {
-    if (selectedSC) {
-      dispatch(updateEMenuEnabledValue(selectedSC.id, value, showError));
-    }
+  const handlePackageSourceSelect = (e: SelectChangeEvent<number | string>) => {
+    if (!selectedSC) return;
+    const value = e.target.value;
+
+    const selected = PackageSourceTypes.find(p => p.value === value);
+    setPackageSourceType(selected!!);
+    dispatch(setPackageSource(selectedSC.id, selected?.value, showError));
   };
 
   const askRemove = useCallback(
@@ -184,78 +198,80 @@ export const MaintenancePackages = () => {
         isEditing={isEditing}
       />
       <div className={classes.topLineWrapper}>
-        <div className={classes.toggleWrapper}>
+        <div className={classes.selectWrapper}>
           {loading ? (
             <Loading />
           ) : (
             <>
-              <div className={classes.toggleItem}>
-                <p className={classes.showPriceLabel}>Show Price Details</p>
-                <Switch
-                  onChange={handlePriceDetailsSwitch}
-                  checked={selectedSC?.isShowPriceDetails}
-                  color="primary"
-                />
-              </div>
-              <div className={classes.toggleItem}>
-                <p className={classes.showPriceLabel}>eMenu Package</p>
-                <Switch
-                  onChange={handleEMenuSwitch}
-                  checked={selectedSC?.isEMenuEnabled}
-                  color="primary"
-                />
+              <div className={classes.controlsRow}>
+                <div className={classes.controlColumn}>
+                  <p className={classes.optionsLabel}>Package Source</p>
+                  <Select
+                    id="package-source"
+                    className={classes.select}
+                    value={packageSourceType.value}
+                    onChange={handlePackageSourceSelect}
+                    disableUnderline
+                    displayEmpty
+                    variant="standard"
+                    size="small"
+                  >
+                    {PackageSourceTypes.map(opt => (
+                      <MenuItem key={opt.value} value={opt.value}>
+                        {opt.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+                <div className={classes.controlColumn}>
+                  <p className={classes.optionsLabel}>Available Package Options</p>
+                  {packagesOptionsLoading ? (
+                    <Loading />
+                  ) : (
+                    <Autocomplete
+                      fullWidth
+                      multiple
+                      disableClearable
+                      classes={autocompleteClasses}
+                      options={MaintenanceOptionTypes}
+                      disableCloseOnSelect
+                      getOptionLabel={o => o.name}
+                      isOptionEqualToValue={(o, v) => o.value === v.value}
+                      value={presentedOptions}
+                      onChange={onPresentedOptionsChange}
+                      renderInput={autocompleteRender({
+                        label: '',
+                        placeholder: '',
+                      })}
+                    />
+                  )}
+                </div>
               </div>
             </>
           )}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Button
-            style={{ marginLeft: 16 }}
-            color="primary"
-            variant="contained"
-            onClick={handleAddDisclaimer}
-          >
-            {isDisclaimerOpen ? 'Close' : 'Open'} Disclaimer
-          </Button>
-          <Button
-            style={{ marginLeft: 16 }}
-            color="primary"
-            variant="contained"
-            onClick={handleAddPackage}
-          >
-            Add Package
-          </Button>
-        </div>
-      </div>
-      <div className={classes.selectWrapper}>
-        <div style={{ display: 'flex', alignItems: 'flex-end', width: '50%' }}>
-          {packagesOptionsLoading ? (
-            <Loading />
-          ) : (
-            <React.Fragment>
-              <Autocomplete
-                fullWidth
-                multiple
-                disableClearable
-                classes={autocompleteClasses}
-                options={MaintenanceOptionTypes}
-                disableCloseOnSelect
-                getOptionLabel={o => o.name}
-                isOptionEqualToValue={(o, v) => o.value === v.value}
-                value={presentedOptions}
-                onChange={onPresentedOptionsChange}
-                renderInput={autocompleteRender({
-                  label: 'Available Package Options',
-                  placeholder: 'Select Available Package Options',
-                })}
-              />
-            </React.Fragment>
-          )}
+        <div className={classes.actionsWrapper}>
+          <div className={classes.actionsButtons}>
+            <Button color="primary" variant="contained" onClick={handleAddDisclaimer}>
+              {isDisclaimerOpen ? 'Close' : 'Open'} Disclaimer
+            </Button>
+            <Button color="primary" variant="contained" onClick={handleAddPackage}>
+              Add Package
+            </Button>
+          </div>
         </div>
       </div>
       {isDisclaimerOpen ? <Disclaimer setDisclaimerOpen={setDisclaimerOpen} /> : null}
       <div className={classes.titleWrapper}>
         <ContentTitle title="Maintenance Package Pricing" />
+        <div className={classes.toggleRightRow}>
+          <p className={classes.toggleRightLabel}>Show Price Details</p>
+          <Switch
+            onChange={handlePriceDetailsSwitch}
+            checked={selectedSC?.isShowPriceDetails}
+            color="primary"
+          />
+        </div>
       </div>
       <>
         {allPackagesLoading ? (
