@@ -5,7 +5,3 @@ export const upperCase = (array: string[]): string[] => {
 export const removeDuplicates = (array: string[]): string[] => {
   return Array.from(new Set(array));
 };
-
-export const removeDuplicatesV2 = (array: number[]): number[] => {
-  return Array.from(new Set(array));
-};

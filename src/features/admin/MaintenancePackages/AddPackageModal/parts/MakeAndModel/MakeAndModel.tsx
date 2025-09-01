@@ -6,17 +6,15 @@ import { RootState } from '../../../../../../store/rootReducer';
 import Checkbox from '../../../../../../components/formControls/Checkbox/Checkbox';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import { IMake } from '../../../../../../api/types';
-import { removeDuplicates, removeDuplicatesV2, upperCase } from './utils';
+import { removeDuplicates, upperCase } from './utils';
 import { useAutocompleteStyles } from '../../../../../../hooks/styling/useAutocompleteStyles';
 import { ApplyToAll } from '../constants';
 
 type MakeAndModelProps = {
-  setSelectedMakes: Dispatch<SetStateAction<string[]>>;
-  setSelectedMakesV2: Dispatch<SetStateAction<number[]>>;
-  setSelectedModelsV2: Dispatch<SetStateAction<number[]>>;
-  setSelectedModels: Dispatch<SetStateAction<string[]>>;
-  selectedModels: string[];
-  selectedMakes: string[];
+  setSelectedMakes: Dispatch<SetStateAction<number[]>>;
+  setSelectedModels: Dispatch<SetStateAction<number[]>>;
+  selectedModels: number[];
+  selectedMakes: number[];
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   disabled: boolean;
 };
@@ -26,8 +24,6 @@ const MakeAndModel: React.FC<
 > = ({
   disabled,
   setSelectedMakes,
-  setSelectedMakesV2,
-  setSelectedModelsV2,
   selectedModels,
   selectedMakes,
   setSelectedModels,
@@ -38,8 +34,18 @@ const MakeAndModel: React.FC<
   const { classes } = useAutocompleteStyles();
 
   const filteredMakes = useMemo(
-    () => makesFromDB.filter(item => upperCase(selectedMakes).includes(item.name.toUpperCase())),
+    () => makesFromDB.filter(item => selectedMakes.includes(item.id)),
     [makesFromDB, selectedMakes]
+  );
+
+  const selectedMakeValues = useMemo(
+    () => filteredMakes.map(make => make.name),
+    [filteredMakes]
+  );
+
+  const selectedModelValues = useMemo(
+    () => filteredMakes.map(make => make.models).flat(1).filter(item => selectedModels.includes(item.id)).map(model => model.name),
+    [filteredMakes, selectedModels]
   );
 
   useEffect(() => {
@@ -48,16 +54,16 @@ const MakeAndModel: React.FC<
   }, [filteredMakes]);
 
   const sortMakes = (a: string, b: string) => {
-    return upperCase(selectedMakes).includes(a.toUpperCase())
-      ? upperCase(selectedMakes).includes(b.toUpperCase())
+    return upperCase(selectedMakeValues).includes(a.toUpperCase())
+      ? upperCase(selectedMakeValues).includes(b.toUpperCase())
         ? 0
         : -1
       : 1;
   };
 
   const sortModels = (a: string, b: string) => {
-    return upperCase(selectedModels).includes(a.toUpperCase())
-      ? upperCase(selectedModels).includes(b.toUpperCase())
+    return upperCase(selectedModelValues).includes(a.toUpperCase())
+      ? upperCase(selectedModelValues).includes(b.toUpperCase())
         ? 0
         : -1
       : 1;
@@ -69,7 +75,7 @@ const MakeAndModel: React.FC<
       if (data.length) data.unshift(ApplyToAll);
       return data;
     },
-    [selectedMakes]
+    [selectedMakeValues]
   );
 
   const getSortedModelsOptions = useCallback(
@@ -81,14 +87,14 @@ const MakeAndModel: React.FC<
       if (data.length) data.unshift(ApplyToAll);
       return removeDuplicates(data);
     },
-    [selectedModels]
+    [selectedModelValues]
   );
 
   const renderMakeOption = useCallback(
     (props: any, option: any) => {
-      const currentOptionSelected = upperCase(selectedMakes).includes(option.toUpperCase());
+      const currentOptionSelected = upperCase(selectedMakeValues).includes(option.toUpperCase());
       const allSelected = Boolean(
-        !makesFromDB.find(make => !upperCase(selectedMakes).includes(make.name.toUpperCase()))
+        !makesFromDB.find(make => !upperCase(selectedMakeValues).includes(make.name.toUpperCase()))
       );
       const checked = currentOptionSelected || allSelected;
       return (
@@ -108,7 +114,7 @@ const MakeAndModel: React.FC<
         </li>
       );
     },
-    [makesFromDB, selectedMakes]
+    [makesFromDB, selectedMakeValues]
   );
 
   const getFilteredModels = (): string[] => {
@@ -125,18 +131,18 @@ const MakeAndModel: React.FC<
   const renderModelOption = useCallback(
     (props: any, option: any) => {
       const filteredMakes = makesFromDB.filter(item =>
-        upperCase(selectedMakes).includes(item.name.toUpperCase())
+        upperCase(selectedMakeValues).includes(item.name.toUpperCase())
       );
       const allModelsSelected = filteredMakes.length
         ? Boolean(
             !filteredMakes
               .map(item => item.models)
               .flat(1)
-              .find(model => !upperCase(selectedModels).includes('any'))
+              .find(model => !upperCase(selectedModelValues).includes(model.name.toUpperCase()))
           )
         : false;
 
-      const checked = upperCase(selectedModels).includes(option.toUpperCase()) || allModelsSelected;
+      const checked = upperCase(selectedModelValues).includes(option.toUpperCase()) || allModelsSelected;
       return (
         <li
           style={{ display: 'flex', alignItems: 'center' }}
@@ -158,7 +164,7 @@ const MakeAndModel: React.FC<
         </li>
       );
     },
-    [selectedModels, selectedMakes]
+    [selectedModelValues, selectedMakeValues]
   );
 
   const onMakeChange = (e: React.SyntheticEvent, value: string[]) => {
@@ -167,23 +173,18 @@ const MakeAndModel: React.FC<
       if (makesFromDB.length && value.length === makesFromDB.length + 1) {
         setSelectedModels([]);
         setSelectedMakes([]);
-        setSelectedMakesV2([]);
-        setSelectedModelsV2([]);
       } else {
-        setSelectedMakes(() => makesFromDB.map(item => item.name));
-        setSelectedMakesV2(() => makesFromDB.map(item => item.id));
+        setSelectedMakes(() => makesFromDB.map(item => item.id));
         setInitialModels();
       }
     } else {
-      setSelectedMakes(value);
-
       const selectedMakeIds = value.map(
         make => makesFromDB.find(makeFromDB => makeFromDB.name === make)?.id || 0
       );
-      setSelectedMakesV2(selectedMakeIds);
+      setSelectedMakes(selectedMakeIds);
 
       // for clear models when delete makes
-      setSelectedModelsV2(prev =>
+      setSelectedModels(prev =>
         prev.filter(modelId => {
           return filteredMakes.some(
             make => value.includes(make.name) && make.models.some(model => model.id === modelId)
@@ -191,17 +192,8 @@ const MakeAndModel: React.FC<
         })
       );
 
-      setSelectedModels(prev =>
-        prev.filter(modelName => {
-          return filteredMakes.some(
-            make => value.includes(make.name) && make.models.some(model => model.name === modelName)
-          );
-        })
-      );
-
       // for all clears
       if (value.length === 0) {
-        setSelectedModelsV2([]);
         setSelectedModels([]);
       }
     }
@@ -209,21 +201,15 @@ const MakeAndModel: React.FC<
 
   const onModelChange = (e: React.SyntheticEvent, value: string[]) => {
     setFormIsChecked(false);
-    const filteredModels = filteredMakes.map(item => item.models.map(model => model.name)).flat(1);
-    const filteredModelsV2 = filteredMakes.map(item => item.models.map(model => model.id)).flat(1);
-    const modelsSet = removeDuplicates(filteredModels);
-    const modelsSetV2 = removeDuplicatesV2(filteredModelsV2);
+    const filteredModels = filteredMakes.map(item => item.models.map(model => model.id)).flat(1);
     if (value.includes(ApplyToAll)) {
-      if (modelsSet.length && value.length === modelsSet.length + 1) {
+      if (filteredModels.length && value.length === filteredModels.length + 1) {
         setSelectedModels([]);
-        setSelectedModelsV2([]);
       } else {
-        setSelectedModels(modelsSet);
-        setSelectedModelsV2(modelsSetV2);
+        setSelectedModels(filteredModels);
       }
     } else {
-      setSelectedModels(value);
-      setSelectedModelsV2(
+      setSelectedModels(
         filteredMakes.flatMap(make =>
           make.models.filter(model => value.includes(model.name)).map(model => model.id)
         )
@@ -244,7 +230,7 @@ const MakeAndModel: React.FC<
         getOptionLabel={o => o ?? null}
         isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
         renderOption={renderMakeOption}
-        value={selectedMakes}
+        value={selectedMakeValues}
         renderInput={autocompleteRender({
           label: 'Vehicle Make',
           placeholder: 'Select Vehicle Make',
@@ -262,7 +248,7 @@ const MakeAndModel: React.FC<
         renderOption={renderModelOption}
         getOptionLabel={o => o ?? null}
         isOptionEqualToValue={(o, v) => o.toLowerCase() === v.toLowerCase()}
-        value={selectedModels}
+        value={selectedModelValues}
         renderInput={autocompleteRender({
           label: 'Vehicle Model',
           placeholder: 'Select Vehicle Model',

@@ -393,10 +393,8 @@ export interface IYearRange {
 }
 
 export interface IBusinessRule {
-  vehicleMakes: string[];
-  vehicleMakesV2?: number[];
-  vehicleModels: string[];
-  vehicleModelsV2?: number[];
+  vehicleMakes?: number[];
+  vehicleModels?: number[];
   vehicleYearRange: IYearRange;
   vehicleMileageValues: string[];
   customerCriteria: ECustomerCriteria;

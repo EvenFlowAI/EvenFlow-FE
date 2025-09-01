@@ -3,7 +3,6 @@ import {
   getAllComplimentary,
   getComplimentary,
   getMakes,
-  getMakesV2,
   getPackageById,
   getPackagesByQuery,
   getPackagesPaging,
@@ -25,7 +24,6 @@ const initialState: TState = {
   isPackageLoading: false,
   packages: [],
   makes: [],
-  makesV2: [],
   complimentary: [],
   isComplimentaryLoading: false,
   complimentaryPaging: {
@@ -57,9 +55,6 @@ export const packagesReducer = createReducer(initialState, builder =>
     })
     .addCase(getMakes, (state, { payload }) => {
       return { ...state, makes: payload };
-    })
-    .addCase(getMakesV2, (state, { payload }) => {
-      return { ...state, makesV2: payload };
     })
     .addCase(getComplimentary, (state, { payload }) => {
       return { ...state, complimentary: payload };

@@ -84,7 +84,6 @@ export type TState = {
   packagesPageData: IPageRequest;
   packagesPaging: IPagingResponse;
   makes: IMake[];
-  makesV2: number[];
   complimentary: IComplimentaryServiceByQuery[];
   isComplimentaryLoading: boolean;
   complimentaryPaging: IPagingResponse;

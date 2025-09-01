@@ -25,7 +25,6 @@ export const getPackageById = createAction<IPackageById | null>('Optimizer/GetPa
 export const getPackagesByQuery = createAction<IPackageByQuery[]>('Optimizer/GetPackages');
 export const getPackagesPaging = createAction<IPagingResponse>('Optimizer/GetPackagesPaging');
 export const getMakes = createAction<IMake[]>('Optimizer/GetVehicles');
-export const getMakesV2 = createAction<number[]>('Optimizer/GetVehiclesV2');
 export const getComplimentary = createAction<IComplimentaryServiceByQuery[]>(
   'Optimizer/GetComplimentary'
 );
