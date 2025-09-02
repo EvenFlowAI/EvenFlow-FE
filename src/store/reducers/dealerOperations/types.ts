@@ -14,7 +14,6 @@ export interface DashboardItemI {
   name: string;
   isTextEnabled: boolean;
   communicationDetails: {
-    textFrom: string;
     textMessage: string;
   };
 

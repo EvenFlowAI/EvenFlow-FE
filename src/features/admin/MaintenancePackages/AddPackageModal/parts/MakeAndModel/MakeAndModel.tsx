@@ -38,13 +38,15 @@ const MakeAndModel: React.FC<
     [makesFromDB, selectedMakes]
   );
 
-  const selectedMakeValues = useMemo(
-    () => filteredMakes.map(make => make.name),
-    [filteredMakes]
-  );
+  const selectedMakeValues = useMemo(() => filteredMakes.map(make => make.name), [filteredMakes]);
 
   const selectedModelValues = useMemo(
-    () => filteredMakes.map(make => make.models).flat(1).filter(item => selectedModels.includes(item.id)).map(model => model.name),
+    () =>
+      filteredMakes
+        .map(make => make.models)
+        .flat(1)
+        .filter(item => selectedModels.includes(item.id))
+        .map(model => model.name),
     [filteredMakes, selectedModels]
   );
 
@@ -142,7 +144,8 @@ const MakeAndModel: React.FC<
           )
         : false;
 
-      const checked = upperCase(selectedModelValues).includes(option.toUpperCase()) || allModelsSelected;
+      const checked =
+        upperCase(selectedModelValues).includes(option.toUpperCase()) || allModelsSelected;
       return (
         <li
           style={{ display: 'flex', alignItems: 'center' }}
