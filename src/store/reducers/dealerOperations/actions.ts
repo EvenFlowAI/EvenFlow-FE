@@ -172,7 +172,6 @@ export const updateCustomerEvent =
       updatedData:
         | {
             communicationDetails: {
-              textFrom: string;
               textMessage: string;
             };
           }

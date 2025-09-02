@@ -53,8 +53,6 @@ const DealerOperationsCustomer = () => {
     changeDealerOperationsPageData
   );
 
-  const [fromPhoneNumber, setFromPhoneNumber] = useState<string>('');
-  const [selectedTag, setSelectedTag] = useState<string>('');
   const [textMessage, setTextMessage] = useState<string>('');
   const [eventForTextConfiguration, setEventForTextConfiguration] = useState<DashboardItemI | null>(
     null
@@ -121,13 +119,11 @@ const DealerOperationsCustomer = () => {
 
     setEventForTextConfiguration(event);
     setTextMessage(event.communicationDetails?.textMessage ?? '');
-    setFromPhoneNumber(event.communicationDetails?.textFrom ?? '');
     onOpenTextConfigurationModal();
   };
 
   const handleCloseConfigurationTextModal = () => {
     setTextMessage('');
-    setFromPhoneNumber('');
     onCloseTextConfigurationModal();
   };
 
@@ -139,7 +135,6 @@ const DealerOperationsCustomer = () => {
     if (eventForTextConfiguration) {
       const updatedEvent = {
         communicationDetails: {
-          textFrom: fromPhoneNumber,
           textMessage: textMessage,
         },
       };
@@ -360,10 +355,6 @@ const DealerOperationsCustomer = () => {
         onClose={onCloseTextConfigurationModal}
         open={isOpenTextConfigurationModal}
         event={eventForTextConfiguration}
-        setFromPhoneNumber={setFromPhoneNumber}
-        fromPhoneNumber={fromPhoneNumber}
-        setSelectedTag={setSelectedTag}
-        selectedTag={selectedTag}
         setTextMessage={setTextMessage}
         textMessage={textMessage}
         handleSaveText={handleSaveText}

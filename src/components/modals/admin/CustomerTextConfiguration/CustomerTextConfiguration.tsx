@@ -1,21 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { DialogProps } from '../../BaseModal/types';
 import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
 import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
-import { TextField } from '../../../formControls/TextFieldStyled/TextField';
-import { Autocomplete, Button } from '@mui/material';
-import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { Button } from '@mui/material';
 import { Textarea } from '../../../../features/admin/RecallsParts/AddRecallModal/styles';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ReactComponent as CopyIcon } from '../../../../assets/img/copy.svg';
 import { customerTags } from '../../../../config/data';
 
+import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
+import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
+
 type TCustomerTextConfigurationProps = DialogProps & {
   event: DashboardItemI | null;
-  setFromPhoneNumber: (fromPhoneNumber: string) => void;
-  fromPhoneNumber: string;
-  selectedTag: string;
-  setSelectedTag: (tag: string) => void;
   setTextMessage: (textMessage: string) => void;
   textMessage: string;
   handleSaveText: () => void;
@@ -25,10 +22,6 @@ const CustomerTextConfiguration = ({
   onClose,
   open,
   event,
-  fromPhoneNumber,
-  setFromPhoneNumber,
-  selectedTag,
-  setSelectedTag,
   setTextMessage,
   textMessage,
   handleSaveText,
@@ -81,10 +74,6 @@ const CustomerTextConfiguration = ({
     onClose();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFromPhoneNumber(e.target.value);
-  };
-
   return (
     <BaseModal open={open} width={602} onClose={handleClose}>
       <DialogTitle onClose={handleClose}>Text Configuration for {event.name}</DialogTitle>
@@ -96,86 +85,101 @@ const CustomerTextConfiguration = ({
             justifyContent: 'space-between',
           }}
         >
-          <div style={{ width: '48%' }}>
-            <TextField
-              id="from"
-              name="from"
-              fullWidth
-              label="From"
-              placeholder="Enter phone number"
-              onChange={handleChange}
-              value={fromPhoneNumber}
-            />
-          </div>
-          <div style={{ width: '48%' }}>
-            <Autocomplete
-              options={customerTags}
-              ref={autocompleteRef}
-              renderOption={(props, option) => (
-                <li
-                  {...props}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                >
-                  <span>{option}</span>
-                  <button
-                    type="button"
+          <div style={{ width: '45%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 32 }}>
+              <p
+                style={{
+                  textTransform: 'uppercase',
+                  margin: 0,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  marginBottom: 8,
+                }}
+              >
+                Integration
+              </p>
+              <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <CheckIcon /> <span style={{ color: '#7898FF' }}>Configured</span>
+              </p>
+            </div>
+            <div>
+              <span
+                style={{
+                  textTransform: 'uppercase',
+                  fontWeight: 700,
+                  fontSize: 12,
+                  display: 'block',
+                  marginBottom: 8,
+                }}
+              >
+                Insert tag
+              </span>
+              {customerTags.map(tag => {
+                return (
+                  <li
                     style={{
-                      border: 'none',
-                      outline: 'none',
-                      background: 'none',
-                      cursor: 'pointer',
-                    }}
-                    onClick={e => {
-                      e.stopPropagation();
-                      navigator.clipboard.writeText(option);
-                      const input = autocompleteRef.current?.querySelector('input');
-                      if (input) (input as HTMLElement).blur();
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: 14,
                     }}
                   >
-                    <CopyIcon />
-                  </button>
-                </li>
-              )}
-              isOptionEqualToValue={(option, value) => option === value}
-              onChange={(e, value) => {
-                if (value) {
-                  handleInsertTag(value);
-                  setSelectedTag('');
-                }
-              }}
-              value={selectedTag}
-              renderInput={autocompleteRender({
-                label: 'Instert Tag',
-                fullWidth: true,
-                placeholder: 'Tag List',
+                    <span
+                      style={{ cursor: 'pointer', fontSize: 16 }}
+                      onClick={() => handleInsertTag(tag)}
+                    >
+                      {tag}
+                    </span>
+                    <button
+                      type="button"
+                      style={{
+                        border: 'none',
+                        outline: 'none',
+                        background: 'none',
+                        cursor: 'pointer',
+                      }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(tag);
+                        const input = autocompleteRef.current?.querySelector('input');
+                        if (input) (input as HTMLElement).blur();
+                      }}
+                    >
+                      <CopyIcon />
+                    </button>
+                  </li>
+                );
               })}
-            />
+            </div>
           </div>
-        </div>
-        <div style={{ marginTop: 24 }}>
-          <Textarea
-            inputRef={textareaRef}
-            fullWidth
-            multiline
-            style={{ marginBottom: 4 }}
-            placeholder="Enter text message"
-            label="Message"
-            onChange={e => {
-              if (e.target.value.length <= 1000) setTextMessage(e.target.value);
-            }}
-            value={textMessage}
-            rows={7}
-          />
-        </div>
 
-        <div
-          style={{
-            textAlign: 'right',
-            color: '#858585',
-            fontWeight: 300,
-          }}
-        >
-          <span>Approximate Characters: {textMessage?.length || 0}/1000</span>
+          <div style={{ width: '51%' }}>
+            <div style={{ marginTop: 24 }}>
+              <Textarea
+                inputRef={textareaRef}
+                fullWidth
+                multiline
+                style={{ marginBottom: 4 }}
+                placeholder="Enter text message"
+                label="Message"
+                onChange={e => {
+                  if (e.target.value.length <= 1000) setTextMessage(e.target.value);
+                }}
+                value={textMessage}
+                rows={20}
+              />
+            </div>
+
+            <div
+              style={{
+                textAlign: 'right',
+                color: '#858585',
+                fontWeight: 300,
+              }}
+            >
+              <span>Approximate Characters: {textMessage?.length || 0}/1000</span>
+            </div>
+          </div>
         </div>
       </DialogContent>
       <DialogActions>
@@ -184,7 +188,7 @@ const CustomerTextConfiguration = ({
         </Button>
         <LoadingButton
           onClick={handleSaveText}
-          disabled={textMessage.length < 3 || fromPhoneNumber.length < 3}
+          disabled={textMessage.length < 3}
           variant="contained"
           color="primary"
         >
