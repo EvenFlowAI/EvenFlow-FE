@@ -13,9 +13,17 @@ interface TriggersI {
   triggers: TriggerI[];
   setTriggers: React.Dispatch<React.SetStateAction<TriggerI[]>>;
   isEditTable: boolean;
+  firstTriggerDateError: boolean;
+  setFirstTriggerDateError: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Triggers = ({ triggers, setTriggers, isEditTable }: TriggersI) => {
+const Triggers = ({
+  triggers,
+  setTriggers,
+  isEditTable,
+  firstTriggerDateError,
+  setFirstTriggerDateError,
+}: TriggersI) => {
   const { classes } = useStyles();
 
   const handleAddTrigger = () => {
@@ -23,12 +31,16 @@ const Triggers = ({ triggers, setTriggers, isEditTable }: TriggersI) => {
   };
 
   const handleRemoveTrigger = (index: number) => {
+    setFirstTriggerDateError(false);
     setTriggers(prev => prev.filter((trigger, i) => i !== index));
   };
 
   const handleTriggerChange = (index: number, field: keyof TriggerI, newValue: string) => {
     const updated = triggers.map(trigger => ({ ...trigger }));
     if (field === 'scheduledTime') {
+      if (index === 0) {
+        setFirstTriggerDateError(false);
+      }
       updated[index][field] = newValue;
     }
     if (field === 'daysFromListGeneration') {
@@ -116,6 +128,7 @@ const Triggers = ({ triggers, setTriggers, isEditTable }: TriggersI) => {
                         endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
                         id: 'Scheduled time',
                         placeholder: '',
+                        error: index === 0 && firstTriggerDateError,
                       }}
                     />
                   </div>

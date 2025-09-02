@@ -5,62 +5,31 @@ import { useStyles } from './styles';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete, Button } from '@mui/material';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-
-const phoneNumberList = ['38011', '55565', '21254'];
-
-const states = [
-  'AL',
-  'AK',
-  'AZ',
-  'AR',
-  'CA',
-  'CO',
-  'CT',
-  'DE',
-  'FL',
-  'GA',
-  'HI',
-  'ID',
-  'IL',
-  'IN',
-  'IA',
-  'KS',
-  'KY',
-  'LA',
-  'ME',
-  'MD',
-  'MA',
-  'MI',
-  'MN',
-  'MS',
-  'MO',
-  'MT',
-  'NE',
-  'NV',
-  'NH',
-  'NJ',
-  'NM',
-  'NY',
-  'NC',
-  'ND',
-  'OH',
-  'OK',
-  'OR',
-  'PA',
-  'RI',
-  'SC',
-  'SD',
-  'TN',
-  'TX',
-  'UT',
-  'VT',
-  'VA',
-  'WA',
-  'WI',
-  'WY',
-];
+import {
+  getAvailablePhoneNumberList,
+  getPhoneNumbers,
+  loadTextIntegrationSettings,
+  updateTextIntegrationSettings,
+} from '../../../../../store/reducers/dealerOperations/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSCs } from '../../../../../hooks/useSCs/useSCs';
+import { RootState } from '../../../../../store/rootReducer';
+import { states } from '../../helper';
+import { useException } from '../../../../../hooks/useException/useException';
 
 const TextIntegration = () => {
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+  const { textIntegrationSettings, availablePhoneNumberList } = useSelector(
+    (state: RootState) => state.dealerOperations
+  );
+
+  useEffect(() => {
+    if (selectedSC?.id) {
+      dispatch(loadTextIntegrationSettings(selectedSC.id));
+    }
+  }, [selectedSC]);
+
   const { classes } = useStyles();
   const [isEditTable, setIsEditTable] = React.useState(false);
   const [legalName, setLegalName] = React.useState('');
@@ -78,45 +47,176 @@ const TextIntegration = () => {
   const [webhook, setWebhook] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [shortlink, setShortlink] = React.useState('');
+  const showError = useException();
+  const [sidError, setSidError] = React.useState(false);
+  const [authTokenError, setAuthTokenError] = React.useState(false);
+  const [webhookError, setWebhookError] = React.useState(false);
+  const [fromPhoneNumberError, setFromNumberError] = React.useState(false);
 
-  const handleSave = () => {
-    const requiredFields = [
-      legalName,
-      dba,
-      address,
-      city,
-      contactEmail,
-      website,
-      ein,
-      state,
-      zip,
-      contactPhone,
-      accountSID,
-      authToken,
-      phoneNumber,
-    ];
-
-    const allFilled = requiredFields.every(field => field.length);
-
-    if (allFilled) {
-      console.log('save success');
+  // set data when visit tab
+  // eslint-disable-next-line complexity
+  useEffect(() => {
+    if (textIntegrationSettings) {
+      setLegalName(textIntegrationSettings.legalCompanyName || '');
+      setWebsite(textIntegrationSettings.website || '');
+      setDba(textIntegrationSettings.dba || '');
+      setEin(textIntegrationSettings.ein || '');
+      setAddress(textIntegrationSettings.addressStreet || '');
+      setCity(textIntegrationSettings.city || '');
+      setState(textIntegrationSettings.state || '');
+      setZip(textIntegrationSettings.zip || '');
+      setContactPhone(textIntegrationSettings.contactPhone || '');
+      setContactEmail(textIntegrationSettings.contactEmail || '');
+      setAccountSID(textIntegrationSettings.accountSid || '');
+      setAuthToken(textIntegrationSettings.authToken || '');
+      setWebhook(textIntegrationSettings.webhookSecret || '');
+      setPhoneNumber(textIntegrationSettings.fromPhoneNumber || '');
+      setShortlink(textIntegrationSettings.schedulingPageShortLink || '');
     }
+  }, [textIntegrationSettings]);
 
-    setIsEditTable(false);
+  // clean number, if a phone number list is empty
+  useEffect(() => {
+    if (!availablePhoneNumberList.length) {
+      setPhoneNumber('');
+    }
+  }, [availablePhoneNumberList]);
+
+  // eslint-disable-next-line complexity
+  const handleCancelChanges = () => {
+    if (textIntegrationSettings) {
+      setLegalName(textIntegrationSettings?.legalCompanyName || '');
+      setWebsite(textIntegrationSettings?.website || '');
+      setDba(textIntegrationSettings?.dba || '');
+      setEin(textIntegrationSettings?.ein || '');
+      setAddress(textIntegrationSettings?.addressStreet || '');
+      setCity(textIntegrationSettings?.city || '');
+      setState(textIntegrationSettings?.state || '');
+      setZip(textIntegrationSettings?.zip || '');
+      setContactPhone(textIntegrationSettings?.contactPhone || '');
+      setContactEmail(textIntegrationSettings?.contactEmail || '');
+      setAccountSID(textIntegrationSettings?.accountSid || '');
+      setAuthToken(textIntegrationSettings?.authToken || '');
+      setWebhook(textIntegrationSettings?.webhookSecret || '');
+      setPhoneNumber(textIntegrationSettings?.fromPhoneNumber || '');
+      setShortlink(textIntegrationSettings?.schedulingPageShortLink || '');
+
+      // return to prev phone or clean field when user press cancel
+      if (
+        textIntegrationSettings.authToken.length &&
+        textIntegrationSettings.accountSid.length &&
+        textIntegrationSettings.webhookSecret.length
+      ) {
+        dispatch(
+          getPhoneNumbers(textIntegrationSettings.accountSid, textIntegrationSettings.authToken)
+        );
+      } else {
+        dispatch(getAvailablePhoneNumberList([]));
+      }
+    } else {
+      dispatch(getAvailablePhoneNumberList([]));
+
+      setLegalName('');
+      setWebsite('');
+      setDba('');
+      setEin('');
+      setAddress('');
+      setCity('');
+      setState('');
+      setZip('');
+      setContactPhone('');
+      setContactEmail('');
+      setAccountSID('');
+      setAuthToken('');
+      setWebhook('');
+      setPhoneNumber('');
+      setShortlink('');
+    }
+  };
+
+  /* eslint-disable complexity */
+  const handleSave = () => {
+    if (selectedSC?.id) {
+      console.log(
+        !accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length
+      );
+
+      if (
+        (!accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length) ||
+        (accountSID.length && authToken.length && webhook.length && phoneNumber.length)
+      ) {
+        setSidError(false);
+        setAuthTokenError(false);
+        setWebhookError(false);
+        setFromNumberError(false);
+
+        const data = {
+          serviceCenterId: selectedSC.id,
+          schedulingPageShortLink: shortlink,
+          fromPhoneNumber: phoneNumber,
+          webhookSecret: webhook,
+          authToken: authToken,
+          accountSid: accountSID,
+          contactPhone: contactPhone,
+          contactEmail: contactEmail,
+          zip: zip,
+          state: state,
+          ein: ein,
+          website: website,
+          dba: dba,
+          addressStreet: address,
+          city: city,
+          legalCompanyName: legalName,
+        };
+
+        dispatch(updateTextIntegrationSettings({ ...data }));
+        setIsEditTable(false);
+      } else {
+        if (!accountSID.length || !authToken.length || !webhook.length || !phoneNumber.length) {
+          if (!accountSID.length) {
+            showError('Account SID is required.');
+            setSidError(true);
+          }
+          if (!authToken.length) {
+            showError('Auth token is required.');
+            setAuthTokenError(true);
+          }
+          if (!webhook.length) {
+            showError('Webhook secret is required.');
+            setWebhookError(true);
+          }
+          if (!phoneNumber.length) {
+            showError('From phone number is required.');
+            setFromNumberError(true);
+          }
+          return;
+        }
+      }
+    }
   };
 
   // debounce
   useEffect(() => {
-    if (!accountSID.length || !authToken.length) return;
+    if (!accountSID?.length || !authToken?.length || !webhook?.length) {
+      dispatch(getAvailablePhoneNumberList([]));
+      return;
+    }
 
     const timeout = setTimeout(() => {
-      console.log('process phoneNumber');
+      dispatch(getPhoneNumbers(accountSID, authToken));
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [accountSID, authToken]);
+  }, [accountSID, authToken, webhook]);
 
   const handleCancel = () => {
+    handleCancelChanges();
+
+    setWebhookError(false);
+    setSidError(false);
+    setFromNumberError(false);
+    setAuthTokenError(false);
+
     setIsEditTable(false);
   };
 
@@ -211,10 +311,20 @@ const TextIntegration = () => {
                   <TextField
                     fullWidth
                     disabled={!isEditTable}
-                    label="Ein"
+                    label="EIN"
                     placeholder="XX-XXXXXXX"
-                    onChange={e => setEin(e.target.value)}
                     value={ein}
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 9) val = val.slice(0, 9);
+
+                      let formatted = val;
+                      if (val.length > 2) {
+                        formatted = val.slice(0, 2) + '-' + val.slice(2);
+                      }
+
+                      setEin(formatted);
+                    }}
                   />
                 </div>
                 <div>
@@ -238,8 +348,14 @@ const TextIntegration = () => {
                     disabled={!isEditTable}
                     label="Zip"
                     placeholder="ZIP"
-                    onChange={e => setZip(e.target.value)}
                     value={zip}
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+
+                      if (val.length > 5) val = val.slice(0, 5);
+                      setZip(val);
+                    }}
+                    inputProps={{ maxLength: 5 }}
                   />
                 </div>
                 <div className={classes.extraMarginTop}>
@@ -248,8 +364,13 @@ const TextIntegration = () => {
                     disabled={!isEditTable}
                     label="Contact Phone"
                     placeholder="1xxxxxxxxxx"
-                    onChange={e => setContactPhone(e.target.value)}
                     value={contactPhone}
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 11) val = val.slice(0, 11);
+                      setContactPhone(val);
+                    }}
+                    inputProps={{ maxLength: 11 }}
                   />
                 </div>
               </div>
@@ -271,7 +392,11 @@ const TextIntegration = () => {
                 disabled={!isEditTable}
                 label="Account SID"
                 placeholder="Account SID"
-                onChange={e => setAccountSID(e.target.value)}
+                onChange={e => {
+                  setSidError(false);
+                  setAccountSID(e.target.value);
+                }}
+                error={sidError}
                 value={accountSID}
               />
             </div>
@@ -281,7 +406,11 @@ const TextIntegration = () => {
                 disabled={!isEditTable}
                 label="Auth Token"
                 placeholder="Auth token"
-                onChange={e => setAuthToken(e.target.value)}
+                error={authTokenError}
+                onChange={e => {
+                  setAuthTokenError(false);
+                  setAuthToken(e.target.value);
+                }}
                 value={authToken}
               />
             </div>
@@ -291,22 +420,30 @@ const TextIntegration = () => {
                 disabled={!isEditTable}
                 label="Webhook secret"
                 placeholder="Webhook Secret"
-                onChange={e => setWebhook(e.target.value)}
+                error={webhookError}
+                onChange={e => {
+                  setWebhookError(false);
+                  setWebhook(e.target.value);
+                }}
                 value={webhook}
               />
             </div>
             <div>
               <Autocomplete
                 fullWidth
-                disabled={!isEditTable}
+                disabled={!isEditTable || !availablePhoneNumberList.length}
                 value={phoneNumber}
-                options={phoneNumberList}
+                options={availablePhoneNumberList}
                 isOptionEqualToValue={(o, v) => String(o) === String(v)}
                 getOptionLabel={o => o}
-                onChange={(e, selectedPhoneNumber) => setPhoneNumber(selectedPhoneNumber || '')}
+                onChange={(e, selectedPhoneNumber) => {
+                  setFromNumberError(false);
+                  setPhoneNumber(selectedPhoneNumber || '');
+                }}
                 renderInput={autocompleteRender({
                   label: 'From Phone Numbers',
                   placeholder: 'Phone Number',
+                  error: fromPhoneNumberError,
                 })}
               />
             </div>

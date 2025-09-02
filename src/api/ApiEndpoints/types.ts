@@ -359,7 +359,13 @@ export interface IApiEndpoints {
   WaitListSettings: Record<'Get' | 'Update' | 'Toggle', TApiEndpoint>;
   ZipCodes: Record<'GetFiltered', TApiEndpoint>;
   DealerOperations: Record<
-    'GetEvents' | 'CreateEvent' | 'DeleteEvent' | 'UpdateEvent',
+    | 'GetEvents'
+    | 'CreateEvent'
+    | 'DeleteEvent'
+    | 'UpdateEvent'
+    | 'GetTextIntegration'
+    | 'SetTextIntegration'
+    | 'GetPhoneNumbers',
     TApiEndpoint
   >;
 }

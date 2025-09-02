@@ -55,7 +55,7 @@ const DealerCustomerSettings = ({
         setTriggers(event.triggers);
       }
     }
-  }, []);
+  }, [dashboardItems]);
 
   const [eventForConfiguration, setEventForConfiguration] = useState<DashboardItemI | null>(null);
   const [isEditTable, setIsEditTable] = useState<boolean>(false);
@@ -63,6 +63,13 @@ const DealerCustomerSettings = ({
   const [rules, setRules] = useState<CriteriaI[]>([]);
   const [triggers, setTriggers] = useState<TriggerI[]>([]);
   const showError = useException();
+  const [criteriaOperatorErrors, setCriteriaOperatorErrors] = useState<{
+    [index: number]: boolean;
+  }>({});
+  const [criteriaTypeErrors, setCriteriaTypeErrors] = useState<{ [index: number]: boolean }>({});
+  const [ruleOperatorErrors, setRuleOperatorErrors] = useState<{ [index: number]: boolean }>({});
+  const [ruleTypeErrors, setRuleTypeErrors] = useState<{ [index: number]: boolean }>({});
+  const [firstTriggerDateError, setFirstTriggerDateError] = useState<boolean>(false);
   const {
     onOpen: onOpenLeaveWithoutSavingModal,
     onClose: onCloseLeaveWithoutSavingModal,
@@ -84,10 +91,82 @@ const DealerCustomerSettings = ({
       setRules(updatedFilterRules.filter(rule => !rule.isCriteria));
       setTriggers(eventForConfiguration.triggers);
     }
+    // for reset all errors
+    setCriteriaTypeErrors({});
+    setCriteriaOperatorErrors({});
+    setRuleOperatorErrors({});
+    setRuleTypeErrors({});
+    setFirstTriggerDateError({});
   };
 
   const handleOnSuccess = () => {
     setIsEditTable(false);
+  };
+
+  const validateChangesBeforeSave = () => {
+    let haveErrors = false;
+
+    const errorsCriteriaOperator: { [index: number]: boolean } = {};
+    criterias.forEach((c, i) => {
+      if (!c.operator) {
+        errorsCriteriaOperator[i] = true;
+      }
+    });
+    setCriteriaOperatorErrors(errorsCriteriaOperator || {});
+
+    const errorsCriteriaType: { [index: number]: boolean } = {};
+    criterias.forEach((c, i) => {
+      if (!c.type) {
+        errorsCriteriaType[i] = true;
+      }
+    });
+    setCriteriaTypeErrors(errorsCriteriaType);
+
+    const errorsRuleType: { [index: number]: boolean } = {};
+    rules.forEach((c, i) => {
+      if (!c.type) {
+        errorsRuleType[i] = true;
+      }
+    });
+    setRuleTypeErrors(errorsRuleType);
+
+    const errorsRuleOperator: { [index: number]: boolean } = {};
+    rules.forEach((c, i) => {
+      if (!c.operator) {
+        errorsRuleOperator[i] = true;
+      }
+    });
+    setRuleOperatorErrors(errorsRuleOperator);
+
+    if (triggers.length === 1) {
+      const trigger = triggers[0];
+      if (!trigger.scheduledTime) {
+        setFirstTriggerDateError(true);
+        showError("The 'Scheduled time' selection is required.");
+        haveErrors = true;
+      }
+    }
+
+    if (Object.keys(errorsCriteriaOperator).length || Object.keys(errorsRuleOperator).length) {
+      showError('The operator selection is required.');
+      haveErrors = true;
+    }
+
+    if (Object.keys(errorsCriteriaType).length) {
+      showError("The ‘Audience Criteria' selection is required.");
+      haveErrors = true;
+    }
+
+    if (Object.keys(errorsRuleType).length) {
+      showError("The ‘Filter Rule' selection is required.");
+      haveErrors = true;
+    }
+
+    if (haveErrors) {
+      return;
+    } else {
+      handleSaveChanges();
+    }
   };
 
   const handleSaveChanges = () => {
@@ -96,8 +175,8 @@ const DealerCustomerSettings = ({
     }
 
     if (
-      validateGroup(criterias, c => Number.isInteger(Number(c.value))) &&
-      validateGroup(rules, r => Number.isInteger(Number(r.value))) &&
+      validateGroup(criterias, c => Number.isInteger(Number(c.value)) && !!c?.operator) &&
+      validateGroup(rules, r => Number.isInteger(Number(r.value)) && !!r?.operator) &&
       validateGroup(triggers, t => Number.isInteger(Number(t.daysFromListGeneration)))
     ) {
       if (triggers.length) {
@@ -117,7 +196,8 @@ const DealerCustomerSettings = ({
             const prevMinutes = h1 * 60 + m1;
             const currMinutes = h2 * 60 + m2;
 
-            return currMinutes - prevMinutes >= 60;
+            // return currMinutes - prevMinutes >= 60; // 1 hour
+            return currMinutes - prevMinutes >= 1; // 1 minute
           }
 
           return false;
@@ -167,7 +247,7 @@ const DealerCustomerSettings = ({
             }
           >
             <ArrowLeft />
-            <span>Back to Customer Communication Dashboard</span>
+            <span>Back to Communication Dashboard</span>
           </Button>
         </div>
 
@@ -178,7 +258,7 @@ const DealerCustomerSettings = ({
                 <Button variant="text" onClick={handleCancelChanges} color="secondary">
                   Cancel
                 </Button>
-                <Button variant="text" onClick={handleSaveChanges}>
+                <Button variant="text" onClick={validateChangesBeforeSave}>
                   Save
                 </Button>
               </>
@@ -201,11 +281,23 @@ const DealerCustomerSettings = ({
           >
             <div style={{ display: 'flex', width: '48%', flexDirection: 'column', gap: '10px' }}>
               <AudienceForm
+                criteriaOperatorErrors={criteriaOperatorErrors}
+                setCriteriaOperatorErrors={setCriteriaOperatorErrors}
+                criteriaTypeErrors={criteriaTypeErrors}
+                setCriteriaTypeErrors={setCriteriaTypeErrors}
                 criterias={criterias}
                 isEditTable={isEditTable}
                 setCriteria={setCriteria}
               />
-              <RulesForm rules={rules} isEditTable={isEditTable} setRules={setRules} />
+              <RulesForm
+                ruleOperatorErrors={ruleOperatorErrors}
+                setRuleOperatorErrors={setRuleOperatorErrors}
+                ruleTypeErrors={ruleTypeErrors}
+                setRuleTypeErrors={setRuleTypeErrors}
+                rules={rules}
+                isEditTable={isEditTable}
+                setRules={setRules}
+              />
             </div>
 
             <hr
@@ -220,7 +312,13 @@ const DealerCustomerSettings = ({
             />
 
             <div style={{ display: 'flex', width: '48%', flexDirection: 'column', gap: '10px' }}>
-              <Triggers triggers={triggers} setTriggers={setTriggers} isEditTable={isEditTable} />
+              <Triggers
+                firstTriggerDateError={firstTriggerDateError}
+                setFirstTriggerDateError={setFirstTriggerDateError}
+                triggers={triggers}
+                setTriggers={setTriggers}
+                isEditTable={isEditTable}
+              />
             </div>
           </div>
         </div>

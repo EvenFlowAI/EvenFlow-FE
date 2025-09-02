@@ -11,9 +11,33 @@ interface AudienceFormI {
   criterias: CriteriaI[];
   isEditTable: boolean;
   setCriteria: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
+  criteriaOperatorErrors: {
+    [index: number]: boolean;
+  };
+  setCriteriaOperatorErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >;
+  criteriaTypeErrors: {
+    [index: number]: boolean;
+  };
+  setCriteriaTypeErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >;
 }
 
-const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) => {
+const AudienceForm = ({
+  criterias,
+  isEditTable,
+  setCriteria,
+  criteriaOperatorErrors,
+  setCriteriaOperatorErrors,
+  criteriaTypeErrors,
+  setCriteriaTypeErrors,
+}: AudienceFormI) => {
   const { classes } = useStyles();
 
   const handleAddCriteria = () => {
@@ -29,6 +53,20 @@ const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) =>
   const handleCriteriaChange = (index: number, field: keyof CriteriaI, newValue: string) => {
     const updated = [...criterias];
     if (field === 'type' || field === 'operator' || field === 'value') {
+      if (field === 'operator') {
+        setCriteriaOperatorErrors(prev => ({
+          ...prev,
+          [index]: false,
+        }));
+      }
+
+      if (field === 'type') {
+        setCriteriaTypeErrors(prev => ({
+          ...prev,
+          [index]: false,
+        }));
+      }
+
       updated[index][field] = newValue;
       setCriteria(updated);
     }
@@ -63,6 +101,7 @@ const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) =>
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'type', v || '')}
                   renderInput={autocompleteRender({
+                    error: criteriaTypeErrors[index],
                     label: 'Audience Criteria',
                     placeholder: 'Not selected',
                   })}
@@ -78,6 +117,7 @@ const AudienceForm = ({ criterias, isEditTable, setCriteria }: AudienceFormI) =>
                   renderInput={autocompleteRender({
                     label: 'Operator',
                     placeholder: '',
+                    error: criteriaOperatorErrors[index],
                   })}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', width: '15%' }}>

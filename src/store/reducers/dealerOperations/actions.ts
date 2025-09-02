@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { DashboardItemI } from './types';
+import { DashboardItemI, IntegrationSettingsI } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
 import { ActionCreator } from 'redux';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -18,6 +18,18 @@ export const getCustomerCommunicationPaging = createAction<IPagingResponse>(
 
 export const setNewEventName = createAction<string>('DealerOperations/SetNewEventName');
 
+export const getTextIntegrationSettings = createAction<IntegrationSettingsI | null>(
+  'Optimizer/getTextIntegrationSettings'
+);
+
+export const getAvailablePhoneNumberList = createAction<string[]>(
+  'Optimizer/getAvailablePhoneNumberList'
+);
+
+export const setTextIntegrationSettings = createAction<IntegrationSettingsI>(
+  'Optimizer/setTextIntegrationSettings'
+);
+
 export enum EventAudienceFilterTypeE {
   DaysToFutureAppointment = 1,
 }
@@ -35,6 +47,60 @@ export enum ComparisonOperatorE {
   'Equal',
   'Greater than',
 }
+
+export const loadTextIntegrationSettings =
+  (serviceCenterId: number): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.GetTextIntegration, { params: { serviceCenterId } })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getTextIntegrationSettings(response?.data));
+        } else {
+          console.log('No data with text integration settings');
+        }
+      })
+      .catch(e => {
+        console.log('Loading text integration settings error', e);
+      });
+  };
+
+export const updateTextIntegrationSettings =
+  (data: IntegrationSettingsI): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.SetTextIntegration, {
+      data: { ...data },
+    })
+      .then(response => {
+        if (response) {
+          dispatch(loadTextIntegrationSettings(data.serviceCenterId));
+        } else {
+          console.log('No response with updating text integration settings');
+        }
+      })
+      .catch(e => {
+        console.log('Updating text integration settings error', e);
+      });
+  };
+
+export const getPhoneNumbers =
+  (AccountSid: string, AuthToken: string): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.GetPhoneNumbers, {
+      data: {
+        AccountSid,
+        AuthToken,
+      },
+    })
+      .then(response => {
+        if (response?.data) {
+          dispatch(getAvailablePhoneNumberList(response.data));
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        dispatch(getAvailablePhoneNumberList([]));
+      });
+  };
 
 export const loadDashboardItems =
   (serviceCenterId: number): AppThunk =>

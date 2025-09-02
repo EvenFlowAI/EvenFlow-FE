@@ -12,9 +12,33 @@ interface RulesFormI {
   rules: CriteriaI[];
   isEditTable: boolean;
   setRules: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
+  ruleOperatorErrors: {
+    [index: number]: boolean;
+  };
+  setRuleOperatorErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >;
+  ruleTypeErrors: {
+    [index: number]: boolean;
+  };
+  setRuleTypeErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >;
 }
 
-const RulesForm = ({ rules, isEditTable, setRules }: RulesFormI) => {
+const RulesForm = ({
+  rules,
+  isEditTable,
+  setRules,
+  ruleOperatorErrors,
+  setRuleOperatorErrors,
+  ruleTypeErrors,
+  setRuleTypeErrors,
+}: RulesFormI) => {
   const { classes } = useStyles();
 
   const getAvailableFilterRules = () => {
@@ -30,12 +54,36 @@ const RulesForm = ({ rules, isEditTable, setRules }: RulesFormI) => {
   };
 
   const handleRemoveRule = (index: number) => {
+    setRuleOperatorErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+
+    setRuleTypeErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+
     setRules(prev => prev.filter((rule, i) => i !== index));
   };
 
   const handleRuleChange = (index: number, field: keyof CriteriaI, newValue: string) => {
     const updated = [...rules];
     if (field === 'type' || field === 'operator' || field === 'value') {
+      if (field === 'operator') {
+        setRuleOperatorErrors(prev => ({
+          ...prev,
+          [index]: false,
+        }));
+      }
+
+      if (field === 'type') {
+        setRuleTypeErrors(prev => ({
+          ...prev,
+          [index]: false,
+        }));
+      }
+
       updated[index][field] = newValue;
       setRules(updated);
     }
@@ -79,20 +127,21 @@ const RulesForm = ({ rules, isEditTable, setRules }: RulesFormI) => {
                   renderInput={autocompleteRender({
                     label: 'Filter Rule',
                     placeholder: 'Not selected',
+                    error: ruleTypeErrors[index],
                   })}
                 />
                 <Autocomplete
                   style={{ width: '25%' }}
                   disabled={!isEditTable}
-                  // value={criteria.operator}
                   value={rule.operator}
-                  options={['Equal', 'Less than', 'Greater than']}
+                  options={['Less than', 'Equal', 'Greater than']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleRuleChange(index, 'operator', v || '')}
                   renderInput={autocompleteRender({
                     label: 'Operator',
                     placeholder: '',
+                    error: ruleOperatorErrors[index],
                   })}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', width: '15%' }}>
