@@ -10,6 +10,8 @@ import { customerTags } from '../../../../config/data';
 
 import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/rootReducer';
 
 type TCustomerTextConfigurationProps = DialogProps & {
   event: DashboardItemI | null;
@@ -30,6 +32,8 @@ const CustomerTextConfiguration = ({
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
+
+  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
 
   useEffect(() => {
     setTimeout(() => {
@@ -74,6 +78,44 @@ const CustomerTextConfiguration = ({
     onClose();
   };
 
+  const renderTagItem = (tag: string) => {
+    const canRender = tag !== '{{Shortlink}}' || textIntegrationSettings?.schedulingPageShortLink;
+
+    if (!canRender) return null;
+
+    return (
+      <li
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 14,
+        }}
+      >
+        <span style={{ cursor: 'pointer', fontSize: 16 }} onClick={() => handleInsertTag(tag)}>
+          {tag}
+        </span>
+        <button
+          type="button"
+          style={{
+            border: 'none',
+            outline: 'none',
+            background: 'none',
+            cursor: 'pointer',
+          }}
+          onClick={e => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(tag);
+            const input = autocompleteRef.current?.querySelector('input');
+            if (input) (input as HTMLElement).blur();
+          }}
+        >
+          <CopyIcon />
+        </button>
+      </li>
+    );
+  };
+
   return (
     <BaseModal open={open} width={602} onClose={handleClose}>
       <DialogTitle onClose={handleClose}>Text Configuration for {event.name}</DialogTitle>
@@ -98,9 +140,15 @@ const CustomerTextConfiguration = ({
               >
                 Integration
               </p>
-              <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <CheckIcon /> <span style={{ color: '#7898FF' }}>Configured</span>
-              </p>
+              {textIntegrationSettings?.fromPhoneNumber ? (
+                <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <CheckIcon /> <span style={{ color: '#7898FF' }}>Configured</span>
+                </p>
+              ) : (
+                <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <RedCross /> <span style={{ color: '#C71062' }}>Not Configured</span>
+                </p>
+              )}
             </div>
             <div>
               <span
@@ -114,42 +162,7 @@ const CustomerTextConfiguration = ({
               >
                 Insert tag
               </span>
-              {customerTags.map(tag => {
-                return (
-                  <li
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: 14,
-                    }}
-                  >
-                    <span
-                      style={{ cursor: 'pointer', fontSize: 16 }}
-                      onClick={() => handleInsertTag(tag)}
-                    >
-                      {tag}
-                    </span>
-                    <button
-                      type="button"
-                      style={{
-                        border: 'none',
-                        outline: 'none',
-                        background: 'none',
-                        cursor: 'pointer',
-                      }}
-                      onClick={e => {
-                        e.stopPropagation();
-                        navigator.clipboard.writeText(tag);
-                        const input = autocompleteRef.current?.querySelector('input');
-                        if (input) (input as HTMLElement).blur();
-                      }}
-                    >
-                      <CopyIcon />
-                    </button>
-                  </li>
-                );
-              })}
+              {customerTags.map(tag => renderTagItem(tag))}
             </div>
           </div>
 
@@ -188,7 +201,7 @@ const CustomerTextConfiguration = ({
         </Button>
         <LoadingButton
           onClick={handleSaveText}
-          disabled={textMessage.length < 3}
+          disabled={textMessage.length < 3 || textIntegrationSettings?.fromPhoneNumber === null}
           variant="contained"
           color="primary"
         >

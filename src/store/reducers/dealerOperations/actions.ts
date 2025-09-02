@@ -83,12 +83,13 @@ export const updateTextIntegrationSettings =
   };
 
 export const getPhoneNumbers =
-  (AccountSid: string, AuthToken: string): AppThunk =>
+  (accountSid: string, authToken: string, webhookSecret: string): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.GetPhoneNumbers, {
       data: {
-        AccountSid,
-        AuthToken,
+        accountSid,
+        authToken,
+        webhookSecret,
       },
     })
       .then(response => {

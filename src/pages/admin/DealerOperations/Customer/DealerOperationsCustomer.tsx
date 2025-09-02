@@ -15,6 +15,7 @@ import {
   changeDealerOperationsPageData,
   deleteCustomerEvent,
   loadDashboardItems,
+  loadTextIntegrationSettings,
   setNewEventName,
   updateCustomerEvent,
 } from '../../../../store/reducers/dealerOperations/actions';
@@ -45,8 +46,12 @@ const DealerOperationsCustomer = () => {
     isOpen: isOpenTextConfigurationModal,
   } = useModal();
 
-  const { dashboardItems, customerCommunicationPaging, customerCommunicationPageData } =
-    useSelector((state: RootState) => state.dealerOperations);
+  const {
+    dashboardItems,
+    customerCommunicationPaging,
+    customerCommunicationPageData,
+    textIntegrationSettings,
+  } = useSelector((state: RootState) => state.dealerOperations);
 
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.dealerOperations.customerCommunicationPageData,
@@ -65,6 +70,8 @@ const DealerOperationsCustomer = () => {
   useEffect(() => {
     if (selectedSC?.id) {
       dispatch(loadDashboardItems(selectedSC.id));
+      if (!textIntegrationSettings?.fromPhoneNumber)
+        dispatch(loadTextIntegrationSettings(selectedSC.id));
     }
   }, [selectedSC, customerCommunicationPageData]);
 
