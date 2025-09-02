@@ -15,6 +15,7 @@ import {
   changeDealerOperationsPageData,
   deleteCustomerEvent,
   loadDashboardItems,
+  loadTextIntegrationSettings,
   setNewEventName,
   updateCustomerEvent,
 } from '../../../../store/reducers/dealerOperations/actions';
@@ -45,16 +46,18 @@ const DealerOperationsCustomer = () => {
     isOpen: isOpenTextConfigurationModal,
   } = useModal();
 
-  const { dashboardItems, customerCommunicationPaging, customerCommunicationPageData } =
-    useSelector((state: RootState) => state.dealerOperations);
+  const {
+    dashboardItems,
+    customerCommunicationPaging,
+    customerCommunicationPageData,
+    textIntegrationSettings,
+  } = useSelector((state: RootState) => state.dealerOperations);
 
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.dealerOperations.customerCommunicationPageData,
     changeDealerOperationsPageData
   );
 
-  const [fromPhoneNumber, setFromPhoneNumber] = useState<string>('');
-  const [selectedTag, setSelectedTag] = useState<string>('');
   const [textMessage, setTextMessage] = useState<string>('');
   const [eventForTextConfiguration, setEventForTextConfiguration] = useState<DashboardItemI | null>(
     null
@@ -67,6 +70,8 @@ const DealerOperationsCustomer = () => {
   useEffect(() => {
     if (selectedSC?.id) {
       dispatch(loadDashboardItems(selectedSC.id));
+      if (!textIntegrationSettings?.fromPhoneNumber)
+        dispatch(loadTextIntegrationSettings(selectedSC.id));
     }
   }, [selectedSC, customerCommunicationPageData]);
 
@@ -121,13 +126,11 @@ const DealerOperationsCustomer = () => {
 
     setEventForTextConfiguration(event);
     setTextMessage(event.communicationDetails?.textMessage ?? '');
-    setFromPhoneNumber(event.communicationDetails?.textFrom ?? '');
     onOpenTextConfigurationModal();
   };
 
   const handleCloseConfigurationTextModal = () => {
     setTextMessage('');
-    setFromPhoneNumber('');
     onCloseTextConfigurationModal();
   };
 
@@ -139,7 +142,6 @@ const DealerOperationsCustomer = () => {
     if (eventForTextConfiguration) {
       const updatedEvent = {
         communicationDetails: {
-          textFrom: fromPhoneNumber,
           textMessage: textMessage,
         },
       };
@@ -360,10 +362,6 @@ const DealerOperationsCustomer = () => {
         onClose={onCloseTextConfigurationModal}
         open={isOpenTextConfigurationModal}
         event={eventForTextConfiguration}
-        setFromPhoneNumber={setFromPhoneNumber}
-        fromPhoneNumber={fromPhoneNumber}
-        setSelectedTag={setSelectedTag}
-        selectedTag={selectedTag}
         setTextMessage={setTextMessage}
         textMessage={textMessage}
         handleSaveText={handleSaveText}

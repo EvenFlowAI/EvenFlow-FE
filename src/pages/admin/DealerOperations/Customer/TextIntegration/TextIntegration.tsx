@@ -103,12 +103,16 @@ const TextIntegration = () => {
 
       // return to prev phone or clean field when user press cancel
       if (
-        textIntegrationSettings.authToken.length &&
-        textIntegrationSettings.accountSid.length &&
-        textIntegrationSettings.webhookSecret.length
+        textIntegrationSettings?.authToken?.length &&
+        textIntegrationSettings?.accountSid?.length &&
+        textIntegrationSettings?.webhookSecret?.length
       ) {
         dispatch(
-          getPhoneNumbers(textIntegrationSettings.accountSid, textIntegrationSettings.authToken)
+          getPhoneNumbers(
+            textIntegrationSettings?.accountSid,
+            textIntegrationSettings.authToken,
+            textIntegrationSettings.webhookSecret
+          )
         );
       } else {
         dispatch(getAvailablePhoneNumberList([]));
@@ -152,21 +156,21 @@ const TextIntegration = () => {
 
         const data = {
           serviceCenterId: selectedSC.id,
-          schedulingPageShortLink: shortlink,
-          fromPhoneNumber: phoneNumber,
-          webhookSecret: webhook,
-          authToken: authToken,
-          accountSid: accountSID,
-          contactPhone: contactPhone,
-          contactEmail: contactEmail,
-          zip: zip,
-          state: state,
-          ein: ein,
-          website: website,
-          dba: dba,
-          addressStreet: address,
-          city: city,
-          legalCompanyName: legalName,
+          schedulingPageShortLink: shortlink || null,
+          fromPhoneNumber: phoneNumber || null,
+          webhookSecret: webhook || null,
+          authToken: authToken || null,
+          accountSid: accountSID || null,
+          contactPhone: contactPhone || null,
+          contactEmail: contactEmail || null,
+          zip: zip || null,
+          state: state || null,
+          ein: ein || null,
+          website: website || null,
+          dba: dba || null,
+          addressStreet: address || null,
+          city: city || null,
+          legalCompanyName: legalName || null,
         };
 
         dispatch(updateTextIntegrationSettings({ ...data }));
@@ -203,7 +207,7 @@ const TextIntegration = () => {
     }
 
     const timeout = setTimeout(() => {
-      dispatch(getPhoneNumbers(accountSID, authToken));
+      dispatch(getPhoneNumbers(accountSID, authToken, webhook));
     }, 1000);
 
     return () => clearTimeout(timeout);

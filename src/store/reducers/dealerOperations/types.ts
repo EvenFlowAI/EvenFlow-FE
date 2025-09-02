@@ -14,7 +14,6 @@ export interface DashboardItemI {
   name: string;
   isTextEnabled: boolean;
   communicationDetails: {
-    textFrom: string;
     textMessage: string;
   };
 
@@ -33,19 +32,19 @@ export interface DashboardItemI {
 
 export interface IntegrationSettingsI {
   serviceCenterId: number;
-  legalCompanyName: string;
-  website: string;
-  dba: string;
-  ein: string;
-  addressStreet: string;
-  city: string;
-  state: string;
-  zip: string;
-  contactEmail: string;
-  contactPhone: string;
-  accountSid: string;
-  authToken: string;
-  webhookSecret: string;
-  fromPhoneNumber: string;
-  schedulingPageShortLink: string;
+  legalCompanyName: string | null;
+  website: string | null;
+  dba: string | null;
+  ein: string | null;
+  addressStreet: string | null;
+  city: string | null;
+  state: string | null;
+  zip: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  accountSid: string | null;
+  authToken: string | null;
+  webhookSecret: string | null;
+  fromPhoneNumber: string | null;
+  schedulingPageShortLink: string | null;
 }
