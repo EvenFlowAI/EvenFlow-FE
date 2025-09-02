@@ -96,7 +96,7 @@ const DealerCustomerSettings = ({
     setCriteriaOperatorErrors({});
     setRuleOperatorErrors({});
     setRuleTypeErrors({});
-    setFirstTriggerDateError({});
+    setFirstTriggerDateError(false);
   };
 
   const handleOnSuccess = () => {
