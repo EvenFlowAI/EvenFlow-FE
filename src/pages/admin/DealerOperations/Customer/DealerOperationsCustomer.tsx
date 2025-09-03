@@ -18,6 +18,7 @@ import {
   loadTextIntegrationSettings,
   setNewEventName,
   updateCustomerEvent,
+  updateCustomerEventName,
 } from '../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
@@ -31,6 +32,7 @@ import { TabContext, TabPanel } from '@mui/lab';
 import { TabList } from '../../../../components/styled/Tabs';
 import TextIntegration from './TextIntegration/TextIntegration';
 import DealerCustomerSettings from './DealerCustomerSettings';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
@@ -59,6 +61,13 @@ const DealerOperationsCustomer = () => {
   );
 
   const [textMessage, setTextMessage] = useState<string>('');
+  const [isEditEventName, setIsEditEventName] = useState<boolean>(false);
+  const [updatedEventsName, setUpdatedEventsName] = useState<
+    {
+      id: number;
+      name: string;
+    }[]
+  >([]);
   const [eventForTextConfiguration, setEventForTextConfiguration] = useState<DashboardItemI | null>(
     null
   );
@@ -74,6 +83,19 @@ const DealerOperationsCustomer = () => {
         dispatch(loadTextIntegrationSettings(selectedSC.id));
     }
   }, [selectedSC, customerCommunicationPageData]);
+
+  useEffect(() => {
+    if (dashboardItems.length) {
+      setUpdatedEventsName(
+        dashboardItems.map(item => {
+          return {
+            id: item.id,
+            name: item.name,
+          };
+        })
+      );
+    }
+  }, [dashboardItems]);
 
   const handleChangePage = async (
     e: React.MouseEvent<Element, MouseEvent> | null,
@@ -159,6 +181,33 @@ const DealerOperationsCustomer = () => {
     }
   };
 
+  const handleUpdateEventName = () => {
+    const onSuccess = () => {
+      setIsEditEventName(false);
+    };
+
+    if (selectedSC?.id) {
+      dashboardItems.forEach(event => {
+        updatedEventsName.forEach(updatedEvent => {
+          if (event.id === updatedEvent.id) {
+            if (event.name !== updatedEvent.name) {
+              dispatch(
+                updateCustomerEventName(
+                  {
+                    id: updatedEvent.id,
+                    name: updatedEvent.name,
+                    serviceCenterId: selectedSC?.id,
+                  },
+                  onSuccess
+                )
+              );
+            }
+          }
+        });
+      });
+    }
+  };
+
   if (eventIdForRulesConfiguration) {
     return (
       <DealerCustomerSettings
@@ -191,151 +240,223 @@ const DealerOperationsCustomer = () => {
                 paddingBottom: '24px',
               }}
             >
+              {dashboardItems.length ? (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: '40px' }}>
+                  {isEditEventName ? (
+                    <>
+                      <Button
+                        variant="text"
+                        onClick={() => {
+                          setUpdatedEventsName(
+                            dashboardItems.map(item => {
+                              return {
+                                id: item.id,
+                                name: item.name,
+                              };
+                            })
+                          );
+                          setIsEditEventName(false);
+                        }}
+                        color="secondary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="text"
+                        disabled={
+                          !!updatedEventsName.find(
+                            event => event.name.length < 3 || event.name.length > 51
+                          )
+                        }
+                        onClick={handleUpdateEventName}
+                      >
+                        Save
+                      </Button>
+                    </>
+                  ) : (
+                    <Button variant="text" onClick={() => setIsEditEventName(true)}>
+                      Edit Name
+                    </Button>
+                  )}
+                </div>
+              ) : null}
+
               <Button variant="contained" onClick={onOpenNewCustomerEventModal}>
                 Add Event
               </Button>
             </div>
-            <DenseTable>
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell
-                    key="Event"
-                    style={{ textTransform: 'capitalize', width: '26%' }}
-                  >
-                    Event
-                  </StyledTableCell>
-                  <StyledTableCell
-                    key="Audience & Triggers"
-                    style={{ textTransform: 'capitalize', width: '18%' }}
-                  >
-                    Audience & Triggers
-                  </StyledTableCell>
-                  <StyledTableCell
-                    key="Email"
-                    style={{ textTransform: 'capitalize', width: '21%' }}
-                  >
-                    Email
-                  </StyledTableCell>
-                  <StyledTableCell key="Text" style={{ textTransform: 'capitalize', width: '21%' }}>
-                    Text
-                  </StyledTableCell>
-                  <StyledTableCell key="BDC" style={{ textTransform: 'capitalize', width: '7%' }}>
-                    BDC
-                  </StyledTableCell>
-                  <StyledTableCell
-                    key="Remove"
-                    style={{ textTransform: 'capitalize' }}
-                  ></StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dashboardItems.map(event => {
-                  return (
-                    <TableRow key={event.id}>
-                      <StyledTableCell>{event.name}</StyledTableCell>
-                      <StyledTableCell>
-                        <LabelLink
-                          style={{ textTransform: 'upperCase', fontWeight: '700' }}
-                          subText={
-                            event.triggers.length && event.filterRules.length
-                              ? 'Configured'
-                              : 'Not Configured'
-                          }
-                          color={
-                            event.triggers.length && event.filterRules.length
-                              ? '#7898FF'
-                              : '#C71062'
-                          }
-                          icon={
-                            event.triggers.length && event.filterRules.length ? (
-                              <CheckIcon />
-                            ) : (
-                              <RedCross />
-                            )
-                          }
-                          onClick={() => setEventIdForRulesConfiguration(event.id)}
-                        />
-                      </StyledTableCell>
-
-                      <StyledTableCell>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                          }}
-                        >
+            {dashboardItems.length ? (
+              <DenseTable>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell
+                      key="Event"
+                      style={{ textTransform: 'capitalize', width: '26%' }}
+                    >
+                      Event
+                    </StyledTableCell>
+                    <StyledTableCell
+                      key="Audience & Triggers"
+                      style={{ textTransform: 'capitalize', width: '18%' }}
+                    >
+                      Audience & Triggers
+                    </StyledTableCell>
+                    <StyledTableCell
+                      key="Email"
+                      style={{ textTransform: 'capitalize', width: '21%' }}
+                    >
+                      Email
+                    </StyledTableCell>
+                    <StyledTableCell
+                      key="Text"
+                      style={{ textTransform: 'capitalize', width: '21%' }}
+                    >
+                      Text
+                    </StyledTableCell>
+                    <StyledTableCell key="BDC" style={{ textTransform: 'capitalize', width: '7%' }}>
+                      BDC
+                    </StyledTableCell>
+                    <StyledTableCell
+                      key="Remove"
+                      style={{ textTransform: 'capitalize' }}
+                    ></StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {dashboardItems.map(event => {
+                    return (
+                      <TableRow key={event.id}>
+                        <StyledTableCell>
+                          {isEditEventName ? (
+                            <TextField
+                              fullWidth
+                              onChange={e =>
+                                setUpdatedEventsName(prevState =>
+                                  prevState.map(ev => {
+                                    const newUpdateNameEvent = { ...ev };
+                                    if (newUpdateNameEvent.id === event.id) {
+                                      newUpdateNameEvent.name = e.target.value;
+                                    }
+                                    return newUpdateNameEvent;
+                                  })
+                                )
+                              }
+                              value={updatedEventsName.find(e => event.id === e.id)?.name}
+                            />
+                          ) : (
+                            event.name
+                          )}
+                        </StyledTableCell>
+                        <StyledTableCell>
                           <LabelLink
-                            subText={'Not Configured'}
-                            color={'#B8B9BF'}
-                            icon={<GreyCross />}
-                            onClick={() => {}}
+                            style={{ textTransform: 'upperCase', fontWeight: '700' }}
+                            subText={
+                              event.triggers.length && event.filterRules.length
+                                ? 'Configured'
+                                : 'Not Configured'
+                            }
+                            color={
+                              event.triggers.length && event.filterRules.length
+                                ? '#7898FF'
+                                : '#C71062'
+                            }
+                            icon={
+                              event.triggers.length && event.filterRules.length ? (
+                                <CheckIcon />
+                              ) : (
+                                <RedCross />
+                              )
+                            }
+                            onClick={() => setEventIdForRulesConfiguration(event.id)}
                           />
+                        </StyledTableCell>
+
+                        <StyledTableCell>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <LabelLink
+                              subText={'Not Configured'}
+                              color={'#B8B9BF'}
+                              icon={<GreyCross />}
+                              onClick={() => {}}
+                            />
+                            <Switch
+                              disabled={true}
+                              onClick={() => {}}
+                              checked={false}
+                              color="primary"
+                            />
+                          </div>
+                        </StyledTableCell>
+
+                        <StyledTableCell>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <LabelLink
+                              subText={
+                                event.communicationDetails?.textMessage
+                                  ? 'Configured'
+                                  : 'Not Configured'
+                              }
+                              color={
+                                event.communicationDetails?.textMessage ? '#7898FF' : '#C71062'
+                              }
+                              icon={
+                                event.communicationDetails?.textMessage ? (
+                                  <CheckIcon />
+                                ) : (
+                                  <RedCross />
+                                )
+                              }
+                              onClick={() => handleClickTextConfiguration(event)}
+                            />
+                            <Switch
+                              disabled={
+                                !event.communicationDetails?.textMessage ||
+                                !event.filterRules.length ||
+                                !event.triggers.length
+                              }
+                              onClick={() => textSwitchChange(event)}
+                              checked={event.isTextEnabled}
+                              color="primary"
+                            />
+                          </div>
+                        </StyledTableCell>
+
+                        <StyledTableCell>
                           <Switch
                             disabled={true}
                             onClick={() => {}}
                             checked={false}
                             color="primary"
                           />
-                        </div>
-                      </StyledTableCell>
+                        </StyledTableCell>
 
-                      <StyledTableCell>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                          }}
-                        >
+                        <StyledTableCell>
                           <LabelLink
-                            subText={
-                              event.communicationDetails?.textMessage
-                                ? 'Configured'
-                                : 'Not Configured'
-                            }
-                            color={event.communicationDetails?.textMessage ? '#7898FF' : '#C71062'}
-                            icon={
-                              event.communicationDetails?.textMessage ? <CheckIcon /> : <RedCross />
-                            }
-                            onClick={() => handleClickTextConfiguration(event)}
+                            style={{ textTransform: 'upperCase', fontWeight: '700' }}
+                            subText={'Remove'}
+                            color={'#7898FF'}
+                            onClick={() => handleDeleteCustomerEvent(event.id)}
                           />
-                          <Switch
-                            disabled={
-                              !event.communicationDetails?.textMessage ||
-                              !event.filterRules.length ||
-                              !event.triggers.length
-                            }
-                            onClick={() => textSwitchChange(event)}
-                            checked={event.isTextEnabled}
-                            color="primary"
-                          />
-                        </div>
-                      </StyledTableCell>
-
-                      <StyledTableCell>
-                        <Switch
-                          disabled={true}
-                          onClick={() => {}}
-                          checked={false}
-                          color="primary"
-                        />
-                      </StyledTableCell>
-
-                      <StyledTableCell>
-                        <LabelLink
-                          style={{ textTransform: 'upperCase', fontWeight: '700' }}
-                          subText={'Remove'}
-                          color={'#7898FF'}
-                          onClick={() => handleDeleteCustomerEvent(event.id)}
-                        />
-                      </StyledTableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </DenseTable>
-            {customerCommunicationPaging.numberOfRecords > 15 ? (
+                        </StyledTableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </DenseTable>
+            ) : null}
+            {customerCommunicationPaging.numberOfRecords > 15 && dashboardItems.length ? (
               <TablePagination
                 component="div"
                 count={customerCommunicationPaging.numberOfRecords}
