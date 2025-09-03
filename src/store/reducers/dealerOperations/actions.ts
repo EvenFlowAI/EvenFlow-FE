@@ -165,6 +165,29 @@ export const deleteCustomerEvent =
       });
   };
 
+export const updateCustomerEventName =
+  (
+    data: {
+      id: number;
+      name: string;
+      serviceCenterId: number;
+    },
+    onSuccess: () => void
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
+      urlParams: { id: data.id },
+      data: { ...data },
+    })
+      .then(() => {
+        dispatch(loadDashboardItems(data.serviceCenterId));
+        onSuccess();
+      })
+      .catch(e => {
+        console.log('Update Customer Event error', e);
+      });
+  };
+
 export const updateCustomerEvent =
   (
     data: {
