@@ -219,22 +219,29 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   };
 
   const handleNext = (localSelectedPackage: IPackageOptions | null): void => {
-    if (localSelectedPackage) {
+    const newPackage =
+      packages.find(p => p.type === packageOptionType) ||
+      packages.find(p => p.type === packageEMenuType) ||
+      null;
+
+    if (newPackage?.id !== localSelectedPackage?.id) {
+      setLocalSelectedPackage(newPackage);
+    }
+
+    const usedPackage = newPackage ?? localSelectedPackage;
+
+    if (usedPackage) {
       dispatch(setPackageIsSelected(true));
-      handleGA(localSelectedPackage);
-      if (
-        selectedPackage &&
-        packageOptionType !== null &&
-        packageOptionType !== localSelectedPackage.type
-      ) {
+      handleGA(usedPackage);
+      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
         onOpen();
       }
       if (scProfile?.packageSource === PackageSourceType.eMenu) {
-        dispatch(setPackageEMenuType(localSelectedPackage.type));
+        dispatch(setPackageEMenuType(usedPackage.type));
       } else {
-        dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
+        dispatch(setSelectedPackageOptionType(usedPackage.type));
       }
-      dispatch(setPackage(localSelectedPackage));
+      dispatch(setPackage(usedPackage));
       dispatch(setPackagePricingType(localSelectedPricingType));
       onSelectionCompleted();
     }
