@@ -211,6 +211,7 @@ const TextIntegration = () => {
   // debounce
   useEffect(() => {
     if (!accountSID?.length || !authToken?.length || !webhook?.length) {
+      updateIsProcessingRequest(false);
       dispatch(getAvailablePhoneNumberList([]));
       return;
     }
