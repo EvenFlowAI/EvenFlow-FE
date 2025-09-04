@@ -87,9 +87,11 @@ export const getPhoneNumbers =
     accountSid: string,
     authToken: string,
     webhookSecret: string,
-    handleNoFoundNumberList?: () => void
+    handleNoFoundNumberList?: () => void,
+    updateIsProcessingRequest?: (value: boolean) => void
   ): AppThunk =>
   async dispatch => {
+    if (updateIsProcessingRequest) updateIsProcessingRequest(true);
     Api.call(Api.endpoints.DealerOperations.GetPhoneNumbers, {
       data: {
         accountSid,
@@ -98,10 +100,10 @@ export const getPhoneNumbers =
       },
     })
       .then(response => {
-        console.log(response);
         if (response?.data) {
           dispatch(getAvailablePhoneNumberList(response.data));
         }
+        if (updateIsProcessingRequest) updateIsProcessingRequest(false);
       })
       .catch(e => {
         const errorObj = e.response?.data;
@@ -111,6 +113,7 @@ export const getPhoneNumbers =
           }
         }
         dispatch(getAvailablePhoneNumberList([]));
+        if (updateIsProcessingRequest) updateIsProcessingRequest(false);
       });
   };
 
