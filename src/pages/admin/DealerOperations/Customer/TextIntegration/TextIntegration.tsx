@@ -31,6 +31,7 @@ const TextIntegration = () => {
   }, [selectedSC]);
 
   const { classes } = useStyles();
+  const [isProcessingRequest, setIsProcessingRequest] = React.useState(false);
   const [isEditTable, setIsEditTable] = React.useState(false);
   const [legalName, setLegalName] = React.useState('');
   const [dba, setDba] = React.useState('');
@@ -203,6 +204,10 @@ const TextIntegration = () => {
     showError('The provided TextGrid credentials are invalid');
   };
 
+  const updateIsProcessingRequest = (value: boolean) => {
+    setIsProcessingRequest(value);
+  };
+
   // debounce
   useEffect(() => {
     if (!accountSID?.length || !authToken?.length || !webhook?.length) {
@@ -211,7 +216,15 @@ const TextIntegration = () => {
     }
 
     const timeout = setTimeout(() => {
-      dispatch(getPhoneNumbers(accountSID, authToken, webhook, handleNoFoundNumberList));
+      dispatch(
+        getPhoneNumbers(
+          accountSID,
+          authToken,
+          webhook,
+          handleNoFoundNumberList,
+          updateIsProcessingRequest
+        )
+      );
     }, 1000);
 
     return () => clearTimeout(timeout);
@@ -236,7 +249,7 @@ const TextIntegration = () => {
             <Button variant="text" onClick={handleCancel} color="secondary">
               Cancel
             </Button>
-            <Button variant="text" onClick={handleSave}>
+            <Button variant="text" disabled={isProcessingRequest} onClick={handleSave}>
               Save
             </Button>
           </>
@@ -402,6 +415,7 @@ const TextIntegration = () => {
                 placeholder="Account SID"
                 onChange={e => {
                   setSidError(false);
+                  setIsProcessingRequest(true);
                   setAccountSID(e.target.value);
                 }}
                 error={sidError}
@@ -417,6 +431,7 @@ const TextIntegration = () => {
                 error={authTokenError}
                 onChange={e => {
                   setAuthTokenError(false);
+                  setIsProcessingRequest(true);
                   setAuthToken(e.target.value);
                 }}
                 value={authToken}
@@ -431,6 +446,7 @@ const TextIntegration = () => {
                 error={webhookError}
                 onChange={e => {
                   setWebhookError(false);
+                  setIsProcessingRequest(true);
                   setWebhook(e.target.value);
                 }}
                 value={webhook}
