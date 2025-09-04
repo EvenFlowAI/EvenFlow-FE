@@ -69,7 +69,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
         </Button>
         <LoadingButton
           onClick={handleSaveNewEvent}
-          disabled={newEventName.length < 3}
+          disabled={newEventName.trim().length < 3}
           variant="contained"
           color="primary"
         >

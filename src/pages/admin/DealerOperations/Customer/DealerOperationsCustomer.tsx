@@ -266,7 +266,7 @@ const DealerOperationsCustomer = () => {
                       </Button>
                       <Button
                         variant="text"
-                        disabled={!!updatedEventsName.find(event => event.name.length < 3)}
+                        disabled={!!updatedEventsName.find(event => event.name.trim().length < 3)}
                         onClick={handleUpdateEventName}
                       >
                         Save

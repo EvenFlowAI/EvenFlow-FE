@@ -142,10 +142,6 @@ const TextIntegration = () => {
   /* eslint-disable complexity */
   const handleSave = () => {
     if (selectedSC?.id) {
-      console.log(
-        !accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length
-      );
-
       if (
         (!accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length) ||
         (accountSID.length && authToken.length && webhook.length && phoneNumber.length)
@@ -162,16 +158,16 @@ const TextIntegration = () => {
           webhookSecret: webhook || null,
           authToken: authToken || null,
           accountSid: accountSID || null,
-          contactPhone: contactPhone || null,
-          contactEmail: contactEmail || null,
+          contactPhone: contactPhone.trim() || null,
+          contactEmail: contactEmail.trim() || null,
           zip: zip || null,
-          state: state || null,
-          ein: ein || null,
-          website: website || null,
-          dba: dba || null,
-          addressStreet: address || null,
-          city: city || null,
-          legalCompanyName: legalName || null,
+          state: state.trim() || null,
+          ein: ein.trim() || null,
+          website: website.trim() || null,
+          dba: dba.trim() || null,
+          addressStreet: address.trim() || null,
+          city: city.trim() || null,
+          legalCompanyName: legalName.trim() || null,
         };
 
         dispatch(updateTextIntegrationSettings({ ...data }));
