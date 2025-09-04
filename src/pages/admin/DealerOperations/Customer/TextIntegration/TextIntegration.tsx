@@ -161,27 +161,6 @@ const TextIntegration = () => {
     }
   };
 
-  const enableTextSwitch = () => {
-    if (selectedSC?.id) {
-      dashboardItems.forEach(item => {
-        if (!item.isTextEnabled && item?.communicationDetails?.textMessage) {
-          dispatch(
-            updateCustomerEvent(
-              {
-                serviceCenterId: selectedSC.id,
-                eventId: item.id,
-                updatedData: {
-                  isTextEnabled: true,
-                },
-              },
-              () => {}
-            )
-          );
-        }
-      });
-    }
-  };
-
   /* eslint-disable complexity */
   const handleSave = () => {
     if (selectedSC?.id) {
@@ -213,12 +192,10 @@ const TextIntegration = () => {
           legalCompanyName: legalName.trim() || null,
         };
 
-        if (phoneNumber.length) {
-          dispatch(updateTextIntegrationSettings({ ...data }, enableTextSwitch));
-        } else {
-          dispatch(updateTextIntegrationSettings({ ...data }));
+        if (!phoneNumber.length) {
           disableTextSwitch();
         }
+        dispatch(updateTextIntegrationSettings({ ...data }));
 
         setIsEditTable(false);
       } else {

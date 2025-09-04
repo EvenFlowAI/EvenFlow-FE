@@ -65,7 +65,7 @@ export const loadTextIntegrationSettings =
   };
 
 export const updateTextIntegrationSettings =
-  (data: IntegrationSettingsI, onSuccess?: () => void): AppThunk =>
+  (data: IntegrationSettingsI): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.SetTextIntegration, {
       data: { ...data },
@@ -73,7 +73,6 @@ export const updateTextIntegrationSettings =
       .then(response => {
         if (response) {
           dispatch(loadTextIntegrationSettings(data.serviceCenterId));
-          if (onSuccess) onSuccess();
         } else {
           console.log('No response with updating text integration settings');
         }
