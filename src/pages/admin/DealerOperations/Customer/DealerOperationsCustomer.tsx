@@ -263,11 +263,7 @@ const DealerOperationsCustomer = () => {
                       </Button>
                       <Button
                         variant="text"
-                        disabled={
-                          !!updatedEventsName.find(
-                            event => event.name.length < 3 || event.name.length > 51
-                          )
-                        }
+                        disabled={!!updatedEventsName.find(event => event.name.length < 3)}
                         onClick={handleUpdateEventName}
                       >
                         Save
@@ -323,6 +319,7 @@ const DealerOperationsCustomer = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  {/* eslint-disable complexity */}
                   {dashboardItems.map(event => {
                     return (
                       <TableRow key={event.id}>
@@ -334,7 +331,10 @@ const DealerOperationsCustomer = () => {
                                 setUpdatedEventsName(prevState =>
                                   prevState.map(ev => {
                                     const newUpdateNameEvent = { ...ev };
-                                    if (newUpdateNameEvent.id === event.id) {
+                                    if (
+                                      newUpdateNameEvent.id === event.id &&
+                                      e.target.value.length < 51
+                                    ) {
                                       newUpdateNameEvent.name = e.target.value;
                                     }
                                     return newUpdateNameEvent;
@@ -404,15 +404,20 @@ const DealerOperationsCustomer = () => {
                           >
                             <LabelLink
                               subText={
-                                event.communicationDetails?.textMessage
+                                event.communicationDetails?.textMessage &&
+                                textIntegrationSettings?.fromPhoneNumber
                                   ? 'Configured'
                                   : 'Not Configured'
                               }
                               color={
-                                event.communicationDetails?.textMessage ? '#7898FF' : '#C71062'
+                                event.communicationDetails?.textMessage &&
+                                textIntegrationSettings?.fromPhoneNumber
+                                  ? '#7898FF'
+                                  : '#C71062'
                               }
                               icon={
-                                event.communicationDetails?.textMessage ? (
+                                event.communicationDetails?.textMessage &&
+                                textIntegrationSettings?.fromPhoneNumber ? (
                                   <CheckIcon />
                                 ) : (
                                   <RedCross />
@@ -423,6 +428,7 @@ const DealerOperationsCustomer = () => {
                             <Switch
                               disabled={
                                 !event.communicationDetails?.textMessage ||
+                                !textIntegrationSettings?.fromPhoneNumber ||
                                 !event.filterRules.length ||
                                 !event.triggers.length
                               }

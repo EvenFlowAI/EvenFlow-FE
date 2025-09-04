@@ -83,7 +83,12 @@ export const updateTextIntegrationSettings =
   };
 
 export const getPhoneNumbers =
-  (accountSid: string, authToken: string, webhookSecret: string): AppThunk =>
+  (
+    accountSid: string,
+    authToken: string,
+    webhookSecret: string,
+    handleNoFoundNumberList?: () => void
+  ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.GetPhoneNumbers, {
       data: {
@@ -93,12 +98,18 @@ export const getPhoneNumbers =
       },
     })
       .then(response => {
+        console.log(response);
         if (response?.data) {
           dispatch(getAvailablePhoneNumberList(response.data));
         }
       })
       .catch(e => {
-        console.log(e);
+        const errorObj = e.response?.data;
+        if (handleNoFoundNumberList) {
+          if (errorObj.errorCode === 4) {
+            handleNoFoundNumberList();
+          }
+        }
         dispatch(getAvailablePhoneNumberList([]));
       });
   };

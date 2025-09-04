@@ -199,6 +199,10 @@ const TextIntegration = () => {
     }
   };
 
+  const handleNoFoundNumberList = () => {
+    showError('The provided TextGrid credentials are invalid');
+  };
+
   // debounce
   useEffect(() => {
     if (!accountSID?.length || !authToken?.length || !webhook?.length) {
@@ -207,7 +211,7 @@ const TextIntegration = () => {
     }
 
     const timeout = setTimeout(() => {
-      dispatch(getPhoneNumbers(accountSID, authToken, webhook));
+      dispatch(getPhoneNumbers(accountSID, authToken, webhook, handleNoFoundNumberList));
     }, 1000);
 
     return () => clearTimeout(timeout);
