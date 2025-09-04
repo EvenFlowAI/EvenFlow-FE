@@ -33,6 +33,7 @@ import { TabList } from '../../../../components/styled/Tabs';
 import TextIntegration from './TextIntegration/TextIntegration';
 import DealerCustomerSettings from './DealerCustomerSettings';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { useException } from '../../../../hooks/useException/useException';
 
 const DealerOperationsCustomer = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const DealerOperationsCustomer = () => {
     onClose: onCloseTextConfigurationModal,
     isOpen: isOpenTextConfigurationModal,
   } = useModal();
+  const showError = useException();
 
   const {
     dashboardItems,
@@ -164,7 +166,7 @@ const DealerOperationsCustomer = () => {
     if (eventForTextConfiguration) {
       const updatedEvent = {
         communicationDetails: {
-          textMessage: textMessage,
+          textMessage: textMessage.trim(),
         },
       };
 
@@ -181,6 +183,11 @@ const DealerOperationsCustomer = () => {
     }
   };
 
+  const onError = (eventName: string) => {
+    showError(`Event name "${eventName}" is already used. Please enter a unique name.`);
+    setIsEditEventName(true);
+  };
+
   const handleUpdateEventName = () => {
     const onSuccess = () => {
       setIsEditEventName(false);
@@ -195,10 +202,11 @@ const DealerOperationsCustomer = () => {
                 updateCustomerEventName(
                   {
                     id: updatedEvent.id,
-                    name: updatedEvent.name,
+                    name: updatedEvent.name.trim(),
                     serviceCenterId: selectedSC?.id,
                   },
-                  onSuccess
+                  onSuccess,
+                  onError
                 )
               );
             }

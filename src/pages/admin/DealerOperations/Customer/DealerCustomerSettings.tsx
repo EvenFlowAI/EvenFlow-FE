@@ -174,6 +174,10 @@ const DealerCustomerSettings = ({
       throw new Error('Selected SC is not defined');
     }
 
+    if (rules.length && !criterias.length) {
+      showError('At least one Audience Criteria should be added.');
+    }
+
     if (
       validateGroup(criterias, c => Number.isInteger(Number(c.value)) && !!c?.operator) &&
       validateGroup(rules, r => Number.isInteger(Number(r.value)) && !!r?.operator) &&

@@ -201,7 +201,9 @@ const CustomerTextConfiguration = ({
         </Button>
         <LoadingButton
           onClick={handleSaveText}
-          disabled={textMessage.length < 3 || textIntegrationSettings?.fromPhoneNumber === null}
+          disabled={
+            textMessage.trim().length < 3 || textIntegrationSettings?.fromPhoneNumber === null
+          }
           variant="contained"
           color="primary"
         >

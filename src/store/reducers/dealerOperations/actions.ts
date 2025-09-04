@@ -65,7 +65,7 @@ export const loadTextIntegrationSettings =
   };
 
 export const updateTextIntegrationSettings =
-  (data: IntegrationSettingsI): AppThunk =>
+  (data: IntegrationSettingsI, onSuccess?: () => void): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.SetTextIntegration, {
       data: { ...data },
@@ -73,6 +73,7 @@ export const updateTextIntegrationSettings =
       .then(response => {
         if (response) {
           dispatch(loadTextIntegrationSettings(data.serviceCenterId));
+          if (onSuccess) onSuccess();
         } else {
           console.log('No response with updating text integration settings');
         }
@@ -153,7 +154,11 @@ export const loadDashboardItems =
   };
 
 export const createCustomerEvent =
-  (data: { serviceCenterId: number; name: string }, onClose: () => void): AppThunk =>
+  (
+    data: { serviceCenterId: number; name: string },
+    onClose: () => void,
+    onError?: () => void
+  ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.CreateEvent, {
       data,
@@ -163,6 +168,7 @@ export const createCustomerEvent =
         onClose();
       })
       .catch(e => {
+        if (onError) onError();
         console.log('Creating Customer Event error', e);
       });
   };
@@ -186,7 +192,8 @@ export const updateCustomerEventName =
       name: string;
       serviceCenterId: number;
     },
-    onSuccess: () => void
+    onSuccess: () => void,
+    onError?: (eventName: string) => void
   ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
@@ -198,6 +205,7 @@ export const updateCustomerEventName =
         onSuccess();
       })
       .catch(e => {
+        if (onError) onError(data.name);
         console.log('Update Customer Event error', e);
       });
   };

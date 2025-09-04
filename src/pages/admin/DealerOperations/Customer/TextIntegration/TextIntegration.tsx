@@ -9,6 +9,7 @@ import {
   getAvailablePhoneNumberList,
   getPhoneNumbers,
   loadTextIntegrationSettings,
+  updateCustomerEvent,
   updateTextIntegrationSettings,
 } from '../../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +21,7 @@ import { useException } from '../../../../../hooks/useException/useException';
 const TextIntegration = () => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const { textIntegrationSettings, availablePhoneNumberList } = useSelector(
+  const { textIntegrationSettings, availablePhoneNumberList, dashboardItems } = useSelector(
     (state: RootState) => state.dealerOperations
   );
 
@@ -139,6 +140,48 @@ const TextIntegration = () => {
     }
   };
 
+  const disableTextSwitch = () => {
+    if (selectedSC?.id) {
+      dashboardItems.forEach(item => {
+        if (item.isTextEnabled) {
+          dispatch(
+            updateCustomerEvent(
+              {
+                serviceCenterId: selectedSC.id,
+                eventId: item.id,
+                updatedData: {
+                  isTextEnabled: false,
+                },
+              },
+              () => {}
+            )
+          );
+        }
+      });
+    }
+  };
+
+  const enableTextSwitch = () => {
+    if (selectedSC?.id) {
+      dashboardItems.forEach(item => {
+        if (!item.isTextEnabled && item?.communicationDetails?.textMessage) {
+          dispatch(
+            updateCustomerEvent(
+              {
+                serviceCenterId: selectedSC.id,
+                eventId: item.id,
+                updatedData: {
+                  isTextEnabled: true,
+                },
+              },
+              () => {}
+            )
+          );
+        }
+      });
+    }
+  };
+
   /* eslint-disable complexity */
   const handleSave = () => {
     if (selectedSC?.id) {
@@ -170,7 +213,13 @@ const TextIntegration = () => {
           legalCompanyName: legalName.trim() || null,
         };
 
-        dispatch(updateTextIntegrationSettings({ ...data }));
+        if (phoneNumber.length) {
+          dispatch(updateTextIntegrationSettings({ ...data }, enableTextSwitch));
+        } else {
+          dispatch(updateTextIntegrationSettings({ ...data }));
+          disableTextSwitch();
+        }
+
         setIsEditTable(false);
       } else {
         if (!accountSID.length || !authToken.length || !webhook.length || !phoneNumber.length) {

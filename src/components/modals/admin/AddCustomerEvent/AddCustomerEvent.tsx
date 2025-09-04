@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useException } from '../../../../hooks/useException/useException';
 
 type TAddCustomerEventModalProps = DialogProps & {};
 
@@ -18,12 +19,17 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
   const { newEventName } = useSelector((state: RootState) => state.dealerOperations);
+  const showError = useException();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEventNameValue = e.target?.value;
     if (newEventNameValue.length < 51) {
       dispatch(setNewEventName(newEventNameValue));
     }
+  };
+
+  const onError = () => {
+    showError('Event name is already used. Please enter a unique name.');
   };
 
   const handleSaveNewEvent = () => {
@@ -33,7 +39,11 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
 
     if (newEventName?.length > 2 && newEventName?.length < 51) {
       dispatch(
-        createCustomerEvent({ serviceCenterId: selectedSC?.id, name: newEventName }, onClose)
+        createCustomerEvent(
+          { serviceCenterId: selectedSC?.id, name: newEventName.trim() },
+          onClose,
+          onError
+        )
       );
     }
   };
