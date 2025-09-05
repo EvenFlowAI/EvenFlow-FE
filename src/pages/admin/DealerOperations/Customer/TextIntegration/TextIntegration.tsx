@@ -9,7 +9,6 @@ import {
   getAvailablePhoneNumberList,
   getPhoneNumbers,
   loadTextIntegrationSettings,
-  updateCustomerEvent,
   updateTextIntegrationSettings,
 } from '../../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +20,7 @@ import { useException } from '../../../../../hooks/useException/useException';
 const TextIntegration = () => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const { textIntegrationSettings, availablePhoneNumberList, dashboardItems } = useSelector(
+  const { textIntegrationSettings, availablePhoneNumberList } = useSelector(
     (state: RootState) => state.dealerOperations
   );
 
@@ -140,27 +139,6 @@ const TextIntegration = () => {
     }
   };
 
-  const disableTextSwitch = () => {
-    if (selectedSC?.id) {
-      dashboardItems.forEach(item => {
-        if (item.isTextEnabled) {
-          dispatch(
-            updateCustomerEvent(
-              {
-                serviceCenterId: selectedSC.id,
-                eventId: item.id,
-                updatedData: {
-                  isTextEnabled: false,
-                },
-              },
-              () => {}
-            )
-          );
-        }
-      });
-    }
-  };
-
   /* eslint-disable complexity */
   const handleSave = () => {
     if (selectedSC?.id) {
@@ -168,6 +146,82 @@ const TextIntegration = () => {
         (!accountSID.length && !authToken.length && !webhook.length && !phoneNumber.length) ||
         (accountSID.length && authToken.length && webhook.length && phoneNumber.length)
       ) {
+        if (website.length) {
+          const urlPattern = /^(https?:\/\/)[\w.-]+(\.[\w.-]+)+[/#?]?.*$/i;
+
+          if (!urlPattern.test(website)) {
+            showError('Must be a valid absolute URL (http or https)');
+            return;
+          }
+        }
+
+        if (contactEmail.length) {
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+          if (!emailPattern.test(contactEmail)) {
+            showError('Please enter a valid Email format');
+            return;
+          }
+        }
+
+        if (zip.length) {
+          if (zip.length !== 5) {
+            showError('Invalid zip code');
+            return;
+          }
+        }
+
+        if (ein.length) {
+          if (ein.length !== 10) {
+            showError('EIN must be 9 digits or formatted as XX-XXXXXXX');
+            return;
+          }
+        }
+
+        if (contactPhone.length) {
+          if (contactPhone.length < 10 || contactPhone.length > 11) {
+            showError('Phone number is not valid. It should contain from 10 to 11 digits.');
+            return;
+          }
+        }
+
+        if (shortlink.length) {
+          const urlPattern = /^(https?:\/\/)[\w.-]+(\.[\w.-]+)+[/#?]?.*$/i;
+
+          if (!urlPattern.test(shortlink)) {
+            showError('Must be a valid absolute URL (http or https)');
+            return;
+          }
+        }
+
+        if (legalName.length) {
+          if (legalName.length < 2) {
+            showError('Legal company name must be at least 2 characters');
+            return;
+          }
+        }
+
+        if (dba.length) {
+          if (dba.length < 2) {
+            showError('DBA must be at least 2 characters');
+            return;
+          }
+        }
+
+        if (address.length) {
+          if (address.length < 2) {
+            showError('Address/Street must be at least 2 characters');
+            return;
+          }
+        }
+
+        if (city.length) {
+          if (city.length < 2) {
+            showError('City must be at least 2 characters');
+            return;
+          }
+        }
+
         setSidError(false);
         setAuthTokenError(false);
         setWebhookError(false);
@@ -193,9 +247,10 @@ const TextIntegration = () => {
         };
 
         if (!phoneNumber.length) {
-          disableTextSwitch();
+          dispatch(updateTextIntegrationSettings({ ...data }, true));
+        } else {
+          dispatch(updateTextIntegrationSettings({ ...data }));
         }
-        dispatch(updateTextIntegrationSettings({ ...data }));
 
         setIsEditTable(false);
       } else {
