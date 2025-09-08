@@ -52,6 +52,7 @@ import { useAutocompleteStyles, useStyles } from './styles';
 import { IVehiclesData, TModalProps } from './types';
 import { criteriaOptions, initialValues, yearOptions } from './constants';
 import { upperCase } from './parts/MakeAndModel/utils';
+import { Loading } from '../../../../components/wrappers/Loading/Loading';
 
 const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TModalProps>>> = ({
   isEditing,
@@ -83,6 +84,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
   const [selectedMileages, setSelectedMileages] = useState<string[]>([]);
   const [optionError, setOptionError] = useState<boolean>(false);
   const [selectedEngineTypes, setSelectedEngineTypes] = useState<IEngineType[]>([]);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const {
     isOpen: isAssignOpsCodeOpen,
@@ -259,6 +261,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
   const onSave = () => {
     if (isValid()) {
       if (selectedSC) {
+        setIsSaving(true);
         const serviceRequests = getRequestsFromSelectedPackages(selectedPackages);
         const data: INewPackage | IUpdatedPackage = {
           name: packageName,
@@ -288,9 +291,28 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
         try {
           isEditing && currentPackage
             ? dispatch(
-                updatePackage(currentPackage.id, data, selectedSC.id, onCancel, e => showError(e))
+                updatePackage(
+                  currentPackage.id,
+                  data,
+                  selectedSC.id,
+                  () => {
+                    onCancel();
+                    setIsSaving(false);
+                  },
+                  e => showError(e)
+                )
               )
-            : dispatch(createPackage(selectedSC.id, data, onCancel, e => showError(e)));
+            : dispatch(
+                createPackage(
+                  selectedSC.id,
+                  data,
+                  () => {
+                    onCancel();
+                    setIsSaving(false);
+                  },
+                  e => showError(e)
+                )
+              );
         } catch (e) {}
       }
     } else setFormIsChecked(true);
@@ -321,179 +343,189 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
   return (
     <BaseModal {...props} width={540} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>{isEditing ? 'Edit' : 'Add'} Maintenance Package</DialogTitle>
-      <DialogContent>
-        <div className={classes.contentWrapper}>
-          <div className={classes.fullWidth}>
-            <TextField
-              label="Maintenance Package Name"
-              placeholder="Type Package Name"
-              error={!packageName && formIsChecked}
-              onChange={onNameChange}
-              value={packageName}
-            />
-          </div>
-          {selectedPackages.map(item => {
-            const pack = packages.find(el => el.id === item);
-            return pack ? (
-              <PackageLabel pack={pack} onDelete={onPackageDelete} key={pack.name} />
-            ) : null;
-          })}
-
-          <div className={classes.addExisting}>
-            <IconButton onClick={onExistingOpen} className={classes.iconPlus} size="large">
-              <AddCircleOutline />
-            </IconButton>
-            <span> Add Existing Maintenance Package</span>
-          </div>
-
-          <div className={classes.label}>Assigned Op Codes</div>
-          <div
-            className={
-              assignedOpsCodes?.length
-                ? classes.opsCodesWrapper
-                : formIsChecked
-                  ? classes.errorOpsCodes
-                  : classes.emptyOpsCodes
-            }
-          >
-            {assignedOpsCodes?.length ? (
-              <AssignedOpsCodes codes={assignedOpsCodes} />
-            ) : (
-              <p>There are no Op Codes in this list yet</p>
-            )}
-          </div>
-
-          <Button
-            className={classes.wideButton}
-            color="primary"
-            style={{ width: '100%' }}
-            onClick={onAssignOpsCodeOpen}
-          >
-            Assign Op Code To Package
-          </Button>
-
-          <div className={classes.label}>Op Codes</div>
-          <div
-            className={
-              opsCodes?.length
-                ? classes.opsCodesWrapper
-                : formIsChecked
-                  ? classes.errorOpsCodes
-                  : classes.emptyOpsCodes
-            }
-          >
-            {opsCodes?.length ? (
-              opsCodes.map((item, index) => (
-                <OpsCode
-                  serviceRequest={item.serviceRequest}
-                  onDelete={onDelete}
-                  key={`${item.serviceRequest.id}+${index}`}
+      {!isSaving ? (
+        <>
+          <DialogContent>
+            <div className={classes.contentWrapper}>
+              <div className={classes.fullWidth}>
+                <TextField
+                  label="Maintenance Package Name"
+                  placeholder="Type Package Name"
+                  error={!packageName && formIsChecked}
+                  onChange={onNameChange}
+                  value={packageName}
                 />
-              ))
-            ) : (
-              <p>There are no Op Codes in this list yet</p>
-            )}
-          </div>
+              </div>
+              {selectedPackages.map(item => {
+                const pack = packages.find(el => el.id === item);
+                return pack ? (
+                  <PackageLabel pack={pack} onDelete={onPackageDelete} key={pack.name} />
+                ) : null;
+              })}
 
-          <div className={classes.btnsWrapper}>
-            <Button color="primary" className={classes.wideButton} onClick={onAddOpsCodeOpen}>
-              Add Op Codes
-            </Button>
-            <Button color="primary" className={classes.wideButton} onClick={onUpsellOpen}>
-              Add Interval Upsell
-            </Button>
-            <Button color="primary" className={classes.wideButton} onClick={onComplimentaryOpen}>
-              Add Complimentary
-            </Button>
-          </div>
+              <div className={classes.addExisting}>
+                <IconButton onClick={onExistingOpen} className={classes.iconPlus} size="large">
+                  <AddCircleOutline />
+                </IconButton>
+                <span> Add Existing Maintenance Package</span>
+              </div>
 
-          <div className={classes.applyRulesWrapper}>
-            <Checkbox
-              className={classes.checkbox}
-              color="primary"
-              checked={isApplyBusinessRules}
-              onChange={onApplyBusinessRulesChange}
-            />
-            <span className={classes.applyText}>Apply Business Rules To Package</span>
-          </div>
-
-          <MakeAndModel
-            selectedMakes={selectedMakes}
-            selectedModels={selectedModels}
-            setSelectedMakes={setSelectedMakes}
-            setSelectedModels={setSelectedModels}
-            setFormIsChecked={setFormIsChecked}
-            disabled={!isApplyBusinessRules}
-          />
-          <Mileage
-            disabled={!isApplyBusinessRules}
-            selectedMileages={selectedMileages}
-            setFormIsChecked={setFormIsChecked}
-            setSelectedMileages={setSelectedMileages}
-          />
-          <div style={{ marginBottom: 16 }}>
-            <div className={classes.label}>Vehicle Year</div>
-            <div className={classes.twoFieldsWrapper}>
-              <Autocomplete
-                disabled={!isApplyBusinessRules}
-                classes={autoCompleteStyles}
-                options={yearOptions}
-                disableCloseOnSelect
-                isOptionEqualToValue={(option, value) =>
-                  option.toLowerCase() === value.toLowerCase()
+              <div className={classes.label}>Assigned Op Codes</div>
+              <div
+                className={
+                  assignedOpsCodes?.length
+                    ? classes.opsCodesWrapper
+                    : formIsChecked
+                      ? classes.errorOpsCodes
+                      : classes.emptyOpsCodes
                 }
-                value={vehiclesData?.yearFrom}
-                onChange={onFormFieldChange('yearFrom')}
-                renderInput={autocompleteRender({
-                  label: '',
-                  placeholder: 'From',
-                })}
+              >
+                {assignedOpsCodes?.length ? (
+                  <AssignedOpsCodes codes={assignedOpsCodes} />
+                ) : (
+                  <p>There are no Op Codes in this list yet</p>
+                )}
+              </div>
+
+              <Button
+                className={classes.wideButton}
+                color="primary"
+                style={{ width: '100%' }}
+                onClick={onAssignOpsCodeOpen}
+              >
+                Assign Op Code To Package
+              </Button>
+
+              <div className={classes.label}>Op Codes</div>
+              <div
+                className={
+                  opsCodes?.length
+                    ? classes.opsCodesWrapper
+                    : formIsChecked
+                      ? classes.errorOpsCodes
+                      : classes.emptyOpsCodes
+                }
+              >
+                {opsCodes?.length ? (
+                  opsCodes.map((item, index) => (
+                    <OpsCode
+                      serviceRequest={item.serviceRequest}
+                      onDelete={onDelete}
+                      key={`${item.serviceRequest.id}+${index}`}
+                    />
+                  ))
+                ) : (
+                  <p>There are no Op Codes in this list yet</p>
+                )}
+              </div>
+
+              <div className={classes.btnsWrapper}>
+                <Button color="primary" className={classes.wideButton} onClick={onAddOpsCodeOpen}>
+                  Add Op Codes
+                </Button>
+                <Button color="primary" className={classes.wideButton} onClick={onUpsellOpen}>
+                  Add Interval Upsell
+                </Button>
+                <Button
+                  color="primary"
+                  className={classes.wideButton}
+                  onClick={onComplimentaryOpen}
+                >
+                  Add Complimentary
+                </Button>
+              </div>
+
+              <div className={classes.applyRulesWrapper}>
+                <Checkbox
+                  className={classes.checkbox}
+                  color="primary"
+                  checked={isApplyBusinessRules}
+                  onChange={onApplyBusinessRulesChange}
+                />
+                <span className={classes.applyText}>Apply Business Rules To Package</span>
+              </div>
+
+              <MakeAndModel
+                selectedMakes={selectedMakes}
+                selectedModels={selectedModels}
+                setSelectedMakes={setSelectedMakes}
+                setSelectedModels={setSelectedModels}
+                setFormIsChecked={setFormIsChecked}
+                disabled={!isApplyBusinessRules}
               />
-              <Autocomplete
+              <Mileage
                 disabled={!isApplyBusinessRules}
-                classes={autoCompleteStyles}
-                options={yearOptions}
-                disableCloseOnSelect
-                isOptionEqualToValue={(option, value) =>
-                  option.toLowerCase() === value.toLowerCase()
-                }
-                value={vehiclesData?.yearTo}
-                onChange={onFormFieldChange('yearTo')}
-                renderInput={autocompleteRender({
-                  label: '',
-                  placeholder: 'To',
-                })}
+                selectedMileages={selectedMileages}
+                setFormIsChecked={setFormIsChecked}
+                setSelectedMileages={setSelectedMileages}
+              />
+              <div style={{ marginBottom: 16 }}>
+                <div className={classes.label}>Vehicle Year</div>
+                <div className={classes.twoFieldsWrapper}>
+                  <Autocomplete
+                    disabled={!isApplyBusinessRules}
+                    classes={autoCompleteStyles}
+                    options={yearOptions}
+                    disableCloseOnSelect
+                    isOptionEqualToValue={(option, value) =>
+                      option.toLowerCase() === value.toLowerCase()
+                    }
+                    value={vehiclesData?.yearFrom}
+                    onChange={onFormFieldChange('yearFrom')}
+                    renderInput={autocompleteRender({
+                      label: '',
+                      placeholder: 'From',
+                    })}
+                  />
+                  <Autocomplete
+                    disabled={!isApplyBusinessRules}
+                    classes={autoCompleteStyles}
+                    options={yearOptions}
+                    disableCloseOnSelect
+                    isOptionEqualToValue={(option, value) =>
+                      option.toLowerCase() === value.toLowerCase()
+                    }
+                    value={vehiclesData?.yearTo}
+                    onChange={onFormFieldChange('yearTo')}
+                    renderInput={autocompleteRender({
+                      label: '',
+                      placeholder: 'To',
+                    })}
+                  />
+                </div>
+              </div>
+              <div style={{ marginBottom: 16 }}>
+                <Autocomplete
+                  classes={autoCompleteStyles}
+                  disableClearable
+                  options={criteriaOptions}
+                  isOptionEqualToValue={(option, value) => option === value}
+                  disabled={!isApplyBusinessRules}
+                  value={
+                    vehiclesData?.customerCriteria
+                      ? ECustomerCriteria[vehiclesData.customerCriteria].toString()
+                      : ECustomerCriteria[ECustomerCriteria.Any]
+                  }
+                  onChange={onFormFieldChange('customerCriteria')}
+                  renderInput={autocompleteRender({
+                    label: 'Customer Criteria',
+                    placeholder: 'Select Customer Criteria',
+                  })}
+                />
+              </div>
+              <EngineTypes
+                setSelectedEngineTypes={setSelectedEngineTypes}
+                selectedEngineTypes={selectedEngineTypes}
+                setFormIsChecked={setFormIsChecked}
+                isApplyBusinessRules={isApplyBusinessRules}
               />
             </div>
-          </div>
-          <div style={{ marginBottom: 16 }}>
-            <Autocomplete
-              classes={autoCompleteStyles}
-              disableClearable
-              options={criteriaOptions}
-              isOptionEqualToValue={(option, value) => option === value}
-              disabled={!isApplyBusinessRules}
-              value={
-                vehiclesData?.customerCriteria
-                  ? ECustomerCriteria[vehiclesData.customerCriteria].toString()
-                  : ECustomerCriteria[ECustomerCriteria.Any]
-              }
-              onChange={onFormFieldChange('customerCriteria')}
-              renderInput={autocompleteRender({
-                label: 'Customer Criteria',
-                placeholder: 'Select Customer Criteria',
-              })}
-            />
-          </div>
-          <EngineTypes
-            setSelectedEngineTypes={setSelectedEngineTypes}
-            selectedEngineTypes={selectedEngineTypes}
-            setFormIsChecked={setFormIsChecked}
-            isApplyBusinessRules={isApplyBusinessRules}
-          />
-        </div>
-      </DialogContent>
-      <Divider style={{ margin: 0 }} />
+          </DialogContent>
+          <Divider style={{ margin: 0 }} />
+        </>
+      ) : (
+        <Loading />
+      )}
       <DialogActions>
         <div className={classes.wrapper}>
           <div className={classes.buttonsWrapper}>
