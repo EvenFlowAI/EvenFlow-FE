@@ -458,12 +458,13 @@ export const deletePackagePricingSettings =
   };
 
 export const addPackageToPricing =
-  (data: TNewPackagesToPricing): AppThunk =>
+  (data: TNewPackagesToPricing, onSuccess?: () => void): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.PricingSettings.AddPackagePricingSettings, { data })
       .then(result => {
         if (result) {
           dispatch(loadMPPricingSettings(data.serviceCenterId));
+          if (onSuccess) onSuccess();
         }
       })
       .catch(err => {
