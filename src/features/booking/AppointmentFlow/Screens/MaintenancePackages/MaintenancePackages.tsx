@@ -148,7 +148,38 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     return cls;
   };
 
-  const handleBack = (): void => {
+  const selectPackage = (localSelectedPackage: IPackageOptions | null, sentGA: boolean): void => {
+    const newPackage =
+      packages.find(p => p.type === localSelectedPackage?.type) ||
+      packages.find(p => p.type === packageEMenuType) ||
+      null;
+
+    if (newPackage?.id !== localSelectedPackage?.id) {
+      setLocalSelectedPackage(newPackage);
+    }
+
+    const usedPackage = newPackage ?? localSelectedPackage;
+
+    if (usedPackage) {
+      dispatch(setPackageIsSelected(true));
+      if (sentGA) {
+        handleGA(usedPackage);
+      }
+      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
+        onOpen();
+      }
+      if (scProfile?.packageSource === PackageSourceType.eMenu) {
+        dispatch(setPackageEMenuType(usedPackage.type));
+      } else {
+        dispatch(setSelectedPackageOptionType(usedPackage.type));
+      }
+      dispatch(setPackage(usedPackage));
+      dispatch(setPackagePricingType(localSelectedPricingType));
+      onSelectionCompleted();
+    }
+  };
+
+  const handleBack = (localSelectedPackage: IPackageOptions | null): void => {
     ReactGA.event(
       {
         category: 'EvenFlow User',
@@ -157,6 +188,11 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       },
       trackerData.ids
     );
+
+    if (isManagingFlow) {
+      selectPackage(localSelectedPackage, false);
+    }
+
     onBack();
   };
 
@@ -219,32 +255,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   };
 
   const handleNext = (localSelectedPackage: IPackageOptions | null): void => {
-    const newPackage =
-      packages.find(p => p.type === packageOptionType) ||
-      packages.find(p => p.type === packageEMenuType) ||
-      null;
-
-    if (newPackage?.id !== localSelectedPackage?.id) {
-      setLocalSelectedPackage(newPackage);
-    }
-
-    const usedPackage = newPackage ?? localSelectedPackage;
-
-    if (usedPackage) {
-      dispatch(setPackageIsSelected(true));
-      handleGA(usedPackage);
-      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
-        onOpen();
-      }
-      if (scProfile?.packageSource === PackageSourceType.eMenu) {
-        dispatch(setPackageEMenuType(usedPackage.type));
-      } else {
-        dispatch(setSelectedPackageOptionType(usedPackage.type));
-      }
-      dispatch(setPackage(usedPackage));
-      dispatch(setPackagePricingType(localSelectedPricingType));
-      onSelectionCompleted();
-    }
+    selectPackage(localSelectedPackage, true);
   };
 
   const onEMenuNext = () => {
@@ -298,7 +309,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       ) : null}
       {scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF ? (
         <React.Fragment>
-          <PackagesEmenu onBack={handleBack} onNext={onEMenuNext} />
+          <PackagesEmenu onBack={() => handleBack(localSelectedPackage)} onNext={onEMenuNext} />
         </React.Fragment>
       ) : packages.length ? (
         <React.Fragment>
@@ -408,7 +419,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       ) : null}
       {scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF ? null : (
         <ActionButtons
-          onBack={handleBack}
+          onBack={() => handleBack(localSelectedPackage)}
           nextLabel={t('Next')}
           nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
           onNext={() => handleNext(localSelectedPackage)}
