@@ -246,7 +246,8 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
       selectedModels.length ||
       selectedMakes.length ||
       selectedMileages.length ||
-      (yearFrom && yearTo) ||
+      yearFrom ||
+      yearTo ||
       selectedEngineTypes.length;
     if (!atLeastOneRule) showError('At least one Business Rule is required');
     return atLeastOneRule;
