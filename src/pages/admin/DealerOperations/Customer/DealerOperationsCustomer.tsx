@@ -213,9 +213,6 @@ const DealerOperationsCustomer = () => {
           }
         });
       });
-      if (isEditEventName) {
-        setIsEditEventName(false);
-      }
     }
   };
 
