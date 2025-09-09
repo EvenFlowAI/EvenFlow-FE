@@ -156,7 +156,8 @@ const TextIntegration = () => {
         }
 
         if (contactEmail.length) {
-          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          const emailPattern =
+            /^(?![.])[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)@[a-zA-Z0-9]+([-]?[a-zA-Z0-9]+)(\.[a-zA-Z]{2,})+$/;
 
           if (!emailPattern.test(contactEmail)) {
             showError('Please enter a valid Email format');
