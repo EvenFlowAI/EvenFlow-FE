@@ -16,6 +16,7 @@ import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { RootState } from '../../../../../store/rootReducer';
 import { states } from '../../helper';
 import { useException } from '../../../../../hooks/useException/useException';
+import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 
 const TextIntegration = () => {
   const dispatch = useDispatch();
@@ -23,12 +24,6 @@ const TextIntegration = () => {
   const { textIntegrationSettings, availablePhoneNumberList } = useSelector(
     (state: RootState) => state.dealerOperations
   );
-
-  useEffect(() => {
-    if (selectedSC?.id) {
-      dispatch(loadTextIntegrationSettings(selectedSC.id));
-    }
-  }, [selectedSC]);
 
   const { classes } = useStyles();
   const [isProcessingRequest, setIsProcessingRequest] = React.useState(false);
@@ -53,6 +48,18 @@ const TextIntegration = () => {
   const [authTokenError, setAuthTokenError] = React.useState(false);
   const [webhookError, setWebhookError] = React.useState(false);
   const [fromPhoneNumberError, setFromNumberError] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const hideLoader = () => {
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (selectedSC?.id) {
+      setIsLoading(true);
+      dispatch(loadTextIntegrationSettings(selectedSC.id, hideLoader));
+    }
+  }, [selectedSC]);
 
   // set data when visit tab
   // eslint-disable-next-line complexity
@@ -247,10 +254,12 @@ const TextIntegration = () => {
           legalCompanyName: legalName.trim() || null,
         };
 
+        setIsLoading(true);
+
         if (!phoneNumber.length) {
-          dispatch(updateTextIntegrationSettings({ ...data }, true));
+          dispatch(updateTextIntegrationSettings({ ...data }, true, hideLoader));
         } else {
-          dispatch(updateTextIntegrationSettings({ ...data }));
+          dispatch(updateTextIntegrationSettings({ ...data }, false, hideLoader));
         }
 
         setIsEditTable(false);
@@ -320,6 +329,10 @@ const TextIntegration = () => {
     setIsEditTable(false);
   };
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className={classes.editTableWrapper}>
@@ -342,7 +355,7 @@ const TextIntegration = () => {
         <div className={classes.inputsSection}>
           <p className={classes.titleRegistrations}>A2P registration inputs</p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className={classes.formRegistrationContainer}>
             <div className={classes.formRegistrationWrapper}>
               <div className={classes.registrationForm}>
                 <div>
@@ -476,7 +489,7 @@ const TextIntegration = () => {
               </div>
             </div>
 
-            <p style={{ fontWeight: '400', fontSize: '18px', margin: 0 }}>
+            <p className={classes.bottomText}>
               * The registered campaign may be rejected if the email and website domain do not match
             </p>
           </div>

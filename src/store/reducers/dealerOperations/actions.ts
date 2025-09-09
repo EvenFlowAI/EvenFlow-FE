@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import { DashboardItemI, IntegrationSettingsI } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
@@ -26,6 +28,23 @@ export const getAvailablePhoneNumberList = createAction<string[]>(
   'Optimizer/getAvailablePhoneNumberList'
 );
 
+export const setTextMessage = createAction<string>('Optimizer/setTextMessage');
+
+export const setEventForTextConfiguration = createAction<DashboardItemI | null>(
+  'Optimizer/setEventForTextConfiguration'
+);
+
+export const setEventIdForRulesConfiguration = createAction<number | null>(
+  'Optimizer/setEventIdForRulesConfiguration'
+);
+
+export const setUpdatedEventsName = createAction<
+  {
+    id: number;
+    name: string;
+  }[]
+>('Optimizer/setUpdatedEventsName');
+
 export const setTextIntegrationSettings = createAction<IntegrationSettingsI>(
   'Optimizer/setTextIntegrationSettings'
 );
@@ -49,7 +68,7 @@ export enum ComparisonOperatorE {
 }
 
 export const loadTextIntegrationSettings =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, hideLoader?: () => void): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.GetTextIntegration, { params: { serviceCenterId } })
       .then(response => {
@@ -58,6 +77,7 @@ export const loadTextIntegrationSettings =
         } else {
           console.log('No data with text integration settings');
         }
+        if (hideLoader) hideLoader();
       })
       .catch(e => {
         console.log('Loading text integration settings error', e);
@@ -65,7 +85,7 @@ export const loadTextIntegrationSettings =
   };
 
 export const updateTextIntegrationSettings =
-  (data: IntegrationSettingsI, updateEvents?: boolean): AppThunk =>
+  (data: IntegrationSettingsI, updateEvents?: boolean, hideLoader?: () => void): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.SetTextIntegration, {
       data: { ...data },
@@ -77,6 +97,7 @@ export const updateTextIntegrationSettings =
         } else {
           console.log('No response with updating text integration settings');
         }
+        if (hideLoader) hideLoader();
       })
       .catch(e => {
         console.log('Updating text integration settings error', e);
@@ -119,7 +140,7 @@ export const getPhoneNumbers =
   };
 
 export const loadDashboardItems =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, hideLoader?: () => void): AppThunk =>
   async (dispatch, getState) => {
     const { customerCommunicationPageData } = getState().dealerOperations;
     const data = {
@@ -147,6 +168,7 @@ export const loadDashboardItems =
         } else {
           console.log('No data with events');
         }
+        if (hideLoader) hideLoader();
       })
       .catch(e => {
         console.log('Loading dashboard items error', e);
@@ -174,11 +196,11 @@ export const createCustomerEvent =
   };
 
 export const deleteCustomerEvent =
-  (data: { serviceCenterId: number; id: number }): AppThunk =>
+  (data: { serviceCenterId: number; id: number }, hideLoader?: () => void): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.DeleteEvent, { urlParams: { id: data.id } })
       .then(() => {
-        dispatch(loadDashboardItems(data.serviceCenterId));
+        dispatch(loadDashboardItems(data.serviceCenterId, hideLoader));
       })
       .catch(e => {
         console.log('Deleting Customer Event error', e);
@@ -193,7 +215,8 @@ export const updateCustomerEventName =
       serviceCenterId: number;
     },
     onSuccess: () => void,
-    onError?: (eventName: string) => void
+    onError?: (eventName: string) => void,
+    hideLoader?: () => void
   ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
@@ -201,7 +224,7 @@ export const updateCustomerEventName =
       data: { ...data },
     })
       .then(() => {
-        dispatch(loadDashboardItems(data.serviceCenterId));
+        dispatch(loadDashboardItems(data.serviceCenterId, hideLoader));
         onSuccess();
       })
       .catch(e => {
@@ -223,7 +246,8 @@ export const updateCustomerEvent =
           }
         | { isTextEnabled: boolean };
     },
-    onClear: () => void
+    onClear: () => void,
+    hideLoader?: () => void
   ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.DealerOperations.UpdateEvent, {
@@ -231,7 +255,7 @@ export const updateCustomerEvent =
       data: { ...data.updatedData, id: data.eventId, serviceCenterId: data.serviceCenterId },
     })
       .then(() => {
-        dispatch(loadDashboardItems(data.serviceCenterId));
+        dispatch(loadDashboardItems(data.serviceCenterId, hideLoader));
         onClear();
       })
       .catch(e => {

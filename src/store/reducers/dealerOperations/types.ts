@@ -7,6 +7,13 @@ export type TState = {
   newEventName: string;
   textIntegrationSettings: null | IntegrationSettingsI;
   availablePhoneNumberList: string[];
+  textMessage: string;
+  eventForTextConfiguration: DashboardItemI | null;
+  eventIdForRulesConfiguration: number | null;
+  updatedEventsName: {
+    id: number;
+    name: string;
+  }[];
 };
 
 export interface DashboardItemI {

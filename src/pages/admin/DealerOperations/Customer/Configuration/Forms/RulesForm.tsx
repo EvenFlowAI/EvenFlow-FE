@@ -1,12 +1,12 @@
 import React from 'react';
 import { Autocomplete, IconButton } from '@mui/material';
-import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
-import { CriteriaI } from '../types';
-import { EventRulesFilterTypeE } from '../../../../../store/reducers/dealerOperations/actions';
+import { autocompleteRender } from '../../../../../../utils/autocompleteRenders';
+import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
+import { CriteriaI } from '../../types';
+import { EventRulesFilterTypeE } from '../../../../../../store/reducers/dealerOperations/actions';
 import { AddCircleOutline } from '@mui/icons-material';
-import { useStyles } from '../../styles';
-import { ReactComponent as CloseNew } from '../../../../../assets/img/close-new.svg';
+import { useStyles } from '../../../styles';
+import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
 
 interface RulesFormI {
   rules: CriteriaI[];
@@ -91,31 +91,13 @@ const RulesForm = ({
 
   return (
     <>
-      <span
-        style={{
-          textTransform: 'uppercase',
-          fontSize: '16px',
-          fontWeight: 700,
-          marginTop: '60px',
-        }}
-      >
-        Audience Filter Rules
-      </span>
+      <span className={classes.filterRulesWrapper}>Audience Filter Rules</span>
 
       {rules.length ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className={classes.criteriaWrapper}>
           {rules.map((rule, index) => {
             return (
-              <div
-                key={index}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '20px',
-                }}
-              >
+              <div key={index} className={classes.filterRuleItem}>
                 <Autocomplete
                   disabled={!isEditTable}
                   style={{ width: '56%' }}
@@ -144,7 +126,7 @@ const RulesForm = ({
                     error: ruleOperatorErrors[index],
                   })}
                 />
-                <div style={{ display: 'flex', flexDirection: 'column', width: '15%' }}>
+                <div className={classes.criteriaValue}>
                   <TextField
                     fullWidth
                     disabled={!isEditTable}
@@ -159,7 +141,7 @@ const RulesForm = ({
                 </div>
                 {isEditTable ? (
                   <div
-                    style={{ marginTop: '30px', cursor: 'pointer' }}
+                    className={classes.removeCriteriaIcon}
                     onClick={() => handleRemoveRule(index)}
                   >
                     <CloseNew />
@@ -180,8 +162,8 @@ const RulesForm = ({
         >
           <AddCircleOutline className={rules.length === 5 ? 'isDisabled' : ''} />
           <span
-            className={rules.length === 5 ? 'isDisabled' : ''}
-            style={{ fontWeight: 700, color: '#7898FF' }}
+            style={rules.length === 5 ? { color: 'grey' } : {}}
+            className={classes.addCriteriaButton}
           >
             Add Filter Criteria
           </span>

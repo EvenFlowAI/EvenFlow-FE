@@ -10,30 +10,32 @@ import { customerTags } from '../../../../config/data';
 
 import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
+import { Loading } from '../../../wrappers/Loading/Loading';
+import { setTextMessage } from '../../../../store/reducers/dealerOperations/actions';
+import { useStyles } from './styles';
 
 type TCustomerTextConfigurationProps = DialogProps & {
-  event: DashboardItemI | null;
-  setTextMessage: (textMessage: string) => void;
-  textMessage: string;
   handleSaveText: () => void;
+  isLoading: boolean;
 };
 
 const CustomerTextConfiguration = ({
   onClose,
   open,
-  event,
-  setTextMessage,
-  textMessage,
   handleSaveText,
+  isLoading,
 }: TCustomerTextConfigurationProps) => {
-  if (!event) return <></>;
+  const { textIntegrationSettings, textMessage, eventForTextConfiguration } = useSelector(
+    (state: RootState) => state.dealerOperations
+  );
 
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const dispatch = useDispatch();
+  const { classes } = useStyles();
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
-
-  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
 
   useEffect(() => {
     setTimeout(() => {
@@ -65,7 +67,7 @@ const CustomerTextConfiguration = ({
     const tagToInsert = `${needSpaceBefore}${tag}${needSpaceAfter}`;
     const newValue = before + tagToInsert + after;
 
-    setTextMessage(newValue);
+    dispatch(setTextMessage(newValue));
 
     setTimeout(() => {
       textarea.focus();
@@ -84,25 +86,13 @@ const CustomerTextConfiguration = ({
     if (!canRender) return null;
 
     return (
-      <li
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 14,
-        }}
-      >
-        <span style={{ cursor: 'pointer', fontSize: 16 }} onClick={() => handleInsertTag(tag)}>
+      <li className={classes.tagItem}>
+        <span className={classes.insertTag} onClick={() => handleInsertTag(tag)}>
           {tag}
         </span>
         <button
           type="button"
-          style={{
-            border: 'none',
-            outline: 'none',
-            background: 'none',
-            cursor: 'pointer',
-          }}
+          className={classes.copyTag}
           onClick={e => {
             e.stopPropagation();
             navigator.clipboard.writeText(tag);
@@ -116,85 +106,61 @@ const CustomerTextConfiguration = ({
     );
   };
 
+  if (!eventForTextConfiguration) return <></>;
+
   return (
     <BaseModal open={open} width={602} onClose={handleClose}>
-      <DialogTitle onClose={handleClose}>Text Configuration for {event.name}</DialogTitle>
-      <DialogContent>
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ width: '45%' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 32 }}>
-              <p
-                style={{
-                  textTransform: 'uppercase',
-                  margin: 0,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  marginBottom: 8,
-                }}
-              >
-                Integration
-              </p>
-              {textIntegrationSettings?.fromPhoneNumber ? (
-                <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <CheckIcon /> <span style={{ color: '#7898FF' }}>Configured</span>
-                </p>
-              ) : (
-                <p style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <RedCross /> <span style={{ color: '#C71062' }}>Not Configured</span>
-                </p>
-              )}
-            </div>
-            <div>
-              <span
-                style={{
-                  textTransform: 'uppercase',
-                  fontWeight: 700,
-                  fontSize: 12,
-                  display: 'block',
-                  marginBottom: 8,
-                }}
-              >
-                Insert tag
-              </span>
-              {customerTags.map(tag => renderTagItem(tag))}
-            </div>
-          </div>
-
-          <div style={{ width: '51%' }}>
-            <div style={{ marginTop: 24 }}>
-              <Textarea
-                inputRef={textareaRef}
-                fullWidth
-                multiline
-                style={{ marginBottom: 4 }}
-                placeholder="Enter text message"
-                label="Message"
-                onChange={e => {
-                  if (e.target.value.length <= 1000) setTextMessage(e.target.value);
-                }}
-                value={textMessage}
-                rows={20}
-              />
+      <DialogTitle onClose={handleClose}>
+        Text Configuration for {eventForTextConfiguration.name}
+      </DialogTitle>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <DialogContent>
+          <div className={classes.wrapper}>
+            <div className={classes.integrationBlock}>
+              <div className={classes.integrationWrapper}>
+                <p className={classes.integrationText}>Integration</p>
+                {textIntegrationSettings?.fromPhoneNumber ? (
+                  <p className={classes.configuredComponent}>
+                    <CheckIcon /> <span className={classes.configuredColor}>Configured</span>
+                  </p>
+                ) : (
+                  <p className={classes.configuredComponent}>
+                    <RedCross /> <span className={classes.notConfiguredColor}>Not Configured</span>
+                  </p>
+                )}
+              </div>
+              <div>
+                <span className={classes.insertTagText}>Insert tag</span>
+                {customerTags.map(tag => renderTagItem(tag))}
+              </div>
             </div>
 
-            <div
-              style={{
-                textAlign: 'right',
-                color: '#858585',
-                fontWeight: 300,
-              }}
-            >
-              <span>Approximate Characters: {textMessage?.length || 0}/1000</span>
+            <div className={classes.textMessageWrapper}>
+              <div className={classes.messageTextArea}>
+                <Textarea
+                  inputRef={textareaRef}
+                  fullWidth
+                  multiline
+                  style={{ marginBottom: 4 }}
+                  placeholder="Enter text message"
+                  label="Message"
+                  onChange={e => {
+                    if (e.target.value.length <= 1000) dispatch(setTextMessage(e.target.value));
+                  }}
+                  value={textMessage}
+                  rows={20}
+                />
+              </div>
+
+              <div className={classes.charactersCounter}>
+                <span>Approximate Characters: {textMessage?.length || 0}/1000</span>
+              </div>
             </div>
           </div>
-        </div>
-      </DialogContent>
+        </DialogContent>
+      )}
       <DialogActions>
         <Button onClick={handleClose} color="info">
           Cancel
@@ -202,7 +168,9 @@ const CustomerTextConfiguration = ({
         <LoadingButton
           onClick={handleSaveText}
           disabled={
-            textMessage.trim().length < 3 || textIntegrationSettings?.fromPhoneNumber === null
+            textMessage.trim().length < 3 ||
+            textIntegrationSettings?.fromPhoneNumber === null ||
+            isLoading
           }
           variant="contained"
           color="primary"
