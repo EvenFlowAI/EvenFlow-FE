@@ -1,11 +1,11 @@
 import React from 'react';
-import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
+import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete, IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
-import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-import { ReactComponent as CloseNew } from '../../../../../assets/img/close-new.svg';
-import { useStyles } from '../../styles';
-import { CriteriaI } from '../types';
+import { autocompleteRender } from '../../../../../../utils/autocompleteRenders';
+import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
+import { useStyles } from '../../../styles';
+import { CriteriaI } from '../../types';
 
 interface AudienceFormI {
   criterias: CriteriaI[];
@@ -74,24 +74,13 @@ const AudienceForm = ({
 
   return (
     <>
-      <span style={{ textTransform: 'uppercase', fontSize: '18px', fontWeight: 700 }}>
-        Audience
-      </span>
+      <span className={classes.audienceParagraph}>Audience</span>
 
       {criterias.length ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className={classes.criteriaWrapper}>
           {criterias.map((criteria, index) => {
             return (
-              <div
-                key={index}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '20px',
-                }}
-              >
+              <div key={index} className={classes.criteriaFormWrapper}>
                 <Autocomplete
                   disabled={!isEditTable}
                   style={{ width: '56%' }}
@@ -120,7 +109,7 @@ const AudienceForm = ({
                     error: criteriaOperatorErrors[index],
                   })}
                 />
-                <div style={{ display: 'flex', flexDirection: 'column', width: '15%' }}>
+                <div className={classes.criteriaValue}>
                   <TextField
                     fullWidth
                     disabled={!isEditTable}
@@ -135,7 +124,7 @@ const AudienceForm = ({
                 </div>
                 {isEditTable ? (
                   <div
-                    style={{ marginTop: '30px', cursor: 'pointer' }}
+                    className={classes.removeCriteriaIcon}
                     onClick={() => handleRemoveCriteria(index)}
                   >
                     <CloseNew />
@@ -156,8 +145,8 @@ const AudienceForm = ({
         >
           <AddCircleOutline className={criterias.length ? 'isDisabled' : ''} />
           <span
-            className={criterias.length ? 'isDisabled' : ''}
-            style={{ fontWeight: 700, color: '#7898FF' }}
+            style={criterias.length ? { color: 'grey' } : {}}
+            className={classes.addCriteriaButton}
           >
             Audience Criteria
           </span>

@@ -87,4 +87,14 @@ export const useStyles = makeStyles()(() => ({
   littleDropdowns: {
     width: '60%',
   },
+  formRegistrationContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px',
+  },
+  bottomText: {
+    fontWeight: '400',
+    fontSize: '18px',
+    margin: 0,
+  },
 }));

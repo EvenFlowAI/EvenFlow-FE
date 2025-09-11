@@ -1,13 +1,13 @@
 import React from 'react';
-import { numberToOrdinalWord } from '../../helper';
+import { numberToOrdinalWord } from '../../../helper';
 import { IconButton } from '@mui/material';
 import { AddCircleOutline, QueryBuilder } from '@mui/icons-material';
-import { TriggerI } from '../types';
-import ClockTimePicker from '../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
-import { ReactComponent as CloseNew } from '../../../../../assets/img/close-new.svg';
+import { TriggerI } from '../../types';
+import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
+import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
+import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
 import dayjs from 'dayjs';
-import { useStyles } from '../../styles';
+import { useStyles } from '../../../styles';
 
 interface TriggersI {
   triggers: TriggerI[];
@@ -51,42 +51,15 @@ const Triggers = ({
 
   return (
     <>
-      <span style={{ textTransform: 'uppercase', fontSize: '18px', fontWeight: 700 }}>
-        Triggers
-      </span>
+      <span className={classes.audienceParagraph}>Triggers</span>
 
       {triggers.length ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className={classes.criteriaWrapper}>
           {triggers.map((trigger, index) => {
             return (
-              <div
-                key={index}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-start',
-                  alignItems: 'center',
-                  padding: '20px 24px',
-                  border: '1px solid #DADADA',
-                  gap: '12px',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 700,
-                      color: '#546AB3',
-                    }}
-                  >
+              <div key={index} className={classes.triggerItemWrapper}>
+                <div className={classes.triggerItem}>
+                  <span className={classes.contactCounter}>
                     {numberToOrdinalWord(index + 1)} Contact
                   </span>
                   {isEditTable ? (
@@ -96,8 +69,8 @@ const Triggers = ({
                   ) : null}
                 </div>
 
-                <div style={{ display: 'flex', width: '100%', gap: '20px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '40%' }}>
+                <div className={classes.triggersFormWrapper}>
+                  <div className={classes.triggersForm}>
                     <TextField
                       fullWidth
                       labelFitContent={true}
@@ -113,7 +86,7 @@ const Triggers = ({
                       value={+trigger.daysFromListGeneration}
                     />
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '30%' }}>
+                  <div className={classes.triggerClockWrapper}>
                     <ClockTimePicker
                       value={
                         trigger.scheduledTime ? dayjs(trigger.scheduledTime, 'HH:mm:ss') : null
@@ -148,8 +121,8 @@ const Triggers = ({
         >
           <AddCircleOutline className={triggers.length === 5 ? 'isDisabled' : ''} />
           <span
-            className={triggers.length === 5 ? 'isDisabled' : ''}
-            style={{ fontWeight: 700, color: '#7898FF' }}
+            style={triggers.length === 5 ? { color: 'grey' } : {}}
+            className={classes.addCriteriaButton}
           >
             Add Contact
           </span>

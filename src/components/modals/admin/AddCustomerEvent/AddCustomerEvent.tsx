@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
 import { DialogProps } from '../../BaseModal/types';
 import { TextField } from '../../../formControls/TextFieldStyled/TextField';
@@ -12,11 +12,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../hooks/useException/useException';
+import { Loading } from '../../../wrappers/Loading/Loading';
 
 type TAddCustomerEventModalProps = DialogProps & {};
 
 const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { selectedSC } = useSCs();
   const { newEventName } = useSelector((state: RootState) => state.dealerOperations);
   const showError = useException();
@@ -30,6 +32,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
 
   const onError = () => {
     showError('Event name is already used. Please enter a unique name.');
+    setIsLoading(false);
   };
 
   const handleSaveNewEvent = () => {
@@ -38,10 +41,14 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
     }
 
     if (newEventName?.length > 2 && newEventName?.length < 51) {
+      setIsLoading(true);
       dispatch(
         createCustomerEvent(
           { serviceCenterId: selectedSC?.id, name: newEventName.trim() },
-          onClose,
+          () => {
+            onClose();
+            setIsLoading(false);
+          },
           onError
         )
       );
@@ -51,28 +58,32 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
   return (
     <BaseModal open={open} width={602} onClose={onClose}>
       <DialogTitle onClose={onClose}>Please enter the name of the new event</DialogTitle>
-      <DialogContent>
-        <TextField
-          id="event"
-          name="event"
-          label="Event"
-          placeholder="Enter name"
-          fullWidth
-          onChange={handleChange}
-          value={newEventName}
-        />
-        <span
-          style={{
-            textAlign: 'right',
-            width: '100%',
-            display: 'block',
-            color: 'rgb(133, 133, 133)',
-            marginTop: '4px',
-          }}
-        >
-          Approximate Characters: {newEventName.length}/50
-        </span>
-      </DialogContent>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <DialogContent>
+          <TextField
+            id="event"
+            name="event"
+            label="Event"
+            placeholder="Enter name"
+            fullWidth
+            onChange={handleChange}
+            value={newEventName}
+          />
+          <span
+            style={{
+              textAlign: 'right',
+              width: '100%',
+              display: 'block',
+              color: 'rgb(133, 133, 133)',
+              marginTop: '4px',
+            }}
+          >
+            Approximate Characters: {newEventName.length}/50
+          </span>
+        </DialogContent>
+      )}
       <DialogActions>
         <Button onClick={onClose} color="info">
           Cancel
