@@ -14,7 +14,6 @@ import {
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import {
-  ECustomerSegment,
   ETransportationDays,
   ITransportationOptionFull,
   ITransportationOptionRules,
@@ -30,7 +29,7 @@ import { Button, Divider } from '@mui/material';
 import { editTransportationOptionRules } from '../../../../store/reducers/transportationNeeds/actions';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { getOptions } from '../../../../utils/utils';
-import { useAutocompleteStyles, useMultipleACStyles, useStyles } from './styles';
+import { useMultipleACStyles, useStyles } from './styles';
 import { TOption, TTimeObject } from '../types';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
@@ -48,9 +47,7 @@ export const EditTransportationModal: React.FC<
   >
 > = ({ editingElement, ...props }) => {
   const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
-  const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
   const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
-  const [segmentOptions, setSegmentOptions] = useState<TOption[]>([]);
   const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
   const [timeOfDay, setTimeOfDay] = useState<TTimeObject | null>(null);
   const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
@@ -59,7 +56,6 @@ export const EditTransportationModal: React.FC<
 
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
-  const { classes: autoCompleteStyles } = useAutocompleteStyles();
   const { classes } = useStyles();
   const { classes: multipleACSClasses } = useMultipleACStyles();
   const showError = useException();
@@ -82,15 +78,11 @@ export const EditTransportationModal: React.FC<
   }, [allAssignedList]);
 
   useEffect(() => {
-    setSegmentOptions(() => {
-      const segments = Object.keys(ECustomerSegment).filter(key => Number.isNaN(+key));
-      return getOptions(segments);
-    });
     setDayOfWeekOptions(() => {
       const days = Object.keys(ETransportationDays).filter(key => Number.isNaN(+key));
       return getOptions(days);
     });
-  }, [ECustomerSegment]);
+  }, []);
 
   useEffect(() => {
     if (selectedSC) {
@@ -107,9 +99,6 @@ export const EditTransportationModal: React.FC<
           days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
         }
         setDaysOfWeek(days);
-
-        const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
-        if (segment) setCustomerSegment(segment);
 
         if (rules.isAllServiceRequestsIncluded) {
           setServiceRequests(
@@ -137,12 +126,7 @@ export const EditTransportationModal: React.FC<
         }));
       }
     }
-  }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList, props.open]);
-
-  const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
-    setFormIsChecked(false);
-    setCustomerSegment(value);
-  };
+  }, [editingElement, dayOFWeekOptions, allAssignedList, props.open]);
 
   const handleTime = useCallback(
     (type: keyof TTimeObject) =>
@@ -289,7 +273,6 @@ export const EditTransportationModal: React.FC<
 
   const onCancel = () => {
     setFormIsChecked(false);
-    setCustomerSegment(null);
     setTimeOfDay(null);
     setServiceRequests([]);
     setDaysOfWeek([]);
@@ -302,8 +285,7 @@ export const EditTransportationModal: React.FC<
       (serviceRequests.length || allRequestsSelected) &&
       timeOfDay?.start &&
       timeOfDay?.end &&
-      daysOfWeek.length &&
-      customerSegment
+      daysOfWeek.length
     );
   };
 
@@ -318,7 +300,6 @@ export const EditTransportationModal: React.FC<
           start: dayjs(timeOfDay.start).format('HH:mm:ss'),
           end: dayjs(timeOfDay.end).format('HH:mm:ss'),
         };
-      if (customerSegment) data.customerSegments = [customerSegment.value];
       if (serviceRequests.length && !allRequestsSelected) {
         data.serviceRequests = serviceRequests.map(item => item.value);
       }
@@ -343,7 +324,6 @@ export const EditTransportationModal: React.FC<
     isValid,
     allRequestsSelected,
     timeOfDay,
-    customerSegment,
     serviceRequests,
     daysOfWeek,
     dayOFWeekOptions,
@@ -359,21 +339,6 @@ export const EditTransportationModal: React.FC<
       <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
       <DialogContent>
         <div className={classes.wrapper}>
-          <Autocomplete
-            fullWidth
-            classes={autoCompleteStyles}
-            style={{ marginBottom: 20 }}
-            getOptionLabel={option => option.name}
-            options={segmentOptions}
-            isOptionEqualToValue={(option, value) => option.name === ECustomerSegment[+value]}
-            value={customerSegment}
-            onChange={onCustomerSegmentChange}
-            renderInput={autocompleteRender({
-              label: 'Applicable Customer Segment',
-              placeholder: 'Select Customer Segment',
-              error: !customerSegment && formIsChecked,
-            })}
-          />
           <Autocomplete
             multiple
             style={{ marginBottom: 20 }}
