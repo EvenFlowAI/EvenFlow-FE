@@ -158,6 +158,7 @@ const DealerOperationsCustomer = () => {
 
     if (selectedSC?.id) {
       setIsLoading(true);
+      let counter = 0;
       dashboardItems.forEach(event => {
         updatedEventsName.forEach(updatedEvent => {
           if (event.id === updatedEvent.id) {
@@ -174,10 +175,16 @@ const DealerOperationsCustomer = () => {
                   () => setIsLoading(false)
                 )
               );
+              counter += 1;
             }
           }
         });
       });
+
+      if (counter === 0) {
+        setIsLoading(false);
+        setIsEditEventName(false);
+      }
     }
   };
 
@@ -275,12 +282,10 @@ const DealerOperationsCustomer = () => {
           <TextIntegration />
         </TabPanel>
       </TabContext>
-
       <AddCustomerEventModal
         onClose={handleCloseNewCustomerEventModal}
         open={isOpenNewCustomerEventModal}
       ></AddCustomerEventModal>
-
       <CustomerTextConfiguration
         onClose={onCloseTextConfigurationModal}
         open={isOpenTextConfigurationModal}
