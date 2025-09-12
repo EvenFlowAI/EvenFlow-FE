@@ -12,8 +12,7 @@ import { useModal } from '../../../hooks/useModal/useModal';
 import CenterSettings from '../../../features/admin/CenterSettings/CenterSettings';
 import ZoneRouting from '../../../features/admin/ZoneRouting/ZoneRouting';
 import TimeRangesAndCapacity from '../../../features/admin/TimeRangesAndCapacity/TimeRangesAndCapacity';
-import { ServiceValetRoutes, QueryTypes } from '../../../routes/types';
-import { useQueryParams } from '../../../hooks/useQueryParams/useQueryParams';
+import { ServiceValetRoutes } from '../../../routes/types';
 
 type TTab = {
   route: ServiceValetRoutes;
@@ -22,8 +21,7 @@ type TTab = {
 };
 
 const ServiceValet = () => {
-  const { setQuery, getQuery } = useQueryParams();
-  const currentTab = getQuery(QueryTypes.selectedTab) ?? ServiceValetRoutes.GeographicZones;
+  const [currentTab, setCurrentTab] = React.useState<string>('geographiczones');
   const { onOpen: onAddZoneOpen, onClose: onAddZoneClose, isOpen: isAddZoneOpen } = useModal();
 
   const tabs: TTab[] = [
@@ -60,7 +58,7 @@ const ServiceValet = () => {
   ];
 
   const handleTabChange = (e: React.SyntheticEvent, value: string) => {
-    setQuery(QueryTypes.selectedTab, value);
+    setCurrentTab(value);
   };
 
   return (
