@@ -78,10 +78,10 @@ export const DealershipGroupDetails = () => {
         return (
           <TabPanel style={{ width: '100%' }} value={t.id} key={t.id}>
             <t.component
-              onChangePage={t.id === '1' ? onChangeEPage : onChangeDPage}
-              onChangeRowsPerPage={t.id === '1' ? onChangeERowsPerPage : onChangeDRowsPerPage}
-              page={pageEData.pageIndex}
-              rowsPerPage={pageEData.pageSize}
+              onChangePage={t.id === '2' ? onChangeEPage : onChangeDPage}
+              onChangeRowsPerPage={t.id === '2' ? onChangeERowsPerPage : onChangeDRowsPerPage}
+              page={t.id === '2' ? pageEData.pageIndex : pageDData.pageIndex}
+              rowsPerPage={t.id === '2' ? pageEData.pageSize : pageDData.pageSize}
             />
           </TabPanel>
         );
