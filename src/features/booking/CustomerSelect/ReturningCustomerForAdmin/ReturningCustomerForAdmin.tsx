@@ -126,7 +126,7 @@ const ReturningCustomerForAdmin: React.FC<
     if (formIsValid) {
       loadData();
     } else {
-      showError('Any search field must contain 2 or more characters');
+      showError(t('Any search field must contain 2 or more characters'));
     }
   };
 

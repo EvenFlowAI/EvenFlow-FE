@@ -32,11 +32,11 @@ const AppointmentNotes = () => {
         setHasError(false);
       } else {
         setHasError(true);
-        showError('Special characters not allowed');
+        showError(t('Special characters not allowed'));
       }
     } else {
       setHasError(true);
-      showError('Only 250 characters allowed');
+      showError(t('Only 250 characters allowed'));
     }
   };
 
@@ -60,7 +60,7 @@ const AppointmentNotes = () => {
     } else {
       if (isFocused) {
         setHasError(true);
-        showError('Please save or cancel Appointment Notes changes');
+        showError(t('Please save or cancel Appointment Notes changes'));
       }
     }
   };

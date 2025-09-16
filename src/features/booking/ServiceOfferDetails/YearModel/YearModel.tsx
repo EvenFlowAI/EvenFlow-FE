@@ -17,6 +17,7 @@ import { SelectsTitle } from '../../../../components/styled/SelectsTitle';
 import { SelectWrapper } from '../../../../components/styled/SelectWrapper';
 import { TActionProps } from '../../../../types/types';
 import { useException } from '../../../../hooks/useException/useException';
+import { useTranslation } from 'react-i18next';
 
 export const YearModel: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TActionProps>>
@@ -28,6 +29,7 @@ export const YearModel: React.FC<
   const [currentModels, setCurrentModels] = useState<TModel[]>([]);
   const [currentSeries, setCurrentSeries] = useState<TSeries[]>([]);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { classes } = useOfferInputStyles();
   const yearOptions = useMemo(() => seriesModels.map(item => item.year.toString()), [seriesModels]);
   const isError = useMemo(
@@ -70,7 +72,7 @@ export const YearModel: React.FC<
 
   useEffect(() => {
     if (isError) {
-      showError('Sorry, but only BMW models are eligible for Value Service');
+      showError(t('Sorry, but only BMW models are eligible for Value Service'));
     }
   }, [isError, showError]);
 

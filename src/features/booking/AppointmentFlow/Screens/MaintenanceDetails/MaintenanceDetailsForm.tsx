@@ -300,7 +300,7 @@ export const MaintenanceDetailsForm: React.FC<
   const checkVINforRecallCategory = () => {
     if (!selectedVehicle?.vin || !checkVin(selectedVehicle?.vin)) {
       setErrors(prev => [...prev, 'vin']);
-      showError('VIN is not correct');
+      showError(t('VIN is not correct'));
     } else {
       onNoRecallsOpen();
     }
@@ -341,7 +341,7 @@ export const MaintenanceDetailsForm: React.FC<
     }
     if (selectedVehicle?.vin && !checkVin(selectedVehicle.vin)) {
       setErrors(prev => [...prev, 'vin']);
-      showError('VIN is not correct');
+      showError(t('VIN is not correct'));
       return false;
     }
 
@@ -381,7 +381,7 @@ export const MaintenanceDetailsForm: React.FC<
           } catch (err) {
             enqueueSnackbar(
               (err as any).response?.data?.message ||
-                'An error occurred while processing your request',
+                t('An error occurred while processing your request'),
               {
                 variant: 'error',
                 autoHideDuration: 3000,
@@ -403,7 +403,7 @@ export const MaintenanceDetailsForm: React.FC<
           handleNoRecalls();
         } else {
           setErrors(prev => [...prev, 'vin']);
-          showError('VIN is not correct');
+          showError(t('VIN is not correct'));
         }
       }
     } else {

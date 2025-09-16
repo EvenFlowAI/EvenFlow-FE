@@ -23,6 +23,7 @@ import { useException } from '../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
+import { useTranslation } from 'react-i18next';
 
 export const ServiceCenterSwitcher = () => {
   const { scProfile } = useSelector((state: RootState) => state.appointment);
@@ -36,6 +37,7 @@ export const ServiceCenterSwitcher = () => {
   const showError = useException();
   const history = useHistory();
   const isWelcomePage = useMemo(() => history.location.pathname.includes('welcome'), [history]);
+  const { t } = useTranslation();
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
     [currentUser, scProfile]
@@ -59,7 +61,7 @@ export const ServiceCenterSwitcher = () => {
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);
         }
       } else {
-        showError('There are not Service Centers list of the current Dealership');
+        showError(t('There are not Service Centers list of the current Dealership'));
       }
     }
   };

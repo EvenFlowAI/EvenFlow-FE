@@ -206,7 +206,7 @@ const YourLocation: React.FC<
 
   const showValidationErrors = () => {
     if (!address) showError('"Address" is required');
-    if (!zip?.length) showError('"Zip Code" is required');
+    if (!zip?.length) showError(t('zip code required'));
   };
 
   const onUnavailableOpen = () => dispatch(setUnavailableServiceOpen(true));

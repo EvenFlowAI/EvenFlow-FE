@@ -181,17 +181,17 @@ export const ManageAppointment: React.FC<
     if (!customer.email && isEmailRequired) {
       isValid = false;
       localErrors.push('email');
-      showError('"Email" must not be empty');
+      showError(t('\"Email\" must not be empty'));
     }
     if (!customer?.fullName) {
       isValid = false;
       localErrors.push('fullname');
-      showError('"Full Name" must not be empty');
+      showError(t('"Full Name" must not be empty'));
     }
     if (!customer?.phoneNumber) {
       isValid = false;
       localErrors.push('phonenumber');
-      showError('"Phone Number" must not be empty');
+      showError(t('"Phone Number" must not be empty'));
     }
     if (
       serviceTypeOption?.type === EServiceType.PickUpDropOff &&
@@ -199,7 +199,7 @@ export const ManageAppointment: React.FC<
       !appointmentByKey?.serviceValetTime
     ) {
       isValid = false;
-      showError('Please select correct Appointment Date and Time');
+      showError(t('Please select correct Appointment Date and Time'));
     }
     if (
       serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
@@ -207,7 +207,7 @@ export const ManageAppointment: React.FC<
       appointmentByKey?.serviceValetTime
     ) {
       isValid = false;
-      showError('Please select correct Appointment Date and Time');
+      showError(t('Please select correct Appointment Date and Time'));
     }
     setErrors(localErrors);
     return isValid;
@@ -328,7 +328,8 @@ export const ManageAppointment: React.FC<
         title: 'Cancel appointment',
         content: (
           <span>
-            Please confirm you want to cancel appointment on {getAppointmentDate(appointmentByKey)}?
+            {t('Please confirm you want to cancel appointment on')}{' '}
+            {getAppointmentDate(appointmentByKey)}?
           </span>
         ),
         onConfirm: handleCancelAppointment,
