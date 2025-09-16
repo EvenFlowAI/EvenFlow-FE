@@ -311,7 +311,7 @@ const CustomerSearchTable: React.FC<
       await setEditingElement(selectedAppointmentForCancelOrEdit);
       await onOpenConfirm();
     } else {
-      console.error('Can not find appointment for cancel or appointmentHashKey');
+      console.error(t('Can not find appointment for cancel or appointmentHashKey'));
     }
   };
 

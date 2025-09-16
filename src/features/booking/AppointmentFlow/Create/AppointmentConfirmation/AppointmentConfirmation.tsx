@@ -80,17 +80,17 @@ export const AppointmentConfirmation: React.FC<
     if (!customer.email && isEmailRequired) {
       isValid = false;
       localErrors.push('email');
-      showError('"Email" must not be empty');
+      showError(t('\"Email\" must not be empty'));
     }
     if (!customer?.fullName) {
       isValid = false;
       localErrors.push('fullname');
-      showError('"Full Name" must not be empty');
+      showError(t('"Full Name" must not be empty'));
     }
     if (!customer?.phoneNumber) {
       isValid = false;
       localErrors.push('phonenumber');
-      showError('"Phone Number" must not be empty');
+      showError(t('"Phone Number" must not be empty'));
     }
     const invalidServiceValetSlot =
       serviceTypeOption?.type === EServiceType.PickUpDropOff && !serviceValetAppointment;
@@ -98,7 +98,9 @@ export const AppointmentConfirmation: React.FC<
     if (invalidServiceValetSlot || invalidSlot) {
       isValid = false;
       showError(
-        'Selected date and time are not correct. Please select correct date and time or cancel all changes'
+        t(
+          'Selected date and time are not correct. Please select correct date and time or cancel all changes'
+        )
       );
     }
     setErrors(localErrors);
@@ -109,7 +111,7 @@ export const AppointmentConfirmation: React.FC<
     const internalError = e.response?.data?.message?.toLowerCase().includes('internal server');
     if (internalError) {
       showError(
-        `We’re sorry. Something went wrong on our end. Please try again shortly. Error identifier: ${e.response?.data?.id ?? 'unknown'}`
+        `${t('We’re sorry. Something went wrong on our end. Please try again shortly. Error identifier:')} ${e.response?.data?.id ?? 'unknown'}`
       );
     } else {
       showError(e);
