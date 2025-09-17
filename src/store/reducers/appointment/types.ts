@@ -37,7 +37,6 @@ export interface IServiceCenterProfile {
   dmsId?: string;
   maintenancePackageOptionTypes: EMaintenanceOptionType[];
   packageSource: PackageSourceType;
-  eMenuPDF?: boolean;
   emailRequirement?: TEmailRequirement;
 }
 
