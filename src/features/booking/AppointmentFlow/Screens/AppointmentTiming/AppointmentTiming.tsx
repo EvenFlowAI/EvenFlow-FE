@@ -19,7 +19,7 @@ import { TArgCallback, TCallback, TParsableDate } from '../../../../../types/typ
 import { TScreen } from '../../../../../types/screens';
 import { TimingWrapper } from './styles';
 import dayjs from 'dayjs';
-import { cards, timingTypes } from './constants';
+import { cardsConfig, timingTypes } from './constants';
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -100,6 +100,11 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
     handleSideBar();
     onNext();
   }, [appointment, dispatch, onNext, selectedInitialTiming, handleGA]);
+
+  const cards = cardsConfig.map(c => ({
+    ...c,
+    description: t(c.description),
+  }));
 
   return (
     <StepWrapper>
