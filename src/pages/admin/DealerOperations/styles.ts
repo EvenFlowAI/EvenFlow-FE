@@ -57,12 +57,19 @@ export const useStyles = makeStyles()(() => ({
     border: '1px solid #DADADA',
     padding: '24px',
     background: '#fff',
+    '@media (max-width: 900px)': {
+      flexDirection: 'column',
+      gap: '30px',
+    },
   },
   rulesWrapper: {
     display: 'flex',
     width: '48%',
     flexDirection: 'column',
     gap: '10px',
+    '@media (max-width: 900px)': {
+      width: '84%',
+    },
   },
   line: {
     color: '#EAEBEE',
@@ -77,6 +84,9 @@ export const useStyles = makeStyles()(() => ({
     width: '48%',
     flexDirection: 'column',
     gap: '10px',
+    '@media (max-width: 900px)': {
+      width: '100%',
+    },
   },
   audienceParagraph: {
     textTransform: 'uppercase',
@@ -94,6 +104,15 @@ export const useStyles = makeStyles()(() => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '20px',
+
+    '@media (max-width: 500px)': {
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
+
+      '& > *': {
+        flex: '1 1 30%',
+      },
+    },
   },
   criteriaValue: {
     display: 'flex',
@@ -120,6 +139,15 @@ export const useStyles = makeStyles()(() => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '20px',
+
+    '@media (max-width: 500px)': {
+      flexWrap: 'wrap',
+      justifyContent: 'flex-start',
+
+      '& > *': {
+        flex: '1 1 45%',
+      },
+    },
   },
   triggerItemWrapper: {
     width: '100%',
@@ -151,10 +179,16 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     flexDirection: 'column',
     width: '40%',
+    '@media (max-width: 900px)': {
+      width: '50%',
+    },
   },
   triggerClockWrapper: {
     display: 'flex',
     flexDirection: 'column',
     width: '30%',
+    '@media (max-width: 900px)': {
+      width: '45%',
+    },
   },
 }));

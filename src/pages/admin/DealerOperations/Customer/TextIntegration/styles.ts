@@ -12,11 +12,17 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     flexDirection: 'column',
     width: '64%',
+    '@media (max-width: 900px)': {
+      width: '54%',
+    },
   },
   settingsWrapper: {
     display: 'flex',
     width: '36%',
     flexDirection: 'column',
+    '@media (max-width: 900px)': {
+      width: '50%',
+    },
   },
   line: {
     color: '#EAEBEE',
@@ -46,17 +52,27 @@ export const useStyles = makeStyles()(() => ({
     flexDirection: 'column',
     width: '55%',
     gap: '24px',
+    '@media (max-width: 900px)': {
+      width: '100%',
+    },
   },
   settingsForm: {
     display: 'flex',
     flexDirection: 'column',
     width: '45%',
     gap: '24px',
+    '@media (max-width: 900px)': {
+      width: '100%',
+    },
   },
   formRegistrationWrapper: {
     display: 'flex',
     gap: '24px',
     marginRight: '24px',
+
+    '@media (max-width: 900px)': {
+      flexDirection: 'column',
+    },
   },
   integrationFormWrapper: {
     display: 'flex',
