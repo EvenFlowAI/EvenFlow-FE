@@ -90,6 +90,7 @@ const TableRowLayout = ({
     <StyledTableCell>
       {isEditEventName ? (
         <TextField
+          className={classes.eventInput}
           fullWidth
           value={updatedEventsName.find(e => event.id === e.id)?.name}
           onChange={e => handleNameChange(e.target.value)}

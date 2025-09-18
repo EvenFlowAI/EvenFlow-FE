@@ -56,4 +56,9 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  eventInput: {
+    '@media (max-width: 900px)': {
+      width: '135px',
+    },
+  },
 }));
