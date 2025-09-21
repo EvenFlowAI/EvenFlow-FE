@@ -211,11 +211,20 @@ export type TActionProps = {
 };
 
 export enum Roles {
+  EvenFlowAdmin = 'EvenFlow Admin',
+  EvenFlowAccountManager = 'EvenFlow Account Manager',
+  EvenFlowSupport = 'EvenFlow Support',
+  EvenFlowAIAgent = 'EvenFlow Agentic AI Configuration Agent',
+  DealerOwner = 'Dealer Owner',
+  ServiceDirector = 'Service Director',
+  ServiceManager = 'Service Manager',
+  BDCManager = 'BDC Manager',
+  BDCAgent = 'BDC Agent',
   Advisor = 'Advisor',
   Technician = 'Technician',
-  Owner = 'Owner',
-  Manager = 'Manager',
-  ServiceDirector = 'Service Director',
+  Staff = 'Staff',
+  Vendor = 'Vendor',
+  AIBookingAgent = 'AI Booking Agent'
 }
 
 export enum Titles {

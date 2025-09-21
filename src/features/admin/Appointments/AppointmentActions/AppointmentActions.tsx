@@ -11,6 +11,8 @@ import { TCallback } from '../../../../types/types';
 import { ReactComponent as Arrow } from '../../../../assets/img/dropdown-alternate-down.svg';
 import { ReactComponent as ArrowDisabled } from '../../../../assets/img/dropdown-alternate-down_grey.svg';
 import ChangeViewButtons from './ChangeViewButtons/ChangeViewButtons';
+import {useCurrentUser} from "../../../../hooks/useCurrentUser/useCurrentUser";
+import {canNotBookAppointmentRoles} from "../../../../utils/constants";
 
 type TProps = {
   searchTerm: string;
@@ -37,12 +39,16 @@ export const AppointmentActions: React.FC<TProps> = ({
   const { selectedSC } = useSCs();
   const encoded = encodeSCID(selectedSC?.id ?? 0);
   const url = Routes.EndUser.Welcome + '/' + encoded + '?frame=1';
+  const currentUser = useCurrentUser();
+  const canBookAppointment = currentUser && !canNotBookAppointmentRoles.includes(currentUser.role);  
 
   return (
     <Box>
+    {canBookAppointment && (
       <NavLink to={url} className={classes.linkBtn} target="_blank" style={{ height: 40 }}>
         Book Appointment
       </NavLink>
+    )}
       {selectedView === 'list' && (
         <SearchDebounced
           onSearch={onSearch}

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Button, Drawer, IconButton, List, useMediaQuery, useTheme } from '@mui/material';
 import logo from '../../../assets/img/logoSidebar.svg';
-import { LinkTypeWithSub } from '../../../types/types';
+import {LinkTypeWithSub, Roles} from '../../../types/types';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { ArrowForwardIos, Close } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import { useModal } from '../../../hooks/useModal/useModal';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
+import {TRole} from "../../../store/reducers/users/types";
 
 type TProps = {
   isOpened: boolean;
@@ -33,6 +34,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   const { onClose: onModalClose, isOpen, onOpen } = useModal();
 
   const currentUser = useCurrentUser();
+  console.log('----' + currentUser?.role + '----');
   const { loading } = useSelector((state: RootState) => state.users);
   const { pathname } = useLocation();
   const { selectedSC } = useSCs();
@@ -45,6 +47,24 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     return MainLinksWithSub;
   }, [currentUser, pathname]);
 
+  const baseRoles: TRole[] = [
+    Roles.EvenFlowAdmin,
+    Roles.EvenFlowAccountManager,
+    Roles.EvenFlowSupport,
+    Roles.EvenFlowAIAgent,
+    Roles.DealerOwner,
+    Roles.ServiceDirector,
+    Roles.ServiceManager,
+    Roles.BDCManager
+  ];
+  const restrictedSchedulerRoles: TRole[] = [
+    Roles.EvenFlowAIAgent,
+    Roles.Technician,
+    Roles.Vendor
+  ];
+  
+  const isOpenSchedulerLinkVisible = selectedSC && currentUser?.role && !restrictedSchedulerRoles.includes(currentUser?.role); 
+  
   useEffect(() => {
     if (
       (!window.origin.includes('apps.evenflow.ai') ||
@@ -54,56 +74,56 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
       MainLinksWithSub.push({
         to: Routes.Admin.Reporting,
         name: 'Reporting',
-        roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+        roles: baseRoles,
         subLinks: [
           {
             to: Routes.Reporting.ShopLoading,
             name: 'Shop Loading',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
           {
             to: Routes.Reporting.AppointmentAssignments,
             name: 'Appointment Assignments',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
           {
             to: Routes.Reporting.BDCReports,
             name: 'BDC Reports',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
           {
             to: Routes.Reporting.ValetAppointments,
             name: 'Valet Appointments',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
           {
             to: Routes.Reporting.OutboundOpportunities,
             name: 'Outbound Opportunities',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
           {
             to: Routes.Reporting.CustomerBehavior,
             name: 'Customer Behavior',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
           {
             to: Routes.Reporting.RepairOrderPerformance,
             name: 'Repair Order Performance',
             exact: true,
             sub: true,
-            roles: ['Owner', 'Manager', 'Service Director', 'Super Admin'],
+            roles: baseRoles,
           },
         ],
       });
@@ -119,7 +139,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
       onClose();
     }
   };
-
+  
+  
   return (
     <Drawer
       className={classes.drawer}
@@ -144,7 +165,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
         </List>
       </div>
       {/*<div style={{flex: 1}} />*/}
-      {selectedSC ? (
+      {isOpenSchedulerLinkVisible ? (
         <Button endIcon={<ArrowForwardIos />} className={classes.link} onClick={onOpen}>
           Open Scheduler
         </Button>

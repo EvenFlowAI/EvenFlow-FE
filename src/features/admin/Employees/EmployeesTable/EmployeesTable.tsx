@@ -142,7 +142,7 @@ const EmployeesTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   };
   const onDeleteEmployee = () => {
     setAnchorEl(null);
-    if (editedItem?.role === 'Owner') {
+    if (editedItem?.role === Roles.DealerOwner) {
       showError('You cannot remove dealership account');
     } else {
       askConfirm({
@@ -166,7 +166,7 @@ const EmployeesTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
       </IconButton>
     ) : (
       <IconButton
-        disabled={el.role === Roles.Owner || el.id === currentUser?.id}
+        disabled={el.role === Roles.DealerOwner || el.id === currentUser?.id}
         size="small"
         onClick={handleMenuOpen(el)}
       >
