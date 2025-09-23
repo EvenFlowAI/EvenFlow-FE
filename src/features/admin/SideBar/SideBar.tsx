@@ -34,7 +34,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   const { onClose: onModalClose, isOpen, onOpen } = useModal();
 
   const currentUser = useCurrentUser();
-  console.log('----' + currentUser?.role + '----');
   const { loading } = useSelector((state: RootState) => state.users);
   const { pathname } = useLocation();
   const { selectedSC } = useSCs();
