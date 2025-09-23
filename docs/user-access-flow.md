@@ -5,7 +5,7 @@ config:
 ---
 flowchart TD
     subgraph subGraph0["Admin Panel"]
-        SuperAdmin["Super Admin"]
+        SuperAdmin["EvenFlow Admin"]
         Entry["User Login"]
         Admin["Admin"]
         BDC["BDC Agent"]

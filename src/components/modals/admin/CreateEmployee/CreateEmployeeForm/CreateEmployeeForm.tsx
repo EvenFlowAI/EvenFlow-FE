@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useMemo } from 'react';
 import { Autocomplete, Divider, FormControlLabel, Grid, Switch } from '@mui/material';
 import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
 import {
@@ -12,17 +12,16 @@ import { ToggleButtons } from '../../../../buttons/ToggleButtons/ToggleButtons';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
 import { checkEmail, getOptions, validatePhoneNumber } from '../../../../../utils/utils';
 import 'react-phone-number-input/style.css';
-import { DmsRoles, superRoles } from '../constants';
-import { userRoles, widerUserRoles } from '../../../../../utils/constants';
+import {DmsRoles, superRoles} from '../constants';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
 import { Roles, TTechnicianLevel } from '../../../../../types/types';
 import { loadDMSAdvisors } from '../../../../../store/reducers/employees/actions';
 import { TRole } from '../../../../../store/reducers/users/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { IServiceCenter } from '../../../../../store/reducers/serviceCenters/types';
-import { useMultipleAutocompleteStyles, useStyles } from './styles';
+import { useStyles } from './styles';
 import { TOption } from '../../../../../features/admin/ServiceBookModal/types';
+import {availableUserRoles} from "../../../../../utils/constants";
 
 type TTFormProps = {
   isEdit: boolean;
@@ -186,26 +185,7 @@ export const CreateEmployeeForm: React.FC<
           />
         )}
       </Grid>
-      {/*<Grid item xs={12}>*/}
-      {/*    <Autocomplete*/}
-      {/*        multiple*/}
-      {/*        classes={autocompleteClasses}*/}
-      {/*        disabled={isEdit}*/}
-      {/*        options={shortSC}*/}
-      {/*        onChange={handleServiceCentersChange}*/}
-      {/*        getOptionLabel={i => i.name}*/}
-      {/*        renderOption={autocompleteOptionsCheckboxRender((e) => e.name)}*/}
-      {/*        getOptionSelected={(o, s) => o.id === s.id}*/}
-      {/*        loading={shortLoading}*/}
-      {/*        value={serviceCenters}*/}
-      {/*        renderInput={autocompleteRender({*/}
-      {/*            label: "Service centers",*/}
-      {/*            fullWidth: true,*/}
-      {/*            placeholder: "Select Service Centers",*/}
-      {/*            error: !serviceCenters.length && formIsChecked*/}
-      {/*        })}*/}
-      {/*    />*/}
-      {/*</Grid>*/}
+     
       <Grid item xs={12} sm={6}>
         <TextField
           id="email"
@@ -220,9 +200,7 @@ export const CreateEmployeeForm: React.FC<
       </Grid>
       <Grid item xs={12} sm={6}>
         <Autocomplete
-          options={
-            currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles
-          }
+          options={availableUserRoles.exceptOf(superRoles)}
           isOptionEqualToValue={(option, value) => option === value}
           onChange={handleRoleChange}
           loading={shortLoading}

@@ -7,8 +7,16 @@ import { useHistory } from 'react-router-dom';
 import { useStyles } from './styles';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
+import {Roles} from "../../../../types/types";
 
-const restrictedRoles: TRole[] = ['Advisor', 'Super Admin', 'Manager', 'Technician'];
+const restrictedRoles: TRole[] = [
+    Roles.ServiceManager,
+    Roles.Advisor,
+    Roles.Technician,
+    Roles.Staff,
+    Roles.Vendor,
+    Roles.AIBookingAgent
+];
 
 export const ServiceCenterSelector = () => {
   const { selectSC, selectedSC, scList } = useSCs();

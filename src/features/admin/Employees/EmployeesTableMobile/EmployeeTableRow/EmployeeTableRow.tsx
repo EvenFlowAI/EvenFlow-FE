@@ -42,7 +42,7 @@ const EmployeeTableRow: React.FC<TProps> = ({
       </IconButton>
     ) : (
       <IconButton
-        disabled={el.role === Roles.Owner || el.id === currentUser?.id}
+        disabled={el.role === Roles.DealerOwner || el.id === currentUser?.id}
         size="small"
         style={{ padding: 0 }}
         onClick={handleMenuOpen(el)}
