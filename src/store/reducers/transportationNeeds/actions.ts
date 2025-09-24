@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   ITransportationOptionFull,
+  ITransportationOptionRule,
   ITransportationOptionRules,
   TTransportationShort,
 } from './types';
@@ -67,6 +68,107 @@ export const editTransportationOptionRules =
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.TransportationOptions.Rules, { urlParams: { id: optionId }, data })
+      .then(result => {
+        if (result) {
+          dispatch(loadTransportationOptions(serviceCenterId));
+          successCallback();
+        }
+      })
+      .catch(err => {
+        errorCallback(err);
+        console.log('edit transportation option rules error', err);
+      });
+  };
+
+export const removeTransportationOptionRule =
+  (
+    serviceCenterId: number,
+    optionId: string,
+    successCallback = () => {},
+    // eslint-disable-next-line
+    errorCallback = (err: { code: number; errorMessage: string }) => {}
+  ): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.TransportationOptions.Remove, { urlParams: { id: optionId } })
+      .then(result => {
+        if (result) {
+          dispatch(loadTransportationOptions(serviceCenterId));
+          successCallback();
+        }
+      })
+      .catch(err => {
+        errorCallback(err);
+        console.log('remove transportation option rules error', err);
+      });
+  };
+
+export const addTransportationOptionRule =
+  (
+    serviceCenterId: number,
+    newRule: ITransportationOptionRule,
+    successCallback = () => {},
+    // eslint-disable-next-line
+    errorCallback = (err: { code: number; errorMessage: string }) => {}
+  ): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.TransportationOptions.Add, { data: newRule })
+      .then(result => {
+        if (result) {
+          dispatch(loadTransportationOptions(serviceCenterId));
+          successCallback();
+        }
+      })
+      .catch(err => {
+        errorCallback(err);
+        console.log('edit transportation option rules error', err);
+      });
+  };
+
+export const editTransportationOptionRule =
+  (
+    serviceCenterId: number,
+    updatedRule: ITransportationOptionRule,
+    ruleId: number,
+    successCallback = () => {},
+    // eslint-disable-next-line
+    errorCallback = (err: { code: number; errorMessage: string }) => {}
+  ): AppThunk =>
+  dispatch => {
+    console.log('updatedRule', updatedRule);
+    Api.call(Api.endpoints.TransportationOptions.Update, {
+      urlParams: { id: ruleId },
+      data: updatedRule,
+    })
+      .then(result => {
+        if (result) {
+          dispatch(loadTransportationOptions(serviceCenterId));
+          successCallback();
+        }
+      })
+      .catch(err => {
+        errorCallback(err);
+        console.log('edit transportation option rules error', err);
+      });
+  };
+
+export const patchUpdateTransportationRule =
+  (
+    serviceCenterId: number,
+    rules: {
+      transportationOptionRuleId: number;
+      state: number;
+      orderIndex: number;
+    }[],
+    successCallback = () => {},
+    // eslint-disable-next-line
+    errorCallback = (err: { code: number; errorMessage: string }) => {}
+  ): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.TransportationOptions.PatchUpdate, {
+      data: {
+        rules,
+      },
+    })
       .then(result => {
         if (result) {
           dispatch(loadTransportationOptions(serviceCenterId));

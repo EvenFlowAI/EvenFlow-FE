@@ -572,6 +572,10 @@ export class Api {
       Rules: { route: '/transportation-options/{id}/rules', method: 'put' },
       UpdateById: { route: '/transportation-options/{id}', method: 'put' },
       UpdateIcon: { route: '/transportation-options/{id}/icon', method: 'patch' },
+      Add: { route: '/transportation-option-rules', method: 'post' },
+      Remove: { route: `/transportation-option-rules/{id}`, method: 'delete' },
+      PatchUpdate: { route: `/transportation-option-rules/bulk-state`, method: 'patch' },
+      Update: { route: `/transportation-option-rules/{id}`, method: 'put' },
     },
     Users: {
       GetAll: { route: '/users/by-query', method: 'post' },
