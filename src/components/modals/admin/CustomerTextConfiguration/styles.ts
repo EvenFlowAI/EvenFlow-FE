@@ -21,15 +21,9 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',
-    '@media (max-width: 600px)': {
-      flexDirection: 'column',
-    },
   },
   integrationBlock: {
     width: '45%',
-    '@media (max-width: 600px)': {
-      width: '100%',
-    },
   },
   integrationWrapper: {
     display: 'flex',
@@ -64,9 +58,6 @@ export const useStyles = makeStyles()(() => ({
   },
   textMessageWrapper: {
     width: '51%',
-    '@media (max-width: 600px)': {
-      width: '100%',
-    },
   },
   messageTextArea: {
     marginTop: 24,
