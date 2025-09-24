@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   ITransportationOptionFull,
+  ITransportationOptionRule,
   ITransportationOptionRules,
   TTransportationShort,
 } from './types';
@@ -67,6 +68,28 @@ export const editTransportationOptionRules =
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.TransportationOptions.Rules, { urlParams: { id: optionId }, data })
+      .then(result => {
+        if (result) {
+          dispatch(loadTransportationOptions(serviceCenterId));
+          successCallback();
+        }
+      })
+      .catch(err => {
+        errorCallback(err);
+        console.log('edit transportation option rules error', err);
+      });
+  };
+
+export const addTransportationOptionRule =
+  (
+    serviceCenterId: number,
+    newRule: ITransportationOptionRule,
+    successCallback = () => {},
+    // eslint-disable-next-line
+    errorCallback = (err: { code: number; errorMessage: string }) => {}
+  ): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.TransportationOptions.Add, { data: newRule })
       .then(result => {
         if (result) {
           dispatch(loadTransportationOptions(serviceCenterId));

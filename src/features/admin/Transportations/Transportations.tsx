@@ -87,6 +87,7 @@ export const Transportations = () => {
 
   const openMenu =
     (el: ITransportationOptionFull) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      console.log('el', el);
       setEditingElement(el);
       setAnchorEl(e.currentTarget);
     };

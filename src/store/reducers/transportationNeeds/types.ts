@@ -24,7 +24,8 @@ export interface ITrOptionServiceTRequest {
 }
 
 export interface ITransportationOptionRule {
-  id: number;
+  id?: number;
+  name: string;
   transportationOptionId: number;
   timeOfDay: {
     start: string;
@@ -35,6 +36,8 @@ export interface ITransportationOptionRule {
   isAllServiceRequestsIncluded?: boolean;
   serviceRequests: ITrOptionServiceTRequest[];
   capacity?: number;
+  state: number;
+  orderIndex: number;
 }
 
 export interface INewTransportationOption {
@@ -48,7 +51,7 @@ export interface ITransportationOptionFull extends INewTransportationOption {
   description: string;
   orderIndex: number;
   iconPath?: string;
-  rules?: ITransportationOptionRule;
+  rules?: ITransportationOptionRule[];
   serviceRequestId?: number;
   opCode?: string;
 }

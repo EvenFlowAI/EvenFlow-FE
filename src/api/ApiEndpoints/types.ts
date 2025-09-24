@@ -326,7 +326,7 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   TransportationOptions: Record<
-    'Edit' | 'Get' | 'GetActive' | 'Rules' | 'UpdateById' | 'GetShort' | 'UpdateIcon',
+    'Edit' | 'Get' | 'GetActive' | 'Rules' | 'UpdateById' | 'GetShort' | 'UpdateIcon' | 'Add',
     TApiEndpoint
   >;
   Users: Record<

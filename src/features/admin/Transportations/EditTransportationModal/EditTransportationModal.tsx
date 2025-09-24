@@ -1,11 +1,4 @@
-import React, {
-  ChangeEvent,
-  HTMLAttributes,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -18,16 +11,32 @@ import {
   ETransportationDays,
   ITransportationOptionFull,
   ITransportationOptionRules,
+  ITrOptionServiceTRequest,
 } from '../../../../store/reducers/transportationNeeds/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadAllAssignedServiceRequests } from '../../../../store/reducers/serviceRequests/actions';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { Autocomplete } from '@mui/material';
-import Checkbox from '../../../../components/formControls/Checkbox/Checkbox';
-import { CheckBoxOutlineBlank, CheckBoxOutlined, QueryBuilder } from '@mui/icons-material';
-import { Button, Divider } from '@mui/material';
-import { editTransportationOptionRules } from '../../../../store/reducers/transportationNeeds/actions';
+import {
+  Autocomplete,
+  Button,
+  Checkbox,
+  Divider,
+  IconButton,
+  Switch,
+  Tooltip,
+} from '@mui/material';
+import {
+  QueryBuilder,
+  ExpandMore,
+  ExpandLess,
+  CheckBoxOutlineBlank,
+  CheckBoxOutlined,
+} from '@mui/icons-material';
+import {
+  addTransportationOptionRule,
+  editTransportationOptionRules,
+} from '../../../../store/reducers/transportationNeeds/actions';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { getOptions } from '../../../../utils/utils';
 import { useAutocompleteStyles, useMultipleACStyles, useStyles } from './styles';
@@ -35,27 +44,37 @@ import { TOption, TTimeObject } from '../types';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import ClockTimePicker from '../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import { TParsableDate } from '../../../../types/types';
 import dayjs from 'dayjs';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
 
 type TEditTransportationOptionDialogProps = {
   editingElement: ITransportationOptionFull | null;
 };
 
+type TRuleState = {
+  id?: number;
+  name: string;
+  customerSegment: TOption | null;
+  daysOfWeek: TOption[];
+  timeOfDay: TTimeObject | null;
+  serviceRequests: TOption[];
+  capacity: string | null;
+  isAllServiceRequestsIncluded?: boolean;
+
+  expanded: boolean;
+  state: number; // додано
+  orderIndex: number;
+};
+
 export const EditTransportationModal: React.FC<
-  React.PropsWithChildren<
-    React.PropsWithChildren<DialogProps & TEditTransportationOptionDialogProps>
-  >
+  DialogProps & TEditTransportationOptionDialogProps
 > = ({ editingElement, ...props }) => {
   const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
-  const [customerSegment, setCustomerSegment] = useState<TOption | null>(null);
-  const [daysOfWeek, setDaysOfWeek] = useState<TOption[]>([]);
   const [segmentOptions, setSegmentOptions] = useState<TOption[]>([]);
   const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
-  const [timeOfDay, setTimeOfDay] = useState<TTimeObject | null>(null);
-  const [serviceRequests, setServiceRequests] = useState<TOption[]>([]);
+  const [rules, setRules] = useState<TRuleState[]>([]);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-  const [capacity, setCapacity] = useState<string>('');
 
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
@@ -63,14 +82,7 @@ export const EditTransportationModal: React.FC<
   const { classes } = useStyles();
   const { classes: multipleACSClasses } = useMultipleACStyles();
   const showError = useException();
-
-  const allRequestsSelected = useMemo(
-    () =>
-      allAssignedList.length
-        ? !allAssignedList.find(item => !serviceRequests.find(el => el.value === item.id))
-        : false,
-    [allAssignedList, serviceRequests]
-  );
+  const showMessage = useMessage();
 
   const requestsOptions = useMemo(() => {
     const options = allAssignedList.map(item => ({
@@ -78,6 +90,7 @@ export const EditTransportationModal: React.FC<
       value: item.id,
     }));
     options.unshift({ name: 'All', value: 0 });
+
     return options;
   }, [allAssignedList]);
 
@@ -90,7 +103,7 @@ export const EditTransportationModal: React.FC<
       const days = Object.keys(ETransportationDays).filter(key => Number.isNaN(+key));
       return getOptions(days);
     });
-  }, [ECustomerSegment]);
+  }, []);
 
   useEffect(() => {
     if (selectedSC) {
@@ -98,373 +111,697 @@ export const EditTransportationModal: React.FC<
     }
   }, [selectedSC]);
 
+  // for adding rules to localState
   useEffect(() => {
     if (editingElement && props.open) {
-      const { rules } = editingElement;
-      if (rules) {
-        let days = dayOFWeekOptions.filter(item => rules.dayOfWeeks.includes(item.value));
-        if (rules.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
-          days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
-        }
-        setDaysOfWeek(days);
+      if (editingElement.rules?.length) {
+        console.log(editingElement.rules);
 
-        const segment = segmentOptions.find(item => item.value === +rules.customerSegments[0]);
-        if (segment) setCustomerSegment(segment);
+        const unblockedRules = [...editingElement.rules];
 
-        if (rules.isAllServiceRequestsIncluded) {
-          setServiceRequests(
-            allAssignedList.map(item => ({
-              name: item.serviceRequest.code,
-              value: item.id,
-            }))
-          );
-        } else {
-          setServiceRequests(
-            rules.serviceRequests.map(item => ({
-              value: item.id,
-              name: item.code,
-            }))
-          );
-        }
-        if (rules.capacity) setCapacity(rules.capacity.toString());
+        const modifiedRules = unblockedRules
+          .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0)) // ← сортуємо тут
+          .map(rule => {
+            const [startHours, startMinutes, startSeconds] = rule.timeOfDay.start?.split(':');
+            const [endHours, endMinutes, endSeconds] = rule.timeOfDay.end?.split(':');
 
-        const [startHours, startMinutes, startSeconds] = rules.timeOfDay.start.split(':');
-        const [endHours, endMinutes, endSeconds] = rules.timeOfDay.end.split(':');
+            let days = dayOFWeekOptions.filter(item => rule.dayOfWeeks.includes(item.value));
+            if (rule.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
+              days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
+            }
 
-        setTimeOfDay(() => ({
-          start: dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds),
-          end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
-        }));
+            let updatedServiceRequests;
+            if (rule.isAllServiceRequestsIncluded) {
+              updatedServiceRequests = allAssignedList.map(item => ({
+                name: item.serviceRequest.code,
+                value: item.id,
+              }));
+            } else {
+              updatedServiceRequests = rule.serviceRequests.map(item => ({
+                value: item.id,
+                name: item.code,
+              }));
+            }
+
+            console.log('rule.customerSegments', rule.customerSegments);
+
+            return {
+              id: rule.id,
+              name: rule.name,
+              customerSegment: rule.customerSegments
+                ? segmentOptions[+rule.customerSegments[0]]
+                : null,
+              daysOfWeek: days,
+              timeOfDay: {
+                start: dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds),
+                end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
+              },
+              serviceRequests: updatedServiceRequests,
+              isAllServiceRequestsIncluded: rule?.isAllServiceRequestsIncluded,
+              capacity: rule.capacity ? `${rule.capacity}` : null,
+              expanded: false,
+              state: rule.state, // додано
+              orderIndex: rule.orderIndex,
+            };
+          });
+        setRules(modifiedRules);
       }
     }
-  }, [editingElement, segmentOptions, dayOFWeekOptions, allAssignedList, props.open]);
+  }, [editingElement, props.open]);
 
-  const onCustomerSegmentChange = (e: React.ChangeEvent<{}>, value: TOption | null): void => {
-    setFormIsChecked(false);
-    setCustomerSegment(value);
+  const updateLocalRule = (index: number, patch: Partial<TRuleState>) => {
+    setRules(prev => prev.map((r, i) => (i === index ? { ...r, ...patch } : r)));
   };
 
-  const handleTime = useCallback(
-    (type: keyof TTimeObject) =>
-      (date: TParsableDate): void => {
-        setFormIsChecked(false);
-        setTimeOfDay(prev => {
-          if (prev) {
-            if (prev.start && type === 'end' && dayjs(date).diff(prev.start) < 0) {
-              showError('The End Time needs to be more than the Start Time');
-              return prev;
-            }
-            return { ...prev, [type as keyof TTimeObject]: dayjs(date) };
-          } else {
-            return { [type as keyof TTimeObject]: dayjs(date) };
-          }
-        });
+  const addRule = () => {
+    setRules(prev => [
+      ...prev,
+      {
+        name: '',
+        customerSegment: null,
+        daysOfWeek: [],
+        serviceRequests: [],
+        timeOfDay: null,
+        capacity: '',
+        expanded: true,
+        state: 1,
+        orderIndex: rules.length + 1,
       },
-    []
-  );
-
-  const onDayOfWeekChange = useCallback(
-    (e: ChangeEvent<{}>, value: TOption[]) => {
-      setFormIsChecked(false);
-      if (value.find(option => option.value === ETransportationDays.EveryDay)) {
-        setDaysOfWeek(dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay));
-      } else {
-        setDaysOfWeek(value);
-      }
-    },
-    [dayOFWeekOptions]
-  );
-
-  const onRequestChange = useCallback(
-    (e: ChangeEvent<{}>, value: TOption[]) => {
-      setFormIsChecked(false);
-      if (value.find(option => option.name === 'All')) {
-        setServiceRequests(
-          allAssignedList.map(item => ({
-            name: item.serviceRequest.code,
-            value: item.id,
-          }))
-        );
-      } else {
-        setServiceRequests(value);
-      }
-    },
-    [allAssignedList]
-  );
-
-  const onRequestCheckboxChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>, option: TOption) => {
-      setFormIsChecked(false);
-      if (!e.target.checked) {
-        setServiceRequests(prev => {
-          let data = option.name === 'All' ? [] : prev;
-          return data
-            .filter(item => item.value !== option.value)
-            .sort((a, b) =>
-              serviceRequests.find(el => el.value === a.value)
-                ? serviceRequests.find(el => el.value === b.value)
-                  ? 0
-                  : -1
-                : 1
-            );
-        });
-      }
-    },
-    [serviceRequests]
-  );
-
-  const onDayOfWeekCheckboxChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>, option: TOption) => {
-      setFormIsChecked(false);
-      if (!e.target.checked) {
-        setDaysOfWeek(prev => {
-          let data = option.value === ETransportationDays.EveryDay ? [] : prev;
-          return data
-            .filter(item => item.value !== option.value)
-            .sort((a, b) =>
-              daysOfWeek.find(el => el.value === a.value)
-                ? daysOfWeek.find(el => el.value === b.value)
-                  ? 0
-                  : -1
-                : 1
-            );
-        });
-      }
-    },
-    [daysOfWeek]
-  );
-
-  const renderDayOfWeekOption = useCallback(
-    (props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
-      const allOptionsSelected = Boolean(
-        daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1
-      );
-      const checked =
-        Boolean(daysOfWeek.find(item => item.value === option.value)) || allOptionsSelected;
-      return (
-        <li style={{ display: 'flex', alignItems: 'center' }} {...props} key={option.name}>
-          <Checkbox
-            color="primary"
-            icon={
-              checked ? (
-                <CheckBoxOutlined htmlColor="#3855FE" />
-              ) : (
-                <CheckBoxOutlineBlank htmlColor="#DADADA" />
-              )
-            }
-            checked={checked}
-            onChange={e => onDayOfWeekCheckboxChange(e, option)}
-          />
-          {option.name}
-        </li>
-      );
-    },
-    [daysOfWeek, dayOFWeekOptions]
-  );
-
-  const renderRequestOption = useCallback(
-    (props: HTMLAttributes<HTMLLIElement>, option: TOption) => {
-      const checked =
-        !!serviceRequests.find(item => item.value === option.value) || allRequestsSelected;
-      return (
-        <li style={{ display: 'flex', alignItems: 'center' }} {...props} key={option.name}>
-          <Checkbox
-            color="primary"
-            icon={
-              checked ? (
-                <CheckBoxOutlined htmlColor="#3855FE" />
-              ) : (
-                <CheckBoxOutlineBlank htmlColor="#DADADA" />
-              )
-            }
-            checked={checked}
-            onChange={e => onRequestCheckboxChange(e, option)}
-          />
-          {option.name}
-        </li>
-      );
-    },
-    [serviceRequests, allAssignedList]
-  );
-
-  const onCancel = () => {
-    setFormIsChecked(false);
-    setCustomerSegment(null);
-    setTimeOfDay(null);
-    setServiceRequests([]);
-    setDaysOfWeek([]);
-    setCapacity('');
-    props.onClose();
+    ]);
   };
 
-  const isValid = () => {
-    return (
-      (serviceRequests.length || allRequestsSelected) &&
-      timeOfDay?.start &&
-      timeOfDay?.end &&
-      daysOfWeek.length &&
-      customerSegment
+  const removeRule = (index: number) => {
+    setRules(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const toggleExpand = (index: number) => {
+    setRules(prev =>
+      prev.map((r, i) => ({
+        ...r,
+        expanded: i === index ? !r.expanded : false, // інші завжди закриті
+      }))
     );
+  };
+
+  const onAddRule = (index2: number) => {
+    setFormIsChecked(true);
+    if (selectedSC && editingElement) {
+      // усі опції запитів без "All"
+      const nonAllRequests = requestsOptions.filter(o => o.name !== 'All');
+
+      let newRule;
+
+      rules.forEach((r, index) => {
+        if (index === index2) {
+          // true, якщо вибрані всі; guard проти кейсу з порожнім списком
+          const isAllRequestsIncluded =
+            nonAllRequests.length > 0 && r.serviceRequests.length === nonAllRequests.length;
+
+          if (
+            r.name?.length < 3 ||
+            !editingElement.id ||
+            !r.timeOfDay?.start ||
+            !r.timeOfDay?.end ||
+            r.customerSegment?.value === undefined ||
+            r.customerSegment?.value === null ||
+            !r.serviceRequests.length ||
+            !r.daysOfWeek.length
+          ) {
+            return;
+          }
+
+          newRule = {
+            name: r.name,
+            transportationOptionId: editingElement.id,
+            isAllServiceRequestsIncluded: isAllRequestsIncluded,
+            timeOfDay: r.timeOfDay
+              ? {
+                  start: dayjs(r.timeOfDay.start).format('HH:mm:ss'),
+                  end: dayjs(r.timeOfDay.end).format('HH:mm:ss'),
+                }
+              : undefined,
+            customerSegments: r.customerSegment ? [r.customerSegment.value] : [],
+            serviceRequests:
+              r.serviceRequests.length && !isAllRequestsIncluded
+                ? r.serviceRequests.map(item => item.value)
+                : undefined,
+            dayOfWeeks:
+              r.daysOfWeek.length && r.daysOfWeek.length === dayOFWeekOptions.length - 1
+                ? [ETransportationDays.EveryDay]
+                : r.daysOfWeek.map(item => item.value),
+            capacity: r.capacity ? Number(r.capacity) : undefined,
+            state: r.state,
+            orderIndex: index,
+          };
+        }
+      });
+
+      console.log(newRule);
+
+      if (newRule) {
+        dispatch(
+          addTransportationOptionRule(
+            selectedSC.id,
+            newRule,
+            () => {
+              setFormIsChecked(false);
+              showMessage('Created new rule');
+            },
+            showError
+          )
+        );
+      }
+    }
   };
 
   const onSave = useCallback(() => {
     setFormIsChecked(true);
-    if (selectedSC && editingElement && isValid()) {
-      const data: ITransportationOptionRules = {
-        isAllServiceRequestsIncluded: allRequestsSelected,
-      };
-      if (timeOfDay)
-        data.timeOfDay = {
-          start: dayjs(timeOfDay.start).format('HH:mm:ss'),
-          end: dayjs(timeOfDay.end).format('HH:mm:ss'),
-        };
-      if (customerSegment) data.customerSegments = [customerSegment.value];
-      if (serviceRequests.length && !allRequestsSelected) {
-        data.serviceRequests = serviceRequests.map(item => item.value);
-      }
-      if (daysOfWeek.length && daysOfWeek.length === dayOFWeekOptions.length - 1) {
-        data.dayOfWeeks = [ETransportationDays.EveryDay];
-      } else {
-        data.dayOfWeeks = daysOfWeek.map(item => item.value);
-      }
-      if (capacity) data.capacity = Number(capacity);
+    if (selectedSC && editingElement) {
+      // усі опції запитів без "All"
+      const nonAllRequests = requestsOptions.filter(o => o.name !== 'All');
 
-      if (editingElement.id) {
-        dispatch(
-          editTransportationOptionRules(editingElement.id, selectedSC.id, data, onCancel, showError)
-        );
-      }
+      const data: ITransportationOptionRules[] = rules.map(r => {
+        // true, якщо вибрані всі; guard проти кейсу з порожнім списком
+        const isAllRequestsIncluded =
+          nonAllRequests.length > 0 && r.serviceRequests.length === nonAllRequests.length;
+
+        return {
+          isAllServiceRequestsIncluded: isAllRequestsIncluded,
+          timeOfDay: r.timeOfDay
+            ? {
+                start: dayjs(r.timeOfDay.start).format('HH:mm:ss'),
+                end: dayjs(r.timeOfDay.end).format('HH:mm:ss'),
+              }
+            : undefined,
+          customerSegments: r.customerSegment ? [r.customerSegment.value] : [],
+          serviceRequests:
+            r.serviceRequests.length && !isAllRequestsIncluded
+              ? r.serviceRequests.map(item => item.value)
+              : undefined,
+          dayOfWeeks:
+            r.daysOfWeek.length && r.daysOfWeek.length === dayOFWeekOptions.length - 1
+              ? [ETransportationDays.EveryDay]
+              : r.daysOfWeek.map(item => item.value),
+          capacity: r.capacity ? Number(r.capacity) : undefined,
+        };
+      });
+
+      console.log(data);
     } else {
       showError('Please fill all required fields');
     }
-  }, [
-    selectedSC,
-    editingElement,
-    isValid,
-    allRequestsSelected,
-    timeOfDay,
-    customerSegment,
-    serviceRequests,
-    daysOfWeek,
-    dayOFWeekOptions,
-    onCancel,
-  ]);
+  }, [rules, selectedSC, editingElement, requestsOptions, dayOFWeekOptions]);
 
-  const onCapacityChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (Number.isInteger(+e.target.value) && +e.target.value >= 0) setCapacity(e.target.value);
+  const onCancel = () => {
+    setFormIsChecked(false);
+    setRules([]);
+    props.onClose();
   };
 
+  // reorder handler for drag & drop
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const reordered = Array.from(rules);
+    const [moved] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, moved);
+
+    console.log(result);
+
+    setRules(reordered);
+  };
+
+  // допоміжний стиль для disabled стану контенту при enabled=false
+  const disabledStyle: React.CSSProperties = {
+    opacity: 0.6,
+    pointerEvents: 'none',
+  };
+
+  // усередині компонента EditTransportationModal:
+
+  // чи все вибрано для конкретного rule
+  const isAllSelected = (idx: number) => {
+    const selected = rules[idx].serviceRequests ?? [];
+    // якщо кількість співпадає з кількістю всіх опцій (крім All)
+    return selected.length === requestsOptions.filter(o => o.name !== 'All').length;
+  };
+
+  // перерахунок значення serviceRequests для "All"
+  const selectAllRequests = useCallback(() => {
+    return requestsOptions.filter(o => o.name !== 'All'); // беремо всі крім "All"
+  }, [requestsOptions]);
+
+  // onChange чекбокса по одній опції (для конкретного rule)
+  const onRequestCheckboxChange = useCallback(
+    (ruleIdx: number, option: TOption, checked: boolean) => {
+      const current = rules[ruleIdx].serviceRequests ?? [];
+      const nonAll = requestsOptions.filter(o => o.name !== 'All');
+
+      if (option.name === 'All') {
+        // якщо тицнули All
+        const next = checked ? nonAll : [];
+        updateLocalRule(ruleIdx, { serviceRequests: next });
+        setFormIsChecked(false);
+        return;
+      }
+
+      // для звичайної опції
+      const exists = current.some(o => o.value === option.value);
+      let next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
+
+      updateLocalRule(ruleIdx, { serviceRequests: next });
+      setFormIsChecked(false);
+    },
+    [rules, requestsOptions]
+  );
+
+  // onChange Autocomplete (batch, наприклад при кліку поза item або через клік по "All")
+  const onRequestChange = useCallback(
+    (ruleIdx: number, _e: any, value: TOption[]) => {
+      setFormIsChecked(false);
+
+      if (value.find(opt => opt.name === 'All')) {
+        // якщо клікнули All у дропдауні
+        const allSelected = isAllSelected(ruleIdx);
+        const nonAll = requestsOptions.filter(o => o.name !== 'All');
+        const next = allSelected ? [] : nonAll;
+        updateLocalRule(ruleIdx, { serviceRequests: next });
+        return;
+      }
+
+      // інакше звичайний апдейт
+      updateLocalRule(ruleIdx, { serviceRequests: value.filter(o => o.name !== 'All') });
+    },
+    [isAllSelected, requestsOptions]
+  );
+
+  // Рендер-опції з чекбоксом для конкретного rule
+  const makeRenderRequestOption = useCallback(
+    (ruleIdx: number) => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
+      const selected = rules[ruleIdx].serviceRequests ?? [];
+      const allSelected = isAllSelected(ruleIdx);
+
+      const checked =
+        option.name === 'All' ? allSelected : selected.some(item => item.value === option.value);
+
+      return (
+        <li
+          {...props}
+          key={`${option.name}-${option.value}`}
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
+          <Checkbox
+            color="primary"
+            icon={
+              checked ? (
+                <CheckBoxOutlined htmlColor="#3855FE" />
+              ) : (
+                <CheckBoxOutlineBlank htmlColor="#DADADA" />
+              )
+            }
+            checked={checked}
+            onClick={e => e.stopPropagation()}
+            onChange={e =>
+              onRequestCheckboxChange(ruleIdx, option, (e.target as HTMLInputElement).checked)
+            }
+          />
+          {option.name}
+        </li>
+      );
+    },
+    [rules, isAllSelected, onRequestCheckboxChange]
+  );
+
+  // усередині компонента EditTransportationModal:
+
+  // значення "EveryDay" з енуму
+  const EVERY_DAY_VALUE = ETransportationDays.EveryDay;
+
+  // усі дні без "Every Day"
+  const nonEveryDayOptions = useMemo(
+    () => dayOFWeekOptions.filter(o => o.value !== EVERY_DAY_VALUE),
+    [dayOFWeekOptions]
+  );
+
+  // чи вибрані всі (для конкретного rule)
+  const isEveryDaySelected = (idx: number) => {
+    const selected = rules[idx].daysOfWeek ?? [];
+    return selected.length === nonEveryDayOptions.length;
+  };
+
+  const onDayCheckboxChange = useCallback(
+    (ruleIdx: number, option: TOption, checked: boolean) => {
+      const current = rules[ruleIdx].daysOfWeek ?? [];
+
+      if (option.value === EVERY_DAY_VALUE) {
+        // клік по "Every Day"
+        const next = checked ? nonEveryDayOptions : [];
+        updateLocalRule(ruleIdx, { daysOfWeek: next });
+        setFormIsChecked(false);
+        return;
+      }
+
+      const exists = current.some(o => o.value === option.value);
+      const next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
+
+      updateLocalRule(ruleIdx, { daysOfWeek: next });
+      setFormIsChecked(false);
+    },
+    [rules, nonEveryDayOptions]
+  );
+
+  const onDaysChange = useCallback(
+    (ruleIdx: number, _e: any, value: TOption[]) => {
+      setFormIsChecked(false);
+
+      // якщо користувач клацнув "Every Day" у списку
+      if (value.some(v => v.value === EVERY_DAY_VALUE)) {
+        const allSelected = isEveryDaySelected(ruleIdx);
+        const next = allSelected ? [] : nonEveryDayOptions;
+        updateLocalRule(ruleIdx, { daysOfWeek: next });
+        return;
+      }
+
+      // звичайний випадок: просто зберігаємо без "Every Day" (на випадок, якщо прослизнув)
+      updateLocalRule(ruleIdx, { daysOfWeek: value.filter(o => o.value !== EVERY_DAY_VALUE) });
+    },
+    [isEveryDaySelected, nonEveryDayOptions]
+  );
+
+  const makeRenderDayOption = useCallback(
+    (ruleIdx: number) => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
+      const selected = rules[ruleIdx].daysOfWeek ?? [];
+      const allSelected = isEveryDaySelected(ruleIdx);
+
+      const checked =
+        option.value === EVERY_DAY_VALUE
+          ? allSelected
+          : selected.some(item => item.value === option.value);
+
+      return (
+        <li
+          {...props}
+          key={`${option.name}-${option.value}`}
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
+          <Checkbox
+            color="primary"
+            icon={
+              checked ? (
+                <CheckBoxOutlined htmlColor="#3855FE" />
+              ) : (
+                <CheckBoxOutlineBlank htmlColor="#DADADA" />
+              )
+            }
+            checked={checked}
+            onClick={e => e.stopPropagation()} // щоб список не закривався
+            onChange={e =>
+              onDayCheckboxChange(ruleIdx, option, (e.target as HTMLInputElement).checked)
+            }
+          />
+          {option.name}
+        </li>
+      );
+    },
+    [rules, isEveryDaySelected, onDayCheckboxChange]
+  );
+
   return (
-    <BaseModal {...props} width={500} onClose={onCancel}>
+    <BaseModal {...props} width={600} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
       <DialogContent>
-        <div className={classes.wrapper}>
-          <Autocomplete
-            fullWidth
-            classes={autoCompleteStyles}
-            style={{ marginBottom: 20 }}
-            getOptionLabel={option => option.name}
-            options={segmentOptions}
-            isOptionEqualToValue={(option, value) => option.name === ECustomerSegment[+value]}
-            value={customerSegment}
-            onChange={onCustomerSegmentChange}
-            renderInput={autocompleteRender({
-              label: 'Applicable Customer Segment',
-              placeholder: 'Select Customer Segment',
-              error: !customerSegment && formIsChecked,
-            })}
-          />
-          <Autocomplete
-            multiple
-            style={{ marginBottom: 20 }}
-            classes={multipleACSClasses}
-            options={requestsOptions}
-            disableCloseOnSelect
-            disableClearable
-            getOptionLabel={option => option.name}
-            isOptionEqualToValue={(o, v) => o.value === v.value}
-            renderOption={renderRequestOption}
-            value={serviceRequests}
-            onChange={onRequestChange}
-            renderInput={autocompleteRender({
-              label: 'Op Codes',
-              error: !serviceRequests.length && formIsChecked,
-              placeholder: 'Select Op Codes',
-            })}
-          />
-          <Autocomplete
-            multiple
-            fullWidth
-            classes={multipleACSClasses}
-            options={dayOFWeekOptions}
-            style={{ marginBottom: 20 }}
-            getOptionLabel={option => option.name}
-            isOptionEqualToValue={(o, v) => o.value === v.value}
-            disableClearable
-            disableCloseOnSelect
-            renderOption={renderDayOfWeekOption}
-            value={daysOfWeek}
-            onChange={onDayOfWeekChange}
-            renderInput={autocompleteRender({
-              label: 'Day Of Week',
-              placeholder: 'Select Day Of Week',
-              error: !daysOfWeek.length && formIsChecked,
-            })}
-          />
-          <div className={classes.label}>Time Of Day</div>
-          <div className={classes.smallWrapper}>
-            <ClockTimePicker
-              value={timeOfDay?.start ?? null}
-              onChange={handleTime('start')}
-              fullWidth
-              InputProps={{
-                endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
-                error: !timeOfDay?.start && formIsChecked,
-                id: 'Time Of Day From',
-                placeholder: 'Start Time',
-              }}
-            />
-            <ClockTimePicker
-              value={timeOfDay?.end ?? null}
-              onChange={handleTime('end')}
-              fullWidth
-              InputProps={{
-                endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
-                error: !timeOfDay?.end && formIsChecked,
-                style: { marginBottom: 20 },
-                id: 'Time Of Day To',
-                placeholder: 'End Time',
-              }}
-            />
-          </div>
-          <div className={classes.bigLabel}>CONSTRAINTS</div>
-          <Divider style={{ margin: '0 0 10px 0' }} />
-          <TextField
-            fullWidth
-            type="number"
-            inputProps={{ min: 1, step: 1 }}
-            label="Daily Capacity"
-            style={{ marginBottom: 20 }}
-            placeholder="Type Number"
-            error={Boolean(capacity) && !Number.isInteger(+capacity)}
-            onChange={onCapacityChange}
-            value={capacity ?? ''}
-          />
-        </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="rules-droppable">
+            {provided => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {rules.map((rule, index) => (
+                  <Draggable key={index.toString()} draggableId={index.toString()} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        style={{
+                          ...provided.draggableProps.style,
+                          marginBottom: 16,
+                          overflow: 'hidden',
+                          background: snapshot.isDragging ? '#e3f2fd' : 'white',
+                        }}
+                      >
+                        {/* Заголовок з handle, Switch, назвою і кнопками */}
+                        {index === 0 ? <Divider style={{ margin: '10px 0 12px 0' }} /> : null}
+                        <div
+                          {...provided.dragHandleProps}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '8px 12px',
+                            cursor: 'grab',
+                            gap: 8,
+                          }}
+                        >
+                          {/* Ліва частина: Switch + Назва */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <Switch
+                              checked={rule.state === 1 ? true : false}
+                              onChange={e =>
+                                updateLocalRule(index, { state: e.target.checked ? 1 : 0 })
+                              }
+                              size="small"
+                              onClick={e => e.stopPropagation()}
+                            />
+                            <span style={{ fontWeight: 600 }}>
+                              {rule.name?.toUpperCase() || `RULE NAME #${index + 1}`}
+                            </span>
+                          </div>
+
+                          {/* Права частина: Delete (outlined, червона) + Expand */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              size="medium"
+                              onClick={e => {
+                                e.stopPropagation();
+                                removeRule(index);
+                              }}
+                              style={{
+                                borderColor: 'red',
+                                color: 'red',
+                                textTransform: 'uppercase',
+                              }}
+                            >
+                              Delete Rule
+                            </Button>
+                            <IconButton
+                              onClick={e => {
+                                e.stopPropagation();
+                                toggleExpand(index);
+                              }}
+                              size="small"
+                            >
+                              {rule.expanded ? <ExpandLess /> : <ExpandMore />}
+                            </IconButton>
+                          </div>
+                        </div>
+
+                        {/* Контент правила */}
+                        {rule.expanded && (
+                          <div style={{ padding: 12, ...(rule.state ? {} : disabledStyle) }}>
+                            <TextField
+                              fullWidth
+                              style={{ marginBottom: 20 }}
+                              label="RULE NAME"
+                              placeholder="Rule Name"
+                              value={rule.name ?? ''}
+                              error={!rule.name && formIsChecked}
+                              onChange={e => updateLocalRule(index, { name: e.target.value })}
+                            />
+
+                            <Autocomplete
+                              fullWidth
+                              classes={autoCompleteStyles}
+                              style={{ marginBottom: 20 }}
+                              getOptionLabel={option => option.name}
+                              options={segmentOptions}
+                              isOptionEqualToValue={(option, value) => option.value === value.value}
+                              value={rule.customerSegment}
+                              onChange={(_, v) => updateLocalRule(index, { customerSegment: v })}
+                              renderInput={autocompleteRender({
+                                label: 'Applicable Customer Segment',
+                                placeholder: 'Select Customer Segment',
+                                error: !rule.customerSegment && formIsChecked,
+                              })}
+                            />
+
+                            <Autocomplete
+                              multiple
+                              style={{ marginBottom: 20 }}
+                              classes={multipleACSClasses}
+                              options={requestsOptions}
+                              disableCloseOnSelect
+                              disableClearable
+                              getOptionLabel={option => option.name}
+                              isOptionEqualToValue={(o, v) => o.value === v.value}
+                              // головне: для кожного rule свій renderOption
+                              renderOption={makeRenderRequestOption(index)}
+                              // значення — з rules[index]
+                              value={rules[index].serviceRequests}
+                              onChange={(e, value) => onRequestChange(index, e, value)}
+                              renderInput={autocompleteRender({
+                                label: 'Op Codes',
+                                error: !rules[index].serviceRequests.length && formIsChecked,
+                                placeholder: 'Select Op Codes',
+                              })}
+                            />
+
+                            <Autocomplete
+                              multiple
+                              fullWidth
+                              classes={multipleACSClasses}
+                              options={dayOFWeekOptions}
+                              style={{ marginBottom: 20 }}
+                              getOptionLabel={option => option.name}
+                              isOptionEqualToValue={(o, v) => o.value === v.value}
+                              disableClearable
+                              disableCloseOnSelect
+                              renderOption={makeRenderDayOption(index)}
+                              value={rules[index].daysOfWeek}
+                              onChange={(e, v) => onDaysChange(index, e, v)}
+                              renderInput={autocompleteRender({
+                                label: 'Day Of Week',
+                                placeholder: 'Select Day Of Week',
+                                error: !rules[index].daysOfWeek.length && formIsChecked,
+                              })}
+                            />
+
+                            <div className={classes.label}>Time Of Day</div>
+                            <div className={classes.smallWrapper}>
+                              <ClockTimePicker
+                                value={rule.timeOfDay?.start ?? null}
+                                onChange={date =>
+                                  updateLocalRule(index, {
+                                    timeOfDay: {
+                                      ...rule.timeOfDay,
+                                      start: dayjs(date),
+                                    },
+                                  })
+                                }
+                                fullWidth
+                                InputProps={{
+                                  endAdornment: (
+                                    <QueryBuilder color={'disabled'} cursor="pointer" />
+                                  ),
+                                  error: !rule.timeOfDay?.start && formIsChecked,
+                                  placeholder: 'Start Time',
+                                }}
+                              />
+                              <ClockTimePicker
+                                value={rule.timeOfDay?.end ?? null}
+                                onChange={date =>
+                                  updateLocalRule(index, {
+                                    timeOfDay: {
+                                      ...rule.timeOfDay,
+                                      end: dayjs(date),
+                                    },
+                                  })
+                                }
+                                fullWidth
+                                InputProps={{
+                                  endAdornment: (
+                                    <QueryBuilder color={'disabled'} cursor="pointer" />
+                                  ),
+                                  error: !rule.timeOfDay?.end && formIsChecked,
+                                  placeholder: 'End Time',
+                                }}
+                              />
+                            </div>
+
+                            <div
+                              style={{ marginTop: '36px', marginBottom: '16px' }}
+                              className={classes.bigLabel}
+                            >
+                              CONSTRAINTS
+                            </div>
+                            <Divider style={{ margin: '0 0 10px 0' }} />
+
+                            <div style={{ marginTop: 24 }}>
+                              <TextField
+                                fullWidth
+                                type="number"
+                                inputProps={{ min: 1, step: 1 }}
+                                label="Daily Capacity"
+                                placeholder="Type Number"
+                                value={rule.capacity ?? ''}
+                                onChange={e => updateLocalRule(index, { capacity: e.target.value })}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {rules.length !== index ? (
+                          <Divider style={{ margin: '10px 0 0 0' }} />
+                        ) : null}
+                        {rule.expanded ? (
+                          <DialogActions>
+                            <div className={classes.actionsWrapper}>
+                              <div className={classes.buttonsWrapper}>
+                                <Button
+                                  onClick={() => {
+                                    if (rule.id) {
+                                      toggleExpand(index);
+                                    } else {
+                                      setRules(prevState =>
+                                        prevState.filter((rule, idx) => idx !== index)
+                                      );
+                                    }
+                                    setFormIsChecked(false);
+                                  }}
+                                  className={classes.cancelButton}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    onAddRule(index);
+                                  }}
+                                  className={classes.saveButton}
+                                >
+                                  Save
+                                </Button>
+                              </div>
+                            </div>
+                          </DialogActions>
+                        ) : null}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+
+        {(!rules.length || rules.every(rule => !rule.expanded)) && rules.length < 4 && (
+          <Button variant="outlined" onClick={addRule} fullWidth>
+            Add Rule
+          </Button>
+        )}
       </DialogContent>
-      <Divider style={{ margin: 0 }} />
-      <DialogActions>
-        <div className={classes.actionsWrapper}>
-          <div className={classes.buttonsWrapper}>
-            <Button onClick={onCancel} className={classes.cancelButton}>
-              Cancel
-            </Button>
-            <Button onClick={onSave} className={classes.saveButton}>
-              Save
-            </Button>
+      {rules?.every(rule => !rule.expanded) && (
+        <DialogActions>
+          <div className={classes.actionsWrapper}>
+            <div className={classes.buttonsWrapper}>
+              <Button onClick={onCancel} className={classes.cancelButton}>
+                Cancel
+              </Button>
+              <Button onClick={onSave} className={classes.saveButton}>
+                Save
+              </Button>
+            </div>
           </div>
-        </div>
-      </DialogActions>
+        </DialogActions>
+      )}
     </BaseModal>
   );
 };
