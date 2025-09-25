@@ -92,6 +92,16 @@ export const Transportations = () => {
       setAnchorEl(e.currentTarget);
     };
 
+  // track option change
+  useEffect(() => {
+    if (editingElement?.id) {
+      const foundEditingElement = options?.find(option => option.id === editingElement.id);
+      if (foundEditingElement) {
+        setEditingElement(foundEditingElement);
+      }
+    }
+  }, [options]);
+
   const onManageRules = () => {
     setAnchorEl(null);
     onOpen();

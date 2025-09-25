@@ -8,7 +8,6 @@ export interface ITransportationOptionRules {
     start: string;
     end: string;
   };
-  customerSegments?: ECustomerSegment[];
   dayOfWeeks?: number[];
   serviceRequests?: number[];
   capacity?: number;
@@ -31,7 +30,6 @@ export interface ITransportationOptionRule {
     start: string;
     end: string;
   };
-  customerSegments: string[];
   dayOfWeeks: number[];
   isAllServiceRequestsIncluded?: boolean;
   serviceRequests: ITrOptionServiceTRequest[];
