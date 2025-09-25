@@ -83,17 +83,19 @@ export const CreateEmployee: React.FC<
     }
   }, [props.open, payload, shortSC]);
 
+  const rolesWhenServiceCenterIsRequired: TRole[] = [Roles.ServiceManager, Roles.Advisor, Roles.Technician, Roles.Staff, Roles.Vendor, Roles.AIBookingAgent];
   const checkIsValid = (): boolean => {
     let err: string[] = [];
     if (!employeeForm.firstName.length) err = [...err, '"First Name" must not be empty'];
     if (!employeeForm.lastName.length) err = [...err, '"Last Name" must not be empty'];
-    if (employeeForm.role !== Roles.ServiceDirector && !employeeForm.serviceCenter)
+    if (employeeForm.role && rolesWhenServiceCenterIsRequired.includes(employeeForm.role) && !employeeForm.serviceCenter)
       err = [...err, '"Service Center" must not be empty'];
     if (!employeeForm.email?.length) {
       err = [...err, '"Email" must not be empty'];
     } else {
       if (!checkEmail(employeeForm.email)) err = [...err, '"Email" is not valid'];
     }
+    if (!employeeForm.role) err = [...err, '"Role" must not be empty'];
     if (employeeForm.role === Roles.Technician) {
       if (!employeeForm.hourlyRate) err = [...err, '"Hourly Rate" must not be empty'];
       if (!employeeForm.overtimeRate) err = [...err, '"Overtime Rate" must not be empty'];

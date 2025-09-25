@@ -209,6 +209,7 @@ export const CreateEmployeeForm: React.FC<
             label: 'Role',
             fullWidth: true,
             placeholder: 'Select Role',
+            error: !form.role && formIsChecked
           })}
         />
       </Grid>
