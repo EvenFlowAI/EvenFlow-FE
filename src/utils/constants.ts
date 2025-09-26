@@ -39,6 +39,17 @@ export const canNotBookAppointmentRoles: TRole[] = [
   Roles.Vendor
 ];
 
+export const dealerShipAccessRoles: TRole[] = [
+  Roles.EvenFlowAdmin,
+  Roles.EvenFlowAccountManager,
+  Roles.EvenFlowSupport,
+  Roles.EvenFlowAIAgent,
+  Roles.DealerOwner,
+  Roles.ServiceDirector,
+  Roles.BDCManager,
+  Roles.BDCAgent
+];
+
 export const timeSpanString = 'HH:mm:ss';
 export const time12HourSeconds = 'hh:mm:ss';
 export const time12HourFormat = 'h:mm a';
