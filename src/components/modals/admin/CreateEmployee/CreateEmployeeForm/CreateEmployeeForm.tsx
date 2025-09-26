@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useStyles } from './styles';
 import { TOption } from '../../../../../features/admin/ServiceBookModal/types';
-import {availableUserRoles} from "../../../../../utils/constants";
+import {availableUserRoles, dealerShipAccessRoles} from "../../../../../utils/constants";
 
 type TTFormProps = {
   isEdit: boolean;
@@ -111,6 +111,7 @@ export const CreateEmployeeForm: React.FC<
       dmsId: null,
       type: null,
       displayOnBookingTypes: value === 'Advisor' ? prev.displayOnBookingTypes : [],
+      serviceCenter: dealerShipAccessRoles.includes(value as TRole) ?  null : prev.serviceCenter,
     }));
   };
 
@@ -159,7 +160,7 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12}>
-        {form.role === Roles.ServiceDirector ? (
+        {form.role && dealerShipAccessRoles.includes(form.role) ? (
           <TextField
             disabled
             value={null}
