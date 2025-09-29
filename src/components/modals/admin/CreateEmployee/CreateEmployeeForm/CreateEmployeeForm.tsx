@@ -114,7 +114,7 @@ export const CreateEmployeeForm: React.FC<
       serviceCenter: dealerShipAccessRoles.includes(value as TRole) ?  null : prev.serviceCenter,
     }));
   };
-
+  
   const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
     setFormIsChecked(false);
     if (newVal) {
@@ -258,7 +258,6 @@ export const CreateEmployeeForm: React.FC<
                   fullWidth
                   onChange={handleChange}
                   value={form.hourlyRate}
-                  error={!form.hourlyRate && formIsChecked}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -270,7 +269,6 @@ export const CreateEmployeeForm: React.FC<
                   type="number"
                   fullWidth
                   onChange={handleChange}
-                  error={!form.overtimeRate && formIsChecked}
                   value={form.overtimeRate}
                 />
               </Grid>
