@@ -160,7 +160,8 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12}>
-        {form.role && dealerShipAccessRoles.includes(form.role) ? (
+        {
+          form.role && dealerShipAccessRoles.includes(form.role) ? (
           <TextField
             disabled
             value={null}
@@ -170,7 +171,7 @@ export const CreateEmployeeForm: React.FC<
           />
         ) : (
           <Autocomplete
-            disabled={isEdit}
+            disabled={isEdit && form.role !== Roles.Advisor}
             options={shortSC}
             onChange={handleSelectChange}
             getOptionLabel={i => i.name}
