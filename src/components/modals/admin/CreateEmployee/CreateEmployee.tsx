@@ -96,10 +96,6 @@ export const CreateEmployee: React.FC<
       if (!checkEmail(employeeForm.email)) err = [...err, '"Email" is not valid'];
     }
     if (!employeeForm.role) err = [...err, '"Role" must not be empty'];
-    if (employeeForm.role === Roles.Technician) {
-      if (!employeeForm.hourlyRate) err = [...err, '"Hourly Rate" must not be empty'];
-      if (!employeeForm.overtimeRate) err = [...err, '"Overtime Rate" must not be empty'];
-    }
     err.map(e => showError(e));
     return !Boolean(err.length);
   };
