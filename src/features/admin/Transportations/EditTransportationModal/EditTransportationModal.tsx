@@ -117,11 +117,12 @@ export const EditTransportationModal: React.FC<
         const modifiedRules = unblockedRules
           .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
           .map(rule => {
-            const [startHours, startMinutes, startSeconds] = rule.timeOfDay.start?.split(':');
-            const [endHours, endMinutes, endSeconds] = rule.timeOfDay.end?.split(':');
+            const [startHours, startMinutes, startSeconds] =
+              rule.timeOfDay?.start?.split(':') || [];
+            const [endHours, endMinutes, endSeconds] = rule.timeOfDay?.end?.split(':') || [];
 
-            let days = dayOFWeekOptions.filter(item => rule.dayOfWeeks.includes(item.value));
-            if (rule.dayOfWeeks.find(item => +item === ETransportationDays.EveryDay)) {
+            let days = dayOFWeekOptions.filter(item => rule.dayOfWeeks?.includes(item.value)) || [];
+            if (rule.dayOfWeeks?.find(item => +item === ETransportationDays.EveryDay)) {
               days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
             }
 
