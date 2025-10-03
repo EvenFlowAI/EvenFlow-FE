@@ -7,5 +7,5 @@ export const rolesList: TRole[] = [
   Roles.ServiceDirector,
   Roles.Advisor,
   Roles.Technician,
-  Roles.BDCAgent
+  Roles.BDCAgent,
 ];

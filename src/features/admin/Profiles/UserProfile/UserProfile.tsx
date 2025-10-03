@@ -13,7 +13,7 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import { Api } from '../../../../api/ApiEndpoints/ApiEndpoints';
 import { blankProfile, initialPasswordForm } from './constants';
-import {Roles} from "../../../../types/types";
+import { Roles } from '../../../../types/types';
 
 export const UserProfile = () => {
   const [saving, setSaving] = useState<boolean>(false);

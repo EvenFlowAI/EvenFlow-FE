@@ -1,4 +1,4 @@
-import {IOrder, Roles} from '../types/types';
+import { IOrder, Roles } from '../types/types';
 import { TRole } from '../store/reducers/users/types';
 
 let apiHost = 'https://be.qa.evenflow.ai';

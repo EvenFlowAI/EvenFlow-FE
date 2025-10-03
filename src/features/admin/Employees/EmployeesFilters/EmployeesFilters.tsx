@@ -23,10 +23,10 @@ import { CreateEmployee } from '../../../../components/modals/admin/CreateEmploy
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useLabelStyles } from '../../../../hooks/styling/useLabelStyles';
 import { EmptyMenuItem } from '../../Appointments/AppointmentFilters/styles';
-import {availableUserRoles} from "../../../../utils/constants";
-import {superRoles} from "../../../../components/modals/admin/CreateEmployee/constants";
-import {Roles} from "../../../../types/types";
-import {TRole} from "../../../../store/reducers/users/types";
+import { availableUserRoles } from '../../../../utils/constants';
+import { superRoles } from '../../../../components/modals/admin/CreateEmployee/constants';
+import { Roles } from '../../../../types/types';
+import { TRole } from '../../../../store/reducers/users/types';
 
 const roles = availableUserRoles.exceptOf(superRoles);
 const widerRoles: TRole[] = [Roles.Advisor, Roles.DealerOwner];

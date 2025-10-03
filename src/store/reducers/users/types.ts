@@ -48,10 +48,10 @@ type TSaving = { type: 'User/Saving'; payload: boolean };
 type TLoading = { type: 'User/Loading'; payload: boolean };
 export type TUserActions = TSaving | TGetCurrentUser | TLoading;
 export type TRole =
-  | 'EvenFlow Admin' 
-  | 'EvenFlow Account Manager' 
+  | 'EvenFlow Admin'
+  | 'EvenFlow Account Manager'
   | 'EvenFlow Support'
-  | 'EvenFlow Agentic AI Configuration Agent'  
+  | 'EvenFlow Agentic AI Configuration Agent'
   | 'Dealer Owner'
   | 'Service Director'
   | 'Service Manager'

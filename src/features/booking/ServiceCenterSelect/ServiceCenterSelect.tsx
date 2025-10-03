@@ -13,15 +13,15 @@ import { useStyles } from './styles';
 import { ServiceCenterCard } from './ServiceCenterCard/ServiceCenterCard';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
-import {Roles} from "../../../types/types";
+import { Roles } from '../../../types/types';
 
 const restrictedRoles: TRole[] = [
-    Roles.ServiceManager,
-    Roles.Advisor,
-    Roles.Technician,
-    Roles.Staff,
-    Roles.Vendor,
-    Roles.AIBookingAgent
+  Roles.ServiceManager,
+  Roles.Advisor,
+  Roles.Technician,
+  Roles.Staff,
+  Roles.Vendor,
+  Roles.AIBookingAgent,
 ];
 
 const ServiceCenterSelect = () => {

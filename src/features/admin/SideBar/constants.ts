@@ -1,6 +1,6 @@
-import {LinkTypeWithSub, Roles} from '../../../types/types';
+import { LinkTypeWithSub, Roles } from '../../../types/types';
 import { Routes } from '../../../routes/constants';
-import {TRole} from "../../../store/reducers/users/types";
+import { TRole } from '../../../store/reducers/users/types';
 
 const baseRoles: TRole[] = [
   Roles.EvenFlowAdmin,
@@ -11,7 +11,7 @@ const baseRoles: TRole[] = [
   Roles.ServiceDirector,
   Roles.ServiceManager,
   Roles.BDCManager,
-  Roles.Staff
+  Roles.Staff,
 ];
 
 export const SULinks: LinkTypeWithSub[] = [

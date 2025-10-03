@@ -224,7 +224,7 @@ export enum Roles {
   Technician = 'Technician',
   Staff = 'Staff',
   Vendor = 'Vendor',
-  AIBookingAgent = 'AI Booking Agent'
+  AIBookingAgent = 'AI Booking Agent',
 }
 
 export enum Titles {

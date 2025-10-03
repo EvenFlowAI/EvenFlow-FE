@@ -1,5 +1,5 @@
 import { TRole } from '../../../store/reducers/users/types';
-import {Roles} from "../../../types/types";
+import { Roles } from '../../../types/types';
 
 export const DashboardsIds = {
   AppointmentSummary: 'Bioab5mEC',
@@ -19,5 +19,5 @@ export const reportingAllowedRoles: TRole[] = [
   Roles.DealerOwner,
   Roles.ServiceDirector,
   Roles.ServiceManager,
-  Roles.BDCManager
+  Roles.BDCManager,
 ];

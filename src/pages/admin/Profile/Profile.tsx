@@ -7,7 +7,7 @@ import { UserProfile } from '../../../features/admin/Profiles/UserProfile/UserPr
 import { useStyles } from './styles';
 import { TTab } from './types';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
-import {Roles} from "../../../types/types";
+import { Roles } from '../../../types/types';
 
 const tabs: TTab[] = [
   { label: 'Dealership Group Profile', id: '1', component: DealershipGroupProfile },
@@ -21,7 +21,9 @@ export const Profile = () => {
   const { classes } = useStyles();
 
   useEffect(() => {
-    setTabList(currentUser?.role === Roles.DealerOwner ? tabs : tabs.filter(item => item.id === '2'));
+    setTabList(
+      currentUser?.role === Roles.DealerOwner ? tabs : tabs.filter(item => item.id === '2')
+    );
     if (currentUser?.role !== Roles.DealerOwner) setTab('2');
   }, [currentUser, tabs]);
 

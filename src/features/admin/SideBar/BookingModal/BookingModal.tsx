@@ -16,13 +16,9 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import { copyTextToClipboard } from './utils';
 import { Routes } from '../../../../routes/constants';
-import {Roles} from "../../../../types/types";
+import { Roles } from '../../../../types/types';
 
-const restrictedRoles: TRole[] = [
-    Roles.EvenFlowAIAgent,
-    Roles.Technician,
-    Roles.Vendor,
-];
+const restrictedRoles: TRole[] = [Roles.EvenFlowAIAgent, Roles.Technician, Roles.Vendor];
 
 export const BookingModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>

@@ -3,7 +3,7 @@ import { EStates } from '../types/states';
 import { IServiceCenterFlag, TGAOptions } from './types';
 import { Routes } from '../routes/constants';
 import { TReviewOption } from '../store/reducers/globalVehicles/types';
-import {Roles, TTitle} from '../types/types';
+import { Roles, TTitle } from '../types/types';
 
 export const states = Object.values(EStates);
 
@@ -18,25 +18,25 @@ export const WeekDayNames = [
 ];
 
 export const availableUserRoles: TRole[] = [
-    Roles.EvenFlowAdmin,
-    Roles.EvenFlowAccountManager,
-    Roles.EvenFlowSupport,
-    Roles.EvenFlowAIAgent,
-    Roles.DealerOwner,
-    Roles.ServiceDirector,
-    Roles.ServiceManager,
-    Roles.BDCManager,
-    Roles.BDCAgent,
-    Roles.Advisor,
-    Roles.Technician,
-    Roles.Staff,
-    Roles.Vendor,
-    Roles.AIBookingAgent
+  Roles.EvenFlowAdmin,
+  Roles.EvenFlowAccountManager,
+  Roles.EvenFlowSupport,
+  Roles.EvenFlowAIAgent,
+  Roles.DealerOwner,
+  Roles.ServiceDirector,
+  Roles.ServiceManager,
+  Roles.BDCManager,
+  Roles.BDCAgent,
+  Roles.Advisor,
+  Roles.Technician,
+  Roles.Staff,
+  Roles.Vendor,
+  Roles.AIBookingAgent,
 ];
 export const canNotBookAppointmentRoles: TRole[] = [
   Roles.EvenFlowAIAgent,
   Roles.Technician,
-  Roles.Vendor
+  Roles.Vendor,
 ];
 
 export const dealerShipAccessRoles: TRole[] = [
@@ -46,7 +46,7 @@ export const dealerShipAccessRoles: TRole[] = [
   Roles.EvenFlowAIAgent,
   Roles.DealerOwner,
   Roles.ServiceDirector,
-  Roles.BDCManager
+  Roles.BDCManager,
 ];
 
 export const timeSpanString = 'HH:mm:ss';

@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IEmployee } from '../../../../store/reducers/employees/types';
 import { Drawer, IconButton, TablePagination } from '@mui/material';
 import { ReactComponent as Close } from '../../../../assets/img/close_grey.svg';
-import {IOrder, Roles, TCallback} from '../../../../types/types';
+import { IOrder, Roles, TCallback } from '../../../../types/types';
 import { ReactComponent as ArrowDownGrey } from '../../../../assets/img/arrow_down_grey.svg';
 import {
   changePageData,

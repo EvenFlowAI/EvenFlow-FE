@@ -9,7 +9,7 @@ export const customerTags = [
   '{{Vin}}',
   '{{Planned Date}}',
   '{{Service Center Name}}',
-  '{{Clone}}',
+  // '{{Clone}}',
   '{{Shortlink}}',
   '{{Phone}}',
 ];
