@@ -817,7 +817,7 @@ export const EditTransportationModal: React.FC<
           </Droppable>
         </DragDropContext>
 
-        {(!rules.length || rules.every(rule => !rule.expanded)) && rules.length < 4 && (
+        {(!rules.length || rules.every(rule => !rule.expanded)) && rules.length < 5 && (
           <Button variant="outlined" onClick={addRule} fullWidth>
             Add Rule
           </Button>
