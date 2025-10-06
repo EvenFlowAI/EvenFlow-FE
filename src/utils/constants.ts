@@ -47,6 +47,7 @@ export const dealerShipAccessRoles: TRole[] = [
   Roles.DealerOwner,
   Roles.ServiceDirector,
   Roles.BDCManager,
+  Roles.BDCAgent
 ];
 
 export const timeSpanString = 'HH:mm:ss';
