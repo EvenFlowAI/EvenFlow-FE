@@ -81,14 +81,10 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
 
   const handleGA = () => {
     if (selectedInitialTiming) {
-      ReactGA.event(
-        {
-          category: 'EvenFlow User',
-          action: 'Selected Timing Type',
-          label: `Selected ${timingTypes[selectedInitialTiming]}`,
-        },
-        trackerData.ids
-      );
+      ReactGA.event('asc_form_engagement', {
+        element_text: 'Search Request Selected',
+        timing_type: timingTypes[selectedInitialTiming],
+      });
     }
   };
 

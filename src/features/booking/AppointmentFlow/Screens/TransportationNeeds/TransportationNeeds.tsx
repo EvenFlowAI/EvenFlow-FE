@@ -75,14 +75,10 @@ export const TransportationNeeds: React.FC<TProps> = ({
   }, [transportation]);
 
   const handleGA = (transportation: ITransportation | null) => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Selected Transportation Need',
-        label: `With Name ${transportation ? transportation.name : 'I Will Be Waiting'}`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Transportation Selected',
+      transportation_type: transportation ? transportation.name : 'I Will Be Waiting',
+    });
   };
 
   const clearSteps = () => {

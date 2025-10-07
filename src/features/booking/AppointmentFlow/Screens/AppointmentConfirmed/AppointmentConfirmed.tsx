@@ -166,14 +166,9 @@ export const AppointmentConfirmed: React.FC<
   ]);
 
   useEffect(() => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Created Appointment',
-        nonInteraction: true,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_submission_service_appt', {
+      element_text: 'Appointment Scheduled',
+    });
     dispatch(setWelcomeScreenView('select'));
   }, [dispatch, trackerData]);
 

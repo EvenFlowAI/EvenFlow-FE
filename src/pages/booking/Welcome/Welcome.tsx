@@ -55,7 +55,7 @@ export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { welcomeScreenView, serviceTypeOption, trackerData } = useSelector(
+  const { welcomeScreenView, serviceTypeOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
@@ -107,14 +107,10 @@ export const Welcome = () => {
   };
 
   const handleGA = () => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Enters Page',
-        label: `As Returning Customer`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Enters Scheduler',
+      user_type: 'Returning Customer',
+    });
   };
 
   const onSuccessForCustomer = () => {
@@ -189,14 +185,10 @@ export const Welcome = () => {
   };
 
   const handleReactGA = (userType: string) => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Enters Page',
-        label: `As ${userType} Customer`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Enters Scheduler',
+      user_type: `${userType} Customer`,
+    });
   };
 
   const handleNew = () => {
