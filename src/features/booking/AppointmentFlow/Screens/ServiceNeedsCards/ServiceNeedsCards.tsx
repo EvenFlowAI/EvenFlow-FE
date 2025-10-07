@@ -143,14 +143,12 @@ export const ServiceNeedsCards: React.FC<
     const requestsString = selectedCategory.serviceRequests
       .map(item => `${item.code} (${item.description})`)
       .join(', ');
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: `Selected ${page === EServiceCategoryPage.Page1 ? 'Service' : 'Sub Service'} `,
-        label: `With Name ${selectedCategory.name} And Service Requests ${requestsString}`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text:
+        page === EServiceCategoryPage.Page1 ? 'Service Selected' : 'Sub Service Selected',
+      selected_service_name: selectedCategory.name,
+      request_codes: requestsString,
+    });
   };
 
   const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {

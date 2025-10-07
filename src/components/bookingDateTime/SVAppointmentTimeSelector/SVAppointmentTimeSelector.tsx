@@ -41,14 +41,10 @@ export const SVAppointmentTimeSelector: React.FC<
 
   const handleGA = useCallback(
     (a: IServiceValetAppointment | null) => {
-      ReactGA.event(
-        {
-          category: 'EvenFlow User',
-          action: 'Clicked on Service Valet Appointment Slot',
-          label: a?.price?.value ? `With Price $${a.price.value}` : '',
-        },
-        trackerData.ids
-      );
+      ReactGA.event('asc_form_engagement', {
+        element_text: 'Valet Date & Time Clicked',
+        slot_price: a?.price?.value ? `$${a.price.value}` : undefined,
+      });
     },
     [trackerData]
   );

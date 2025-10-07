@@ -179,31 +179,17 @@ export const AppointmentSlots: React.FC<
 
   const handleGALandingOnPage = useCallback(() => {
     if (consultants?.length && currentConfig?.advisorSelection) {
-      ReactGA.event(
-        {
-          category: 'EvenFlow User',
-          action: 'Selected advisor',
-          label: advisor ? advisor.name : 'Any available',
-          nonInteraction: true,
-        },
-        trackerData.ids
-      );
+      ReactGA.event('asc_form_engagement', {
+        element_text: 'Advisor Selected',
+        advisor_name: advisor ? advisor.name : 'Any available',
+      });
     }
     if (appointment) {
-      ReactGA.event(
-        {
-          category: 'EvenFlow User',
-          action: 'Selected Service Requests',
-          label: `Requests Codes: 
-                ${appointment?.serviceRequestPrices?.map(item => item.requestName).join(', ')}
-                ${
-                  !isNaN(appointment?.price?.value)
-                    ? `with Total Price $${+appointment.price.value}`
-                    : ''
-                }`,
-        },
-        trackerData.ids
-      );
+      ReactGA.event('asc_form_engagement', {
+        element_text: 'Services Selected',
+        request_codes: appointment?.serviceRequestPrices?.map(item => item.requestName).join(', '),
+        total_price: !isNaN(appointment?.price?.value) ? `$${+appointment.price.value}` : undefined,
+      });
     }
   }, [advisor, appointment, consultants, currentConfig, trackerData]);
 
@@ -595,31 +581,21 @@ export const AppointmentSlots: React.FC<
 
   const handleGANext = useCallback(() => {
     if (appointment) {
-      ReactGA.event(
-        {
-          category: 'EvenFlow User',
-          action:
-            serviceTypeOption?.type === EServiceType.PickUpDropOff
-              ? 'Selected Service Valet Appointment Slot'
-              : 'Selected Appointment Slot',
-          label: `On ${dayjs.utc(appointment.date).format('MM-DD-YYYY')} at ${dayjs
-            .utc(appointment.date)
-            .format('hh:mm A')}`,
-        },
-        trackerData.ids
-      );
+      ReactGA.event('asc_form_engagement', {
+        element_text:
+          serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? 'Valet Date & Time Selected'
+            : 'Date & Time Selected',
+        appointment_datetime: dayjs.utc(appointment.date).format('MM-DD-YYYY hh:mm A'),
+      });
     }
   }, [appointment, serviceTypeOption, trackerData]);
 
   const handleGABack = useCallback(() => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Went back',
-        label: 'From Selection Date & Time Page',
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Went Backwards',
+      page_context: 'Selection Date & Time Page',
+    });
   }, [trackerData]);
 
   const handleConsents = () => {

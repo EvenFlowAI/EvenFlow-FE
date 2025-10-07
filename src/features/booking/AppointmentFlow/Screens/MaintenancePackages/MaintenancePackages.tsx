@@ -177,19 +177,14 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   };
 
   const handleBack = (localSelectedPackage: IPackageOptions | null): void => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Went back',
-        label: 'From Selection Package Page',
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Went Backwards',
+      page_context: 'Selection Package Page',
+    });
 
     if (isManagingFlow) {
       selectPackage(localSelectedPackage, false);
     }
-
     onBack();
   };
 
@@ -229,26 +224,18 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
 
   const handleGA = (selectedPackage: IPackageOptions): void => {
     const packageOptions = ['Good', 'Better', 'Best'];
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: `Selected Package`,
-        label: `With ${packageOptions[selectedPackage.type]} Option`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'EvenFlow Package Selected',
+      package_option: packageOptions[selectedPackage.type],
+    });
   };
 
   const handleEMenuGA = () => {
     const firstOption = scProfile?.maintenancePackageOptionTypes[0];
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: `Selected eMenu Package`,
-        label: `With ${packageEMenuType === firstOption ? 'Factory' : 'Dealer'} Option`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'External Package Selected',
+      emenu_package_type: packageEMenuType === firstOption ? 'Factory' : 'Dealer',
+    });
   };
 
   const handleNext = (localSelectedPackage: IPackageOptions | null): void => {
