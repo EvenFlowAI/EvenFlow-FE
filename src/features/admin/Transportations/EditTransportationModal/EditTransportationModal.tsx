@@ -49,6 +49,7 @@ import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import RemoveRule from '../../../../components/modals/admin/RemoveRule/RemoveRule';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { ReactComponent as DotsIcon } from '../../../../assets/img/dots.svg';
+import { TError } from '../../../booking/CustomerSelect/ReturningCustomerForAdmin/types';
 
 type TEditTransportationOptionDialogProps = {
   editingElement: ITransportationOptionFull | null;
@@ -60,7 +61,7 @@ type TRuleState = {
   daysOfWeek: TOption[];
   timeOfDay: TTimeObject | null;
   serviceRequests: TOption[];
-  capacity: string | null;
+  capacity?: number;
   isAllServiceRequestsIncluded?: boolean;
 
   expanded: boolean;
@@ -75,6 +76,7 @@ export const EditTransportationModal: React.FC<
   const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
   const [rules, setRules] = useState<TRuleState[]>([]);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
@@ -86,18 +88,17 @@ export const EditTransportationModal: React.FC<
   const [ruleForDeleting, setRuleForDeleting] = useState<TRuleState | null>(null);
 
   const requestsOptions = useMemo(() => {
-    const options = allAssignedList.map(item => ({
+    return allAssignedList.map(item => ({
       name: item.serviceRequest.code,
       value: item.id,
     }));
-    options.unshift({ name: 'All', value: 0 });
-
-    return options;
   }, [allAssignedList]);
 
   useEffect(() => {
     setDayOfWeekOptions(() => {
-      const days = Object.keys(ETransportationDays).filter(key => Number.isNaN(+key));
+      const days = Object.keys(ETransportationDays).filter(
+        key => Number.isNaN(+key) && key !== 'EveryDay'
+      );
       return getOptions(days);
     });
   }, []);
@@ -120,24 +121,13 @@ export const EditTransportationModal: React.FC<
             const [startHours, startMinutes, startSeconds] =
               rule.timeOfDay?.start?.split(':') || [];
             const [endHours, endMinutes, endSeconds] = rule.timeOfDay?.end?.split(':') || [];
-
-            let days = dayOFWeekOptions.filter(item => rule.dayOfWeeks?.includes(item.value)) || [];
-            if (rule.dayOfWeeks?.find(item => +item === ETransportationDays.EveryDay)) {
-              days = dayOFWeekOptions.filter(item => item.value !== ETransportationDays.EveryDay);
-            }
-
-            let updatedServiceRequests;
-            if (!rule.serviceRequests?.length) {
-              updatedServiceRequests = allAssignedList.map(item => ({
-                name: item.serviceRequest.code,
-                value: item.id,
-              }));
-            } else {
-              updatedServiceRequests = rule.serviceRequests.map(item => ({
+            const days =
+              dayOFWeekOptions.filter(item => rule.dayOfWeeks?.includes(item.value)) || [];
+            const updatedServiceRequests =
+              rule.serviceRequests?.map(item => ({
                 value: item.id,
                 name: item.code,
-              }));
-            }
+              })) || [];
 
             return {
               id: rule.id,
@@ -149,13 +139,14 @@ export const EditTransportationModal: React.FC<
               },
               serviceRequests: updatedServiceRequests,
               isAllServiceRequestsIncluded: rule?.isAllServiceRequestsIncluded,
-              capacity: rule.capacity ? `${rule.capacity}` : null,
+              capacity: rule.capacity,
               expanded: false,
               state: rule.state,
               orderIndex: rule.orderIndex,
             };
           });
         setRules(modifiedRules);
+        setErrors([]);
       }
     }
   }, [editingElement, props.open]);
@@ -172,12 +163,20 @@ export const EditTransportationModal: React.FC<
         daysOfWeek: [],
         serviceRequests: [],
         timeOfDay: null,
-        capacity: '',
+        capacity: undefined,
         expanded: true,
         state: 1,
         orderIndex: rules.length + 1,
       },
     ]);
+  };
+
+  const onError = (e: any) => {
+    showError(e);
+    if (e.response?.data?.errors) {
+      const data = [...e.response.data.errors];
+      setErrors(() => data.map((err: TError): string => err.field).filter(el => el !== null));
+    }
   };
 
   const handleRemoveRule = () => {
@@ -188,10 +187,10 @@ export const EditTransportationModal: React.FC<
           String(ruleForDeleting?.id),
           () => {
             onClose();
-            setRules(prev => prev.filter((rule, i) => rule?.id !== ruleForDeleting?.id));
+            setRules(prev => prev.filter((rule, _) => rule?.id !== ruleForDeleting?.id));
             setRuleForDeleting(null);
           },
-          showError
+          onError
         )
       );
     }
@@ -217,28 +216,25 @@ export const EditTransportationModal: React.FC<
     );
   };
 
-  const onAddRule = (index2: number) => {
+  const validateRule = (rule: TRuleState) => {
+    const hasServiceRequests =
+      Array.isArray(rule.serviceRequests) && rule.serviceRequests.length > 0;
+    const hasDaysOfWeek = Array.isArray(rule.daysOfWeek) && rule.daysOfWeek.length > 0;
+    const hasTimeOfDay = rule.timeOfDay?.start != null && rule.timeOfDay?.end != null;
+    const hasDailyCapacity = rule.capacity != null && rule.capacity > 0;
+
+    if (!hasServiceRequests && !hasDaysOfWeek && !hasTimeOfDay && !hasDailyCapacity) {
+      return showError('Rule must have at least one configuration setting');
+    }
+  };
+
+  const onAddRule = (ruleIndex: number) => {
     setFormIsChecked(true);
     if (selectedSC && editingElement) {
-      const nonAllRequests = requestsOptions.filter(o => o.name !== 'All');
-
       let newRule;
-
       rules.forEach((r, index) => {
-        if (index === index2) {
-          const isAllRequestsIncluded =
-            nonAllRequests.length > 0 && r.serviceRequests.length === nonAllRequests.length;
-
-          if (
-            r.name?.length < 3 ||
-            !editingElement.id ||
-            !r.timeOfDay?.start ||
-            !r.timeOfDay?.end ||
-            !r.serviceRequests.length ||
-            !r.daysOfWeek.length
-          ) {
-            return;
-          }
+        if (index === ruleIndex) {
+          validateRule(r);
 
           newRule = {
             name: r.name,
@@ -249,11 +245,8 @@ export const EditTransportationModal: React.FC<
                   end: dayjs(r.timeOfDay.end).format('HH:mm:ss'),
                 }
               : undefined,
-            serviceRequests: isAllRequestsIncluded ? [] : r.serviceRequests.map(item => item.value),
-            dayOfWeeks:
-              r.daysOfWeek.length && r.daysOfWeek.length === dayOFWeekOptions.length - 1
-                ? [ETransportationDays.EveryDay]
-                : r.daysOfWeek.map(item => item.value),
+            serviceRequests: r.serviceRequests.map(item => item.value),
+            dayOfWeeks: r.daysOfWeek.map(item => item.value),
             capacity: r.capacity ? Number(r.capacity) : undefined,
             state: r.state,
             orderIndex: index,
@@ -269,37 +262,23 @@ export const EditTransportationModal: React.FC<
             () => {
               setFormIsChecked(false);
               showMessage('Created new rule');
-              toggleExpand(index2);
+              toggleExpand(ruleIndex);
             },
-            showError
+            onError
           )
         );
       }
     }
   };
 
-  const onEditRule = (id: number, index2: number) => {
+  const onEditRule = (id: number, ruleIndex: number) => {
     setFormIsChecked(true);
     if (selectedSC && editingElement) {
-      const nonAllRequests = requestsOptions.filter(o => o.name !== 'All');
-
       let newRule;
 
       rules.forEach((r, index) => {
         if (r.id === id) {
-          const isAllRequestsIncluded =
-            nonAllRequests.length > 0 && r.serviceRequests.length === nonAllRequests.length;
-
-          if (
-            r.name?.length < 3 ||
-            !editingElement.id ||
-            !r.timeOfDay?.start ||
-            !r.timeOfDay?.end ||
-            !r.serviceRequests.length ||
-            !r.daysOfWeek.length
-          ) {
-            return;
-          }
+          validateRule(r);
 
           newRule = {
             name: r.name,
@@ -310,11 +289,8 @@ export const EditTransportationModal: React.FC<
                   end: dayjs(r.timeOfDay.end).format('HH:mm:ss'),
                 }
               : undefined,
-            serviceRequests: isAllRequestsIncluded ? [] : r.serviceRequests.map(item => item.value),
-            dayOfWeeks:
-              r.daysOfWeek.length && r.daysOfWeek.length === dayOFWeekOptions.length - 1
-                ? [ETransportationDays.EveryDay]
-                : r.daysOfWeek.map(item => item.value),
+            serviceRequests: r.serviceRequests.map(item => item.value),
+            dayOfWeeks: r.daysOfWeek.map(item => item.value),
             capacity: r.capacity ? Number(r.capacity) : undefined,
             state: r.state,
             orderIndex: index,
@@ -331,9 +307,9 @@ export const EditTransportationModal: React.FC<
             () => {
               setFormIsChecked(false);
               showMessage('Rule updated');
-              toggleExpand(index2);
+              toggleExpand(ruleIndex);
             },
-            showError
+            onError
           )
         );
       }
@@ -355,7 +331,7 @@ export const EditTransportationModal: React.FC<
               };
             }),
             () => {},
-            showError
+            onError
           )
         );
       }
@@ -383,27 +359,9 @@ export const EditTransportationModal: React.FC<
     setRules(updated);
   };
 
-  const disabledStyle: React.CSSProperties = {
-    opacity: 0.6,
-    pointerEvents: 'none',
-  };
-
-  const isAllSelected = (idx: number) => {
-    const selected = rules[idx].serviceRequests ?? [];
-    return selected.length === requestsOptions.filter(o => o.name !== 'All').length;
-  };
-
   const onRequestCheckboxChange = useCallback(
-    (ruleIdx: number, option: TOption, checked: boolean) => {
+    (ruleIdx: number, option: TOption) => {
       const current = rules[ruleIdx].serviceRequests ?? [];
-      const nonAll = requestsOptions.filter(o => o.name !== 'All');
-
-      if (option.name === 'All') {
-        const next = checked ? nonAll : [];
-        updateLocalRule(ruleIdx, { serviceRequests: next });
-        setFormIsChecked(false);
-        return;
-      }
 
       const exists = current.some(o => o.value === option.value);
       let next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
@@ -417,27 +375,15 @@ export const EditTransportationModal: React.FC<
   const onRequestChange = useCallback(
     (ruleIdx: number, _e: any, value: TOption[]) => {
       setFormIsChecked(false);
-
-      if (value.find(opt => opt.name === 'All')) {
-        const allSelected = isAllSelected(ruleIdx);
-        const nonAll = requestsOptions.filter(o => o.name !== 'All');
-        const next = allSelected ? [] : nonAll;
-        updateLocalRule(ruleIdx, { serviceRequests: next });
-        return;
-      }
-
-      updateLocalRule(ruleIdx, { serviceRequests: value.filter(o => o.name !== 'All') });
+      updateLocalRule(ruleIdx, { serviceRequests: value });
     },
-    [isAllSelected, requestsOptions]
+    [requestsOptions]
   );
 
   const makeRenderRequestOption = useCallback(
     (ruleIdx: number) => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
       const selected = rules[ruleIdx].serviceRequests ?? [];
-      const allSelected = isAllSelected(ruleIdx);
-
-      const checked =
-        option.name === 'All' ? allSelected : selected.some(item => item.value === option.value);
+      const checked = selected.some(item => item.value === option.value);
 
       return (
         <li
@@ -456,39 +402,18 @@ export const EditTransportationModal: React.FC<
             }
             checked={checked}
             onClick={e => e.stopPropagation()}
-            onChange={e =>
-              onRequestCheckboxChange(ruleIdx, option, (e.target as HTMLInputElement).checked)
-            }
+            onChange={() => onRequestCheckboxChange(ruleIdx, option)}
           />
           {option.name}
         </li>
       );
     },
-    [rules, isAllSelected, onRequestCheckboxChange]
+    [rules, onRequestCheckboxChange]
   );
-
-  const EVERY_DAY_VALUE = ETransportationDays.EveryDay;
-
-  const nonEveryDayOptions = useMemo(
-    () => dayOFWeekOptions.filter(o => o.value !== EVERY_DAY_VALUE),
-    [dayOFWeekOptions]
-  );
-
-  const isEveryDaySelected = (idx: number) => {
-    const selected = rules[idx].daysOfWeek ?? [];
-    return selected.length === nonEveryDayOptions.length;
-  };
 
   const onDayCheckboxChange = useCallback(
-    (ruleIdx: number, option: TOption, checked: boolean) => {
+    (ruleIdx: number, option: TOption) => {
       const current = rules[ruleIdx].daysOfWeek ?? [];
-
-      if (option.value === EVERY_DAY_VALUE) {
-        const next = checked ? nonEveryDayOptions : [];
-        updateLocalRule(ruleIdx, { daysOfWeek: next });
-        setFormIsChecked(false);
-        return;
-      }
 
       const exists = current.some(o => o.value === option.value);
       const next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
@@ -496,34 +421,19 @@ export const EditTransportationModal: React.FC<
       updateLocalRule(ruleIdx, { daysOfWeek: next });
       setFormIsChecked(false);
     },
-    [rules, nonEveryDayOptions]
+    [rules]
   );
 
-  const onDaysChange = useCallback(
-    (ruleIdx: number, _e: any, value: TOption[]) => {
-      setFormIsChecked(false);
-
-      if (value.some(v => v.value === EVERY_DAY_VALUE)) {
-        const allSelected = isEveryDaySelected(ruleIdx);
-        const next = allSelected ? [] : nonEveryDayOptions;
-        updateLocalRule(ruleIdx, { daysOfWeek: next });
-        return;
-      }
-
-      updateLocalRule(ruleIdx, { daysOfWeek: value.filter(o => o.value !== EVERY_DAY_VALUE) });
-    },
-    [isEveryDaySelected, nonEveryDayOptions]
-  );
+  const onDaysChange = useCallback((ruleIdx: number, _e: any, value: TOption[]) => {
+    setFormIsChecked(false);
+    updateLocalRule(ruleIdx, { daysOfWeek: value });
+  }, []);
 
   const makeRenderDayOption = useCallback(
     (ruleIdx: number) => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
       const selected = rules[ruleIdx].daysOfWeek ?? [];
-      const allSelected = isEveryDaySelected(ruleIdx);
 
-      const checked =
-        option.value === EVERY_DAY_VALUE
-          ? allSelected
-          : selected.some(item => item.value === option.value);
+      const checked = selected.some(item => item.value === option.value);
 
       return (
         <li
@@ -542,20 +452,19 @@ export const EditTransportationModal: React.FC<
             }
             checked={checked}
             onClick={e => e.stopPropagation()}
-            onChange={e =>
-              onDayCheckboxChange(ruleIdx, option, (e.target as HTMLInputElement).checked)
-            }
+            onChange={() => onDayCheckboxChange(ruleIdx, option)}
           />
           {option.name}
         </li>
       );
     },
-    [rules, isEveryDaySelected, onDayCheckboxChange]
+    [rules, onDayCheckboxChange]
   );
 
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
+      {rules.length === 0 && <Divider style={{ margin: '10px 0 20px 0' }} />}
       <DialogContent>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="rules-droppable">
@@ -579,7 +488,6 @@ export const EditTransportationModal: React.FC<
                           background: snapshot.isDragging ? '#e3f2fd' : 'white',
                         }}
                       >
-                        {/* Заголовок з handle, Switch, назвою і кнопками */}
                         {index === 0 ? <Divider style={{ margin: '10px 0 12px 0' }} /> : null}
                         <div
                           {...provided.dragHandleProps}
@@ -592,7 +500,6 @@ export const EditTransportationModal: React.FC<
                             gap: 8,
                           }}
                         >
-                          {/* Ліва частина: Switch + Назва */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <Tooltip
                               placement="top-start"
@@ -612,6 +519,7 @@ export const EditTransportationModal: React.FC<
                             </Tooltip>
                             <Switch
                               checked={rule.state === 1}
+                              disabled={!rule.id || rule.expanded}
                               onChange={e =>
                                 updateLocalRule(index, { state: e.target.checked ? 1 : 0 })
                               }
@@ -623,25 +531,27 @@ export const EditTransportationModal: React.FC<
                             </span>
                           </div>
 
-                          {/* Права частина: Delete (outlined, червона) + Expand */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="medium"
-                              onClick={e => {
-                                e.stopPropagation();
-                                rule.id ? removeRule(String(rule.id)) : removeLocalRule(index);
-                              }}
-                              style={{
-                                borderColor: 'red',
-                                color: 'red',
-                                textTransform: 'uppercase',
-                              }}
-                            >
-                              Delete Rule
-                            </Button>
+                            {rule.id && (
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                size="medium"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  rule.id ? removeRule(String(rule.id)) : removeLocalRule(index);
+                                }}
+                                style={{
+                                  borderColor: 'red',
+                                  color: 'red',
+                                  textTransform: 'uppercase',
+                                }}
+                              >
+                                Delete Rule
+                              </Button>
+                            )}
                             <IconButton
+                              disabled={rule.expanded && !formIsChecked}
                               onClick={e => {
                                 e.stopPropagation();
                                 toggleExpand(index);
@@ -653,9 +563,8 @@ export const EditTransportationModal: React.FC<
                           </div>
                         </div>
 
-                        {/* Контент правила */}
                         {rule.expanded && (
-                          <div style={{ padding: 12, ...(rule.state ? {} : disabledStyle) }}>
+                          <div style={{ padding: 12 }}>
                             <TextField
                               fullWidth
                               style={{ marginBottom: 20 }}
@@ -680,7 +589,6 @@ export const EditTransportationModal: React.FC<
                               onChange={(e, value) => onRequestChange(index, e, value)}
                               renderInput={autocompleteRender({
                                 label: 'Op Codes',
-                                error: !rules[index].serviceRequests.length && formIsChecked,
                                 placeholder: 'Select Op Codes',
                               })}
                             />
@@ -701,19 +609,29 @@ export const EditTransportationModal: React.FC<
                               renderInput={autocompleteRender({
                                 label: 'Day Of Week',
                                 placeholder: 'Select Day Of Week',
-                                error: !rules[index].daysOfWeek.length && formIsChecked,
                               })}
                             />
 
                             <div className={classes.label}>Time Of Day</div>
                             <div className={classes.smallWrapper}>
                               <ClockTimePicker
+                                withClear
                                 value={rule.timeOfDay?.start ?? null}
+                                onError={(reason, value) => {
+                                  if (reason === 'invalidDate' || value === null) {
+                                    updateLocalRule(index, {
+                                      timeOfDay: {
+                                        ...rule.timeOfDay,
+                                        start: null,
+                                      },
+                                    });
+                                  }
+                                }}
                                 onChange={date =>
                                   updateLocalRule(index, {
                                     timeOfDay: {
                                       ...rule.timeOfDay,
-                                      start: dayjs(date),
+                                      start: date ? dayjs(date, 'HH:mm:ss') : null,
                                     },
                                   })
                                 }
@@ -722,18 +640,28 @@ export const EditTransportationModal: React.FC<
                                   endAdornment: (
                                     <QueryBuilder color={'disabled'} cursor="pointer" />
                                   ),
-                                  error: !rule.timeOfDay?.start && formIsChecked,
                                   placeholder: 'Start Time',
                                 }}
                               />
                               <span>_</span>
                               <ClockTimePicker
+                                withClear
                                 value={rule.timeOfDay?.end ?? null}
+                                onError={(reason, value) => {
+                                  if (reason === 'invalidDate' || value === null) {
+                                    updateLocalRule(index, {
+                                      timeOfDay: {
+                                        ...rule.timeOfDay,
+                                        start: null,
+                                      },
+                                    });
+                                  }
+                                }}
                                 onChange={date =>
                                   updateLocalRule(index, {
                                     timeOfDay: {
                                       ...rule.timeOfDay,
-                                      end: dayjs(date),
+                                      end: date ? dayjs(date, 'HH:mm:ss') : null,
                                     },
                                   })
                                 }
@@ -742,19 +670,10 @@ export const EditTransportationModal: React.FC<
                                   endAdornment: (
                                     <QueryBuilder color={'disabled'} cursor="pointer" />
                                   ),
-                                  error: !rule.timeOfDay?.end && formIsChecked,
                                   placeholder: 'End Time',
                                 }}
                               />
                             </div>
-
-                            <div
-                              style={{ marginTop: '36px', marginBottom: '16px' }}
-                              className={classes.bigLabel}
-                            >
-                              CONSTRAINTS
-                            </div>
-                            <Divider style={{ margin: '0 0 10px 0' }} />
 
                             <div style={{ marginTop: 24 }}>
                               <TextField
@@ -763,8 +682,10 @@ export const EditTransportationModal: React.FC<
                                 inputProps={{ min: 1, step: 1 }}
                                 label="Daily Capacity"
                                 placeholder="Type Number"
-                                value={rule.capacity ?? ''}
-                                onChange={e => updateLocalRule(index, { capacity: e.target.value })}
+                                value={rule.capacity}
+                                onChange={e =>
+                                  updateLocalRule(index, { capacity: Number(e.target.value) })
+                                }
                               />
                             </div>
                           </div>
@@ -782,7 +703,7 @@ export const EditTransportationModal: React.FC<
                                       toggleExpand(index);
                                     } else {
                                       setRules(prevState =>
-                                        prevState.filter((rule, idx) => idx !== index)
+                                        prevState.filter((_, idx) => idx !== index)
                                       );
                                     }
                                     setFormIsChecked(false);

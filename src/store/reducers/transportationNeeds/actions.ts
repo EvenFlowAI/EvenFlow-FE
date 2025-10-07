@@ -108,7 +108,7 @@ export const addTransportationOptionRule =
     newRule: ITransportationOptionRule,
     successCallback = () => {},
     // eslint-disable-next-line
-    errorCallback = (err: { code: number; errorMessage: string }) => {}
+    errorCallback: (err: any) => void
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.TransportationOptions.Add, { data: newRule })
@@ -131,10 +131,9 @@ export const editTransportationOptionRule =
     ruleId: number,
     successCallback = () => {},
     // eslint-disable-next-line
-    errorCallback = (err: { code: number; errorMessage: string }) => {}
+    errorCallback: (err: any) => void
   ): AppThunk =>
   dispatch => {
-    console.log('updatedRule', updatedRule);
     Api.call(Api.endpoints.TransportationOptions.Update, {
       urlParams: { id: ruleId },
       data: updatedRule,
@@ -161,7 +160,7 @@ export const patchUpdateTransportationRule =
     }[],
     successCallback = () => {},
     // eslint-disable-next-line
-    errorCallback = (err: { code: number; errorMessage: string }) => {}
+    errorCallback: (err: any) => void
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.TransportationOptions.PatchUpdate, {
