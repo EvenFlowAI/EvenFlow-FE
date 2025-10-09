@@ -15,7 +15,7 @@ export const initialEmployeeForm: TEmployeeForm = {
   dmsId: '',
 };
 
-export const superRoles = [Roles.EvenFlowAdmin, Roles.DealerOwner];
+export const superRoles = [Roles.EvenFlowAdmin, Roles.EvenFlowSupport, Roles.EvenFlowAIAgent, Roles.DealerOwner];
 
 export const DmsRoles = {
   [EDmsRole.None]: 'None',
