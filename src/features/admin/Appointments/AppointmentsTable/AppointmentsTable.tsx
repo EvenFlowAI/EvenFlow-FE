@@ -6,7 +6,7 @@ import { ViewAppointmentsModal } from '../ViewAppointmentsModal/ViewAppointments
 import { API } from '../../../../api/api';
 import { MoreHoriz } from '@mui/icons-material';
 import { IOrder, IPageRequest, TCallback } from '../../../../types/types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 
 import { AppointmentsColumns } from '../constants';
 import NoAppointments from '../NoAppointments/NoAppointments';
+import { extractDuplicateAppointmentKey } from '../helper';
 
 type TAppointmentsTable = {
   refresh: TCallback;
@@ -45,11 +46,14 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
 }) => {
   const { appointments, count } = useSelector((state: RootState) => state.appointments);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
+  const [isClone, setIsClone] = useState<boolean>(false);
   const { isOpen, onClose, onOpen } = useModal();
   const showMessage = useMessage();
   const showError = useException();
   const { askConfirm } = useConfirm();
+
+  const path = window.location.pathname;
+  const key = extractDuplicateAppointmentKey(path);
 
   const handleOpen = (el: IAppointment) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setViewItem && setViewItem(el);
@@ -60,6 +64,25 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     setAnchorEl(null);
     onOpen();
   };
+
+  const handleCloneAppointment = () => {
+    if (!appointments?.length || !key) return;
+
+    const selectedAppointment = appointments.find(a => a.hashKey === key);
+
+    if (selectedAppointment) {
+      if (setViewItem) setViewItem(selectedAppointment);
+      setIsClone(true);
+      onOpen();
+    } else {
+      showError('Unfortunately, we couldn’t find your appointment.');
+      window.history.replaceState(null, '', '/admin/appointments/');
+    }
+  };
+
+  useEffect(() => {
+    handleCloneAppointment();
+  }, [appointments, key]);
 
   const openInNewTab = async () => {
     if (viewItem?.hashKey) {
@@ -176,6 +199,8 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
         refresh={refresh}
         payload={viewItem}
         onClose={onClose}
+        isClone={isClone}
+        setIsClone={setIsClone}
       />
     </>
   ) : (

@@ -35,11 +35,22 @@ type TCallbackProps = {
   onEditAppointment: TCallback;
   onCancelAppointment: TCallback;
   refresh?: TCallback;
+  isClone: boolean;
+  setIsClone: (isClone: boolean) => void;
 };
 
 export const ViewAppointmentsModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment> & TCallbackProps>>
-> = ({ onAction, refresh, onEditAppointment, onCancelAppointment, payload, ...props }) => {
+> = ({
+  onAction,
+  refresh,
+  onEditAppointment,
+  onCancelAppointment,
+  isClone,
+  setIsClone,
+  payload,
+  ...props
+}) => {
   const { isAppointmentLoading } = useSelector((state: RootState) => state.appointments);
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
   const [messageText, setMessageText] = useState<string>('');
@@ -60,6 +71,15 @@ export const ViewAppointmentsModal: React.FC<
   useEffect(() => {
     selectedSC && dispatch(loadMileage(selectedSC.id));
   }, [selectedSC]);
+
+  useEffect(() => {
+    if (isClone) {
+      onClone().then(() => {
+        window.history.replaceState(null, '', '/admin/appointments/');
+        setIsClone(false);
+      });
+    }
+  }, [isClone]);
 
   const handleNoSlots = () => {
     setMessageText(
@@ -217,6 +237,7 @@ export const ViewAppointmentsModal: React.FC<
           Edit
         </Button>
         <Button
+          id="clone-appointment"
           onClick={onClone}
           variant="outlined"
           style={{ color: '#5FA077', borderColor: '#5FA077' }}

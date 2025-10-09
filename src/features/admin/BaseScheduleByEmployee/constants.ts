@@ -1,11 +1,11 @@
 import { TRole } from '../../../store/reducers/users/types';
+import { Roles } from '../../../types/types';
 
 export const rolesList: TRole[] = [
-  'Owner',
-  'Manager',
-  'Advisor',
-  'Technician',
-  'BDC Agent',
-  'Service Director',
-  'Call Center Administrator',
+  Roles.DealerOwner,
+  Roles.ServiceManager,
+  Roles.ServiceDirector,
+  Roles.Advisor,
+  Roles.Technician,
+  Roles.BDCAgent,
 ];

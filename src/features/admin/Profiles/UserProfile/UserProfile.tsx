@@ -13,6 +13,7 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import { Api } from '../../../../api/ApiEndpoints/ApiEndpoints';
 import { blankProfile, initialPasswordForm } from './constants';
+import { Roles } from '../../../../types/types';
 
 export const UserProfile = () => {
   const [saving, setSaving] = useState<boolean>(false);
@@ -118,7 +119,7 @@ export const UserProfile = () => {
 
   return (
     <div className={classes.container}>
-      {currentUser?.role === 'Owner' ? (
+      {currentUser?.role === Roles.DealerOwner ? (
         <React.Fragment>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={12} md={3}>

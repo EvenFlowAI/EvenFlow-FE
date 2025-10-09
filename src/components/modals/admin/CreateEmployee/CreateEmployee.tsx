@@ -20,6 +20,7 @@ import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { CreateEmployeeForm } from './CreateEmployeeForm/CreateEmployeeForm';
+import { dealerShipAccessRoles } from '../../../../utils/constants';
 
 export const CreateEmployee: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEmployee>>>
@@ -30,6 +31,8 @@ export const CreateEmployee: React.FC<
 
   const [avatar, setAvatar] = useState<File | undefined>();
   const [employeeForm, setEmployeeForm] = useState<TEmployeeForm>(initialEmployeeForm);
+  const [initialEditEmployeeForm, setInitialEditEmployeeForm] =
+    useState<TEmployeeForm>(initialEmployeeForm);
 
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
 
@@ -78,26 +81,36 @@ export const CreateEmployee: React.FC<
         data.displayOnBookingTypes = payload.displayOnBookingTypes;
       }
       setEmployeeForm(data);
+      setInitialEditEmployeeForm(data);
     } else {
       setEmployeeForm(initialEmployeeForm);
     }
   }, [props.open, payload, shortSC]);
 
+  const rolesWhenServiceCenterIsRequired: TRole[] = [
+    Roles.ServiceManager,
+    Roles.Advisor,
+    Roles.Technician,
+    Roles.Staff,
+    Roles.Vendor,
+    Roles.AIBookingAgent,
+  ];
   const checkIsValid = (): boolean => {
     let err: string[] = [];
     if (!employeeForm.firstName.length) err = [...err, '"First Name" must not be empty'];
     if (!employeeForm.lastName.length) err = [...err, '"Last Name" must not be empty'];
-    if (employeeForm.role !== Roles.ServiceDirector && !employeeForm.serviceCenter)
+    if (
+      employeeForm.role &&
+      rolesWhenServiceCenterIsRequired.includes(employeeForm.role) &&
+      !employeeForm.serviceCenter
+    )
       err = [...err, '"Service Center" must not be empty'];
     if (!employeeForm.email?.length) {
       err = [...err, '"Email" must not be empty'];
     } else {
       if (!checkEmail(employeeForm.email)) err = [...err, '"Email" is not valid'];
     }
-    if (employeeForm.role === Roles.Technician) {
-      if (!employeeForm.hourlyRate) err = [...err, '"Hourly Rate" must not be empty'];
-      if (!employeeForm.overtimeRate) err = [...err, '"Overtime Rate" must not be empty'];
-    }
+    if (!employeeForm.role) err = [...err, '"Role" must not be empty'];
     err.map(e => showError(e));
     return !Boolean(err.length);
   };
@@ -119,17 +132,17 @@ export const CreateEmployee: React.FC<
     const isValid = checkIsValid();
     if (isValid) {
       let data: IEmployeeForm | IUserForm;
-      const advisorData: TEmployeeForm = { ...employeeForm };
+      const employeeData: TEmployeeForm = { ...employeeForm };
 
-      delete advisorData.serviceCenter;
+      delete employeeData.serviceCenter;
 
       if (employeeForm.role !== Roles.Technician) {
         data = {
-          ...advisorData,
+          ...employeeData,
           dmsId: employeeForm?.dmsId ?? null,
           serviceCenterId: employeeForm.serviceCenter?.id || null,
         } as IUserForm;
-        if (advisorData.role === 'Service Director') {
+        if (employeeData.role && dealerShipAccessRoles.includes(employeeData.role)) {
           delete data.serviceCenterId;
         }
       } else {
@@ -176,6 +189,7 @@ export const CreateEmployee: React.FC<
         <CreateEmployeeForm
           formIsChecked={formIsChecked}
           form={employeeForm}
+          initialForm={initialEditEmployeeForm}
           isEdit={isEdit}
           setFormIsChecked={setFormIsChecked}
           setEmployeeForm={setEmployeeForm}

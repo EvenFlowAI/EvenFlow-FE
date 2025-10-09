@@ -119,7 +119,7 @@ export const HolidaysModal: React.FC<
     return (
       <IconButton
         onClick={openMenu(el)}
-        disabled={currentUser?.role === Roles.Manager}
+        disabled={currentUser?.role === Roles.ServiceManager}
         size="large"
       >
         <MoreHoriz />
@@ -140,7 +140,7 @@ export const HolidaysModal: React.FC<
   return (
     <BaseModal {...props} onClose={onCloseModal} width={720}>
       <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
-      {!viewMode && currentUser?.role !== Roles.Manager ? (
+      {!viewMode && currentUser?.role !== Roles.ServiceManager ? (
         <div className={classes.addHoliday}>
           <Button variant="contained" color="primary" onClick={handleOpenCreate}>
             Add Holiday

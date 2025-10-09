@@ -26,6 +26,21 @@ export const initialFilters: TFilters = {
   dateRangeFilterBy: EDate.AppointmentDate,
 };
 
+export const initialFiltersForClone: TFilters = {
+  searchTerm: '',
+  serviceBook: null,
+  scheduler: null,
+  reportingStatus: [],
+  dateFrom: dayjs().startOf('day'),
+  dateTo: dayjs().add(89, 'day').endOf('day'),
+  scId: null,
+  pageData: initialPaging,
+  advisor: null,
+  technician: null,
+  initialFiltersSet: false,
+  dateRangeFilterBy: EDate.AppointmentDate,
+};
+
 export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
   {
     header: 'Date',

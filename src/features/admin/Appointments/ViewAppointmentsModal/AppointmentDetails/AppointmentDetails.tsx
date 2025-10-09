@@ -56,13 +56,13 @@ export const AppointmentDetails: React.FC<
       />
       <DetailsItem
         title="Services Selected"
-        text={payload.servicesRequested.map(el => el.code ?? el.description ?? '')}
+        text={payload?.servicesRequested?.map(el => el.code ?? el.description ?? '')}
         icon={<SettingsChecked />}
         key="Services"
       />
       <DetailsItem
         title="Service Option"
-        text={payload.serviceOption ?? ''}
+        text={payload?.serviceOption ?? ''}
         icon={<Settings />}
         key="Option"
       />

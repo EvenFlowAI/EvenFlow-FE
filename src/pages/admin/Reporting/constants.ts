@@ -1,4 +1,5 @@
 import { TRole } from '../../../store/reducers/users/types';
+import { Roles } from '../../../types/types';
 
 export const DashboardsIds = {
   AppointmentSummary: 'Bioab5mEC',
@@ -11,8 +12,12 @@ export const DashboardsIds = {
 };
 
 export const reportingAllowedRoles: TRole[] = [
-  'Service Director',
-  'Owner',
-  'Super Admin',
-  'Manager',
+  Roles.EvenFlowAdmin,
+  Roles.EvenFlowAccountManager,
+  Roles.EvenFlowSupport,
+  Roles.EvenFlowAIAgent,
+  Roles.DealerOwner,
+  Roles.ServiceDirector,
+  Roles.ServiceManager,
+  Roles.BDCManager,
 ];

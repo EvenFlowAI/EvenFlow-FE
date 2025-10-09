@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useMemo } from 'react';
 import { Autocomplete, Divider, FormControlLabel, Grid, Switch } from '@mui/material';
 import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
 import {
@@ -13,20 +13,20 @@ import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
 import { checkEmail, getOptions, validatePhoneNumber } from '../../../../../utils/utils';
 import 'react-phone-number-input/style.css';
 import { DmsRoles, superRoles } from '../constants';
-import { userRoles, widerUserRoles } from '../../../../../utils/constants';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
 import { Roles, TTechnicianLevel } from '../../../../../types/types';
 import { loadDMSAdvisors } from '../../../../../store/reducers/employees/actions';
 import { TRole } from '../../../../../store/reducers/users/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { IServiceCenter } from '../../../../../store/reducers/serviceCenters/types';
-import { useMultipleAutocompleteStyles, useStyles } from './styles';
+import { useStyles } from './styles';
 import { TOption } from '../../../../../features/admin/ServiceBookModal/types';
+import { availableUserRoles, dealerShipAccessRoles } from '../../../../../utils/constants';
 
 type TTFormProps = {
   isEdit: boolean;
   form: TEmployeeForm;
+  initialForm: TEmployeeForm;
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TEmployeeForm>>;
@@ -34,11 +34,10 @@ type TTFormProps = {
 
 export const CreateEmployeeForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
-> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isEdit }) => {
+> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, initialForm, isEdit }) => {
   const { shortSC, shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { DmsAdvisors: dmsAdvisors } = useSelector((state: RootState) => state.scEmployees);
   const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
-  const currentUser = useCurrentUser();
   const dispatch = useDispatch();
 
   const { classes } = useStyles();
@@ -112,6 +111,7 @@ export const CreateEmployeeForm: React.FC<
       dmsId: null,
       type: null,
       displayOnBookingTypes: value === 'Advisor' ? prev.displayOnBookingTypes : [],
+      serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
     }));
   };
 
@@ -160,7 +160,7 @@ export const CreateEmployeeForm: React.FC<
         />
       </Grid>
       <Grid item xs={12}>
-        {form.role === Roles.ServiceDirector ? (
+        {form.role && dealerShipAccessRoles.includes(form.role) ? (
           <TextField
             disabled
             value={null}
@@ -170,13 +170,13 @@ export const CreateEmployeeForm: React.FC<
           />
         ) : (
           <Autocomplete
-            disabled={isEdit}
+            disabled={isEdit && initialForm.role === form.role && form.role !== Roles.Advisor}
             options={shortSC}
             onChange={handleSelectChange}
             getOptionLabel={i => i.name}
             isOptionEqualToValue={(o, s) => o.id === s.id}
             loading={shortLoading}
-            value={form.serviceCenter || null}
+            value={form.serviceCenter || initialForm?.serviceCenter || null}
             renderInput={autocompleteRender({
               label: 'Service center',
               fullWidth: true,
@@ -186,26 +186,7 @@ export const CreateEmployeeForm: React.FC<
           />
         )}
       </Grid>
-      {/*<Grid item xs={12}>*/}
-      {/*    <Autocomplete*/}
-      {/*        multiple*/}
-      {/*        classes={autocompleteClasses}*/}
-      {/*        disabled={isEdit}*/}
-      {/*        options={shortSC}*/}
-      {/*        onChange={handleServiceCentersChange}*/}
-      {/*        getOptionLabel={i => i.name}*/}
-      {/*        renderOption={autocompleteOptionsCheckboxRender((e) => e.name)}*/}
-      {/*        getOptionSelected={(o, s) => o.id === s.id}*/}
-      {/*        loading={shortLoading}*/}
-      {/*        value={serviceCenters}*/}
-      {/*        renderInput={autocompleteRender({*/}
-      {/*            label: "Service centers",*/}
-      {/*            fullWidth: true,*/}
-      {/*            placeholder: "Select Service Centers",*/}
-      {/*            error: !serviceCenters.length && formIsChecked*/}
-      {/*        })}*/}
-      {/*    />*/}
-      {/*</Grid>*/}
+
       <Grid item xs={12} sm={6}>
         <TextField
           id="email"
@@ -220,9 +201,7 @@ export const CreateEmployeeForm: React.FC<
       </Grid>
       <Grid item xs={12} sm={6}>
         <Autocomplete
-          options={
-            currentUser && superRoles.includes(currentUser?.role) ? widerUserRoles : userRoles
-          }
+          options={availableUserRoles.exceptOf(superRoles)}
           isOptionEqualToValue={(option, value) => option === value}
           onChange={handleRoleChange}
           loading={shortLoading}
@@ -231,6 +210,7 @@ export const CreateEmployeeForm: React.FC<
             label: 'Role',
             fullWidth: true,
             placeholder: 'Select Role',
+            error: !form.role && formIsChecked,
           })}
         />
       </Grid>
@@ -278,7 +258,6 @@ export const CreateEmployeeForm: React.FC<
                   fullWidth
                   onChange={handleChange}
                   value={form.hourlyRate}
-                  error={!form.hourlyRate && formIsChecked}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -290,7 +269,6 @@ export const CreateEmployeeForm: React.FC<
                   type="number"
                   fullWidth
                   onChange={handleChange}
-                  error={!form.overtimeRate && formIsChecked}
                   value={form.overtimeRate}
                 />
               </Grid>

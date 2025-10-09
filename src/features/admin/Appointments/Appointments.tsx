@@ -18,12 +18,14 @@ import dayjs from 'dayjs';
 import {
   allColumns,
   initialFilters,
+  initialFiltersForClone,
   initialOrder,
   localStorageItemName,
   requiredColumns,
 } from './constants';
 import ColumnsSelectionModal from '../../../components/modals/common/ColumnSelectionModal/ColumnsSelectionModal/ColumnsSelectionModal';
 import { useException } from '../../../hooks/useException/useException';
+import { extractDuplicateAppointmentKey } from './helper';
 
 export const Appointments = () => {
   const { isLoading } = useSelector((state: RootState) => state.appointments);
@@ -39,6 +41,9 @@ export const Appointments = () => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
   const showError = useException();
+
+  const path = window.location.pathname;
+  const key = extractDuplicateAppointmentKey(path);
 
   const getAppointments = useCallback(() => {
     if (!filters.dateTo && !filters.dateFrom) {
@@ -91,7 +96,11 @@ export const Appointments = () => {
 
   useEffect(() => {
     if (selectedSC) {
-      setFilters({ ...initialFilters, scId: selectedSC?.id });
+      if (key?.length) {
+        setFilters({ ...initialFiltersForClone, scId: selectedSC?.id });
+      } else {
+        setFilters({ ...initialFilters, scId: selectedSC?.id });
+      }
       setSearch('');
     }
   }, [selectedSC, selectedView]);

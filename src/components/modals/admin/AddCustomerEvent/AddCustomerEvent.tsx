@@ -80,7 +80,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
               marginTop: '4px',
             }}
           >
-            Approximate Characters: {newEventName.length}/50
+            Approximate Characters: {newEventName.length} / 50
           </span>
         </DialogContent>
       )}

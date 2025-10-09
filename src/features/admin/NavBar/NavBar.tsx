@@ -103,7 +103,7 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({ sideBarOpened, onOpe
               </MenuItem>
             ) : null}
             <MenuItem onClick={openProfile}>
-              {currentUser?.role === Roles.Owner ? 'Company Settings' : 'Change Password'}
+              {currentUser?.role === Roles.DealerOwner ? 'Company Settings' : 'Change Password'}
             </MenuItem>
             <MenuItem onClick={handleLogout}>{isAdminDealership ? 'Exit' : 'Logout'}</MenuItem>
           </Menu>

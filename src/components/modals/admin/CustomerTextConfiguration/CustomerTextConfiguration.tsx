@@ -155,7 +155,7 @@ const CustomerTextConfiguration = ({
               </div>
 
               <div className={classes.charactersCounter}>
-                <span>Approximate Characters: {textMessage?.length || 0}/1000</span>
+                <span>Approximate Characters: {textMessage?.length || 0} / 1000</span>
               </div>
             </div>
           </div>

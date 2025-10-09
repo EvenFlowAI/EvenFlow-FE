@@ -37,7 +37,6 @@ import PackagesIntervalUpsells from './PackagesIntervalUpsells/PackagesIntervalU
 import PackagesTotalPriceRow from './PackagesTotalPriceRow/PackagesTotalPriceRow';
 import PackagesTotalPriceWithFee from './PackagesTotalPriceWithFee/PackagesTotalPriceWithFee';
 import { EPackagePricingType } from '../../../../../store/reducers/appointmentFrameReducer/types';
-import PackagesEmenu from './PackagesEmenu/PackagesEmenu';
 import { checkPodChanged } from '../../../../../store/reducers/appointments/actions';
 import { TComplimentary, TPackage, TService, TUpsell } from './types';
 import { FeesText, Info, PackagesStepWrapper, Wrapper } from './styles';
@@ -112,33 +111,31 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   }, [selectedPackage, packagePricingType]);
 
   useEffect(() => {
-    if (!scProfile?.eMenuPDF) {
-      setLoading(true);
-      const endpoint =
-        scProfile?.packageSource !== PackageSourceType.eMenu
-          ? Api.endpoints.MaintenancePackages.ByVehicle
-          : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
-      Api.call<IPackage[]>(endpoint, {
-        data: {
-          serviceCenterId: decodeSCID(id),
-          modelCode: getModelCode(makes, selectedVehicle),
-          vehicle: {
-            ...selectedVehicle,
-            mileage: selectedVehicle?.mileage,
-          },
+    setLoading(true);
+    const endpoint =
+      scProfile?.packageSource !== PackageSourceType.eMenu
+        ? Api.endpoints.MaintenancePackages.ByVehicle
+        : Api.endpoints.MaintenancePackages.EMenuMaintenancePackage;
+    Api.call<IPackage[]>(endpoint, {
+      data: {
+        serviceCenterId: decodeSCID(id),
+        modelCode: getModelCode(makes, selectedVehicle),
+        vehicle: {
+          ...selectedVehicle,
+          mileage: selectedVehicle?.mileage,
         },
+      },
+    })
+      .then(({ data }) => {
+        setPackages(data);
+        if (data.length) dispatch(setSelectedPackagePriceTitles(data[0].priceTitles));
       })
-        .then(({ data }) => {
-          setPackages(data);
-          if (data.length) dispatch(setSelectedPackagePriceTitles(data[0].priceTitles));
-        })
-        .catch(() => {
-          setPackages([]);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+      .catch(() => {
+        setPackages([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [id, selectedVehicle]);
 
   const setClasses = (id: number, cls: string): string => {
@@ -148,7 +145,38 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     return cls;
   };
 
-  const handleBack = (): void => {
+  const selectPackage = (localSelectedPackage: IPackageOptions | null, sentGA: boolean): void => {
+    const newPackage =
+      packages.find(p => p.type === localSelectedPackage?.type) ||
+      packages.find(p => p.type === packageEMenuType) ||
+      null;
+
+    if (newPackage?.id !== localSelectedPackage?.id) {
+      setLocalSelectedPackage(newPackage);
+    }
+
+    const usedPackage = newPackage ?? localSelectedPackage;
+    if (usedPackage) {
+      const isEMenuPackage = scProfile?.packageSource === PackageSourceType.eMenu;
+      dispatch(setPackageIsSelected(true));
+      if (sentGA) {
+        isEMenuPackage ? handleEMenuGA() : handleGA(usedPackage);
+      }
+      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
+        onOpen();
+      }
+      if (isEMenuPackage) {
+        dispatch(setPackageEMenuType(usedPackage.type));
+      } else {
+        dispatch(setSelectedPackageOptionType(usedPackage.type));
+      }
+      dispatch(setPackage(usedPackage));
+      dispatch(setPackagePricingType(localSelectedPricingType));
+      onSelectionCompleted();
+    }
+  };
+
+  const handleBack = (localSelectedPackage: IPackageOptions | null): void => {
     ReactGA.event(
       {
         category: 'EvenFlow User',
@@ -157,6 +185,11 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       },
       trackerData.ids
     );
+
+    if (isManagingFlow) {
+      selectPackage(localSelectedPackage, false);
+    }
+
     onBack();
   };
 
@@ -219,31 +252,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   };
 
   const handleNext = (localSelectedPackage: IPackageOptions | null): void => {
-    if (localSelectedPackage) {
-      dispatch(setPackageIsSelected(true));
-      handleGA(localSelectedPackage);
-      if (
-        selectedPackage &&
-        packageOptionType !== null &&
-        packageOptionType !== localSelectedPackage.type
-      ) {
-        onOpen();
-      }
-      if (scProfile?.packageSource === PackageSourceType.eMenu) {
-        dispatch(setPackageEMenuType(localSelectedPackage.type));
-      } else {
-        dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
-      }
-      dispatch(setPackage(localSelectedPackage));
-      dispatch(setPackagePricingType(localSelectedPricingType));
-      onSelectionCompleted();
-    }
-  };
-
-  const onEMenuNext = () => {
-    dispatch(setPackageIsSelected(true));
-    handleEMenuGA();
-    onSelectionCompleted();
+    selectPackage(localSelectedPackage, true);
   };
 
   const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
@@ -281,19 +290,13 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
 
   return (
     <PackagesStepWrapper>
-      {!(scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF) ? (
-        <NoItemsLoading
-          wrapperStyles={{ marginTop: 20 }}
-          items={packages}
-          loading={loading}
-          label={t('There are no packages available')}
-        />
-      ) : null}
-      {scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF ? (
-        <React.Fragment>
-          <PackagesEmenu onBack={handleBack} onNext={onEMenuNext} />
-        </React.Fragment>
-      ) : packages.length ? (
+      <NoItemsLoading
+        wrapperStyles={{ marginTop: 20 }}
+        items={packages}
+        loading={loading}
+        label={t('There are no packages available')}
+      />
+      {packages.length ? (
         <React.Fragment>
           {isXs ? (
             <MaintenancePackagesMobile
@@ -399,14 +402,12 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
           )}
         </React.Fragment>
       ) : null}
-      {scProfile?.packageSource === PackageSourceType.eMenu && scProfile?.eMenuPDF ? null : (
-        <ActionButtons
-          onBack={handleBack}
-          nextLabel={t('Next')}
-          nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
-          onNext={() => handleNext(localSelectedPackage)}
-        />
-      )}
+      <ActionButtons
+        onBack={() => handleBack(localSelectedPackage)}
+        nextLabel={t('Next')}
+        nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
+        onNext={() => handleNext(localSelectedPackage)}
+      />
       <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave} />
       <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
     </PackagesStepWrapper>
