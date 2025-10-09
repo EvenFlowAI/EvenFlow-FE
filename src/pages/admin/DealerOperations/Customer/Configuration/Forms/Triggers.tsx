@@ -95,13 +95,14 @@ const Triggers = ({
                       onChange={e =>
                         handleTriggerChange(index, 'scheduledTime', dayjs(e).format('HH:mm:ss'))
                       }
-                      fullWidth
+                      // fullWidth
                       label={'Scheduled time'}
                       InputProps={{
                         endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
                         id: 'Scheduled time',
                         placeholder: '',
                         error: index === 0 && firstTriggerDateError,
+                        style: { width: '84%' },
                       }}
                     />
                   </div>

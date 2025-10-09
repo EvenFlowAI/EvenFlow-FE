@@ -54,11 +54,12 @@ export enum EventAudienceFilterTypeE {
 }
 
 export enum EventRulesFilterTypeE {
-  DaysFromLastNoShowAppointment = 1,
-  DaysFromLastCancelAppointment,
-  DaysFromLastShowedAppointment,
-  DaysFromLastOpenRo,
-  DaysFromLastClosedRo,
+  'Days From Last No Show Appointment' = 1,
+  'Days From Last Cancel Appointment',
+  'Days From Last Showed Appointment',
+  'Days From Last Open Ro',
+  'Days From Last Closed Ro',
+  'Days To Future Appointment',
 }
 
 export enum ComparisonOperatorE {

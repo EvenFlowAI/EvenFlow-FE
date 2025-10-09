@@ -64,7 +64,7 @@ export const useStyles = makeStyles()(() => ({
   },
   rulesWrapper: {
     display: 'flex',
-    width: '48%',
+    width: '54%',
     flexDirection: 'column',
     gap: '10px',
     '@media (max-width: 900px)': {
@@ -81,7 +81,7 @@ export const useStyles = makeStyles()(() => ({
   },
   triggersWrapper: {
     display: 'flex',
-    width: '48%',
+    width: '42%',
     flexDirection: 'column',
     gap: '10px',
     '@media (max-width: 900px)': {
@@ -117,7 +117,7 @@ export const useStyles = makeStyles()(() => ({
   criteriaValue: {
     display: 'flex',
     flexDirection: 'column',
-    width: '15%',
+    width: '11%',
   },
   removeCriteriaIcon: {
     marginTop: '30px',
@@ -178,7 +178,7 @@ export const useStyles = makeStyles()(() => ({
   triggersForm: {
     display: 'flex',
     flexDirection: 'column',
-    width: '40%',
+    width: '42%',
     '@media (max-width: 900px)': {
       width: '50%',
     },
@@ -186,7 +186,7 @@ export const useStyles = makeStyles()(() => ({
   triggerClockWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    width: '30%',
+    width: '34%',
     '@media (max-width: 900px)': {
       width: '45%',
     },

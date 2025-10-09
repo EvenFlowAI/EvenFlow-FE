@@ -85,7 +85,14 @@ const AudienceForm = ({
                   disabled={!isEditTable}
                   style={{ width: '56%' }}
                   value={criteria.type}
-                  options={['DaysFromLastNoShowAppointment']}
+                  disableClearable
+                  options={[
+                    'Days From Last No Show Appointment',
+                    'Days From Last Cancel Appointment',
+                    'Days From Last Showed Appointment',
+                    'Days From Last Open Ro',
+                    'Days From Last Closed Ro',
+                  ]}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'type', v || '')}
@@ -96,10 +103,11 @@ const AudienceForm = ({
                   })}
                 />
                 <Autocomplete
-                  style={{ width: '25%' }}
+                  style={{ width: '22%' }}
                   disabled={!isEditTable}
                   value={criteria.operator}
                   options={['Equal']}
+                  disableClearable
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'operator', v || '')}

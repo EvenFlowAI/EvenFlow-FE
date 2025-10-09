@@ -102,6 +102,7 @@ const RulesForm = ({
                   disabled={!isEditTable}
                   style={{ width: '56%' }}
                   value={rule.type}
+                  disableClearable
                   options={getAvailableFilterRules()}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
@@ -116,6 +117,7 @@ const RulesForm = ({
                   style={{ width: '25%' }}
                   disabled={!isEditTable}
                   value={rule.operator}
+                  disableClearable
                   options={['Less than', 'Equal', 'Greater than']}
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
