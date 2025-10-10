@@ -83,7 +83,7 @@ const AudienceForm = ({
               <div key={index} className={classes.criteriaFormWrapper}>
                 <Autocomplete
                   disabled={!isEditTable}
-                  style={{ width: '56%' }}
+                  style={{ width: '52%' }}
                   value={criteria.type}
                   disableClearable
                   options={[
@@ -97,13 +97,14 @@ const AudienceForm = ({
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'type', v || '')}
                   renderInput={autocompleteRender({
+                    isCustomFontSize: true,
                     error: criteriaTypeErrors[index],
                     label: 'Audience Criteria',
                     placeholder: 'Not selected',
                   })}
                 />
                 <Autocomplete
-                  style={{ width: '22%' }}
+                  style={{ width: '25%' }}
                   disabled={!isEditTable}
                   value={criteria.operator}
                   options={['Equal']}

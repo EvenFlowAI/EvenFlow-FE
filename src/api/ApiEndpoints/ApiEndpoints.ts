@@ -643,6 +643,7 @@ export class Api {
       GetTextIntegration: { route: '/text-integration', method: 'get' },
       SetTextIntegration: { route: '/text-integration', method: 'put' },
       GetPhoneNumbers: { route: '/text-integration/phone-numbers', method: 'post' },
+      SendSMSMessage: { route: '/text-integration/sms-message', method: 'post' },
     },
   };
 

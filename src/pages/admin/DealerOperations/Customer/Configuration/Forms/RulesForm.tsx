@@ -100,7 +100,7 @@ const RulesForm = ({
               <div key={index} className={classes.filterRuleItem}>
                 <Autocomplete
                   disabled={!isEditTable}
-                  style={{ width: '56%' }}
+                  style={{ width: '52%' }}
                   value={rule.type}
                   disableClearable
                   options={getAvailableFilterRules()}
@@ -108,6 +108,7 @@ const RulesForm = ({
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleRuleChange(index, 'type', v || '')}
                   renderInput={autocompleteRender({
+                    isCustomFontSize: true,
                     label: 'Filter Rule',
                     placeholder: 'Not selected',
                     error: ruleTypeErrors[index],

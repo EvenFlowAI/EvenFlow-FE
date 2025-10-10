@@ -140,6 +140,33 @@ export const getPhoneNumbers =
       });
   };
 
+export const sendTestSMSMessage =
+  (
+    serviceCenterId: number,
+    to: string,
+    templateMessage: string,
+    onSuccess: () => void,
+    onError: () => void
+  ): AppThunk =>
+  () => {
+    Api.call(Api.endpoints.DealerOperations.SendSMSMessage, {
+      data: {
+        serviceCenterId,
+        to,
+        templateMessage,
+      },
+    })
+      .then(response => {
+        if (response) {
+          onSuccess();
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        onError();
+      });
+  };
+
 export const loadDashboardItems =
   (serviceCenterId: number, hideLoader?: () => void): AppThunk =>
   async (dispatch, getState) => {
