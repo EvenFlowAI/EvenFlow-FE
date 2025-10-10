@@ -12,6 +12,15 @@ export const autocompleteRender =
   (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
     return (
       <TextField
+        sx={
+          props.isCustomFontSize
+            ? {
+                '& .MuiInputBase-input': {
+                  fontSize: '15px',
+                },
+              }
+            : null
+        }
         label={props.label}
         name={'undefined-name'}
         params={params}

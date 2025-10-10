@@ -33,6 +33,7 @@ export type TOption = {
 };
 
 export type TTextParams = {
+  isCustomFontSize?: boolean;
   label: string;
   fullWidth?: boolean;
   disabled?: boolean;

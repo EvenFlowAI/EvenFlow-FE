@@ -375,7 +375,8 @@ export interface IApiEndpoints {
     | 'UpdateEvent'
     | 'GetTextIntegration'
     | 'SetTextIntegration'
-    | 'GetPhoneNumbers',
+    | 'GetPhoneNumbers'
+    | 'SendSMSMessage',
     TApiEndpoint
   >;
 }

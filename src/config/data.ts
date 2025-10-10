@@ -12,4 +12,7 @@ export const customerTags = [
   // '{{Clone}}',
   '{{Shortlink}}',
   '{{Phone}}',
+  '{{Transportation}}',
+  '{{Service Option}}',
+  '{{Service Advisor}}',
 ];
