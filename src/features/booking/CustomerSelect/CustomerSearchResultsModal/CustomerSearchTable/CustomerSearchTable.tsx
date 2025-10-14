@@ -718,7 +718,7 @@ const CustomerSearchTable: React.FC<
                         editingElement={editingElement}
                         customer={customer}
                         fieldName="lastName"
-                        isEdit={isEdit}
+                        isEdit={isEdit && !customer.isNameReadOnly}
                         onFieldChange={onFieldChange}
                       />
                     </TableCell>
@@ -737,7 +737,7 @@ const CustomerSearchTable: React.FC<
                         editingElement={editingElement}
                         customer={customer}
                         fieldName="firstName"
-                        isEdit={isEdit}
+                        isEdit={isEdit && !customer.isNameReadOnly}
                         onFieldChange={onFieldChange}
                       />
                     </TableCell>
