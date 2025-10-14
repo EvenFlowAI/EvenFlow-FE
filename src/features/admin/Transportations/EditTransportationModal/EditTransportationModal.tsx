@@ -230,10 +230,10 @@ export const EditTransportationModal: React.FC<
             name: r.name,
             transportationOptionId: editingElement.id,
             timeOfDay:
-              r.timeOfDay?.start && r.timeOfDay?.end
+              r.timeOfDay?.start != null || r.timeOfDay?.end != null
                 ? {
-                    start: r.timeOfDay.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
-                    end: r.timeOfDay.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
+                    start: r.timeOfDay?.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
+                    end: r.timeOfDay?.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
                   }
                 : undefined,
             serviceRequests: r.serviceRequests.map(item => item.value),
@@ -273,10 +273,10 @@ export const EditTransportationModal: React.FC<
             name: r.name,
             transportationOptionId: editingElement.id,
             timeOfDay:
-              r.timeOfDay?.start && r.timeOfDay?.end
+              r.timeOfDay?.start != null || r.timeOfDay?.end != null
                 ? {
-                    start: r.timeOfDay.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
-                    end: r.timeOfDay.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
+                    start: r.timeOfDay?.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
+                    end: r.timeOfDay?.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
                   }
                 : undefined,
             serviceRequests: r.serviceRequests.map(item => item.value),
