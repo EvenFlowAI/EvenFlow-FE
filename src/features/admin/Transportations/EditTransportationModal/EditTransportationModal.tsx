@@ -63,7 +63,6 @@ type TRuleState = {
   timeOfDay: TTimeObject | null;
   serviceRequests: TOption[];
   capacity?: number;
-  isAllServiceRequestsIncluded?: boolean;
 
   expanded: boolean;
   state: number;
@@ -119,9 +118,13 @@ export const EditTransportationModal: React.FC<
         const modifiedRules = unblockedRules
           .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
           .map(rule => {
-            const [startHours, startMinutes, startSeconds] =
-              rule.timeOfDay?.start?.split(':') || [];
-            const [endHours, endMinutes, endSeconds] = rule.timeOfDay?.end?.split(':') || [];
+            const parseTime = (time?: string | null) => {
+              if (!time) return null;
+              const [h, m, s] = time.split(':').map(Number);
+              if (isNaN(h) || isNaN(m) || isNaN(s)) return null;
+              return dayjs().utc().hour(h).minute(m).second(s);
+            };
+
             const days =
               dayOFWeekOptions.filter(item => rule.dayOfWeeks?.includes(item.value)) || [];
             const updatedServiceRequests =
@@ -135,11 +138,10 @@ export const EditTransportationModal: React.FC<
               name: rule.name,
               daysOfWeek: days,
               timeOfDay: {
-                start: dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds),
-                end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
+                start: parseTime(rule.timeOfDay?.start),
+                end: parseTime(rule.timeOfDay?.end),
               },
               serviceRequests: updatedServiceRequests,
-              isAllServiceRequestsIncluded: rule?.isAllServiceRequestsIncluded,
               capacity: rule.capacity,
               expanded: false,
               state: rule.state,
@@ -227,15 +229,16 @@ export const EditTransportationModal: React.FC<
           newRule = {
             name: r.name,
             transportationOptionId: editingElement.id,
-            timeOfDay: r.timeOfDay
-              ? {
-                  start: dayjs(r.timeOfDay.start).format('HH:mm:ss'),
-                  end: dayjs(r.timeOfDay.end).format('HH:mm:ss'),
-                }
-              : undefined,
+            timeOfDay:
+              r.timeOfDay?.start != null || r.timeOfDay?.end != null
+                ? {
+                    start: r.timeOfDay?.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
+                    end: r.timeOfDay?.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
+                  }
+                : undefined,
             serviceRequests: r.serviceRequests.map(item => item.value),
             dayOfWeeks: r.daysOfWeek.map(item => item.value),
-            capacity: r.capacity ? Number(r.capacity) : undefined,
+            capacity: r.capacity,
             state: r.state,
             orderIndex: index,
           };
@@ -269,15 +272,16 @@ export const EditTransportationModal: React.FC<
           newRule = {
             name: r.name,
             transportationOptionId: editingElement.id,
-            timeOfDay: r.timeOfDay
-              ? {
-                  start: dayjs(r.timeOfDay.start).format('HH:mm:ss'),
-                  end: dayjs(r.timeOfDay.end).format('HH:mm:ss'),
-                }
-              : undefined,
+            timeOfDay:
+              r.timeOfDay?.start != null || r.timeOfDay?.end != null
+                ? {
+                    start: r.timeOfDay?.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
+                    end: r.timeOfDay?.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
+                  }
+                : undefined,
             serviceRequests: r.serviceRequests.map(item => item.value),
             dayOfWeeks: r.daysOfWeek.map(item => item.value),
-            capacity: r.capacity ? Number(r.capacity) : undefined,
+            capacity: r.capacity,
             state: r.state,
             orderIndex: index,
           };
@@ -470,7 +474,6 @@ export const EditTransportationModal: React.FC<
         end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
       },
       serviceRequests: updatedServiceRequests,
-      isAllServiceRequestsIncluded: original?.isAllServiceRequestsIncluded,
       capacity: original.capacity,
       expanded: false,
       state: original.state,
@@ -492,7 +495,7 @@ export const EditTransportationModal: React.FC<
     // Estimate average chip width based on text length
     const avgChipWidth =
       selectedValues.reduce((sum, item) => {
-        // Base width + character width estimation
+        // Base width plus character width estimation
         return sum + (55 + item.name.length * 5); // 55 px base + ~5px per character
       }, 0) / selectedValues.length;
 
@@ -531,7 +534,7 @@ export const EditTransportationModal: React.FC<
           <div
             style={{
               display: 'flex',
-              flexWrap: 'nowrap', // Keep chips in single row
+              flexWrap: 'nowrap', // Keep chips in a single row
               width: '100%',
               overflow: 'hidden',
             }}
@@ -718,9 +721,7 @@ export const EditTransportationModal: React.FC<
                               renderOption={makeRenderRequestOption(index)}
                               value={rules[index].serviceRequests}
                               onChange={(e, value) => onRequestChange(index, e, value)}
-                              renderTags={(selectedValues: TOption[], getTagProps) =>
-                                renderChipTags(selectedValues, getTagProps)
-                              }
+                              renderTags={renderChipTags}
                               renderInput={autocompleteRender({
                                 label: 'Op Codes',
                                 placeholder: 'Select Op Codes',
@@ -745,9 +746,7 @@ export const EditTransportationModal: React.FC<
                               renderOption={makeRenderDayOption(index)}
                               value={rules[index].daysOfWeek}
                               onChange={(e, v) => onDaysChange(index, e, v)}
-                              renderTags={(selectedValues: TOption[], getTagProps) =>
-                                renderChipTags(selectedValues, getTagProps)
-                              }
+                              renderTags={renderChipTags}
                               renderInput={autocompleteRender({
                                 label: 'Day Of Week',
                                 placeholder: 'Select Day Of Week',
