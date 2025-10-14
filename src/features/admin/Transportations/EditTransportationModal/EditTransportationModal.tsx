@@ -22,6 +22,7 @@ import {
   IconButton,
   Switch,
   Tooltip,
+  Chip,
 } from '@mui/material';
 import {
   CheckBoxOutlineBlank,
@@ -153,6 +154,7 @@ export const EditTransportationModal: React.FC<
 
   const updateLocalRule = (index: number, patch: Partial<TRuleState>) => {
     setRules(prev => prev.map((r, i) => (i === index ? { ...r, ...patch } : r)));
+    setErrors([]);
   };
 
   const addRule = () => {
@@ -175,7 +177,7 @@ export const EditTransportationModal: React.FC<
     showError(e);
     if (e.response?.data?.errors) {
       const data = [...e.response.data.errors];
-      setErrors(() => data.map((err: TError): string => err.field).filter(el => el !== null));
+      setErrors(() => data.map((err: TError): string => err.message).filter(el => el !== null));
     }
   };
 
@@ -216,26 +218,12 @@ export const EditTransportationModal: React.FC<
     );
   };
 
-  const validateRule = (rule: TRuleState) => {
-    const hasServiceRequests =
-      Array.isArray(rule.serviceRequests) && rule.serviceRequests.length > 0;
-    const hasDaysOfWeek = Array.isArray(rule.daysOfWeek) && rule.daysOfWeek.length > 0;
-    const hasTimeOfDay = rule.timeOfDay?.start != null && rule.timeOfDay?.end != null;
-    const hasDailyCapacity = rule.capacity != null && rule.capacity > 0;
-
-    if (!hasServiceRequests && !hasDaysOfWeek && !hasTimeOfDay && !hasDailyCapacity) {
-      return showError('Rule must have at least one configuration setting');
-    }
-  };
-
   const onAddRule = (ruleIndex: number) => {
     setFormIsChecked(true);
     if (selectedSC && editingElement) {
       let newRule;
       rules.forEach((r, index) => {
         if (index === ruleIndex) {
-          validateRule(r);
-
           newRule = {
             name: r.name,
             transportationOptionId: editingElement.id,
@@ -278,8 +266,6 @@ export const EditTransportationModal: React.FC<
 
       rules.forEach((r, index) => {
         if (r.id === id) {
-          validateRule(r);
-
           newRule = {
             name: r.name,
             transportationOptionId: editingElement.id,
@@ -461,6 +447,146 @@ export const EditTransportationModal: React.FC<
     [rules, onDayCheckboxChange]
   );
 
+  const resetRuleToOriginal = (ruleIndex: number) => {
+    if (!editingElement || !editingElement.rules) return;
+    const original = editingElement.rules[ruleIndex];
+    if (!original) return;
+
+    const [startHours, startMinutes, startSeconds] = original.timeOfDay?.start?.split(':') || [];
+    const [endHours, endMinutes, endSeconds] = original.timeOfDay?.end?.split(':') || [];
+    const days = dayOFWeekOptions.filter(item => original.dayOfWeeks?.includes(item.value)) || [];
+    const updatedServiceRequests =
+      original.serviceRequests?.map(item => ({
+        value: item.id,
+        name: item.code,
+      })) || [];
+
+    const resetRule: TRuleState = {
+      id: original.id,
+      name: original.name,
+      daysOfWeek: days,
+      timeOfDay: {
+        start: dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds),
+        end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
+      },
+      serviceRequests: updatedServiceRequests,
+      isAllServiceRequestsIncluded: original?.isAllServiceRequestsIncluded,
+      capacity: original.capacity,
+      expanded: false,
+      state: original.state,
+      orderIndex: original.orderIndex,
+    };
+
+    setRules(prev => prev.map((rule, idx) => (idx === ruleIndex ? resetRule : rule)));
+  };
+
+  const stableKeys = useMemo(() => {
+    return rules.map((rule, index) =>
+      rule.id ? `rule-${rule.id}` : `new-rule-${rule.orderIndex || index}`
+    );
+  }, [rules.map(r => r.id || r.orderIndex).join(',')]);
+
+  const calculateMaxVisibleTags = useCallback((selectedValues: TOption[], containerWidth = 500) => {
+    if (selectedValues.length === 0) return 0;
+
+    // Estimate average chip width based on text length
+    const avgChipWidth =
+      selectedValues.reduce((sum, item) => {
+        // Base width + character width estimation
+        return sum + (55 + item.name.length * 5); // 55 px base + ~5px per character
+      }, 0) / selectedValues.length;
+
+    // Calculate how many chips can fit in one row (accounting for margins)
+    const availableWidth = containerWidth - 40; // Account for padding
+    const chipsPerRow = Math.floor(availableWidth / (avgChipWidth + 4)); // 8px for margins
+
+    // If all chips fit in one row, show all
+    if (selectedValues.length <= chipsPerRow) {
+      return selectedValues.length;
+    }
+
+    // Otherwise, show as many as possible in the first row minus space for "+X others"
+    const othersChipWidth = 100; // Estimated width of "+X others" chip
+    const maxVisibleWithOthers = Math.floor(
+      (availableWidth - othersChipWidth) / (avgChipWidth + 8)
+    );
+
+    return Math.max(1, maxVisibleWithOthers);
+  }, []);
+
+  const renderChipTags = useCallback(
+    (selectedValues: TOption[], getTagProps: any) => {
+      const maxVisibleTags = calculateMaxVisibleTags(selectedValues);
+      const visibleTags = selectedValues.slice(0, maxVisibleTags);
+      const remainingCount = selectedValues.length - maxVisibleTags;
+
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            width: '100%',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'nowrap', // Keep chips in single row
+              width: '100%',
+              overflow: 'hidden',
+            }}
+          >
+            {visibleTags.map((option, tagIndex) => {
+              const props = getTagProps({ index: tagIndex });
+              return (
+                <Chip
+                  key={option.value}
+                  label={option.name}
+                  onDelete={props.onDelete}
+                  size="medium"
+                  color="primary"
+                  variant="filled"
+                  style={{
+                    margin: '2px 4px 2px 0',
+                    flexShrink: 0, // Prevent chips from shrinking
+                    maxWidth: '200px',
+                  }}
+                  {...props}
+                />
+              );
+            })}
+            {remainingCount > 0 && (
+              <Tooltip
+                title={
+                  <div>
+                    {selectedValues.slice(maxVisibleTags).map(option => (
+                      <div key={option.value}>{option.name}</div>
+                    ))}
+                  </div>
+                }
+                arrow
+                placement="top"
+              >
+                <Chip
+                  key="others"
+                  label={`+${remainingCount} others`}
+                  size="medium"
+                  color="primary"
+                  variant="filled"
+                  style={{
+                    margin: '2px 4px 2px 0',
+                    flexShrink: 0,
+                  }}
+                />
+              </Tooltip>
+            )}
+          </div>
+        </div>
+      );
+    },
+    [calculateMaxVisibleTags]
+  );
+
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>Manage Rules</DialogTitle>
@@ -473,8 +599,8 @@ export const EditTransportationModal: React.FC<
                 {rules.map((rule, index) => (
                   <Draggable
                     isDragDisabled={!!rules?.find(rule => rule.expanded)}
-                    key={index.toString()}
-                    draggableId={index.toString()}
+                    key={stableKeys[index]}
+                    draggableId={stableKeys[index]}
                     index={index}
                   >
                     {(provided, snapshot) => (
@@ -551,7 +677,10 @@ export const EditTransportationModal: React.FC<
                               </Button>
                             )}
                             <IconButton
-                              disabled={rule.expanded && !formIsChecked}
+                              disabled={
+                                rule.expanded ||
+                                rules.some(r => r.orderIndex != index && r.expanded)
+                              }
                               onClick={e => {
                                 e.stopPropagation();
                                 toggleExpand(index);
@@ -571,7 +700,9 @@ export const EditTransportationModal: React.FC<
                               label="RULE NAME"
                               placeholder="Rule Name"
                               value={rule.name ?? ''}
-                              error={!rule.name && formIsChecked}
+                              error={
+                                errors.some(e => e.toLowerCase().includes('name')) && formIsChecked
+                              }
                               onChange={e => updateLocalRule(index, { name: e.target.value })}
                             />
 
@@ -587,9 +718,17 @@ export const EditTransportationModal: React.FC<
                               renderOption={makeRenderRequestOption(index)}
                               value={rules[index].serviceRequests}
                               onChange={(e, value) => onRequestChange(index, e, value)}
+                              renderTags={(selectedValues: TOption[], getTagProps) =>
+                                renderChipTags(selectedValues, getTagProps)
+                              }
                               renderInput={autocompleteRender({
                                 label: 'Op Codes',
                                 placeholder: 'Select Op Codes',
+                                error:
+                                  errors.some(
+                                    e =>
+                                      e.includes('service request') || e.includes('configuration')
+                                  ) && formIsChecked,
                               })}
                             />
 
@@ -606,9 +745,16 @@ export const EditTransportationModal: React.FC<
                               renderOption={makeRenderDayOption(index)}
                               value={rules[index].daysOfWeek}
                               onChange={(e, v) => onDaysChange(index, e, v)}
+                              renderTags={(selectedValues: TOption[], getTagProps) =>
+                                renderChipTags(selectedValues, getTagProps)
+                              }
                               renderInput={autocompleteRender({
                                 label: 'Day Of Week',
                                 placeholder: 'Select Day Of Week',
+                                error:
+                                  errors.some(
+                                    e => e.includes('Days of week') || e.includes('configuration')
+                                  ) && formIsChecked,
                               })}
                             />
 
@@ -616,6 +762,14 @@ export const EditTransportationModal: React.FC<
                             <div className={classes.smallWrapper}>
                               <ClockTimePicker
                                 withClear
+                                error={
+                                  errors.some(
+                                    e =>
+                                      e.includes('time') ||
+                                      e.includes('Start') ||
+                                      e.includes('configuration')
+                                  ) && formIsChecked
+                                }
                                 value={rule.timeOfDay?.start ?? null}
                                 onError={(reason, value) => {
                                   if (reason === 'invalidDate' || value === null) {
@@ -646,6 +800,14 @@ export const EditTransportationModal: React.FC<
                               <span>_</span>
                               <ClockTimePicker
                                 withClear
+                                error={
+                                  errors.some(
+                                    e =>
+                                      e.includes('time') ||
+                                      e.includes('End') ||
+                                      e.includes('configuration')
+                                  ) && formIsChecked
+                                }
                                 value={rule.timeOfDay?.end ?? null}
                                 onError={(reason, value) => {
                                   if (reason === 'invalidDate' || value === null) {
@@ -683,6 +845,11 @@ export const EditTransportationModal: React.FC<
                                 label="Daily Capacity"
                                 placeholder="Type Number"
                                 value={rule.capacity}
+                                error={
+                                  errors.some(
+                                    e => e.includes('Capacity') || e.includes('configuration')
+                                  ) && formIsChecked
+                                }
                                 onChange={e =>
                                   updateLocalRule(index, { capacity: Number(e.target.value) })
                                 }
@@ -701,12 +868,14 @@ export const EditTransportationModal: React.FC<
                                   onClick={() => {
                                     if (rule.id) {
                                       toggleExpand(index);
+                                      resetRuleToOriginal(index);
                                     } else {
                                       setRules(prevState =>
                                         prevState.filter((_, idx) => idx !== index)
                                       );
                                     }
                                     setFormIsChecked(false);
+                                    setErrors([]);
                                   }}
                                   className={classes.cancelButton}
                                 >
@@ -719,6 +888,7 @@ export const EditTransportationModal: React.FC<
                                     } else {
                                       onAddRule(index);
                                     }
+                                    setErrors([]);
                                   }}
                                   className={classes.saveButton}
                                 >
