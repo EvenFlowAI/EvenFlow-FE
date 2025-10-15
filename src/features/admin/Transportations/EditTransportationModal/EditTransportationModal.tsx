@@ -181,6 +181,9 @@ export const EditTransportationModal: React.FC<
       const data = [...e.response.data.errors];
       setErrors(() => data.map((err: TError): string => err.message).filter(el => el !== null));
     }
+    if (e.response?.data?.message) {
+      setErrors(prevState => [...prevState, e.response.data.message]);
+    }
   };
 
   const handleRemoveRule = () => {
@@ -193,6 +196,8 @@ export const EditTransportationModal: React.FC<
             onClose();
             setRules(prev => prev.filter((rule, _) => rule?.id !== ruleForDeleting?.id));
             setRuleForDeleting(null);
+            showMessage('Rule deleted');
+            onCancel();
           },
           onError
         )
@@ -320,7 +325,10 @@ export const EditTransportationModal: React.FC<
                 orderIndex: rule.orderIndex,
               };
             }),
-            () => {},
+            () => {
+              showMessage('Rules updated');
+              onCancel();
+            },
             onError
           )
         );
@@ -618,18 +626,8 @@ export const EditTransportationModal: React.FC<
                         }}
                       >
                         {index === 0 ? <Divider style={{ margin: '10px 0 12px 0' }} /> : null}
-                        <div
-                          {...provided.dragHandleProps}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '8px 12px',
-                            cursor: 'grab',
-                            gap: 8,
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div {...provided.dragHandleProps} className={classes.ruleHeaderWrapper}>
+                          <div className={classes.leftSideHeaderWrapper}>
                             <Tooltip
                               placement="top-start"
                               title="Drag to Reorder"
@@ -655,12 +653,13 @@ export const EditTransportationModal: React.FC<
                               size="small"
                               onClick={e => e.stopPropagation()}
                             />
-                            <span style={{ fontWeight: 600 }}>
+
+                            <span className={classes.ruleName}>
                               {rule.name?.toUpperCase() || `RULE NAME #${index + 1}`}
                             </span>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <div className={classes.rightSideHeaderWrapper}>
                             {rule.id && (
                               <Button
                                 variant="outlined"
@@ -670,11 +669,7 @@ export const EditTransportationModal: React.FC<
                                   e.stopPropagation();
                                   rule.id ? removeRule(String(rule.id)) : removeLocalRule(index);
                                 }}
-                                style={{
-                                  borderColor: 'red',
-                                  color: 'red',
-                                  textTransform: 'uppercase',
-                                }}
+                                className={classes.deleteButton}
                               >
                                 Delete Rule
                               </Button>
@@ -849,9 +844,12 @@ export const EditTransportationModal: React.FC<
                                     e => e.includes('Capacity') || e.includes('configuration')
                                   ) && formIsChecked
                                 }
-                                onChange={e =>
-                                  updateLocalRule(index, { capacity: Number(e.target.value) })
-                                }
+                                onChange={e => {
+                                  const value = e.target.value;
+                                  updateLocalRule(index, {
+                                    capacity: value === '' ? undefined : Number(value),
+                                  });
+                                }}
                               />
                             </div>
                           </div>

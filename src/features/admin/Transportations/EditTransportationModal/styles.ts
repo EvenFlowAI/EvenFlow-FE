@@ -61,6 +61,36 @@ export const useStyles = makeStyles()(() => ({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  ruleHeaderWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '8px 12px',
+    cursor: 'grab',
+    gap: 8,
+    minWidth: 0,
+  },
+  leftSideHeaderWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+    minWidth: 0,
+  },
+  rightSideHeaderWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 0,
+  },
+  ruleName: {
+    fontWeight: 600,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    flex: 1,
+    minWidth: 0,
+  },
   cancelButton: {
     color: '#7898FF',
     marginRight: 20,
@@ -75,6 +105,12 @@ export const useStyles = makeStyles()(() => ({
     '&:hover': {
       color: '#7898FF',
     },
+  },
+  deleteButton: {
+    borderColor: 'red',
+    color: 'red',
+    textTransform: 'uppercase',
+    flexShrink: 0,
   },
 }));
 
