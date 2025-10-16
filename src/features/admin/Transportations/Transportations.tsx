@@ -130,7 +130,7 @@ export const Transportations = () => {
       <TitleContainer title="Other Transportation" pad parent={servicesRoot} />
       <div style={{ padding: 16, width: '100%' }}>
         <NoItemsLoading items={options} loading={isLoading} />
-        {options.length ? (
+        {options.length && !isLoading ? (
           <TableWrapper>
             <DemandTable>
               <TableHead>
