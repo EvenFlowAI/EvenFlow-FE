@@ -63,10 +63,10 @@ type TRuleState = {
   timeOfDay: TTimeObject | null;
   serviceRequests: TOption[];
   capacity?: number;
-
   expanded: boolean;
   state: number;
   orderIndex: number;
+  dirty?: boolean;
 };
 
 export const EditTransportationModal: React.FC<
@@ -146,6 +146,7 @@ export const EditTransportationModal: React.FC<
               expanded: false,
               state: rule.state,
               orderIndex: rule.orderIndex,
+              dirty: false,
             };
           });
         setRules(modifiedRules);
@@ -155,7 +156,7 @@ export const EditTransportationModal: React.FC<
   }, [editingElement, props.open]);
 
   const updateLocalRule = (index: number, patch: Partial<TRuleState>) => {
-    setRules(prev => prev.map((r, i) => (i === index ? { ...r, ...patch } : r)));
+    setRules(prev => prev.map((r, i) => (i === index ? { ...r, ...patch, dirty: true } : r)));
     setErrors([]);
   };
 
@@ -217,10 +218,25 @@ export const EditTransportationModal: React.FC<
   };
 
   const toggleExpand = (index: number) => {
+    const expandedIndex = rules.findIndex(rule => rule.expanded);
+    if (rules[expandedIndex]?.dirty) {
+      showError('Please save or cancel changes before expanding another rule');
+      return;
+    }
     setRules(prev =>
       prev.map((r, i) => ({
         ...r,
         expanded: i === index ? !r.expanded : false,
+      }))
+    );
+  };
+
+  const resetRulesToDefaultState = () => {
+    setRules(prev =>
+      prev.map(r => ({
+        ...r,
+        dirty: false,
+        expanded: false,
       }))
     );
   };
@@ -258,7 +274,7 @@ export const EditTransportationModal: React.FC<
             () => {
               setFormIsChecked(false);
               showMessage('Created new rule');
-              toggleExpand(ruleIndex);
+              resetRulesToDefaultState();
             },
             onError
           )
@@ -302,7 +318,8 @@ export const EditTransportationModal: React.FC<
             () => {
               setFormIsChecked(false);
               showMessage('Rule updated');
-              toggleExpand(ruleIndex);
+              resetRulesToDefaultState();
+              resetRulesToDefaultState();
             },
             onError
           )
@@ -337,6 +354,11 @@ export const EditTransportationModal: React.FC<
   };
 
   const onCancel = () => {
+    const expandedIndex = rules.findIndex(rule => rule.expanded);
+    if (rules[expandedIndex]?.dirty) {
+      showError('Please save or cancel rule changes before closing');
+      return;
+    }
     setFormIsChecked(false);
     setRules([]);
     props.onClose();
@@ -675,10 +697,7 @@ export const EditTransportationModal: React.FC<
                               </Button>
                             )}
                             <IconButton
-                              disabled={
-                                rule.expanded ||
-                                rules.some(r => r.orderIndex != index && r.expanded)
-                              }
+                              disabled={rule.expanded}
                               onClick={e => {
                                 e.stopPropagation();
                                 toggleExpand(index);
@@ -888,6 +907,7 @@ export const EditTransportationModal: React.FC<
                                     setErrors([]);
                                   }}
                                   className={classes.saveButton}
+                                  disabled={!rule.dirty}
                                 >
                                   Save
                                 </Button>

@@ -105,6 +105,11 @@ export const useStyles = makeStyles()(() => ({
     '&:hover': {
       color: '#7898FF',
     },
+    '&.Mui-disabled': {
+      background: '#E0E0E0',
+      color: '#BDBDBD',
+      border: '1px solid #E0E0E0',
+    },
   },
   deleteButton: {
     borderColor: 'red',
