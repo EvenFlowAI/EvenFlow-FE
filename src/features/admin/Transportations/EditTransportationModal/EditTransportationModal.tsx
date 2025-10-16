@@ -508,6 +508,7 @@ export const EditTransportationModal: React.FC<
       expanded: false,
       state: original.state,
       orderIndex: original.orderIndex,
+      dirty: false,
     };
 
     setRules(prev => prev.map((rule, idx) => (idx === ruleIndex ? resetRule : rule)));
@@ -883,7 +884,7 @@ export const EditTransportationModal: React.FC<
                                 <Button
                                   onClick={() => {
                                     if (rule.id) {
-                                      toggleExpand(index);
+                                      resetRulesToDefaultState();
                                       resetRuleToOriginal(index);
                                     } else {
                                       setRules(prevState =>
