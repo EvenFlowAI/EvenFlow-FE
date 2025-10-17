@@ -1,20 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { DialogProps } from '../../BaseModal/types';
-import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
 import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
-import { Button } from '@mui/material';
+import { Button, styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 import { Textarea } from '../../../../features/admin/RecallsParts/AddRecallModal/styles';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ReactComponent as CopyIcon } from '../../../../assets/img/copy.svg';
 import { customerTags } from '../../../../config/data';
-
+import { ReactComponent as Info } from '../../../../assets/img/info.svg';
 import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { Loading } from '../../../wrappers/Loading/Loading';
-import { setTextMessage } from '../../../../store/reducers/dealerOperations/actions';
+import {
+  sendTestSMSMessage,
+  setTextMessage,
+} from '../../../../store/reducers/dealerOperations/actions';
 import { useStyles } from './styles';
+import { TextField } from '../../../formControls/TextFieldStyled/TextField';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useException } from '../../../../hooks/useException/useException';
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
 
 type TCustomerTextConfigurationProps = DialogProps & {
   handleSaveText: () => void;
@@ -30,9 +36,14 @@ const CustomerTextConfiguration = ({
   const { textIntegrationSettings, textMessage, eventForTextConfiguration } = useSelector(
     (state: RootState) => state.dealerOperations
   );
+  const { selectedSC } = useSCs();
+  const showError = useException();
+  const showMessage = useMessage();
 
   const dispatch = useDispatch();
   const { classes } = useStyles();
+
+  const [phoneNumberForTest, setPhoneNumberForTest] = React.useState<string>('');
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
@@ -106,6 +117,32 @@ const CustomerTextConfiguration = ({
     );
   };
 
+  const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      width: '195px',
+      backgroundColor: theme.palette.common.white,
+      color: 'rgba(0, 0, 0, 0.87)',
+      boxShadow: theme.shadows[1],
+      fontSize: 12,
+    },
+  }));
+
+  const sendTestMessage = () => {
+    if (selectedSC?.id && textMessage.length && phoneNumberForTest.length) {
+      dispatch(
+        sendTestSMSMessage(
+          selectedSC.id,
+          phoneNumberForTest,
+          textMessage,
+          () => showMessage('Message sent successfully'),
+          () => showError('Failed to send test message')
+        )
+      );
+    }
+  };
+
   if (!eventForTextConfiguration) return <></>;
 
   return (
@@ -131,14 +168,14 @@ const CustomerTextConfiguration = ({
                   </p>
                 )}
               </div>
-              <div>
+              <div className={classes.tagsWrapper}>
                 <span className={classes.insertTagText}>Insert tag</span>
                 {customerTags.map(tag => renderTagItem(tag))}
               </div>
             </div>
 
             <div className={classes.textMessageWrapper}>
-              <div className={classes.messageTextArea}>
+              <div>
                 <Textarea
                   inputRef={textareaRef}
                   fullWidth
@@ -150,7 +187,7 @@ const CustomerTextConfiguration = ({
                     if (e.target.value.length <= 1000) dispatch(setTextMessage(e.target.value));
                   }}
                   value={textMessage}
-                  rows={20}
+                  rows={22}
                 />
               </div>
 
@@ -159,24 +196,62 @@ const CustomerTextConfiguration = ({
               </div>
             </div>
           </div>
+          <div className={classes.testMessageWrapper}>
+            <p className={classes.testMessageText}>
+              <span>Send Test Message</span>
+              <LightTooltip
+                title="Test messages will display the tag field name and not actual values"
+                placement="top-start"
+              >
+                <Info />
+              </LightTooltip>
+            </p>
+            <TextField
+              fullWidth
+              value={phoneNumberForTest}
+              placeholder="1xxxxxxxxxx"
+              onChange={e => {
+                let val = e.target.value.replace(/\D/g, '');
+                if (val.length > 11) val = val.slice(0, 11);
+                setPhoneNumberForTest(val);
+              }}
+              inputProps={{ maxLength: 11 }}
+            />
+          </div>
         </DialogContent>
       )}
       <DialogActions>
-        <Button onClick={handleClose} color="info">
-          Cancel
-        </Button>
-        <LoadingButton
-          onClick={handleSaveText}
-          disabled={
-            textMessage.trim().length < 3 ||
-            textIntegrationSettings?.fromPhoneNumber === null ||
-            isLoading
-          }
-          variant="contained"
-          color="primary"
-        >
-          Save
-        </LoadingButton>
+        <div className={classes.testMessage}>
+          <Button
+            color="primary"
+            disabled={
+              phoneNumberForTest.length !== 11 ||
+              !textIntegrationSettings?.fromPhoneNumber?.length ||
+              textMessage.length < 3
+            }
+            className={classes.testMessageButton}
+            onClick={sendTestMessage}
+          >
+            Send
+          </Button>
+          <div className={classes.buttonsWrapper}>
+            <Button onClick={handleClose} color="primary" variant="outlined">
+              Cancel
+            </Button>
+            <LoadingButton
+              onClick={handleSaveText}
+              disabled={
+                textMessage.trim().length < 3 ||
+                textIntegrationSettings?.fromPhoneNumber === null ||
+                isLoading
+              }
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </LoadingButton>
+          </div>
+        </div>
       </DialogActions>
     </BaseModal>
   );

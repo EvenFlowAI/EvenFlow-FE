@@ -5,7 +5,10 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: 6,
+    borderRadius: '6px',
+    padding: '3.4px 6px',
+    backgroundColor: 'rgba(242, 244, 251, 1)',
   },
   insertTag: {
     cursor: 'pointer',
@@ -20,6 +23,7 @@ export const useStyles = makeStyles()(() => ({
   wrapper: {
     display: 'flex',
     width: '100%',
+    // height: '530px',
     justifyContent: 'space-between',
     '@media (max-width: 600px)': {
       flexDirection: 'column',
@@ -27,6 +31,7 @@ export const useStyles = makeStyles()(() => ({
   },
   integrationBlock: {
     width: '45%',
+    height: '562px',
     '@media (max-width: 600px)': {
       width: '100%',
     },
@@ -35,6 +40,10 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     flexDirection: 'column',
     marginBottom: 32,
+  },
+  tagsWrapper: {
+    overflowY: 'auto',
+    height: '85%',
   },
   integrationText: {
     textTransform: 'uppercase',
@@ -68,12 +77,39 @@ export const useStyles = makeStyles()(() => ({
       width: '100%',
     },
   },
-  messageTextArea: {
-    marginTop: 24,
-  },
   charactersCounter: {
     textAlign: 'right',
     color: '#858585',
     fontWeight: 300,
+  },
+  testMessageWrapper: {
+    width: '44%',
+    marginTop: '18px',
+  },
+  testMessageText: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontSize: 12,
+    textTransform: 'uppercase',
+    fontWeight: 700,
+    color: 'black',
+    margin: 0,
+    marginBottom: '4px',
+  },
+  testMessageButton: {
+    marginTop: '12px',
+    paddingLeft: 0,
+    justifyContent: 'flex-start',
+  },
+  testMessage: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: ' space-between',
+  },
+  buttonsWrapper: {
+    display: 'flex',
+    gap: '12px',
   },
 }));
