@@ -171,14 +171,10 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     dispatch(setCustomerLoadedData(c));
     dispatch(setVehicle(getBlankVehicle()));
     saveCustomerCache(c);
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Enters Page',
-        label: `As New User`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Enters Scheduler',
+      user_type: 'New User',
+    });
   };
 
   const handleUser = (service: IFirstScreenOption) => {

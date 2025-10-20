@@ -48,14 +48,11 @@ const OfferProductPage: React.FC<
       const requestsString = service.serviceRequests
         .map(item => `${item.code} (${item.description})`)
         .join(', ');
-      ReactGA.event(
-        {
-          category: 'EvenFlow User',
-          action: 'Selected Service',
-          label: `With Name ${service.name} And Service Requests ${requestsString}`,
-        },
-        trackerData.ids
-      );
+      ReactGA.event('asc_form_engagement', {
+        element_text: 'Services Selected',
+        service_name: service.name,
+        service_requests: requestsString,
+      });
     } else {
       if (subService && subService?.id === lastCategory?.id) {
         if (serviceCategories && subService.type !== EServiceCategoryType.LinkToPage2) {
@@ -67,14 +64,11 @@ const OfferProductPage: React.FC<
         const requestsString = subService.serviceRequests
           .map(item => `${item.code} (${item.description})`)
           .join(', ');
-        ReactGA.event(
-          {
-            category: 'EvenFlow User',
-            action: 'Selected Sub Service',
-            label: `With Name ${subService.name} ${subService.serviceRequests?.length && `And Service Requests ${requestsString}`}`,
-          },
-          trackerData.ids
-        );
+        ReactGA.event('asc_form_engagement', {
+          element_text: 'Services Sub Page Selected',
+          sub_service_name: subService.name,
+          service_requests: subService.serviceRequests?.length ? requestsString : undefined,
+        });
       }
     }
   };
