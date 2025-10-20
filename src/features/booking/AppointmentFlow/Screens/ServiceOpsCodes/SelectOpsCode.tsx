@@ -200,17 +200,13 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
 
   const handleGA = () => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Selected Individual Service Requests',
-        label: `With Codes ${serviceRequests
-          .filter(item => selectedOpsCodes.includes(item.id))
-          .map(sr => `${sr.code} (${sr.description})`)
-          .join(', ')}`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'A La Carte Service Selected',
+      selected_codes: serviceRequests
+        .filter(item => selectedOpsCodes.includes(item.id))
+        .map(sr => `${sr.code} (${sr.description})`)
+        .join(', '),
+    });
   };
 
   const handleValidateCheckedServiceComments = () => {

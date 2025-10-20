@@ -49,12 +49,13 @@ import { useException } from '../../../hooks/useException/useException';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import usePopState from '../../../hooks/usePopState/usePopState';
+import GA4SessionSync from '../../../utils/ga4SessionSync/GA4SessionSync';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { welcomeScreenView, serviceTypeOption, trackerData } = useSelector(
+  const { welcomeScreenView, serviceTypeOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
@@ -106,14 +107,10 @@ export const Welcome = () => {
   };
 
   const handleGA = () => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Enters Page',
-        label: `As Returning Customer`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Enters Scheduler',
+      user_type: 'Returning Customer',
+    });
   };
 
   const onSuccessForCustomer = () => {
@@ -188,14 +185,10 @@ export const Welcome = () => {
   };
 
   const handleReactGA = (userType: string) => {
-    ReactGA.event(
-      {
-        category: 'EvenFlow User',
-        action: 'Enters Page',
-        label: `As ${userType} Customer`,
-      },
-      trackerData.ids
-    );
+    ReactGA.event('asc_form_engagement', {
+      element_text: 'Enters Scheduler',
+      user_type: `${userType} Customer`,
+    });
   };
 
   const handleNew = () => {
@@ -259,6 +252,7 @@ export const Welcome = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={frameTheme}>
         <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew} />
+        <GA4SessionSync />
         <FrameWelcomeLayout>
           {/*<LanguageSwitcher/>*/}
           {getComponent()}
