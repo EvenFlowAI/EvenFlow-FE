@@ -18,8 +18,6 @@ const GA4SessionSync = () => {
   const { id } = useParams<{ id: string }>();
   const ids = getTrackersForParentSite(id);
 
-  console.log('ids', ids);
-
   const measurementId = ids[0]?.measurementId;
   useEffect(() => {
     const trySend = () => {
