@@ -27,6 +27,10 @@ type TCustomerTextConfigurationProps = DialogProps & {
   isLoading: boolean;
 };
 
+interface LightTooltipProps extends TooltipProps {
+  width?: string | number;
+}
+
 const CustomerTextConfiguration = ({
   onClose,
   open,
@@ -89,6 +93,7 @@ const CustomerTextConfiguration = ({
 
   const handleClose = () => {
     onClose();
+    setPhoneNumberForTest('');
   };
 
   const renderTagItem = (tag: string) => {
@@ -101,27 +106,30 @@ const CustomerTextConfiguration = ({
         <span className={classes.insertTag} onClick={() => handleInsertTag(tag)}>
           {tag}
         </span>
-        <button
-          type="button"
-          className={classes.copyTag}
-          onClick={e => {
-            e.stopPropagation();
-            navigator.clipboard.writeText(tag);
-            const input = autocompleteRef.current?.querySelector('input');
-            if (input) (input as HTMLElement).blur();
-          }}
-        >
-          <CopyIcon />
-        </button>
+        <LightTooltip width={110} title="Copy to clipboard" placement="top-start">
+          <button
+            type="button"
+            className={classes.copyTag}
+            onClick={e => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(tag);
+              const input = autocompleteRef.current?.querySelector('input');
+              if (input) (input as HTMLElement).blur();
+              showMessage('Tag copied to clipboard');
+            }}
+          >
+            <CopyIcon />
+          </button>
+        </LightTooltip>
       </li>
     );
   };
 
-  const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+  const LightTooltip = styled(({ className, width, ...props }: LightTooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
+  ))<LightTooltipProps>(({ theme, width }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
-      width: '195px',
+      width: typeof width === 'number' ? `${width}px` : width || '195px',
       backgroundColor: theme.palette.common.white,
       color: 'rgba(0, 0, 0, 0.87)',
       boxShadow: theme.shadows[1],
@@ -170,7 +178,9 @@ const CustomerTextConfiguration = ({
               </div>
               <div className={classes.tagsWrapper}>
                 <span className={classes.insertTagText}>Insert tag</span>
-                {customerTags.map(tag => renderTagItem(tag))}
+                <div className={classes.scrollableTags}>
+                  {customerTags.map(tag => renderTagItem(tag))}
+                </div>
               </div>
             </div>
 
@@ -200,6 +210,7 @@ const CustomerTextConfiguration = ({
             <p className={classes.testMessageText}>
               <span>Send Test Message</span>
               <LightTooltip
+                width={185}
                 title="Test messages will display the tag field name and not actual values"
                 placement="top-start"
               >

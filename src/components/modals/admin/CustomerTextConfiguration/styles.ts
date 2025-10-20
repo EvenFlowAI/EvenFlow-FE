@@ -31,7 +31,7 @@ export const useStyles = makeStyles()(() => ({
   },
   integrationBlock: {
     width: '45%',
-    height: '562px',
+    height: 'fit-content',
     '@media (max-width: 600px)': {
       width: '100%',
     },
@@ -42,8 +42,7 @@ export const useStyles = makeStyles()(() => ({
     marginBottom: 32,
   },
   tagsWrapper: {
-    overflowY: 'auto',
-    height: '85%',
+    height: '456px',
   },
   integrationText: {
     textTransform: 'uppercase',
@@ -76,6 +75,10 @@ export const useStyles = makeStyles()(() => ({
     '@media (max-width: 600px)': {
       width: '100%',
     },
+  },
+  scrollableTags: {
+    overflowY: 'auto',
+    height: '100%',
   },
   charactersCounter: {
     textAlign: 'right',
