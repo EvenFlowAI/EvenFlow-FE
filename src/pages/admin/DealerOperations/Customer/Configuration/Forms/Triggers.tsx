@@ -1,7 +1,7 @@
 import React from 'react';
 import { numberToOrdinalWord } from '../../../helper';
 import { IconButton } from '@mui/material';
-import { AddCircleOutline, QueryBuilder } from '@mui/icons-material';
+import { AddCircleOutline } from '@mui/icons-material';
 import { TriggerI } from '../../types';
 import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
@@ -98,11 +98,10 @@ const Triggers = ({
                       // fullWidth
                       label={'Scheduled time'}
                       InputProps={{
-                        endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
                         id: 'Scheduled time',
                         placeholder: '',
                         error: index === 0 && firstTriggerDateError,
-                        style: { width: '84%' },
+                        style: { width: '74%' },
                       }}
                     />
                   </div>
