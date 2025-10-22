@@ -186,7 +186,7 @@ export const useStyles = makeStyles()(() => ({
   triggerClockWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    width: '34%',
+    width: '31%',
     '@media (max-width: 900px)': {
       width: '45%',
     },
