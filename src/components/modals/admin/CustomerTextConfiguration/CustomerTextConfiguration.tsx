@@ -250,7 +250,10 @@ const CustomerTextConfiguration = ({
               Cancel
             </Button>
             <LoadingButton
-              onClick={handleSaveText}
+              onClick={() => {
+                setPhoneNumberForTest('');
+                handleSaveText();
+              }}
               disabled={
                 textMessage.trim().length < 3 ||
                 textIntegrationSettings?.fromPhoneNumber === null ||
