@@ -95,13 +95,12 @@ const Triggers = ({
                       onChange={e =>
                         handleTriggerChange(index, 'scheduledTime', dayjs(e).format('HH:mm:ss'))
                       }
-                      // fullWidth
                       label={'Scheduled time'}
                       InputProps={{
+                        className: 'ClockTimeTriggers',
                         id: 'Scheduled time',
                         placeholder: '',
                         error: index === 0 && firstTriggerDateError,
-                        style: { width: '74%' },
                       }}
                     />
                   </div>
