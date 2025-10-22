@@ -186,9 +186,12 @@ export const useStyles = makeStyles()(() => ({
   triggerClockWrapper: {
     display: 'flex',
     flexDirection: 'column',
-    width: '31%',
+    width: 'fit-content',
     '@media (max-width: 900px)': {
       width: '45%',
+    },
+    '& .MuiFormControl-root': {
+      width: '107px',
     },
   },
 }));
