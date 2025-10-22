@@ -102,6 +102,12 @@ const ClockTimePicker: React.FC<TProps> = ({
           },
           '& .ClockTimeTriggers': {
             paddingRight: '0 !important',
+            '&::after': {
+              display: 'none',
+            },
+            '&::before': {
+              display: 'none',
+            },
           },
         }}
       />
