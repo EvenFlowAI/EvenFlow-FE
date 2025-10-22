@@ -1,7 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   ITransportationOptionFull,
-  ITransportationOptionRule,
   ITransportationOptionRules,
   TTransportationShort,
 } from './types';
@@ -105,7 +104,16 @@ export const removeTransportationOptionRule =
 export const addTransportationOptionRule =
   (
     serviceCenterId: number,
-    newRule: ITransportationOptionRule,
+    newRule: {
+      name: string;
+      transportationOptionId: number;
+      timeOfDay: { start: string | null; end: string | null } | undefined;
+      serviceRequests: number[];
+      dayOfWeeks: number[];
+      capacity: number | undefined;
+      state: number;
+      orderIndex: number;
+    },
     successCallback = () => {},
     // eslint-disable-next-line
     errorCallback: (err: any) => void
@@ -127,7 +135,16 @@ export const addTransportationOptionRule =
 export const editTransportationOptionRule =
   (
     serviceCenterId: number,
-    updatedRule: ITransportationOptionRule,
+    updatedRule: {
+      name: string;
+      transportationOptionId: number;
+      timeOfDay: { start: string | null; end: string | null } | undefined;
+      serviceRequests: number[];
+      dayOfWeeks: number[];
+      capacity: number | undefined;
+      state: number;
+      orderIndex: number;
+    },
     ruleId: number,
     successCallback = () => {},
     // eslint-disable-next-line

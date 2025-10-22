@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
-  DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
@@ -11,88 +10,51 @@ import {
   ITransportationOptionFull,
 } from '../../../../store/reducers/transportationNeeds/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadAllAssignedServiceRequests } from '../../../../store/reducers/serviceRequests/actions';
+import {
+  loadAllAssignedServiceRequests,
+  setFormIsChecked,
+  setRules,
+} from '../../../../store/reducers/serviceRequests/actions';
 import { RootState } from '../../../../store/rootReducer';
-import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import {
-  Autocomplete,
-  Button,
-  Checkbox,
-  Divider,
-  IconButton,
-  Switch,
-  Tooltip,
-  Chip,
-} from '@mui/material';
-import {
-  CheckBoxOutlineBlank,
-  CheckBoxOutlined,
-  ExpandLess,
-  ExpandMore,
-  QueryBuilder,
-} from '@mui/icons-material';
-import {
-  addTransportationOptionRule,
-  editTransportationOptionRule,
-  patchUpdateTransportationRule,
-  removeTransportationOptionRule,
-} from '../../../../store/reducers/transportationNeeds/actions';
+import { Divider } from '@mui/material';
+import { removeTransportationOptionRule } from '../../../../store/reducers/transportationNeeds/actions';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { getOptions } from '../../../../utils/utils';
-import { useMultipleACStyles, useStyles } from './styles';
-import { TOption, TTimeObject } from '../types';
+import { useStyles } from './styles';
+import { TOption } from '../types';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
-import ClockTimePicker from '../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import dayjs from 'dayjs';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import RemoveRule from '../../../../components/modals/admin/RemoveRule/RemoveRule';
 import { useModal } from '../../../../hooks/useModal/useModal';
-import { ReactComponent as DotsIcon } from '../../../../assets/img/dots.svg';
 import { TError } from '../../../booking/CustomerSelect/ReturningCustomerForAdmin/types';
+import { transformTransportationRules, TRuleState } from './helper';
+import ExpandedRulesRender from './layouts/ExpandedRulesRender';
+import ClocksRender from './layouts/ClocksRender';
+import OpCodesAndDayOfWeekRender from './layouts/OpCodesAndDayOfWeekRender';
+import ModalButtons from './layouts/ModalButtons';
+import RuleHeaderWrapper from './layouts/RuleHeaderWrapper';
+import AddRuleRender from './layouts/AddRuleRender';
 
 type TEditTransportationOptionDialogProps = {
   editingElement: ITransportationOptionFull | null;
 };
 
-type TRuleState = {
-  id?: number;
-  name: string;
-  daysOfWeek: TOption[];
-  timeOfDay: TTimeObject | null;
-  serviceRequests: TOption[];
-  capacity?: number;
-  expanded: boolean;
-  state: number;
-  orderIndex: number;
-  dirty?: boolean;
-};
-
 export const EditTransportationModal: React.FC<
   DialogProps & TEditTransportationOptionDialogProps
 > = ({ editingElement, ...props }) => {
-  const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
+  const { rules, formIsChecked } = useSelector((state: RootState) => state.serviceRequests);
   const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
-  const [rules, setRules] = useState<TRuleState[]>([]);
-  const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
 
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
   const { classes } = useStyles();
-  const { classes: multipleACSClasses } = useMultipleACStyles();
   const showError = useException();
   const showMessage = useMessage();
   const { onOpen, isOpen, onClose } = useModal();
   const [ruleForDeleting, setRuleForDeleting] = useState<TRuleState | null>(null);
-
-  const requestsOptions = useMemo(() => {
-    return allAssignedList.map(item => ({
-      name: item.serviceRequest.code,
-      value: item.id,
-    }));
-  }, [allAssignedList]);
 
   useEffect(() => {
     setDayOfWeekOptions(() => {
@@ -112,68 +74,15 @@ export const EditTransportationModal: React.FC<
   // for adding rules to localState
   useEffect(() => {
     if (editingElement && props.open) {
-      if (editingElement.rules?.length) {
-        const unblockedRules = [...editingElement.rules];
-
-        const modifiedRules = unblockedRules
-          .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
-          .map(rule => {
-            const parseTime = (time?: string | null) => {
-              if (!time) return null;
-              const [h, m, s] = time.split(':').map(Number);
-              if (isNaN(h) || isNaN(m) || isNaN(s)) return null;
-              return dayjs().utc().hour(h).minute(m).second(s);
-            };
-
-            const days =
-              dayOFWeekOptions.filter(item => rule.dayOfWeeks?.includes(item.value)) || [];
-            const updatedServiceRequests =
-              rule.serviceRequests?.map(item => ({
-                value: item.id,
-                name: item.code,
-              })) || [];
-
-            return {
-              id: rule.id,
-              name: rule.name,
-              daysOfWeek: days,
-              timeOfDay: {
-                start: parseTime(rule.timeOfDay?.start),
-                end: parseTime(rule.timeOfDay?.end),
-              },
-              serviceRequests: updatedServiceRequests,
-              capacity: rule.capacity,
-              expanded: false,
-              state: rule.state,
-              orderIndex: rule.orderIndex,
-              dirty: false,
-            };
-          });
-        setRules(modifiedRules);
-        setErrors([]);
-      }
+      const modifiedRules = transformTransportationRules(editingElement, dayOFWeekOptions);
+      dispatch(setRules(modifiedRules));
+      setErrors([]);
     }
   }, [editingElement, props.open]);
 
   const updateLocalRule = (index: number, patch: Partial<TRuleState>) => {
-    setRules(prev => prev.map((r, i) => (i === index ? { ...r, ...patch, dirty: true } : r)));
+    dispatch(setRules(rules.map((r, i) => (i === index ? { ...r, ...patch, dirty: true } : r))));
     setErrors([]);
-  };
-
-  const addRule = () => {
-    setRules(prev => [
-      ...prev,
-      {
-        name: '',
-        daysOfWeek: [],
-        serviceRequests: [],
-        timeOfDay: null,
-        capacity: undefined,
-        expanded: true,
-        state: 1,
-        orderIndex: rules.length + 1,
-      },
-    ]);
   };
 
   const onError = (e: any) => {
@@ -195,7 +104,7 @@ export const EditTransportationModal: React.FC<
           String(ruleForDeleting?.id),
           () => {
             onClose();
-            setRules(prev => prev.filter((rule, _) => rule?.id !== ruleForDeleting?.id));
+            dispatch(setRules(rules.filter((rule, _) => rule?.id !== ruleForDeleting?.id)));
             setRuleForDeleting(null);
             showMessage('Rule deleted');
             onCancel();
@@ -206,161 +115,14 @@ export const EditTransportationModal: React.FC<
     }
   };
 
-  const removeRule = (id: string) => {
-    if (selectedSC?.id) {
-      setRuleForDeleting(rules.find(rule => rule?.id === +id) || null);
-      onOpen();
-    }
-  };
-
-  const removeLocalRule = (index: number) => {
-    setRules(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const toggleExpand = (index: number) => {
-    const expandedIndex = rules.findIndex(rule => rule.expanded);
-    if (rules[expandedIndex]?.dirty) {
-      showError('Please save or cancel changes before expanding another rule');
-      return;
-    }
-    setRules(prev =>
-      prev.map((r, i) => ({
-        ...r,
-        expanded: i === index ? !r.expanded : false,
-      }))
-    );
-  };
-
-  const resetRulesToDefaultState = () => {
-    setRules(prev =>
-      prev.map(r => ({
-        ...r,
-        dirty: false,
-        expanded: false,
-      }))
-    );
-  };
-
-  const onAddRule = (ruleIndex: number) => {
-    setFormIsChecked(true);
-    if (selectedSC && editingElement) {
-      let newRule;
-      rules.forEach((r, index) => {
-        if (index === ruleIndex) {
-          newRule = {
-            name: r.name,
-            transportationOptionId: editingElement.id,
-            timeOfDay:
-              r.timeOfDay?.start != null || r.timeOfDay?.end != null
-                ? {
-                    start: r.timeOfDay?.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
-                    end: r.timeOfDay?.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
-                  }
-                : undefined,
-            serviceRequests: r.serviceRequests.map(item => item.value),
-            dayOfWeeks: r.daysOfWeek.map(item => item.value),
-            capacity: r.capacity,
-            state: r.state,
-            orderIndex: index,
-          };
-        }
-      });
-
-      if (newRule) {
-        dispatch(
-          addTransportationOptionRule(
-            selectedSC.id,
-            newRule,
-            () => {
-              setFormIsChecked(false);
-              showMessage('Created new rule');
-              resetRulesToDefaultState();
-            },
-            onError
-          )
-        );
-      }
-    }
-  };
-
-  const onEditRule = (id: number, ruleIndex: number) => {
-    setFormIsChecked(true);
-    if (selectedSC && editingElement) {
-      let newRule;
-
-      rules.forEach((r, index) => {
-        if (r.id === id) {
-          newRule = {
-            name: r.name,
-            transportationOptionId: editingElement.id,
-            timeOfDay:
-              r.timeOfDay?.start != null || r.timeOfDay?.end != null
-                ? {
-                    start: r.timeOfDay?.start ? dayjs(r.timeOfDay.start).format('HH:mm:ss') : null,
-                    end: r.timeOfDay?.end ? dayjs(r.timeOfDay.end).format('HH:mm:ss') : null,
-                  }
-                : undefined,
-            serviceRequests: r.serviceRequests.map(item => item.value),
-            dayOfWeeks: r.daysOfWeek.map(item => item.value),
-            capacity: r.capacity,
-            state: r.state,
-            orderIndex: index,
-          };
-        }
-      });
-
-      if (newRule) {
-        dispatch(
-          editTransportationOptionRule(
-            selectedSC.id,
-            newRule,
-            id,
-            () => {
-              setFormIsChecked(false);
-              showMessage('Rule updated');
-              resetRulesToDefaultState();
-              resetRulesToDefaultState();
-            },
-            onError
-          )
-        );
-      }
-    }
-  };
-
-  const patchUpdateRule = () => {
-    if (selectedSC && editingElement && rules.length) {
-      const rulesWithId = rules.filter(rule => rule.id);
-      if (rulesWithId.length) {
-        dispatch(
-          patchUpdateTransportationRule(
-            selectedSC.id,
-            rulesWithId.map(rule => {
-              return {
-                transportationOptionRuleId: rule.id || 0,
-                state: rule.state,
-                orderIndex: rule.orderIndex,
-              };
-            }),
-            () => {
-              showMessage('Rules updated');
-              onCancel();
-            },
-            onError
-          )
-        );
-      }
-    }
-  };
-
   const onCancel = () => {
     const expandedIndex = rules.findIndex(rule => rule.expanded);
     if (rules[expandedIndex]?.dirty) {
       showError('Please save or cancel rule changes before closing');
       return;
     }
-    setFormIsChecked(false);
-    setRules([]);
+    dispatch(setFormIsChecked(false));
+    dispatch(setRules([]));
     props.onClose();
   };
 
@@ -376,250 +138,14 @@ export const EditTransportationModal: React.FC<
       orderIndex: index,
     }));
 
-    setRules(updated);
-  };
-
-  const onRequestCheckboxChange = useCallback(
-    (ruleIdx: number, option: TOption) => {
-      const current = rules[ruleIdx].serviceRequests ?? [];
-
-      const exists = current.some(o => o.value === option.value);
-      let next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
-
-      updateLocalRule(ruleIdx, { serviceRequests: next });
-      setFormIsChecked(false);
-    },
-    [rules, requestsOptions]
-  );
-
-  const onRequestChange = useCallback(
-    (ruleIdx: number, _e: any, value: TOption[]) => {
-      setFormIsChecked(false);
-      updateLocalRule(ruleIdx, { serviceRequests: value });
-    },
-    [requestsOptions]
-  );
-
-  const makeRenderRequestOption = useCallback(
-    (ruleIdx: number) => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
-      const selected = rules[ruleIdx].serviceRequests ?? [];
-      const checked = selected.some(item => item.value === option.value);
-
-      return (
-        <li
-          {...props}
-          key={`${option.name}-${option.value}`}
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Checkbox
-            color="primary"
-            icon={
-              checked ? (
-                <CheckBoxOutlined htmlColor="#3855FE" />
-              ) : (
-                <CheckBoxOutlineBlank htmlColor="#DADADA" />
-              )
-            }
-            checked={checked}
-            onClick={e => e.stopPropagation()}
-            onChange={() => onRequestCheckboxChange(ruleIdx, option)}
-          />
-          {option.name}
-        </li>
-      );
-    },
-    [rules, onRequestCheckboxChange]
-  );
-
-  const onDayCheckboxChange = useCallback(
-    (ruleIdx: number, option: TOption) => {
-      const current = rules[ruleIdx].daysOfWeek ?? [];
-
-      const exists = current.some(o => o.value === option.value);
-      const next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
-
-      updateLocalRule(ruleIdx, { daysOfWeek: next });
-      setFormIsChecked(false);
-    },
-    [rules]
-  );
-
-  const onDaysChange = useCallback((ruleIdx: number, _e: any, value: TOption[]) => {
-    setFormIsChecked(false);
-    updateLocalRule(ruleIdx, { daysOfWeek: value });
-  }, []);
-
-  const makeRenderDayOption = useCallback(
-    (ruleIdx: number) => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
-      const selected = rules[ruleIdx].daysOfWeek ?? [];
-
-      const checked = selected.some(item => item.value === option.value);
-
-      return (
-        <li
-          {...props}
-          key={`${option.name}-${option.value}`}
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Checkbox
-            color="primary"
-            icon={
-              checked ? (
-                <CheckBoxOutlined htmlColor="#3855FE" />
-              ) : (
-                <CheckBoxOutlineBlank htmlColor="#DADADA" />
-              )
-            }
-            checked={checked}
-            onClick={e => e.stopPropagation()}
-            onChange={() => onDayCheckboxChange(ruleIdx, option)}
-          />
-          {option.name}
-        </li>
-      );
-    },
-    [rules, onDayCheckboxChange]
-  );
-
-  const resetRuleToOriginal = (ruleIndex: number) => {
-    if (!editingElement || !editingElement.rules) return;
-    const original = editingElement.rules[ruleIndex];
-    if (!original) return;
-
-    const [startHours, startMinutes, startSeconds] = original.timeOfDay?.start?.split(':') || [];
-    const [endHours, endMinutes, endSeconds] = original.timeOfDay?.end?.split(':') || [];
-    const days = dayOFWeekOptions.filter(item => original.dayOfWeeks?.includes(item.value)) || [];
-    const updatedServiceRequests =
-      original.serviceRequests?.map(item => ({
-        value: item.id,
-        name: item.code,
-      })) || [];
-
-    const resetRule: TRuleState = {
-      id: original.id,
-      name: original.name,
-      daysOfWeek: days,
-      timeOfDay: {
-        start: dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds),
-        end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
-      },
-      serviceRequests: updatedServiceRequests,
-      capacity: original.capacity,
-      expanded: false,
-      state: original.state,
-      orderIndex: original.orderIndex,
-      dirty: false,
-    };
-
-    setRules(prev => prev.map((rule, idx) => (idx === ruleIndex ? resetRule : rule)));
+    dispatch(setRules(updated));
   };
 
   const stableKeys = useMemo(() => {
     return rules.map((rule, index) =>
       rule.id ? `rule-${rule.id}` : `new-rule-${rule.orderIndex || index}`
     );
-  }, [rules.map(r => r.id || r.orderIndex).join(',')]);
-
-  const calculateMaxVisibleTags = useCallback((selectedValues: TOption[], containerWidth = 500) => {
-    if (selectedValues.length === 0) return 0;
-
-    // Estimate average chip width based on text length
-    const avgChipWidth =
-      selectedValues.reduce((sum, item) => {
-        // Base width plus character width estimation
-        return sum + (55 + item.name.length * 5); // 55 px base + ~5px per character
-      }, 0) / selectedValues.length;
-
-    // Calculate how many chips can fit in one row (accounting for margins)
-    const availableWidth = containerWidth - 40; // Account for padding
-    const chipsPerRow = Math.floor(availableWidth / (avgChipWidth + 4)); // 8px for margins
-
-    // If all chips fit in one row, show all
-    if (selectedValues.length <= chipsPerRow) {
-      return selectedValues.length;
-    }
-
-    // Otherwise, show as many as possible in the first row minus space for "+X others"
-    const othersChipWidth = 100; // Estimated width of "+X others" chip
-    const maxVisibleWithOthers = Math.floor(
-      (availableWidth - othersChipWidth) / (avgChipWidth + 8)
-    );
-
-    return Math.max(1, maxVisibleWithOthers);
-  }, []);
-
-  const renderChipTags = useCallback(
-    (selectedValues: TOption[], getTagProps: any) => {
-      const maxVisibleTags = calculateMaxVisibleTags(selectedValues);
-      const visibleTags = selectedValues.slice(0, maxVisibleTags);
-      const remainingCount = selectedValues.length - maxVisibleTags;
-
-      return (
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            width: '100%',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'nowrap', // Keep chips in a single row
-              width: '100%',
-              overflow: 'hidden',
-            }}
-          >
-            {visibleTags.map((option, tagIndex) => {
-              const props = getTagProps({ index: tagIndex });
-              return (
-                <Chip
-                  key={option.value}
-                  label={option.name}
-                  onDelete={props.onDelete}
-                  size="medium"
-                  color="primary"
-                  variant="filled"
-                  style={{
-                    margin: '2px 4px 2px 0',
-                    flexShrink: 0, // Prevent chips from shrinking
-                    maxWidth: '200px',
-                  }}
-                  {...props}
-                />
-              );
-            })}
-            {remainingCount > 0 && (
-              <Tooltip
-                title={
-                  <div>
-                    {selectedValues.slice(maxVisibleTags).map(option => (
-                      <div key={option.value}>{option.name}</div>
-                    ))}
-                  </div>
-                }
-                arrow
-                placement="top"
-              >
-                <Chip
-                  key="others"
-                  label={`+${remainingCount} others`}
-                  size="medium"
-                  color="primary"
-                  variant="filled"
-                  style={{
-                    margin: '2px 4px 2px 0',
-                    flexShrink: 0,
-                  }}
-                />
-              </Tooltip>
-            )}
-          </div>
-        </div>
-      );
-    },
-    [calculateMaxVisibleTags]
-  );
+  }, [rules]);
 
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
@@ -649,72 +175,20 @@ export const EditTransportationModal: React.FC<
                         }}
                       >
                         {index === 0 ? <Divider style={{ margin: '10px 0 12px 0' }} /> : null}
-                        <div {...provided.dragHandleProps} className={classes.ruleHeaderWrapper}>
-                          <div className={classes.leftSideHeaderWrapper}>
-                            <Tooltip
-                              placement="top-start"
-                              title="Drag to Reorder"
-                              slotProps={{
-                                tooltip: {
-                                  sx: {
-                                    background: 'white',
-                                    color: 'black',
-                                    fontSize: '19px',
-                                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)',
-                                  },
-                                },
-                              }}
-                            >
-                              <DotsIcon />
-                            </Tooltip>
-                            <Switch
-                              checked={rule.state === 1}
-                              disabled={!rule.id || rule.expanded}
-                              onChange={e =>
-                                updateLocalRule(index, { state: e.target.checked ? 1 : 0 })
-                              }
-                              size="small"
-                              onClick={e => e.stopPropagation()}
-                            />
-
-                            <span className={classes.ruleName}>
-                              {rule.name?.toUpperCase() || `RULE NAME #${index + 1}`}
-                            </span>
-                          </div>
-
-                          <div className={classes.rightSideHeaderWrapper}>
-                            {rule.id && (
-                              <Button
-                                variant="outlined"
-                                color="error"
-                                size="medium"
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  rule.id ? removeRule(String(rule.id)) : removeLocalRule(index);
-                                }}
-                                className={classes.deleteButton}
-                              >
-                                Delete Rule
-                              </Button>
-                            )}
-                            <IconButton
-                              disabled={rule.expanded}
-                              onClick={e => {
-                                e.stopPropagation();
-                                toggleExpand(index);
-                              }}
-                              size="small"
-                            >
-                              {rule.expanded ? <ExpandLess /> : <ExpandMore />}
-                            </IconButton>
-                          </div>
-                        </div>
+                        <RuleHeaderWrapper
+                          rule={rule}
+                          setRuleForDeleting={setRuleForDeleting}
+                          updateLocalRule={updateLocalRule}
+                          index={index}
+                          dragHandleProps={provided.dragHandleProps}
+                          onOpen={onOpen}
+                        />
 
                         {rule.expanded && (
-                          <div style={{ padding: 12 }}>
+                          <div className={classes.expandedRuleWrapper}>
                             <TextField
                               fullWidth
-                              style={{ marginBottom: 20 }}
+                              className={classes.ruleNameInput}
                               label="RULE NAME"
                               placeholder="Rule Name"
                               value={rule.name ?? ''}
@@ -724,134 +198,22 @@ export const EditTransportationModal: React.FC<
                               onChange={e => updateLocalRule(index, { name: e.target.value })}
                             />
 
-                            <Autocomplete
-                              multiple
-                              style={{ marginBottom: 20 }}
-                              classes={multipleACSClasses}
-                              options={requestsOptions}
-                              disableCloseOnSelect
-                              disableClearable
-                              getOptionLabel={option => option.name}
-                              isOptionEqualToValue={(o, v) => o.value === v.value}
-                              renderOption={makeRenderRequestOption(index)}
-                              value={rules[index].serviceRequests}
-                              onChange={(e, value) => onRequestChange(index, e, value)}
-                              renderTags={renderChipTags}
-                              renderInput={autocompleteRender({
-                                label: 'Op Codes',
-                                placeholder: 'Select Op Codes',
-                                error:
-                                  errors.some(
-                                    e =>
-                                      e.includes('service request') || e.includes('configuration')
-                                  ) && formIsChecked,
-                              })}
-                            />
-
-                            <Autocomplete
-                              multiple
-                              fullWidth
-                              classes={multipleACSClasses}
-                              options={dayOFWeekOptions}
-                              style={{ marginBottom: 20 }}
-                              getOptionLabel={option => option.name}
-                              isOptionEqualToValue={(o, v) => o.value === v.value}
-                              disableClearable
-                              disableCloseOnSelect
-                              renderOption={makeRenderDayOption(index)}
-                              value={rules[index].daysOfWeek}
-                              onChange={(e, v) => onDaysChange(index, e, v)}
-                              renderTags={renderChipTags}
-                              renderInput={autocompleteRender({
-                                label: 'Day Of Week',
-                                placeholder: 'Select Day Of Week',
-                                error:
-                                  errors.some(
-                                    e => e.includes('Days of week') || e.includes('configuration')
-                                  ) && formIsChecked,
-                              })}
+                            <OpCodesAndDayOfWeekRender
+                              dayOFWeekOptions={dayOFWeekOptions}
+                              index={index}
+                              errors={errors}
+                              updateLocalRule={updateLocalRule}
                             />
 
                             <div className={classes.label}>Time Of Day</div>
-                            <div className={classes.smallWrapper}>
-                              <ClockTimePicker
-                                withClear
-                                error={
-                                  errors.some(
-                                    e =>
-                                      e.includes('time') ||
-                                      e.includes('Start') ||
-                                      e.includes('configuration')
-                                  ) && formIsChecked
-                                }
-                                value={rule.timeOfDay?.start ?? null}
-                                onError={(reason, value) => {
-                                  if (reason === 'invalidDate' || value === null) {
-                                    updateLocalRule(index, {
-                                      timeOfDay: {
-                                        ...rule.timeOfDay,
-                                        start: null,
-                                      },
-                                    });
-                                  }
-                                }}
-                                onChange={date =>
-                                  updateLocalRule(index, {
-                                    timeOfDay: {
-                                      ...rule.timeOfDay,
-                                      start: date ? dayjs(date, 'HH:mm:ss') : null,
-                                    },
-                                  })
-                                }
-                                fullWidth
-                                InputProps={{
-                                  endAdornment: (
-                                    <QueryBuilder color={'disabled'} cursor="pointer" />
-                                  ),
-                                  placeholder: 'Start Time',
-                                }}
-                              />
-                              <span>_</span>
-                              <ClockTimePicker
-                                withClear
-                                error={
-                                  errors.some(
-                                    e =>
-                                      e.includes('time') ||
-                                      e.includes('End') ||
-                                      e.includes('configuration')
-                                  ) && formIsChecked
-                                }
-                                value={rule.timeOfDay?.end ?? null}
-                                onError={(reason, value) => {
-                                  if (reason === 'invalidDate' || value === null) {
-                                    updateLocalRule(index, {
-                                      timeOfDay: {
-                                        ...rule.timeOfDay,
-                                        start: null,
-                                      },
-                                    });
-                                  }
-                                }}
-                                onChange={date =>
-                                  updateLocalRule(index, {
-                                    timeOfDay: {
-                                      ...rule.timeOfDay,
-                                      end: date ? dayjs(date, 'HH:mm:ss') : null,
-                                    },
-                                  })
-                                }
-                                fullWidth
-                                InputProps={{
-                                  endAdornment: (
-                                    <QueryBuilder color={'disabled'} cursor="pointer" />
-                                  ),
-                                  placeholder: 'End Time',
-                                }}
-                              />
-                            </div>
+                            <ClocksRender
+                              errors={errors}
+                              updateLocalRule={updateLocalRule}
+                              index={index}
+                              rule={rule}
+                            />
 
-                            <div style={{ marginTop: 24 }}>
+                            <div className={classes.capacityWrapper}>
                               <TextField
                                 fullWidth
                                 type="number"
@@ -878,43 +240,14 @@ export const EditTransportationModal: React.FC<
                           <Divider style={{ margin: '10px 0 0 0' }} />
                         ) : null}
                         {rule.expanded ? (
-                          <DialogActions>
-                            <div className={classes.actionsWrapper}>
-                              <div className={classes.buttonsWrapper}>
-                                <Button
-                                  onClick={() => {
-                                    if (rule.id) {
-                                      resetRulesToDefaultState();
-                                      resetRuleToOriginal(index);
-                                    } else {
-                                      setRules(prevState =>
-                                        prevState.filter((_, idx) => idx !== index)
-                                      );
-                                    }
-                                    setFormIsChecked(false);
-                                    setErrors([]);
-                                  }}
-                                  className={classes.cancelButton}
-                                >
-                                  Cancel
-                                </Button>
-                                <Button
-                                  onClick={() => {
-                                    if (rule.id) {
-                                      onEditRule(rule.id, index);
-                                    } else {
-                                      onAddRule(index);
-                                    }
-                                    setErrors([]);
-                                  }}
-                                  className={classes.saveButton}
-                                  disabled={!rule.dirty}
-                                >
-                                  Save
-                                </Button>
-                              </div>
-                            </div>
-                          </DialogActions>
+                          <ExpandedRulesRender
+                            rule={rule}
+                            editingElement={editingElement}
+                            dayOFWeekOptions={dayOFWeekOptions}
+                            index={index}
+                            onError={onError}
+                            setErrors={setErrors}
+                          />
                         ) : null}
                       </div>
                     )}
@@ -927,24 +260,11 @@ export const EditTransportationModal: React.FC<
         </DragDropContext>
 
         {(!rules.length || rules.every(rule => !rule.expanded)) && rules.length < 5 && (
-          <Button variant="outlined" onClick={addRule} fullWidth>
-            Add Rule
-          </Button>
+          <AddRuleRender />
         )}
       </DialogContent>
       {rules?.every(rule => !rule.expanded) && (
-        <DialogActions>
-          <div className={classes.actionsWrapper}>
-            <div className={classes.buttonsWrapper}>
-              <Button onClick={onCancel} className={classes.cancelButton}>
-                Cancel
-              </Button>
-              <Button onClick={patchUpdateRule} className={classes.saveButton}>
-                Save
-              </Button>
-            </div>
-          </div>
-        </DialogActions>
+        <ModalButtons editingElement={editingElement} onError={onError} onCancel={onCancel} />
       )}
       <RemoveRule
         open={isOpen}
