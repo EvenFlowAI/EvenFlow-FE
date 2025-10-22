@@ -25,6 +25,7 @@ import {
 } from '../../../types/types';
 import { EPricingDisplayType } from '../pricingSettings/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { TRuleState } from '../../../features/admin/Transportations/EditTransportationModal/helper';
 
 export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>(
   'ServiceRequestsScreen/getNonSelected'
@@ -334,6 +335,8 @@ export const setUpsellPaging = createAction<IPagingResponse>(
 export const setUpsellPageData = createAction<Partial<IPageRequest>>(
   'ServiceRequestsScreen/SetUpsellPageData'
 );
+export const setRules = createAction<TRuleState[]>('ServiceRequestsScreen/setRules');
+export const setFormIsChecked = createAction<boolean>('ServiceRequestsScreen/setFormIsChecked');
 export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>(
   'ServiceRequestsScreen/SetUpsellFilter'
 );
