@@ -71,7 +71,7 @@ class AuthService {
     return !!getAuthenticationTokenForAdmin();
   }
 
-  refreshRequest(): void {
+  syncRequestAuthWithLocalStorage(): void {
     const token = this.getLocalToken();
     if (token) {
       request.defaults.headers['Authorization'] = `Bearer ${token}`;
@@ -87,7 +87,7 @@ class AuthService {
       const data: IRefreshTokenData = { token: this.getRefreshToken() };
       const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Refresh, { data });
       this.setTokenForRefresh(resp.data);
-      this.refreshRequest();
+      this.syncRequestAuthWithLocalStorage();
     } catch (e) {
       // for refresh dead token
       removeAuthenticationTokenForSelfCustomer();
@@ -114,7 +114,7 @@ class AuthService {
       authChannel.postMessage({
         type: ADMIN_TOKEN_UPDATED,
       });
-      this.refreshRequest();
+      this.syncRequestAuthWithLocalStorage();
     } catch (e) {
       console.error(e);
     }
@@ -132,7 +132,7 @@ class AuthService {
 
     const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Request, { data });
     this.setTokens(resp.data);
-    this.refreshRequest();
+    this.syncRequestAuthWithLocalStorage();
   }
 
   logout(): void {
@@ -152,7 +152,7 @@ class AuthService {
         type: ADMIN_TOKEN_UPDATED,
       });
     }
-    this.refreshRequest();
+    this.syncRequestAuthWithLocalStorage();
   }
 }
 

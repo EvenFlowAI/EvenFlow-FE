@@ -43,8 +43,7 @@ authChannel.onmessage = event => {
   }
 };
 
-root.render(
-  <React.StrictMode>
+const content = (
     <ErrorBoundary fallback={<FallBack />}>
       <Provider store={store}>
         <StyledEngineProvider injectFirst>
@@ -59,7 +58,14 @@ root.render(
         </StyledEngineProvider>
       </Provider>
     </ErrorBoundary>
-  </React.StrictMode>
+);
+
+root.render(
+    process.env.REACT_APP_ENV !== 'local' ? (
+        <React.StrictMode>{content}</React.StrictMode>
+    ) : (
+        content
+    )
 );
 
 // If you want your app to work offline and load faster, you can change
