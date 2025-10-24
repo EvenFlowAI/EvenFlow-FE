@@ -18,9 +18,13 @@ const CustomerInfo = () => {
     <div className={classes.wrapper}>
       <div className={classes.title}>{t('Customer')}</div>
       <div>{customerName}</div>
+      {customerLoadedData?.phoneNumbers?.[0]?.length ? (
+        <div>Cell: {customerLoadedData?.phoneNumbers?.[0]}</div>
+      ) : null}
       <div>
         {selectedVehicle?.year ?? ''} {selectedVehicle?.make ?? ''} {selectedVehicle?.model ?? ''}
       </div>
+      <div>{selectedVehicle?.vin}</div>
     </div>
   ) : null;
 };

@@ -43,23 +43,25 @@ authChannel.onmessage = event => {
   }
 };
 
+const content = (
+  <ErrorBoundary fallback={<FallBack />}>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <CssBaseline />
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </Provider>
+  </ErrorBoundary>
+);
+
 root.render(
-  <React.StrictMode>
-    <ErrorBoundary fallback={<FallBack />}>
-      <Provider store={store}>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <CssBaseline />
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </LocalizationProvider>
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </Provider>
-    </ErrorBoundary>
-  </React.StrictMode>
+  process.env.REACT_APP_ENV !== 'local' ? <React.StrictMode>{content}</React.StrictMode> : content
 );
 
 // If you want your app to work offline and load faster, you can change
