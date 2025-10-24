@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useMultipleACStyles = makeStyles()(() => ({
   tag: {
     display: 'flex',
@@ -117,11 +116,16 @@ export const useStyles = makeStyles()(() => ({
     textTransform: 'uppercase',
     flexShrink: 0,
   },
-}));
-
-//
-export const useAutocompleteStyles = makeStyles()(() => ({
-  clearIndicator: {
-    width: 0,
+  expandedRuleWrapper: {
+    padding: 12,
+  },
+  ruleNameInput: {
+    marginBottom: 20,
+  },
+  capacityWrapper: {
+    marginTop: 24,
+  },
+  dividerTop: {
+    margin: '10px 0 0 0',
   },
 }));

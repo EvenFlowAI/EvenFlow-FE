@@ -38,8 +38,11 @@ import {
   setUpsellOrdering,
   setUpsellPaging,
   setUpsellPageData,
+  setRules,
+  setFormIsChecked,
 } from './actions';
 import { defaultOrder } from '../../../config/config';
+import { TRuleState } from '../../../features/admin/Transportations/EditTransportationModal/helper';
 
 type TState = {
   nonSelectedList: IServiceRequest[];
@@ -72,6 +75,8 @@ type TState = {
   upsellPageData: IPageRequest;
   upsellFilter: Partial<IServiceRequestNonAddedFilter>;
   upsellLoading: boolean;
+  rules: TRuleState[];
+  formIsChecked: boolean;
 };
 const initialState: TState = {
   nonSelectedList: [],
@@ -104,6 +109,8 @@ const initialState: TState = {
   upsellPageData: { ...defaultPageData },
   upsellFilter: { searchTerm: '' },
   upsellLoading: false,
+  rules: [],
+  formIsChecked: false,
 };
 
 export const serviceRequestsReducer = createReducer(initialState, builder =>
@@ -202,5 +209,11 @@ export const serviceRequestsReducer = createReducer(initialState, builder =>
     })
     .addCase(setUpsellPageData, (state, { payload }) => {
       return { ...state, upsellPageData: { ...state.upsellPageData, ...payload } };
+    })
+    .addCase(setRules, (state, { payload }) => {
+      return { ...state, rules: payload };
+    })
+    .addCase(setFormIsChecked, (state, { payload }) => {
+      return { ...state, formIsChecked: payload };
     })
 );
