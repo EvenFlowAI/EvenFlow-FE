@@ -19,7 +19,7 @@ export const useAnalyticsForParentSite = (
 
     if (!trackerCreated) {
       console.log(TRACKERS[0]?.measurementId);
-      if (opt_clientId) options.clientId = opt_clientId;
+      if (opt_clientId) options.clientId = opt_clientId || (clientId as string);
 
       const trackersData: TReactGATracker[] = TRACKERS.map(el => ({
         trackingId: el.measurementId,
@@ -69,6 +69,8 @@ export const useAnalyticsForParentSite = (
         console.log('TEMP_LOG: create tracker with no-client-id');
       }
     }, 3500);
+
+    return () => clearTimeout(timeout);
   }, [id, trackerCreated, clientId]);
 
   useEffect(() => {
