@@ -49,7 +49,6 @@ import { useException } from '../../../hooks/useException/useException';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import usePopState from '../../../hooks/usePopState/usePopState';
-import GA4SessionSync from '../../../utils/ga4SessionSync/GA4SessionSync';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
@@ -252,7 +251,6 @@ export const Welcome = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={frameTheme}>
         <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew} />
-        <GA4SessionSync />
         <FrameWelcomeLayout>
           {/*<LanguageSwitcher/>*/}
           {getComponent()}
