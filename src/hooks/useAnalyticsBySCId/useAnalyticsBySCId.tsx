@@ -47,19 +47,18 @@ export const useAnalyticsForParentSite = (
     const handleMessage = (event: MessageEvent) => {
       const clientId = typeof event.data === 'string' ? event.data : '';
 
-      if (clientId) {
-        console.log('TEMP_LOG: client_id obtained from the dealer website:', clientId);
-        if (clientId?.length) setClientId(clientId || clientIdLocal);
-
-        if (!trackerCreated && id) {
-          createTracker(clientId || '', trackerCreated);
-        }
-      } else {
-        if (!trackerCreated && id) {
-          createTracker(clientIdLocal || '', trackerCreated);
-        }
-      }
+      console.log('TEMP_LOG: client_id obtained from the dealer website:', clientId);
+      if (clientId?.length) setClientId(clientId || clientIdLocal);
     };
+
+    if (clientIdLocal) {
+      console.log('TEMP_LOG: client_id obtained from the dealer website:', clientIdLocal);
+      // if (clientIdLocal?.length) setClientId( || clientIdLocal);
+
+      if (!trackerCreated && id) {
+        createTracker(clientIdLocal || '', trackerCreated);
+      }
+    }
 
     window.addEventListener('message', handleMessage);
   }, [id, trackerCreated]);
