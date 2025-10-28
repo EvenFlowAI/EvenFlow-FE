@@ -62,7 +62,6 @@ export const useAnalyticsForParentSite = (
     };
 
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
   }, [id, trackerCreated]);
 
   // useEffect(() => {
