@@ -5,19 +5,17 @@ import { options } from '../../utils/constants';
 import { TReactGATracker } from '../../utils/types';
 import { TArgCallback } from '../../types/types';
 import { getTrackersForParentSite } from '../../utils/getTrackersForParentSite';
-import { getTrackerById } from '../../utils/getTrackerById';
 
 export const useAnalyticsForParentSite = (
   id: string,
   trackerCreated: boolean,
   setTrackerCreated: TArgCallback<string[]>
 ) => {
-  const [clientId, setClientId] = useState<string | null>(null);
-
-  function createTracker(opt_clientId = '', trackerCreated: boolean) {
+  function createTracker(trackerCreated: boolean) {
     const TRACKERS = getTrackersForParentSite(id);
 
     if (!trackerCreated) {
+      const opt_clientId = sessionStorage.getItem('clientId');
       if (opt_clientId) options.clientId = opt_clientId;
 
       const trackersData: TReactGATracker[] = TRACKERS.map(el => ({
@@ -28,7 +26,7 @@ export const useAnalyticsForParentSite = (
         },
       }));
 
-      console.log('TEMP_LOG: initialization ga4');
+      console.log('TEMP_LOG: initialization ga4', opt_clientId);
       ReactGA.initialize(trackersData);
 
       TRACKERS.forEach(item => {
@@ -49,10 +47,10 @@ export const useAnalyticsForParentSite = (
 
       if (clientId) {
         console.log('TEMP_LOG: client_id obtained from the dealer website:', clientId);
-        if (clientId?.length) setClientId(clientId);
+        if (clientId?.length) sessionStorage.setItem('clientId', clientId);
 
         if (!trackerCreated && id) {
-          createTracker(clientId, trackerCreated);
+          createTracker(trackerCreated);
         }
       }
     };
@@ -63,14 +61,13 @@ export const useAnalyticsForParentSite = (
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (!trackerCreated && id && clientId === null) {
-        createTracker('', trackerCreated);
-        console.log('TEMP_LOG: create tracker with no-client-id');
+      if (!trackerCreated && id) {
+        createTracker(trackerCreated);
       }
-    }, 3500);
+    }, 2500);
 
     return () => clearTimeout(timeout);
-  }, [id, trackerCreated, clientId]);
+  }, [id, trackerCreated]);
 
   useEffect(() => {
     trackerCreated &&
