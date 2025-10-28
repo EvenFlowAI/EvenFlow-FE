@@ -18,6 +18,7 @@ export const useAnalyticsForParentSite = (
     const TRACKERS = getTrackersForParentSite(id);
 
     if (!trackerCreated) {
+      console.log(TRACKERS[0]?.measurementId);
       if (opt_clientId) options.clientId = opt_clientId;
 
       const trackersData: TReactGATracker[] = TRACKERS.map(el => ({
@@ -28,7 +29,7 @@ export const useAnalyticsForParentSite = (
         },
       }));
 
-      console.log('TEMP_LOG: initialization ga4, client_id: ', opt_clientId);
+      console.log('TEMP_LOG: initialization ga4');
       ReactGA.initialize(trackersData);
 
       TRACKERS.forEach(item => {
@@ -63,13 +64,11 @@ export const useAnalyticsForParentSite = (
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (!trackerCreated && id && clientId === null) {
-        createTracker('', trackerCreated);
+      if (!trackerCreated && id) {
+        createTracker(clientId || '', trackerCreated);
         console.log('TEMP_LOG: create tracker with no-client-id');
       }
     }, 3500);
-
-    return () => clearTimeout(timeout);
   }, [id, trackerCreated, clientId]);
 
   useEffect(() => {
