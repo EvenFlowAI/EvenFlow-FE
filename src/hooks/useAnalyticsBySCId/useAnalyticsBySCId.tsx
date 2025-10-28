@@ -12,14 +12,14 @@ export const useAnalyticsForParentSite = (
   trackerCreated: boolean,
   setTrackerCreated: TArgCallback<string[]>
 ) => {
-  const [clientId, setClientId] = useState<string | null>(null);
+  const [clientId2, setClientId] = useState<string | null>(null);
 
   function createTracker(opt_clientId = '', trackerCreated: boolean) {
     const TRACKERS = getTrackersForParentSite(id);
 
     if (!trackerCreated) {
       console.log(TRACKERS[0]?.measurementId);
-      if (opt_clientId) options.clientId = opt_clientId || (clientId as string);
+      if (opt_clientId) options.clientId = opt_clientId || (clientId2 as string);
 
       const trackersData: TReactGATracker[] = TRACKERS.map(el => ({
         trackingId: el.measurementId,
@@ -50,7 +50,10 @@ export const useAnalyticsForParentSite = (
 
       if (clientId) {
         console.log('TEMP_LOG: client_id obtained from the dealer website:', clientId);
-        if (clientId?.length) setClientId(clientId);
+        if (clientId?.length) {
+          console.log('clientId.length, trackerCreated, id', clientId, trackerCreated, id);
+          setClientId(clientId);
+        }
 
         if (!trackerCreated && id) {
           createTracker(clientId, trackerCreated);
@@ -65,13 +68,13 @@ export const useAnalyticsForParentSite = (
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!trackerCreated && id) {
-        createTracker(clientId || '', trackerCreated);
-        console.log('TEMP_LOG: create tracker with no-client-id');
+        createTracker(clientId2 || '', trackerCreated);
+        console.log('TEMP_LOG: create tracker with no-client-id', clientId2);
       }
     }, 3500);
 
     return () => clearTimeout(timeout);
-  }, [id, trackerCreated, clientId]);
+  }, [id, trackerCreated, clientId2]);
 
   useEffect(() => {
     trackerCreated &&
