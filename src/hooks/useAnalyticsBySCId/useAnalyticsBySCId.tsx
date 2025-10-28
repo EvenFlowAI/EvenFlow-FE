@@ -12,13 +12,13 @@ export const useAnalyticsForParentSite = (
   trackerCreated: boolean,
   setTrackerCreated: TArgCallback<string[]>
 ) => {
-  const [clientIdLocal, setClientId] = useState<string | null>(null);
+  const [clientId, setClientId] = useState<string | null>(null);
 
   function createTracker(opt_clientId = '', trackerCreated: boolean) {
     const TRACKERS = getTrackersForParentSite(id);
 
     if (!trackerCreated) {
-      if (opt_clientId) options.clientId = opt_clientId || (clientIdLocal ? clientIdLocal : '');
+      if (opt_clientId) options.clientId = opt_clientId;
 
       const trackersData: TReactGATracker[] = TRACKERS.map(el => ({
         trackingId: el.measurementId,
@@ -49,32 +49,28 @@ export const useAnalyticsForParentSite = (
 
       if (clientId) {
         console.log('TEMP_LOG: client_id obtained from the dealer website:', clientId);
-        if (clientId?.length) setClientId(clientId || clientIdLocal);
+        if (clientId?.length) setClientId(clientId);
 
         if (!trackerCreated && id) {
-          createTracker(clientId || '', trackerCreated);
-        }
-      } else {
-        if (!trackerCreated && id) {
-          createTracker(clientIdLocal || '', trackerCreated);
+          createTracker(clientId, trackerCreated);
         }
       }
     };
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [id, trackerCreated]);
+  }, [trackerCreated, id]);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     if (!trackerCreated && id && clientId === null) {
-  //       createTracker('', trackerCreated);
-  //       console.log('TEMP_LOG: create tracker with no-client-id');
-  //     }
-  //   }, 3500);
-  //
-  //   return () => clearTimeout(timeout);
-  // }, [id, trackerCreated, clientId]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!trackerCreated && id && clientId === null) {
+        createTracker('', trackerCreated);
+        console.log('TEMP_LOG: create tracker with no-client-id');
+      }
+    }, 3500);
+
+    return () => clearTimeout(timeout);
+  }, [id, trackerCreated, clientId]);
 
   useEffect(() => {
     trackerCreated &&
