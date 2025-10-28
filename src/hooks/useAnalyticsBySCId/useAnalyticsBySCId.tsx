@@ -28,7 +28,7 @@ export const useAnalyticsForParentSite = (
         },
       }));
 
-      console.log('TEMP_LOG: initialization ga4');
+      console.log('TEMP_LOG: initialization ga4, client_id: ', opt_clientId);
       ReactGA.initialize(trackersData);
 
       TRACKERS.forEach(item => {
