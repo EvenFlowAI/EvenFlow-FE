@@ -57,7 +57,7 @@ export const useAnalyticsForParentSite = (
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [trackerCreated, id]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
