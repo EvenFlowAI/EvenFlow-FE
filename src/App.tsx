@@ -144,20 +144,18 @@ const App = () => {
     disableEmotionWarning();
   }, []);
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      console.log('222 clientId event received:', event.data);
-      const clientId = typeof event.data === 'string' ? event.data : '';
+  const handleMessage = (event: MessageEvent) => {
+    console.log('222 clientId event received:', event.data);
+    const clientId = typeof event.data === 'string' ? event.data : '';
 
-      if (clientId) {
-        console.log('222 TEMP_LOG: client_id obtained from the dealer website:', clientId);
-        if (clientId?.length) sessionStorage.setItem('clientId', clientId);
-      }
-    };
+    if (clientId) {
+      console.log('222 TEMP_LOG: client_id obtained from the dealer website:', clientId);
+      if (clientId?.length) sessionStorage.setItem('clientId', clientId);
+    }
+  };
 
-    window.addEventListener('message', handleMessage);
-    // return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  window.addEventListener('message', handleMessage);
+  // return () => window.removeEventListener('message', handleMessage);
 
   const handleClose = (key: React.ReactText) => () => {
     notificationsRef?.current?.closeSnackbar(key);
