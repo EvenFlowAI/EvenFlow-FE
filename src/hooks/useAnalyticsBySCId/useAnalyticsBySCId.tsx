@@ -43,6 +43,7 @@ export const useAnalyticsForParentSite = (
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      console.log('clientId event received:', event.data);
       const clientId = typeof event.data === 'string' ? event.data : '';
 
       if (clientId) {
@@ -56,7 +57,7 @@ export const useAnalyticsForParentSite = (
     };
 
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    // return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   useEffect(() => {
