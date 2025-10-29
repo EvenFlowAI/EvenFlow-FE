@@ -144,6 +144,17 @@ const App = () => {
     disableEmotionWarning();
   }, []);
 
+  const handleMessage = (event: MessageEvent) => {
+    const clientId = typeof event.data === 'string' ? event.data : '';
+
+    if (clientId) {
+      console.log('TEMP_LOG: App.tsx: client_id obtained from the dealer website:', clientId);
+      if (clientId?.length) sessionStorage.setItem('clientId', clientId);
+    }
+  };
+
+  window.addEventListener('message', handleMessage);
+
   const handleClose = (key: React.ReactText) => () => {
     notificationsRef?.current?.closeSnackbar(key);
   };
