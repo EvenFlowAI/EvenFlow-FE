@@ -80,6 +80,11 @@ export interface ICustomerLoadedData {
   id: string;
   sessionId?: string;
   phoneNumbers: string[];
+  phoneNumbersByCategory?: {
+    home?: string;
+    cell?: string;
+    other?: string;
+  };
   vehicles: ILoadedVehicle[];
   fromSearchByName?: boolean;
   isUpdating?: boolean;
