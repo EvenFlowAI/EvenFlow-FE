@@ -87,6 +87,7 @@ const AudienceForm = ({
                   value={criteria.type}
                   disableClearable
                   options={[
+                    'Days To Future Appointment',
                     'Days From Last No Show Appointment',
                     'Days From Last Cancel Appointment',
                     'Days From Last Showed Appointment',
