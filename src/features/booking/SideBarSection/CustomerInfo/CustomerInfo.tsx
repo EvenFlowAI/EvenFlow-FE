@@ -14,16 +14,39 @@ const CustomerInfo = () => {
     customerLoadedData?.fullName ??
     `${customerLoadedData?.firstName ?? ''} ${customerLoadedData?.lastName ?? ''}`;
 
+  const formatPhoneNumber = (raw?: string): string => {
+    if (!raw) return '';
+
+    const hasSeparators = /[-.()\s]/.test(raw);
+    if (hasSeparators) return raw;
+
+    const digitsOnly = raw.replace(/\D/g, '');
+    if (digitsOnly.length === 10) {
+      return `${digitsOnly.slice(0, 3)}.${digitsOnly.slice(3, 6)}.${digitsOnly.slice(6)}`;
+    }
+
+    return raw;
+  };
+
+  const getPreferredPhone = (): string => {
+    const phones = customerLoadedData?.phoneNumbersByCategory;
+    if (phones?.cell) return `Cell: ${formatPhoneNumber(phones.cell)}`;
+    if (phones?.home) return `Home: ${formatPhoneNumber(phones.home)}`;
+    if (phones?.other) return `Phone: ${formatPhoneNumber(phones.other)}`;
+    return 'Phone: Missing';
+  };
+
   return userType === EUserType.Existing && customerLoadedData ? (
     <div className={classes.wrapper}>
       <div className={classes.title}>{t('Customer')}</div>
       <div>{customerName}</div>
-      {customerLoadedData?.phoneNumbers?.[0]?.length ? (
-        <div>Cell: {customerLoadedData?.phoneNumbers?.[0]}</div>
-      ) : null}
+
+      <div>{getPreferredPhone()}</div>
+
       <div>
         {selectedVehicle?.year ?? ''} {selectedVehicle?.make ?? ''} {selectedVehicle?.model ?? ''}
       </div>
+
       <div>{selectedVehicle?.vin}</div>
     </div>
   ) : null;

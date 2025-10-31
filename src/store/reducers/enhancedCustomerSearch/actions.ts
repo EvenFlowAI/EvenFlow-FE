@@ -146,6 +146,7 @@ export const loadCustomersByPhoneOrEmail =
           const { cellPhone, homePhone, otherPhone, vehicles } = customer;
           const phoneNumber = cellPhone ?? homePhone ?? otherPhone;
           const vehiclesData = normalizeVehicles(vehicles);
+
           const data: ICustomerLoadedData = {
             emails: customer.email ? [customer.email] : [],
             firstName: customer.firstName,

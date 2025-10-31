@@ -154,6 +154,7 @@ const CustomerSearchTable: React.FC<
       engineTypeId: item.engineTypeId ?? null,
       id: item.vehicleId,
     };
+
     const data: ICustomerLoadedData = {
       emails: item?.email ? [item.email] : [],
       firstName: item?.firstName ?? '',
@@ -161,6 +162,11 @@ const CustomerSearchTable: React.FC<
       id: item.customerId?.toString() ?? null,
       companyName: item?.companyName ?? '',
       phoneNumbers,
+      phoneNumbersByCategory: {
+        cell: customerData?.cellPhone,
+        home: customerData?.homePhone,
+        other: customerData?.otherPhone,
+      },
       vehicles: [vehicle],
       fromSearchByName: true,
       isUpdating,
@@ -422,6 +428,7 @@ const CustomerSearchTable: React.FC<
 
   const onSelectCustomerForNewVehicle = (customer: ICustomerWithPhones) => async () => {
     setFormChecked(false);
+
     const phoneNumber = customer.cellPhone || customer.homePhone || '';
     const data: ICustomerLoadedData = {
       emails: customer?.email ? [customer.email] : [],
