@@ -3,14 +3,30 @@ import { Chip, Tooltip } from '@mui/material';
 import { TOption } from '../../types';
 import { calculateMaxVisibleTags } from '../helper';
 
+const dayOrder: Record<string, number> = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+};
+
 export const renderChipTags = (
   selectedValues: TOption[],
   getTagProps: (params: { index: number }) => any,
   containerWidth = 500
 ) => {
-  const maxVisibleTags = calculateMaxVisibleTags(selectedValues, containerWidth);
-  const visibleTags = selectedValues.slice(0, maxVisibleTags);
-  const remainingCount = selectedValues.length - maxVisibleTags;
+  const sortedValues = [...selectedValues].sort((a, b) => {
+    const aIndex = dayOrder[a.name] ?? 999;
+    const bIndex = dayOrder[b.name] ?? 999;
+    return aIndex - bIndex;
+  });
+
+  const maxVisibleTags = calculateMaxVisibleTags(sortedValues, containerWidth);
+  const visibleTags = sortedValues.slice(0, maxVisibleTags);
+  const remainingCount = sortedValues.length - maxVisibleTags;
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
@@ -45,7 +61,7 @@ export const renderChipTags = (
           <Tooltip
             title={
               <div>
-                {selectedValues.slice(maxVisibleTags).map(option => (
+                {sortedValues.slice(maxVisibleTags).map(option => (
                   <div key={option.value}>{option.name}</div>
                 ))}
               </div>
