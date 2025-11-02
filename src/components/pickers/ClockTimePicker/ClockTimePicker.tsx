@@ -5,6 +5,7 @@ import { useDatePickerStyles } from '../../../hooks/styling/useDatePickerStyles'
 import { InputLabel } from '@mui/material';
 import { TParsableDate } from '../../../types/types';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
+import dayjs from 'dayjs';
 
 type TProps = MobileTimePickerProps<TParsableDate> & {
   fullWidth?: boolean;
@@ -33,6 +34,16 @@ const ClockTimePicker: React.FC<TProps> = ({
   ...props
 }) => {
   const { classes } = useDatePickerStyles();
+
+  console.log(value);
+
+  const parsedValue = dayjs(value); // або твій об'єкт
+
+  console.log(InputProps?.placeholder, !parsedValue.isValid());
+
+  if (!parsedValue.isValid()) {
+    value = null;
+  }
 
   return (
     <>

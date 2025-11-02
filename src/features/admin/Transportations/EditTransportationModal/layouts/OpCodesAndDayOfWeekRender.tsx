@@ -145,7 +145,7 @@ const OpCodesAndDayOfWeekRender = ({
     <>
       <Autocomplete
         multiple
-        style={{ marginBottom: 20 }}
+        style={{ marginBottom: 20, marginTop: 20 }}
         classes={multipleACSClasses}
         options={requestsOptions}
         disableCloseOnSelect
