@@ -33,6 +33,7 @@ const AskChangesCompleted = () => {
     editingPosition,
     isConsentsLoading,
   } = useSelector((state: RootState) => state.appointmentFrame);
+  const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { isChangesCompletedOpen } = useSelector((state: RootState) => state.modals);
   const currentUser = useCurrentUser();
   const dispatch = useDispatch();
@@ -117,7 +118,7 @@ const AskChangesCompleted = () => {
         {t('Are you satisfied with the appointment changes?')}
       </DialogTitle>
       <div className={classes.wrapper}>
-        {isUsualFlowNeeded || isNewServiceOption ? null : (
+        {isUsualFlowNeeded || isNewServiceOption || isCloneMode ? null : (
           <Button variant="text" className={classes.textButton} onClick={onAdditionalChanges}>
             {t('I’d like to make additional changes')}
           </Button>

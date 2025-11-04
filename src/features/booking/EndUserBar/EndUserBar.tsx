@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AppBar, Avatar, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { getInitials } from '../../../utils/utils';
 import { useStyles } from './styles';
+import { setIsCloneMode } from '../../../store/reducers/appointment/actions';
 
 export const EndUserBar = () => {
   const scProfile = useSelector((state: RootState) => {
     return state.appointment.scProfile;
   });
+  const dispatch = useDispatch();
   const theme = useTheme();
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    const hasAppointmentClone = window.location.href.includes('appointment-clone');
+    if (hasAppointmentClone) {
+      dispatch(setIsCloneMode(true));
+    }
+  }, []);
 
   const { classes } = useStyles();
   return (

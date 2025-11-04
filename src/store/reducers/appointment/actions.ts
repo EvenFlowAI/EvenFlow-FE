@@ -151,6 +151,10 @@ export const setSlotsTransportationId = createAction<number | null>(
 export const setSlotsSearchDate = createAction<ParsableDate>(
   'Appointment/SetSlotsServiceSearchDate'
 );
+export const setIsCloneMode = createAction<boolean>('Appointment/setIsCloneMode');
+export const setHasRedirectFromAppointmentDateSelection = createAction<boolean>(
+  'Appointment/hasRedirectFromAppointmentDateSelection'
+);
 
 export const setLoadedDateRange = createAction<ISearchedDateRange>(
   'Appointment/SetLoadedDateRange'

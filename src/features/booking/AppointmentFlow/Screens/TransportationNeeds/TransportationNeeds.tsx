@@ -46,6 +46,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
     isTransportationsLoading,
     sideBarSteps,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
+  const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector(({ serviceTypes }: RootState) => serviceTypes);
   const [selectedOption, setSelectedOption] = useState<IFirstScreenOption | null>(null);
   const { id } = useParams<{ id: string }>();
@@ -145,6 +146,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
         </TextWrapper>
       )}
       <ActionButtons
+        hidePrev={isCloneMode}
         onBack={onBack}
         nextLabel={t('Next')}
         onNext={() => handleNext(transportation)}

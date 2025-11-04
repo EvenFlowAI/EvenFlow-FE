@@ -27,7 +27,7 @@ type TProps = {
 };
 
 export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack }) => {
-  const { appointment } = useSelector((state: RootState) => state.appointment);
+  const { appointment, isCloneMode } = useSelector((state: RootState) => state.appointment);
   const {
     selectedInitialTiming,
     selectedTime,
@@ -129,6 +129,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
         })}
       </TimingWrapper>
       <ActionButtons
+        hidePrev={isCloneMode}
         onBack={onBack}
         onNext={onSubmit}
         nextDisabled={!isTimingValid}

@@ -110,6 +110,8 @@ export const ManageAppointment: React.FC<
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('smMobile'));
 
+  const { isCloneMode } = useSelector((state: RootState) => state.appointment);
+
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
     [currentUser, scProfile]
@@ -150,7 +152,12 @@ export const ManageAppointment: React.FC<
   }, []);
 
   useEffect(() => {
-    if (appointmentByKey && !appointmentByKey?.vehicle?.mileage && !selectedVehicle?.mileage) {
+    if (
+      appointmentByKey &&
+      !appointmentByKey?.vehicle?.mileage &&
+      !selectedVehicle?.mileage &&
+      !isCloneMode
+    ) {
       onMileageOpen();
     }
   }, [appointmentByKey, selectedVehicle]);

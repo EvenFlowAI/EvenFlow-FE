@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BaseModal, DialogTitle } from '../../BaseModal/BaseModal';
 import { useTranslation } from 'react-i18next';
 import { setSlotsWarningOpen } from '../../../../store/reducers/modals/actions';
@@ -15,7 +15,7 @@ const SlotImpactedWarning = () => {
   const { isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const { customerLoadedData, isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { currentScreen } = useSelector((state: RootState) => state.appointmentFrame);
   const dispatch = useDispatch();
   const { classes } = useStyles();
@@ -44,6 +44,12 @@ const SlotImpactedWarning = () => {
       redirect();
     }
   };
+
+  useEffect(() => {
+    if (isCloneMode) {
+      onNext();
+    }
+  }, []);
 
   const onCancel = () => {
     dispatch(setSlotsWarningOpen(false));

@@ -40,6 +40,7 @@ export const Consultants: React.FC<TProps> = ({
     serviceTypeOption,
     isConsultantsLoading,
   } = useSelector((state: RootState) => state.appointmentFrame);
+  const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const dispatch = useDispatch();
@@ -126,7 +127,12 @@ export const Consultants: React.FC<TProps> = ({
           ))}
         </ConsultantsWrapper>
       )}
-      <ActionButtons onNext={handleNext} onBack={handleBack} nextLabel={t('Next')} />
+      <ActionButtons
+        onNext={handleNext}
+        hidePrev={isCloneMode}
+        onBack={handleBack}
+        nextLabel={t('Next')}
+      />
     </StepWrapper>
   );
 };

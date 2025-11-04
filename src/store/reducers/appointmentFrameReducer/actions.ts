@@ -82,6 +82,7 @@ import {
   selectSRMultiple,
   setAppointmentWasChanged,
   setCustomerLoadedData,
+  setIsCloneMode,
   setSlotsSearchDate,
   setSlotsServiceTypeOptionId,
   setSlotsTransportationId,
@@ -1189,9 +1190,10 @@ export const createOrUpdateAppointment =
     if (isAdmin) delete data.schedulerType;
 
     try {
-      const endpoint = appointmentFrame.hashKey
-        ? Api.endpoints.Appointments.UpdateByKey
-        : Api.endpoints.Appointments.Create;
+      const endpoint =
+        appointmentFrame.hashKey && !appointment.isCloneMode
+          ? Api.endpoints.Appointments.UpdateByKey
+          : Api.endpoints.Appointments.Create;
 
       const response = await Api.call<ICreateAppointmentResp>(endpoint, {
         data,
@@ -1204,6 +1206,7 @@ export const createOrUpdateAppointment =
       onError(e);
     } finally {
       dispatch(setAppointmentSaving(false));
+      dispatch(setIsCloneMode(false));
     }
   };
 
@@ -1337,7 +1340,6 @@ export const loadAppointmentRequestsPrices =
     ) {
       Api.call(Api.endpoints.AppointmentPricing.GetPriceList, { data })
         .then(result => {
-          console.log('result', result);
           if (result) dispatch(getAppointmentRequestsPrices(result.data));
           dispatch(setAppointmentsLoading(false));
         })

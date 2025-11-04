@@ -15,6 +15,9 @@ import { TitleWrapper } from './styles';
 import dayjs from 'dayjs';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { setSlotsWarningOpen } from '../../../../../../store/reducers/modals/actions';
+import { useModal } from '../../../../../../hooks/useModal/useModal';
+import MileageModal from '../../../../../../components/modals/booking/MileageModal/MileageModal';
+import { setHasRedirectFromAppointmentDateSelection } from '../../../../../../store/reducers/appointment/actions';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -29,12 +32,19 @@ export const AppointmentSelectedDate: React.FC<
     waitListSettings,
     dropOffSettings,
     customerLoadedData,
+    isCloneMode,
+    hasRedirectFromAppointmentDateSelection,
   } = useSelector((state: RootState) => state.appointment);
   const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { wasWarningShowed } = useSelector((state: RootState) => state.modals);
-  const { serviceTypeOption, isAppointmentSaving, appointmentByKey, transportation } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const {
+    serviceTypeOption,
+    isAppointmentSaving,
+    appointmentByKey,
+    transportation,
+    selectedVehicle,
+  } = useSelector((state: RootState) => state.appointmentFrame);
+  const { onOpen, isOpen, onClose } = useModal();
   const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot | null>(null);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -112,6 +122,20 @@ export const AppointmentSelectedDate: React.FC<
     }
   };
 
+  useEffect(() => {
+    if (isCloneMode && !hasRedirectFromAppointmentDateSelection) {
+      onOpen();
+    }
+  }, []);
+
+  const handleCloseMileageModal = () => {
+    onClose();
+    if (!hasRedirectFromAppointmentDateSelection) {
+      dispatch(setHasRedirectFromAppointmentDateSelection(true));
+      handleChangeSlot();
+    }
+  };
+
   return (
     <ConfirmationItemWrapper>
       <TitleWrapper>
@@ -161,6 +185,7 @@ export const AppointmentSelectedDate: React.FC<
           {waitListData?.text ?? t('Waitlist only')}
         </div>
       ) : null}
+      <MileageModal open={isOpen} onClose={onClose} onSave={handleCloseMileageModal} blockClosing />
     </ConfirmationItemWrapper>
   );
 };
