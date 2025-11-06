@@ -83,6 +83,7 @@ export const AppointmentSlots: React.FC<
     slotsTransportationId,
     slotsSearchedDate,
     selectedSRComments,
+    isCloneMode,
   } = useSelector((state: RootState) => state.appointment);
 
   const {
@@ -715,7 +716,7 @@ export const AppointmentSlots: React.FC<
           onBack={handleBack}
           onNext={handleNext}
           nextDisabled={nextDisabled}
-          nextLabel={t('Next')}
+          nextLabel={isCloneMode ? t('Confirm') : t('Next')}
           loading={isConsultantsLoading || isConsentsLoading}
         />
         <AppointmentFilters

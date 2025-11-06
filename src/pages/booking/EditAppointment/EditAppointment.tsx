@@ -104,8 +104,11 @@ export const EditAppointment = () => {
           saveCustomerCache(customer);
           dispatch(setCurrentFrameScreen('manageAppointment'));
           if (data.appointmentStatus === AppointmentStatus.Cancelled) {
-            setState('canceled');
-            return;
+            const hasAppointmentClone = window.location.href.includes('appointment-clone');
+            if (!hasAppointmentClone) {
+              setState('canceled');
+              return;
+            }
           }
           const [hours, minutes] = data.timeSlot.split(':');
           const formattedDate = dayjs(data.dateInUtc).format();
@@ -115,8 +118,12 @@ export const EditAppointment = () => {
             .minute(+minutes)
             .format(dateTimeFormat);
           if (dayjs.utc().diff(dateTime) >= 0) {
-            setState('passed');
-            return;
+            const hasAppointmentClone = window.location.href.includes('appointment-clone');
+
+            if (!hasAppointmentClone) {
+              setState('passed');
+              return;
+            }
           }
           if (selectedScId) {
             history.push('/f/appointment-manage/' + encodeSCID(selectedScId));

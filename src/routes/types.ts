@@ -87,6 +87,7 @@ export enum EndUser {
   CancelAppointmentFromEmail = '/appointment-cancel/:id/by-key',
   EditAppointment = '/appointment-update/:id',
   EditAppointmentFromEmail = '/appointment-update/:id/by-key',
+  CloneAppointmentFromEmail = '/appointment-clone/:id/by-key',
   Appointment = '/appointment/:id',
   AppointmentFrame = '/f/appointment/:id',
   ManageAppointmentFrame = '/f/appointment-manage/:id',

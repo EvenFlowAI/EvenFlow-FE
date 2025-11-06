@@ -147,9 +147,7 @@ const ProbabilityApproach = () => {
           }}
           color="primary"
           variant="contained"
-          onClick={() => {
-            console.log('test click');
-          }}
+          onClick={() => {}}
         >
           Add segment
         </Button>

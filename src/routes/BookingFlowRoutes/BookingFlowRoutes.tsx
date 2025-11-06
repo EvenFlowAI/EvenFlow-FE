@@ -26,6 +26,7 @@ const BookingFlowRoutes = () => {
       <Route path={Routes.EndUser.CancelAppointmentFromEmail} exact component={CancelAppointment} />
       <Route path={Routes.EndUser.EditAppointment} exact component={EditAppointment} />
       <Route path={Routes.EndUser.EditAppointmentFromEmail} exact component={EditAppointment} />
+      <Route path={Routes.EndUser.CloneAppointmentFromEmail} exact component={EditAppointment} />
     </Switch>
   );
 };

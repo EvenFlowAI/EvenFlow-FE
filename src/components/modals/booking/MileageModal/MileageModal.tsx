@@ -11,12 +11,9 @@ import { useTranslation } from 'react-i18next';
 import { getCurrentAppointment } from '../../../../store/reducers/appointments/actions';
 import { BfButtonsWrapper } from '../../../styled/BfButtonsWrapper';
 
-const MileageModal: React.FC<DialogProps & { onSave: TCallback; isAdminPanel?: boolean }> = ({
-  open,
-  onClose,
-  isAdminPanel,
-  onSave,
-}) => {
+const MileageModal: React.FC<
+  DialogProps & { onSave: TCallback; isAdminPanel?: boolean; blockClosing?: boolean }
+> = ({ open, onClose, isAdminPanel, onSave, blockClosing }) => {
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
   const { selectedVehicle } = useSelector((state: RootState) => state.appointmentFrame);
   const { currentAppointment } = useSelector((state: RootState) => state.appointments);
@@ -49,7 +46,9 @@ const MileageModal: React.FC<DialogProps & { onSave: TCallback; isAdminPanel?: b
   };
 
   const handleSave = () => {
-    updateData().then(onSave);
+    updateData().then(() => {
+      onSave();
+    });
   };
 
   const onCancel = () => {
@@ -59,7 +58,9 @@ const MileageModal: React.FC<DialogProps & { onSave: TCallback; isAdminPanel?: b
 
   return (
     <BaseModal open={open} onClose={() => {}} width={550}>
-      <DialogTitle onClose={onCancel}>{t('Please select your estimated mileage')}</DialogTitle>
+      <DialogTitle onClose={blockClosing ? () => {} : onCancel}>
+        {t('Please select your estimated mileage')}
+      </DialogTitle>
       <DialogContent>
         <div style={{ margin: '20px auto', width: '70%' }}>
           <Autocomplete
@@ -78,7 +79,12 @@ const MileageModal: React.FC<DialogProps & { onSave: TCallback; isAdminPanel?: b
         </div>
       </DialogContent>
       <BfButtonsWrapper>
-        <Button onClick={onCancel} variant="outlined" style={isSm ? { marginBottom: 0 } : {}}>
+        <Button
+          disabled={blockClosing}
+          onClick={onCancel}
+          variant="outlined"
+          style={isSm ? { marginBottom: 0 } : {}}
+        >
           {t('Cancel')}
         </Button>
         <Button
