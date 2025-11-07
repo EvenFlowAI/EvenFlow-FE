@@ -53,6 +53,8 @@ const productionTrackerMap: Record<string, string> = {
   [ServiceCenters.SouthDaytonToyotaDealerBuilt]: 'G-DBCQZNFP0Y',
   [ServiceCenters.HondaOfDowntownLosAngelesRR]: 'G-EZ32G667P5',
   [ServiceCenters.HyundaiOfDowntownLosAngelesRR]: 'G-MTTMZVLMQ0',
+  [ServiceCenters.WalserCJDRHopkins]: 'G-83F59D9Y4Y',
+  [ServiceCenters.WalserMinnetonkaKia]: 'G-VPQX5P9DHZ',
 };
 
 export const getTrackerById = (id: string): string => {
