@@ -53,6 +53,8 @@ export const ServiceCenters = {
   SouthDaytonToyotaDealerBuilt: 988,
   HondaOfDowntownLosAngelesRR: 1087,
   HyundaiOfDowntownLosAngelesRR: 1088,
+  WalserCJDRHopkins: 1219,
+  WalserMinnetonkaKia: 1252,
 };
 
 const parentTrackersMap: Record<number, GATrackers[]> = {
@@ -124,6 +126,8 @@ const parentTrackersMap: Record<number, GATrackers[]> = {
   [ServiceCenters.SouthDaytonToyotaDealerBuilt]: [{ measurementId: 'G-DBCQZNFP0Y' }],
   [ServiceCenters.HondaOfDowntownLosAngelesRR]: [{ measurementId: 'G-EZ32G667P5' }],
   [ServiceCenters.HyundaiOfDowntownLosAngelesRR]: [{ measurementId: 'G-MTTMZVLMQ0' }],
+  [ServiceCenters.WalserCJDRHopkins]: [{ measurementId: 'G-83F59D9Y4Y' }],
+  [ServiceCenters.WalserMinnetonkaKia]: [{ measurementId: 'G-VPQX5P9DHZ' }],
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
