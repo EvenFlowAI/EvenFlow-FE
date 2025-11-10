@@ -142,6 +142,7 @@ const CustomerSearchTable: React.FC<
       el => el.vehicleId === item.vehicleId && el.customerId === item.customerId
     );
     if (customerData?.homePhone) phoneNumbers.push(customerData.homePhone);
+
     const vehicle = {
       vin: item.vin,
       make: item.make,
@@ -437,6 +438,11 @@ const CustomerSearchTable: React.FC<
       companyName: customer?.companyName ?? '',
       id: customer.customerId?.toString() ?? null,
       phoneNumbers: phoneNumber ? [phoneNumber] : [],
+      phoneNumbersByCategory: {
+        cell: customer?.cellPhone,
+        home: customer?.homePhone,
+        other: customer?.otherPhone,
+      },
       vehicles: [],
       fromSearchByName: true,
     };
