@@ -754,6 +754,7 @@ export const handleAppointmentResponse =
           updatedData.emails = [customer.email];
         }
       }
+
       updatedData.fullName = data.driver?.fullName;
       updatedData.id = data.customerId;
       updatedData.phoneNumbers = [data.driver?.phoneNumber];
