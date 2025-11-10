@@ -7,6 +7,8 @@ import { TCallback } from '../../../../../../types/types';
 import { useTranslation } from 'react-i18next';
 import { EServiceType } from '../../../../../../store/reducers/appointmentFrameReducer/types';
 import {
+  loadActiveTransportations,
+  setCurrentFrameScreen,
   setEditingPosition,
   setServiceOptionChanged,
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
@@ -18,6 +20,8 @@ import { setSlotsWarningOpen } from '../../../../../../store/reducers/modals/act
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import MileageModal from '../../../../../../components/modals/booking/MileageModal/MileageModal';
 import { setHasRedirectFromAppointmentDateSelection } from '../../../../../../store/reducers/appointment/actions';
+import { decodeSCID } from '../../../../../../utils/utils';
+import { useParams } from 'react-router-dom';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -37,11 +41,13 @@ export const AppointmentSelectedDate: React.FC<
   } = useSelector((state: RootState) => state.appointment);
   const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { wasWarningShowed } = useSelector((state: RootState) => state.modals);
+  const { id } = useParams<{ id: string }>();
   const {
     serviceTypeOption,
     isAppointmentSaving,
     appointmentByKey,
     transportation,
+    transportations,
     selectedVehicle,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { onOpen, isOpen, onClose } = useModal();
@@ -124,6 +130,7 @@ export const AppointmentSelectedDate: React.FC<
 
   useEffect(() => {
     if (isCloneMode && !hasRedirectFromAppointmentDateSelection) {
+      dispatch(loadActiveTransportations(decodeSCID(id)));
       onOpen();
     }
   }, []);
@@ -132,7 +139,16 @@ export const AppointmentSelectedDate: React.FC<
     onClose();
     if (!hasRedirectFromAppointmentDateSelection) {
       dispatch(setHasRedirectFromAppointmentDateSelection(true));
-      handleChangeSlot();
+
+      const transportationAvailable = transportations.some(
+        transportation => transportation.id === appointmentByKey?.transportationOption?.id
+      );
+
+      if (transportationAvailable) {
+        handleChangeSlot();
+      } else {
+        dispatch(setCurrentFrameScreen('transportationNeeds'));
+      }
     }
   };
 
