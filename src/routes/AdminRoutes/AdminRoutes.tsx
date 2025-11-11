@@ -18,6 +18,7 @@ import CenterProfileRoutes from '../CenterProfileRoutes/CenterProfileRoutes';
 import { ServiceCenters } from '../../pages/admin/ServiceCenters/ServiceCenters';
 import ApplicationRoutes from '../ApplicationRoutes/ApplicationRoutes';
 import { DealerOperationsRoutes } from '../DealerOperationsRoutes/DealerOperationsRoutes';
+import AiAgents from '../../pages/admin/AiAgents/AiAgents';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
@@ -38,6 +39,7 @@ export const AdminRoutes = () => {
     { path: Routes.Employees.Base, component: EmployeesRoutes, condition: !isRestrictedRole },
     { path: Routes.CenterProfile.Base, component: CenterProfileRoutes },
     { path: Routes.Admin.Appointments, component: AppointmentsPage },
+    { path: Routes.Admin.AiAgents, component: AiAgents },
     {
       path: Routes.Dealer.Base,
       component: DealerOperationsRoutes,

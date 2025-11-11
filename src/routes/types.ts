@@ -2,6 +2,7 @@ export enum AdminRoutes {
   Base = '/admin',
   DealershipGroups = '/admin/dealership-groups',
   Appointments = '/admin/appointments',
+  AiAgents = '/admin/aiAgents',
   Profile = '/admin/profile',
   ServiceCenters = '/admin/service-centers',
   ServiceRequests = '/admin/service-requests',

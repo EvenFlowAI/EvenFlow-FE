@@ -34,11 +34,19 @@ export const SULinks: LinkTypeWithSub[] = [
         roles: [Roles.EvenFlowAdmin],
         sub: true,
       },
+      {
+        to: Routes.Admin.AiAgents,
+        name: 'AI Agents',
+        roles: [Roles.EvenFlowAdmin],
+        sub: true,
+      },
     ],
   },
 ];
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [
+  { to: Routes.Admin.AiAgents, name: 'AI Agents (BETA)', roles: true },
+
   {
     to: Routes.CenterProfile.Base,
     name: 'Center Profile',
