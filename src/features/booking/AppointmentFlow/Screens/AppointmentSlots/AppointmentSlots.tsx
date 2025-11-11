@@ -715,6 +715,7 @@ export const AppointmentSlots: React.FC<
           removeTopMargin
           onBack={handleBack}
           onNext={handleNext}
+          prevDisabled={!isAppointmentTimingAvailable && isCloneMode}
           nextDisabled={nextDisabled}
           nextLabel={isCloneMode ? t('Confirm') : t('Next')}
           loading={isConsultantsLoading || isConsentsLoading}

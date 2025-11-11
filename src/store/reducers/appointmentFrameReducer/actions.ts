@@ -1689,7 +1689,7 @@ export const loadActiveTransportations =
       subService,
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
-    const { selectedSR, selectedSRComments } = getState().appointment;
+    const { selectedSR, selectedSRComments, isCloneMode } = getState().appointment;
     const { firstScreenOptions } = getState().serviceTypes;
     if (selectedVehicle) {
       dispatch(setTransportationsLoading(true));
@@ -1717,7 +1717,7 @@ export const loadActiveTransportations =
           year: selectedVehicle.year,
           make: selectedVehicle.make,
           model: selectedVehicle.model,
-          mileage: selectedVehicle.mileage,
+          mileage: selectedVehicle.mileage || isCloneMode ? 0 : null,
           engineTypeId: selectedVehicle.engineTypeId,
         },
       };
