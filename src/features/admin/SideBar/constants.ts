@@ -34,12 +34,6 @@ export const SULinks: LinkTypeWithSub[] = [
         roles: [Roles.EvenFlowAdmin],
         sub: true,
       },
-      {
-        to: Routes.Admin.AiAgents,
-        name: 'AI Agents',
-        roles: [Roles.EvenFlowAdmin],
-        sub: true,
-      },
     ],
   },
 ];
