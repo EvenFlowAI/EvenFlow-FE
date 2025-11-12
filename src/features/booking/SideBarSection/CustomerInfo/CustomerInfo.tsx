@@ -33,6 +33,8 @@ const CustomerInfo = () => {
     if (phones?.cell) return `Cell: ${formatPhoneNumber(phones.cell)}`;
     if (phones?.home) return `Home: ${formatPhoneNumber(phones.home)}`;
     if (phones?.other) return `Phone: ${formatPhoneNumber(phones.other)}`;
+    if (customerLoadedData?.phoneNumber)
+      return `Phone: ${formatPhoneNumber(customerLoadedData.phoneNumber)}`; // for the clone and edit
     return 'Phone: Missing';
   };
 

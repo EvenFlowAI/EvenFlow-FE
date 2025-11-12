@@ -80,6 +80,7 @@ export interface ICustomerLoadedData {
   id: string;
   sessionId?: string;
   phoneNumbers: string[];
+  phoneNumber?: string;
   phoneNumbersByCategory?: {
     home?: string;
     cell?: string;
