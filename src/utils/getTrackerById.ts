@@ -55,6 +55,7 @@ const productionTrackerMap: Record<string, string> = {
   [ServiceCenters.HyundaiOfDowntownLosAngelesRR]: 'G-MTTMZVLMQ0',
   [ServiceCenters.WalserCJDRHopkins]: 'G-83F59D9Y4Y',
   [ServiceCenters.WalserMinnetonkaKia]: 'G-VPQX5P9DHZ',
+  [ServiceCenters.PorscheNashua]: 'G-Y41L9SH71Y',
 };
 
 export const getTrackerById = (id: string): string => {
