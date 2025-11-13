@@ -54,6 +54,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   );
 
   const onBackFromServiceNeeds = () => {
+    console.log('test 2');
     if (customerLoadedData?.isUpdating) history.push('/f/appointment-manage/' + id);
     handleSetScreen(serviceType === EServiceType.VisitCenter ? 'carSelection' : 'location');
   };
