@@ -16,16 +16,12 @@ const CustomerInfo = () => {
 
   const formatPhoneNumber = (raw?: string): string => {
     if (!raw) return '';
-
-    const hasSeparators = /[-.()\s]/.test(raw);
-    if (hasSeparators) return raw;
-
     const digitsOnly = raw.replace(/\D/g, '');
-    if (digitsOnly.length === 10) {
-      return `${digitsOnly.slice(0, 3)}.${digitsOnly.slice(3, 6)}.${digitsOnly.slice(6)}`;
-    }
 
-    return raw;
+    if (digitsOnly.length < 10) return raw;
+    const lastTen = digitsOnly.slice(-10);
+
+    return `${lastTen.slice(0, 3)}-${lastTen.slice(3, 6)}-${lastTen.slice(6)}`;
   };
 
   const getPreferredPhone = (): string => {
