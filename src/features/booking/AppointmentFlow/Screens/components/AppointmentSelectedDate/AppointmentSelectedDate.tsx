@@ -129,7 +129,7 @@ export const AppointmentSelectedDate: React.FC<
   };
 
   useEffect(() => {
-    if (isCloneMode && !hasRedirectFromAppointmentDateSelection) {
+    if (isCloneMode) {
       dispatch(loadActiveTransportations(decodeSCID(id)));
       onOpen();
     }
@@ -137,18 +137,16 @@ export const AppointmentSelectedDate: React.FC<
 
   const handleCloseMileageModal = () => {
     onClose();
-    if (!hasRedirectFromAppointmentDateSelection) {
-      dispatch(setHasRedirectFromAppointmentDateSelection(true));
+    dispatch(setHasRedirectFromAppointmentDateSelection(true));
 
-      const transportationAvailable = transportations.some(
-        transportation => transportation.id === appointmentByKey?.transportationOption?.id
-      );
+    const transportationAvailable = transportations.some(
+      transportation => transportation.id === appointmentByKey?.transportationOption?.id
+    );
 
-      if (transportationAvailable) {
-        handleChangeSlot();
-      } else {
-        dispatch(setCurrentFrameScreen('transportationNeeds'));
-      }
+    if (transportationAvailable) {
+      handleChangeSlot();
+    } else {
+      dispatch(setCurrentFrameScreen('transportationNeeds'));
     }
   };
 
