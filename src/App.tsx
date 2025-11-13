@@ -13,21 +13,14 @@ import {
 } from './store/reducers/bookingFlowConfig/actions';
 import { TScreen } from './types/screens';
 import AppRoutes from './routes/AppRoutes/AppRoutes';
-import { disableEmotionWarning, encodeSCID } from './utils/utils';
+import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
-import { setWelcomeScreenView } from './store/reducers/appointmentFrameReducer/actions';
-import { Routes } from './routes/constants';
-import { useHistory, useParams } from 'react-router-dom';
 
 const App = () => {
-  const { scProfile, isTopAligning, isCloneMode } = useSelector(
-    (state: RootState) => state.appointment
-  );
+  const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
   const { config, currentConfig, isAdvisorAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { id } = useParams<{ id: string }>();
-  const history = useHistory();
   const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
   const [valueServiceNextScreen, setValueServiceNextScreen] =
     useState<TScreen>('consultantSelection');
@@ -173,33 +166,6 @@ const App = () => {
     );
   };
   const isWin = window.navigator.appVersion.indexOf('Win') !== -1;
-
-  const onGoToFirstScreen = () => {
-    dispatch(setWelcomeScreenView('select'));
-    if (id) {
-      history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
-    } else if (scProfile?.id) {
-      history.push(Routes.EndUser.Welcome + '/' + encodeSCID(scProfile?.id) + '?frame=1');
-    }
-  };
-
-  // for prevent user to visit the manage appointment page
-  useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      event.preventDefault();
-      onGoToFirstScreen();
-    };
-
-    if (isCloneMode) {
-      window.addEventListener('popstate', handlePopState);
-    }
-
-    return () => {
-      if (isCloneMode) {
-        window.removeEventListener('popstate', handlePopState);
-      }
-    };
-  }, [history, isCloneMode]);
 
   return (
     <SnackbarProvider
