@@ -195,7 +195,6 @@ const AppointmentFlow = () => {
     }
     await onUpdateAppointment(car);
     dispatch(setCurrentFrameScreen('manageAppointment'));
-    console.log('test 3');
     history.push('/f/appointment-manage/' + id);
   };
 
