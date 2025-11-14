@@ -89,6 +89,7 @@ export const EditAppointment = () => {
           };
 
           const rawId = data.driver?.id ?? data.customerId;
+
           const customer: ICustomerLoadedData = {
             ...data.driver,
             id: String(rawId),
