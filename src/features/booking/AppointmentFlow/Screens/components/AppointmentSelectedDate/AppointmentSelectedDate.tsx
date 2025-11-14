@@ -22,7 +22,6 @@ import MileageModal from '../../../../../../components/modals/booking/MileageMod
 import { setHasRedirectFromAppointmentDateSelection } from '../../../../../../store/reducers/appointment/actions';
 import { decodeSCID } from '../../../../../../utils/utils';
 import { useParams } from 'react-router-dom';
-import { Loading } from '../../../../../../components/wrappers/Loading/Loading';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -49,7 +48,7 @@ export const AppointmentSelectedDate: React.FC<
     appointmentByKey,
     transportation,
     transportations,
-    isTransportationsLoading,
+    selectedVehicle,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { onOpen, isOpen, onClose } = useModal();
   const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot | null>(null);
@@ -128,45 +127,28 @@ export const AppointmentSelectedDate: React.FC<
       }
     }
   };
-  //
-  // const forwardNextStepCloning = () => {
-  //   const transportationAvailable = transportations.some(
-  //     transportation => transportation.id === appointmentByKey?.transportationOption?.id
-  //   );
-  //
-  //   console.log('transportations', transportations);
-  //   console.log('appointmentByKey?.transportationOption?.id', appointmentByKey?.transportationOption);
-  //
-  //   if (transportationAvailable) {
-  //     handleChangeSlot();
-  //   } else {
-  //     dispatch(setCurrentFrameScreen('transportationNeeds'));
-  //   }
-  // }
-  //
-  // useEffect(() => {
-  //   console.log('appointmentByKey', appointmentByKey);
-  //   if (isCloneMode && appointmentByKey) {
-  //     console.log('appointmentByKey', appointmentByKey);
-  //     dispatch(loadActiveTransportations(decodeSCID(id)));
-  //     if (transportations.length) {
-  //       if (appointmentByKey.vehicle.mileage) {
-  //         forwardNextStepCloning()
-  //       } else {
-  //         onOpen();
-  //       }
-  //     }
-  //   }
-  // }, [appointmentByKey, transportations]);
-  //
-  // const handleCloseMileageModal = () => {
-  //   onClose();
-  //   forwardNextStepCloning()
-  // };
-  //
-  // if (isTransportationsLoading && isCloneMode) return (
-  //   <Loading />
-  // )
+
+  useEffect(() => {
+    if (isCloneMode) {
+      dispatch(loadActiveTransportations(decodeSCID(id)));
+      onOpen();
+    }
+  }, []);
+
+  const handleCloseMileageModal = () => {
+    onClose();
+    dispatch(setHasRedirectFromAppointmentDateSelection(true));
+
+    const transportationAvailable = transportations.some(
+      transportation => transportation.id === appointmentByKey?.transportationOption?.id
+    );
+
+    if (transportationAvailable) {
+      handleChangeSlot();
+    } else {
+      dispatch(setCurrentFrameScreen('transportationNeeds'));
+    }
+  };
 
   return (
     <ConfirmationItemWrapper>
@@ -217,7 +199,7 @@ export const AppointmentSelectedDate: React.FC<
           {waitListData?.text ?? t('Waitlist only')}
         </div>
       ) : null}
-      {/*<MileageModal open={isOpen} onClose={onClose} onSave={handleCloseMileageModal} blockClosing />*/}
+      <MileageModal open={isOpen} onClose={onClose} onSave={handleCloseMileageModal} blockClosing />
     </ConfirmationItemWrapper>
   );
 };

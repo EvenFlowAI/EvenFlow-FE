@@ -10,13 +10,11 @@ import { decodeSCID, getAppointmentDate } from '../../../../../utils/utils';
 import {
   clearAppointmentData,
   createOrUpdateAppointment,
-  loadActiveTransportations,
   loadAppointmentRequestsPrices,
   loadConsultantsForUpdating,
   searchForCustomerConsents,
   setAppointmentSaving,
   setCurrentFrameScreen,
-  setEditingPosition,
   setReminders,
   setServiceOptionChanged,
   setServiceTypeOption,
@@ -76,7 +74,6 @@ export const ManageAppointment: React.FC<
   const { scProfile, appointmentWasChanged, serviceValetAppointment, appointment } = useSelector(
     ({ appointment }: RootState) => appointment
   );
-  const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const {
     isAppointmentSaving,
     serviceTypeOption,
@@ -86,8 +83,6 @@ export const ManageAppointment: React.FC<
     transportation,
     isConsentsLoading,
     advisor,
-    transportations,
-    isTransportationsLoading,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
   const { mileage } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
@@ -114,9 +109,8 @@ export const ManageAppointment: React.FC<
   const history = useHistory();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('smMobile'));
-  const { wasWarningShowed } = useSelector((state: RootState) => state.modals);
 
-  const { isCloneMode, customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const { isCloneMode } = useSelector((state: RootState) => state.appointment);
 
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
@@ -134,8 +128,6 @@ export const ManageAppointment: React.FC<
   };
 
   usePopState(isAuthorized ? 'serviceCenterSelect' : 'select', redirectToWelcomeScreens);
-
-  const { onOpen, isOpen, onClose } = useModal();
 
   useEffect(() => {
     if (scProfile) {
@@ -158,13 +150,6 @@ export const ManageAppointment: React.FC<
   useEffect(() => {
     dispatch(setReminders([0, 1]));
   }, []);
-
-  useEffect(() => {
-    if (appointmentByKey && isCloneMode) {
-      console.log('load active transportations');
-      dispatch(loadActiveTransportations(decodeSCID(id)));
-    }
-  }, [appointmentByKey, isCloneMode]);
 
   useEffect(() => {
     if (
@@ -363,59 +348,7 @@ export const ManageAppointment: React.FC<
   const onSaveMileage = () => {
     userClickedOnSave ? handleCreateAppointment() : onMileageClose();
   };
-  const showLoader = isAppointmentSaving || isConsentsLoading || isCloneMode;
-
-  const handleChangeSlot = () => {
-    if (customerLoadedData?.isUpdating) {
-      dispatch(setEditingPosition('slot'));
-      dispatch(setServiceOptionChanged(false));
-    }
-    if (!isAppointmentSaving) {
-      if (isTransportationAvailable && !transportation && !wasWarningShowed) {
-        dispatch(setSlotsWarningOpen(true));
-      } else {
-        onChangeSlot();
-      }
-    }
-  };
-
-  const forwardNextStepCloning = () => {
-    const transportationAvailable = transportations.some(
-      transportation => transportation.id === appointmentByKey?.transportationOption?.id
-    );
-
-    console.log('transportations', transportations);
-    console.log(
-      'appointmentByKey?.transportationOption?.id',
-      appointmentByKey?.transportationOption
-    );
-
-    if (transportationAvailable) {
-      handleChangeSlot();
-    } else {
-      dispatch(setCurrentFrameScreen('transportationNeeds'));
-    }
-  };
-
-  useEffect(() => {
-    console.log('appointmentByKey', appointmentByKey);
-    if (isCloneMode && appointmentByKey) {
-      console.log('appointmentByKey', appointmentByKey);
-      console.log('transportations', transportations);
-      if (transportations.length) {
-        if (appointmentByKey.vehicle.mileage) {
-          forwardNextStepCloning();
-        } else {
-          onOpen();
-        }
-      }
-    }
-  }, [appointmentByKey, transportations]);
-
-  const handleCloseMileageModal = () => {
-    onClose();
-    forwardNextStepCloning();
-  };
+  const showLoader = isAppointmentSaving || isConsentsLoading;
 
   return (
     <StepWrapper style={isXs ? { paddingBottom: 30 } : {}}>
@@ -448,12 +381,6 @@ export const ManageAppointment: React.FC<
             </div>
           </React.Fragment>
         )}
-        <MileageModal
-          open={isOpen}
-          onClose={onClose}
-          onSave={handleCloseMileageModal}
-          blockClosing
-        />
       </Wrapper>
       {/*todo change to open payment window on next*/}
       {showLoader ? null : (
