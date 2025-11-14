@@ -36,8 +36,7 @@ const ServiceSelection: React.FC<
     const year = valueService?.year?.year;
     const seriesId = valueService?.series?.id;
     const modelId = valueService?.model?.id;
-    if (year && seriesId && modelId && scProfile)
-      dispatch(loadServiceOffers(+year, seriesId, modelId, scProfile.id));
+    if (year && seriesId && modelId && scProfile) dispatch(loadServiceOffers());
   }, [valueService]);
 
   const onSelectClick =

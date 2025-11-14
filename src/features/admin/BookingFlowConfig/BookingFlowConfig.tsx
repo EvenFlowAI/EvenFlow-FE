@@ -62,10 +62,7 @@ export const BookingFlowConfig = () => {
       showError('To enable Checking Recalls you need to select Default Recall Op Code');
       return false;
     }
-    if (!selectedSC?.isValueServiceAvailable && optionType === 'valueService') {
-      showError('No Service Offers are available for current Service Center');
-      return false;
-    }
+
     return true;
   };
 

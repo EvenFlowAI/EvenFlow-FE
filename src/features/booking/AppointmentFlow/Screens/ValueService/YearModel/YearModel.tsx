@@ -18,6 +18,7 @@ import { ScreenWrapper } from '../../../../../../components/styled/ScreenWrapper
 import { SelectsTitle } from '../../../../../../components/styled/SelectsTitle';
 import { TActionProps } from '../../../../../../types/types';
 import { useException } from '../../../../../../hooks/useException/useException';
+import { NoItemsLoading } from '../../../../../../components/wrappers/NoItemsLoading/NoItemsLoading';
 
 export const YearModel: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TActionProps>>
@@ -39,7 +40,7 @@ export const YearModel: React.FC<
   const { t } = useTranslation();
 
   useEffect(() => {
-    scProfile && dispatch(loadSeriesModels(scProfile.id));
+    scProfile && dispatch(loadSeriesModels());
   }, [dispatch, scProfile]);
 
   useEffect(() => {
@@ -113,10 +114,16 @@ export const YearModel: React.FC<
     <StepWrapper>
       <ScreenWrapper>
         <SelectsTitle>{t('SELECT YOUR VEHICLE')}</SelectsTitle>
+        <NoItemsLoading
+          wrapperStyles={{ marginTop: 20 }}
+          items={seriesModels}
+          loading={seriesModels === null}
+          label={t('There are no models available')}
+        />
         <SelectWrapper>
-          {seriesModels?.length > 0 ? (
+          {seriesModels.length > 0 && (
             <Autocomplete
-              key={valueService?.year?.year || seriesModels[0].year}
+              key={valueService?.year?.year || seriesModels[0]?.year}
               options={yearOptions}
               onChange={onYearChange}
               fullWidth
@@ -131,9 +138,8 @@ export const YearModel: React.FC<
               })}
               value={valueService?.year?.year.toString() ?? ''}
             />
-          ) : (
-            <Loading />
           )}
+
           {valueService?.year && currentSeries?.length ? (
             <Autocomplete
               key={valueService?.series?.name || 'series'}

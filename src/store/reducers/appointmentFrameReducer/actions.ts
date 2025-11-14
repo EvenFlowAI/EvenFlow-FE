@@ -540,33 +540,15 @@ export const loadMakes =
       });
   };
 
-export const loadSeriesModels =
-  (serviceCenterId: number): AppThunk =>
-  dispatch => {
-    Api.call(Api.endpoints.ValueService.GetSeriesModels, { params: { serviceCenterId } })
-      .then(result => {
-        if (result?.data) dispatch(getSeriesModels(result.data));
-      })
-      .catch(err => {
-        console.log('get series models data for value service error', err);
-      });
-  };
+export const loadSeriesModels = (): AppThunk => dispatch => {
+  dispatch(getSeriesModels([]));
+};
 
-export const loadServiceOffers =
-  (year: number, seriesId: number, modelId: number, serviceCenterId: number): AppThunk =>
-  dispatch => {
-    dispatch(setOffersLoading(true));
-    Api.call(Api.endpoints.ValueService.GetValueServiceOffers, {
-      params: { year, seriesId, modelId, serviceCenterId },
-    })
-      .then(result => {
-        if (result?.data) dispatch(getValueServiceOffers(result.data));
-        dispatch(setOffersLoading(false));
-      })
-      .catch(err => {
-        console.log('get value service offers error', err);
-      });
-  };
+export const loadServiceOffers = (): AppThunk => dispatch => {
+  dispatch(setOffersLoading(true));
+  dispatch(getValueServiceOffers([]));
+  dispatch(setOffersLoading(false));
+};
 
 export const clearSelectedServices =
   (keepCategories?: boolean): AppThunk =>

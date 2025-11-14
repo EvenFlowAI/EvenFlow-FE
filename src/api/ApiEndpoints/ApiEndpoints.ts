@@ -623,10 +623,6 @@ export class Api {
       CreateEngineType: { route: '/vehicles/engine-type', method: 'post' },
       UpdateModel: { route: '/vehicles/models', method: 'put' },
     },
-    ValueService: {
-      GetSeriesModels: { route: '/value-service-offers/vehicle-models', method: 'get' },
-      GetValueServiceOffers: { route: '/value-service-offers', method: 'get' },
-    },
     WaitListSettings: {
       Get: { route: '/waitlist-settings', method: 'get' },
       Update: { route: '/waitlist-settings', method: 'put' },
