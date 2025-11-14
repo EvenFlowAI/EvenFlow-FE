@@ -504,6 +504,7 @@ export const AppointmentSlots: React.FC<
         }
         if (selectedVehicle) {
           data.vehicle = {
+            id: selectedVehicle.id ? +selectedVehicle.id : undefined,
             vin: selectedVehicle.vin,
             year: selectedVehicle.year,
             make: selectedVehicle.make,

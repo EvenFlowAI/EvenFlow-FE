@@ -87,9 +87,11 @@ export const EditAppointment = () => {
             ...data.vehicle,
             appointmentHashKeys: [data.hashKey],
           };
+
+          const rawId = data.driver?.id ?? data.customerId;
+
           const customer: ICustomerLoadedData = {
-            ...data.driver,
-            id: data.customerId,
+            id: String(rawId),
             vehicles: [vehicle],
             phoneNumbers: [data.driver.phoneNumber],
             emails: [data.driver.email],
