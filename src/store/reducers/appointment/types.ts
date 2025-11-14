@@ -136,6 +136,8 @@ export enum EAppointmentTimingType {
 }
 
 export interface IVehicleForSlots {
+  id?: number;
+  dmsId?: string;
   vin: string;
   make: string;
   year: number | null;
