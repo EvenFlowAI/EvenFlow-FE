@@ -123,7 +123,7 @@ export const YearModel: React.FC<
         <SelectWrapper>
           {seriesModels.length > 0 && (
             <Autocomplete
-              key={valueService?.year?.year || seriesModels[0]?.year}
+              key={valueService?.year?.year || seriesModels[0]?.year || 'year-select'}
               options={yearOptions}
               onChange={onYearChange}
               fullWidth
