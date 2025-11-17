@@ -1735,7 +1735,6 @@ export const loadActiveTransportations =
             )
           );
           dispatch(setTransportationsLoading(false));
-          console.log('data');
           if (onSuccess) onSuccess();
         }
       );
