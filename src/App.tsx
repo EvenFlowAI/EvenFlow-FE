@@ -15,9 +15,12 @@ import { TScreen } from './types/screens';
 import AppRoutes from './routes/AppRoutes/AppRoutes';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
+import { setIsCloneMode } from './store/reducers/appointment/actions';
 
 const App = () => {
-  const { scProfile, isTopAligning } = useSelector((state: RootState) => state.appointment);
+  const { scProfile, isTopAligning, isCloneMode } = useSelector(
+    (state: RootState) => state.appointment
+  );
   const { config, currentConfig, isAdvisorAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
@@ -166,6 +169,23 @@ const App = () => {
     );
   };
   const isWin = window.navigator.appVersion.indexOf('Win') !== -1;
+
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      event.preventDefault();
+      dispatch(setIsCloneMode(false));
+    };
+
+    if (isCloneMode) {
+      window.addEventListener('popstate', handlePopState);
+    }
+
+    return () => {
+      if (isCloneMode) {
+        window.removeEventListener('popstate', handlePopState);
+      }
+    };
+  }, [isCloneMode]);
 
   return (
     <SnackbarProvider

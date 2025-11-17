@@ -160,8 +160,8 @@ export const ManageAppointment: React.FC<
   }, []);
 
   useEffect(() => {
+    // load active transportation when appointmentByKey is available
     if (appointmentByKey && isCloneMode) {
-      console.log('load active transportations');
       dispatch(loadActiveTransportations(decodeSCID(id)));
     }
   }, [appointmentByKey, isCloneMode]);
@@ -384,12 +384,6 @@ export const ManageAppointment: React.FC<
       transportation => transportation.id === appointmentByKey?.transportationOption?.id
     );
 
-    console.log('transportations', transportations);
-    console.log(
-      'appointmentByKey?.transportationOption?.id',
-      appointmentByKey?.transportationOption
-    );
-
     if (transportationAvailable) {
       handleChangeSlot();
     } else {
@@ -398,11 +392,9 @@ export const ManageAppointment: React.FC<
   };
 
   useEffect(() => {
-    console.log('appointmentByKey', appointmentByKey);
     if (isCloneMode && appointmentByKey) {
-      console.log('appointmentByKey', appointmentByKey);
-      console.log('transportations', transportations);
       if (transportations.length) {
+        // when transportations and appointmentByKey are ready
         if (appointmentByKey.vehicle.mileage) {
           forwardNextStepCloning();
         } else {
