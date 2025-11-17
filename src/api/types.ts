@@ -370,7 +370,6 @@ export interface IConsultantsRequestData {
   recalls: TRecallForRequest[];
   serviceTypeOptionId: number | null;
   vehicle: IVehicleForSlots;
-  valueServiceOfferIds?: number[];
   address?: string;
   zipCode?: string;
   appointmentHashKey?: string;

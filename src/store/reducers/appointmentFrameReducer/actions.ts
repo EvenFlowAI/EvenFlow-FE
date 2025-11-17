@@ -37,7 +37,6 @@ import {
   ICustomerConsentBooking,
   ILoadSlotsRequestData,
   ISearchConsentsData,
-  IServiceOffer,
   IValueService,
   TAncillaryPriceByZip,
   TDriverForRequest,
@@ -173,9 +172,6 @@ export const setCity = createAction<string>('fAppointment/SetCity');
 export const setStreetName = createAction<string>('fAppointment/SetStreetName');
 export const setValueService = createAction<IValueService | null>('fAppointment/SetValueService');
 export const getSeriesModels = createAction<TYear[]>('fAppointment/GetSeriesModels');
-export const getValueServiceOffers = createAction<IServiceOffer[]>(
-  'fAppointment/GetValueServiceOffers'
-);
 export const setOffersLoading = createAction<boolean>('fAppointment/SetOffersLoading');
 export const setSideBarSteps = createAction<TScreen[]>('fAppointment/SetSideBarSteps');
 export const setSideBarMenu = createAction<string[]>('fAppointment/SetSideBarMenu');
@@ -327,7 +323,7 @@ export const loadConsultantsForUpdating =
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
-    const { selectedVehicle, selectedRecalls, valueService, sideBarSteps, appointmentByKey } =
+    const { selectedVehicle, selectedRecalls, sideBarSteps, appointmentByKey } =
       getState().appointmentFrame;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
     const recalls = mapRecallsForRequest(selectedRecalls);
@@ -359,9 +355,6 @@ export const loadConsultantsForUpdating =
           address: address?.fullAddress ?? '',
           zipCode: address?.zipCode ?? '',
         };
-        if (valueService?.selectedService) {
-          data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
         }
@@ -413,7 +406,6 @@ export const loadConsultants =
       selectedVehicle,
       address,
       zipCode,
-      valueService,
       service,
       subService,
       serviceCategories,
@@ -475,9 +467,6 @@ export const loadConsultants =
           address: typeof address === 'string' ? address : (address?.label ?? ''),
           zipCode,
         };
-        if (valueService?.selectedService) {
-          data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
         }
@@ -546,7 +535,6 @@ export const loadSeriesModels = (): AppThunk => dispatch => {
 
 export const loadServiceOffers = (): AppThunk => dispatch => {
   dispatch(setOffersLoading(true));
-  dispatch(getValueServiceOffers([]));
   dispatch(setOffersLoading(false));
 };
 
@@ -1153,9 +1141,6 @@ export const createOrUpdateAppointment =
         appointmentFrame.serviceCategories
       ),
       maintenancePackageOption,
-      valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
-        ? [appointmentFrame?.valueService?.selectedService.id]
-        : [],
       searchTerm: appointment.customerEnteredEmail,
       serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
       recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
@@ -1299,9 +1284,6 @@ export const loadAppointmentRequestsPrices =
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
-      valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
-        ? [appointmentFrame?.valueService?.selectedService.id]
-        : [],
       recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
       maintenancePackageOption,
       date,
@@ -1317,7 +1299,6 @@ export const loadAppointmentRequestsPrices =
     if (
       serviceRequests.length ||
       data.serviceCategories.length ||
-      data.valueServiceOfferIds.length ||
       data.recalls.length ||
       maintenancePackageOption
     ) {
@@ -1520,7 +1501,6 @@ export const cloneAppointment =
           serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
           recalls: mapRecallsForRequest(selectedRecalls),
           notes: currentAppointment.notes ?? '',
-          valueServiceOfferIds: [],
           address: currentAppointment.address ?? null,
           isWaitlist: Boolean(isWaitlist),
           customerConsentIds: [],

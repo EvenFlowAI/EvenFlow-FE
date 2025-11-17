@@ -491,9 +491,6 @@ export const AppointmentSlots: React.FC<
           recalls: mapRecallsForRequest(selectedRecalls),
           transportationOptionId,
         };
-        if (valueService?.selectedService) {
-          data.valueServiceOfferIds = [valueService.selectedService.id];
-        }
         if (zipCode?.length) data.zipCode = zipCode;
         if (address) {
           if (address?.label) {
