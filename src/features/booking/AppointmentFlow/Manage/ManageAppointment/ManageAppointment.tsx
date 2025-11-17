@@ -96,6 +96,7 @@ export const ManageAppointment: React.FC<
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userClickedOnSave, setUserClickedOnSave] = useState<boolean>(false);
+  const [pendingSlotChange, setPendingSlotChange] = useState<boolean>(false);
   const currentUser = useCurrentUser();
   const { id } = useParams<{ id: string }>();
   const { isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen } = useModal();
@@ -194,7 +195,9 @@ export const ManageAppointment: React.FC<
 
   useEffect(() => {
     const advisorShouldBeSelected = appointmentByKey?.advisorId && !advisor;
-    if (advisorShouldBeSelected && selectedVehicle?.mileage) handleConsultants().then();
+    if (advisorShouldBeSelected && selectedVehicle?.mileage) {
+      handleConsultants().then();
+    }
   }, [selectedVehicle, appointmentByKey, advisor]);
 
   const checkIsValid = () => {
@@ -365,6 +368,14 @@ export const ManageAppointment: React.FC<
   };
   const showLoader = isAppointmentSaving || isConsentsLoading || isCloneMode;
 
+  useEffect(() => {
+    // moving to the next step after updating advisor
+    if (advisor && pendingSlotChange && isCloneMode) {
+      onChangeSlot();
+      setPendingSlotChange(false);
+    }
+  }, [advisor]);
+
   const handleChangeSlot = () => {
     if (customerLoadedData?.isUpdating) {
       dispatch(setEditingPosition('slot'));
@@ -374,7 +385,11 @@ export const ManageAppointment: React.FC<
       if (isTransportationAvailable && !transportation && !wasWarningShowed) {
         dispatch(setSlotsWarningOpen(true));
       } else {
-        onChangeSlot();
+        if (appointmentByKey?.advisorId && !advisor) {
+          setPendingSlotChange(true); // waiting updating advisor
+        } else {
+          onChangeSlot(); // advisor selected
+        }
       }
     }
   };
