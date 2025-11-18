@@ -26,3 +26,6 @@ yarn-error.log*
 
 # husky
 .husky/
+
+#vs code copilot mcp settings
+.vscode/mcp.json
