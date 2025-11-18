@@ -174,6 +174,7 @@ const App = () => {
     const handlePopState = (event: PopStateEvent) => {
       event.preventDefault();
       dispatch(setIsCloneMode(false));
+      window.location.reload();
     };
 
     if (isCloneMode) {
