@@ -36,7 +36,6 @@ import {
   selectSRComment,
   setLoadedDateRange,
   setIsCloneMode,
-  setHasRedirectFromAppointmentDateSelection,
 } from './actions';
 import { setPackage } from '../appointmentFrameReducer/actions';
 import dayjs from 'dayjs';
@@ -92,7 +91,6 @@ const initialState: TAppointmentState = {
   slotsTransportationId: null,
   slotsSearchedDate: null,
   isCloneMode: false,
-  hasRedirectFromAppointmentDateSelection: false,
 };
 
 export const appointmentReducer = createReducer(initialState, builder =>
@@ -241,8 +239,5 @@ export const appointmentReducer = createReducer(initialState, builder =>
     })
     .addCase(setIsCloneMode, (state, { payload }) => {
       return { ...state, isCloneMode: payload };
-    })
-    .addCase(setHasRedirectFromAppointmentDateSelection, (state, { payload }) => {
-      return { ...state, hasRedirectFromAppointmentDateSelection: payload };
     })
 );

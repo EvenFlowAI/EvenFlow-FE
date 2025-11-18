@@ -7,8 +7,6 @@ import { TCallback } from '../../../../../../types/types';
 import { useTranslation } from 'react-i18next';
 import { EServiceType } from '../../../../../../store/reducers/appointmentFrameReducer/types';
 import {
-  loadActiveTransportations,
-  setCurrentFrameScreen,
   setEditingPosition,
   setServiceOptionChanged,
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
@@ -17,11 +15,6 @@ import { TitleWrapper } from './styles';
 import dayjs from 'dayjs';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { setSlotsWarningOpen } from '../../../../../../store/reducers/modals/actions';
-import { useModal } from '../../../../../../hooks/useModal/useModal';
-import MileageModal from '../../../../../../components/modals/booking/MileageModal/MileageModal';
-import { setHasRedirectFromAppointmentDateSelection } from '../../../../../../store/reducers/appointment/actions';
-import { decodeSCID } from '../../../../../../utils/utils';
-import { useParams } from 'react-router-dom';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -36,21 +29,12 @@ export const AppointmentSelectedDate: React.FC<
     waitListSettings,
     dropOffSettings,
     customerLoadedData,
-    isCloneMode,
-    hasRedirectFromAppointmentDateSelection,
   } = useSelector((state: RootState) => state.appointment);
   const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { wasWarningShowed } = useSelector((state: RootState) => state.modals);
-  const { id } = useParams<{ id: string }>();
-  const {
-    serviceTypeOption,
-    isAppointmentSaving,
-    appointmentByKey,
-    transportation,
-    transportations,
-    selectedVehicle,
-  } = useSelector((state: RootState) => state.appointmentFrame);
-  const { onOpen, isOpen, onClose } = useModal();
+  const { serviceTypeOption, isAppointmentSaving, appointmentByKey, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot | null>(null);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -128,28 +112,6 @@ export const AppointmentSelectedDate: React.FC<
     }
   };
 
-  useEffect(() => {
-    if (isCloneMode) {
-      dispatch(loadActiveTransportations(decodeSCID(id)));
-      onOpen();
-    }
-  }, []);
-
-  const handleCloseMileageModal = () => {
-    onClose();
-    dispatch(setHasRedirectFromAppointmentDateSelection(true));
-
-    const transportationAvailable = transportations.some(
-      transportation => transportation.id === appointmentByKey?.transportationOption?.id
-    );
-
-    if (transportationAvailable) {
-      handleChangeSlot();
-    } else {
-      dispatch(setCurrentFrameScreen('transportationNeeds'));
-    }
-  };
-
   return (
     <ConfirmationItemWrapper>
       <TitleWrapper>
@@ -199,7 +161,6 @@ export const AppointmentSelectedDate: React.FC<
           {waitListData?.text ?? t('Waitlist only')}
         </div>
       ) : null}
-      <MileageModal open={isOpen} onClose={onClose} onSave={handleCloseMileageModal} blockClosing />
     </ConfirmationItemWrapper>
   );
 };

@@ -234,7 +234,6 @@ export type TAppointmentState = {
   slotsTransportationId: number | null;
   slotsSearchedDate: ParsableDate;
   isCloneMode: boolean;
-  hasRedirectFromAppointmentDateSelection: boolean;
 };
 
 export enum EContactMethodTypes {

@@ -10,11 +10,13 @@ import { decodeSCID, getAppointmentDate } from '../../../../../utils/utils';
 import {
   clearAppointmentData,
   createOrUpdateAppointment,
+  loadActiveTransportations,
   loadAppointmentRequestsPrices,
   loadConsultantsForUpdating,
   searchForCustomerConsents,
   setAppointmentSaving,
   setCurrentFrameScreen,
+  setEditingPosition,
   setReminders,
   setServiceOptionChanged,
   setServiceTypeOption,
@@ -74,6 +76,7 @@ export const ManageAppointment: React.FC<
   const { scProfile, appointmentWasChanged, serviceValetAppointment, appointment } = useSelector(
     ({ appointment }: RootState) => appointment
   );
+  const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const {
     isAppointmentSaving,
     serviceTypeOption,
@@ -83,6 +86,8 @@ export const ManageAppointment: React.FC<
     transportation,
     isConsentsLoading,
     advisor,
+    transportations,
+    isTransportationsLoading,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
   const { mileage } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
@@ -91,6 +96,7 @@ export const ManageAppointment: React.FC<
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userClickedOnSave, setUserClickedOnSave] = useState<boolean>(false);
+  const [pendingSlotChange, setPendingSlotChange] = useState<boolean>(false);
   const currentUser = useCurrentUser();
   const { id } = useParams<{ id: string }>();
   const { isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen } = useModal();
@@ -109,8 +115,9 @@ export const ManageAppointment: React.FC<
   const history = useHistory();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('smMobile'));
+  const { wasWarningShowed } = useSelector((state: RootState) => state.modals);
 
-  const { isCloneMode } = useSelector((state: RootState) => state.appointment);
+  const { isCloneMode, customerLoadedData } = useSelector((state: RootState) => state.appointment);
 
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
@@ -128,6 +135,8 @@ export const ManageAppointment: React.FC<
   };
 
   usePopState(isAuthorized ? 'serviceCenterSelect' : 'select', redirectToWelcomeScreens);
+
+  const { onOpen, isOpen, onClose } = useModal();
 
   useEffect(() => {
     if (scProfile) {
@@ -150,6 +159,13 @@ export const ManageAppointment: React.FC<
   useEffect(() => {
     dispatch(setReminders([0, 1]));
   }, []);
+
+  useEffect(() => {
+    // load active transportation when appointmentByKey is available
+    if (appointmentByKey && isCloneMode) {
+      dispatch(loadActiveTransportations(decodeSCID(id)));
+    }
+  }, [appointmentByKey, isCloneMode]);
 
   useEffect(() => {
     if (
@@ -179,7 +195,9 @@ export const ManageAppointment: React.FC<
 
   useEffect(() => {
     const advisorShouldBeSelected = appointmentByKey?.advisorId && !advisor;
-    if (advisorShouldBeSelected && selectedVehicle?.mileage) handleConsultants().then();
+    if (advisorShouldBeSelected && selectedVehicle?.mileage) {
+      handleConsultants().then();
+    }
   }, [selectedVehicle, appointmentByKey, advisor]);
 
   const checkIsValid = () => {
@@ -348,7 +366,63 @@ export const ManageAppointment: React.FC<
   const onSaveMileage = () => {
     userClickedOnSave ? handleCreateAppointment() : onMileageClose();
   };
-  const showLoader = isAppointmentSaving || isConsentsLoading;
+  const showLoader = isAppointmentSaving || isConsentsLoading || isCloneMode;
+
+  useEffect(() => {
+    // moving to the next step after updating advisor
+    if (advisor && pendingSlotChange && isCloneMode) {
+      onChangeSlot();
+      setPendingSlotChange(false);
+    }
+  }, [advisor]);
+
+  const handleChangeSlot = () => {
+    if (customerLoadedData?.isUpdating) {
+      dispatch(setEditingPosition('slot'));
+      dispatch(setServiceOptionChanged(false));
+    }
+    if (!isAppointmentSaving) {
+      if (isTransportationAvailable && !transportation && !wasWarningShowed) {
+        dispatch(setSlotsWarningOpen(true));
+      } else {
+        if (appointmentByKey?.advisorId && !advisor) {
+          setPendingSlotChange(true); // waiting updating advisor
+        } else {
+          onChangeSlot(); // advisor selected
+        }
+      }
+    }
+  };
+
+  const forwardNextStepCloning = () => {
+    const transportationAvailable = transportations.some(
+      transportation => transportation.id === appointmentByKey?.transportationOption?.id
+    );
+
+    if (transportationAvailable) {
+      handleChangeSlot();
+    } else {
+      dispatch(setCurrentFrameScreen('transportationNeeds'));
+    }
+  };
+
+  useEffect(() => {
+    if (isCloneMode && appointmentByKey) {
+      if (transportations.length) {
+        // when transportations and appointmentByKey are ready
+        if (appointmentByKey.vehicle.mileage) {
+          forwardNextStepCloning();
+        } else {
+          onOpen();
+        }
+      }
+    }
+  }, [appointmentByKey, transportations]);
+
+  const handleCloseMileageModal = () => {
+    onClose();
+    forwardNextStepCloning();
+  };
 
   return (
     <StepWrapper style={isXs ? { paddingBottom: 30 } : {}}>
@@ -381,6 +455,12 @@ export const ManageAppointment: React.FC<
             </div>
           </React.Fragment>
         )}
+        <MileageModal
+          open={isOpen}
+          onClose={onClose}
+          onSave={handleCloseMileageModal}
+          blockClosing
+        />
       </Wrapper>
       {/*todo change to open payment window on next*/}
       {showLoader ? null : (
