@@ -11,7 +11,6 @@ import {
   getSeriesModels,
   getSlotsGap,
   getTransactionValue,
-  getValueServiceOffers,
   selectCategories,
   selectService,
   selectSubService,
@@ -325,9 +324,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     })
     .addCase(getSeriesModels, (state, { payload }) => {
       return { ...state, seriesModels: payload };
-    })
-    .addCase(getValueServiceOffers, (state, { payload }) => {
-      return { ...state, serviceOffers: payload };
     })
     .addCase(setOffersLoading, (state, { payload }) => {
       return { ...state, offersLoading: payload };

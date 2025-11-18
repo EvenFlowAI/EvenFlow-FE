@@ -365,7 +365,6 @@ export interface IApiEndpoints {
     | 'UpdateModel',
     TApiEndpoint
   >;
-  ValueService: Record<'GetSeriesModels' | 'GetValueServiceOffers', TApiEndpoint>;
   WaitListSettings: Record<'Get' | 'Update' | 'Toggle', TApiEndpoint>;
   ZipCodes: Record<'GetFiltered', TApiEndpoint>;
   DealerOperations: Record<

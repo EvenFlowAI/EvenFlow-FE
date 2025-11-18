@@ -120,7 +120,7 @@ export const AddServiceCategoryModal: React.FC<
 
   const getCategoryOptions = () => {
     let options: TOption[] = categoryOptions;
-    if (!selectedSC?.isValueServiceAvailable || !visitCenterConfig?.valueService) {
+    if (!visitCenterConfig?.valueService) {
       options = categoryOptions.filter(o => o.value !== EServiceCategoryType.ValueService);
     }
     if (definedPage?.value === 1) {

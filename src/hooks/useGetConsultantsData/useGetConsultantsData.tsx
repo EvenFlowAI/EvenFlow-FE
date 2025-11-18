@@ -20,7 +20,6 @@ const useGetConsultantsData = (
     packageEMenuType,
     selectedRecalls,
     selectedVehicle,
-    valueService,
     service,
     subService,
     serviceCategories,
@@ -85,9 +84,6 @@ const useGetConsultantsData = (
           address: typeof address === 'string' ? address : (address?.label ?? ''),
           zipCode,
         };
-        if (valueService?.selectedService) {
-          requestData.valueServiceOfferIds = [valueService.selectedService.id];
-        }
         if (appointmentByKey?.hashKey) {
           requestData.appointmentHashKey = appointmentByKey?.hashKey;
         }

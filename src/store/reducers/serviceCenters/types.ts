@@ -18,7 +18,6 @@ export interface IServiceCenter {
   isAuthRequired: boolean;
   serviceCenterFlag?: number;
   isUpdateAdvisorInAppointments?: boolean;
-  isValueServiceAvailable?: boolean;
   maintenancePackageDisclaimer?: string;
   isShowPriceDetails?: boolean;
   recallServiceRequestId?: number;

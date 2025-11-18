@@ -176,7 +176,6 @@ export interface IAppointmentSlotsRequest {
   customerId?: string;
   warrantyExpiration?: ParsableDate;
   advisorId?: string | null;
-  valueServiceOfferIds?: number[];
   vehicle?: IVehicleForSlots;
   searchTerm?: string;
   appointmentHashKey?: string;

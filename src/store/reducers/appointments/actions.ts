@@ -170,9 +170,6 @@ export const checkPodChanged =
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
-      valueServiceOfferIds: appointmentFrame?.valueService?.selectedService?.id
-        ? [appointmentFrame?.valueService?.selectedService.id]
-        : [],
       recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
       maintenancePackageOption,
       appointmentTimingType,

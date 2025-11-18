@@ -261,7 +261,6 @@ export interface ICreateAppointmentRequest {
   date: ParsableDate;
   serviceCategories: IServiceRequestIds[];
   maintenancePackageOption: TMaintenanceOption | null;
-  valueServiceOfferIds: number[];
   searchTerm: string;
   serviceTypeOptionId: number | null;
   recalls: TRecallForRequest[];
