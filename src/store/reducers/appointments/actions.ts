@@ -309,7 +309,10 @@ const loadSlotsForCloning =
           id: el.id,
           comment: el.comment,
         })),
-        customerId: currentAppointment.customerId,
+        customerId:
+          currentAppointment.customerId || currentAppointment?.driver.id
+            ? String(currentAppointment?.driver.id)
+            : undefined,
         serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
         recalls: currentAppointment.recallsModel ?? [],
         appointmentHashKey: currentAppointment.hashKey,
@@ -325,8 +328,11 @@ const loadSlotsForCloning =
       if (currentAppointment.address) {
         data.address = currentAppointment.address.fullAddress;
       }
+
       if (currentAppointment.vehicle) {
         data.vehicle = {
+          id: currentAppointment.vehicle.id ? +currentAppointment.vehicle.id : undefined,
+          dmsId: currentAppointment.vehicle.dmsId,
           vin: currentAppointment.vehicle.vin,
           year: currentAppointment.vehicle.year,
           make: currentAppointment.vehicle.make,

@@ -58,6 +58,7 @@ export interface IVehicleData {
   engineTypeId?: number;
   makeId?: number;
   dmsId?: string;
+  id?: string;
 }
 
 export interface IVehicleShort {
