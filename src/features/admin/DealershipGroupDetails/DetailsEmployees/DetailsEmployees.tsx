@@ -10,8 +10,14 @@ import { TDetailComponentProps } from '../../../../pages/admin/DealerShipGroupDe
 const rowData: TableRowDataType<IEmployee>[] = [
   { header: 'Name', val: v => v.fullName },
   { header: 'Role', val: v => v.role },
-  { header: 'Name', val: v => v.serviceCenter?.name },
-  { header: 'Service center address', val: v => concatAddress(v.serviceCenter?.address) },
+  { header: 'Service Center', val: v => v.serviceCenter?.name },
+  {
+    header: 'Service center address',
+    val: v => {
+      console.log('v', v);
+      return concatAddress(v.serviceCenter?.address);
+    },
+  },
 ];
 
 export const DetailsEmployees: React.FC<
