@@ -37,9 +37,16 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
   needToShowServiceTypes,
   setNeedToShowServiceTypes,
 }) => {
-  const { selectedVehicle, serviceTypeOption, isUsualFlowNeeded, advisor, welcomeScreenView } =
-    useSelector((state: RootState) => state.appointmentFrame);
-  const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const {
+    selectedVehicle,
+    serviceTypeOption,
+    isUsualFlowNeeded,
+    advisor,
+    welcomeScreenView,
+    appointmentByKey,
+    transportations,
+  } = useSelector((state: RootState) => state.appointmentFrame);
+  const { customerLoadedData, isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
 
@@ -74,6 +81,31 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
       handleSetScreen('appointmentConfirmed');
       resolve();
     });
+  };
+
+  const onNextOnAdvisorSelectionStep = () => {
+    // if the transportation available, move to the slots, if not, move to the transportation selection step
+    if (isCloneMode) {
+      const transportationAvailable = transportations.some(
+        transportation => transportation.id === appointmentByKey?.transportationOption?.id
+      );
+
+      return handleSetScreen(
+        transportationAvailable
+          ? isAppointmentTimingAvailable
+            ? 'appointmentTiming'
+            : 'appointmentSelection'
+          : 'transportationNeeds'
+      );
+    }
+
+    return handleSetScreen(
+      isTransportationAvailable && !serviceTypeOption?.transportationOption
+        ? 'transportationNeeds'
+        : isAppointmentTimingAvailable
+          ? 'appointmentTiming'
+          : 'appointmentSelection'
+    );
   };
 
   const carSelections: { [k in TScreen]?: JSX.Element } = {
@@ -125,19 +157,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
         isManagingFlow={!isUsualFlowNeeded}
       />
     ),
-    consultantSelection: (
-      <ConsultantsManage
-        onNext={() =>
-          handleSetScreen(
-            isTransportationAvailable && !serviceTypeOption?.transportationOption
-              ? 'transportationNeeds'
-              : isAppointmentTimingAvailable
-                ? 'appointmentTiming'
-                : 'appointmentSelection'
-          )
-        }
-      />
-    ),
+    consultantSelection: <ConsultantsManage onNext={onNextOnAdvisorSelectionStep} />,
     appointmentTiming: <AppointmentTimingManage handleSetScreen={handleSetScreen} />,
     appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen} />,
     transportationNeeds: (

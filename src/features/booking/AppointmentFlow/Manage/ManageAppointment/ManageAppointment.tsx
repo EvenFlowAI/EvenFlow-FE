@@ -88,6 +88,7 @@ export const ManageAppointment: React.FC<
     advisor,
     transportations,
     isTransportationsLoading,
+    consultants,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
   const { mileage } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
@@ -395,6 +396,18 @@ export const ManageAppointment: React.FC<
   };
 
   const forwardNextStepCloning = () => {
+    // checking if the advisor is available
+    if (appointmentByKey) {
+      const advisorId = consultants.find(
+        consultant => appointmentByKey?.advisorId === consultant.id
+      );
+      if (!advisorId) {
+        onChangeSlot();
+        return;
+      }
+    }
+
+    // checking if the transportation is available
     const transportationAvailable = transportations.some(
       transportation => transportation.id === appointmentByKey?.transportationOption?.id
     );
