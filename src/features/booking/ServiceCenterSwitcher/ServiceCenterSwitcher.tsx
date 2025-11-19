@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import {
   setCustomerEnteredEmail,
   setCustomerLoadedData,
+  setIsCloneMode,
 } from '../../../store/reducers/appointment/actions';
 import {
   clearAppointmentData,
@@ -26,7 +27,7 @@ import { initialCustomerSearch } from '../../../store/reducers/constants';
 import { useTranslation } from 'react-i18next';
 
 export const ServiceCenterSwitcher = () => {
-  const { scProfile } = useSelector((state: RootState) => state.appointment);
+  const { scProfile, isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { welcomeScreenView, isAppointmentSaving } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
@@ -63,6 +64,9 @@ export const ServiceCenterSwitcher = () => {
       } else {
         showError(t('There are not Service Centers list of the current Dealership'));
       }
+    }
+    if (isCloneMode) {
+      dispatch(setIsCloneMode(false));
     }
   };
 
