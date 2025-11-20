@@ -282,7 +282,8 @@ const loadSlotsForCloning =
     serviceCenterId: number,
     onEmptyList: (isEmpty: boolean) => void,
     startDate: TParsableDate,
-    endDate: TParsableDate
+    endDate: TParsableDate,
+    setApiDates?: (newStartDate: string) => void
   ): AppThunk =>
   (dispatch, getState) => {
     const { consultants } = getState().appointmentFrame;
@@ -346,12 +347,15 @@ const loadSlotsForCloning =
         if (data.address && data.zipCode)
           dispatch(loadServiceValetSlots(data, () => {}, onEmptyList));
       } else {
+        console.log('load appointment slots');
         dispatch(
           loadAppointmentSlots(
             data,
             () => {},
             () => {},
-            onEmptyList
+            onEmptyList,
+            () => {},
+            setApiDates
           )
         );
       }
@@ -388,11 +392,18 @@ export const loadAppointmentByKey =
     cb: TArgCallback<boolean>,
     startDate: TParsableDate,
     endDate: TParsableDate,
-    onEmptyMileage?: TCallback
+    onEmptyMileage?: TCallback,
+    setApiDates?: (newStartDate: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setCurrentApiStartDate?: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setCurrentApiEndDate?: any
   ): AppThunk =>
   async (dispatch, getState) => {
     dispatch(setCurrentAppointmentLoading(true));
     const { mileage } = getState().vehicleDetails;
+    if (setCurrentApiStartDate) setCurrentApiStartDate(startDate);
+    if (setCurrentApiEndDate) setCurrentApiEndDate(endDate);
     try {
       const { data } = await API.appointment.getByKey(key);
       if (data) {
@@ -407,7 +418,15 @@ export const loadAppointmentByKey =
         } else {
           dispatch(
             loadConsultantsForCloning(serviceCenterId, data, () =>
-              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
+              dispatch(
+                loadSlotsForCloning(
+                  decodeSCID(serviceCenterId),
+                  cb,
+                  startDate,
+                  endDate,
+                  setApiDates
+                )
+              )
             )
           );
         }

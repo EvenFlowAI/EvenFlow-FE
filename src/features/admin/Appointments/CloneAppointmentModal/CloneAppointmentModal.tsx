@@ -33,8 +33,23 @@ import theme from '../../../../theme/theme';
 import { useMediaQuery } from '@mui/material';
 
 const CloneAppointmentModal: React.FC<
-  DialogProps & { onViewClose: TCallback; loadNextSlots: TCallback; loadPreviousSlots: TCallback }
-> = ({ onViewClose, loadNextSlots, loadPreviousSlots, ...props }) => {
+  DialogProps & {
+    onViewClose: TCallback;
+    loadNextSlots: TCallback;
+    loadPreviousSlots: TCallback;
+    currentApiStartDate: null | string;
+    currentApiEndDate: null | string;
+    setApiDates: (newStartDate: string) => void;
+  }
+> = ({
+  onViewClose,
+  loadNextSlots,
+  loadPreviousSlots,
+  currentApiStartDate,
+  currentApiEndDate,
+  setApiDates,
+  ...props
+}) => {
   const { currentAppointment, isAppointmentLoading } = useSelector(
     (state: RootState) => state.appointments
   );
@@ -50,6 +65,7 @@ const CloneAppointmentModal: React.FC<
   const dispatch = useDispatch();
   const showError = useException();
   const { onOpen, isOpen, onClose } = useModal();
+
   const initRef = useRef<boolean>(false);
   const isLoading = isAppointmentLoading || isAppointmentSaving;
 
@@ -107,7 +123,7 @@ const CloneAppointmentModal: React.FC<
       dispatch(selectAppointment(null));
       dispatch(selectServiceValetAppointment(null));
       setDate(dayjs(d).startOf('day'));
-      if (!dayjs(d).isSame(month, 'month')) {
+      if (dayjs(d).isSame(month, 'month')) {
         setMonth(d);
       }
     },
@@ -164,6 +180,8 @@ const CloneAppointmentModal: React.FC<
               onDateChange={updateDate}
               onLoadNext={loadNextSlots}
               onLoadPrevious={loadPreviousSlots}
+              apiStartDate={currentApiStartDate || undefined}
+              apiEndDate={currentApiEndDate || undefined}
             />
           )}
           {currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff ? (

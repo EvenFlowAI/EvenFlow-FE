@@ -699,7 +699,6 @@ export const handleAppointmentResponse =
     if (data.maintenancePackageOption?.priceType) {
       dispatch(setPackagePricingType(data.maintenancePackageOption.priceType));
     }
-    console.log('data', data);
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList));
     dispatch(getTransactionValue(data.transactionValue ?? 0));
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -52,13 +52,18 @@ export const ViewAppointmentsModal: React.FC<
   ...props
 }) => {
   const { isAppointmentLoading } = useSelector((state: RootState) => state.appointments);
+  const { selectedTime } = useSelector((state: RootState) => state.appointmentFrame);
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
   const [messageText, setMessageText] = useState<string>('');
+
+  const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
+  const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
 
   const { selectedSC } = useSCs();
   const { onOpen, isOpen, onClose } = useModal();
   const { onOpen: onOpenClone, isOpen: isOpenClone, onClose: onCloseClone } = useModal();
   const { isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen } = useModal();
+  const apiDatesSetRef = useRef<boolean>(false);
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMd = useMediaQuery(theme.breakpoints.down('md'));
@@ -90,13 +95,39 @@ export const ViewAppointmentsModal: React.FC<
 
   const getApiDates = () => {
     const utcOffset = dayjs().utcOffset();
-    const anchorTime = dayjs().startOf('day');
+    const anchorTime = selectedTime ? dayjs(selectedTime) : dayjs().startOf('day');
     const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
     const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
-    const desiredEndDate = desiredStartDate.add(daysPerScreen, 'day');
+    const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+
+    console.log('selectedTime', selectedTime);
+
     return { apiStartDate, apiEndDate };
+  };
+
+  const setApiDates = (newStartDate: string) => {
+    // Only run once per session/component mount
+    if (apiDatesSetRef.current) {
+      return;
+    }
+
+    apiDatesSetRef.current = true;
+
+    console.log('newStartDate', newStartDate);
+
+    const utcOffset = dayjs().utcOffset();
+    const anchorTime = dayjs(newStartDate);
+    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
+    const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
+    const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
+    const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    setCurrentApiStartDate(apiStartDate);
+    setCurrentApiEndDate(apiEndDate);
+    console.log('apiStartDate', apiStartDate);
+    console.log('apiEndDate');
   };
 
   const handleExEvenFlowAppointments = () => {
@@ -113,6 +144,9 @@ export const ViewAppointmentsModal: React.FC<
   const onClone = async () => {
     if (payload?.hashKey && selectedSC) {
       const { apiStartDate, apiEndDate } = getApiDates();
+
+      console.log('on clone 1', apiStartDate, apiEndDate);
+
       dispatch(loadSCProfile(selectedSC.id));
       dispatch(
         loadAppointmentByKey(
@@ -121,7 +155,10 @@ export const ViewAppointmentsModal: React.FC<
           onGetSlots,
           apiStartDate,
           apiEndDate,
-          onMileageOpen
+          onMileageOpen,
+          setApiDates,
+          setCurrentApiStartDate,
+          setCurrentApiEndDate
         )
       );
     } else {
@@ -156,6 +193,9 @@ export const ViewAppointmentsModal: React.FC<
       .toISOString();
     const nextApiEndDate = dayjs(apiEndDate).add(daysPerScreen, 'day').endOf('day').toISOString();
     // loadData({ requestedStartDate: nextApiStartDate, requestedEndDate: nextApiEndDate }).finally();
+
+    console.log('load next slots', apiStartDate, apiEndDate, nextApiStartDate, nextApiEndDate);
+
     if (payload?.hashKey && selectedSC) {
       await dispatch(
         loadAppointmentByKey(
@@ -164,7 +204,10 @@ export const ViewAppointmentsModal: React.FC<
           onGetSlots,
           nextApiStartDate,
           nextApiEndDate,
-          onMileageOpen
+          onMileageOpen,
+          setApiDates,
+          setCurrentApiStartDate,
+          setCurrentApiEndDate
         )
       );
     }
@@ -188,7 +231,10 @@ export const ViewAppointmentsModal: React.FC<
           onGetSlots,
           previousApiStartDate,
           previousApiEndDate,
-          onMileageOpen
+          onMileageOpen,
+          setApiDates,
+          setCurrentApiStartDate,
+          setCurrentApiEndDate
         )
       );
     }
@@ -256,6 +302,9 @@ export const ViewAppointmentsModal: React.FC<
         onViewClose={onAfterClone}
         loadNextSlots={loadNextSlots}
         loadPreviousSlots={loadPreviousSlots}
+        currentApiStartDate={currentApiStartDate}
+        currentApiEndDate={currentApiEndDate}
+        setApiDates={setApiDates}
       />
       <MileageModal
         open={isMileageOpen}

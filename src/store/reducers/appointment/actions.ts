@@ -205,6 +205,7 @@ export const loadAppointmentSlots =
         const startDate = dayjs(String(data.startDate));
         const endDate = dayjs(String(data.endDate));
         if (firstSlotDate.isAfter(endDate) || firstSlotDate.isBefore(startDate)) {
+          console.log('!!!!! IS AFTER OR BEFORE');
           setApiDates(String(items[0].date));
         }
       }
@@ -233,6 +234,7 @@ export const loadAppointmentSlots =
       }
       return res;
     } catch (err) {
+      console.log('error');
       if (onError) {
         onError(err);
       }
