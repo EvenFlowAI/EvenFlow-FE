@@ -18,5 +18,8 @@
     },
     "[scss]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+    },
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        { "file": ".github/git-commit-instructions.md" }
+    ]
 } 
