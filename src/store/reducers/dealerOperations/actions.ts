@@ -60,6 +60,8 @@ export enum EventRulesFilterTypeE {
   'Days From Last Showed Appointment',
   'Days From Last Open Ro',
   'Days From Last Closed Ro',
+  'Vehicle Make' = 8,
+  'Vehicle Model' = 9,
 }
 
 export enum ComparisonOperatorE {
