@@ -433,9 +433,13 @@ export const ManageAppointment: React.FC<
         consultant => appointmentByKey?.advisorId === consultant.id
       );
       if (!advisorId) {
-        setTimeout(() => {
+        if (isAdvisorAvailable) {
+          setTimeout(() => {
+            onChangeSlot();
+          }, 500);
+        } else {
           onChangeSlot();
-        }, 500);
+        }
         return;
       }
     }
