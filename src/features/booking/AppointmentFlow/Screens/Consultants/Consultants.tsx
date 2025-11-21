@@ -53,7 +53,7 @@ export const Consultants: React.FC<TProps> = ({
   );
 
   useEffect(() => {
-    dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext));
+    if (!isCloneMode) dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext));
   }, [id, serviceTypeOption]);
 
   useEffect(() => {
