@@ -8,10 +8,7 @@ import { SelectedPrice } from './SelectedPrice/SelectedPrice';
 import { AppointmentReminders } from '../../Screens/components/AppointmentReminders/AppointmentReminders';
 import { TActionProps, TCallback, TError } from '../../../../../types/types';
 import { decodeSCID } from '../../../../../utils/utils';
-import {
-  createOrUpdateAppointment,
-  setReminders,
-} from '../../../../../store/reducers/appointmentFrameReducer/actions';
+import { createOrUpdateAppointment } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useParams } from 'react-router-dom';
@@ -69,10 +66,6 @@ export const AppointmentConfirmation: React.FC<
   useEffect(() => {
     scProfile && dispatch(loadAllServiceCategories(scProfile.id));
   }, [scProfile]);
-
-  useEffect(() => {
-    dispatch(setReminders([0, 1]));
-  }, []);
 
   const checkIsValid = () => {
     let isValid = true;

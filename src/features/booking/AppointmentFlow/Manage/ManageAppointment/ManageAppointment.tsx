@@ -17,7 +17,6 @@ import {
   setAppointmentSaving,
   setCurrentFrameScreen,
   setEditingPosition,
-  setReminders,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -87,7 +86,6 @@ export const ManageAppointment: React.FC<
     isConsentsLoading,
     advisor,
     transportations,
-    isTransportationsLoading,
     consultants,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
@@ -156,10 +154,6 @@ export const ManageAppointment: React.FC<
       dispatch(loadAppointmentRequestsPrices(scProfile.id));
     }
   }, [scProfile, appointmentWasChanged]);
-
-  useEffect(() => {
-    dispatch(setReminders([0, 1]));
-  }, []);
 
   useEffect(() => {
     // load active transportation when appointmentByKey is available
