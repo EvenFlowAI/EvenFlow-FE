@@ -1174,11 +1174,11 @@ export const createOrUpdateAppointment =
       dispatch(setEditingPosition(null));
       onNext();
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
+      dispatch(setIsCloneMode(false));
     } catch (e) {
       onError(e);
     } finally {
       dispatch(setAppointmentSaving(false));
-      dispatch(setIsCloneMode(false));
     }
   };
 
