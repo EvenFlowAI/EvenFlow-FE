@@ -52,6 +52,8 @@ import {
   setPoliticalState,
   setRecallsAreShown,
   setReminders,
+  setTempCustomer,
+  setTempReminders,
   setSelectedPackageOptionType,
   setSelectedPackagePriceTitles,
   setSelectedRecalls,
@@ -169,6 +171,8 @@ const initialState: TState = {
     serviceType: true,
     advisor: true,
   },
+  tempCustomer: null,
+  tempReminders: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -223,6 +227,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     })
     .addCase(setReminders, (state, { payload }) => {
       return { ...state, reminders: payload };
+    })
+    .addCase(setTempCustomer, (state, { payload }) => {
+      return { ...state, tempCustomer: payload };
+    })
+    .addCase(setTempReminders, (state, { payload }) => {
+      return { ...state, tempReminders: payload };
     })
     .addCase(setAppointmentId, (state, { payload }) => {
       let vehicle = state.selectedVehicle;
