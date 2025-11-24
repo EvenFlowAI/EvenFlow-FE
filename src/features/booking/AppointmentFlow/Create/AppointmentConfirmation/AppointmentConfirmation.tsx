@@ -82,8 +82,6 @@ export const AppointmentConfirmation: React.FC<
   }, [currentUser, scProfile]);
 
   useEffect(() => {
-    console.log('tempCustomer', tempCustomer);
-    console.log('tempReminders', tempReminders);
     const hasTempCustomer = tempCustomer !== null;
     const hasTempReminders = tempReminders !== null;
 
@@ -100,7 +98,16 @@ export const AppointmentConfirmation: React.FC<
     if (!hasTempReminders && !reminders?.length) {
       dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
     }
-  }, [dispatch, setCustomer, setReminders, setTempCustomer, setTempReminders, reminders, tempCustomer, tempReminders]);
+  }, [
+    dispatch,
+    setCustomer,
+    setReminders,
+    setTempCustomer,
+    setTempReminders,
+    reminders,
+    tempCustomer,
+    tempReminders,
+  ]);
 
   useEffect(() => {
     scProfile && dispatch(loadAllServiceCategories(scProfile.id));
