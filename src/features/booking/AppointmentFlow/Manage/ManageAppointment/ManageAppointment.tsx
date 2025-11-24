@@ -23,6 +23,10 @@ import {
   setVehicle,
   setWelcomeScreenView,
   updateConsultant,
+  setTempCustomer,
+  setTempReminders,
+  setCustomer,
+  setReminders,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
@@ -59,6 +63,7 @@ import { Routes } from '../../../../../routes/constants';
 import CustomerConsents from '../../../../../components/modals/booking/CustomerConsents/CustomerConsents';
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
+import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
 
 type TProps = {
@@ -87,6 +92,9 @@ export const ManageAppointment: React.FC<
     advisor,
     transportations,
     consultants,
+    reminders,
+    tempCustomer,
+    tempReminders,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
   const { mileage } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
@@ -371,7 +379,28 @@ export const ManageAppointment: React.FC<
     }
   }, [advisor]);
 
+  useEffect(() => {
+    const hasTempCustomer = tempCustomer !== null && tempCustomer !== undefined;
+    const hasTempReminders = tempReminders !== null && tempReminders !== undefined;
+    if (hasTempCustomer) {
+      dispatch(setCustomer(tempCustomer));
+      dispatch(setTempCustomer(null));
+    }
+
+    if (hasTempReminders) {
+      dispatch(setReminders(tempReminders));
+      dispatch(setTempReminders(null));
+    }
+
+    if (!hasTempReminders && !reminders) {
+      dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
+    }
+  }, [tempCustomer, tempReminders]);
+
   const handleChangeSlot = () => {
+    dispatch(setTempCustomer(customer));
+    dispatch(setTempReminders(reminders));
+
     if (customerLoadedData?.isUpdating) {
       dispatch(setEditingPosition('slot'));
       dispatch(setServiceOptionChanged(false));
@@ -428,6 +457,12 @@ export const ManageAppointment: React.FC<
     }
   }, [appointmentByKey, transportations]);
 
+  const handleBack = () => {
+    dispatch(setTempCustomer(customer));
+    dispatch(setTempReminders(reminders));
+    onCancelConfirmOpen();
+  };
+
   const handleCloseMileageModal = () => {
     onClose();
     forwardNextStepCloning();
@@ -476,7 +511,7 @@ export const ManageAppointment: React.FC<
         <ActionButtons
           loading={showLoader}
           nextDisabled={loading || isMileageOpen}
-          onBack={onCancelConfirmOpen}
+          onBack={handleBack}
           onNext={searchForConsents}
           nextLabel="Confirm Changes"
           prevLabel="Cancel Changes"

@@ -255,8 +255,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         ...state,
         id: payload.id,
         hashKey: payload.hashKey,
-        customer: { ...payload.driver },
-        reminders: state.reminders?.length ? state.reminders : payload.contactMethodTypes,
+        customer: { ...(state.tempCustomer ?? payload.driver) },
+        reminders: state.tempReminders ?? state.reminders ?? payload.contactMethodTypes,
+        tempCustomer: null,
+        tempReminders: null,
         serviceCategories: payload.serviceCategories.map(item => ({
           id: item.id,
           comment: item.comment,

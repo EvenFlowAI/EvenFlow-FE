@@ -33,7 +33,6 @@ import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
 import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
-import { ICustomer } from '../../../../../api/types';
 
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 
@@ -83,13 +82,24 @@ export const AppointmentConfirmation: React.FC<
   }, [currentUser, scProfile]);
 
   useEffect(() => {
-    if (tempCustomer && tempReminders !== null) {
+    console.log('tempCustomer', tempCustomer);
+    console.log('tempReminders', tempReminders);
+    console.log('Reminders', reminders);
+    const hasTempCustomer = tempCustomer !== null;
+    const hasTempReminders = tempReminders !== null;
+
+    if (hasTempCustomer) {
       dispatch(setCustomer(tempCustomer));
-      dispatch(setReminders(tempReminders));
       dispatch(setTempCustomer(null));
+    }
+
+    if (hasTempReminders) {
+      dispatch(setReminders(tempReminders));
       dispatch(setTempReminders(null));
-    } else if (!reminders || reminders.length === 0) {
-      dispatch(setReminders([0, 1]));
+    }
+
+    if (!hasTempReminders && !reminders?.length) {
+      dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
     }
   }, [tempCustomer, tempReminders]);
 
