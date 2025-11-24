@@ -108,7 +108,7 @@ export const ManageAppointment: React.FC<
   const { id } = useParams<{ id: string }>();
   const { isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen } = useModal();
   const { isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen } = useModal();
-  const { isOpen: isPaymentOpen, onClose: onPaymentClose, onOpen: onPaymentOpen } = useModal();
+  const { isOpen: isPaymentOpen, onClose: onPaymentClose } = useModal();
   const {
     isOpen: isCancelConfirmOpen,
     onClose: onCancelConfirmClose,
@@ -136,6 +136,33 @@ export const ManageAppointment: React.FC<
       ? Boolean(scProfile?.emailRequirement?.adminAndEmployeesEnabled)
       : Boolean(scProfile?.emailRequirement?.customerSelfServiceEnabled);
   }, [currentUser, scProfile]);
+
+  useEffect(() => {
+    const hasTempCustomer = tempCustomer !== null;
+    const hasTempReminders = tempReminders !== null;
+    if (hasTempCustomer) {
+      dispatch(setCustomer(tempCustomer));
+      dispatch(setTempCustomer(null));
+    }
+
+    if (hasTempReminders) {
+      dispatch(setReminders(tempReminders));
+      dispatch(setTempReminders(null));
+    }
+
+    if (!hasTempReminders && !reminders) {
+      dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
+    }
+  }, [
+    dispatch,
+    setCustomer,
+    setReminders,
+    setTempCustomer,
+    setTempReminders,
+    tempCustomer,
+    tempReminders,
+    reminders,
+  ]);
 
   const redirectToWelcomeScreens = () => {
     history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
@@ -378,24 +405,6 @@ export const ManageAppointment: React.FC<
       setPendingSlotChange(false);
     }
   }, [advisor]);
-
-  useEffect(() => {
-    const hasTempCustomer = tempCustomer !== null;
-    const hasTempReminders = tempReminders !== null;
-    if (hasTempCustomer) {
-      dispatch(setCustomer(tempCustomer));
-      dispatch(setTempCustomer(null));
-    }
-
-    if (hasTempReminders) {
-      dispatch(setReminders(tempReminders));
-      dispatch(setTempReminders(null));
-    }
-
-    if (!hasTempReminders && !reminders) {
-      dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
-    }
-  }, [tempCustomer, tempReminders, reminders]);
 
   const handleChangeSlot = () => {
     dispatch(setTempCustomer(customer));

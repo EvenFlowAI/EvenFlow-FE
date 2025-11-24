@@ -98,13 +98,14 @@ export const AppointmentConfirmation: React.FC<
     if (!hasTempReminders && !reminders?.length) {
       dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
     }
+    // Intentionally exclude `reminders` from dependencies so this runs only once on mount.
+    // Keep action creators and temp values to pick up any temp data passed in on first render.
   }, [
     dispatch,
     setCustomer,
     setReminders,
     setTempCustomer,
     setTempReminders,
-    reminders,
     tempCustomer,
     tempReminders,
   ]);
