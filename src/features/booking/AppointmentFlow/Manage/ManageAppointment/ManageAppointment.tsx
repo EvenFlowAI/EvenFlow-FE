@@ -161,7 +161,6 @@ export const ManageAppointment: React.FC<
     setTempReminders,
     tempCustomer,
     tempReminders,
-    reminders,
   ]);
 
   const redirectToWelcomeScreens = () => {
