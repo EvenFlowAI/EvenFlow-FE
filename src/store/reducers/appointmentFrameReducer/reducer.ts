@@ -52,6 +52,8 @@ import {
   setPoliticalState,
   setRecallsAreShown,
   setReminders,
+  setTempCustomer,
+  setTempReminders,
   setSelectedPackageOptionType,
   setSelectedPackagePriceTitles,
   setSelectedRecalls,
@@ -169,6 +171,8 @@ const initialState: TState = {
     serviceType: true,
     advisor: true,
   },
+  tempCustomer: null,
+  tempReminders: null,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -224,6 +228,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setReminders, (state, { payload }) => {
       return { ...state, reminders: payload };
     })
+    .addCase(setTempCustomer, (state, { payload }) => {
+      return { ...state, tempCustomer: payload };
+    })
+    .addCase(setTempReminders, (state, { payload }) => {
+      return { ...state, tempReminders: payload };
+    })
     .addCase(setAppointmentId, (state, { payload }) => {
       let vehicle = state.selectedVehicle;
       if (vehicle) {
@@ -245,8 +255,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         ...state,
         id: payload.id,
         hashKey: payload.hashKey,
-        customer: { ...payload.driver },
-        reminders: state.reminders?.length ? state.reminders : payload.contactMethodTypes,
+        customer: { ...(state.tempCustomer ?? payload.driver) },
+        reminders: state.tempReminders ?? state.reminders ?? payload.contactMethodTypes,
+        tempCustomer: null,
+        tempReminders: null,
         serviceCategories: payload.serviceCategories.map(item => ({
           id: item.id,
           comment: item.comment,
