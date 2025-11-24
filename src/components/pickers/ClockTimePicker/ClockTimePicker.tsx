@@ -35,11 +35,7 @@ const ClockTimePicker: React.FC<TProps> = ({
 }) => {
   const { classes } = useDatePickerStyles();
 
-  console.log(value);
-
-  const parsedValue = dayjs(value); // або твій об'єкт
-
-  console.log(InputProps?.placeholder, !parsedValue.isValid());
+  const parsedValue = dayjs(value);
 
   if (!parsedValue.isValid()) {
     value = null;

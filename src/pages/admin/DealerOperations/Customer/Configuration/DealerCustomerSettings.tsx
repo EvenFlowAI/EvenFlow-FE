@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import React, { useEffect, useState } from 'react';
 import { TitleContainerForDealerOperation } from '../../../../../components/wrappers/TitleContainer/TitleContainer';
 import { dealerOperationsCustomer, dealerOperationsRoot } from '../../../../../utils/constants';
@@ -36,6 +38,7 @@ import {
 import AudienceForm from './Forms/AudienceForm';
 import RulesForm from './Forms/RulesForm';
 import Triggers from './Forms/Triggers';
+import { loadMakes } from '../../../../../store/reducers/vehicleDetails/actions';
 
 const DealerCustomerSettings = () => {
   const { dashboardItems, eventIdForRulesConfiguration } = useSelector(
@@ -43,6 +46,11 @@ const DealerCustomerSettings = () => {
   );
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
+
+  useEffect(() => {
+    if (!selectedSC) return;
+    dispatch(loadMakes(selectedSC.id));
+  }, [selectedSC]);
 
   useEffect(() => {
     if (dashboardItems.length) {
@@ -57,6 +65,9 @@ const DealerCustomerSettings = () => {
             operator: ComparisonOperatorE[rule.operator],
           };
         });
+
+        handleUpdateMakesAndModels(updatedFilterRules);
+
         setCriteria(updatedFilterRules.filter(rule => rule.isCriteria));
         setRules(updatedFilterRules.filter(rule => !rule.isCriteria));
         setTriggers(event.triggers);
@@ -70,6 +81,8 @@ const DealerCustomerSettings = () => {
   const [criterias, setCriteria] = useState<CriteriaI[]>([]);
   const [rules, setRules] = useState<CriteriaI[]>([]);
   const [triggers, setTriggers] = useState<TriggerI[]>([]);
+  const [selectedMakes, setSelectedMakes] = useState<number[]>([]);
+  const [selectedModels, setSelectedModels] = useState<number[]>([]);
   const showError = useException();
   const [criteriaOperatorErrors, setCriteriaOperatorErrors] = useState<{
     [index: number]: boolean;
@@ -95,6 +108,9 @@ const DealerCustomerSettings = () => {
           operator: ComparisonOperatorE[rule.operator],
         };
       });
+
+      handleUpdateMakesAndModels(updatedFilterRules);
+
       setCriteria(updatedFilterRules.filter(rule => rule.isCriteria));
       setRules(updatedFilterRules.filter(rule => !rule.isCriteria));
       setTriggers(eventForConfiguration.triggers);
@@ -107,6 +123,18 @@ const DealerCustomerSettings = () => {
     setFirstTriggerDateError(false);
   };
 
+  const handleUpdateMakesAndModels = (updatedFilterRules: CriteriaI[]) => {
+    const makeRule = updatedFilterRules.find((rule: CriteriaI) => rule.type === 'Vehicle Make');
+    if (makeRule) {
+      setSelectedMakes(makeRule.value.split(',').map(Number));
+    }
+
+    const modelRule = updatedFilterRules.find((rule: CriteriaI) => rule.type === 'Vehicle Model');
+    if (modelRule) {
+      setSelectedModels(modelRule.value.split(',').map(Number));
+    }
+  };
+
   const handleOnSuccess = () => {
     setIsEditTable(false);
     setIsLoading(false);
@@ -114,6 +142,20 @@ const DealerCustomerSettings = () => {
 
   const validateChangesBeforeSave = () => {
     let haveErrors = false;
+
+    if (rules.some(rule => rule.type === 'Vehicle Make')) {
+      if (selectedMakes.length === 0) {
+        showError('Please select at least one vehicle make.');
+        return;
+      }
+    }
+
+    if (rules.some(rule => rule.type === 'Vehicle Model')) {
+      if (selectedModels.length === 0) {
+        showError('Please select at least one vehicle model.');
+        return;
+      }
+    }
 
     const errorsCriteriaOperator = validateCriteriaOperator(criterias, setCriteriaOperatorErrors);
     const errorsCriteriaType = validateCriteriaType(criterias, setCriteriaTypeErrors);
@@ -149,7 +191,14 @@ const DealerCustomerSettings = () => {
 
     if (
       validateGroup(criterias, c => Number.isInteger(Number(c.value)) && !!c?.operator) &&
-      validateGroup(rules, r => Number.isInteger(Number(r.value)) && !!r?.operator) &&
+      validateGroup(
+        rules,
+        r =>
+          (r.type === 'Vehicle Make' ||
+            r.type === 'Vehicle Model' ||
+            Number.isInteger(Number(r.value))) &&
+          !!r?.operator
+      ) &&
       validateGroup(triggers, t => Number.isInteger(Number(t.daysFromListGeneration)))
     ) {
       if (!validateTriggersSequence(triggers, showError)) return;
@@ -243,6 +292,10 @@ const DealerCustomerSettings = () => {
                   rules={rules}
                   isEditTable={isEditTable}
                   setRules={setRules}
+                  selectedMakes={selectedMakes}
+                  selectedModels={selectedModels}
+                  setSelectedMakes={setSelectedMakes}
+                  setSelectedModels={setSelectedModels}
                 />
               </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Autocomplete, IconButton } from '@mui/material';
 import { autocompleteRender } from '../../../../../../utils/autocompleteRenders';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
@@ -7,6 +7,8 @@ import { EventRulesFilterTypeE } from '../../../../../../store/reducers/dealerOp
 import { AddCircleOutline } from '@mui/icons-material';
 import { useStyles } from '../../../styles';
 import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
+import RuleMakes from './Makes';
+import RuleModels from './Models';
 
 interface RulesFormI {
   rules: CriteriaI[];
@@ -28,6 +30,10 @@ interface RulesFormI {
       [index: number]: boolean;
     }>
   >;
+  selectedMakes: number[];
+  setSelectedMakes: Dispatch<SetStateAction<number[]>>;
+  selectedModels: number[];
+  setSelectedModels: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 const RulesForm = ({
@@ -38,6 +44,10 @@ const RulesForm = ({
   setRuleOperatorErrors,
   ruleTypeErrors,
   setRuleTypeErrors,
+  selectedMakes,
+  setSelectedMakes,
+  selectedModels,
+  setSelectedModels,
 }: RulesFormI) => {
   const { classes } = useStyles();
 
@@ -46,6 +56,22 @@ const RulesForm = ({
       v => typeof v === 'string'
     ) as string[];
 
+    const isModelAdded = rules.some(rule => rule.type === 'Vehicle Model');
+    if (isModelAdded) {
+      const modelIndex = allValues.indexOf('Vehicle Model');
+      if (modelIndex !== -1) {
+        allValues.splice(modelIndex, 1);
+      }
+    }
+
+    const isMakeAdded = rules.some(rule => rule.type === 'Vehicle Make');
+    if (isMakeAdded) {
+      const makeIndex = allValues.indexOf('Vehicle Make');
+      if (makeIndex !== -1) {
+        allValues.splice(makeIndex, 1);
+      }
+    }
+
     return allValues;
   };
 
@@ -53,7 +79,7 @@ const RulesForm = ({
     setRules(prev => [...prev, { type: '', operator: '', value: '' }]);
   };
 
-  const handleRemoveRule = (index: number) => {
+  const handleRemoveRule = (index: number, ruleType?: string) => {
     setRuleOperatorErrors(prev => ({
       ...prev,
       [index]: false,
@@ -65,6 +91,12 @@ const RulesForm = ({
     }));
 
     setRules(prev => prev.filter((rule, i) => i !== index));
+    if (ruleType === 'Vehicle Make') {
+      setSelectedMakes([]);
+    }
+    if (ruleType === 'Vehicle Model') {
+      setSelectedModels([]);
+    }
   };
 
   const handleRuleChange = (index: number, field: keyof CriteriaI, newValue: string) => {
@@ -114,38 +146,60 @@ const RulesForm = ({
                     error: ruleTypeErrors[index],
                   })}
                 />
-                <Autocomplete
-                  style={{ width: '25%' }}
-                  disabled={!isEditTable}
-                  value={rule.operator}
-                  disableClearable
-                  options={['Less than', 'Equal', 'Greater than']}
-                  isOptionEqualToValue={(o, v) => String(o) === String(v)}
-                  getOptionLabel={o => o}
-                  onChange={(e, v) => handleRuleChange(index, 'operator', v || '')}
-                  renderInput={autocompleteRender({
-                    label: 'Operator',
-                    placeholder: '',
-                    error: ruleOperatorErrors[index],
-                  })}
-                />
-                <div className={classes.criteriaValue}>
-                  <TextField
-                    fullWidth
-                    disabled={!isEditTable}
-                    type="number"
-                    inputProps={{ min: 0 }}
-                    error={!Number.isInteger(Number(rule.value))}
-                    label="Value"
-                    placeholder=""
-                    onChange={e => handleRuleChange(index, 'value', e.target.value || '')}
-                    value={+rule.value}
+
+                {rule.type === 'Vehicle Make' ? (
+                  <RuleMakes
+                    selectedMakes={selectedMakes}
+                    setSelectedMakes={setSelectedMakes}
+                    handleRuleChange={handleRuleChange}
+                    index={index}
+                    isEdit={isEditTable}
                   />
-                </div>
+                ) : rule.type === 'Vehicle Model' ? (
+                  <RuleModels
+                    selectedModels={selectedModels}
+                    setSelectedModels={setSelectedModels}
+                    handleRuleChange={handleRuleChange}
+                    index={index}
+                    isEdit={isEditTable}
+                  />
+                ) : (
+                  <>
+                    <Autocomplete
+                      style={{ width: '25%' }}
+                      disabled={!isEditTable}
+                      value={rule.operator}
+                      disableClearable
+                      options={['Less than', 'Equal', 'Greater than']}
+                      isOptionEqualToValue={(o, v) => String(o) === String(v)}
+                      getOptionLabel={o => o}
+                      onChange={(e, v) => handleRuleChange(index, 'operator', v || '')}
+                      renderInput={autocompleteRender({
+                        label: 'Operator',
+                        placeholder: '',
+                        error: ruleOperatorErrors[index],
+                      })}
+                    />
+                    <div className={classes.criteriaValue}>
+                      <TextField
+                        fullWidth
+                        disabled={!isEditTable}
+                        type="number"
+                        inputProps={{ min: 0 }}
+                        error={!Number.isInteger(Number(rule.value))}
+                        label="Value"
+                        placeholder=""
+                        onChange={e => handleRuleChange(index, 'value', e.target.value || '')}
+                        value={+rule.value}
+                      />
+                    </div>
+                  </>
+                )}
+
                 {isEditTable ? (
                   <div
                     className={classes.removeCriteriaIcon}
-                    onClick={() => handleRemoveRule(index)}
+                    onClick={() => handleRemoveRule(index, rule.type)}
                   >
                     <CloseNew />
                   </div>
