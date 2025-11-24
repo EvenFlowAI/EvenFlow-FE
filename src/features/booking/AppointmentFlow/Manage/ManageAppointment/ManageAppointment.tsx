@@ -380,8 +380,8 @@ export const ManageAppointment: React.FC<
   }, [advisor]);
 
   useEffect(() => {
-    const hasTempCustomer = tempCustomer !== null && tempCustomer !== undefined;
-    const hasTempReminders = tempReminders !== null && tempReminders !== undefined;
+    const hasTempCustomer = tempCustomer !== null;
+    const hasTempReminders = tempReminders !== null;
     if (hasTempCustomer) {
       dispatch(setCustomer(tempCustomer));
       dispatch(setTempCustomer(null));
@@ -395,7 +395,7 @@ export const ManageAppointment: React.FC<
     if (!hasTempReminders && !reminders) {
       dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
     }
-  }, [tempCustomer, tempReminders]);
+  }, [tempCustomer, tempReminders, reminders]);
 
   const handleChangeSlot = () => {
     dispatch(setTempCustomer(customer));
