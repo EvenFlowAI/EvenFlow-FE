@@ -81,6 +81,7 @@ import {
   switchLanguage,
   updateAppointmentDetails,
   updateVehicle,
+  setIsEditFromAdmin,
 } from './actions';
 import { EAppointmentTimingType } from '../appointment/types';
 import { EServiceType, TState } from './types';
@@ -173,6 +174,7 @@ const initialState: TState = {
   },
   tempCustomer: null,
   tempReminders: null,
+  isEditFromAdmin: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -250,13 +252,23 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setMaintenanceDetails, (state, { payload }) => {
       return { ...state, maintenanceDetails: { ...state.maintenanceDetails, ...payload } };
     })
+    // eslint-disable-next-line complexity
     .addCase(setUpdateAppointment, (state, { payload }) => {
+      const customer = state.isEditFromAdmin ? payload.driver : state.tempCustomer;
       return {
         ...state,
         id: payload.id,
         hashKey: payload.hashKey,
-        customer: { ...(state.tempCustomer ?? payload.driver) },
-        reminders: state.tempReminders ?? state.reminders ?? payload.contactMethodTypes,
+        customer: {
+          fullName: customer?.fullName ?? '',
+          phoneNumber: customer?.phoneNumber ?? '',
+          email: customer?.email ?? '',
+          city: customer?.city ?? '',
+          companyName: customer?.companyName ?? '',
+        },
+        reminders: state.isEditFromAdmin
+          ? payload.contactMethodTypes
+          : (state.tempReminders ?? state.reminders),
         tempCustomer: null,
         tempReminders: null,
         serviceCategories: payload.serviceCategories.map(item => ({
@@ -493,5 +505,8 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         selectedTime: payload.date,
         serviceTypeOption: payload.serviceTypeOption,
       };
+    })
+    .addCase(setIsEditFromAdmin, (state, { payload }) => {
+      return { ...state, isEditFromAdmin: payload };
     })
 );

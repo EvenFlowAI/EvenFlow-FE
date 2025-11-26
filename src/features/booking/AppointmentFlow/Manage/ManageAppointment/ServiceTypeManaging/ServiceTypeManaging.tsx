@@ -8,6 +8,7 @@ import { IFirstScreenOption } from '../../../../../../store/reducers/serviceType
 import { Edit } from '@mui/icons-material';
 import {
   setEditingPosition,
+  setIsEditFromAdmin,
   setServiceOptionChanged,
   setShowServiceCentersList,
   setWelcomeScreenView,
@@ -48,6 +49,7 @@ const ServiceTypeManaging = () => {
   };
 
   const onServiceOptionChange = async () => {
+    await dispatch(setIsEditFromAdmin(false));
     await dispatch(setEditingPosition('serviceOption'));
     await dispatch(setShowServiceCentersList(false));
     await dispatch(setServiceOptionChanged(false));

@@ -216,6 +216,7 @@ export type TState = {
   // Temporary storage used when editing slot and restoring customer/consents
   tempCustomer: ICustomer | null;
   tempReminders: EContactMethodTypes[] | null;
+  isEditFromAdmin: boolean;
 };
 
 type TPackageOptionRequestData = {
