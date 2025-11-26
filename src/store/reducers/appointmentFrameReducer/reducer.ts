@@ -260,6 +260,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         id: payload.id,
         hashKey: payload.hashKey,
         customer: {
+          id: customer?.id,
           fullName: customer?.fullName ?? '',
           phoneNumber: customer?.phoneNumber ?? '',
           email: customer?.email ?? '',
