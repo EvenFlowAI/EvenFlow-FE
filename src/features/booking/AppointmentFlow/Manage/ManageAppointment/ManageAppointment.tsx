@@ -427,39 +427,43 @@ export const ManageAppointment: React.FC<
   };
 
   const forwardNextStepCloning = () => {
-    // checking if the advisor is available
     if (appointmentByKey) {
+      // checking if the advisor is available
       const advisorId = consultants.find(
         consultant => appointmentByKey?.advisorId === consultant.id
       );
+
+      // checking if the transportation is available
+      const transportationAvailable = transportations.some(
+        transportation => transportation.id === appointmentByKey?.transportationOption?.id
+      );
       if (!advisorId) {
         if (isAdvisorAvailable) {
+          // fix blicking on the advisor step
           setTimeout(() => {
             onChangeSlot();
           }, 500);
         } else {
-          onChangeSlot();
+          if (transportationAvailable) {
+            onChangeSlot();
+          } else {
+            dispatch(setCurrentFrameScreen('transportationNeeds'));
+          }
         }
-        return;
+      } else {
+        if (transportationAvailable) {
+          handleChangeSlot();
+        } else {
+          dispatch(setCurrentFrameScreen('transportationNeeds'));
+        }
       }
-    }
-
-    // checking if the transportation is available
-    const transportationAvailable = transportations.some(
-      transportation => transportation.id === appointmentByKey?.transportationOption?.id
-    );
-
-    if (transportationAvailable) {
-      handleChangeSlot();
-    } else {
-      dispatch(setCurrentFrameScreen('transportationNeeds'));
     }
   };
 
   useEffect(() => {
     if (isCloneMode && appointmentByKey) {
       if (transportations.length) {
-        // when transportations and appointmentByKey are ready
+        // when transportations from the backend and appointmentByKey are ready
         if (appointmentByKey.vehicle.mileage) {
           forwardNextStepCloning();
         } else {
