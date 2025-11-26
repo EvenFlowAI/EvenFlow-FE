@@ -33,6 +33,7 @@ import dayjs from 'dayjs';
 
 type TCallbackProps = {
   onEditAppointment: TCallback;
+  onCloneAppointment: TCallback;
   onCancelAppointment: TCallback;
   refresh?: TCallback;
   isClone: boolean;
@@ -45,6 +46,7 @@ export const ViewAppointmentsModal: React.FC<
   onAction,
   refresh,
   onEditAppointment,
+  onCloneAppointment,
   onCancelAppointment,
   isClone,
   setIsClone,
@@ -238,7 +240,7 @@ export const ViewAppointmentsModal: React.FC<
         </Button>
         <Button
           id="clone-appointment"
-          onClick={onClone}
+          onClick={onCloneAppointment}
           variant="outlined"
           style={{ color: '#5FA077', borderColor: '#5FA077' }}
           aria-hidden={false}

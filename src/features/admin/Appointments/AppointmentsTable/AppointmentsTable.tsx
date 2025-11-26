@@ -84,7 +84,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     handleCloneAppointment();
   }, [appointments, key]);
 
-  const openInNewTab = async () => {
+  const openInNewTabForEdit = async () => {
     if (viewItem?.hashKey) {
       const url = window.location.href.replace(
         '/admin/appointments',
@@ -94,9 +94,24 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     }
   };
 
+  const openInNewTabForClone = async () => {
+    if (viewItem?.hashKey) {
+      const url = window.location.href.replace(
+        '/admin/appointments',
+        `/appointment-clone/${viewItem.hashKey}/by-key`
+      );
+      window.open(url, '_blank', 'noreferrer');
+    }
+  };
+
   const handleEdit = async () => {
     setAnchorEl(null);
-    await openInNewTab();
+    await openInNewTabForEdit();
+  };
+
+  const handleClone = async () => {
+    setAnchorEl(null);
+    await openInNewTabForClone();
   };
 
   const handleCancel = useCallback(() => {
@@ -138,6 +153,12 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     onClose();
     handleEdit();
   };
+
+  const handleCloneCallback = () => {
+    onClose();
+    handleClone();
+  };
+
   const handleCancelCallback = () => {
     onClose();
     handleCancel();
@@ -194,6 +215,7 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
       </Menu>
       <ViewAppointmentsModal
         onEditAppointment={handleEditCallback}
+        onCloneAppointment={handleCloneCallback}
         onCancelAppointment={handleCancelCallback}
         open={isOpen}
         refresh={refresh}
