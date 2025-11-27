@@ -401,15 +401,18 @@ export const loadAppointmentByKey =
           mileage.find(item => item.value.toString() === data?.vehicle?.mileage?.toString());
         dispatch(getCurrentAppointment(data));
         dispatch(updateRecalls(data, serviceCenterId));
+        console.log('test');
+        dispatch(
+          loadConsultantsForCloning(serviceCenterId, data, () =>
+            dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
+          )
+        );
         if (onEmptyMileage && !mileageIsValid) {
+          console.log('test 2');
           onEmptyMileage();
           dispatch(setCurrentAppointmentLoading(false));
         } else {
-          dispatch(
-            loadConsultantsForCloning(serviceCenterId, data, () =>
-              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
-            )
-          );
+          console.log('test 3');
         }
       }
     } catch {

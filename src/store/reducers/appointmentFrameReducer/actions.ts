@@ -330,6 +330,7 @@ export const loadConsultantsForUpdating =
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
     const { selectedVehicle, selectedRecalls, sideBarSteps, appointmentByKey } =
       getState().appointmentFrame;
+    const { isCloneMode } = getState().appointment;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
     const recalls = mapRecallsForRequest(selectedRecalls);
     if (selectedVehicle) {
@@ -354,7 +355,10 @@ export const loadConsultantsForUpdating =
             year: selectedVehicle.year,
             make: selectedVehicle.make,
             model: selectedVehicle.model,
-            mileage: selectedVehicle.mileage ?? appointmentByKey?.vehicle?.mileage ?? null,
+            mileage:
+              selectedVehicle.mileage || appointmentByKey?.vehicle?.mileage || isCloneMode
+                ? 1
+                : null,
             engineTypeId: selectedVehicle.engineTypeId,
           },
           address: address?.fullAddress ?? '',
@@ -363,6 +367,7 @@ export const loadConsultantsForUpdating =
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
         }
+
         if (data.vehicle.mileage) {
           Api.call<PaginatedAPIResponse<IServiceConsultant>>(
             Api.endpoints.ServiceConsultants.GetByQuery,
