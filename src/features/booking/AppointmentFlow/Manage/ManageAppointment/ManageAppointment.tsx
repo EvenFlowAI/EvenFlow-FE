@@ -465,13 +465,16 @@ export const ManageAppointment: React.FC<
       if (transportations.length) {
         // when transportations from the backend and appointmentByKey are ready
         if (appointmentByKey.vehicle.mileage) {
-          forwardNextStepCloning();
+          // when advisors from the backend are ready
+          if (consultants.length) {
+            forwardNextStepCloning();
+          }
         } else {
           onOpen();
         }
       }
     }
-  }, [appointmentByKey, transportations]);
+  }, [appointmentByKey, transportations, consultants]);
 
   const handleBack = () => {
     dispatch(setTempCustomer(customer));
