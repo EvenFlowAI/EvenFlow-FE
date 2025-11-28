@@ -464,7 +464,7 @@ export const ManageAppointment: React.FC<
     if (isCloneMode && appointmentByKey) {
       if (transportations.length) {
         // when transportations from the backend and appointmentByKey are ready
-        if (appointmentByKey.vehicle.mileage) {
+        if (appointmentByKey.vehicle.mileage || selectedVehicle?.mileage) {
           // when advisors from the backend are ready
           if (consultants.length) {
             forwardNextStepCloning();
@@ -484,7 +484,6 @@ export const ManageAppointment: React.FC<
 
   const handleCloseMileageModal = () => {
     onClose();
-    forwardNextStepCloning();
   };
 
   return (
