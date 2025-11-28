@@ -190,9 +190,13 @@ export const updateDealershipLogo =
 
 export const updateLeftPanelColor =
   (id: number, hex: string): AppThunk =>
-  () => {
-    Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
-      urlParams: { id },
-      data: { leftPanelColor: hex },
-    });
+  async () => {
+    try {
+      await Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
+        urlParams: { id },
+        data: { leftPanelColor: hex },
+      });
+    } catch (err) {
+      console.log('updateLeftPanelColor error', err);
+    }
   };

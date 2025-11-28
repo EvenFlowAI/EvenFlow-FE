@@ -235,7 +235,7 @@ export const AdminStyling: React.FC = () => {
                 Upload Logo
               </Button>
               <Typography variant="body2" color="textSecondary" className={classes.helperTextWrap}>
-                Upload an rectangular SVG or PNG file, and make sure its size does not <br /> exceed
+                Upload a rectangular SVG or PNG file, and make sure its size does not <br /> exceed
                 2 MB
               </Typography>
             </div>
