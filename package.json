@@ -1,6 +1,6 @@
 {
   "name": "even_flow_ai",
-  "version": "0.6.42",
+  "version": "0.6.43",
   "private": true,
   "description": "EvenFlow AI frontend application. Run 'npm run setup-hooks' after cloning to enable automatic version incrementation.",
   "dependencies": {
@@ -13,6 +13,7 @@
     "@mui/material": "^5.15.4",
     "@mui/styles": "^5.15.4",
     "@mui/x-date-pickers": "^6.19.2",
+    "@rc-component/color-picker": "^3.0.2",
     "@reduxjs/toolkit": "^1.4.0",
     "@sentry/react": "^8.26.0",
     "aws-rum-web": "^1.19.0",

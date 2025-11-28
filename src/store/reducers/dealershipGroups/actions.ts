@@ -48,6 +48,16 @@ export const setSearchTerm = (payload: string): DealershipActions => ({
   payload,
 });
 
+export const setSidebarColorHex = (payload: string | undefined): DealershipActions => ({
+  type: 'Dealership/SetSidebarColorHex',
+  payload,
+});
+
+export const setCustomLogoPath = (payload: string | undefined): DealershipActions => ({
+  type: 'Dealership/SetCustomLogoPath',
+  payload,
+});
+
 export const changePageData: ActionCreator<
   ThunkAction<void, RootState, void, DealershipActions>
 > = (payload: Partial<IPageRequest>) => {
@@ -163,3 +173,26 @@ export const updateDealershipAvatar =
         onError(err);
       }
     };
+
+export const updateDealershipLogo =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (id: number, logo: File, onError: TArgCallback<any>): AppThunk =>
+    async () => {
+      try {
+        const data = new FormData();
+        data.append('file', logo, logo.name);
+        await Api.call(Api.endpoints.Dealerships.UploadLogo, { urlParams: { id }, data });
+      } catch (err) {
+        console.log(err);
+        onError(err);
+      }
+    };
+
+export const updateLeftPanelColor =
+  (id: number, hex: string): AppThunk =>
+  () => {
+    Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
+      urlParams: { id },
+      data: { leftPanelColor: hex },
+    });
+  };

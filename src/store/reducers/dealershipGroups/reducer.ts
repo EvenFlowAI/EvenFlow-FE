@@ -8,6 +8,8 @@ const initialState: DealershipState = {
   paging: { ...defaultPaging },
   pageData: { ...defaultPageData },
   searchTerm: '',
+  sidebarColorHex: undefined,
+  customLogoPath: undefined,
 };
 
 export const dealershipGroupsReducer = (
@@ -18,7 +20,12 @@ export const dealershipGroupsReducer = (
     case 'Dealership/Add':
       return { ...state, dealershipList: [action.payload, ...state.dealershipList] };
     case 'Dealership/Profile':
-      return { ...state, profile: action.payload };
+      return {
+        ...state,
+        profile: action.payload,
+        sidebarColorHex: action.payload.leftPanelColor,
+        customLogoPath: action.payload.logoPath,
+      };
     case 'Dealership/Remove':
       return {
         ...state,
@@ -36,6 +43,10 @@ export const dealershipGroupsReducer = (
       return { ...state, paging: action.payload };
     case 'Dealership/SetSearchTerm':
       return { ...state, searchTerm: action.payload };
+    case 'Dealership/SetSidebarColorHex':
+      return { ...state, sidebarColorHex: action.payload };
+    case 'Dealership/SetCustomLogoPath':
+      return { ...state, customLogoPath: action.payload };
     default:
       return state;
   }
