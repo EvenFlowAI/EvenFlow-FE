@@ -36,8 +36,6 @@ type TCallbackProps = {
   onCloneAppointment: TCallback;
   onCancelAppointment: TCallback;
   refresh?: TCallback;
-  isClone: boolean;
-  setIsClone: (isClone: boolean) => void;
 };
 
 export const ViewAppointmentsModal: React.FC<
@@ -48,8 +46,6 @@ export const ViewAppointmentsModal: React.FC<
   onEditAppointment,
   onCloneAppointment,
   onCancelAppointment,
-  isClone,
-  setIsClone,
   payload,
   ...props
 }) => {
@@ -73,15 +69,6 @@ export const ViewAppointmentsModal: React.FC<
   useEffect(() => {
     selectedSC && dispatch(loadMileage(selectedSC.id));
   }, [selectedSC]);
-
-  useEffect(() => {
-    if (isClone) {
-      onClone().then(() => {
-        window.history.replaceState(null, '', '/admin/appointments/');
-        setIsClone(false);
-      });
-    }
-  }, [isClone]);
 
   const handleNoSlots = () => {
     setMessageText(
@@ -239,7 +226,6 @@ export const ViewAppointmentsModal: React.FC<
           Edit
         </Button>
         <Button
-          id="clone-appointment"
           onClick={onCloneAppointment}
           variant="outlined"
           style={{ color: '#5FA077', borderColor: '#5FA077' }}
