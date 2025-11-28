@@ -16,38 +16,23 @@ import {
   TServiceBook,
   TServiceConsultant,
 } from './types';
-import {
-  AppThunk,
-  IPageRequest,
-  TArgCallback,
-  TCallback,
-  TParsableDate,
-} from '../../../types/types';
+import { AppThunk, IPageRequest, TArgCallback, TCallback } from '../../../types/types';
 import { TScreen } from '../../../types/screens';
 import { API } from '../../../api/api';
 import { EServiceType } from '../appointmentFrameReducer/types';
-import { EAppointmentTimingType, IAppointmentSlotsRequest } from '../appointment/types';
+import { EAppointmentTimingType } from '../appointment/types';
 import {
-  loadConsultantsForCloning,
   setAppointmentSaving,
   setConsultants,
   setCurrentFrameScreen,
   setSelectedRecalls,
-  updateRecalls,
 } from '../appointmentFrameReducer/actions';
 import { setChangesCompletedOpen, setSlotsWarningOpen } from '../modals/actions';
-import {
-  decodeSCID,
-  getCategories,
-  getVehicleData,
-  mapRecallsForRequest,
-} from '../../../utils/utils';
+import { getCategories, getVehicleData, mapRecallsForRequest } from '../../../utils/utils';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import {
   getAppointmentSlots,
   getServiceValetSlots,
-  loadAppointmentSlots,
-  loadServiceValetSlots,
   selectAppointment,
   selectServiceValetAppointment,
   setProfileLoading,
@@ -55,7 +40,6 @@ import {
 } from '../appointment/actions';
 import { IServiceCenterProfile } from '../appointment/types';
 import { getRecallsByVin } from '../recall/actions';
-import dayjs from 'dayjs';
 import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
 
 export const getAppointments = createAction<IAppointment[]>('Appointments/GetAppointments');
@@ -275,146 +259,6 @@ export const loadServiceConsultants =
         console.log('load Service Consultants error', e);
       })
       .finally(() => dispatch(setAppointmentsLoading(false)));
-  };
-
-const loadSlotsForCloning =
-  (
-    serviceCenterId: number,
-    onEmptyList: (isEmpty: boolean) => void,
-    startDate: TParsableDate,
-    endDate: TParsableDate
-  ): AppThunk =>
-  (dispatch, getState) => {
-    const { consultants } = getState().appointmentFrame;
-    const { currentAppointment } = getState().appointments;
-    const utcOffset = dayjs().utcOffset();
-    const fromDate =
-      currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff
-        ? dayjs().startOf('day').add(utcOffset, 'minute').toISOString()
-        : undefined;
-    const advisorId = consultants.find(item => item.id === currentAppointment?.advisorId)?.id;
-    if (currentAppointment) {
-      const data: IAppointmentSlotsRequest = {
-        fromDate,
-        startDate,
-        endDate,
-        appointmentTimingType: EAppointmentTimingType.FirstAvailable,
-        serviceCenterId,
-        advisorId: !currentAppointment?.advisorId && advisorId ? advisorId : null,
-        maintenancePackageOption: currentAppointment.maintenancePackageOption ?? null,
-        serviceRequests: currentAppointment.serviceRequests
-          ? currentAppointment.serviceRequests.map(el => ({ id: el.id, comment: null }))
-          : [],
-        serviceCategories: currentAppointment.serviceCategories.map(el => ({
-          id: el.id,
-          comment: el.comment,
-        })),
-        customerId:
-          currentAppointment.customerId || currentAppointment?.driver.id
-            ? String(currentAppointment?.driver.id)
-            : undefined,
-        serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
-        recalls: currentAppointment.recallsModel ?? [],
-        appointmentHashKey: currentAppointment.hashKey,
-        transportationOptionId:
-          (currentAppointment.serviceTypeOption?.type === EServiceType.VisitCenter ||
-            !currentAppointment.serviceTypeOption) &&
-          !currentAppointment.serviceTypeOption?.transportationOption &&
-          currentAppointment?.transportationOption
-            ? currentAppointment?.transportationOption.id
-            : null,
-      };
-      if (currentAppointment.address?.zipCode) data.zipCode = currentAppointment.address?.zipCode;
-      if (currentAppointment.address) {
-        data.address = currentAppointment.address.fullAddress;
-      }
-
-      if (currentAppointment.vehicle) {
-        data.vehicle = {
-          id: currentAppointment.vehicle.id ? +currentAppointment.vehicle.id : undefined,
-          dmsId: currentAppointment.vehicle.dmsId,
-          vin: currentAppointment.vehicle.vin,
-          year: currentAppointment.vehicle.year,
-          make: currentAppointment.vehicle.make,
-          model: currentAppointment.vehicle.model,
-          mileage: currentAppointment.vehicle.mileage,
-          engineTypeId: currentAppointment.vehicle.engineTypeId,
-        };
-      }
-      if (currentAppointment.driver?.email) data.searchTerm = currentAppointment.driver?.email;
-      if (currentAppointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-        if (data.address && data.zipCode)
-          dispatch(loadServiceValetSlots(data, () => {}, onEmptyList));
-      } else {
-        dispatch(
-          loadAppointmentSlots(
-            data,
-            () => {},
-            () => {},
-            onEmptyList
-          )
-        );
-      }
-    }
-  };
-
-export const handleUpdatedMileageForCloning =
-  (
-    serviceCenterId: string,
-    cb: TArgCallback<boolean>,
-    startDate: TParsableDate,
-    endDate: TParsableDate
-  ): AppThunk =>
-  (dispatch, getState) => {
-    const { currentAppointment } = getState().appointments;
-    if (currentAppointment) {
-      try {
-        dispatch(setCurrentAppointmentLoading(true));
-        dispatch(
-          loadConsultantsForCloning(serviceCenterId, currentAppointment, () =>
-            dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
-          )
-        );
-      } catch {
-        dispatch(setCurrentAppointmentLoading(false));
-      }
-    }
-  };
-
-export const loadAppointmentByKey =
-  (
-    key: string,
-    serviceCenterId: string,
-    cb: TArgCallback<boolean>,
-    startDate: TParsableDate,
-    endDate: TParsableDate,
-    onEmptyMileage?: TCallback
-  ): AppThunk =>
-  async (dispatch, getState) => {
-    dispatch(setCurrentAppointmentLoading(true));
-    const { mileage } = getState().vehicleDetails;
-    try {
-      const { data } = await API.appointment.getByKey(key);
-      if (data) {
-        const mileageIsValid =
-          data?.vehicle?.mileage &&
-          mileage.find(item => item.value.toString() === data?.vehicle?.mileage?.toString());
-        dispatch(getCurrentAppointment(data));
-        dispatch(updateRecalls(data, serviceCenterId));
-        if (onEmptyMileage && !mileageIsValid) {
-          onEmptyMileage();
-          dispatch(setCurrentAppointmentLoading(false));
-        } else {
-          dispatch(
-            loadConsultantsForCloning(serviceCenterId, data, () =>
-              dispatch(loadSlotsForCloning(decodeSCID(serviceCenterId), cb, startDate, endDate))
-            )
-          );
-        }
-      }
-    } catch {
-      dispatch(setCurrentAppointmentLoading(false));
-    }
   };
 
 export const clearAfterCloning = (): AppThunk => dispatch => {
