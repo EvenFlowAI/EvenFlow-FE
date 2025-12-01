@@ -21,8 +21,7 @@ export const useStyles = makeStyles<{ isInDealership: boolean; sidebarColor?: st
     },
     logo: {
       maxWidth: '80%',
-      maxHeight: 100,
-      marginBottom: 60,
+      marginBottom: !params.isInDealership ? 60 : 30,
       cursor: 'pointer',
       transition: theme.transitions.create(['opacity']),
       '&:hover': {

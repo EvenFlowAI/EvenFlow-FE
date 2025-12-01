@@ -10,6 +10,10 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
     titleText: {
       fontWeight: 'bold',
     },
+    helperTextWrapper: {
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+    },
     headerRow: {
       display: 'flex',
       alignItems: 'center',
@@ -20,7 +24,7 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
     },
     grid: {
       display: 'grid',
-      gridTemplateColumns: '600px 320px',
+      gridTemplateColumns: '65% 35%',
       gap: theme.spacing(3),
     },
     section: {
@@ -28,11 +32,11 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
       flexDirection: 'column',
       gap: theme.spacing(2),
       background: theme.palette.background.paper,
-      padding: `${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(3)} 16px`,
+      padding: `${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(2)}`,
     },
     logoWrapper: {
-      width: 180,
-      height: 88,
+      width: '30%',
+      height: '20%',
       borderRadius: 3,
       border: `1px solid ${theme.palette.divider}`,
       display: 'flex',
@@ -43,28 +47,29 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
       position: 'relative',
       cursor: isEditMode ? 'pointer' : 'default',
     },
-    logoPlaceholderWrapper: { display: 'flex', flexDirection: 'column', alignItems: 'center' },
-    logoPlaceholderText: {
-      color: '#5E5F66',
-      fontSize: 12,
-      fontWeight: 700,
-      letterSpacing: '0.1em',
-      textAlign: 'center',
-      lineHeight: 1.2,
-    },
     logoImg: {
       width: '100%',
       height: '100%',
-      maxWidth: 120, // keep within square wrapper width
-      maxHeight: 80, // enforce rectangular display so layout stays consistent
       objectFit: 'contain',
     },
     previewColorBox: {
-      width: 65,
-      height: 65,
-      borderRadius: 3,
+      width: theme.spacing(8), // ~64px
+      height: theme.spacing(8),
+      borderRadius: theme.shape.borderRadius,
       border: `1px solid ${theme.palette.divider}`,
       cursor: isEditMode ? 'pointer' : 'default',
+      [theme.breakpoints.down('xs')]: {
+        width: theme.spacing(5), // ~40px
+        height: theme.spacing(5),
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: theme.spacing(7), // ~60px
+        height: theme.spacing(7),
+      },
+      [theme.breakpoints.up('lg')]: {
+        width: theme.spacing(8.75), // ~70px
+        height: theme.spacing(8.75),
+      },
     },
     row: {
       display: 'flex',
@@ -100,27 +105,46 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
       display: 'flex',
       flexDirection: 'column',
       gap: 8,
-      minWidth: 200,
-      maxWidth: 260,
+      minWidth: '20%',
+      maxWidth: '26%',
     },
-    hexColorSectionWrapper: { display: 'flex', alignItems: 'flex-start', gap: 15 },
+    hexColorSectionWrapper: { display: 'flex', alignItems: 'flex-start', gap: theme.spacing(2) },
     leftColorColumn: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
       gap: 8,
-      width: 65,
     },
-    colorInputsContainer: { display: 'flex', flexDirection: 'column', gap: 4, minWidth: 200 },
-    colorResetContainer: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 },
-    helperTextWrap: {
-      whiteSpace: 'normal',
-      wordBreak: 'break-word',
+    previewWrapper: {
+      position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
     },
-    pickerWrap: {
-      marginTop: 8,
+    colorInputsContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4,
+      flex: 1,
+      minWidth: '20%',
+      marginRight: '5%',
       alignSelf: 'flex-start',
-      marginLeft: 0,
+    },
+    colorResetContainer: { display: 'flex', flexDirection: 'column', gap: '2%', marginTop: '2%' },
+    pickerPopover: {
+      position: 'absolute',
+      top: 'calc(100% + 8px)',
+      left: 0,
+      zIndex: theme.zIndex.modal,
+      background: theme.palette.background.paper,
+      padding: theme.spacing(2),
+      borderRadius: theme.shape.borderRadius,
+      boxShadow: theme.shadows[4],
+      border: `1px solid ${theme.palette.divider}`,
+      // hide default color preview block
+      '& .rc-color-picker-color-block': {
+        display: 'none',
+      },
     },
   })
 );

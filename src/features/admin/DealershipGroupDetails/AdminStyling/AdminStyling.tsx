@@ -40,7 +40,7 @@ export const AdminStyling: React.FC = () => {
   const originalHexRef = useRef<string>(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
   const originalLogoRef = useRef<string | undefined>(customLogoPath);
   const pickerRef = useRef<HTMLDivElement | null>(null);
-  const previewRef = useRef<HTMLDivElement | null>(null);
+  const previewClickFlagRef = useRef<boolean>(false);
 
   const isHexError = useMemo(() => {
     if (!hexTouched) return false;
@@ -57,8 +57,11 @@ export const AdminStyling: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   useClickOutside(pickerRef, () => {
-    // ignore if click was on the preview swatch
-    // const lastActive = document.activeElement as Node | null;
+    // If the most recent interaction started on the preview box, do not close.
+    if (previewClickFlagRef.current) {
+      previewClickFlagRef.current = false;
+      return;
+    }
     setShowPicker(false);
   });
 
@@ -154,21 +157,16 @@ export const AdminStyling: React.FC = () => {
       showError('Only PNG or SVG formats allowed');
       return;
     }
+
     const maxSize = MAX_FILE_SIZE_MB * 1024 * 1024;
     if (file.size > maxSize) {
       showError(`Max file size is ${MAX_FILE_SIZE_MB}MB`);
       return;
     }
+
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
-      const { width, height } = img;
-      if (width <= height) {
-        showError('Please upload a rectangular image (width must be greater than height)');
-        URL.revokeObjectURL(url);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-        return;
-      }
       selectedFileRef.current = file;
       setLocalLogo(url);
     };
@@ -179,6 +177,8 @@ export const AdminStyling: React.FC = () => {
     };
     img.src = url;
   };
+
+  console.log('local logo:', localLogo);
 
   return (
     <div className={`${classes.root} ${classes.section}`}>
@@ -215,14 +215,7 @@ export const AdminStyling: React.FC = () => {
           </Typography>
           <div className={classes.row}>
             <div className={classes.logoWrapper} onClick={handleLogoClick} role="button">
-              {localLogo ? (
-                <img src={localLogo} alt="Logo Preview" className={classes.logoImg} />
-              ) : (
-                <div className={classes.logoPlaceholderWrapper}>
-                  <Typography className={classes.logoPlaceholderText}>DEFAULT</Typography>
-                  <Typography className={classes.logoPlaceholderText}>IMAGE</Typography>
-                </div>
-              )}
+              <img src={localLogo || defaultLogo} alt="Logo Preview" className={classes.logoImg} />
             </div>
             <div className={classes.uploadLogoWrapper}>
               <Button
@@ -234,9 +227,12 @@ export const AdminStyling: React.FC = () => {
               >
                 Upload Logo
               </Button>
-              <Typography variant="body2" color="textSecondary" className={classes.helperTextWrap}>
-                Upload a rectangular SVG or PNG file, and make sure its size does not <br /> exceed
-                2 MB
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                className={classes.helperTextWrapper}
+              >
+                Upload a SVG or PNG file, and make sure its size does not exceed 2 MB
               </Typography>
             </div>
           </div>
@@ -268,24 +264,28 @@ export const AdminStyling: React.FC = () => {
           <div className={classes.row}>
             <div className={classes.hexColorSectionWrapper}>
               <div className={classes.leftColorColumn}>
-                <div
-                  className={classes.previewColorBox}
-                  ref={previewRef}
-                  style={{ backgroundColor: isValidFullHex(localHex) ? `#${localHex}` : '#fff' }}
-                  onClick={handlePreviewClick}
-                  role="button"
-                  aria-label="Toggle color picker"
-                />
-                {showPicker && (
-                  <div className={classes.pickerWrap} ref={pickerRef}>
-                    <ColorPicker
-                      disabled={!isEdit}
-                      disabledAlpha
-                      value={pickerColor}
-                      onChange={onPickerChange}
-                    />
-                  </div>
-                )}
+                <div className={classes.previewWrapper}>
+                  <div
+                    className={classes.previewColorBox}
+                    style={{ backgroundColor: isValidFullHex(localHex) ? `#${localHex}` : '#fff' }}
+                    onMouseDown={() => {
+                      previewClickFlagRef.current = true;
+                    }}
+                    onClick={handlePreviewClick}
+                    role="button"
+                    aria-label="Toggle color picker"
+                  />
+                  {showPicker && (
+                    <div className={classes.pickerPopover} ref={pickerRef}>
+                      <ColorPicker
+                        disabled={!isEdit}
+                        disabledAlpha
+                        value={pickerColor}
+                        onChange={onPickerChange}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
               <div className={classes.colorInputsContainer}>
                 <Typography
