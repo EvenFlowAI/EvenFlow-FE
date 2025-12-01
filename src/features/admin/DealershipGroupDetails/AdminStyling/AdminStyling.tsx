@@ -18,6 +18,7 @@ import {
   isValidFullHex,
   MAX_FILE_SIZE_MB,
   normalizeHex,
+  urlToFile,
 } from './helpers';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
@@ -95,31 +96,39 @@ export const AdminStyling: React.FC = () => {
       showError('Hex color is invalid. Please correct it before saving.');
       return;
     }
-
+    let isSuccess = true;
     const dealershipId = id ? Number(id) : null;
     if (dealershipId && localHex !== (sidebarColorHex || DEFAULT_SIDEBAR_HEX)) {
-      dispatch(updateLeftPanelColor(dealershipId, localHex));
+      dispatch(
+        updateLeftPanelColor(dealershipId, localHex, err => {
+          showError(`Color update failed: ${err}`);
+          isSuccess = false;
+        })
+      );
     }
     if (dealershipId && selectedFileRef.current) {
       dispatch(
-        updateDealershipLogo(dealershipId, selectedFileRef.current, _ =>
-          showError('Logo upload failed')
-        )
+        updateDealershipLogo(dealershipId, selectedFileRef.current, err => {
+          showError(`Logo update failed: ${err}`);
+          isSuccess = false;
+        })
       );
     }
-
-    dispatch(setSidebarColorHex(localHex === DEFAULT_SIDEBAR_HEX ? undefined : localHex));
-    dispatch(setCustomLogoPath(localLogo));
+    isSuccess && setLocalLogo(localLogo);
+    isSuccess && setLocalHex(localHex);
     setIsEdit(false);
     setShowPicker(false);
-    showMessage('Configuration updated successfully');
+    isSuccess && showMessage('Configuration updated successfully');
   };
 
   const handleResetHex = () => {
     setLocalHex(DEFAULT_SIDEBAR_HEX);
   };
-  const handleResetLogo = () => {
+
+  const handleResetLogo = async () => {
     setLocalLogo(defaultLogo);
+    const file = await urlToFile(defaultLogo);
+    selectedFileRef.current = file;
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,8 +186,6 @@ export const AdminStyling: React.FC = () => {
     };
     img.src = url;
   };
-
-  console.log('local logo:', localLogo);
 
   return (
     <div className={`${classes.root} ${classes.section}`}>

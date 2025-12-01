@@ -175,28 +175,34 @@ export const updateDealershipAvatar =
     };
 
 export const updateDealershipLogo =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (id: number, logo: File, onError: TArgCallback<any>): AppThunk =>
-    async () => {
-      try {
-        const data = new FormData();
-        data.append('file', logo, logo.name);
-        await Api.call(Api.endpoints.Dealerships.UploadLogo, { urlParams: { id }, data });
-      } catch (err) {
-        console.log(err);
-        onError(err);
-      }
-    };
+  (id: number, logo: File, onError: (err?: string | unknown) => void): AppThunk =>
+  async dispatch => {
+    try {
+      const data = new FormData();
+      data.append('file', logo, logo.name);
+      const response = await Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
+        urlParams: { id },
+        data,
+      });
+      dispatch(setCustomLogoPath(response.data));
+    } catch (err) {
+      console.log('updateDealershipLogo error', err);
+      onError(err);
+    }
+  };
 
 export const updateLeftPanelColor =
-  (id: number, hex: string): AppThunk =>
-  async () => {
+  (id: number, hex: string, onError: (err?: string | unknown) => void): AppThunk =>
+  async dispatch => {
     try {
+      const defaultHex = '252525';
       await Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
         urlParams: { id },
         data: { leftPanelColor: hex },
       });
+      dispatch(setSidebarColorHex(hex === defaultHex ? undefined : hex));
     } catch (err) {
       console.log('updateLeftPanelColor error', err);
+      onError(err);
     }
   };
