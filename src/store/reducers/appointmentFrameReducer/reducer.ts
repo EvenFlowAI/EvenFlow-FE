@@ -252,21 +252,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setMaintenanceDetails, (state, { payload }) => {
       return { ...state, maintenanceDetails: { ...state.maintenanceDetails, ...payload } };
     })
-    // eslint-disable-next-line complexity
     .addCase(setUpdateAppointment, (state, { payload }) => {
-      const customer = state.isEditFromAdmin ? payload.driver : state.tempCustomer;
       return {
         ...state,
         id: payload.id,
         hashKey: payload.hashKey,
-        customer: {
-          id: customer?.id,
-          fullName: customer?.fullName ?? '',
-          phoneNumber: customer?.phoneNumber ?? '',
-          email: customer?.email ?? '',
-          city: customer?.city ?? '',
-          companyName: customer?.companyName ?? '',
-        },
+        customer: { ...payload.driver },
         reminders: state.isEditFromAdmin
           ? payload.contactMethodTypes
           : (state.tempReminders ?? state.reminders),
