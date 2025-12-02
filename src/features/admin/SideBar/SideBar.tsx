@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Button, Drawer, IconButton, List, useMediaQuery, useTheme } from '@mui/material';
 import defaultLogo from '../../../assets/img/logoSidebar.svg';
 import { LinkTypeWithSub, Roles } from '../../../types/types';
@@ -31,10 +31,10 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     (state: RootState) => state.dealershipGroups
   );
   const currentUser = useCurrentUser();
+  const isInDealership = !currentUser?.isSuperUser;
 
   const { classes } = useStyles({
-    isInDealership: !currentUser?.isSuperUser,
-    sidebarColor: sidebarColorHex,
+    sidebarColor: isInDealership ? sidebarColorHex : undefined,
   });
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
@@ -45,7 +45,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   const { pathname } = useLocation();
   const { selectedSC } = useSCs();
   const history = useHistory();
-  const [logoAspect, setLogoAspect] = useState<number | null>(null);
 
   const links: LinkTypeWithSub[] = useMemo(() => {
     if (matchPath(pathname, Routes.Admin.Base) && currentUser?.isSuperUser) {
@@ -148,36 +147,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     return currentUser?.isSuperUser ? defaultLogo : customLogoPath || defaultLogo;
   }, [currentUser, customLogoPath]);
 
-  // Measure logo aspect ratio to adapt sidebar and logo sizing
-  useEffect(() => {
-    if (!logoSrc) return;
-    const img = new Image();
-    img.onload = () => {
-      if (img.naturalWidth && img.naturalHeight) {
-        setLogoAspect(img.naturalWidth / img.naturalHeight);
-      }
-    };
-    img.src = logoSrc;
-  }, [logoSrc]);
-
-  const getResponsiveSidebarWidth = (aspect: number | null) => {
-    if (!aspect) return undefined;
-    if (aspect >= 3) return '18.75%';
-    if (aspect >= 2) return '16%';
-    return undefined; // fall back to theme sideBarWidth
-  };
-
-  const computedSidebarWidth = getResponsiveSidebarWidth(logoAspect);
-
-  const getLogoStyle = (aspect: number | null) => {
-    if (!aspect) return {};
-    if (aspect >= 3) return { maxWidth: '90%', maxHeight: 100 };
-    if (aspect >= 2) return { maxWidth: '85%', maxHeight: 80 };
-    if (aspect >= 1) return { maxWidth: '80%', maxHeight: 70 };
-    return { maxWidth: '75%', maxHeight: 90 };
-  };
-  const logoStyle = getLogoStyle(logoAspect);
-
   return (
     <Drawer
       className={classes.drawer}
@@ -185,7 +154,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
       variant={!isTablet ? 'permanent' : 'persistent'}
       open={isOpened}
       anchor="left"
-      PaperProps={computedSidebarWidth ? { style: { width: computedSidebarWidth } } : undefined}
     >
       <div>
         {isTablet ? (
@@ -193,13 +161,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             <Close style={{ color: '#fff' }} />
           </IconButton>
         ) : null}
-        <img
-          onClick={handleLogoClick}
-          className={classes.logo}
-          style={logoStyle}
-          src={logoSrc}
-          alt="EvenFlow AI"
-        />
+        <img onClick={handleLogoClick} className={classes.logo} src={logoSrc} alt="EvenFlow AI" />
         <List disablePadding>
           {loading ? (
             <Loading />

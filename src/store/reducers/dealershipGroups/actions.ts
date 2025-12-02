@@ -17,6 +17,7 @@ import {
 } from '../../../types/types';
 import { RootState } from '../../rootReducer';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { DEFAULT_SIDEBAR_HEX } from '../../../utils/constants';
 
 export const loading = (payload: boolean): DealershipActions => ({
   type: 'Dealership/Loading',
@@ -175,34 +176,51 @@ export const updateDealershipAvatar =
     };
 
 export const updateDealershipLogo =
-  (id: number, logo: File, onError: (err?: string | unknown) => void): AppThunk =>
+  (
+    id: number,
+    logo: File,
+    onError: (err?: string | unknown) => void,
+    onSuccess?: TCallback
+  ): AppThunk =>
   async dispatch => {
-    try {
-      const data = new FormData();
-      data.append('file', logo, logo.name);
-      const response = await Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
-        urlParams: { id },
-        data,
+    const data = new FormData();
+    data.append('file', logo, logo.name);
+    Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
+      urlParams: { id },
+      data,
+    })
+      .then(response => {
+        if (onSuccess) {
+          onSuccess();
+        }
+        dispatch(setCustomLogoPath(response.data));
+      })
+      .catch(err => {
+        console.log('updateDealershipLogo error', err);
+        onError(err);
       });
-      dispatch(setCustomLogoPath(response.data));
-    } catch (err) {
-      console.log('updateDealershipLogo error', err);
-      onError(err);
-    }
   };
 
 export const updateLeftPanelColor =
-  (id: number, hex: string, onError: (err?: string | unknown) => void): AppThunk =>
+  (
+    id: number,
+    hex: string,
+    onError: (err?: string | unknown) => void,
+    onSuccess?: TCallback
+  ): AppThunk =>
   async dispatch => {
-    try {
-      const defaultHex = '252525';
-      await Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
-        urlParams: { id },
-        data: { leftPanelColor: hex },
+    Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
+      urlParams: { id },
+      data: { leftPanelColor: hex },
+    })
+      .then(() => {
+        if (onSuccess) {
+          onSuccess();
+        }
+        dispatch(setSidebarColorHex(hex === DEFAULT_SIDEBAR_HEX ? undefined : hex));
+      })
+      .catch(err => {
+        console.log('updateLeftPanelColor error', err);
+        onError(err);
       });
-      dispatch(setSidebarColorHex(hex === defaultHex ? undefined : hex));
-    } catch (err) {
-      console.log('updateLeftPanelColor error', err);
-      onError(err);
-    }
   };

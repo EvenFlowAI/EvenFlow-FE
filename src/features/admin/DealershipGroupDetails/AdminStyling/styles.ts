@@ -36,7 +36,7 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
     },
     logoWrapper: {
       width: '30%',
-      height: '20%',
+      maxHeight: '15%',
       borderRadius: 3,
       border: `1px solid ${theme.palette.divider}`,
       display: 'flex',

@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import defaultLogo from '../../../../assets/img/logoSidebar.svg';
 import {
-  setCustomLogoPath,
-  setSidebarColorHex,
   updateDealershipLogo,
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
@@ -14,7 +12,6 @@ import '@rc-component/color-picker/assets/index.css';
 import { useStyles } from './styles';
 import {
   ACCEPTED_EXTENSIONS,
-  DEFAULT_SIDEBAR_HEX,
   isValidFullHex,
   MAX_FILE_SIZE_MB,
   normalizeHex,
@@ -24,6 +21,7 @@ import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import useClickOutside from '../../../../hooks/useClickOutside/useClickOutside';
 import { useParams } from 'react-router-dom';
+import { DEFAULT_SIDEBAR_HEX } from '../../../../utils/constants';
 
 export const AdminStyling: React.FC = () => {
   const dispatch = useDispatch();
@@ -83,42 +81,106 @@ export const AdminStyling: React.FC = () => {
     setIsEdit(true);
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     setLocalHex(originalHexRef.current);
     setLocalLogo(originalLogoRef.current);
+    const file = await urlToFile(defaultLogo);
+    selectedFileRef.current = file;
     setHexTouched(false);
     setShowPicker(false);
     setIsEdit(false);
   };
 
-  const handleSave = () => {
+  // Helpers: validation and building async ops
+  const validateHexOrShowError = (): boolean => {
     if (!isValidFullHex(localHex)) {
       showError('Hex color is invalid. Please correct it before saving.');
+      return false;
+    }
+    return true;
+  };
+
+  const shouldUpdateColor = (dealershipId: number | null): boolean => {
+    return !!dealershipId && localHex !== (sidebarColorHex || DEFAULT_SIDEBAR_HEX);
+  };
+
+  const buildColorUpdateOperation = (dealershipId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      dispatch(
+        updateLeftPanelColor(
+          dealershipId,
+          localHex,
+          err => {
+            showError(`Color update failed: ${err}`);
+            reject(err);
+          },
+          () => {
+            setLocalHex(localHex);
+            resolve();
+          }
+        )
+      );
+    });
+  };
+
+  const shouldUpdateLogo = (dealershipId: number | null): boolean => {
+    return !!dealershipId && !!selectedFileRef.current;
+  };
+
+  const buildLogoUpdateOperation = (dealershipId: number): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+      dispatch(
+        updateDealershipLogo(
+          dealershipId,
+          selectedFileRef.current!,
+          err => {
+            showError(`Logo update failed: ${err}`);
+            reject(err);
+          },
+          () => {
+            setLocalLogo(localLogo);
+            resolve();
+          }
+        )
+      );
+    });
+  };
+
+  const executeSave = async (ops: Promise<void>[], attempted: number) => {
+    if (attempted === 0) {
+      setIsEdit(false);
+      setShowPicker(false);
+      showMessage('No changes to save');
       return;
     }
-    let isSuccess = true;
+    try {
+      await Promise.all(ops);
+      setIsEdit(false);
+      setShowPicker(false);
+      showMessage('Admin styling updated successfully');
+    } catch {
+      // At least one failed; keep edit mode so user can correct and retry
+    }
+  };
+
+  const handleSave = () => {
+    if (!validateHexOrShowError()) return;
+
     const dealershipId = id ? Number(id) : null;
-    if (dealershipId && localHex !== (sidebarColorHex || DEFAULT_SIDEBAR_HEX)) {
-      dispatch(
-        updateLeftPanelColor(dealershipId, localHex, err => {
-          showError(`Color update failed: ${err}`);
-          isSuccess = false;
-        })
-      );
+    const ops: Promise<void>[] = [];
+    let attempted = 0;
+
+    if (shouldUpdateColor(dealershipId)) {
+      attempted++;
+      ops.push(buildColorUpdateOperation(dealershipId!));
     }
-    if (dealershipId && selectedFileRef.current) {
-      dispatch(
-        updateDealershipLogo(dealershipId, selectedFileRef.current, err => {
-          showError(`Logo update failed: ${err}`);
-          isSuccess = false;
-        })
-      );
+
+    if (shouldUpdateLogo(dealershipId)) {
+      attempted++;
+      ops.push(buildLogoUpdateOperation(dealershipId!));
     }
-    isSuccess && setLocalLogo(localLogo);
-    isSuccess && setLocalHex(localHex);
-    setIsEdit(false);
-    setShowPicker(false);
-    isSuccess && showMessage('Configuration updated successfully');
+
+    executeSave(ops, attempted);
   };
 
   const handleResetHex = () => {
@@ -163,7 +225,7 @@ export const AdminStyling: React.FC = () => {
       return;
     }
     if (!ACCEPTED_EXTENSIONS.includes(file.type)) {
-      showError('Only PNG or SVG formats allowed');
+      showError('Only PNG or SVG formats are allowed');
       return;
     }
 
