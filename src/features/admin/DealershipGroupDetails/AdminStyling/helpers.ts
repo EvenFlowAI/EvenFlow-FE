@@ -3,7 +3,7 @@ export const MAX_FILE_SIZE_MB = 2;
 export const ACCEPTED_EXTENSIONS = ['image/png', 'image/svg+xml'];
 
 // Validation helpers
-export const normalizeHex = (value: string) =>
+export const sanitizeHex = (value: string) =>
   value
     .replace(/[^0-9a-fA-F]/g, '')
     .toUpperCase()

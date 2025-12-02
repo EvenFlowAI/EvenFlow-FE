@@ -14,7 +14,7 @@ import {
   ACCEPTED_EXTENSIONS,
   isValidFullHex,
   MAX_FILE_SIZE_MB,
-  normalizeHex,
+  sanitizeHex,
   urlToFile,
 } from './helpers';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
@@ -51,7 +51,7 @@ export const AdminStyling: React.FC = () => {
 
   const { classes } = useStyles({
     isEditMode: isEdit,
-    choosenColor: !isHexError ? localHex : undefined,
+    chosenColor: !isHexError ? localHex : undefined,
   });
   const { id } = useParams<{ id: string }>();
 
@@ -196,7 +196,7 @@ export const AdminStyling: React.FC = () => {
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setHexTouched(true);
     const raw = e.target.value.toUpperCase().replace(/#/g, '');
-    const normalized = normalizeHex(raw);
+    const normalized = sanitizeHex(raw);
     setLocalHex(normalized);
   };
 
@@ -204,7 +204,7 @@ export const AdminStyling: React.FC = () => {
   const onPickerChange = useCallback((c: any) => {
     const hexStr = (c as any)?.toHexString ? (c as any).toHexString() : String(c);
     const hex = hexStr.replace('#', '');
-    const normalized = normalizeHex(hex);
+    const normalized = sanitizeHex(hex);
     setLocalHex(normalized);
     setHexTouched(true);
   }, []);

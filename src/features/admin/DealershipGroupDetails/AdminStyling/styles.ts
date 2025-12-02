@@ -1,7 +1,7 @@
 import { makeStyles } from 'tss-react/mui';
 
-export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string }>()(
-  (theme, { isEditMode, choosenColor }) => ({
+export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string }>()(
+  (theme, { isEditMode, chosenColor }) => ({
     root: {
       display: 'flex',
       flexDirection: 'column',
@@ -42,7 +42,7 @@ export const useStyles = makeStyles<{ isEditMode: boolean; choosenColor?: string
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: choosenColor ? `#${choosenColor}` : '#DADADA',
+      background: chosenColor ? `#${chosenColor}` : '#DADADA',
       overflow: 'hidden',
       position: 'relative',
       cursor: isEditMode ? 'pointer' : 'default',
