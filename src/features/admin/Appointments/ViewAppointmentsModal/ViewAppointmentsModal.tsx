@@ -18,6 +18,9 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { RootState } from '../../../../store/rootReducer';
 import { TCallback } from '../../../../types/types';
 import { loadMileage } from '../../../../store/reducers/vehicleDetails/actions';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import Informing from '../../../../components/modals/common/Informing/Informing';
+import { ReactComponent as Warning } from '../../../../assets/img/warning_icon.svg';
 
 type TCallbackProps = {
   onEditAppointment: TCallback;
@@ -39,6 +42,8 @@ export const ViewAppointmentsModal: React.FC<
 }) => {
   const { isAppointmentLoading } = useSelector((state: RootState) => state.appointments);
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
+  const { onOpen, isOpen, onClose } = useModal();
+  const [messageText, setMessageText] = React.useState<string>('');
 
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
@@ -46,6 +51,21 @@ export const ViewAppointmentsModal: React.FC<
   useEffect(() => {
     selectedSC && dispatch(loadMileage(selectedSC.id));
   }, [selectedSC]);
+
+  const handleExEvenFlowAppointments = () => {
+    setMessageText(`We are sorry but this appointment \n 
+            was made outside of EvenFlow \n 
+            and is not able to be cloned.`);
+    onOpen();
+  };
+
+  const onClone = () => {
+    if (payload?.hashKey && selectedSC) {
+      onCloneAppointment();
+    } else {
+      handleExEvenFlowAppointments();
+    }
+  };
 
   return (
     <BaseModal {...props} width={940}>
@@ -90,7 +110,7 @@ export const ViewAppointmentsModal: React.FC<
           Edit
         </Button>
         <Button
-          onClick={onCloneAppointment}
+          onClick={onClone}
           variant="outlined"
           style={{ color: '#5FA077', borderColor: '#5FA077' }}
           aria-hidden={false}
@@ -101,7 +121,7 @@ export const ViewAppointmentsModal: React.FC<
           Close
         </Button>
       </DialogActions>
-      ={' '}
+      = <Informing icon={<Warning />} open={isOpen} onClose={onClose} title={messageText} />
     </BaseModal>
   );
 };
