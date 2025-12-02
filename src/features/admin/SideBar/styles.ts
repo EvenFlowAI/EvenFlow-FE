@@ -1,7 +1,8 @@
 import { makeStyles } from 'tss-react/mui';
 import { sideBarWidth } from '../../../theme/theme';
+import { DEFAULT_SIDEBAR_HEX } from '../../../utils/constants';
 
-export const useStyles = makeStyles()(theme => ({
+export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params) => ({
   drawer: {
     flexShrink: 0,
     width: sideBarWidth,
@@ -19,9 +20,12 @@ export const useStyles = makeStyles()(theme => ({
     right: 10,
   },
   logo: {
-    maxWidth: '80%',
+    width: '100%',
+    maxWidth: '85%',
     marginBottom: 60,
     cursor: 'pointer',
+    maxHeight: '15%',
+    objectFit: 'contain',
     transition: theme.transitions.create(['opacity']),
     '&:hover': {
       opacity: 0.8,
@@ -29,7 +33,7 @@ export const useStyles = makeStyles()(theme => ({
   },
   drawerPaper: {
     width: sideBarWidth,
-    backgroundColor: '#252525',
+    backgroundColor: params.sidebarColor ? `#${params.sidebarColor}` : `#${DEFAULT_SIDEBAR_HEX}`,
     color: '#FFFFFF',
     display: 'flex',
     flexFlow: 'column',

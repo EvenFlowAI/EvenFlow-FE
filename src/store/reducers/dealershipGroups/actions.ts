@@ -17,6 +17,7 @@ import {
 } from '../../../types/types';
 import { RootState } from '../../rootReducer';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { DEFAULT_SIDEBAR_HEX } from '../../../utils/constants';
 
 export const loading = (payload: boolean): DealershipActions => ({
   type: 'Dealership/Loading',
@@ -45,6 +46,16 @@ const _changePageData = (payload: Partial<IPageRequest>): DealershipActions => (
 
 export const setSearchTerm = (payload: string): DealershipActions => ({
   type: 'Dealership/SetSearchTerm',
+  payload,
+});
+
+export const setSidebarColorHex = (payload: string | undefined): DealershipActions => ({
+  type: 'Dealership/SetSidebarColorHex',
+  payload,
+});
+
+export const setCustomLogoPath = (payload: string | undefined): DealershipActions => ({
+  type: 'Dealership/SetCustomLogoPath',
   payload,
 });
 
@@ -163,3 +174,53 @@ export const updateDealershipAvatar =
         onError(err);
       }
     };
+
+export const updateDealershipLogo =
+  (
+    id: number,
+    logo: File,
+    onError: (err?: string | unknown) => void,
+    onSuccess?: TCallback
+  ): AppThunk =>
+  async dispatch => {
+    const data = new FormData();
+    data.append('file', logo, logo.name);
+    Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
+      urlParams: { id },
+      data,
+    })
+      .then(response => {
+        if (onSuccess) {
+          onSuccess();
+        }
+        dispatch(setCustomLogoPath(response.data));
+      })
+      .catch(err => {
+        console.log('updateDealershipLogo error', err);
+        onError(err);
+      });
+  };
+
+export const updateLeftPanelColor =
+  (
+    id: number,
+    hex: string,
+    onError: (err?: string | unknown) => void,
+    onSuccess?: TCallback
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
+      urlParams: { id },
+      data: { leftPanelColor: hex },
+    })
+      .then(() => {
+        if (onSuccess) {
+          onSuccess();
+        }
+        dispatch(setSidebarColorHex(hex === DEFAULT_SIDEBAR_HEX ? undefined : hex));
+      })
+      .catch(err => {
+        console.log('updateLeftPanelColor error', err);
+        onError(err);
+      });
+  };

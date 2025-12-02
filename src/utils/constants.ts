@@ -173,3 +173,5 @@ export const parentOrigins = {
   performancetoyotastore: 'performancetoyotastore',
   subaru: 'subaru',
 };
+
+export const DEFAULT_SIDEBAR_HEX = '252525';

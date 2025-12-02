@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { Button, Drawer, IconButton, List, useMediaQuery, useTheme } from '@mui/material';
-import logo from '../../../assets/img/logoSidebar.svg';
+import defaultLogo from '../../../assets/img/logoSidebar.svg';
 import { LinkTypeWithSub, Roles } from '../../../types/types';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import { ArrowForwardIos, Close } from '@mui/icons-material';
@@ -27,13 +27,20 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   isOpened,
   onClose,
 }) => {
-  const { classes } = useStyles();
+  const { sidebarColorHex, customLogoPath } = useSelector(
+    (state: RootState) => state.dealershipGroups
+  );
+  const currentUser = useCurrentUser();
+  const isInDealership = !currentUser?.isSuperUser;
+
+  const { classes } = useStyles({
+    sidebarColor: isInDealership ? sidebarColorHex : undefined,
+  });
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
   const { onClose: onModalClose, isOpen, onOpen } = useModal();
 
-  const currentUser = useCurrentUser();
   const { loading } = useSelector((state: RootState) => state.users);
   const { pathname } = useLocation();
   const { selectedSC } = useSCs();
@@ -136,6 +143,10 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     }
   };
 
+  const logoSrc = useMemo(() => {
+    return currentUser?.isSuperUser ? defaultLogo : customLogoPath || defaultLogo;
+  }, [currentUser, customLogoPath]);
+
   return (
     <Drawer
       className={classes.drawer}
@@ -150,7 +161,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             <Close style={{ color: '#fff' }} />
           </IconButton>
         ) : null}
-        <img onClick={handleLogoClick} className={classes.logo} src={logo} alt="EvenFlow AI" />
+        <img onClick={handleLogoClick} className={classes.logo} src={logoSrc} alt="EvenFlow AI" />
         <List disablePadding>
           {loading ? (
             <Loading />
@@ -159,7 +170,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           )}
         </List>
       </div>
-      {/*<div style={{flex: 1}} />*/}
       {isOpenSchedulerLinkVisible ? (
         <Button endIcon={<ArrowForwardIos />} className={classes.link} onClick={onOpen}>
           Open Scheduler

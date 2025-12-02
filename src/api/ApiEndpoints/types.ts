@@ -75,7 +75,9 @@ export interface IApiEndpoints {
     | 'Update'
     | 'GetAll'
     | 'UpdateAddress'
-    | 'UploadAvatar',
+    | 'UploadAvatar'
+    | 'UploadLogo'
+    | 'UpdateSideBarColor',
     TApiEndpoint
   >;
   DemandManagement: Record<'GetSettings' | 'UpdateSettings', TApiEndpoint>;

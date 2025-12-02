@@ -158,6 +158,8 @@ export class Api {
       Update: { route: '/dealerships/{id}', method: 'put' },
       UpdateAddress: { route: '/dealerships', method: 'put' },
       UploadAvatar: { route: '/dealerships/{id}/avatar', method: 'patch' },
+      UploadLogo: { route: '/dealerships/{id}/logo', method: 'patch' },
+      UpdateSideBarColor: { route: '/dealerships/{id}/left-panel-color', method: 'patch' },
     },
     DemandManagement: {
       GetSettings: { route: '/demand-management-settings/predictions', method: 'get' },

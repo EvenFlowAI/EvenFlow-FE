@@ -4,6 +4,8 @@ export interface IDealershipGroupShort {
   id: number;
   name: string;
   avatarPath: string;
+  logoPath: string;
+  leftPanelColor?: string;
 }
 
 export interface IAddress {
@@ -22,6 +24,7 @@ export interface IDealershipGroupExtended extends IDealershipGroupShort {
   address: IAddress;
   countOfServiceCenters: number;
   countOfEmployees: number;
+  phoneNumber: string;
 }
 
 export interface IDealershipForm {
@@ -43,6 +46,7 @@ export interface IDealershipProfileForm {
   name: string;
   phoneNumber: string;
   address: IAddress;
+  leftPanelColor?: string;
 }
 
 type AddDealership = { type: 'Dealership/Add'; payload: IDealershipGroupExtended };
@@ -54,6 +58,8 @@ type ChangePaging = { type: 'Dealership/ChangePaging'; payload: IPagingResponse 
 type Remove = { type: 'Dealership/Remove'; payload: number };
 type Profile = { type: 'Dealership/Profile'; payload: IDealershipProfile };
 type SetSearchTerm = { type: 'Dealership/SetSearchTerm'; payload: string };
+type SetSidebarColorHex = { type: 'Dealership/SetSidebarColorHex'; payload: string | undefined };
+type SetCustomLogoPath = { type: 'Dealership/SetCustomLogoPath'; payload: string | undefined };
 
 export type DealershipActions =
   | AddDealership
@@ -64,7 +70,9 @@ export type DealershipActions =
   | GetAllDealerships
   | ChangePaging
   | ChangePageData
-  | SetSearchTerm;
+  | SetSearchTerm
+  | SetSidebarColorHex
+  | SetCustomLogoPath;
 
 export type DealershipState = {
   dealershipList: IDealershipGroupExtended[];
@@ -74,4 +82,6 @@ export type DealershipState = {
   paging: IPagingResponse;
   pageData: IPageRequest;
   searchTerm: string;
+  sidebarColorHex?: string; // 6-char hex without '#'
+  customLogoPath?: string;
 };

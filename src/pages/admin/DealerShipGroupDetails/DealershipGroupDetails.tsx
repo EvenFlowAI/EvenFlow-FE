@@ -8,21 +8,27 @@ import { TabList } from '../../../components/styled/Tabs';
 import { TabContext, TabPanel } from '@mui/lab';
 import { DetailsServiceCenters } from '../../../features/admin/DealershipGroupDetails/DetailsServiceCenters/DetailsServiceCenters';
 import { DetailsEmployees } from '../../../features/admin/DealershipGroupDetails/DetailsEmployees/DetailsEmployees';
+import { AdminStyling } from '../../../features/admin/DealershipGroupDetails/AdminStyling/AdminStyling';
 import { useDispatch } from 'react-redux';
 import { loadDealershipEmployees } from '../../../store/reducers/employees/actions';
 import { loadDealershipSCs } from '../../../store/reducers/serviceCenters/actions';
 import { TTab } from './types';
 import { useStatePagination } from '../../../hooks/usePaginations/usePaginations';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import {
+  setCustomLogoPath,
+  setSidebarColorHex,
+} from '../../../store/reducers/dealershipGroups/actions';
 
 const tabs: TTab[] = [
   { id: '1', label: 'Service centers', component: DetailsServiceCenters },
   { id: '2', label: 'Employees', component: DetailsEmployees },
+  { id: '3', label: 'Admin styling', component: AdminStyling },
 ];
 
 export const DealershipGroupDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const [dealership, setDS] = useState<IDealershipGroupExtended | undefined>();
+  const [dealership, setDealership] = useState<IDealershipGroupExtended | undefined>();
   const [selectedTab, setTab] = useState<string>('1');
   const dispatch = useDispatch();
 
@@ -41,9 +47,12 @@ export const DealershipGroupDetails = () => {
     Api.call<IDealershipGroupExtended>(Api.endpoints.Dealerships.Retrieve, {
       urlParams: { id },
     }).then(r => {
-      setDS(r.data);
+      const dealershipData = r.data;
+      setDealership(dealershipData);
+      dispatch(setCustomLogoPath(dealershipData.logoPath));
+      dispatch(setSidebarColorHex(dealershipData.leftPanelColor));
     });
-  }, [setDS, id]);
+  }, [setDealership, id, dispatch]);
 
   useEffect(() => {
     dispatch(loadDealershipEmployees(id, pageEData));
