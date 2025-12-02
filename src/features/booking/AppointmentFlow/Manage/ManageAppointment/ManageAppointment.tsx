@@ -23,9 +23,6 @@ import {
   setVehicle,
   setWelcomeScreenView,
   updateConsultant,
-  setTempCustomer,
-  setTempReminders,
-  setCustomer,
   setReminders,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -63,8 +60,8 @@ import { Routes } from '../../../../../routes/constants';
 import CustomerConsents from '../../../../../components/modals/booking/CustomerConsents/CustomerConsents';
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
-import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
+import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -92,9 +89,6 @@ export const ManageAppointment: React.FC<
     advisor,
     transportations,
     consultants,
-    reminders,
-    tempCustomer,
-    tempReminders,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
   const { mileage } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
@@ -137,32 +131,6 @@ export const ManageAppointment: React.FC<
       : Boolean(scProfile?.emailRequirement?.customerSelfServiceEnabled);
   }, [currentUser, scProfile]);
 
-  useEffect(() => {
-    const hasTempCustomer = tempCustomer !== null;
-    const hasTempReminders = tempReminders !== null;
-    if (hasTempCustomer) {
-      dispatch(setCustomer(tempCustomer));
-      dispatch(setTempCustomer(null));
-    }
-
-    if (hasTempReminders) {
-      dispatch(setReminders(tempReminders));
-      dispatch(setTempReminders(null));
-    }
-
-    if (!hasTempReminders && !reminders) {
-      dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
-    }
-  }, [
-    dispatch,
-    setCustomer,
-    setReminders,
-    setTempCustomer,
-    setTempReminders,
-    tempCustomer,
-    tempReminders,
-  ]);
-
   const redirectToWelcomeScreens = () => {
     history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
   };
@@ -188,6 +156,10 @@ export const ManageAppointment: React.FC<
       dispatch(loadAppointmentRequestsPrices(scProfile.id));
     }
   }, [scProfile, appointmentWasChanged]);
+
+  useEffect(() => {
+    dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
+  }, []);
 
   useEffect(() => {
     // load active transportation when appointmentByKey is available
@@ -406,9 +378,6 @@ export const ManageAppointment: React.FC<
   }, [advisor]);
 
   const handleChangeSlot = () => {
-    dispatch(setTempCustomer(customer));
-    dispatch(setTempReminders(reminders));
-
     if (customerLoadedData?.isUpdating) {
       dispatch(setEditingPosition('slot'));
       dispatch(setServiceOptionChanged(false));
@@ -477,8 +446,6 @@ export const ManageAppointment: React.FC<
   }, [appointmentByKey, transportations, consultants]);
 
   const handleBack = () => {
-    dispatch(setTempCustomer(customer));
-    dispatch(setTempReminders(reminders));
     onCancelConfirmOpen();
   };
 

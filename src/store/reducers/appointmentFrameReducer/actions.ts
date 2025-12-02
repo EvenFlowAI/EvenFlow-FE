@@ -125,10 +125,6 @@ export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setV
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
 export const setCustomer = createAction<ICustomer>('fAppointment/setCustomer');
 export const setReminders = createAction<EContactMethodTypes[]>('fAppointment/setReminders');
-export const setTempCustomer = createAction<ICustomer | null>('fAppointment/setTempCustomer');
-export const setTempReminders = createAction<EContactMethodTypes[] | null>(
-  'fAppointment/setTempReminders'
-);
 export const setAppointmentId = createAction<IAppointmentId>('fAppointment/setAppointmentId');
 export const setTransportation = createAction<ITransportation | null>(
   'fAppointment/setTransportation'
@@ -239,7 +235,6 @@ export const setFiltersVisibility = createAction<Partial<TFiltersVisibility>>(
 export const updateAppointmentDetails = createAction<ILoadSlotsRequestData>(
   'fAppointment/UpdateAppointmentDetails'
 );
-export const setIsEditFromAdmin = createAction<boolean>('fAppointment/SetIsEditFromAdmin');
 
 export const setValueServicePartial =
   (data: Partial<IValueService>): AppThunk =>

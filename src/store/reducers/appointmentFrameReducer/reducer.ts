@@ -52,8 +52,6 @@ import {
   setPoliticalState,
   setRecallsAreShown,
   setReminders,
-  setTempCustomer,
-  setTempReminders,
   setSelectedPackageOptionType,
   setSelectedPackagePriceTitles,
   setSelectedRecalls,
@@ -81,7 +79,6 @@ import {
   switchLanguage,
   updateAppointmentDetails,
   updateVehicle,
-  setIsEditFromAdmin,
 } from './actions';
 import { EAppointmentTimingType } from '../appointment/types';
 import { EServiceType, TState } from './types';
@@ -172,9 +169,6 @@ const initialState: TState = {
     serviceType: true,
     advisor: true,
   },
-  tempCustomer: null,
-  tempReminders: null,
-  isEditFromAdmin: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -230,12 +224,6 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setReminders, (state, { payload }) => {
       return { ...state, reminders: payload };
     })
-    .addCase(setTempCustomer, (state, { payload }) => {
-      return { ...state, tempCustomer: payload };
-    })
-    .addCase(setTempReminders, (state, { payload }) => {
-      return { ...state, tempReminders: payload };
-    })
     .addCase(setAppointmentId, (state, { payload }) => {
       let vehicle = state.selectedVehicle;
       if (vehicle) {
@@ -258,11 +246,7 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         id: payload.id,
         hashKey: payload.hashKey,
         customer: { ...payload.driver },
-        reminders: state.isEditFromAdmin
-          ? payload.contactMethodTypes
-          : (state.tempReminders ?? state.reminders),
-        tempCustomer: null,
-        tempReminders: null,
+        reminders: payload.contactMethodTypes,
         serviceCategories: payload.serviceCategories.map(item => ({
           id: item.id,
           comment: item.comment,
@@ -497,8 +481,5 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         selectedTime: payload.date,
         serviceTypeOption: payload.serviceTypeOption,
       };
-    })
-    .addCase(setIsEditFromAdmin, (state, { payload }) => {
-      return { ...state, isEditFromAdmin: payload };
     })
 );

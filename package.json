@@ -1,6 +1,6 @@
 {
   "name": "even_flow_ai",
-  "version": "0.6.44",
+  "version": "0.6.47",
   "private": true,
   "description": "EvenFlow AI frontend application. Run 'npm run setup-hooks' after cloning to enable automatic version incrementation.",
   "dependencies": {
