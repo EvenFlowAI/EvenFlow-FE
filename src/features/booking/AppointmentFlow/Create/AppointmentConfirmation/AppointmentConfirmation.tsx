@@ -11,9 +11,6 @@ import { decodeSCID } from '../../../../../utils/utils';
 import {
   createOrUpdateAppointment,
   setReminders,
-  setCustomer,
-  setTempCustomer,
-  setTempReminders,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
@@ -32,8 +29,6 @@ import { Wrapper } from './styles';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
-import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
-
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 
 type TProps = {
@@ -44,7 +39,6 @@ export const AppointmentConfirmation: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TProps>>
 > = ({ onBack, onChangeSlot, onNext }) => {
   const [errors, setErrors] = useState<string[]>([]);
-  // temporary data is stored in redux (tempCustomer / tempReminders)
   const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
   const currentUser = useCurrentUser();
   const { scProfile, serviceValetAppointment, appointment } = useSelector(
@@ -55,9 +49,6 @@ export const AppointmentConfirmation: React.FC<
     serviceTypeOption,
     transportation,
     isAppointmentSaving: saving,
-    reminders,
-    tempCustomer,
-    tempReminders,
   } = useSelector((state: RootState) => state.appointmentFrame);
 
   const { id } = useParams<{ id: string }>();
@@ -68,13 +59,6 @@ export const AppointmentConfirmation: React.FC<
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const handleBack = () => {
-    // save current customer and reminders into redux temp storage before navigating back
-    dispatch(setTempCustomer(customer));
-    dispatch(setTempReminders(reminders));
-    if (onBack) onBack();
-  };
-
   const isEmailRequired = useMemo(() => {
     return currentUser
       ? Boolean(scProfile?.emailRequirement?.adminAndEmployeesEnabled)
@@ -82,37 +66,12 @@ export const AppointmentConfirmation: React.FC<
   }, [currentUser, scProfile]);
 
   useEffect(() => {
-    const hasTempCustomer = tempCustomer !== null;
-    const hasTempReminders = tempReminders !== null;
-
-    if (hasTempCustomer) {
-      dispatch(setCustomer(tempCustomer));
-      dispatch(setTempCustomer(null));
-    }
-
-    if (hasTempReminders) {
-      dispatch(setReminders(tempReminders));
-      dispatch(setTempReminders(null));
-    }
-
-    if (!hasTempReminders && !reminders?.length) {
-      dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
-    }
-    // Intentionally exclude `reminders` from dependencies so this runs only once on mount.
-    // Keep action creators and temp values to pick up any temp data passed in on first render.
-  }, [
-    dispatch,
-    setCustomer,
-    setReminders,
-    setTempCustomer,
-    setTempReminders,
-    tempCustomer,
-    tempReminders,
-  ]);
-
-  useEffect(() => {
     scProfile && dispatch(loadAllServiceCategories(scProfile.id));
   }, [scProfile]);
+
+  useEffect(() => {
+    dispatch(setReminders([0, 1]));
+  }, []);
 
   const checkIsValid = () => {
     let isValid = true;
@@ -184,13 +143,7 @@ export const AppointmentConfirmation: React.FC<
     <StepWrapper>
       <Wrapper>
         <div>
-          <AppointmentSelectedDate
-            onChangeSlot={() => {
-              dispatch(setTempCustomer(customer));
-              dispatch(setTempReminders(reminders));
-              onChangeSlot();
-            }}
-          />
+          <AppointmentSelectedDate onChangeSlot={onChangeSlot} />
           <AppointmentVehicleInfo />
           <ServiceRequests />
           <Address />
@@ -212,7 +165,7 @@ export const AppointmentConfirmation: React.FC<
         </div>
       </Wrapper>
       {/*todo change to open payment window on next*/}
-      <ActionButtons loading={saving} onBack={handleBack} onNext={handleCreateAppointment} />
+      <ActionButtons loading={saving} onBack={onBack} onNext={handleCreateAppointment} />
       <DetailedFees open={isFeesOpen} onClose={onFeesClose} />
       {/* <CommentModal open={isCommentOpen} onClose={onCommentClose} /> */}
       <PaymentTypeModal
