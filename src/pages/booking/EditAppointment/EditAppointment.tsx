@@ -19,7 +19,6 @@ import { encodeSCID } from '../../../utils/utils';
 import {
   clearAppointmentData,
   setCurrentFrameScreen,
-  setIsEditFromAdmin,
   setServiceTypeOption,
   setUpdateAppointment,
   setUserType,
@@ -81,7 +80,6 @@ export const EditAppointment = () => {
     requestFunc(id)
       .then(async ({ data }) => {
         if (data) {
-          dispatch(setIsEditFromAdmin(true));
           dispatch(loadSCProfile(data.serviceCenterId));
           dispatch(setUserType(EUserType.Existing));
           dispatch(setUpdateAppointment(data));
