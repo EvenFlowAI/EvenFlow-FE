@@ -30,6 +30,7 @@ import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
+import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -70,7 +71,7 @@ export const AppointmentConfirmation: React.FC<
   }, [scProfile]);
 
   useEffect(() => {
-    dispatch(setReminders([0, 1]));
+    dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
   }, []);
 
   const checkIsValid = () => {

@@ -61,6 +61,7 @@ import CustomerConsents from '../../../../../components/modals/booking/CustomerC
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
+import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -157,7 +158,7 @@ export const ManageAppointment: React.FC<
   }, [scProfile, appointmentWasChanged]);
 
   useEffect(() => {
-    dispatch(setReminders([0, 1]));
+    dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
   }, []);
 
   useEffect(() => {
