@@ -23,10 +23,8 @@ import AppRoutes from './routes/AppRoutes/AppRoutes';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
 import { setIsCloneMode } from './store/reducers/appointment/actions';
-import { useException } from './hooks/useException/useException';
-import { authService } from './api/AuthService/AuthService';
-import { ITokens } from './types/auth';
-import { partnerAppAuthEvent } from './utils/constants';
+import { useAppInitialization } from './hooks/useAppInitialization/useAppInitialization';
+import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandler';
 
 const App = () => {
   const { scProfile, isTopAligning, isCloneMode } = useSelector(
@@ -40,33 +38,15 @@ const App = () => {
     useState<TScreen>('consultantSelection');
   const [valueServicePreviousScreen, setValueServicePreviousScreen] =
     useState<TScreen>('serviceNeeds');
-  const [appReady, setAppReady] = useState(false);
   const notificationsRef = useRef<SnackbarProvider | null>(null);
   const dispatch = useDispatch();
-  const showError = useException();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
 
-  // Initialize app readiness
-  useEffect(() => {
-    try {
-      if (authService.isAuthenticated()) {
-        setAppReady(true);
-      }
+  const { appIsReady, setAppIsReady } = useAppInitialization();
+  useSSOTokenHandler(setAppIsReady);
 
-      // If in iframe, wait for tokens
-      if (window.self !== window.top) {
-        return;
-      }
-
-      // Not embedded and not authenticated—ready to show login
-      setAppReady(true);
-    } catch (error) {
-      showError(`Failed to initialize app: ${error}`);
-      setAppReady(true); // Still render to show error
-    }
-  }, [showError]);
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
     if (window.location.hostname === 'localhost') return;
@@ -141,40 +121,6 @@ const App = () => {
       }
     }
   }, [process.env.REACT_APP_ENV]);
-
-  // Listen for tokens posted via postMessage from parent page
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      const data = event.data as {
-        type?: string;
-        tokens?: ITokens;
-      };
-      if (data?.type !== partnerAppAuthEvent) return;
-
-      const tokens = data.tokens;
-      if (!tokens) return;
-
-      const sendStatus = (status: 'success' | 'error', payload?: unknown) => {
-        window.parent?.postMessage({ type: partnerAppAuthEvent, status, payload }, '*');
-      };
-
-      try {
-        authService.setTokens(tokens);
-        authService.syncRequestAuthWithLocalStorage();
-        sendStatus('success');
-      } catch (e) {
-        showError(`Error processing SSO tokens: ${e}. Please refer to administrator.`);
-        sendStatus('error', {
-          message: (e as Error)?.message ?? 'Unknown error',
-        });
-      } finally {
-        setAppReady(true);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
 
   useEffect(() => {
     const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
@@ -274,7 +220,7 @@ const App = () => {
         }}
       >
         <ConfirmModal />
-        {appReady ? (
+        {appIsReady ? (
           <AppRoutes
             valueServicePreviousScreen={valueServicePreviousScreen}
             valueServiceNextScreen={valueServiceNextScreen}
