@@ -5,6 +5,20 @@ import { useException } from '../useException/useException';
 import { PARTNER_APP_AUTH_EVENT } from '../../utils/constants';
 
 /**
+ * Type guard to validate SSO token message data structure
+ * Ensures event.data is an object with expected properties before type casting
+ */
+const isSSOTokenMessage = (data: unknown): data is { type?: string; tokens?: ITokens } => {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'type' in data &&
+    'tokens' in data &&
+    typeof (data as Record<string, unknown>).type === 'string'
+  );
+};
+
+/**
  * Hook to handle SSO token messages from parent window via postMessage
  * Listens for token events and syncs authentication
  */
@@ -14,10 +28,13 @@ export const useSSOTokenHandler = (setAppIsReady: (ready: boolean) => void) => {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin === null || event.origin === 'null') return;
-      const data = event.data as {
-        type?: string;
-        tokens?: ITokens;
-      };
+
+      const data = event.data;
+      if (!isSSOTokenMessage(data)) {
+        showError('Received invalid SSO token message format');
+        return;
+      }
+
       if (data?.type !== PARTNER_APP_AUTH_EVENT) return;
 
       const tokens = data.tokens;
