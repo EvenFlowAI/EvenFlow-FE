@@ -106,7 +106,7 @@ const initialState: TState = {
   maintenanceDetails: {},
   packages: [],
   isPackagesLoading: false,
-  consultants: [],
+  consultants: null,
   isConsultantsLoading: false,
   currentScreen: '',
   prevScreen: '',

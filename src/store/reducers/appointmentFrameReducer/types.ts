@@ -150,7 +150,7 @@ export type TState = {
   maintenanceDetails: TMaintenanceDetails;
   packages: IPackage[];
   isPackagesLoading: boolean;
-  consultants: IServiceConsultant[];
+  consultants: IServiceConsultant[] | null;
   isConsultantsLoading: boolean;
   currentScreen: TScreen | '';
   prevScreen: TScreen | '';

@@ -19,7 +19,7 @@ const AppointmentTimingCreate: React.FC<{ handleSetScreen: TArgCallback<TScreen>
     const prev: TScreen =
       isTransportationAvailable && !serviceTypeOption?.transportationOption
         ? 'transportationNeeds'
-        : isAdvisorAvailable && consultants.length
+        : isAdvisorAvailable && consultants?.length
           ? 'consultantSelection'
           : 'serviceNeeds';
     handleSetScreen(prev);

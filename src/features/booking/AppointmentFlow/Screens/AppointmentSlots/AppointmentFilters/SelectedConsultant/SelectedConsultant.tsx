@@ -25,7 +25,7 @@ const SelectedConsultant: React.FC<TProps> = ({ disabled, isVisible, loading }) 
   const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
 
   const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
-    const consultant = consultants.find(item => item.id === e.target.value);
+    const consultant = consultants?.find(item => item.id === e.target.value);
     dispatch(setAdvisor(consultant ? consultant : null));
   };
 
@@ -44,13 +44,13 @@ const SelectedConsultant: React.FC<TProps> = ({ disabled, isVisible, loading }) 
             disableUnderline
             fullWidth={isSm}
             disabled={
-              disabled || (!!currentConfig && !consultants.length) || isAppointmentSlotsLoading
+              disabled || (!!currentConfig && !consultants?.length) || isAppointmentSlotsLoading
             }
             onChange={handleConsultantChange}
           >
             `
             {consultants
-              .map(consultant => (
+              ?.map(consultant => (
                 <MenuItem value={consultant.id} key={consultant.name}>
                   {consultant.name}
                 </MenuItem>

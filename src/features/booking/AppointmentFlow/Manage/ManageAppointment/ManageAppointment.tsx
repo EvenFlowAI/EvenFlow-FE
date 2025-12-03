@@ -398,7 +398,7 @@ export const ManageAppointment: React.FC<
   const forwardNextStepCloning = () => {
     if (appointmentByKey) {
       // checking if the advisor is available
-      const advisorId = consultants.find(
+      const advisorId = consultants?.find(
         consultant => appointmentByKey?.advisorId === consultant.id
       );
 
