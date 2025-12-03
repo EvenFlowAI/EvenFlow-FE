@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
-import { Container, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Container,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { ConfirmModal } from './components/modals/common/ConfirmModal/ConfirmModal';
 import { SnackbarProvider } from 'notistack';
 import { Close } from '@mui/icons-material';
@@ -16,6 +23,8 @@ import AppRoutes from './routes/AppRoutes/AppRoutes';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
 import { setIsCloneMode } from './store/reducers/appointment/actions';
+import { useAppInitialization } from './hooks/useAppInitialization/useAppInitialization';
+import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandler';
 
 const App = () => {
   const { scProfile, isTopAligning, isCloneMode } = useSelector(
@@ -34,6 +43,10 @@ const App = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
   const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
+  const { appIsReady, setAppIsReady } = useAppInitialization();
+  useSSOTokenHandler(setAppIsReady);
+
   // Check version once every 2 hours and reload if version changed
   const checkVersion = useCallback(() => {
     if (window.location.hostname === 'localhost') return;
@@ -207,10 +220,23 @@ const App = () => {
         }}
       >
         <ConfirmModal />
-        <AppRoutes
-          valueServicePreviousScreen={valueServicePreviousScreen}
-          valueServiceNextScreen={valueServiceNextScreen}
-        />
+        {appIsReady ? (
+          <AppRoutes
+            valueServicePreviousScreen={valueServicePreviousScreen}
+            valueServiceNextScreen={valueServiceNextScreen}
+          />
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
       </Container>
     </SnackbarProvider>
   );

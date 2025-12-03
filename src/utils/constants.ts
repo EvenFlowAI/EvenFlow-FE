@@ -175,3 +175,5 @@ export const parentOrigins = {
 };
 
 export const DEFAULT_SIDEBAR_HEX = '252525';
+
+export const PARTNER_APP_AUTH_EVENT = 'EVENFLOW_AUTH';
