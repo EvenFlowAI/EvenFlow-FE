@@ -18,11 +18,11 @@ const SelectedConsultant = () => {
 
   useEffect(() => {
     if (currentAppointment?.advisorId) {
-      setAdvisor(() => consultants.find(el => el.id === currentAppointment?.advisorId) ?? null);
+      setAdvisor(() => consultants?.find(el => el.id === currentAppointment?.advisorId) ?? null);
     }
   }, [consultants, currentAppointment]);
 
-  return currentAppointment?.advisorId && consultants.length ? (
+  return currentAppointment?.advisorId && consultants?.length ? (
     <div className={classes.selectWrapper}>
       <div className={classes.selectWrapper}>
         {t('Advisor')}: {isSm ? <br /> : null}
