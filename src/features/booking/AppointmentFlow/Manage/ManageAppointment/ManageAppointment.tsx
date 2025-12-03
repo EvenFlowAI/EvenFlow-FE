@@ -435,7 +435,7 @@ export const ManageAppointment: React.FC<
         // when transportations from the backend and appointmentByKey are ready
         if (appointmentByKey.vehicle.mileage || selectedVehicle?.mileage) {
           // when advisors from the backend are ready
-          if (consultants.length) {
+          if (consultants) {
             forwardNextStepCloning();
           }
         } else {
