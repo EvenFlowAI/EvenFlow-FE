@@ -1009,7 +1009,7 @@ const findSelectedConsultant =
   (id: string): AppThunk =>
   (dispatch, getState) => {
     const { consultants } = getState().appointmentFrame;
-    const selected = consultants.find(item => item.id === id);
+    const selected = consultants?.find(item => item.id === id);
     if (selected) {
       dispatch(setAdvisor(selected));
     }
@@ -1480,7 +1480,7 @@ export const cloneAppointment =
 
         const isWaitlist = isVisitCenterAppointment && isWaitListSlotSelected;
 
-        const advisor = consultants.find(el => el.id === currentAppointment?.advisorId)?.id;
+        const advisor = consultants?.find(el => el.id === currentAppointment?.advisorId)?.id;
 
         const data: ICreateAppointmentRequest = {
           id: currentAppointment.id,

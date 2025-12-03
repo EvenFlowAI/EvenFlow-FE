@@ -398,7 +398,7 @@ export const ManageAppointment: React.FC<
   const forwardNextStepCloning = () => {
     if (appointmentByKey) {
       // checking if the advisor is available
-      const advisorId = consultants.find(
+      const advisorId = consultants?.find(
         consultant => appointmentByKey?.advisorId === consultant.id
       );
 
@@ -435,7 +435,7 @@ export const ManageAppointment: React.FC<
         // when transportations from the backend and appointmentByKey are ready
         if (appointmentByKey.vehicle.mileage || selectedVehicle?.mileage) {
           // when advisors from the backend are ready
-          if (consultants.length) {
+          if (consultants) {
             forwardNextStepCloning();
           }
         } else {

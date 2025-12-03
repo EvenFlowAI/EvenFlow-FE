@@ -117,7 +117,7 @@ export const Consultants: React.FC<TProps> = ({
             onClick={() => onClick(null)}
             active={selectedConsultant === null}
           />
-          {consultants.map(c => (
+          {consultants?.map(c => (
             <ConsultantCard
               onClick={() => onClick(c)}
               advisor={c}
