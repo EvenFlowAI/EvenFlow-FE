@@ -22,12 +22,15 @@ import { useException } from '../../../../hooks/useException/useException';
 import useClickOutside from '../../../../hooks/useClickOutside/useClickOutside';
 import { useParams } from 'react-router-dom';
 import { DEFAULT_SIDEBAR_HEX } from '../../../../utils/constants';
+import { Loading } from '../../../../components/wrappers/Loading/Loading';
 
 export const AdminStyling: React.FC = () => {
   const dispatch = useDispatch();
   const showMessage = useMessage();
   const showError = useException();
-  const { sidebarColorHex, customLogoPath } = useSelector((s: RootState) => s.dealershipGroups);
+  const { sidebarColorHex, customLogoPath, saving } = useSelector(
+    (s: RootState) => s.dealershipGroups
+  );
 
   const [isEdit, setIsEdit] = useState(false);
   const [localHex, setLocalHex] = useState<string>(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
@@ -265,6 +268,8 @@ export const AdminStyling: React.FC = () => {
             <Button variant="text" color="primary" onClick={handleEdit}>
               Edit
             </Button>
+          ) : saving ? (
+            <Loading />
           ) : (
             <>
               <Button variant="text" color="error" onClick={handleCancel}>
@@ -305,7 +310,7 @@ export const AdminStyling: React.FC = () => {
               </Typography>
             </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+          <div className={classes.fileInputWrapper}>
             {isEdit && (
               <Button
                 variant="text"

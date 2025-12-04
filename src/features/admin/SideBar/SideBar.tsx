@@ -161,7 +161,16 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
             <Close style={{ color: '#fff' }} />
           </IconButton>
         ) : null}
-        <img onClick={handleLogoClick} className={classes.logo} src={logoSrc} alt="EvenFlow AI" />
+        {!loading && (
+          <div className={classes.logoWrapper}>
+            <img
+              onClick={handleLogoClick}
+              className={classes.logo}
+              src={logoSrc}
+              alt="EvenFlow AI"
+            />
+          </div>
+        )}
         <List disablePadding>
           {loading ? (
             <Loading />
