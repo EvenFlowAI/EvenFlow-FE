@@ -35,11 +35,17 @@ const SelectedTransportation: React.FC<TProps> = ({
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
   const value = useMemo(() => {
-    return transportation && transportation.id
-      ? transportation.id
-      : serviceTypeOption && serviceTypeOption.transportationOption
-        ? serviceTypeOption.transportationOption.id
-        : '';
+    // Prioritize transportation from serviceTypeOption (as default transportation) if available
+    if (serviceTypeOption?.transportationOption) {
+      return serviceTypeOption.transportationOption.id;
+    }
+
+    // Otherwise, use transportation from appointmentFrame (if available)
+    if (transportation?.id) {
+      return transportation.id;
+    }
+
+    return '';
   }, [transportation, serviceTypeOption]);
 
   const switchToServiceValet = () => {
