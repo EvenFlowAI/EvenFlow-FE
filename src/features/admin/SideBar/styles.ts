@@ -19,12 +19,17 @@ export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params)
     top: 10,
     right: 10,
   },
+  logoWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   logo: {
-    width: '100%',
-    maxWidth: '85%',
+    width: 'auto',
+    maxWidth: '10rem',
+    maxHeight: '10rem',
     marginBottom: 60,
     cursor: 'pointer',
-    maxHeight: '15%',
     objectFit: 'contain',
     transition: theme.transitions.create(['opacity']),
     '&:hover': {

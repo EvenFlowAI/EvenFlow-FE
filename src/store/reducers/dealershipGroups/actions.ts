@@ -183,6 +183,7 @@ export const updateDealershipLogo =
     onSuccess?: TCallback
   ): AppThunk =>
   async dispatch => {
+    dispatch(saving(true));
     const data = new FormData();
     data.append('file', logo, logo.name);
     Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
@@ -198,6 +199,9 @@ export const updateDealershipLogo =
       .catch(err => {
         console.log('updateDealershipLogo error', err);
         onError(err);
+      })
+      .finally(() => {
+        dispatch(saving(false));
       });
   };
 
@@ -209,6 +213,7 @@ export const updateLeftPanelColor =
     onSuccess?: TCallback
   ): AppThunk =>
   async dispatch => {
+    dispatch(saving(true));
     Api.call(Api.endpoints.Dealerships.UpdateSideBarColor, {
       urlParams: { id },
       data: { leftPanelColor: hex },
@@ -222,5 +227,8 @@ export const updateLeftPanelColor =
       .catch(err => {
         console.log('updateLeftPanelColor error', err);
         onError(err);
+      })
+      .finally(() => {
+        dispatch(saving(false));
       });
   };
