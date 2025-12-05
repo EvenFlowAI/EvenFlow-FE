@@ -25,11 +25,11 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 
 const rowDataSU: TableRowDataType<IServiceCenterExtended>[] = [
-  { val: (el: IServiceCenterExtended) => el.dealership.name, header: 'Dealership group' },
-  { val: (el: IServiceCenterExtended) => el.name, header: 'Service center name', orderId: 'name' },
+  { val: (el: IServiceCenterExtended) => el.dealership.name, header: 'Dealership Group' },
+  { val: (el: IServiceCenterExtended) => el.name, header: 'Service Center Name', orderId: 'name' },
   {
     val: (el: IServiceCenterExtended) => concatAddress(el.address),
-    header: 'Service center address',
+    header: 'Service Center Address',
   },
   {
     val: (el: IServiceCenterExtended) => el.id.toString(),

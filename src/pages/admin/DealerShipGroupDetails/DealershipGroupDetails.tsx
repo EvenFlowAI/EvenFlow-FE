@@ -21,9 +21,9 @@ import {
 } from '../../../store/reducers/dealershipGroups/actions';
 
 const tabs: TTab[] = [
-  { id: '1', label: 'Service centers', component: DetailsServiceCenters },
+  { id: '1', label: 'Service Centers', component: DetailsServiceCenters },
   { id: '2', label: 'Employees', component: DetailsEmployees },
-  { id: '3', label: 'Admin styling', component: AdminStyling },
+  { id: '3', label: 'Admin Styling', component: AdminStyling },
 ];
 
 export const DealershipGroupDetails = () => {
