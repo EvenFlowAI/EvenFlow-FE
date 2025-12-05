@@ -87,8 +87,7 @@ export const AdminStyling: React.FC = () => {
   const handleCancel = async () => {
     setLocalHex(originalHexRef.current);
     setLocalLogo(originalLogoRef.current);
-    const file = await urlToFile(defaultLogo);
-    selectedFileRef.current = file;
+    selectedFileRef.current = null;
     setHexTouched(false);
     setShowPicker(false);
     setIsEdit(false);
@@ -194,6 +193,7 @@ export const AdminStyling: React.FC = () => {
     setLocalLogo(defaultLogo);
     const file = await urlToFile(defaultLogo);
     selectedFileRef.current = file;
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
