@@ -7,7 +7,7 @@ import {
   updateDealershipLogo,
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
-import ColorPicker from '@rc-component/color-picker';
+import ColorPicker, { Color } from '@rc-component/color-picker';
 import '@rc-component/color-picker/assets/index.css';
 import { useStyles } from './styles';
 import {
@@ -203,9 +203,13 @@ export const AdminStyling: React.FC = () => {
     setLocalHex(normalized);
   };
 
-  const pickerColor = useMemo(() => `#${localHex.padEnd(6, '0')}`, [localHex]);
-  const onPickerChange = useCallback((c: any) => {
-    const hexStr = (c as any)?.toHexString ? (c as any).toHexString() : String(c);
+  const pickerColor = useMemo(() => {
+    const color = new Color(`#${localHex.padEnd(6, '0')}`);
+    return color;
+  }, [localHex]);
+
+  const onPickerChange = useCallback((c: Color) => {
+    const hexStr = c.toHexString();
     const hex = hexStr.replace('#', '');
     const normalized = sanitizeHex(hex);
     setLocalHex(normalized);
@@ -220,6 +224,7 @@ export const AdminStyling: React.FC = () => {
   const handlePreviewClick = () => {
     if (!isEdit) return;
     setShowPicker(prev => !prev);
+    previewClickFlagRef.current = false;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
