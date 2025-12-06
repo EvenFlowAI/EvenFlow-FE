@@ -1,12 +1,10 @@
-import React, { useMemo } from 'react';
-import TimeSelect from '../../../../../components/pickers/TimeSelect/TimeSelect';
+import React from 'react';
 import dayjs from 'dayjs';
-import { time24HourFormat, timeSpanString } from '../../../../../utils/constants';
-import { PickersWrapper } from '../../../../../components/styled/PickersWrapper';
+import { timeSpanString } from '../../../../../utils/constants';
 import { IHOODataForm } from '../../../../../store/reducers/serviceCenters/types';
 import { IScheduleByDate } from '../../../../../store/reducers/schedules/types';
-import { scClosesText, scOpensText } from '../constants';
-import { useMediaQuery, useTheme } from '@mui/material';
+import ClockTimePicker from '../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
+import { useStyles } from './style';
 
 type TProps = {
   formIsChecked: boolean;
@@ -23,82 +21,66 @@ const TimeBlock: React.FC<TProps> = ({
   disabledDate,
   el,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
-  const downArrowString = useMemo(() => {
-    return schedule?.from
-      ? `${scOpensText} ${dayjs(schedule?.from, timeSpanString).format(time24HourFormat)}`
-      : '';
-  }, [schedule]);
-
-  const upArrowString = useMemo(() => {
-    return schedule?.to
-      ? `${scClosesText} ${dayjs(schedule?.to, timeSpanString).format(time24HourFormat)}`
-      : '';
-  }, [schedule]);
+  const { classes } = useStyles();
 
   return (
-    <PickersWrapper>
-      <TimeSelect
-        width={isMobile ? 70 : 86}
-        hideArrows={isMobile}
-        disableClearable
-        error={
-          formIsChecked &&
-          el.isOnSchedule &&
-          (!el.startAt ||
-            dayjs(el.finishAt, timeSpanString).isSameOrBefore(
-              dayjs(el.startAt, timeSpanString),
-              'minute'
-            ) ||
-            dayjs(el.startAt, timeSpanString).isBefore(
-              dayjs(schedule?.from, timeSpanString),
-              'minute'
-            ) ||
-            dayjs(el.startAt, timeSpanString).isAfter(
-              dayjs(schedule?.to, timeSpanString),
-              'minute'
-            ))
-        }
+    <div className={classes.timePickersWrapper}>
+      <ClockTimePicker
+        value={dayjs(el.startAt, 'HH:mm:ss')}
         disabled={!el.isOnSchedule || disabledDate}
-        start={schedule?.from ?? '09:00:00'}
-        end={schedule?.to ?? '17:00:00'}
-        value={el.startAt}
-        downArrowErrorText={downArrowString}
-        upArrowErrorText={upArrowString}
-        onChange={value => onTimeChange(el, 'startAt', value)}
+        onChange={e => onTimeChange(el, 'startAt', dayjs(e).format('HH:mm:ss'))}
+        label={''}
+        InputProps={{
+          className: 'ClockTimeTriggers',
+          id: 'Scheduled time',
+          placeholder: '',
+          error:
+            formIsChecked &&
+            el.isOnSchedule &&
+            (!el.startAt ||
+              dayjs(el.finishAt, timeSpanString).isSameOrBefore(
+                dayjs(el.startAt, timeSpanString),
+                'minute'
+              ) ||
+              dayjs(el.startAt, timeSpanString).isBefore(
+                dayjs(schedule?.from, timeSpanString),
+                'minute'
+              ) ||
+              dayjs(el.startAt, timeSpanString).isAfter(
+                dayjs(schedule?.to, timeSpanString),
+                'minute'
+              )),
+        }}
       />
-      <div>TO</div>
-      <TimeSelect
-        width={isMobile ? 70 : 86}
-        hideArrows={isMobile}
-        disableClearable
-        error={
-          formIsChecked &&
-          el.isOnSchedule &&
-          (!el.finishAt ||
-            dayjs(el.finishAt, timeSpanString).isSameOrBefore(
-              dayjs(el.startAt, timeSpanString),
-              'minute'
-            ) ||
-            dayjs(el.finishAt, timeSpanString).isAfter(
-              dayjs(schedule?.to, timeSpanString),
-              'minute'
-            ) ||
-            dayjs(el.finishAt, timeSpanString).isBefore(
-              dayjs(schedule?.from, timeSpanString),
-              'minute'
-            ))
-        }
+      <span className={classes.boldText}>TO</span>
+      <ClockTimePicker
+        value={dayjs(el.finishAt, 'HH:mm:ss')}
         disabled={!el.isOnSchedule || disabledDate}
-        start={schedule?.from ?? '09:00:00'}
-        end={schedule?.to ?? '17:00:00'}
-        value={el.finishAt}
-        downArrowErrorText={downArrowString}
-        upArrowErrorText={upArrowString}
-        onChange={value => onTimeChange(el, 'finishAt', value)}
+        onChange={e => onTimeChange(el, 'startAt', dayjs(e).format('HH:mm:ss'))}
+        label={''}
+        InputProps={{
+          className: 'ClockTimeTriggers',
+          id: 'Scheduled time',
+          placeholder: '',
+          error:
+            formIsChecked &&
+            el.isOnSchedule &&
+            (!el.finishAt ||
+              dayjs(el.finishAt, timeSpanString).isSameOrBefore(
+                dayjs(el.startAt, timeSpanString),
+                'minute'
+              ) ||
+              dayjs(el.finishAt, timeSpanString).isAfter(
+                dayjs(schedule?.to, timeSpanString),
+                'minute'
+              ) ||
+              dayjs(el.finishAt, timeSpanString).isBefore(
+                dayjs(schedule?.from, timeSpanString),
+                'minute'
+              )),
+        }}
       />
-    </PickersWrapper>
+    </div>
   );
 };
 
