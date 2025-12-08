@@ -5,7 +5,7 @@ import { AdminRoutes } from '../../../routes/AdminRoutes/AdminRoutes';
 import { NavBar } from '../../../features/admin/NavBar/NavBar';
 import { Toolbar } from '@mui/material';
 import { PrivateRoute } from '../../../routes/PrivateRoute/PrivateRoute';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../../../store/reducers/users/actions';
 import { loadDealershipProfile } from '../../../store/reducers/dealershipGroups/actions';
 import { loadAllSCs } from '../../../store/reducers/serviceCenters/actions';
@@ -15,9 +15,13 @@ import { useStyles } from './styles';
 import { useSideBar } from '../../../hooks/useSideBar/useSideBar';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { Routes } from '../../../routes/constants';
+import { setGlobalLoader } from '../../../store/reducers/adminPanel/actions';
+import { RootState } from '../../../store/rootReducer';
 
 export const AdminPanel = () => {
   const [navBarHeight, setNavBarHeight] = useState<number>(0);
+  const { globalLoader } = useSelector((state: RootState) => state.adminPanel);
+
   const { selectedSC } = useSCs();
   const { isOpened, onOpen, onClose } = useSideBar();
   const dispatch = useDispatch();
@@ -34,9 +38,15 @@ export const AdminPanel = () => {
     };
   });
 
+  const onSuccess = () => {
+    dispatch(setGlobalLoader(false));
+  };
+
   useEffect(() => {
+    dispatch(setGlobalLoader(true));
+
     dispatch(getCurrentUser());
-    dispatch(loadDealershipProfile());
+    dispatch(loadDealershipProfile(onSuccess));
     dispatch(loadAllSCs());
   }, [dispatch]);
 
@@ -47,6 +57,10 @@ export const AdminPanel = () => {
       dispatch(getPodsShort([]));
     }
   }, [dispatch, selectedSC]);
+
+  if (globalLoader) {
+    return <></>;
+  }
 
   return (
     <div className={classes.root}>

@@ -137,14 +137,18 @@ const _loadDealershipProfile = (payload: IDealershipProfile): DealershipActions 
   type: 'Dealership/Profile',
   payload,
 });
-export const loadDealershipProfile = (): AppThunk => async dispatch => {
-  try {
-    const { data } = await Api.call<IDealershipProfile>(Api.endpoints.Accounts.Dealership);
-    dispatch(_loadDealershipProfile(data));
-  } catch (err) {
-    console.log(err);
-  }
-};
+export const loadDealershipProfile =
+  (onSuccess?: () => void): AppThunk =>
+  async dispatch => {
+    try {
+      const { data } = await Api.call<IDealershipProfile>(Api.endpoints.Accounts.Dealership);
+      dispatch(_loadDealershipProfile(data));
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.log(err);
+      if (onSuccess) onSuccess();
+    }
+  };
 
 export const updateDealership =
   (payload: IDealershipProfileForm, id: number): AppThunk =>

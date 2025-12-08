@@ -3,4 +3,5 @@ export interface TState {
   vehicleServicesTab: string;
   timeDifferentiationTab: string;
   localTab: string;
+  globalLoader: boolean;
 }
