@@ -22,13 +22,13 @@ import { RootState } from '../../../store/rootReducer';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
 import dayjs from 'dayjs';
 import { Switch } from '@mui/material';
-import TimeSelect from '../../../components/pickers/TimeSelect/TimeSelect';
 import { useActionButtonsStyles } from '../../../hooks/styling/useActionButtonsStyles';
 import { LoadingButton } from '../../../components/buttons/LoadingButton/LoadingButton';
 import { useMessage } from '../../../hooks/useMessage/useMessage';
 import { useException } from '../../../hooks/useException/useException';
 import { timeSpanString } from '../../../utils/constants';
-import { PickersWrapper } from '../../../components/styled/PickersWrapper';
+import ClockTimePicker from '../../../components/pickers/ClockTimePicker/ClockTimePicker';
+import { useStyles } from './style';
 
 type TProps = DialogProps & {
   editingItem: IEmployeeRoleHours | null;
@@ -51,6 +51,8 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({ open, onClose, editingIte
   const workingDays = useMemo(() => {
     return hoursOfOperations.map(el => el.dayOfWeek);
   }, [hoursOfOperations]);
+
+  const { classes: localClasses } = useStyles();
 
   useEffect(() => {
     if (editingItem && selectedSC && open) {
@@ -187,57 +189,61 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({ open, onClose, editingIte
                     />
                     <SwitcherLabel>ON</SwitcherLabel>
                   </SwitcherWrapper>
-                  <PickersWrapper>
-                    <TimeSelect
-                      disableClearable
-                      error={
-                        formIsChecked &&
-                        scheduleItem?.isOnSchedule &&
-                        (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(
-                          dayjs(scheduleItem.from, timeSpanString),
-                          'minute'
-                        ) ||
-                          dayjs(scheduleItem.from, timeSpanString).isBefore(
-                            dayjs(schedule?.from, timeSpanString),
+                  <div className={localClasses.timePickersWrapper}>
+                    <ClockTimePicker
+                      value={dayjs(scheduleItem?.from, 'HH:mm:ss')}
+                      disabled={!checked || !workingDays.includes(day)}
+                      onChange={e => onTimeChange(day, 'from', dayjs(e).format('HH:mm:ss'))}
+                      label={''}
+                      InputProps={{
+                        className: 'ClockTimeTriggers',
+                        id: 'Scheduled time',
+                        placeholder: '',
+                        error:
+                          formIsChecked &&
+                          scheduleItem?.isOnSchedule &&
+                          (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(
+                            dayjs(scheduleItem.from, timeSpanString),
                             'minute'
                           ) ||
-                          dayjs(scheduleItem.from, timeSpanString).isAfter(
-                            dayjs(schedule?.to, timeSpanString),
-                            'minute'
-                          ))
-                      }
-                      disabled={!checked || !workingDays.includes(day)}
-                      start={schedule?.from ?? ''}
-                      end={schedule?.to ?? ''}
-                      value={scheduleItem?.from}
-                      onChange={value => onTimeChange(day, 'from', value)}
+                            dayjs(scheduleItem.from, timeSpanString).isBefore(
+                              dayjs(schedule?.from, timeSpanString),
+                              'minute'
+                            ) ||
+                            dayjs(scheduleItem.from, timeSpanString).isAfter(
+                              dayjs(schedule?.to, timeSpanString),
+                              'minute'
+                            )),
+                      }}
                     />
-                    <div>TO</div>
-                    <TimeSelect
-                      disableClearable
-                      error={
-                        formIsChecked &&
-                        scheduleItem?.isOnSchedule &&
-                        (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(
-                          dayjs(scheduleItem.from, timeSpanString),
-                          'minute'
-                        ) ||
-                          dayjs(scheduleItem.to, timeSpanString).isAfter(
-                            dayjs(schedule?.to, timeSpanString),
+                    <div className={localClasses.boldText}>TO</div>
+                    <ClockTimePicker
+                      value={dayjs(scheduleItem?.to, 'HH:mm:ss')}
+                      disabled={!checked || !workingDays.includes(day)}
+                      onChange={e => onTimeChange(day, 'to', dayjs(e).format('HH:mm:ss'))}
+                      label={''}
+                      InputProps={{
+                        className: 'ClockTimeTriggers',
+                        id: 'Scheduled time',
+                        placeholder: '',
+                        error:
+                          formIsChecked &&
+                          scheduleItem?.isOnSchedule &&
+                          (dayjs(scheduleItem.to, timeSpanString).isSameOrBefore(
+                            dayjs(scheduleItem.from, timeSpanString),
                             'minute'
                           ) ||
-                          dayjs(scheduleItem.to, timeSpanString).isBefore(
-                            dayjs(schedule?.from, timeSpanString),
-                            'minute'
-                          ))
-                      }
-                      disabled={!checked || !workingDays.includes(day)}
-                      start={schedule?.from ?? ''}
-                      end={schedule?.to ?? ''}
-                      value={scheduleItem?.to}
-                      onChange={value => onTimeChange(day, 'to', value)}
+                            dayjs(scheduleItem.to, timeSpanString).isAfter(
+                              dayjs(schedule?.to, timeSpanString),
+                              'minute'
+                            ) ||
+                            dayjs(scheduleItem.to, timeSpanString).isBefore(
+                              dayjs(schedule?.from, timeSpanString),
+                              'minute'
+                            )),
+                      }}
                     />
-                  </PickersWrapper>
+                  </div>
                 </RowWrapper>
               );
             })}
