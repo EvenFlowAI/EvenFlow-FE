@@ -56,7 +56,7 @@ const TimeBlock: React.FC<TProps> = ({
       <ClockTimePicker
         value={dayjs(el.finishAt, 'HH:mm:ss')}
         disabled={!el.isOnSchedule || disabledDate}
-        onChange={e => onTimeChange(el, 'startAt', dayjs(e).format('HH:mm:ss'))}
+        onChange={e => onTimeChange(el, 'finishAt', dayjs(e).format('HH:mm:ss'))}
         label={''}
         InputProps={{
           className: 'ClockTimeTriggers',
