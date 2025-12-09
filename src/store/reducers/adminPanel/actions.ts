@@ -6,3 +6,4 @@ export const setVehicleServicesTab = createAction<string>('AdminPanel/SetVehicle
 export const setTimeDifferentiationTab = createAction<string>(
   'AdminPanel/SetTimeDifferentiationTab'
 );
+export const setGlobalLoader = createAction<boolean>('AdminPanel/SetGlobalLoader');

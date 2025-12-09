@@ -2,6 +2,7 @@ import { TState } from './types';
 import { createReducer } from '@reduxjs/toolkit';
 import {
   setAllocationTab,
+  setGlobalLoader,
   setLocalTab,
   setTimeDifferentiationTab,
   setVehicleServicesTab,
@@ -12,6 +13,7 @@ const initialState: TState = {
   timeDifferentiationTab: '0',
   vehicleServicesTab: '0',
   localTab: '0',
+  globalLoader: true,
 };
 
 export const adminPanelReducer = createReducer(initialState, builder =>
@@ -27,5 +29,8 @@ export const adminPanelReducer = createReducer(initialState, builder =>
     })
     .addCase(setVehicleServicesTab, (state, { payload }) => {
       return { ...state, vehicleServicesTab: payload };
+    })
+    .addCase(setGlobalLoader, (state, { payload }) => {
+      return { ...state, globalLoader: payload };
     })
 );
