@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Autocomplete, Checkbox } from '@mui/material';
 import { renderChipTags } from './ChipTagRender';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
@@ -10,24 +10,27 @@ import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import { setFormIsChecked } from '../../../../../store/reducers/serviceRequests/actions';
 import { TRuleState } from '../helper';
 
-interface IOpCodesAndDayOfWeekRender {
+interface IOpCodeFieldsAndDayOfWeekRender {
   updateLocalRule: (index: number, rule: Partial<TRuleState>) => void;
   index: number;
   errors: string[];
   dayOFWeekOptions: TOption[];
+  filterModeOptions: TOption[];
 }
 
-const OpCodesAndDayOfWeekRender = ({
+const OpCodeFieldsAndDayOfWeekRender = ({
   updateLocalRule,
   index,
   errors,
   dayOFWeekOptions,
-}: IOpCodesAndDayOfWeekRender) => {
+  filterModeOptions,
+}: IOpCodeFieldsAndDayOfWeekRender) => {
   const { allAssignedList, rules, formIsChecked } = useSelector(
     (state: RootState) => state.serviceRequests
   );
   const dispatch = useDispatch();
   const { classes: multipleACSClasses } = useMultipleACStyles();
+  const currentRule = rules[index];
 
   const requestsOptions = useMemo(() => {
     return allAssignedList.map(item => ({
@@ -83,7 +86,11 @@ const OpCodesAndDayOfWeekRender = ({
   const onRequestChange = useCallback(
     (ruleIdx: number, _e: any, value: TOption[]) => {
       dispatch(setFormIsChecked(false));
-      updateLocalRule(ruleIdx, { serviceRequests: value });
+      if (value.length > 0) {
+        updateLocalRule(ruleIdx, { serviceRequests: value });
+      } else {
+        updateLocalRule(ruleIdx, { serviceRequests: value, serviceRequestFilterMode: null });
+      }
     },
     [dispatch, updateLocalRule]
   );
@@ -141,6 +148,14 @@ const OpCodesAndDayOfWeekRender = ({
     [dispatch, updateLocalRule]
   );
 
+  const onFilterModeChange = useCallback(
+    (ruleIdx: number, _e: any, value: TOption | null) => {
+      dispatch(setFormIsChecked(false));
+      updateLocalRule(ruleIdx, { serviceRequestFilterMode: value });
+    },
+    [dispatch, updateLocalRule]
+  );
+
   return (
     <>
       <Autocomplete
@@ -153,17 +168,34 @@ const OpCodesAndDayOfWeekRender = ({
         getOptionLabel={option => option.name}
         isOptionEqualToValue={(o, v) => o.value === v.value}
         renderOption={makeRenderRequestOption(index)}
-        value={rules[index].serviceRequests}
+        value={currentRule.serviceRequests}
         onChange={(e, value) => onRequestChange(index, e, value)}
         renderTags={(selected, getTagProps) => renderChipTags(selected, getTagProps)}
         renderInput={autocompleteRender({
-          label: 'Op Codes',
-          placeholder: 'Select Op Codes',
+          label: 'Service Requests',
+          placeholder: 'Select Service',
           error:
             errors.some(e => e.includes('service request') || e.includes('configuration')) &&
             formIsChecked,
         })}
       />
+
+      {currentRule.serviceRequests?.length > 0 && (
+        <Autocomplete
+          style={{ marginBottom: 20 }}
+          options={filterModeOptions}
+          getOptionLabel={i => i.name}
+          value={currentRule.serviceRequestFilterMode}
+          isOptionEqualToValue={(o, v) => o.value === v.value}
+          onChange={(e, value) => onFilterModeChange(index, e, value)}
+          renderInput={autocompleteRender({
+            label: 'Type',
+            placeholder: 'Select Type',
+            error:
+              errors.some(e => e.includes('Type') || e.includes('configuration')) && formIsChecked,
+          })}
+        />
+      )}
 
       <Autocomplete
         multiple
@@ -176,7 +208,7 @@ const OpCodesAndDayOfWeekRender = ({
         disableClearable
         disableCloseOnSelect
         renderOption={makeRenderDayOption(index)}
-        value={rules[index].daysOfWeek}
+        value={currentRule.daysOfWeek}
         onChange={(e, v) => onDaysChange(index, e, v)}
         renderTags={(selected, getTagProps) => renderChipTags(selected, getTagProps)}
         renderInput={autocompleteRender({
@@ -191,4 +223,4 @@ const OpCodesAndDayOfWeekRender = ({
   );
 };
 
-export default OpCodesAndDayOfWeekRender;
+export default OpCodeFieldsAndDayOfWeekRender;

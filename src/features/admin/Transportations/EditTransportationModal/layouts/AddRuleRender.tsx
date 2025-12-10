@@ -16,6 +16,7 @@ const AddRuleRender = () => {
           name: '',
           daysOfWeek: [],
           serviceRequests: [],
+          serviceRequestFilterMode: null,
           timeOfDay: null,
           capacity: undefined,
           expanded: true,

@@ -95,6 +95,11 @@ export enum EAppointmentType {
   Mixed,
 }
 
+export enum EFilterMode {
+  Mixed,
+  Only,
+}
+
 export type TState = {
   podsList: IPod[];
   podsLoading: boolean;

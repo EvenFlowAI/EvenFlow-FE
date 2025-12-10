@@ -8,6 +8,7 @@ export type TRuleState = {
   daysOfWeek: TOption[];
   timeOfDay: TTimeObject | null;
   serviceRequests: TOption[];
+  serviceRequestFilterMode: TOption | null;
   capacity?: number;
   expanded: boolean;
   state: number;
@@ -17,7 +18,8 @@ export type TRuleState = {
 
 export const transformTransportationRules = (
   editingElement: ITransportationOptionFull | null,
-  dayOfWeekOptions: TOption[]
+  dayOfWeekOptions: TOption[],
+  filterModeOptions: TOption[]
 ): TRuleState[] => {
   if (!editingElement?.rules?.length) return [];
 
@@ -32,6 +34,9 @@ export const transformTransportationRules = (
     .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
     .map(rule => {
       const days = dayOfWeekOptions.filter(item => rule.dayOfWeeks?.includes(item.value)) || [];
+      const serviceRequestFilterMode = filterModeOptions.filter(
+        item => rule.serviceRequestFilterMode == item.value
+      )[0];
       const updatedServiceRequests =
         rule.serviceRequests?.map(item => ({
           value: item.id,
@@ -47,6 +52,7 @@ export const transformTransportationRules = (
           end: parseTime(rule.timeOfDay?.end),
         },
         serviceRequests: updatedServiceRequests,
+        serviceRequestFilterMode: serviceRequestFilterMode,
         capacity: rule.capacity,
         expanded: false,
         state: rule.state,
@@ -75,6 +81,7 @@ export const buildTransportationRulePayload = (
           }
         : undefined,
     serviceRequests: rule.serviceRequests.map(item => item.value),
+    serviceRequestFilterMode: rule.serviceRequestFilterMode?.value,
     dayOfWeeks: rule.daysOfWeek.map(item => item.value),
     capacity: rule.capacity,
     state: rule.state,
@@ -102,6 +109,7 @@ export const buildTransportationRulePayloadById = (
           }
         : undefined,
     serviceRequests: rule.serviceRequests.map(item => item.value),
+    serviceRequestFilterMode: rule.serviceRequestFilterMode?.value,
     dayOfWeeks: rule.daysOfWeek.map(item => item.value),
     capacity: rule.capacity,
     state: rule.state,
@@ -112,7 +120,8 @@ export const buildTransportationRulePayloadById = (
 export const getOriginalRuleState = (
   editingElement: ITransportationOptionFull,
   ruleIndex: number,
-  dayOfWeekOptions: TOption[]
+  dayOfWeekOptions: TOption[],
+  filterModeOptions: TOption[]
 ): TRuleState | null => {
   const original = editingElement.rules?.[ruleIndex];
   if (!original) return null;
@@ -121,6 +130,9 @@ export const getOriginalRuleState = (
   const [endHours, endMinutes, endSeconds] = original.timeOfDay?.end?.split(':') || [];
 
   const days = dayOfWeekOptions.filter(item => original.dayOfWeeks?.includes(item.value)) || [];
+  const serviceRequestFilterMode = filterModeOptions.filter(
+    item => original.serviceRequestFilterMode == item.value
+  )[0];
 
   const updatedServiceRequests =
     original.serviceRequests?.map(item => ({
@@ -137,6 +149,7 @@ export const getOriginalRuleState = (
       end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
     },
     serviceRequests: updatedServiceRequests,
+    serviceRequestFilterMode: serviceRequestFilterMode,
     capacity: original.capacity,
     expanded: false,
     state: original.state,

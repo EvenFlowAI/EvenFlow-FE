@@ -32,10 +32,11 @@ import { TError } from '../../../booking/CustomerSelect/ReturningCustomerForAdmi
 import { transformTransportationRules, TRuleState } from './helper';
 import ExpandedRulesRender from './layouts/ExpandedRulesRender';
 import ClocksRender from './layouts/ClocksRender';
-import OpCodesAndDayOfWeekRender from './layouts/OpCodesAndDayOfWeekRender';
+import OpCodeFieldsAndDayOfWeekRender from './layouts/OpCodeFieldsAndDayOfWeekRender';
 import ModalButtons from './layouts/ModalButtons';
 import RuleHeaderWrapper from './layouts/RuleHeaderWrapper';
 import AddRuleRender from './layouts/AddRuleRender';
+import { EFilterMode } from '../../../../store/reducers/pods/types';
 
 type TEditTransportationOptionDialogProps = {
   editingElement: ITransportationOptionFull | null;
@@ -46,6 +47,8 @@ export const EditTransportationModal: React.FC<
 > = ({ editingElement, ...props }) => {
   const { rules, formIsChecked } = useSelector((state: RootState) => state.serviceRequests);
   const [dayOFWeekOptions, setDayOfWeekOptions] = useState<TOption[]>([]);
+  const [filterModeOptions, setFilterModeOptions] = useState<TOption[]>([]);
+
   const [errors, setErrors] = useState<string[]>([]);
 
   const { selectedSC } = useSCs();
@@ -63,6 +66,11 @@ export const EditTransportationModal: React.FC<
       );
       return getOptions(days);
     });
+
+    setFilterModeOptions(() => {
+      const filterModes = Object.keys(EFilterMode).filter(key => Number.isNaN(+key));
+      return getOptions(filterModes);
+    });
   }, []);
 
   useEffect(() => {
@@ -74,7 +82,11 @@ export const EditTransportationModal: React.FC<
   // for adding rules to localState
   useEffect(() => {
     if (editingElement && props.open) {
-      const modifiedRules = transformTransportationRules(editingElement, dayOFWeekOptions);
+      const modifiedRules = transformTransportationRules(
+        editingElement,
+        dayOFWeekOptions,
+        filterModeOptions
+      );
       dispatch(setRules(modifiedRules));
       setErrors([]);
     }
@@ -198,8 +210,9 @@ export const EditTransportationModal: React.FC<
                               onChange={e => updateLocalRule(index, { name: e.target.value })}
                             />
 
-                            <OpCodesAndDayOfWeekRender
+                            <OpCodeFieldsAndDayOfWeekRender
                               dayOFWeekOptions={dayOFWeekOptions}
+                              filterModeOptions={filterModeOptions}
                               index={index}
                               errors={errors}
                               updateLocalRule={updateLocalRule}
@@ -244,6 +257,7 @@ export const EditTransportationModal: React.FC<
                             rule={rule}
                             editingElement={editingElement}
                             dayOFWeekOptions={dayOFWeekOptions}
+                            filterModeOptions={filterModeOptions}
                             index={index}
                             onError={onError}
                             setErrors={setErrors}
