@@ -44,7 +44,7 @@ export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params)
     display: 'flex',
     flexFlow: 'column',
     padding: '60px 30px',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
     scrollbarWidth: 'none',
     '&::-webkit-scrollbar': {
