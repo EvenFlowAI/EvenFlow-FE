@@ -13,6 +13,7 @@ export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params)
   link: {
     color: '#fff',
     marginTop: 16,
+    alignSelf: 'center',
   },
   closeButton: {
     position: 'absolute',
@@ -23,9 +24,9 @@ export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params)
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   logo: {
-    width: 'auto',
     maxWidth: '10rem',
     maxHeight: '10rem',
     marginBottom: 60,
@@ -45,8 +46,15 @@ export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params)
     padding: '60px 30px',
     alignItems: 'center',
     justifyContent: 'space-between',
+    scrollbarWidth: 'none',
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
+    },
+    '& .MuiList-root': {
+      paddingLeft: 0,
     },
   },
 }));
