@@ -33,6 +33,7 @@ export interface ITransportationOptionRule {
   dayOfWeeks: number[];
   isAllServiceRequestsIncluded?: boolean;
   serviceRequests: ITrOptionServiceTRequest[];
+  serviceRequestFilterMode?: number;
   capacity?: number;
   state: number;
   orderIndex: number;

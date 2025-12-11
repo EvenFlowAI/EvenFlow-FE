@@ -140,6 +140,7 @@ export const editTransportationOptionRule =
       transportationOptionId: number;
       timeOfDay: { start: string | null; end: string | null } | undefined;
       serviceRequests: number[];
+      serviceRequestFilterMode: number | undefined;
       dayOfWeeks: number[];
       capacity: number | undefined;
       state: number;

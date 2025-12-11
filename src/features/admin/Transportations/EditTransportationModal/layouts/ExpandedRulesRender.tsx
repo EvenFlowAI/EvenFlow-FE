@@ -23,6 +23,7 @@ import { ITransportationOptionFull } from '../../../../../store/reducers/transpo
 interface IExpandedRulesRender {
   rule: TRuleState;
   dayOFWeekOptions: TOption[];
+  filterModeOptions: TOption[];
   editingElement: ITransportationOptionFull | null;
   index: number;
   setErrors: Dispatch<SetStateAction<string[]>>;
@@ -32,6 +33,7 @@ interface IExpandedRulesRender {
 const ExpandedRulesRender = ({
   rule,
   dayOFWeekOptions,
+  filterModeOptions,
   editingElement,
   index,
   setErrors,
@@ -58,7 +60,12 @@ const ExpandedRulesRender = ({
   const resetRuleToOriginal = (ruleIndex: number) => {
     if (!editingElement || !editingElement.rules) return;
 
-    const resetRule = getOriginalRuleState(editingElement, ruleIndex, dayOFWeekOptions);
+    const resetRule = getOriginalRuleState(
+      editingElement,
+      ruleIndex,
+      dayOFWeekOptions,
+      filterModeOptions
+    );
     if (!resetRule) return;
 
     dispatch(setRules(rules.map((rule, idx) => (idx === ruleIndex ? resetRule : rule))));
