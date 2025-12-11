@@ -347,7 +347,7 @@ export const ServiceBookModal: React.FC<
             advisors: form.advisors.map(el => el.id),
             bays: form.bays.map(item => item.id),
             description: form.description,
-            name: form.name,
+            name: form.name?.trim(),
             serviceCenterId: selectedSC.id,
             serviceRequests: form.serviceRequests.map(sr => sr.id),
             technicians: form.technicians.map(t => t.id),
