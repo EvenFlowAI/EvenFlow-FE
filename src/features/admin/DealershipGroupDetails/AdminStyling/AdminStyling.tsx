@@ -300,7 +300,7 @@ export const AdminStyling: React.FC = () => {
                 variant="contained"
                 onClick={handleLogoClick}
                 color="primary"
-                style={{ maxWidth: 132 }}
+                className={classes.uploadLogoButton}
               >
                 Upload Logo
               </Button>
@@ -392,6 +392,7 @@ export const AdminStyling: React.FC = () => {
                 onClick={handleResetHex}
                 fullWidth
                 className={`${classes.resetButtonBase} ${localHex !== DEFAULT_SIDEBAR_HEX ? classes.resetButtonPrimary : classes.resetButtonGrey}`}
+                style={{ marginTop: 8 }}
               >
                 Reset to Default
               </Button>

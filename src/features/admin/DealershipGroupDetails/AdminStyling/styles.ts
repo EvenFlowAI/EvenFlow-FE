@@ -24,7 +24,7 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
     },
     grid: {
       display: 'grid',
-      gridTemplateColumns: '65% 35%',
+      gridTemplateColumns: '50% 50%',
       gap: theme.spacing(3),
     },
     section: {
@@ -35,11 +35,8 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
       padding: `${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(2)}`,
     },
     logoWrapper: {
-      width: '35%',
-      minWidth: '7rem',
-      minHeight: '7rem',
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
+      width: '214px',
+      height: '88px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -50,38 +47,40 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
       background: chosenColor ? `#${chosenColor}` : '#DADADA',
       cursor: isEditMode ? 'pointer' : 'default',
       [theme.breakpoints.down('sm')]: {
-        width: '45%',
+        width: '160px',
+        height: '66px',
+      },
+      [theme.breakpoints.down('xs')]: {
+        width: '140px',
+        height: '56px',
       },
       [theme.breakpoints.up('lg')]: {
-        width: '28%',
+        width: '214px',
+        height: '88px',
       },
     },
     logoImg: {
-      width: '100%',
-      height: '100%',
-      maxHeight: '20rem',
-      objectFit: 'contain',
+      width: '90%',
+      height: '90%',
       display: 'block',
+      objectFit: 'contain',
+      objectPosition: 'center',
     },
     previewColorBox: {
-      width: theme.spacing(8), // ~64px
-      height: theme.spacing(8),
+      width: '59px', // ~64px
+      height: '59px',
       flexShrink: 0,
       alignSelf: 'flex-end',
       borderRadius: theme.shape.borderRadius,
       border: `1px solid ${theme.palette.divider}`,
       cursor: isEditMode ? 'pointer' : 'default',
       [theme.breakpoints.down('xs')]: {
-        width: theme.spacing(5), // ~40px
-        height: theme.spacing(5),
+        width: '40px',
+        height: '40px',
       },
       [theme.breakpoints.down('sm')]: {
-        width: theme.spacing(7), // ~60px
-        height: theme.spacing(7),
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: theme.spacing(8.75), // ~70px
-        height: theme.spacing(8.75),
+        width: '50px',
+        height: '50px',
       },
     },
     row: {
@@ -99,6 +98,7 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
       alignSelf: 'stretch',
       justifyContent: 'flex-start',
       paddingLeft: 0,
+      maxWidth: '25%',
     },
     resetButtonGrey: {
       color: '#858585',
@@ -118,9 +118,9 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
       display: 'flex',
       flexDirection: 'column',
       gap: 8,
-      minWidth: '20%',
-      maxWidth: '26%',
+      maxWidth: '50%',
     },
+    uploadLogoButton: { maxWidth: 132, minHeight: 40, marginBottom: 6 },
     fileInputWrapper: {
       display: 'flex',
       flexDirection: 'column',
@@ -148,7 +148,6 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
     colorInputsContainer: {
       display: 'flex',
       flexDirection: 'column',
-      gap: theme.spacing(1),
       flex: 1,
       minWidth: '25%',
       justifyContent: 'flex-end',
