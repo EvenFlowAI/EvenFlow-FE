@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, TextField, Typography, InputAdornment } from '@mui/material';
+import { Button, InputAdornment, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import defaultLogo from '../../../../assets/img/logoSidebar.svg';
@@ -7,8 +7,6 @@ import {
   updateDealershipLogo,
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
-import ColorPicker, { Color } from '@rc-component/color-picker';
-import '@rc-component/color-picker/assets/index.css';
 import { useStyles } from './styles';
 import {
   ACCEPTED_EXTENSIONS,
@@ -23,6 +21,7 @@ import useClickOutside from '../../../../hooks/useClickOutside/useClickOutside';
 import { useParams } from 'react-router-dom';
 import { DEFAULT_SIDEBAR_HEX } from '../../../../utils/constants';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
+import { HexColorPicker } from 'react-colorful';
 
 export const AdminStyling: React.FC = () => {
   const dispatch = useDispatch();
@@ -204,13 +203,12 @@ export const AdminStyling: React.FC = () => {
   };
 
   const pickerColor = useMemo(() => {
-    const color = new Color(`#${localHex.padEnd(6, '0')}`);
-    return color;
+    return `#${localHex.padEnd(6, '0')}`;
   }, [localHex]);
 
-  const onPickerChange = useCallback((c: Color) => {
-    const hexStr = c.toHexString();
-    const hex = hexStr.replace('#', '');
+  const onPickerChange = useCallback((c: string) => {
+    // const hexStr = c.toHexString();
+    const hex = c.replace('#', '');
     const normalized = sanitizeHex(hex);
     setLocalHex(normalized);
     setHexTouched(true);
@@ -346,7 +344,7 @@ export const AdminStyling: React.FC = () => {
                 <div className={classes.previewWrapper}>
                   <div
                     className={classes.previewColorBox}
-                    style={{ backgroundColor: isValidFullHex(localHex) ? `#${localHex}` : '#fff' }}
+                    style={{ backgroundColor: `#${localHex}` }}
                     onMouseDown={() => {
                       previewClickFlagRef.current = true;
                     }}
@@ -356,12 +354,7 @@ export const AdminStyling: React.FC = () => {
                   />
                   {showPicker && (
                     <div className={classes.pickerPopover} ref={pickerRef}>
-                      <ColorPicker
-                        disabled={!isEdit}
-                        disabledAlpha
-                        value={pickerColor}
-                        onChange={onPickerChange}
-                      />
+                      <HexColorPicker color={pickerColor} onChange={e => onPickerChange(e)} />
                     </div>
                   )}
                 </div>
