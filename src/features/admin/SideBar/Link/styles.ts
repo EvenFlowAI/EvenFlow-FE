@@ -11,6 +11,8 @@ export const useStyles = makeStyles()(theme => ({
     lineHeight: '17px',
     fontWeight: 'bold',
     transition: theme.transitions.create(['color']),
+    position: 'relative',
+    paddingRight: theme.spacing(4),
     '&.active': {
       color: '#7898FF',
     },
