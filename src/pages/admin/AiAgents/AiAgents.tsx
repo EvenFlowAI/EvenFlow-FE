@@ -24,7 +24,7 @@ const AiAgents = () => {
     },
     {
       name: 'Insights Agent',
-      available: true,
+      available: false,
       description: 'Get answers from your personal business intelligence and data analyst',
       link: '/admin/insights-agent',
     },

@@ -22,6 +22,7 @@ import AiAgents from '../../pages/admin/AiAgents/AiAgents';
 import ConfigurationAgent from '../../pages/admin/ConfigurationAgent/ConfigurationAgent';
 import InsightsAgent from '../../pages/admin/InsightsAgent/InsightsAgent';
 import AnomalyAgent from '../../pages/admin/AnomalyAgent/AnomalyAgent';
+import { Roles } from '../../types/types';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
@@ -42,10 +43,26 @@ export const AdminRoutes = () => {
     { path: Routes.Employees.Base, component: EmployeesRoutes, condition: !isRestrictedRole },
     { path: Routes.CenterProfile.Base, component: CenterProfileRoutes },
     { path: Routes.Admin.Appointments, component: AppointmentsPage },
-    { path: Routes.Admin.AiAgents, component: AiAgents },
-    { path: Routes.Admin.ConfigurationAgent, component: ConfigurationAgent },
-    { path: Routes.Admin.InsightsAgent, component: InsightsAgent },
-    { path: Routes.Admin.AnomalyAgent, component: AnomalyAgent },
+    {
+      path: Routes.Admin.AiAgents,
+      component: AiAgents,
+      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+    },
+    {
+      path: Routes.Admin.ConfigurationAgent,
+      component: ConfigurationAgent,
+      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+    },
+    {
+      path: Routes.Admin.InsightsAgent,
+      component: InsightsAgent,
+      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+    },
+    {
+      path: Routes.Admin.AnomalyAgent,
+      component: AnomalyAgent,
+      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+    },
 
     {
       path: Routes.Dealer.Base,

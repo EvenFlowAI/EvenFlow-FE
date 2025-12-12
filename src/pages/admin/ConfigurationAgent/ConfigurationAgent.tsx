@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getAuthenticationTokenForAdmin } from '../../../api/helper';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import Agent from '../../../features/admin/Agent/Agent';
@@ -10,12 +10,13 @@ const ConfigurationAgent = () => {
   const { selectedSC } = useSCs();
   const accessToken = getAuthenticationTokenForAdmin();
   const { classes } = useStyles();
-  const iframe = document.getElementById('configuration-agent') as HTMLIFrameElement;
-  const [reloadKey, setReloadKey] = useState(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
 
   const sendDataToAgent = () => {
-    if (selectedSC && iframe) {
-      iframe.contentWindow?.postMessage(
+    const iframe = iframeRef.current;
+    if (selectedSC) {
+      iframe?.contentWindow?.postMessage(
         { scID: selectedSC.id, accessToken: accessToken },
         CONFIGURATION_AGENT_URL
       );
@@ -24,28 +25,29 @@ const ConfigurationAgent = () => {
   };
 
   useEffect(() => {
-    if (iframe) {
-      iframe.addEventListener('load', () => {
-        if (accessToken?.length && selectedSC) {
-          sendDataToAgent();
-        }
-      });
-    }
-  }, [iframe]);
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const handleLoad = () => {
+      setIframeLoaded(true);
+    };
+
+    iframe.addEventListener('load', handleLoad);
+    return () => iframe.removeEventListener('load', handleLoad);
+  }, []);
 
   useEffect(() => {
-    if (selectedSC && iframe) {
+    if (selectedSC && iframeRef.current && iframeLoaded) {
       sendDataToAgent();
-      setReloadKey(prev => prev + 1);
     }
-  }, [selectedSC?.id]);
+  }, [selectedSC?.id, iframeLoaded]);
 
   return (
     <>
       <Agent agentName={'Configuration Agent'} />
       <div className={classes.wrapper}>
         <iframe
-          key={reloadKey}
+          ref={iframeRef}
           id="configuration-agent"
           src={CONFIGURATION_AGENT_URL}
           width="100%"
