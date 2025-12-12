@@ -17,10 +17,12 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
     headerRow: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-start',
       padding: 0,
       borderRadius: 0,
       boxShadow: 'none',
+      width: '100%',
+      boxSizing: 'border-box',
     },
     grid: {
       display: 'grid',
@@ -32,7 +34,8 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
       flexDirection: 'column',
       gap: theme.spacing(2),
       background: theme.palette.background.paper,
-      padding: `${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(3)} ${theme.spacing(2)}`,
+      padding: theme.spacing(3), // 24px
+      boxSizing: 'border-box',
     },
     logoWrapper: {
       width: '214px',
@@ -93,6 +96,11 @@ export const useStyles = makeStyles<{ isEditMode: boolean; chosenColor?: string 
       display: 'flex',
       gap: theme.spacing(2),
       flexWrap: 'wrap',
+      marginLeft: 'auto',
+    },
+    actionButton: {
+      padding: 0,
+      minWidth: 'auto',
     },
     resetButtonBase: {
       alignSelf: 'stretch',

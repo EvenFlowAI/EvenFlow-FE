@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import defaultLogo from '../../../../assets/img/logoSidebar.svg';
 import {
+  setCustomLogoPath,
   updateDealershipLogo,
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
@@ -42,6 +43,7 @@ export const AdminStyling: React.FC = () => {
   const originalLogoRef = useRef<string | undefined>(customLogoPath);
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const previewClickFlagRef = useRef<boolean>(false);
+  const resetToDefaultRef = useRef<boolean>(false);
 
   const isHexError = useMemo(() => {
     if (!hexTouched) return false;
@@ -69,7 +71,7 @@ export const AdminStyling: React.FC = () => {
   useEffect(() => {
     if (isEdit) {
       setLocalHex(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
-      setLocalLogo(customLogoPath);
+      setLocalLogo(resetToDefaultRef.current ? defaultLogo : customLogoPath);
     }
   }, [isEdit, sidebarColorHex, customLogoPath]);
 
@@ -138,8 +140,20 @@ export const AdminStyling: React.FC = () => {
             showError(`Logo update failed: ${err}`);
             reject(err);
           },
-          () => {
-            setLocalLogo(localLogo);
+          async () => {
+            const isDefaultLogo = selectedFileRef.current!.name.includes(
+              defaultLogo.split('/').pop()!
+            );
+            if (isDefaultLogo) {
+              setLocalLogo(defaultLogo);
+              const file = await urlToFile(defaultLogo);
+              selectedFileRef.current = file;
+              if (fileInputRef.current) fileInputRef.current.value = '';
+              resetToDefaultRef.current = true;
+            } else {
+              setLocalLogo(localLogo);
+              resetToDefaultRef.current = false;
+            }
             resolve();
           }
         )
@@ -192,7 +206,9 @@ export const AdminStyling: React.FC = () => {
     setLocalLogo(defaultLogo);
     const file = await urlToFile(defaultLogo);
     selectedFileRef.current = file;
+    resetToDefaultRef.current = true;
     if (fileInputRef.current) fileInputRef.current.value = '';
+    dispatch(setCustomLogoPath(undefined));
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,7 +223,6 @@ export const AdminStyling: React.FC = () => {
   }, [localHex]);
 
   const onPickerChange = useCallback((c: string) => {
-    // const hexStr = c.toHexString();
     const hex = c.replace('#', '');
     const normalized = sanitizeHex(hex);
     setLocalHex(normalized);
@@ -255,6 +270,7 @@ export const AdminStyling: React.FC = () => {
     img.src = url;
   };
 
+  const isDefaultLogo = localLogo === defaultLogo || resetToDefaultRef.current;
   return (
     <div className={`${classes.root} ${classes.section}`}>
       <div className={classes.headerRow}>
@@ -268,17 +284,33 @@ export const AdminStyling: React.FC = () => {
         </Typography>
         <div className={classes.actionsRow}>
           {!isEdit ? (
-            <Button variant="text" color="primary" onClick={handleEdit}>
+            <Button
+              variant="text"
+              color="primary"
+              onClick={handleEdit}
+              className={classes.actionButton}
+            >
               Edit
             </Button>
           ) : saving ? (
             <Loading />
           ) : (
             <>
-              <Button variant="text" color="error" onClick={handleCancel}>
+              <Button
+                variant="text"
+                color="error"
+                onClick={handleCancel}
+                className={classes.actionButton}
+              >
                 Cancel
               </Button>
-              <Button variant="text" color="primary" onClick={handleSave} disabled={isHexError}>
+              <Button
+                variant="text"
+                color="primary"
+                onClick={handleSave}
+                disabled={isHexError}
+                className={classes.actionButton}
+              >
                 Save
               </Button>
             </>
@@ -309,7 +341,7 @@ export const AdminStyling: React.FC = () => {
                 color="textSecondary"
                 className={classes.helperTextWrapper}
               >
-                Upload a SVG or PNG file, and make sure its size does not exceed 2 MB
+                Upload an SVG or PNG file, and make sure its size does not exceed 2 MB
               </Typography>
             </div>
           </div>
@@ -317,10 +349,10 @@ export const AdminStyling: React.FC = () => {
             {isEdit && (
               <Button
                 variant="text"
-                color={localLogo !== defaultLogo ? 'primary' : 'inherit'}
+                color={isDefaultLogo ? 'inherit' : 'primary'}
                 onClick={handleResetLogo}
                 fullWidth
-                className={`${classes.resetButtonBase} ${localLogo !== defaultLogo ? classes.resetButtonPrimary : classes.resetButtonGrey}`}
+                className={`${classes.resetButtonBase} ${isDefaultLogo ? classes.resetButtonGrey : classes.resetButtonPrimary}`}
               >
                 Reset to Default
               </Button>
