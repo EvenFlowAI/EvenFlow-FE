@@ -49,7 +49,12 @@ export const DealershipGroupDetails = () => {
     }).then(r => {
       const dealershipData = r.data;
       setDealership(dealershipData);
-      dispatch(setCustomLogoPath(dealershipData.logoPath));
+      dispatch(
+        setCustomLogoPath({
+          value: dealershipData.logoPath,
+          isDefault: dealershipData.isDefaultLogo,
+        })
+      );
       dispatch(setSidebarColorHex(dealershipData.leftPanelColor));
     });
   }, [setDealership, id, dispatch]);

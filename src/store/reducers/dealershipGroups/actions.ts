@@ -54,7 +54,10 @@ export const setSidebarColorHex = (payload: string | undefined): DealershipActio
   payload,
 });
 
-export const setCustomLogoPath = (payload: string | undefined): DealershipActions => ({
+export const setCustomLogoPath = (payload: {
+  value: string | undefined;
+  isDefault: boolean;
+}): DealershipActions => ({
   type: 'Dealership/SetCustomLogoPath',
   payload,
 });
@@ -183,6 +186,7 @@ export const updateDealershipLogo =
   (
     id: number,
     logo: File,
+    isDefault: boolean,
     onError: (err?: string | unknown) => void,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -190,6 +194,7 @@ export const updateDealershipLogo =
     dispatch(saving(true));
     const data = new FormData();
     data.append('file', logo, logo.name);
+    data.append('isDefault', String(isDefault));
     Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
       urlParams: { id },
       data,
@@ -198,7 +203,7 @@ export const updateDealershipLogo =
         if (onSuccess) {
           onSuccess();
         }
-        dispatch(setCustomLogoPath(response.data));
+        dispatch(setCustomLogoPath({ value: response.data, isDefault }));
       })
       .catch(err => {
         console.log('updateDealershipLogo error', err);

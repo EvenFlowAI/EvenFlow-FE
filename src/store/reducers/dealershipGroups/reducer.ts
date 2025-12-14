@@ -10,6 +10,7 @@ const initialState: DealershipState = {
   searchTerm: '',
   sidebarColorHex: undefined,
   customLogoPath: undefined,
+  isDefaultLogo: false,
 };
 
 export const dealershipGroupsReducer = (
@@ -46,7 +47,11 @@ export const dealershipGroupsReducer = (
     case 'Dealership/SetSidebarColorHex':
       return { ...state, sidebarColorHex: action.payload };
     case 'Dealership/SetCustomLogoPath':
-      return { ...state, customLogoPath: action.payload };
+      return {
+        ...state,
+        customLogoPath: action.payload.value,
+        isDefaultLogo: action.payload.isDefault,
+      };
     default:
       return state;
   }
