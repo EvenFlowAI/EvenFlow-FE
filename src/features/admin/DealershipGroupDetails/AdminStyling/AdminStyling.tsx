@@ -126,7 +126,7 @@ export const AdminStyling: React.FC = () => {
   };
 
   const buildLogoUpdateOperation = (dealershipId: number): Promise<void> => {
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       // If user requested removal (reset) and there's no selected file, call removal action
       if (shouldRemoveLogoRef.current && !selectedFileRef.current) {
         dispatch(
@@ -272,9 +272,9 @@ export const AdminStyling: React.FC = () => {
     img.src = url;
   };
 
-  const isUsingDefaultLogo = !!selectedFileRef.current
-    ? false
-    : !customLogoPath || localLogo === '' || localLogo === defaultLogo || !localLogo;
+  const isUsingDefaultLogo =
+    !selectedFileRef.current &&
+    (!customLogoPath || localLogo === '' || localLogo === defaultLogo || !localLogo);
   return (
     <div className={`${classes.root} ${classes.section}`}>
       <div className={classes.headerRow}>
