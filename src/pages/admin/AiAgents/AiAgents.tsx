@@ -3,6 +3,8 @@ import { TitleContainer } from '../../../components/wrappers/TitleContainer/Titl
 import { Titles } from '../../../types/types';
 import { useStyles } from './styles';
 import { useHistory } from 'react-router-dom';
+import { Grid, Paper } from '@mui/material';
+import { useCenterSettingsStyles } from '../../../hooks/styling/useCenterSettingsStyles';
 
 interface AgentI {
   name: string;
@@ -13,6 +15,7 @@ interface AgentI {
 
 const AiAgents = () => {
   const { classes } = useStyles();
+  const { classes: centerSettingsClasses } = useCenterSettingsStyles();
   const history = useHistory();
 
   const AIAgentsList: AgentI[] = [
@@ -43,24 +46,26 @@ const AiAgents = () => {
   return (
     <React.Fragment>
       <TitleContainer title={Titles.AiAgents} pad />
-      <div className={classes.wrapper}>
+      <Grid container spacing={3}>
         {AIAgentsList.map((agent: AgentI) => (
-          <div key={agent.name} className={classes.agent}>
-            <div className={classes.header}>
-              <span className={classes.title}>{agent.name}</span>
-              <p onClick={() => redirectToAgent(agent.link)} className={classes.redirectButton}>
-                {agent.available ? 'Start Chat' : 'View'}
+          <Grid item xs={6} md={4} key={agent.name}>
+            <Paper className={centerSettingsClasses.paper} variant={'outlined'}>
+              <div className={classes.header}>
+                <span className={classes.title}>{agent.name}</span>
+                <p onClick={() => redirectToAgent(agent.link)} className={classes.redirectButton}>
+                  {agent.available ? 'Start Chat' : 'View'}
+                </p>
+              </div>
+              <p className={classes.agentAvailability}>
+                {agent.available ? 'Active' : 'Coming Soon'}
               </p>
-            </div>
-            <p className={classes.agentAvailability}>
-              {agent.available ? 'Active' : 'Coming Soon'}
-            </p>
-            <div>
-              <span>{agent.description}</span>
-            </div>
-          </div>
+              <div>
+                <span>{agent.description}</span>
+              </div>
+            </Paper>
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </React.Fragment>
   );
 };

@@ -42,7 +42,7 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
   {
     to: Routes.Admin.AiAgents,
     name: 'AI Agents (BETA)',
-    roles: [Roles.EvenFlowAdmin, Roles.DealerOwner],
+    roles: [Roles.DealerOwner],
   },
 
   {

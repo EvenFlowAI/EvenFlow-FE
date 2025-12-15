@@ -50,7 +50,17 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     if (matchPath(pathname, Routes.Admin.Base) && currentUser?.isSuperUser) {
       return SULinks;
     }
-    return MainLinksWithSub;
+
+    const isDealerOwnerSuperAdmin =
+      Boolean(currentUser?.adminDealership) && currentUser?.role === Roles.DealerOwner;
+
+    // AI agents link visible only for dealer owner super admins
+    return MainLinksWithSub.filter(link => {
+      if (link.to === '/admin/ai-agents') {
+        return isDealerOwnerSuperAdmin;
+      }
+      return true;
+    });
   }, [currentUser, pathname]);
 
   const baseRoles: TRole[] = [

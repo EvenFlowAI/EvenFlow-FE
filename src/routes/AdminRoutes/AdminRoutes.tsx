@@ -31,6 +31,8 @@ export const AdminRoutes = () => {
 
   const isRestrictedRole = ['BDC Agent', 'Advisor', 'Technician'].includes(currentUser.role);
   const isSuperUser = currentUser.isSuperUser;
+  const isDealerOwnerSuperAdmin =
+    Boolean(currentUser.adminDealership) && currentUser?.role === Roles.DealerOwner;
 
   const superUserRoutes = [
     { path: Routes.Admin.DealershipGroups, exact: true, component: DealershipGroups },
@@ -46,22 +48,22 @@ export const AdminRoutes = () => {
     {
       path: Routes.Admin.AiAgents,
       component: AiAgents,
-      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+      condition: isDealerOwnerSuperAdmin,
     },
     {
       path: Routes.Admin.ConfigurationAgent,
       component: ConfigurationAgent,
-      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+      condition: isDealerOwnerSuperAdmin,
     },
     {
       path: Routes.Admin.InsightsAgent,
       component: InsightsAgent,
-      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+      condition: isDealerOwnerSuperAdmin,
     },
     {
       path: Routes.Admin.AnomalyAgent,
       component: AnomalyAgent,
-      condition: currentUser?.role === Roles.DealerOwner || Roles.EvenFlowAdmin,
+      condition: isDealerOwnerSuperAdmin,
     },
 
     {

@@ -1,16 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()(() => ({
-  wrapper: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  agent: {
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-    width: '30%',
-    padding: '24px',
-  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
