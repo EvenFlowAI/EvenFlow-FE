@@ -9,13 +9,7 @@ import {
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
 import { useStyles } from './styles';
-import {
-  ACCEPTED_EXTENSIONS,
-  isValidFullHex,
-  MAX_FILE_SIZE_MB,
-  sanitizeHex,
-  urlToFile,
-} from './helpers';
+import { ACCEPTED_EXTENSIONS, isValidFullHex, MAX_FILE_SIZE_MB, sanitizeHex } from './helpers';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import useClickOutside from '../../../../hooks/useClickOutside/useClickOutside';
@@ -44,7 +38,6 @@ export const AdminStyling: React.FC = () => {
   const originalLogoRef = useRef<string | undefined>(customLogoPath);
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const previewClickFlagRef = useRef<boolean>(false);
-  const isDefaultLogoLocalRef = useRef<boolean>(!customLogoPath);
 
   const isHexError = useMemo(() => {
     if (!hexTouched) return false;
@@ -72,9 +65,8 @@ export const AdminStyling: React.FC = () => {
   useEffect(() => {
     if (isEdit) {
       setLocalHex(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
-      setLocalLogo(isDefaultLogoLocalRef.current ? defaultLogo : customLogoPath);
+      setLocalLogo(customLogoPath || defaultLogo);
     }
-    // Intentionally not adding ref to deps
   }, [isEdit, sidebarColorHex, customLogoPath]);
 
   const handleEdit = () => {
@@ -91,8 +83,6 @@ export const AdminStyling: React.FC = () => {
     setLocalHex(originalHexRef.current);
     setLocalLogo(originalLogoRef.current);
     selectedFileRef.current = null;
-    isDefaultLogoLocalRef.current =
-      !originalLogoRef.current || originalLogoRef.current === defaultLogo;
     shouldRemoveLogoRef.current = false;
     setHexTouched(false);
     setShowPicker(false);
@@ -150,7 +140,6 @@ export const AdminStyling: React.FC = () => {
               setLocalLogo(defaultLogo);
               selectedFileRef.current = null;
               shouldRemoveLogoRef.current = false;
-              isDefaultLogoLocalRef.current = true;
               resolve();
             }
           )
@@ -158,7 +147,6 @@ export const AdminStyling: React.FC = () => {
         return;
       }
 
-      const isDefault = selectedFileRef.current!.name.includes(defaultLogo.split('/').pop()!);
       dispatch(
         updateDealershipLogo(
           dealershipId,
@@ -168,16 +156,7 @@ export const AdminStyling: React.FC = () => {
             reject(err);
           },
           async () => {
-            if (isDefault) {
-              setLocalLogo(defaultLogo);
-              const file = await urlToFile(defaultLogo);
-              selectedFileRef.current = file;
-              if (fileInputRef.current) fileInputRef.current.value = '';
-              isDefaultLogoLocalRef.current = true;
-            } else {
-              setLocalLogo(localLogo);
-              isDefaultLogoLocalRef.current = false;
-            }
+            setLocalLogo(localLogo);
             resolve();
           }
         )
@@ -232,7 +211,6 @@ export const AdminStyling: React.FC = () => {
     selectedFileRef.current = null;
     if (fileInputRef.current) fileInputRef.current.value = '';
     shouldRemoveLogoRef.current = true;
-    isDefaultLogoLocalRef.current = true;
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -285,7 +263,6 @@ export const AdminStyling: React.FC = () => {
     img.onload = () => {
       selectedFileRef.current = file;
       setLocalLogo(url);
-      isDefaultLogoLocalRef.current = false;
     };
     img.onerror = () => {
       showError('Unable to read image. Please try another file');
@@ -295,8 +272,9 @@ export const AdminStyling: React.FC = () => {
     img.src = url;
   };
 
-  const isDefaultLogoSrc =
-    localLogo === '' || localLogo === defaultLogo || isDefaultLogoLocalRef.current;
+  const isUsingDefaultLogo = !!selectedFileRef.current
+    ? false
+    : !customLogoPath || localLogo === '' || localLogo === defaultLogo || !localLogo;
   return (
     <div className={`${classes.root} ${classes.section}`}>
       <div className={classes.headerRow}>
@@ -375,10 +353,10 @@ export const AdminStyling: React.FC = () => {
             {isEdit && (
               <Button
                 variant="text"
-                color={isDefaultLogoSrc ? 'inherit' : 'primary'}
+                color={isUsingDefaultLogo ? 'inherit' : 'primary'}
                 onClick={handleResetLogo}
                 fullWidth
-                className={`${classes.resetButtonBase} ${isDefaultLogoSrc ? classes.resetButtonGrey : classes.resetButtonPrimary}`}
+                className={`${classes.resetButtonBase} ${isUsingDefaultLogo ? classes.resetButtonGrey : classes.resetButtonPrimary}`}
               >
                 Reset to Default
               </Button>
