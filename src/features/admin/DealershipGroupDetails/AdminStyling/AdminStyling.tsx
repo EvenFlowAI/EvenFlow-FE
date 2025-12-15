@@ -5,6 +5,7 @@ import { RootState } from '../../../../store/rootReducer';
 import defaultLogo from '../../../../assets/img/logoSidebar.svg';
 import {
   updateDealershipLogo,
+  removeDealershipLogo,
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
 import { useStyles } from './styles';
@@ -27,7 +28,7 @@ export const AdminStyling: React.FC = () => {
   const dispatch = useDispatch();
   const showMessage = useMessage();
   const showError = useException();
-  const { sidebarColorHex, customLogoPath, isDefaultLogo, saving } = useSelector(
+  const { sidebarColorHex, customLogoPath, saving } = useSelector(
     (s: RootState) => s.dealershipGroups
   );
 
@@ -38,11 +39,12 @@ export const AdminStyling: React.FC = () => {
   const [showPicker, setShowPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const selectedFileRef = useRef<File | null>(null);
+  const shouldRemoveLogoRef = useRef<boolean>(false);
   const originalHexRef = useRef<string>(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
   const originalLogoRef = useRef<string | undefined>(customLogoPath);
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const previewClickFlagRef = useRef<boolean>(false);
-  const isDefaultLogoLocalRef = useRef<boolean>(isDefaultLogo);
+  const isDefaultLogoLocalRef = useRef<boolean>(!customLogoPath);
 
   const isHexError = useMemo(() => {
     if (!hexTouched) return false;
@@ -89,7 +91,9 @@ export const AdminStyling: React.FC = () => {
     setLocalHex(originalHexRef.current);
     setLocalLogo(originalLogoRef.current);
     selectedFileRef.current = null;
-    isDefaultLogoLocalRef.current = originalLogoRef.current === defaultLogo || isDefaultLogo;
+    isDefaultLogoLocalRef.current =
+      !originalLogoRef.current || originalLogoRef.current === defaultLogo;
+    shouldRemoveLogoRef.current = false;
     setHexTouched(false);
     setShowPicker(false);
     setIsEdit(false);
@@ -127,17 +131,38 @@ export const AdminStyling: React.FC = () => {
   };
 
   const shouldUpdateLogo = (dealershipId: number | null): boolean => {
-    return !!dealershipId && !!selectedFileRef.current;
+    // Update on save if there's a selected file OR the user requested a reset
+    return !!dealershipId && (!!selectedFileRef.current || shouldRemoveLogoRef.current);
   };
 
   const buildLogoUpdateOperation = (dealershipId: number): Promise<void> => {
-    const isDefault = selectedFileRef.current!.name.includes(defaultLogo.split('/').pop()!);
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
+      // If user requested removal (reset) and there's no selected file, call removal action
+      if (shouldRemoveLogoRef.current && !selectedFileRef.current) {
+        dispatch(
+          removeDealershipLogo(
+            dealershipId,
+            err => {
+              showError(`Logo removal failed: ${err}`);
+              reject(err);
+            },
+            () => {
+              setLocalLogo(defaultLogo);
+              selectedFileRef.current = null;
+              shouldRemoveLogoRef.current = false;
+              isDefaultLogoLocalRef.current = true;
+              resolve();
+            }
+          )
+        );
+        return;
+      }
+
+      const isDefault = selectedFileRef.current!.name.includes(defaultLogo.split('/').pop()!);
       dispatch(
         updateDealershipLogo(
           dealershipId,
           selectedFileRef.current!,
-          isDefault,
           err => {
             showError(`Logo update failed: ${err}`);
             reject(err);
@@ -202,11 +227,12 @@ export const AdminStyling: React.FC = () => {
   };
 
   const handleResetLogo = async () => {
+    // Show default locally and clear selected file
     setLocalLogo(defaultLogo);
-    isDefaultLogoLocalRef.current = true;
-    const file = await urlToFile(defaultLogo);
-    selectedFileRef.current = file;
+    selectedFileRef.current = null;
     if (fileInputRef.current) fileInputRef.current.value = '';
+    shouldRemoveLogoRef.current = true;
+    isDefaultLogoLocalRef.current = true;
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

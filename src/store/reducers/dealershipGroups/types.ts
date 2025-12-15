@@ -5,7 +5,6 @@ export interface IDealershipGroupShort {
   name: string;
   avatarPath: string;
   logoPath: string;
-  isDefaultLogo: boolean;
   leftPanelColor?: string;
 }
 
@@ -62,7 +61,7 @@ type SetSearchTerm = { type: 'Dealership/SetSearchTerm'; payload: string };
 type SetSidebarColorHex = { type: 'Dealership/SetSidebarColorHex'; payload: string | undefined };
 type SetCustomLogoPath = {
   type: 'Dealership/SetCustomLogoPath';
-  payload: { value: string | undefined; isDefault: boolean };
+  payload: string | undefined;
 };
 
 export type DealershipActions =
@@ -88,5 +87,4 @@ export type DealershipState = {
   searchTerm: string;
   sidebarColorHex?: string; // 6-char hex without '#'
   customLogoPath?: string;
-  isDefaultLogo: boolean;
 };

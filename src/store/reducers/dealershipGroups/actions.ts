@@ -54,10 +54,7 @@ export const setSidebarColorHex = (payload: string | undefined): DealershipActio
   payload,
 });
 
-export const setCustomLogoPath = (payload: {
-  value: string | undefined;
-  isDefault: boolean;
-}): DealershipActions => ({
+export const setCustomLogoPath = (payload: string | undefined): DealershipActions => ({
   type: 'Dealership/SetCustomLogoPath',
   payload,
 });
@@ -186,7 +183,6 @@ export const updateDealershipLogo =
   (
     id: number,
     logo: File,
-    isDefault: boolean,
     onError: (err?: string | unknown) => void,
     onSuccess?: TCallback
   ): AppThunk =>
@@ -194,7 +190,6 @@ export const updateDealershipLogo =
     dispatch(saving(true));
     const data = new FormData();
     data.append('file', logo, logo.name);
-    data.append('isDefault', String(isDefault));
     Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
       urlParams: { id },
       data,
@@ -203,10 +198,31 @@ export const updateDealershipLogo =
         if (onSuccess) {
           onSuccess();
         }
-        dispatch(setCustomLogoPath({ value: response.data, isDefault }));
+        dispatch(setCustomLogoPath(response.data));
       })
       .catch(err => {
         console.log('updateDealershipLogo error', err);
+        onError(err);
+      })
+      .finally(() => {
+        dispatch(saving(false));
+      });
+  };
+
+export const removeDealershipLogo =
+  (id: number, onError: (err?: string | unknown) => void, onSuccess?: TCallback): AppThunk =>
+  async dispatch => {
+    dispatch(saving(true));
+    // Backend handles null by removing stored logo.
+    Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
+      urlParams: { id },
+    })
+      .then(() => {
+        if (onSuccess) onSuccess();
+        dispatch(setCustomLogoPath(undefined));
+      })
+      .catch(err => {
+        console.log('removeDealershipLogo error', err);
         onError(err);
       })
       .finally(() => {
