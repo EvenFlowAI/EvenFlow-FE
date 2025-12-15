@@ -59,7 +59,10 @@ type Remove = { type: 'Dealership/Remove'; payload: number };
 type Profile = { type: 'Dealership/Profile'; payload: IDealershipProfile };
 type SetSearchTerm = { type: 'Dealership/SetSearchTerm'; payload: string };
 type SetSidebarColorHex = { type: 'Dealership/SetSidebarColorHex'; payload: string | undefined };
-type SetCustomLogoPath = { type: 'Dealership/SetCustomLogoPath'; payload: string | undefined };
+type SetCustomLogoPath = {
+  type: 'Dealership/SetCustomLogoPath';
+  payload: string | undefined;
+};
 
 export type DealershipActions =
   | AddDealership

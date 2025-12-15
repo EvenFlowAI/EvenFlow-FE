@@ -209,6 +209,27 @@ export const updateDealershipLogo =
       });
   };
 
+export const removeDealershipLogo =
+  (id: number, onError: (err?: string | unknown) => void, onSuccess?: TCallback): AppThunk =>
+  async dispatch => {
+    dispatch(saving(true));
+    // Backend handles null by removing stored logo.
+    Api.call<string>(Api.endpoints.Dealerships.UploadLogo, {
+      urlParams: { id },
+    })
+      .then(() => {
+        if (onSuccess) onSuccess();
+        dispatch(setCustomLogoPath(undefined));
+      })
+      .catch(err => {
+        console.log('removeDealershipLogo error', err);
+        onError(err);
+      })
+      .finally(() => {
+        dispatch(saving(false));
+      });
+  };
+
 export const updateLeftPanelColor =
   (
     id: number,

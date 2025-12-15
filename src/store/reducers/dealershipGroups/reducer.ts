@@ -46,7 +46,10 @@ export const dealershipGroupsReducer = (
     case 'Dealership/SetSidebarColorHex':
       return { ...state, sidebarColorHex: action.payload };
     case 'Dealership/SetCustomLogoPath':
-      return { ...state, customLogoPath: action.payload };
+      return {
+        ...state,
+        customLogoPath: action.payload,
+      };
     default:
       return state;
   }
