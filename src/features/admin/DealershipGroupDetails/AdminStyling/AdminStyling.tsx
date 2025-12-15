@@ -4,18 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import defaultLogo from '../../../../assets/img/logoSidebar.svg';
 import {
-  setCustomLogoPath,
   updateDealershipLogo,
+  removeDealershipLogo,
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
 import { useStyles } from './styles';
-import {
-  ACCEPTED_EXTENSIONS,
-  isValidFullHex,
-  MAX_FILE_SIZE_MB,
-  sanitizeHex,
-  urlToFile,
-} from './helpers';
+import { ACCEPTED_EXTENSIONS, isValidFullHex, MAX_FILE_SIZE_MB, sanitizeHex } from './helpers';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import useClickOutside from '../../../../hooks/useClickOutside/useClickOutside';
@@ -39,11 +33,11 @@ export const AdminStyling: React.FC = () => {
   const [showPicker, setShowPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const selectedFileRef = useRef<File | null>(null);
+  const shouldRemoveLogoRef = useRef<boolean>(false);
   const originalHexRef = useRef<string>(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
   const originalLogoRef = useRef<string | undefined>(customLogoPath);
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const previewClickFlagRef = useRef<boolean>(false);
-  const resetToDefaultRef = useRef<boolean>(false);
 
   const isHexError = useMemo(() => {
     if (!hexTouched) return false;
@@ -71,7 +65,7 @@ export const AdminStyling: React.FC = () => {
   useEffect(() => {
     if (isEdit) {
       setLocalHex(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
-      setLocalLogo(resetToDefaultRef.current ? defaultLogo : customLogoPath);
+      setLocalLogo(customLogoPath || defaultLogo);
     }
   }, [isEdit, sidebarColorHex, customLogoPath]);
 
@@ -89,12 +83,12 @@ export const AdminStyling: React.FC = () => {
     setLocalHex(originalHexRef.current);
     setLocalLogo(originalLogoRef.current);
     selectedFileRef.current = null;
+    shouldRemoveLogoRef.current = false;
     setHexTouched(false);
     setShowPicker(false);
     setIsEdit(false);
   };
 
-  // Helpers: validation and building async ops
   const validateHexOrShowError = (): boolean => {
     if (!isValidFullHex(localHex)) {
       showError('Hex color is invalid. Please correct it before saving.');
@@ -127,11 +121,32 @@ export const AdminStyling: React.FC = () => {
   };
 
   const shouldUpdateLogo = (dealershipId: number | null): boolean => {
-    return !!dealershipId && !!selectedFileRef.current;
+    // Update on save if there's a selected file OR the user requested a reset
+    return !!dealershipId && (!!selectedFileRef.current || shouldRemoveLogoRef.current);
   };
 
   const buildLogoUpdateOperation = (dealershipId: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
+      // If user requested removal (reset) and there's no selected file, call removal action
+      if (shouldRemoveLogoRef.current && !selectedFileRef.current) {
+        dispatch(
+          removeDealershipLogo(
+            dealershipId,
+            err => {
+              showError(`Logo removal failed: ${err}`);
+              reject(err);
+            },
+            () => {
+              setLocalLogo(defaultLogo);
+              selectedFileRef.current = null;
+              shouldRemoveLogoRef.current = false;
+              resolve();
+            }
+          )
+        );
+        return;
+      }
+
       dispatch(
         updateDealershipLogo(
           dealershipId,
@@ -141,19 +156,7 @@ export const AdminStyling: React.FC = () => {
             reject(err);
           },
           async () => {
-            const isDefaultLogo = selectedFileRef.current!.name.includes(
-              defaultLogo.split('/').pop()!
-            );
-            if (isDefaultLogo) {
-              setLocalLogo(defaultLogo);
-              const file = await urlToFile(defaultLogo);
-              selectedFileRef.current = file;
-              if (fileInputRef.current) fileInputRef.current.value = '';
-              resetToDefaultRef.current = true;
-            } else {
-              setLocalLogo(localLogo);
-              resetToDefaultRef.current = false;
-            }
+            setLocalLogo(localLogo);
             resolve();
           }
         )
@@ -203,12 +206,11 @@ export const AdminStyling: React.FC = () => {
   };
 
   const handleResetLogo = async () => {
+    // Show default locally and clear selected file
     setLocalLogo(defaultLogo);
-    const file = await urlToFile(defaultLogo);
-    selectedFileRef.current = file;
-    resetToDefaultRef.current = true;
+    selectedFileRef.current = null;
     if (fileInputRef.current) fileInputRef.current.value = '';
-    dispatch(setCustomLogoPath(undefined));
+    shouldRemoveLogoRef.current = true;
   };
 
   const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -270,7 +272,9 @@ export const AdminStyling: React.FC = () => {
     img.src = url;
   };
 
-  const isDefaultLogo = localLogo === defaultLogo || resetToDefaultRef.current;
+  const isUsingDefaultLogo =
+    !selectedFileRef.current &&
+    (!customLogoPath || localLogo === '' || localLogo === defaultLogo || !localLogo);
   return (
     <div className={`${classes.root} ${classes.section}`}>
       <div className={classes.headerRow}>
@@ -349,10 +353,10 @@ export const AdminStyling: React.FC = () => {
             {isEdit && (
               <Button
                 variant="text"
-                color={isDefaultLogo ? 'inherit' : 'primary'}
+                color={isUsingDefaultLogo ? 'inherit' : 'primary'}
                 onClick={handleResetLogo}
                 fullWidth
-                className={`${classes.resetButtonBase} ${isDefaultLogo ? classes.resetButtonGrey : classes.resetButtonPrimary}`}
+                className={`${classes.resetButtonBase} ${isUsingDefaultLogo ? classes.resetButtonGrey : classes.resetButtonPrimary}`}
               >
                 Reset to Default
               </Button>
