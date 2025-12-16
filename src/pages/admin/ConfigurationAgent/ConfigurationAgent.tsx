@@ -4,7 +4,10 @@ import { useSCs } from '../../../hooks/useSCs/useSCs';
 import Agent from '../../../features/admin/Agent/Agent';
 import { useStyles } from './styles';
 
-const CONFIGURATION_AGENT_URL = 'https://main.d3v088l5chpnmg.amplifyapp.com/';
+const CONFIGURATION_AGENT_URL =
+  process.env.REACT_APP_ENV === 'production'
+    ? 'https://main.d3v088l5chpnmg.amplifyapp.com/'
+    : 'https://develop.d3v088l5chpnmg.amplifyapp.com/';
 
 const ConfigurationAgent = () => {
   const { selectedSC } = useSCs();
