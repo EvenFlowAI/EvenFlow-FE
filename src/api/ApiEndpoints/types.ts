@@ -50,7 +50,6 @@ export interface IApiEndpoints {
   AppointmentPricing: Record<'GetPriceList', TApiEndpoint>;
   AppointmentSlots: Record<'GetSlots' | 'GetServiceValetSlots', TApiEndpoint>;
   Authentications: Record<'Request' | 'Refresh' | 'Anonymous', TApiEndpoint>;
-  Bays: Record<'Create' | 'Update' | 'Remove' | 'Retrieve' | 'GetAll' | 'GetShort', TApiEndpoint>;
   BookingFlowConfig: Record<'Get' | 'Update', TApiEndpoint>;
   BookingFlowScreenSettings: Record<'GetEmailRequirement' | 'UpdateEmailRequirement', TApiEndpoint>;
   CapacityManagement: Record<'Reallocate', TApiEndpoint>;

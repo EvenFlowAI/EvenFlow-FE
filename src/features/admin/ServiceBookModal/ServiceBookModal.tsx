@@ -29,7 +29,6 @@ import {
   setPodById,
   updatePod,
 } from '../../../store/reducers/pods/actions';
-import { loadBaysShort } from '../../../store/reducers/bays/actions';
 import { IMake, IModel } from '../../../api/types';
 import { getOptions, getTransportationOptionString } from '../../../utils/utils';
 import {
@@ -57,7 +56,6 @@ const initialForm: TForm = {
   description: '',
   advisors: [],
   technicians: [],
-  bays: [],
   serviceRequests: [],
   isVisitCenter: true,
 };
@@ -138,7 +136,6 @@ export const ServiceBookModal: React.FC<
       setForm({
         ...initialForm,
         ...podById,
-        bays: podById?.bays ?? [],
       });
       if (typeof podById?.jobType !== 'undefined') {
         const selectedJobType = jobTypeOptions.find(item => item.value === podById.jobType);
@@ -243,7 +240,6 @@ export const ServiceBookModal: React.FC<
       dispatch(loadSCAdvisors(selectedSC.id));
       dispatch(loadSCEmployees(selectedSC.id));
       dispatch(loadSCRequestsShort(selectedSC.id));
-      dispatch(loadBaysShort(selectedSC.id));
       dispatch(loadMakesGlobally(selectedSC.id));
       dispatch(loadMobServiceZones(selectedSC.id));
       dispatch(loadServiceValetZones(selectedSC.id));
@@ -345,7 +341,6 @@ export const ServiceBookModal: React.FC<
         try {
           const data: IPodForm = {
             advisors: form.advisors.map(el => el.id),
-            bays: form.bays.map(item => item.id),
             description: form.description,
             name: form.name?.trim(),
             serviceCenterId: selectedSC.id,

@@ -109,7 +109,7 @@
 
 - Service booking and appointment scheduling
 - Dealership operations and resource management
-- Employee and bay capacity optimization
+- Employee capacity optimization
 - Customer transportation coordination
 - Multi-location dealership network management
 
@@ -125,7 +125,7 @@
 2. **Dealership Operations**
    - Multiple dealership locations (service centers)
    - Employee management and scheduling
-   - Bay/facility capacity management
+   - Facility capacity management
    - Service consultant allocation
    - Pod (service area) management
 

@@ -96,14 +96,6 @@ export class Api {
       Refresh: { route: '/authentications/refresh', method: 'post' },
       Anonymous: { route: '/authentications/anonymous ', method: 'post' },
     },
-    Bays: {
-      Create: { route: '/bays', method: 'post' },
-      Update: { route: '/bays/{id}', method: 'put' },
-      Remove: { route: '/bays/{id}', method: 'delete' },
-      Retrieve: { route: '/bays/{id}', method: 'get' },
-      GetAll: { route: '/bays/by-query', method: 'post' },
-      GetShort: { route: '/bays/short-by-query', method: 'post' },
-    },
     BookingFlowConfig: {
       Get: { route: '/booking-flow/{id}/settings', method: 'get' },
       Update: { route: '/booking-flow/{id}/settings', method: 'put' },

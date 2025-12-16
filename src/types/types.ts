@@ -290,7 +290,6 @@ export type TDashboardItem = {
 };
 export type TDashboardCountData = {
   technicians: number;
-  bays: number;
   pods: number;
   appointments: number;
 };
