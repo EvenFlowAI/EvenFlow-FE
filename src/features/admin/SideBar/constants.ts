@@ -40,6 +40,12 @@ export const SULinks: LinkTypeWithSub[] = [
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [
   {
+    to: Routes.Admin.AiAgents,
+    name: 'AI Agents (BETA)',
+    roles: [Roles.DealerOwner],
+  },
+
+  {
     to: Routes.CenterProfile.Base,
     name: 'Center Profile',
     roles: baseRoles,
