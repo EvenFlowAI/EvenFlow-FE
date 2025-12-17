@@ -9,8 +9,6 @@ const CONFIGURATION_AGENT_URL =
     ? 'https://main.d3v088l5chpnmg.amplifyapp.com/'
     : 'https://develop.d3v088l5chpnmg.amplifyapp.com/';
 
-console.log('env: ', process.env.REACT_APP_ENV);
-
 const ConfigurationAgent = () => {
   const { selectedSC } = useSCs();
   const accessToken = getAuthenticationTokenForAdmin();
