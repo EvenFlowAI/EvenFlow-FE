@@ -84,7 +84,23 @@ export const CancelAppointment = () => {
   const getData = (): JSX.Element | null => {
     switch (tState) {
       case 'already_canceled':
-        return <p>{t('appointment canceled')}.</p>;
+        return (
+          <div>
+            <p>{t('Appointment is already cancelled')}.</p>
+            <p>
+              <small>{t('Schedule different appointment')}</small>
+            </p>{' '}
+            <br />
+            <Button
+              onClick={handleCreateNew}
+              startIcon={<Edit />}
+              color="primary"
+              variant="contained"
+            >
+              {t('Schedule appointment')}
+            </Button>
+          </div>
+        );
       case 'canceled':
         return (
           <div>

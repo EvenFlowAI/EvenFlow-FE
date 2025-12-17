@@ -163,11 +163,13 @@ export interface IDriverInfo {
 
 export enum AppointmentStatus {
   Active,
+  Rescheduled,
   Cancelled,
 }
 
 export const appointmentStatuses: TEnumKeyLabel<AppointmentStatus> = {
   [AppointmentStatus.Active]: 'Active',
+  [AppointmentStatus.Rescheduled]: 'Rescheduled',
   [AppointmentStatus.Cancelled]: 'Canceled',
 };
 

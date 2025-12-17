@@ -48,8 +48,8 @@ export const transformTransportationRules = (
         name: rule.name,
         daysOfWeek: days,
         timeOfDay: {
-          start: parseTime(rule.timeOfDay?.start),
-          end: parseTime(rule.timeOfDay?.end),
+          start: rule.timeOfDay?.start ? parseTime(rule.timeOfDay?.start) : null,
+          end: rule.timeOfDay?.end ? parseTime(rule.timeOfDay?.end) : null,
         },
         serviceRequests: updatedServiceRequests,
         serviceRequestFilterMode: serviceRequestFilterMode,
@@ -145,8 +145,12 @@ export const getOriginalRuleState = (
     name: original.name,
     daysOfWeek: days,
     timeOfDay: {
-      start: dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds),
-      end: dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds),
+      start: original.timeOfDay.start
+        ? dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds)
+        : null,
+      end: original.timeOfDay?.end
+        ? dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds)
+        : null,
     },
     serviceRequests: updatedServiceRequests,
     serviceRequestFilterMode: serviceRequestFilterMode,
