@@ -5,9 +5,11 @@ import Agent from '../../../features/admin/Agent/Agent';
 import { useStyles } from './styles';
 
 const CONFIGURATION_AGENT_URL =
-  process.env.REACT_APP_ENV === 'production'
+  process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
     ? 'https://main.d3v088l5chpnmg.amplifyapp.com/'
     : 'https://develop.d3v088l5chpnmg.amplifyapp.com/';
+
+console.log('env: ', process.env.REACT_APP_ENV);
 
 const ConfigurationAgent = () => {
   const { selectedSC } = useSCs();
