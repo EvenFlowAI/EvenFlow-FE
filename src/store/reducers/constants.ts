@@ -23,7 +23,6 @@ export const initialCustomerSearch: TCustomerSearchData = {
 
 export const blankAnalytics: ISCAnalytics = {
   countOfAppointmentsToday: 0,
-  countOfBays: 0,
   countOfPods: 0,
   countOfTechnicians: 0,
 };

@@ -1,5 +1,4 @@
 import { IAdvisorShort } from '../users/types';
-import { IBayShort } from '../bays/types';
 import { IAssignedServiceRequestShort } from '../serviceRequests/types';
 import { IEngineType } from '../vehicleDetails/types';
 import { IPageRequest, IPagingResponse } from '../../../types/types';
@@ -41,7 +40,6 @@ export interface IPod {
   description?: string;
   advisorId?: string;
   advisors: IAdvisorShort[];
-  bays?: IBayShort[];
   technicians?: IAdvisorShort[];
   serviceRequests?: IAssignedServiceRequestShort[];
   vehicleMakes?: IPodVehicleMake[];
@@ -68,7 +66,6 @@ export interface IPodForm {
   advisors?: string[];
   technicians?: string[];
   serviceRequests?: number[];
-  bays?: number[];
   vehicleMakes: number[];
   vehicleModels: number[];
   jobType?: EJobType;

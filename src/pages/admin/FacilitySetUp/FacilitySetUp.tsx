@@ -3,11 +3,9 @@ import { Grid, Paper } from '@mui/material';
 import { HourOfOperationsModal } from '../../../features/admin/HourOfOperationsModal/HourOfOperationsModal';
 import { HolidaysModal } from '../../../features/admin/HolidaysModal/HolidaysModal';
 import { BreaksModal } from '../../../features/admin/BreaksModal/BreaksModal';
-import { Bays } from '../../../components/modals/admin/Bays/Bays';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { ReactComponent as LaborRateIcon } from '../../../assets/img/labor_rate.svg';
 import { ReactComponent as HoursIcon } from '../../../assets/img/Icon 2 Hours of operation.svg';
-import { ReactComponent as BaysIcon } from '../../../assets/img/Icon_6 _Bays.svg';
 import { ReactComponent as BreaksIcon } from '../../../assets/img/Icon 4 Breaks.svg';
 import { ReactComponent as LockOutlined } from '../../../assets/img/Icon 5 Holidays.svg';
 import LaborRateModal from '../../../features/admin/LaborRateModal/LaborRateModal';
@@ -34,7 +32,6 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
   const { onClose: onCloseHOO, onOpen: onOpenHOO, isOpen: isHOOOpen } = useModal();
   const { onClose: onCloseB, onOpen: onOpenB, isOpen: isBOpen } = useModal();
   const { onClose: onCloseH, onOpen: onOpenH, isOpen: isHOpen } = useModal();
-  const { onClose: onCloseBays, onOpen: onOpenBays, isOpen: isBaysOpen } = useModal();
   const {
     onClose: onCloseLaborRate,
     onOpen: onOpenLaborRate,
@@ -45,7 +42,6 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
     { label: 'Hours of operation', icon: <HoursIcon />, action: onOpenHOO },
     { label: 'Holidays', icon: <LockOutlined />, action: onOpenH },
     { label: 'Breaks', icon: <BreaksIcon />, action: onOpenB },
-    { label: 'Bays', icon: <BaysIcon />, action: onOpenBays },
     { label: 'Labor Rate', icon: <LaborRateIcon />, action: onOpenLaborRate },
   ];
 
@@ -72,7 +68,6 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
       <HourOfOperationsModal viewMode={isCCRView} open={isHOOOpen} onClose={onCloseHOO} />
       <HolidaysModal viewMode={isCCRView} open={isHOpen} onClose={onCloseH} />
       <BreaksModal viewMode={isCCRView} open={isBOpen} onClose={onCloseB} />
-      <Bays viewMode={isCCRView} open={isBaysOpen} onClose={onCloseBays} />
       <LaborRateModal open={isOpenLaborRate} onClose={onCloseLaborRate} />
     </div>
   );

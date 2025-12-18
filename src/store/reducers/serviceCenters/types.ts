@@ -31,7 +31,6 @@ export interface IServiceCenterExtended extends IServiceCenter {
   countOfManagers: number;
   countOfTechnician: number;
   countOfEmployees: number;
-  countOfBays: number;
   dealership: IDealershipGroupShort;
   serviceCenterEmail: string;
   contactPersonalEmail: string;
@@ -68,7 +67,6 @@ export interface IBreakFrom {
 
 export interface ISCAnalytics {
   countOfTechnicians: number;
-  countOfBays: number;
   countOfPods: number;
   countOfAppointmentsToday: number;
 }

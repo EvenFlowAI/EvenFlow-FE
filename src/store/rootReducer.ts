@@ -5,7 +5,6 @@ import { employeesReducer, scEmployees } from './reducers/employees/reducer';
 import { serviceCenterReducer } from './reducers/serviceCenters/reducer';
 import { modalsReducer } from './reducers/modals/reducer';
 import { holidaysReducer } from './reducers/holidays/reducer';
-import { baysReducer } from './reducers/bays/reducer';
 import { valueSettingsReducer } from './reducers/valueSettings/reducer';
 import { serviceRequestsReducer } from './reducers/serviceRequests/reducers';
 import { podsReducer } from './reducers/pods/reducer';
@@ -58,7 +57,6 @@ export const rootReducer = combineReducers({
   slotScoring: slotScoringReducer,
   modals: modalsReducer,
   holidays: holidaysReducer,
-  bays: baysReducer,
   valueSettings: valueSettingsReducer,
   serviceRequests: serviceRequestsReducer,
   packages: packagesReducer,

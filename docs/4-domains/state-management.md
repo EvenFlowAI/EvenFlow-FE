@@ -44,7 +44,6 @@ export const rootReducer = combineReducers({
   serviceCenters: serviceCenterReducer,
   employees: employeesReducer,
   pods: podsReducer,
-  bays: baysReducer,
 
   // Configuration
   bookingFlowConfig: bookingFlowConfigReducer,
@@ -286,8 +285,7 @@ Major feature reducers:
 2. **Resource Management**
    - `serviceCenters` - Dealership locations
    - `employees` - Staff members
-   - `pods` - Service areas/bays
-   - `bays` - Service bays
+   - `pods` - Service areas
    - `schedules` - Employee schedules
    - `holidays` - Holiday dates
 
