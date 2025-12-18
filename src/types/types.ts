@@ -237,6 +237,7 @@ export enum Titles {
   CapacityOptimization = 'Capacity Optimization',
   Reporting = 'Reporting',
   Vehicles = 'Vehicles',
+  AiAgents = 'AI Agents (beta)',
 }
 
 export enum LocalItems {
@@ -292,8 +293,4 @@ export type TDashboardCountData = {
   technicians: number;
   pods: number;
   appointments: number;
-};
-export type TDashboardDataMap = {
-  label: string;
-  value: keyof TDashboardCountData;
 };

@@ -18,6 +18,11 @@ import CenterProfileRoutes from '../CenterProfileRoutes/CenterProfileRoutes';
 import { ServiceCenters } from '../../pages/admin/ServiceCenters/ServiceCenters';
 import ApplicationRoutes from '../ApplicationRoutes/ApplicationRoutes';
 import { DealerOperationsRoutes } from '../DealerOperationsRoutes/DealerOperationsRoutes';
+import AiAgents from '../../pages/admin/AiAgents/AiAgents';
+import ConfigurationAgent from '../../pages/admin/ConfigurationAgent/ConfigurationAgent';
+import InsightsAgent from '../../pages/admin/InsightsAgent/InsightsAgent';
+import AnomalyAgent from '../../pages/admin/AnomalyAgent/AnomalyAgent';
+import { Roles } from '../../types/types';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
@@ -26,6 +31,8 @@ export const AdminRoutes = () => {
 
   const isRestrictedRole = ['BDC Agent', 'Advisor', 'Technician'].includes(currentUser.role);
   const isSuperUser = currentUser.isSuperUser;
+  const isDealerOwnerSuperAdmin =
+    Boolean(currentUser.adminDealership) && currentUser?.role === Roles.DealerOwner;
 
   const superUserRoutes = [
     { path: Routes.Admin.DealershipGroups, exact: true, component: DealershipGroups },
@@ -38,6 +45,27 @@ export const AdminRoutes = () => {
     { path: Routes.Employees.Base, component: EmployeesRoutes, condition: !isRestrictedRole },
     { path: Routes.CenterProfile.Base, component: CenterProfileRoutes },
     { path: Routes.Admin.Appointments, component: AppointmentsPage },
+    {
+      path: Routes.Admin.AiAgents,
+      component: AiAgents,
+      condition: isDealerOwnerSuperAdmin,
+    },
+    {
+      path: Routes.Admin.ConfigurationAgent,
+      component: ConfigurationAgent,
+      condition: isDealerOwnerSuperAdmin,
+    },
+    {
+      path: Routes.Admin.InsightsAgent,
+      component: InsightsAgent,
+      condition: isDealerOwnerSuperAdmin,
+    },
+    {
+      path: Routes.Admin.AnomalyAgent,
+      component: AnomalyAgent,
+      condition: isDealerOwnerSuperAdmin,
+    },
+
     {
       path: Routes.Dealer.Base,
       component: DealerOperationsRoutes,
