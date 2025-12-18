@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Button, InputAdornment, TextField, Typography } from '@mui/material';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import defaultLogo from '../../../../assets/img/logoSidebar.svg';
@@ -9,14 +9,14 @@ import {
   updateLeftPanelColor,
 } from '../../../../store/reducers/dealershipGroups/actions';
 import { useStyles } from './styles';
-import { ACCEPTED_EXTENSIONS, isValidFullHex, MAX_FILE_SIZE_MB, sanitizeHex } from './helpers';
+import { isValidFullHex } from './helpers';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
-import useClickOutside from '../../../../hooks/useClickOutside/useClickOutside';
 import { useParams } from 'react-router-dom';
 import { DEFAULT_SIDEBAR_HEX } from '../../../../utils/constants';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
-import { HexColorPicker } from 'react-colorful';
+import UploadLogo from './UploadLogo';
+import SetBackgroundColor from './SetBackgroundColor';
 
 export const AdminStyling: React.FC = () => {
   const dispatch = useDispatch();
@@ -31,20 +31,14 @@ export const AdminStyling: React.FC = () => {
   const [localLogo, setLocalLogo] = useState<string | undefined>(customLogoPath);
   const [hexTouched, setHexTouched] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const selectedFileRef = useRef<File | null>(null);
   const shouldRemoveLogoRef = useRef<boolean>(false);
   const originalHexRef = useRef<string>(sidebarColorHex || DEFAULT_SIDEBAR_HEX);
   const originalLogoRef = useRef<string | undefined>(customLogoPath);
-  const pickerRef = useRef<HTMLDivElement | null>(null);
-  const previewClickFlagRef = useRef<boolean>(false);
 
   const isHexError = useMemo(() => {
     if (!hexTouched) return false;
-    if (!isValidFullHex(localHex)) {
-      return true;
-    }
-    return false;
+    return !isValidFullHex(localHex);
   }, [localHex, hexTouched]);
 
   const { classes } = useStyles({
@@ -52,15 +46,6 @@ export const AdminStyling: React.FC = () => {
     chosenColor: !isHexError ? localHex : undefined,
   });
   const { id } = useParams<{ id: string }>();
-
-  useClickOutside(pickerRef, () => {
-    // If the most recent interaction started on the preview box, do not close.
-    if (previewClickFlagRef.current) {
-      previewClickFlagRef.current = false;
-      return;
-    }
-    setShowPicker(false);
-  });
 
   useEffect(() => {
     if (isEdit) {
@@ -127,7 +112,7 @@ export const AdminStyling: React.FC = () => {
 
   const buildLogoUpdateOperation = (dealershipId: number): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
-      // If user requested removal (reset) and there's no selected file, call removal action
+      // If a user requested removal (reset) and there's no selected file, call removal action
       if (shouldRemoveLogoRef.current && !selectedFileRef.current) {
         dispatch(
           removeDealershipLogo(
@@ -177,7 +162,7 @@ export const AdminStyling: React.FC = () => {
       setShowPicker(false);
       showMessage('Admin styling updated successfully');
     } catch {
-      // At least one failed; keep edit mode so user can correct and retry
+      // At least one failed; keep edit mode so the user can correct and retry
     }
   };
 
@@ -198,83 +183,9 @@ export const AdminStyling: React.FC = () => {
       ops.push(buildLogoUpdateOperation(dealershipId!));
     }
 
-    executeSave(ops, attempted);
+    executeSave(ops, attempted).then();
   };
 
-  const handleResetHex = () => {
-    setLocalHex(DEFAULT_SIDEBAR_HEX);
-  };
-
-  const handleResetLogo = async () => {
-    // Show default locally and clear selected file
-    setLocalLogo(defaultLogo);
-    selectedFileRef.current = null;
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    shouldRemoveLogoRef.current = true;
-  };
-
-  const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHexTouched(true);
-    const raw = e.target.value.toUpperCase().replace(/#/g, '');
-    const normalized = sanitizeHex(raw);
-    setLocalHex(normalized);
-  };
-
-  const pickerColor = useMemo(() => {
-    return `#${localHex.padEnd(6, '0')}`;
-  }, [localHex]);
-
-  const onPickerChange = useCallback((c: string) => {
-    const hex = c.replace('#', '');
-    const normalized = sanitizeHex(hex);
-    setLocalHex(normalized);
-    setHexTouched(true);
-  }, []);
-
-  const handleLogoClick = () => {
-    if (!isEdit) return;
-    fileInputRef.current?.click();
-  };
-
-  const handlePreviewClick = () => {
-    if (!isEdit) return;
-    setShowPicker(prev => !prev);
-    previewClickFlagRef.current = false;
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      return;
-    }
-    if (!ACCEPTED_EXTENSIONS.includes(file.type)) {
-      showError('Only PNG or SVG formats are allowed');
-      return;
-    }
-
-    const maxSize = MAX_FILE_SIZE_MB * 1024 * 1024;
-    if (file.size > maxSize) {
-      showError(`Max file size is ${MAX_FILE_SIZE_MB}MB`);
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      selectedFileRef.current = file;
-      setLocalLogo(url);
-    };
-    img.onerror = () => {
-      showError('Unable to read image. Please try another file');
-      URL.revokeObjectURL(url);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    };
-    img.src = url;
-  };
-
-  const isUsingDefaultLogo =
-    !selectedFileRef.current &&
-    (!customLogoPath || localLogo === '' || localLogo === defaultLogo || !localLogo);
   return (
     <div className={`${classes.root} ${classes.section}`}>
       <div className={classes.headerRow}>
@@ -322,119 +233,24 @@ export const AdminStyling: React.FC = () => {
         </div>
       </div>
       <div className={classes.grid}>
-        <div>
-          <Typography variant="subtitle1" marginBottom={2} className={classes.titleText}>
-            Admin Panel Logo
-          </Typography>
-          <div className={classes.row}>
-            <div className={classes.logoWrapper} onClick={handleLogoClick} role="button">
-              <img src={localLogo || defaultLogo} alt="Logo Preview" className={classes.logoImg} />
-            </div>
-            <div className={classes.uploadLogoWrapper}>
-              <Button
-                disabled={!isEdit}
-                variant="contained"
-                onClick={handleLogoClick}
-                color="primary"
-                className={classes.uploadLogoButton}
-              >
-                Upload Logo
-              </Button>
-              <Typography
-                variant="body2"
-                color="textSecondary"
-                className={classes.helperTextWrapper}
-              >
-                Upload an SVG or PNG file, and make sure its size does not exceed 2 MB
-              </Typography>
-            </div>
-          </div>
-          <div className={classes.fileInputWrapper}>
-            {isEdit && (
-              <Button
-                variant="text"
-                color={isUsingDefaultLogo ? 'inherit' : 'primary'}
-                onClick={handleResetLogo}
-                fullWidth
-                className={`${classes.resetButtonBase} ${isUsingDefaultLogo ? classes.resetButtonGrey : classes.resetButtonPrimary}`}
-              >
-                Reset to Default
-              </Button>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".png,.svg"
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-            />
-          </div>
-        </div>
-        <div>
-          <Typography variant="subtitle1" marginBottom={2} className={classes.titleText}>
-            Left Panel Background
-          </Typography>
-          <div className={classes.row}>
-            <div className={classes.hexColorSectionWrapper}>
-              <div className={classes.leftColorColumn}>
-                <div className={classes.previewWrapper}>
-                  <div
-                    className={classes.previewColorBox}
-                    style={{ backgroundColor: `#${localHex}` }}
-                    onMouseDown={() => {
-                      previewClickFlagRef.current = true;
-                    }}
-                    onClick={handlePreviewClick}
-                    role="button"
-                    aria-label="Toggle color picker"
-                  />
-                  {showPicker && (
-                    <div className={classes.pickerPopover} ref={pickerRef}>
-                      <HexColorPicker color={pickerColor} onChange={e => onPickerChange(e)} />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className={classes.colorInputsContainer}>
-                <Typography
-                  variant="caption"
-                  textTransform="uppercase"
-                  className={classes.titleText}
-                >
-                  HEX Color
-                </Typography>
-                <TextField
-                  size="small"
-                  value={localHex}
-                  onChange={handleHexInputChange}
-                  disabled={!isEdit}
-                  placeholder="252525"
-                  InputProps={{
-                    startAdornment: <InputAdornment position="start">#</InputAdornment>,
-                  }}
-                  inputProps={{ maxLength: 6, style: { textTransform: 'uppercase' } }}
-                  error={isHexError}
-                />
-              </div>
-            </div>
-          </div>
-          <div className={classes.colorResetContainer}>
-            <Typography variant="body2" color="textSecondary">
-              Set the background color for the left-hand nav panel
-            </Typography>
-            {isEdit && (
-              <Button
-                variant="text"
-                onClick={handleResetHex}
-                fullWidth
-                className={`${classes.resetButtonBase} ${localHex !== DEFAULT_SIDEBAR_HEX ? classes.resetButtonPrimary : classes.resetButtonGrey}`}
-                style={{ marginTop: 8 }}
-              >
-                Reset to Default
-              </Button>
-            )}
-          </div>
-        </div>
+        <UploadLogo
+          isEdit={isEdit}
+          isHexError={isHexError}
+          localLogo={localLogo}
+          setLocalLogo={setLocalLogo}
+          localHex={localHex}
+          selectedFileRef={selectedFileRef}
+          shouldRemoveLogoRef={shouldRemoveLogoRef}
+        />
+        <SetBackgroundColor
+          isEdit={isEdit}
+          isHexError={isHexError}
+          localHex={localHex}
+          setLocalHex={setLocalHex}
+          setShowPicker={setShowPicker}
+          setHexTouched={setHexTouched}
+          showPicker={showPicker}
+        />
       </div>
     </div>
   );
