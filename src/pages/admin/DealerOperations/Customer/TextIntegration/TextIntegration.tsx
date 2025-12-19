@@ -48,7 +48,7 @@ const TextIntegration = () => {
   const [authTokenError, setAuthTokenError] = React.useState(false);
   const [webhookError, setWebhookError] = React.useState(false);
   const [fromPhoneNumberError, setFromNumberError] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const hideLoader = () => {
     setIsLoading(false);
