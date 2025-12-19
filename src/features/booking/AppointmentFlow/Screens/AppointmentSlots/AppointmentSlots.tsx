@@ -33,6 +33,7 @@ import { SVAppointmentTimeSelector } from '../../../../../components/bookingDate
 import {
   clearAppointmentSteps,
   loadActiveTransportations,
+  searchForCustomerConsents,
   setServiceTypeOption,
   setTime,
   setWelcomeScreenView,
@@ -602,6 +603,10 @@ export const AppointmentSlots: React.FC<
     handleSetScreen('appointmentConfirmation');
   };
 
+  const searchForConsents = () => {
+    dispatch(searchForCustomerConsents(handleNext));
+  };
+
   const handleNext = useCallback((): void => {
     handleGANext();
     onNext();
@@ -713,7 +718,7 @@ export const AppointmentSlots: React.FC<
         <ActionButtons
           removeTopMargin
           onBack={handleBack}
-          onNext={handleNext}
+          onNext={searchForConsents}
           prevDisabled={!isAppointmentTimingAvailable && isCloneMode}
           nextDisabled={nextDisabled}
           nextLabel={isCloneMode ? t('Confirm') : t('Next')}
@@ -761,7 +766,7 @@ export const AppointmentSlots: React.FC<
           />
         )}
       </SlotsScreenWrapper>
-      <CustomerConsents onNext={handleConsents} />
+      <CustomerConsents onNext={isCloneMode ? onNext : handleConsents} />
       <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={loadDataForMileage} />
     </StepWrapper>
   );
