@@ -53,9 +53,11 @@ type TProps = DialogProps & {
 
 const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNext }) => {
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const { address, zipCode: zipCodeValue } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const {
+    address,
+    zipCode: zipCodeValue,
+    transportation,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
 
   const [consultant, setConsultant] = useState<IServiceConsultant | null>(null);
@@ -95,7 +97,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
   const isAddressVisible = selectedOption?.type === EServiceType.PickUpDropOff;
   const nextButtonIsDisabled = useMemo(() => {
-    return !isAddressValid || (isTransportationsVisible && !transportationOption);
+    return (
+      !isAddressValid || !transportation || (isTransportationsVisible && !transportationOption)
+    );
   }, [isAddressValid, isTransportationsVisible, transportationOption]);
 
   useEffect(() => {

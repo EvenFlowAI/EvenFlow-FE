@@ -18,6 +18,7 @@ import {
   checkCarIsValid,
   selectCategories,
   setAdditionalServicesChosen,
+  setTransportation,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { Caption } from '../../../../../components/wrappers/Caption/Caption';
 import { useTranslation } from 'react-i18next';
@@ -191,6 +192,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
         ? prev.filter(el => el !== Number(value))
         : [...prev, Number(value)];
     });
+    dispatch(setTransportation(null));
   };
 
   const goNext = () => {
