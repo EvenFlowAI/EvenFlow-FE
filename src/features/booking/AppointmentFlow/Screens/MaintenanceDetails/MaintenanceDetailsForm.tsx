@@ -154,11 +154,11 @@ export const MaintenanceDetailsForm: React.FC<
   const isNextDisabled = useMemo(() => {
     return !Boolean(
       selectedVehicle?.make &&
-      selectedVehicle?.model &&
-      selectedVehicle?.year &&
-      selectedVehicle?.mileage &&
-      (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
-      (isRecallsCategorySelected ? selectedVehicle?.vin : true)
+        selectedVehicle?.model &&
+        selectedVehicle?.year &&
+        selectedVehicle?.mileage &&
+        (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
+        (isRecallsCategorySelected ? selectedVehicle?.vin : true)
     );
   }, [selectedVehicle, currentConfig, isRecallsCategorySelected]);
 

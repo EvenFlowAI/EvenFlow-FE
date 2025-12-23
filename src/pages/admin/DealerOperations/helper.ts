@@ -162,12 +162,13 @@ export const validateTriggers = (
   return false;
 };
 
-export const checkRulesWithoutCriteria = (
+export const checkAudienceCriteria = (
   rules: CriteriaI[],
+  triggers: TriggerI[],
   criterias: CriteriaI[],
   showError: (msg: string) => void
 ) => {
-  if (rules.length && !criterias.length) {
+  if ((rules.length || triggers.length) && !criterias.length) {
     showError('At least one Audience Criteria should be added.');
     return false;
   }
@@ -194,7 +195,7 @@ export const validateTriggersSequence = (
       const prevMinutes = h1 * 60 + m1;
       const currMinutes = h2 * 60 + m2;
 
-      return currMinutes - prevMinutes >= 60; // мінімум 1 година
+      return currMinutes - prevMinutes >= 60;
     }
 
     return false;
