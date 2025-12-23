@@ -154,11 +154,11 @@ export const MaintenanceDetailsForm: React.FC<
   const isNextDisabled = useMemo(() => {
     return !Boolean(
       selectedVehicle?.make &&
-        selectedVehicle?.model &&
-        selectedVehicle?.year &&
-        selectedVehicle?.mileage &&
-        (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
-        (isRecallsCategorySelected ? selectedVehicle?.vin : true)
+      selectedVehicle?.model &&
+      selectedVehicle?.year &&
+      selectedVehicle?.mileage &&
+      (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
+      (isRecallsCategorySelected ? selectedVehicle?.vin : true)
     );
   }, [selectedVehicle, currentConfig, isRecallsCategorySelected]);
 
@@ -283,10 +283,6 @@ export const MaintenanceDetailsForm: React.FC<
     } else {
       onNext();
     }
-  };
-
-  const handleAddServices = () => {
-    onBack('serviceNeeds');
   };
 
   const onEmptyRecalls = () => {
@@ -491,7 +487,6 @@ export const MaintenanceDetailsForm: React.FC<
         open={isOpen}
         onClose={onClose}
         handleNext={onNextForRecalls}
-        handleAddServices={handleAddServices}
         onDeclineRecalls={handleDeclineRecalls}
         isRecallsCategorySelected={isRecallsCategorySelected}
       />
