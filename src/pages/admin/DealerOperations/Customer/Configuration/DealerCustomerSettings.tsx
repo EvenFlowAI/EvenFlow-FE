@@ -19,7 +19,7 @@ import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { CriteriaI, TriggerI } from '../types';
 import { useException } from '../../../../../hooks/useException/useException';
 import {
-  checkRulesWithoutCriteria,
+  checkAudienceCriteria,
   filterValidRulesAndTriggers,
   validateGroup,
   validateTriggersSequence,
@@ -187,7 +187,10 @@ const DealerCustomerSettings = () => {
     if (!selectedSC || !eventForConfiguration) {
       throw new Error('Selected SC is not defined');
     }
-    if (!checkRulesWithoutCriteria(rules, criterias, showError)) return;
+    if (!checkAudienceCriteria(rules, triggers, criterias)) {
+      showError('At least one Audience Criteria should be added.');
+      return;
+    }
 
     if (
       validateGroup(criterias, c => Number.isInteger(Number(c.value)) && !!c?.operator) &&
@@ -291,6 +294,9 @@ const DealerCustomerSettings = () => {
                   setRuleTypeErrors={setRuleTypeErrors}
                   rules={rules}
                   isEditTable={isEditTable}
+                  disableAdd={
+                    !checkAudienceCriteria(rules, triggers, criterias) || criterias.length === 0
+                  }
                   setRules={setRules}
                   selectedMakes={selectedMakes}
                   selectedModels={selectedModels}
@@ -308,6 +314,9 @@ const DealerCustomerSettings = () => {
                   triggers={triggers}
                   setTriggers={setTriggers}
                   isEditTable={isEditTable}
+                  disableAdd={
+                    !checkAudienceCriteria(rules, triggers, criterias) || criterias.length === 0
+                  }
                 />
               </div>
             </div>
