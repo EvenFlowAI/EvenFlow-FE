@@ -165,9 +165,11 @@ export const validateTriggers = (
 export const checkAudienceCriteria = (
   rules: CriteriaI[],
   triggers: TriggerI[],
-  criterias: CriteriaI[]
+  criterias: CriteriaI[],
+  showError: (msg: string) => void
 ) => {
   if ((rules.length || triggers.length) && !criterias.length) {
+    showError('At least one Audience Criteria should be added.');
     return false;
   }
   return true;

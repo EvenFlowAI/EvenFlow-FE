@@ -15,7 +15,7 @@ interface TriggersI {
   isEditTable: boolean;
   firstTriggerDateError: boolean;
   setFirstTriggerDateError: React.Dispatch<React.SetStateAction<boolean>>;
-  disableAdd?: boolean;
+  disableAdd: boolean;
 }
 
 const Triggers = ({
@@ -117,12 +117,12 @@ const Triggers = ({
         <IconButton
           onClick={handleAddTrigger}
           className={classes.iconPlus}
-          disabled={triggers.length === 5 || !!disableAdd}
+          disabled={triggers.length === 5 || disableAdd}
           size="large"
         >
-          <AddCircleOutline className={triggers.length === 5 || !!disableAdd ? 'isDisabled' : ''} />
+          <AddCircleOutline className={triggers.length === 5 || disableAdd ? 'isDisabled' : ''} />
           <span
-            style={triggers.length === 5 || !!disableAdd ? { color: 'grey' } : {}}
+            style={triggers.length === 5 || disableAdd ? { color: 'grey' } : {}}
             className={classes.addCriteriaButton}
           >
             Add Contact

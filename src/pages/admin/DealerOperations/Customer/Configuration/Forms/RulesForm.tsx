@@ -34,7 +34,7 @@ interface RulesFormI {
   setSelectedMakes: Dispatch<SetStateAction<number[]>>;
   selectedModels: number[];
   setSelectedModels: React.Dispatch<React.SetStateAction<number[]>>;
-  disableAdd?: boolean;
+  disableAdd: boolean;
 }
 
 const RulesForm = ({
@@ -215,13 +215,13 @@ const RulesForm = ({
       {isEditTable ? (
         <IconButton
           onClick={handleAddRule}
-          disabled={rules.length === 5 || !!disableAdd}
+          disabled={rules.length === 5 || disableAdd}
           className={classes.iconPlus}
           size="large"
         >
-          <AddCircleOutline className={rules.length === 5 || !!disableAdd ? 'isDisabled' : ''} />
+          <AddCircleOutline className={rules.length === 5 || disableAdd ? 'isDisabled' : ''} />
           <span
-            style={rules.length === 5 || !!disableAdd ? { color: 'grey' } : {}}
+            style={rules.length === 5 || disableAdd ? { color: 'grey' } : {}}
             className={classes.addCriteriaButton}
           >
             Add Filter Criteria
