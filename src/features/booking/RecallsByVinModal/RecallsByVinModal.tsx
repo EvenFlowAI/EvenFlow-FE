@@ -15,14 +15,11 @@ import { Loading } from '../../../components/wrappers/Loading/Loading';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import {
   checkCarIsValid,
-  setAdditionalServicesChosen,
   setSelectedRecalls,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import AskAddService from '../../../components/modals/booking/AskAddService/AskAddService';
 import { checkPodChanged } from '../../../store/reducers/appointments/actions';
 import { useStyles } from './styles';
 import { IRecallByVin } from '../../../types/types';
-import { useModal } from '../../../hooks/useModal/useModal';
 import { useException } from '../../../hooks/useException/useException';
 import { BfButtonsWrapper } from '../../../components/styled/BfButtonsWrapper';
 import Recall from './Recall/Recall';
@@ -30,20 +27,12 @@ import Recall from './Recall/Recall';
 type TRecallsByVinProps = DialogProps & {
   handleNext: () => void;
   onDeclineRecalls: () => void;
-  handleAddServices: () => void;
   isRecallsCategorySelected: boolean;
 };
 
 const RecallsByVinModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallsByVinProps>>
-> = ({
-  open,
-  onClose,
-  handleNext,
-  onDeclineRecalls,
-  handleAddServices,
-  isRecallsCategorySelected,
-}) => {
+> = ({ open, onClose, handleNext, onDeclineRecalls, isRecallsCategorySelected }) => {
   const { recallsByVin, isLoading } = useSelector((state: RootState) => state.recalls);
   const { selectedVehicle, isUsualFlowNeeded } = useSelector(
     (state: RootState) => state.appointmentFrame
@@ -55,11 +44,7 @@ const RecallsByVinModal: React.FC<
   const showError = useException();
   const { t } = useTranslation();
   const { classes } = useStyles();
-  const {
-    isOpen: isAddServiceOpen,
-    onClose: onAddServiceClose,
-    onOpen: onAddServiceOpen,
-  } = useModal();
+
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -98,19 +83,6 @@ const RecallsByVinModal: React.FC<
     onClose();
   };
 
-  const handleYes = () => {
-    dispatch(setAdditionalServicesChosen(true));
-    onAddServiceClose();
-    handleAddServices();
-    onClose();
-  };
-
-  const handleNo = () => {
-    onAddServiceClose();
-    handleNext();
-    onClose();
-  };
-
   const onCarIsValid = () => dispatch(checkPodChanged(decodeSCID(id), showError));
 
   const onCarIsInvalid = () => {
@@ -123,7 +95,8 @@ const RecallsByVinModal: React.FC<
     if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
       dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid));
     } else {
-      onAddServiceOpen();
+      handleNext();
+      onClose();
     }
   };
 
@@ -174,7 +147,6 @@ const RecallsByVinModal: React.FC<
           {t('Next')}
         </Button>
       </BfButtonsWrapper>
-      <AskAddService onSave={handleYes} onClose={handleNo} open={isAddServiceOpen} />
     </BaseModal>
   );
 };
