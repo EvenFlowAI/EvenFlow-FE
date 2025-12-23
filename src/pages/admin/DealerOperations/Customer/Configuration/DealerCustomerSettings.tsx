@@ -294,9 +294,7 @@ const DealerCustomerSettings = () => {
                   setRuleTypeErrors={setRuleTypeErrors}
                   rules={rules}
                   isEditTable={isEditTable}
-                  disableAdd={
-                    !checkAudienceCriteria(rules, triggers, criterias) || criterias.length === 0
-                  }
+                  disableAdd={!checkAudienceCriteria(rules, triggers, criterias)}
                   setRules={setRules}
                   selectedMakes={selectedMakes}
                   selectedModels={selectedModels}
@@ -314,9 +312,7 @@ const DealerCustomerSettings = () => {
                   triggers={triggers}
                   setTriggers={setTriggers}
                   isEditTable={isEditTable}
-                  disableAdd={
-                    !checkAudienceCriteria(rules, triggers, criterias) || criterias.length === 0
-                  }
+                  disableAdd={!checkAudienceCriteria(rules, triggers, criterias)}
                 />
               </div>
             </div>
