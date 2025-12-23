@@ -40,7 +40,6 @@ export interface ICustomerWithPhones extends ICustomerByName {
   sortOrder?: number;
   companyName?: string;
   hasPlannedAppointment: boolean;
-  isNameReadOnly: boolean;
 }
 
 export type ICustomerForTable = Omit<
