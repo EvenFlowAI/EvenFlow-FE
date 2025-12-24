@@ -16,7 +16,6 @@ import {
   deleteRecall,
   deleteValueService,
   setSideBarSteps,
-  setTransportation,
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { loadCategoriesByQuery } from '../../../../../../store/reducers/categories/actions';
 import { EServiceType } from '../../../../../../store/reducers/appointmentFrameReducer/types';
@@ -106,7 +105,6 @@ const ShoppingCart = () => {
         const newComments = Object.fromEntries(
           Object.entries(selectedSRComments).filter(([key]) => Number(key) !== itemId)
         );
-        dispatch(setTransportation(null));
         dispatch(selectSRComments({ comments: newComments }));
         dispatch(deleteIndService(item));
         setAppointmentChanged();
