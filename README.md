@@ -5,8 +5,9 @@
 
 ### Deployment
 Build project from source
+
 ```bash
-  npm run build
+npm run build
 ```
 and push into environment through FTP or SFTP
 
@@ -23,28 +24,22 @@ npm start
 
 To set up Husky and ensure your code is automatically linted and formatted before every commit, follow these steps after installing dependencies:
 
-1. **Install Husky and lint-staged globally:**
-   ```bash
-    npm install -g husky lint-staged 
-    ```
+1. **Initialize Husky in your project:**
+ ```bash
+ npx husky install
+ ```
+ 
+2. **Create the pre-commit hook script:**
 
-2. **Initialize Husky in your project:**
+Inside the `.husky` directory, create a file named `pre-commit` with the following content:
 
-    ```bash
-    npx husky install
-    ```
+ ```
+ npm run all-fix
+ npm run increment-version
+ git add .
+ ```
 
-3. **Create the pre-commit hook script:**
-
-   Inside the `.husky` directory, create a file named `pre-commit` with the following content:
-
-    ```
-    npm run all-fix
-    npm run increment-version
-    git add .
-    ```
-
-These steps set up Husky on your local machine and install a Git pre-commit hook that automatically runs linters and formatters before each commit. Note that these hooks run only locally and are not executed in Continuous Integration (CI) environments.
+These steps set up Husky and install a Git pre-commit hook that automatically runs linters and formatters before each commit. Note that these hooks run only locally and are not executed in Continuous Integration (CI) environments.
 
 **Important:** Do not skip this setup, or the pre-commit hooks will not function correctly.
 
