@@ -21,7 +21,7 @@ const initialState: TState = {
   appointments: [],
   count: 0,
   allCount: 0,
-  isLoading: false,
+  isLoading: true,
   isModalLoading: false,
   allAppointments: [],
   packages: [],
