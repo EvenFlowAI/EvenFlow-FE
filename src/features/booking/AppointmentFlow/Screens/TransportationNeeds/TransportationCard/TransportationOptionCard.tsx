@@ -19,7 +19,12 @@ export const TransportationOptionCard: React.FC<
 
   return (
     <CardWrapper onClick={onSelect} selected={false} key={card.id} active={active}>
-      <CardIcon iconPath={card.iconPath} isSM={isSM} active={active} />
+      <CardIcon
+        transportationName={card.name}
+        iconPath={card.iconPath}
+        isSM={isSM}
+        active={active}
+      />
       <span style={{ color: active ? '#FFFFFF' : '#252733' }}>{card.description}</span>
     </CardWrapper>
   );
