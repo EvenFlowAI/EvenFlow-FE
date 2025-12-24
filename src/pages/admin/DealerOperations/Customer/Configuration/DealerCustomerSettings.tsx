@@ -262,7 +262,11 @@ const DealerCustomerSettings = () => {
                   <Button variant="text" onClick={handleCancelChanges} color="secondary">
                     Cancel
                   </Button>
-                  <Button variant="text" onClick={validateChangesBeforeSave}>
+                  <Button
+                    disabled={!criterias.length && !rules.length && !triggers.length}
+                    variant="text"
+                    onClick={validateChangesBeforeSave}
+                  >
                     Save
                   </Button>
                 </>
