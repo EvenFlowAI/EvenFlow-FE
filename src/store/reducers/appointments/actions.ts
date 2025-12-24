@@ -87,7 +87,7 @@ export const loadAppointments =
       .catch(err => {
         console.log('load appointments for calendar', err);
       })
-      .finally(() => setTimeout(() => dispatch(setAppointmentsLoading(false)), 500));
+      .finally(() => dispatch(setAppointmentsLoading(false)));
   };
 
 export const checkPodChanged =
@@ -222,8 +222,7 @@ export const loadServiceBookList =
       })
       .catch(e => {
         console.log('get service book list error', e);
-      })
-      .finally(() => dispatch(setAppointmentsLoading(false)));
+      });
   };
 
 export const loadSchedulerList = (): AppThunk => dispatch => {
@@ -234,8 +233,7 @@ export const loadSchedulerList = (): AppThunk => dispatch => {
     })
     .catch(e => {
       console.log('get scheduler list error', e);
-    })
-    .finally(() => dispatch(setAppointmentsLoading(false)));
+    });
 };
 
 export const loadServiceConsultants =
@@ -257,8 +255,7 @@ export const loadServiceConsultants =
       })
       .catch(e => {
         console.log('load Service Consultants error', e);
-      })
-      .finally(() => dispatch(setAppointmentsLoading(false)));
+      });
   };
 
 export const clearAfterCloning = (): AppThunk => dispatch => {
