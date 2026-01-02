@@ -46,7 +46,6 @@ const BaseScheduleByEmployee = () => {
   const { employeeRoleHours, loading } = useSelector((state: RootState) => state.employees);
   const { employeesLoading } = useSelector((state: RootState) => state.employeesSchedule);
   const { workingDays } = useSelector(({ serviceCenters }: RootState) => serviceCenters);
-  const { isLoading } = useSelector((state: RootState) => state.appointments);
   const { isLoading: hoursIsLoading } = useSelector((state: RootState) => state.slotScoring);
   const [loader, setLoader] = useState<boolean>(false);
   const [order, setOrder] = useState<TOrder>({ orderBy: 'Name', isAscending: true });
@@ -59,8 +58,8 @@ const BaseScheduleByEmployee = () => {
   const { isOpen, onOpen, onClose } = useModal();
 
   const saving = useMemo(
-    () => loading || employeesLoading || hoursIsLoading || loader || isLoading,
-    [loading, employeesLoading, hoursIsLoading, loader, isLoading]
+    () => loading || employeesLoading || hoursIsLoading || loader,
+    [loading, employeesLoading, hoursIsLoading, loader]
   );
 
   const getData = useCallback(() => {
