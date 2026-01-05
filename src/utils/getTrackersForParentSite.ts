@@ -56,6 +56,7 @@ export const ServiceCenters = {
   WalserCJDRHopkins: 1219,
   WalserMinnetonkaKia: 1252,
   PorscheNashua: 1153,
+  JannsenKuenleCDJROfPlattsmouth: 1516,
 };
 
 const parentTrackersMap: Record<number, GATrackers[]> = {
@@ -130,6 +131,7 @@ const parentTrackersMap: Record<number, GATrackers[]> = {
   [ServiceCenters.WalserCJDRHopkins]: [{ measurementId: 'G-83F59D9Y4Y' }],
   [ServiceCenters.WalserMinnetonkaKia]: [{ measurementId: 'G-VPQX5P9DHZ' }],
   [ServiceCenters.PorscheNashua]: [{ measurementId: 'G-Y41L9SH71Y' }],
+  [ServiceCenters.JannsenKuenleCDJROfPlattsmouth]: [{ measurementId: 'G-RZJXL9LBL9' }],
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {
