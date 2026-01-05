@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Button, Drawer, IconButton, List, useMediaQuery, useTheme } from '@mui/material';
 import defaultLogo from '../../../assets/img/logoSidebar.svg';
 import { LinkTypeWithSub, Roles } from '../../../types/types';
@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
 import Link from './Link/Link';
-import { reportingAllowedRoles } from '../../../pages/admin/Reporting/constants';
 import { useStyles } from './styles';
 import { MainLinksWithSub, SULinks } from './constants';
 import { BookingModal } from './BookingModal/BookingModal';
@@ -77,71 +76,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
 
   const isOpenSchedulerLinkVisible =
     selectedSC && currentUser?.role && !restrictedSchedulerRoles.includes(currentUser?.role);
-
-  useEffect(() => {
-    if (
-      (!window.origin.includes('apps.evenflow.ai') ||
-        (currentUser && reportingAllowedRoles.includes(currentUser?.role))) &&
-      !MainLinksWithSub.find(el => el.to === Routes.Admin.Reporting)
-    ) {
-      MainLinksWithSub.push({
-        to: Routes.Admin.Reporting,
-        name: 'Reporting',
-        roles: baseRoles,
-        subLinks: [
-          {
-            to: Routes.Reporting.ShopLoading,
-            name: 'Shop Loading',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-          {
-            to: Routes.Reporting.AppointmentAssignments,
-            name: 'Appointment Assignments',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-          {
-            to: Routes.Reporting.BDCReports,
-            name: 'BDC Reports',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-          {
-            to: Routes.Reporting.ValetAppointments,
-            name: 'Valet Appointments',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-          {
-            to: Routes.Reporting.OutboundOpportunities,
-            name: 'Outbound Opportunities',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-          {
-            to: Routes.Reporting.CustomerBehavior,
-            name: 'Customer Behavior',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-          {
-            to: Routes.Reporting.RepairOrderPerformance,
-            name: 'Repair Order Performance',
-            exact: true,
-            sub: true,
-            roles: baseRoles,
-          },
-        ],
-      });
-    }
-  }, [MainLinksWithSub, window, currentUser]);
 
   const handleLogoClick = () => {
     history.push(Routes.Admin.Appointments);
