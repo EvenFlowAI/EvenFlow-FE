@@ -1,6 +1,7 @@
 import { LinkTypeWithSub, Roles } from '../../../types/types';
 import { Routes } from '../../../routes/constants';
 import { TRole } from '../../../store/reducers/users/types';
+import { reportingAllowedRoles } from '../../../pages/admin/Reporting/constants';
 
 const baseRoles: TRole[] = [
   Roles.EvenFlowAdmin,
@@ -13,6 +14,9 @@ const baseRoles: TRole[] = [
   Roles.BDCManager,
   Roles.Staff,
 ];
+
+const isProdOrUat =
+  process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'uat';
 
 export const SULinks: LinkTypeWithSub[] = [
   { to: Routes.Admin.DealershipGroups, name: 'Dealership Groups', roles: [Roles.EvenFlowAdmin] },
@@ -256,4 +260,60 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
     ],
   },
   { to: Routes.Admin.Appointments, name: 'Appointments', roles: true },
+  {
+    to: Routes.Admin.Reporting,
+    name: 'Reporting',
+    roles: isProdOrUat ? reportingAllowedRoles : [],
+    subLinks: [
+      {
+        to: Routes.Reporting.ShopLoading,
+        name: 'Shop Loading',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.AppointmentAssignments,
+        name: 'Appointment Assignments',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.BDCReports,
+        name: 'BDC Reports',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.ValetAppointments,
+        name: 'Valet Appointments',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.OutboundOpportunities,
+        name: 'Outbound Opportunities',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.CustomerBehavior,
+        name: 'Customer Behavior',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.RepairOrderPerformance,
+        name: 'Repair Order Performance',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+    ],
+  },
 ];
