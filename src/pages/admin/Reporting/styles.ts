@@ -13,6 +13,10 @@ export const useStyles = makeStyles()(() => ({
   },
   reporting: {
     margin: '0',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
   },
   navReportName: {
     fontWeight: 'bold',
