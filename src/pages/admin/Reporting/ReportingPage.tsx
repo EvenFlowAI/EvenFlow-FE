@@ -3,7 +3,7 @@ import { IEndUserConfig } from '../../../features/admin/Reporting/types';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { ReportingRoutes } from '../../../routes/ReportingRoutes/ReportingRoutes';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useStyles } from './styles';
 
 const ReportingPage: React.FC = () => {
@@ -14,6 +14,7 @@ const ReportingPage: React.FC = () => {
   const { classes } = useStyles();
   const location = useLocation();
   const lastSegment = location.pathname.split('/').pop();
+  const history = useHistory();
 
   const getReportName = () => {
     switch (lastSegment) {
@@ -32,7 +33,7 @@ const ReportingPage: React.FC = () => {
       case 'service-retention':
         return 'Service Retention';
       default:
-        return '';
+        return "Today's Appointments";
     }
   };
 
@@ -46,10 +47,16 @@ const ReportingPage: React.FC = () => {
     }
   }, [selectedSC]);
 
+  const redirect = () => {
+    history.push('/admin/reporting/today-appointments');
+  };
+
   return (
     <div className={classes.wrapper}>
       <div className={classes.nav}>
-        <p className={classes.reporting}>Reporting</p>
+        <p className={classes.reporting} onClick={redirect}>
+          Reporting
+        </p>
         <span className={classes.navSeparator}> / </span>
         <span className={classes.navReportName}>{getReportName()}</span>
       </div>
