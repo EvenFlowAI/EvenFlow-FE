@@ -266,6 +266,13 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
     roles: isProdOrUat ? reportingAllowedRoles : [],
     subLinks: [
       {
+        to: Routes.Reporting.TodayAppointments,
+        name: "Today's Appointments",
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
         to: Routes.Reporting.ShopLoading,
         name: 'Shop Loading',
         exact: true,
@@ -273,29 +280,8 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
         roles: baseRoles,
       },
       {
-        to: Routes.Reporting.AppointmentAssignments,
-        name: 'Appointment Assignments',
-        exact: true,
-        sub: true,
-        roles: baseRoles,
-      },
-      {
         to: Routes.Reporting.BDCReports,
         name: 'BDC Reports',
-        exact: true,
-        sub: true,
-        roles: baseRoles,
-      },
-      {
-        to: Routes.Reporting.ValetAppointments,
-        name: 'Valet Appointments',
-        exact: true,
-        sub: true,
-        roles: baseRoles,
-      },
-      {
-        to: Routes.Reporting.OutboundOpportunities,
-        name: 'Outbound Opportunities',
         exact: true,
         sub: true,
         roles: baseRoles,
@@ -309,7 +295,21 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
       },
       {
         to: Routes.Reporting.RepairOrderPerformance,
-        name: 'Repair Order Performance',
+        name: 'Repair Orders',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.ServiceRetention,
+        name: 'Service Retention',
+        exact: true,
+        sub: true,
+        roles: baseRoles,
+      },
+      {
+        to: Routes.Reporting.HelpSupport,
+        name: 'Help & Support',
         exact: true,
         sub: true,
         roles: baseRoles,
