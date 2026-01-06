@@ -61,11 +61,11 @@ export enum ReportingRoutes {
   Base = '/admin/reporting',
   BDCReports = '/admin/reporting/bdc-reports',
   ShopLoading = '/admin/reporting/shop-loading',
-  ValetAppointments = '/admin/reporting/valet-appointments',
-  AppointmentAssignments = '/admin/reporting/appointment-assignments',
+  HelpSupport = '/admin/reporting/help-support',
+  TodayAppointments = '/admin/reporting/today-appointments',
   CustomerBehavior = '/admin/reporting/customer-behavior',
-  RepairOrderPerformance = '/admin/reporting/repair-order-performance',
-  OutboundOpportunities = '/admin/reporting/outbound-opportunities',
+  RepairOrderPerformance = '/admin/reporting/repair-orders',
+  ServiceRetention = '/admin/reporting/service-retention',
 }
 
 export enum PricingRoutes {
