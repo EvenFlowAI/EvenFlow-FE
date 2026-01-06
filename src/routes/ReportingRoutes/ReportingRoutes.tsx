@@ -33,12 +33,12 @@ export const ReportingRoutes: React.FC<
       />
       <Route
         exact
-        path={Routes.Reporting.ValetAppointments}
+        path={Routes.Reporting.HelpSupport}
         render={() => <ValetAppointments settings={config} />}
       />
       <Route
         exact
-        path={Routes.Reporting.AppointmentAssignments}
+        path={Routes.Reporting.TodayAppointments}
         render={() => <MobileServiceAppointments settings={config} />}
       />
       <Route
@@ -53,10 +53,10 @@ export const ReportingRoutes: React.FC<
       />
       <Route
         exact
-        path={Routes.Reporting.OutboundOpportunities}
+        path={Routes.Reporting.ServiceRetention}
         render={() => <CapacityManagementPerformance settings={config} />}
       />
-      <Redirect to={Routes.Reporting.BDCReports} />
+      <Redirect to={Routes.Reporting.TodayAppointments} />
     </Switch>
   ) : null;
 };
