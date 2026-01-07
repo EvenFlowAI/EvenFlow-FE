@@ -285,6 +285,10 @@ export const MaintenanceDetailsForm: React.FC<
     }
   };
 
+  const handleAddServices = () => {
+    onBack('serviceNeeds');
+  };
+
   const onEmptyRecalls = () => {
     if (userType === EUserType.New || isRecallsCategorySelected) {
       onNoRecallsOpen();
@@ -487,6 +491,7 @@ export const MaintenanceDetailsForm: React.FC<
         open={isOpen}
         onClose={onClose}
         handleNext={onNextForRecalls}
+        handleAddServices={handleAddServices}
         onDeclineRecalls={handleDeclineRecalls}
         isRecallsCategorySelected={isRecallsCategorySelected}
       />

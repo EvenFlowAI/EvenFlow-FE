@@ -2,11 +2,12 @@
 ### Requirements
 - Node.js
 - NPM
+- YARN
 
 ### Deployment
 Build project from source
 ```bash
-  npm run build
+  yarn build
 ```
 and push into environment through FTP or SFTP
 
@@ -15,8 +16,9 @@ Clone project from git
 
 ```
 cd <project_dirrectory>
-npm install --legacy-peer-deps
-npm start
+yarn install or npm install
+yarn global add cross-env or npm install -g cross-env 
+yarn start or npm start
 ```
 
 ### Husky Pre-Commit Hook Setup
@@ -24,6 +26,12 @@ npm start
 To set up Husky and ensure your code is automatically linted and formatted before every commit, follow these steps after installing dependencies:
 
 1. **Install Husky and lint-staged globally:**
+    ```bash
+    yarn global add husky lint-staged
+    ```
+
+   or
+
    ```bash
     npm install -g husky lint-staged 
     ```
