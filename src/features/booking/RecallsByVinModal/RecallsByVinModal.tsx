@@ -26,6 +26,7 @@ import { useModal } from '../../../hooks/useModal/useModal';
 import { useException } from '../../../hooks/useException/useException';
 import { BfButtonsWrapper } from '../../../components/styled/BfButtonsWrapper';
 import Recall from './Recall/Recall';
+import { EServiceCategoryType } from '../../../store/reducers/categories/types';
 
 type TRecallsByVinProps = DialogProps & {
   handleNext: () => void;
@@ -45,7 +46,7 @@ const RecallsByVinModal: React.FC<
   isRecallsCategorySelected,
 }) => {
   const { recallsByVin, isLoading } = useSelector((state: RootState) => state.recalls);
-  const { selectedVehicle, isUsualFlowNeeded } = useSelector(
+  const { selectedVehicle, isUsualFlowNeeded, service } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
@@ -123,7 +124,13 @@ const RecallsByVinModal: React.FC<
     if (customerLoadedData?.isUpdating && !isUsualFlowNeeded) {
       dispatch(checkCarIsValid(onCarIsValid, onCarIsInvalid));
     } else {
-      onAddServiceOpen();
+      // Not show modal if it is a maintenance package
+      if (service?.type === EServiceCategoryType.MaintenancePackage) {
+        handleNext();
+        onClose();
+      } else {
+        onAddServiceOpen();
+      }
     }
   };
 
