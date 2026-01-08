@@ -2,7 +2,10 @@ import React, { useEffect } from 'react';
 import { BaseModal, DialogTitle } from '../../BaseModal/BaseModal';
 import { useTranslation } from 'react-i18next';
 import { setSlotsWarningOpen } from '../../../../store/reducers/modals/actions';
-import { setCurrentFrameScreen } from '../../../../store/reducers/appointmentFrameReducer/actions';
+import {
+  setCurrentFrameScreen,
+  setTransportation,
+} from '../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useHistory, useParams } from 'react-router-dom';
@@ -16,7 +19,9 @@ const SlotImpactedWarning = () => {
     (state: RootState) => state.bookingFlowConfig
   );
   const { customerLoadedData, isCloneMode } = useSelector((state: RootState) => state.appointment);
-  const { currentScreen } = useSelector((state: RootState) => state.appointmentFrame);
+  const { currentScreen, appointmentByKey } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const { t } = useTranslation();
@@ -33,6 +38,8 @@ const SlotImpactedWarning = () => {
 
   const onNext = () => {
     dispatch(setSlotsWarningOpen(false));
+    dispatch(setTransportation(null));
+
     const nextScreen: TScreen =
       isTransportationAvailable && currentScreen !== 'transportationNeeds'
         ? 'transportationNeeds'

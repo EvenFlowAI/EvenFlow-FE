@@ -1657,6 +1657,7 @@ export const loadActiveTransportations =
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
     const { selectedSR, selectedSRComments, isCloneMode } = getState().appointment;
+    const { transportation } = getState().appointmentFrame;
     const { firstScreenOptions } = getState().serviceTypes;
     if (selectedVehicle) {
       dispatch(setTransportationsLoading(true));
@@ -1694,13 +1695,19 @@ export const loadActiveTransportations =
           const serviceValetOption = firstScreenOptions.find(
             el => el.type === EServiceType.PickUpDropOff
           );
-          dispatch(
-            getActiveTransportations(
-              serviceValetOption
-                ? data
-                : data.filter(el => el.type !== ETransportationType.PickUpDelivery)
-            )
-          );
+          const availableTransportations = serviceValetOption
+            ? data
+            : data.filter(el => el.type !== ETransportationType.PickUpDelivery);
+          dispatch(getActiveTransportations(availableTransportations));
+
+          if (transportation) {
+            const transportationAvailable = availableTransportations.some(
+              el => el.id === transportation.id
+            );
+            if (!transportationAvailable) {
+              dispatch(setTransportation(null));
+            }
+          }
           dispatch(setTransportationsLoading(false));
           if (onSuccess) onSuccess();
         }
