@@ -145,10 +145,10 @@ export const getOriginalRuleState = (
     name: original.name,
     daysOfWeek: days,
     timeOfDay: {
-      start: original.timeOfDay.start
+      start: original?.timeOfDay?.start
         ? dayjs.utc().hour(+startHours).minute(+startMinutes).second(+startSeconds)
         : null,
-      end: original.timeOfDay?.end
+      end: original?.timeOfDay?.end
         ? dayjs.utc().hour(+endHours).minute(+endMinutes).second(+endSeconds)
         : null,
     },
