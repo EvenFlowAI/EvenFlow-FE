@@ -1335,6 +1335,7 @@ export const searchForCustomerConsents =
       appointment,
       waitListSettings,
       serviceValetAppointment,
+      isCloneMode,
     } = getState().appointment;
     const {
       selectedVehicle,
@@ -1392,7 +1393,7 @@ export const searchForCustomerConsents =
         isWaitlistEnabled: isWaitlist,
         zipCode,
       };
-      if (appointmentByKey?.id) data.appointmentRequestId = appointmentByKey.id;
+      if (appointmentByKey?.id && !isCloneMode) data.appointmentRequestId = appointmentByKey.id;
       if (data.serviceType === EServiceType.VisitCenter) delete data.zipCode;
       if (selectedPackage) data.maintenancePackageOptionId = selectedPackage.id;
       Api.call<ICustomerConsentBooking[]>(Api.endpoints.CustomerConsent.Search, { data })
