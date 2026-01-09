@@ -23,7 +23,6 @@ import {
 } from '../../../../../api/types';
 import MaintenancePackagesMobile from '../MaintenancePackagesMobile/MaintenancePackagesMobile';
 import ReactGA from 'react-ga4';
-import ConfirmChangeOption from './ConfirmChangeOption/ConfirmChangeOption';
 import AskAddService from '../../../../../components/modals/booking/AskAddService/AskAddService';
 import PackageTitles from './PackageTitles/PackageTitles';
 import PackagesServiceRequests from './PackagesServiceRequests/PackagesServiceRequests';
@@ -66,9 +65,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     selectedPackage,
     selectedVehicle,
     packagePricingType,
-    packageOptionType,
     packageEMenuType,
-    trackerData,
     serviceTypeOption,
   } = useSelector((state: RootState) => state.appointmentFrame);
 
@@ -79,7 +76,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     useState<EPackagePricingType | null>(null);
 
   const theme = useTheme();
-  const { isOpen, onOpen, onClose } = useModal();
   const {
     isOpen: isAdditionalOpen,
     onOpen: onAdditionalOpen,
@@ -169,11 +165,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       }
       dispatch(setPackage(usedPackage));
       dispatch(setPackagePricingType(localSelectedPricingType));
-      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
-        onOpen();
-      } else {
-        onSelectionCompleted();
-      }
+      onSelectionCompleted();
     }
   };
 
@@ -219,7 +211,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
       dispatch(setPackage(localSelectedPackage));
     }
-    await onClose();
     await onSelectionCompleted();
   };
 
@@ -246,12 +237,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   const handleClick = (p: IPackageOptions, pricing?: EPackagePricingType) => () => {
     setLocalSelectedPackage(p);
     setLocalSelectedPricingType(pricing ?? EPackagePricingType.BasePrice);
-  };
-
-  const handleDontChangeOption = (): void => {
-    const prevPackage = packages.find(p => p.type === packageOptionType);
-    if (prevPackage) dispatch(setPackage(prevPackage));
-    onClose();
   };
 
   const handleYes = (): void => {
@@ -396,7 +381,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
         nextDisabled={!localSelectedPackage || localSelectedPricingType === null}
         onNext={() => handleNext(localSelectedPackage)}
       />
-      <ConfirmChangeOption open={isOpen} onClose={handleDontChangeOption} onSave={onSave} />
       <AskAddService onSave={handleYes} onClose={handleNo} open={isAdditionalOpen} />
     </PackagesStepWrapper>
   );
