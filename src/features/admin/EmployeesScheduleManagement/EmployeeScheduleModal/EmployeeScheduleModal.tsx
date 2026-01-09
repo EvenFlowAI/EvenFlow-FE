@@ -85,8 +85,15 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
           el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
         );
       });
+
       return filtered.filter(el =>
-        filters.serviceBook?.length ? el.serviceBooks.includes(filters.serviceBook.trim()) : true
+        filters.serviceBook
+          ? el.serviceBooks.some(book =>
+              book.serviceBookId
+                ? book.serviceBookId === filters.serviceBookId
+                : book.serviceBook === filters.serviceBook
+            )
+          : true
       );
     });
     setLoading(false);
@@ -143,7 +150,7 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     },
     {
       header: 'Service Book',
-      val: el => el.serviceBooks.join(', '),
+      val: el => el.serviceBooks.map(book => book.serviceBook).join(', '),
       verticalAlign: isTablet ? 'top' : 'middle',
     },
     {

@@ -76,7 +76,10 @@ export interface IBaseEmployeeSchedule {
 export interface IScheduleByDate extends IBaseEmployeeSchedule {
   employeeName: string;
   role: string;
-  serviceBooks: string[];
+  serviceBooks: {
+    serviceBook: string;
+    serviceBookId?: number;
+  }[];
   id: number;
 }
 

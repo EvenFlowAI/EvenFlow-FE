@@ -17,16 +17,40 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({ isLoading, filters, setFilt
   const [search, setSearch] = useState<string>('');
 
   const serviceBooksList = useMemo(() => {
-    const list = scheduleByDate.map(el => el.serviceBooks).flat(1);
-    return Array.from(new Set(list));
+    const list = scheduleByDate.flatMap(el => el.serviceBooks);
+
+    const unique = new Map();
+
+    list.forEach(book => {
+      const key = book.serviceBookId ?? book.serviceBook;
+      if (!unique.has(key)) {
+        unique.set(key, {
+          label: book.serviceBook,
+          value: key,
+        });
+      }
+    });
+
+    return Array.from(unique.values());
   }, [scheduleByDate]);
+
   const rolesList = useMemo(
     () => Array.from(new Set(scheduleByDate.map(el => el.role))),
     [scheduleByDate]
   );
 
-  const onServiceBookChange = (e: React.SyntheticEvent, value: string | null) => {
-    setFilters(prev => ({ ...prev, serviceBook: value ?? '' }));
+  const onServiceBookChange = (
+    e: React.SyntheticEvent,
+    value: {
+      label: string | null;
+      value: number | null;
+    }
+  ) => {
+    setFilters(prev => ({
+      ...prev,
+      serviceBook: value.label ?? '',
+      serviceBookId: value.value ?? 0,
+    }));
   };
 
   const onRoleChange = (e: React.SyntheticEvent, value: string | null) => {
@@ -55,7 +79,9 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({ isLoading, filters, setFilt
           })}
           fullWidth
           disabled={isLoading}
-          onChange={onServiceBookChange}
+          onChange={(event, newValue) => {
+            onServiceBookChange(event, newValue);
+          }}
           value={filters.serviceBook}
           options={serviceBooksList}
         />

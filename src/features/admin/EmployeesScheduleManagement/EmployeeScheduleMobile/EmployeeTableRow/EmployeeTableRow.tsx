@@ -73,7 +73,7 @@ const EmployeeTableRow: React.FC<TProps> = ({
           <SubCellWrapper>
             <SubCell>
               <SubTitle>Service Book</SubTitle>
-              <SubText>{item.serviceBooks.join(', ')}</SubText>
+              <SubText>{item.serviceBooks.map(book => book.serviceBook).join(', ')}</SubText>
             </SubCell>
           </SubCellWrapper>
           <SubCellWrapper>
