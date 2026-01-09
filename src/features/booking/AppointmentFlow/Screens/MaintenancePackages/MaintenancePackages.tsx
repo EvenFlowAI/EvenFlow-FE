@@ -162,9 +162,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       if (sentGA) {
         isEMenuPackage ? handleEMenuGA() : handleGA(usedPackage);
       }
-      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
-        onOpen();
-      }
       if (isEMenuPackage) {
         dispatch(setPackageEMenuType(usedPackage.type));
       } else {
@@ -172,7 +169,11 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       }
       dispatch(setPackage(usedPackage));
       dispatch(setPackagePricingType(localSelectedPricingType));
-      onSelectionCompleted();
+      if (selectedPackage && packageOptionType !== null && packageOptionType !== usedPackage.type) {
+        onOpen();
+      } else {
+        onSelectionCompleted();
+      }
     }
   };
 
