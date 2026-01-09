@@ -2,6 +2,7 @@ import { TFilters } from '../types';
 
 export const initialFilters: TFilters = {
   serviceBook: '',
+  serviceBookId: 0,
   name: '',
   role: '',
 };
