@@ -30,6 +30,13 @@ const RecallParts = () => {
   const showError = useException();
 
   useEffect(() => {
+    return () => {
+      dispatch(setRecallSearch(''));
+      dispatch(setRecallPageData({ pageIndex: 0, pageSize: 10 }));
+    };
+  }, []);
+
+  useEffect(() => {
     if (selectedSC && allAssignedList) {
       const opsCode = allAssignedList.find(item => item.id === selectedSC.recallServiceRequestId);
       setSelectedOpsCode(opsCode ?? null);
