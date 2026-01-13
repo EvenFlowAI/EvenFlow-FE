@@ -403,7 +403,7 @@ export const ManageAppointment: React.FC<
       );
 
       // checking if the transportation is available
-      const transportationAvailable = transportations.some(
+      const isSelectedTransportationAvailable = transportations.some(
         transportation => transportation.id === appointmentByKey?.transportationOption?.id
       );
       if (!advisorId) {
@@ -413,17 +413,31 @@ export const ManageAppointment: React.FC<
             onChangeSlot();
           }, 500);
         } else {
-          if (transportationAvailable) {
+          if (isSelectedTransportationAvailable) {
             onChangeSlot();
           } else {
-            dispatch(setCurrentFrameScreen('transportationNeeds'));
+            // we are checking if a transportation step is available on booking configuration,
+            // if yes, move to the transportationNeeds screen,
+            // if not move to the timing
+            if (isTransportationAvailable) {
+              dispatch(setCurrentFrameScreen('transportationNeeds'));
+            } else {
+              onChangeSlot();
+            }
           }
         }
       } else {
-        if (transportationAvailable) {
+        if (isSelectedTransportationAvailable) {
           handleChangeSlot();
         } else {
-          dispatch(setCurrentFrameScreen('transportationNeeds'));
+          // we are checking if a transportation step is available on booking configuration,
+          // if yes, move to the transportationNeeds screen,
+          // if not move to the timing
+          if (isTransportationAvailable) {
+            dispatch(setCurrentFrameScreen('transportationNeeds'));
+          } else {
+            handleChangeSlot();
+          }
         }
       }
     }
