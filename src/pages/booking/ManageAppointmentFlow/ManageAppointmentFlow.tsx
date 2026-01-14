@@ -84,28 +84,36 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
   };
 
   const onNextOnAdvisorSelectionStep = () => {
-    // if the transportation available, move to the slots, if not, move to the transportation selection step
     if (isCloneMode) {
-      const transportationAvailable = transportations.some(
+      const isSelectedTransportationAvailable = transportations.some(
         transportation => transportation.id === appointmentByKey?.transportationOption?.id
       );
 
-      return handleSetScreen(
-        transportationAvailable
-          ? isAppointmentTimingAvailable
-            ? 'appointmentTiming'
-            : 'appointmentSelection'
-          : 'transportationNeeds'
-      );
+      let nextScreen: TScreen;
+
+      // if is selected, transportation is available to move to timing,
+      // if no, we are checking if a transportation step is available on booking configuration,
+      // if yes, move to the transportationNeeds screen,
+      // if not move to the timing
+      if (isSelectedTransportationAvailable) {
+        nextScreen = isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection';
+      } else if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
+        nextScreen = 'transportationNeeds';
+      } else {
+        nextScreen = isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection';
+      }
+
+      return handleSetScreen(nextScreen);
     }
 
-    return handleSetScreen(
+    const nextScreen =
       isTransportationAvailable && !serviceTypeOption?.transportationOption
         ? 'transportationNeeds'
         : isAppointmentTimingAvailable
           ? 'appointmentTiming'
-          : 'appointmentSelection'
-    );
+          : 'appointmentSelection';
+
+    return handleSetScreen(nextScreen);
   };
 
   const carSelections: { [k in TScreen]?: JSX.Element } = {
