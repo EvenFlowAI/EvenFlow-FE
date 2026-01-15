@@ -1643,7 +1643,7 @@ export const setTransportationsLoading = createAction<boolean>(
 );
 
 export const loadActiveTransportations =
-  (serviceCenterId: number, onSuccess?: () => void): AppThunk =>
+  (serviceCenterId: number, onSuccess?: (showWarning?: boolean) => void): AppThunk =>
   (dispatch, getState) => {
     const {
       serviceCategories,
@@ -1707,6 +1707,9 @@ export const loadActiveTransportations =
             );
             if (!transportationAvailable) {
               dispatch(setTransportation(null));
+              dispatch(setTransportationsLoading(false));
+              if (onSuccess) onSuccess(true);
+              return;
             }
           }
           dispatch(setTransportationsLoading(false));

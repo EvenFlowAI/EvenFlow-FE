@@ -19,7 +19,7 @@ const SlotImpactedWarning = () => {
     (state: RootState) => state.bookingFlowConfig
   );
   const { customerLoadedData, isCloneMode } = useSelector((state: RootState) => state.appointment);
-  const { currentScreen, appointmentByKey, transportations } = useSelector(
+  const { currentScreen, appointmentByKey, transportations, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const SlotImpactedWarning = () => {
   const onNext = () => {
     dispatch(setSlotsWarningOpen(false));
 
-    if (appointmentByKey?.transportationOption && transportations.length) {
+    if (appointmentByKey?.transportationOption && transportations.length && !transportation?.id) {
       const transportationAvailable = transportations.some(
         el => el.id === appointmentByKey?.transportationOption?.id
       );
