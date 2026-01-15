@@ -7,6 +7,7 @@ import { TCallback } from '../../../../../../types/types';
 import { useTranslation } from 'react-i18next';
 import { EServiceType } from '../../../../../../store/reducers/appointmentFrameReducer/types';
 import {
+  loadActiveTransportations,
   setEditingPosition,
   setServiceOptionChanged,
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
@@ -15,6 +16,8 @@ import { TitleWrapper } from './styles';
 import dayjs from 'dayjs';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { setSlotsWarningOpen } from '../../../../../../store/reducers/modals/actions';
+import { useParams } from 'react-router-dom';
+import { decodeSCID } from '../../../../../../utils/utils';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -35,6 +38,7 @@ export const AppointmentSelectedDate: React.FC<
   const { serviceTypeOption, isAppointmentSaving, appointmentByKey, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  const { id } = useParams<{ id: string }>();
   const [serviceValetTime, setServiceValetTime] = useState<TServiceValetSlot | null>(null);
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -98,18 +102,22 @@ export const AppointmentSelectedDate: React.FC<
           : getDateForUpdate()
         : dayjs.utc(appointment?.date).format('ddd, MMMM D, hh:mm A');
 
-  const handleChangeSlot = () => {
+  const onSuccess = (showWarning?: boolean) => {
     if (customerLoadedData?.isUpdating) {
       dispatch(setEditingPosition('slot'));
       dispatch(setServiceOptionChanged(false));
     }
     if (!isAppointmentSaving) {
-      if (isTransportationAvailable && !transportation && !wasWarningShowed) {
+      if ((isTransportationAvailable && !transportation && !wasWarningShowed) || showWarning) {
         dispatch(setSlotsWarningOpen(true));
       } else {
         onChangeSlot();
       }
     }
+  };
+
+  const handleChangeSlot = () => {
+    dispatch(loadActiveTransportations(decodeSCID(id), onSuccess));
   };
 
   return (
