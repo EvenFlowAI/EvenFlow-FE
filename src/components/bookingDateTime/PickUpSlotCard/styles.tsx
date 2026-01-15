@@ -1,8 +1,6 @@
 import { makeStyles } from 'tss-react/mui';
 import { styled } from '@mui/material';
-import React from 'react';
 
-//
 export const useStyles = makeStyles()(theme => ({
   dropOff: {
     display: 'flex',

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, SetStateAction, Dispatch } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { DialogProps } from '../../BaseModal/types';
@@ -21,7 +21,6 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 type TAssignOpsCodeModalProps = DialogProps & {
   selectedCodes: IAssignedServiceRequest[];
-  setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
   handleSave?: () => void;
   isEligible?: boolean;
   handleSelect: (el: IAssignedServiceRequest) => void;
@@ -59,15 +58,7 @@ const tableData: TableRowDataType<IAssignedServiceRequest>[] = [
 
 const AddOpsCodeModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>
-> = ({
-  handleSelect,
-  isEligible,
-  disabledIds,
-  handleSave,
-  selectedCodes,
-  setSelectedCodes,
-  ...props
-}) => {
+> = ({ handleSelect, isEligible, disabledIds, handleSave, selectedCodes, ...props }) => {
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
   const { classes } = useStyles();
@@ -96,7 +87,7 @@ const AddOpsCodeModal: React.FC<
   }, [props.onClose, dispatch]);
 
   const handleSaveOpsCode = useCallback(() => {
-    handleSave && handleSave();
+    if (handleSave) handleSave();
     handleClose();
   }, [selectedCodes]);
 

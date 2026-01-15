@@ -2,17 +2,18 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from 'react';
 import { InputLabel } from '@mui/material';
 import { useStyles } from './styles';
+import { TTechnicianLevel } from '../../../types/types';
 
 export type TButtonElement = {
-  value: any;
+  value: TTechnicianLevel;
   label: string;
   id: string;
 };
 
 type TProps = {
   buttons: TButtonElement[];
-  onChange: (e: React.MouseEvent<HTMLElement>, value: any) => void;
-  value: any;
+  onChange: (e: React.MouseEvent<HTMLElement>, value: TTechnicianLevel) => void;
+  value: TTechnicianLevel;
   label?: string;
   exclusive?: boolean;
 };

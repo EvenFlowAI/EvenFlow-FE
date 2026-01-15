@@ -125,7 +125,7 @@ const CustomerTextConfiguration = ({
     );
   };
 
-  const LightTooltip = styled(({ className, width, ...props }: LightTooltipProps) => (
+  const LightTooltip = styled(({ className, ...props }: LightTooltipProps) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))<LightTooltipProps>(({ theme, width }) => ({
     [`& .${tooltipClasses.tooltip}`]: {

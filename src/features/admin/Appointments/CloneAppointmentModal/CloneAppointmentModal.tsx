@@ -151,7 +151,6 @@ const CloneAppointmentModal: React.FC<
               dateRangeUpdated={initRef.current}
               dateChangeDisabled
               date={date}
-              loading={isLoading}
               onDateChange={updateDate}
             />
           ) : (
@@ -160,7 +159,6 @@ const CloneAppointmentModal: React.FC<
               dateChangeDisabled
               appointments={groupedAppointments}
               date={date}
-              loading={isLoading}
               onDateChange={updateDate}
               onLoadNext={loadNextSlots}
               onLoadPrevious={loadPreviousSlots}

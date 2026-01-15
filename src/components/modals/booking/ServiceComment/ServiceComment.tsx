@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseModal, DialogTitle, DialogContent } from '../../BaseModal/BaseModal';
+import { BaseModal, DialogTitle } from '../../BaseModal/BaseModal';
 import { DialogProps } from '../../BaseModal/types';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { BfButtonsWrapper } from '../../../styled/BfButtonsWrapper';

@@ -568,7 +568,6 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
         open={isAddOpsCodeOpen}
         onClose={onAddOpsCodeClose}
         selectedCodes={opsCodes}
-        setSelectedCodes={setOpsCodes}
       />
       <ExistingPackagesModal
         open={isExistingOpen}

@@ -3,7 +3,6 @@ import { Dayjs } from 'dayjs';
 
 export type TMonthProps = {
   date: TParsableDate;
-  loading: boolean;
   onDateChange: TArgCallback<TParsableDate>;
 };
 

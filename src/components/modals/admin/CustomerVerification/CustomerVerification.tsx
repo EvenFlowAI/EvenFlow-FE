@@ -23,10 +23,10 @@ const CustomerVerification: React.FC<
   const { classes } = useStyles();
 
   useEffect(() => {
-    selectedSC && setVerificationOn(selectedSC.isAuthRequired);
+    if (selectedSC) setVerificationOn(selectedSC.isAuthRequired);
   }, [selectedSC]);
 
-  const handleSwitch = (e: any, value: boolean) => {
+  const handleSwitch = (e: React.ChangeEvent<HTMLInputElement>, value: boolean) => {
     setVerificationOn(value);
   };
 

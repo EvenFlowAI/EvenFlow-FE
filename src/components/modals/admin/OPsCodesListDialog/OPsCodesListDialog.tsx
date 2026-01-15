@@ -44,7 +44,7 @@ type TOPsCodesListDialogProps = {
 
 export const OPsCodesListDialog: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TOPsCodesListDialogProps>>
-> = ({ onAction, onSave, selectedPreviously, payload, ...props }) => {
+> = ({ onSave, selectedPreviously, ...props }) => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
   const showError = useException();

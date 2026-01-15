@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
 import { TArgCallback } from '../../types/types';
-import { IGlobalMake } from '../../store/reducers/globalVehicles/types';
 
 export type TContainerStyle = {
   width?: number | string;
@@ -24,7 +23,7 @@ export type TDnDProps = {
 };
 
 export interface CardProps {
-  id: any;
+  id: number;
   text: string;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;

@@ -19,7 +19,6 @@ export function DataCalendar<U>({
   secondIconFieldName,
   firstIcon,
   secondIcon,
-  index,
   dateFieldName,
   firstIconText,
   secondIconText,
@@ -92,7 +91,7 @@ export function DataCalendar<U>({
                 {day}
               </div>
             ))}
-            {days.map((d, i) => {
+            {days.map(d => {
               const dayData = data.find(el => {
                 if (el[dateFieldName]) {
                   const formatted = dayjs

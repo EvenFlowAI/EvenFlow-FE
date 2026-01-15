@@ -242,7 +242,8 @@ const VehicleRepairHistory: React.FC<
                 </div>
                 <div className={classnames(classes.smallPadding, classes.borderTop)}>
                   <div className={classes.titleNonUpperCase}>Comments:</div>
-                  {item.comments && item.comments.map(comment => <div>{comment}</div>)}
+                  {item.comments &&
+                    item.comments.map((comment, index) => <div key={index}>{comment}</div>)}
                 </div>
               </div>
             ))}

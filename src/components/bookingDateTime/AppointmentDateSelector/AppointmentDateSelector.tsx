@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { TArgCallback } from '../../../types/types';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { DaySelector } from '../DaySelector/DaySelector';
 import { TGroupedAppointments } from '../../../utils/types';
@@ -21,7 +20,6 @@ export const AppointmentDateSelector: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TProps>>
 > = ({
   date,
-  loading,
   onDateChange,
   appointments,
   dateChangeDisabled,
@@ -47,7 +45,7 @@ export const AppointmentDateSelector: React.FC<
       {!isMobile && <h4>{t('Select Date')}</h4>}
       {!dateChangeDisabled ? (
         <div ref={monthSelectorRef}>
-          <MonthSelector date={date} loading={loading} onDateChange={onDateChange} />
+          <MonthSelector date={date} onDateChange={onDateChange} />
         </div>
       ) : null}
       <DaySelector

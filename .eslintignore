@@ -6,7 +6,22 @@ dist/
 scripts/
 .eslintrc.js
 
+#src/components/bookingDateTime
+#src/components/buttons
+#src/components/DataCalendar
+#src/components/DragAndDrop
+#src/components/FallBack
+#src/components/formControls
+#src/components/modals
+src/components/pickers
+src/components/styled
+src/components/tables
+src/components/UserLocation
+src/components/wrappers
+
+
+
+
 src/api
-src/components
 src/features
 src/hooks

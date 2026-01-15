@@ -17,7 +17,7 @@ type TProps = {
 
 export const SVAppointmentDateSelector: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TProps>>
-> = ({ date, loading, onDateChange, dateChangeDisabled, dateRangeUpdated, onDateRangeSet }) => {
+> = ({ date, onDateChange, dateChangeDisabled, dateRangeUpdated, onDateRangeSet }) => {
   const { serviceValetSlots } = useSelector((state: RootState) => state.appointment);
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('md'));
@@ -26,15 +26,12 @@ export const SVAppointmentDateSelector: React.FC<
   return (
     <div>
       {!isXs && <h4>{t('Select Date')}</h4>}
-      {!dateChangeDisabled ? (
-        <MonthSelector date={date} loading={loading} onDateChange={onDateChange} />
-      ) : null}
+      {!dateChangeDisabled ? <MonthSelector date={date} onDateChange={onDateChange} /> : null}
       <SVDaySelector
         onDateRangeSet={onDateRangeSet}
         dateRangeUpdated={dateRangeUpdated}
         date={date}
         appointments={serviceValetSlots}
-        loading={loading}
         onDateChange={onDateChange}
       />
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
+import { BaseModal, DialogActions, DialogTitle } from '../../BaseModal/BaseModal';
 import { Button } from '@mui/material';
 import { useStyles } from './styles';
 import { ReportProblemOutlined } from '@mui/icons-material';

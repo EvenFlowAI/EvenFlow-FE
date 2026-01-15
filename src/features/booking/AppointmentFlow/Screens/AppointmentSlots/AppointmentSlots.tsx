@@ -735,7 +735,6 @@ export const AppointmentSlots: React.FC<
             onDateRangeSet={handleDateRangeSet}
             dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             date={date}
-            loading={loading || isConsentsLoading}
             onDateChange={updateDate}
             dateRangeUpdated={initRef.current}
           />
@@ -744,7 +743,6 @@ export const AppointmentSlots: React.FC<
             dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             appointments={groupedAppointments}
             date={date}
-            loading={loading || isConsentsLoading}
             onDateChange={updateDate}
             daysPerScreen={daysPerScreen}
             onLoadNext={loadNextSlots}
@@ -760,7 +758,6 @@ export const AppointmentSlots: React.FC<
             appointments={
               groupedAppointments[dayjs.utc(date).startOf('day').toISOString().replace('.000', '')]
             }
-            selectFirstSlot={selectFirstSlot}
             date={date}
             loading={loading || isConsentsLoading}
           />

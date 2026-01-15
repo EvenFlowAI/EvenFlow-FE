@@ -5,7 +5,7 @@ export type TStyleProps = {
   fw: boolean;
 };
 
-export const Wrapper = styled('div')<TStyleProps>(({ theme, fw }) => ({
+export const Wrapper = styled('div')<TStyleProps>(({ fw }) => ({
   position: 'relative',
   width: fw ? '100%' : 'auto',
   display: 'inline-flex',
