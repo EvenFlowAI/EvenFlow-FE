@@ -175,6 +175,26 @@ export const checkAudienceCriteria = (
   return true;
 };
 
+export const validateDaysToFutureAppointment = (
+  criterias: CriteriaI[],
+  triggers: TriggerI[],
+  showError: (msg: string) => void
+) => {
+  if (criterias[0].type === 'Days To Future Appointment' && triggers.length) {
+    const hasInvalid = triggers.some(
+      trigger => trigger.daysFromListGeneration > +criterias[0].value
+    );
+    if (hasInvalid) {
+      showError(
+        'Contact #1: Days from list generation must be less or equal to audience criteria value'
+      );
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const validateTriggersSequence = (
   triggers: TriggerI[],
   showError: (msg: string) => void
