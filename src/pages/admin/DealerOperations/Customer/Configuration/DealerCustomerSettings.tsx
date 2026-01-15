@@ -21,6 +21,7 @@ import { useException } from '../../../../../hooks/useException/useException';
 import {
   checkAudienceCriteria,
   filterValidRulesAndTriggers,
+  validateDaysToFutureAppointment,
   validateGroup,
   validateTriggersSequence,
 } from '../../helper';
@@ -202,6 +203,7 @@ const DealerCustomerSettings = () => {
       validateGroup(triggers, t => Number.isInteger(Number(t.daysFromListGeneration)))
     ) {
       if (!validateTriggersSequence(triggers, showError)) return;
+      if (!validateDaysToFutureAppointment(criterias, triggers, showError)) return;
 
       const { filterRules, triggers: validTriggers } = filterValidRulesAndTriggers(
         criterias,
