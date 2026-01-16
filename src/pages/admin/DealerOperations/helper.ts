@@ -1,5 +1,5 @@
 import { CriteriaI, TriggerI } from './Customer/types';
-import { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 export function numberToOrdinalWord(num: number): string {
   switch (num) {
@@ -150,13 +150,22 @@ export const validateRuleType = (
 };
 
 export const validateTriggers = (
+  criterias: CriteriaI[],
   triggers: TriggerI[],
   setFirstTriggerDateError: Dispatch<SetStateAction<boolean>>,
-  showError: (msg: string) => void
+  showError: (msg: string) => void,
+  setTriggerDateErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >
 ) => {
   if (triggers.length === 1 && !triggers[0].scheduledTime) {
     setFirstTriggerDateError(true);
     showError("The 'Scheduled time' selection is required.");
+    return true;
+  }
+  if (!validateDaysToFutureAppointment(criterias, triggers, showError, setTriggerDateErrors)) {
     return true;
   }
   return false;
@@ -178,18 +187,30 @@ export const checkAudienceCriteria = (
 export const validateDaysToFutureAppointment = (
   criterias: CriteriaI[],
   triggers: TriggerI[],
-  showError: (msg: string) => void
+  showError: (msg: string) => void,
+  setTriggerDateErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >
 ) => {
   if (criterias[0].type === 'Days To Future Appointment' && triggers.length) {
-    const hasInvalid = triggers.some(
-      trigger => trigger.daysFromListGeneration > +criterias[0].value
-    );
+    const errors: { [index: number]: boolean } = {};
+
+    triggers.forEach((trigger, index) => {
+      errors[index] = trigger.daysFromListGeneration > +criterias[0].value;
+    });
+
+    const hasInvalid = Object.values(errors).some(Boolean);
+
     if (hasInvalid) {
-      showError(
-        'Contact #1: Days from list generation must be less or equal to audience criteria value'
-      );
+      showError('Days from list generation must be less or equal to audience criteria value');
+      setTriggerDateErrors(errors);
       return false;
     }
+
+    // якщо все ок — очистити помилки
+    setTriggerDateErrors({});
   }
 
   return true;
