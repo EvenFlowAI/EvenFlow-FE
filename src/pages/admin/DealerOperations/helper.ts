@@ -209,7 +209,6 @@ export const validateDaysToFutureAppointment = (
       return false;
     }
 
-    // якщо все ок — очистити помилки
     setTriggerDateErrors({});
   }
 
