@@ -21,7 +21,6 @@ import { useException } from '../../../../../hooks/useException/useException';
 import {
   checkAudienceCriteria,
   filterValidRulesAndTriggers,
-  validateDaysToFutureAppointment,
   validateGroup,
   validateTriggersSequence,
 } from '../../helper';
@@ -90,6 +89,7 @@ const DealerCustomerSettings = () => {
   }>({});
   const [criteriaTypeErrors, setCriteriaTypeErrors] = useState<{ [index: number]: boolean }>({});
   const [ruleOperatorErrors, setRuleOperatorErrors] = useState<{ [index: number]: boolean }>({});
+  const [triggerDateErrors, setTriggerDateErrors] = useState<{ [index: number]: boolean }>({});
   const [ruleTypeErrors, setRuleTypeErrors] = useState<{ [index: number]: boolean }>({});
   const [firstTriggerDateError, setFirstTriggerDateError] = useState<boolean>(false);
   const {
@@ -120,6 +120,7 @@ const DealerCustomerSettings = () => {
     setCriteriaTypeErrors({});
     setCriteriaOperatorErrors({});
     setRuleOperatorErrors({});
+    setTriggerDateErrors({});
     setRuleTypeErrors({});
     setFirstTriggerDateError(false);
   };
@@ -162,7 +163,13 @@ const DealerCustomerSettings = () => {
     const errorsCriteriaType = validateCriteriaType(criterias, setCriteriaTypeErrors);
     const errorsRuleOperator = validateRuleOperator(rules, setRuleOperatorErrors);
     const errorsRuleType = validateRuleType(rules, setRuleTypeErrors);
-    const triggersError = validateTriggers(triggers, setFirstTriggerDateError, showError);
+    const triggersError = validateTriggers(
+      criterias,
+      triggers,
+      setFirstTriggerDateError,
+      showError,
+      setTriggerDateErrors
+    );
 
     if (Object.keys(errorsCriteriaOperator).length || Object.keys(errorsRuleOperator).length) {
       showError('The operator selection is required.');
@@ -203,7 +210,6 @@ const DealerCustomerSettings = () => {
       validateGroup(triggers, t => Number.isInteger(Number(t.daysFromListGeneration)))
     ) {
       if (!validateTriggersSequence(triggers, showError)) return;
-      if (!validateDaysToFutureAppointment(criterias, triggers, showError)) return;
 
       const { filterRules, triggers: validTriggers } = filterValidRulesAndTriggers(
         criterias,
@@ -310,6 +316,8 @@ const DealerCustomerSettings = () => {
 
               <div className={classes.triggersWrapper}>
                 <Triggers
+                  setTriggerDateErrors={setTriggerDateErrors}
+                  triggerDateErrors={triggerDateErrors}
                   firstTriggerDateError={firstTriggerDateError}
                   setFirstTriggerDateError={setFirstTriggerDateError}
                   triggers={triggers}
