@@ -17,6 +17,7 @@ export const TableRow = withStyles(TR, theme => ({
   },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const TableRowWithoutBorder = withStyles(TR, theme => ({
   root: {
     '&:nth-child(2n) .MuiTableCell-root': {

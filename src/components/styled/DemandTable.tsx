@@ -33,6 +33,7 @@ export const DenseTableWithPadding = withStyles(StyledTable, {
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const DemandTableWithoutBorder = withStyles(StyledTable, theme => ({
   root: {
     border: 'none',

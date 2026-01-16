@@ -13,7 +13,7 @@ type TProps = {
 const CardPrice: React.FC<TProps> = ({ price, offer }) => {
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { t } = useTranslation();
-  return !!price ? (
+  return price ? (
     <div className="priceWrapper">
       <span className="text">{t('Starting At')}</span>
       <span

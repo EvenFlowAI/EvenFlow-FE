@@ -152,13 +152,13 @@ export const MaintenanceDetailsForm: React.FC<
   }, [selectedSR, selectedPackage, isRecallsCategorySelected, serviceCategories, allCategories]);
 
   const isNextDisabled = useMemo(() => {
-    return !Boolean(
+    return !(
       selectedVehicle?.make &&
-        selectedVehicle?.model &&
-        selectedVehicle?.year &&
-        selectedVehicle?.mileage &&
-        (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
-        (isRecallsCategorySelected ? selectedVehicle?.vin : true)
+      selectedVehicle?.model &&
+      selectedVehicle?.year &&
+      selectedVehicle?.mileage &&
+      (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
+      (isRecallsCategorySelected ? selectedVehicle?.vin : true)
     );
   }, [selectedVehicle, currentConfig, isRecallsCategorySelected]);
 
@@ -316,7 +316,7 @@ export const MaintenanceDetailsForm: React.FC<
 
   const isValid = () => {
     const errorsArray: string[] = [];
-    for (let f of requiredFields) {
+    for (const f of requiredFields) {
       if (!selectedVehicle || !selectedVehicle[f as keyof ILoadedVehicle]) {
         setErrors(e => [...e, f]);
         if (f === 'mileage' && !selectedVehicle?.mileage) {

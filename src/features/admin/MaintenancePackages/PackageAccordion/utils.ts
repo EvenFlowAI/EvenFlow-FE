@@ -137,7 +137,7 @@ export const getOptionsTableData = (pack: IPackageById) => {
 
 export const checkIsValid = (packageData: IPackageById | null): [boolean, string[] | []] => {
   let isValid = false;
-  let messages = [];
+  const messages = [];
   const allRequestsHavePriceAndHours = !packageData?.options.find(
     option => option.serviceRequestPrice < 0 || option.serviceRequestLaborHours < 0
   );

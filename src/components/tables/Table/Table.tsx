@@ -53,10 +53,19 @@ export function Table<U>({
   );
 
   const handleChangePage = (e: React.MouseEvent | null, newPage: number) => {
-    props.onChangePage ? props.onChangePage(e, newPage) : setPage(newPage);
+    if (props.onChangePage) {
+      props.onChangePage(e, newPage);
+    } else {
+      setPage(newPage);
+    }
   };
+
   const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChangeRowsPerPage ? props.onChangeRowsPerPage(e) : setRowsPerPage(+e.target.value);
+    if (props.onChangeRowsPerPage) {
+      props.onChangeRowsPerPage(e);
+    } else {
+      setRowsPerPage(+e.target.value);
+    }
     handleChangePage(null, 0);
   };
 
@@ -120,8 +129,8 @@ export function Table<U>({
           )}
           <TableBody>
             {props.data.map((row, idx) => {
-              let rIdx: any = props.index ? row[props.index] : idx;
-              if (props.getKey) rIdx = props.getKey(row);
+              let rIdx = props.index ? row[props.index] : idx;
+              if (props.getKey) rIdx = +props.getKey(row);
               return (
                 <TableRow key={`${rIdx}`} className={classes.tableRow}>
                   {props.startActions ? (

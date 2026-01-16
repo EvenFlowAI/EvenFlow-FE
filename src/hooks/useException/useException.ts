@@ -7,7 +7,7 @@ export function useException(preventDuplicate?: boolean) {
   return useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (e: any) => {
-      let showId = e?.response?.status === 500;
+      const showId = e?.response?.status === 500;
       if (e && e.response?.data?.errors && e.response.data.errors.length) {
         for (const error of e.response.data.errors.slice(0, 3) as {
           field: string;

@@ -382,7 +382,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
                       {/*{s.offer ? <OfferPrice style={{fontWeight: s.offer.type === EOfferType.FreeService ? 400 : 600}}>*/}
                       {/*    {getOfferString(s.offer, Boolean(scProfile?.isRoundPrice))}*/}
                       {/*</OfferPrice> : null}*/}
-                      {Boolean(s.price) ? (
+                      {s.price ? (
                         <Price>${scProfile?.isRoundPrice ? s.price : s.price.toFixed(2)}</Price>
                       ) : (
                         <InfoOutlined style={{ paddingRight: 8, fontSize: '2rem' }} />

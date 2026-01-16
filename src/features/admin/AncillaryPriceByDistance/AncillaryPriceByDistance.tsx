@@ -100,7 +100,7 @@ const AncillaryPriceByDistance: React.FC<
           const nextItem = prev.find(el => el.orderIndex === editedItem.orderIndex + 1);
           let nextUpdated: IDistancePriceSettings | null = null;
           if (itemToUpdate) {
-            let newValue = Number(value);
+            const newValue = Number(value);
             if (nextItem && fieldName === 'maxValue') {
               if (newValue > nextItem.maxValue) {
                 showError(

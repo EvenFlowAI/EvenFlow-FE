@@ -63,7 +63,7 @@ const SummaryRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSumm
   };
 
   return (
-    <RowWrapper toggle={Boolean(toggleField) ? 1 : 0}>
+    <RowWrapper toggle={toggleField ? 1 : 0}>
       <div className={classes.summaryText}>{summaryText}</div>
       {toggleField ? (
         <Label

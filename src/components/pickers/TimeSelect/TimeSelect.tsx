@@ -82,7 +82,7 @@ const TimeSelect: React.FC<TProps> = ({
     onChange(dayjs(`${pureHours} ${period}`, time12HourFormat).format(timeSpanString));
   };
 
-  const onAutocompleteChange = (e: React.ChangeEvent<{}>, option: string | null) => {
+  const onAutocompleteChange = (e: React.SyntheticEvent, option: string | null) => {
     if (option) {
       onChange(dayjs(`${option} ${period}`, time12HourFormat).format(timeSpanString));
     } else {
@@ -92,22 +92,26 @@ const TimeSelect: React.FC<TProps> = ({
 
   const onClickUp = () => {
     if (!disabled) {
-      upEnabled
-        ? onChange(dayjs(value, timeSpanString).add(gap, 'minute').format(timeSpanString))
-        : showError(
-            upArrowErrorText ??
-              `The maximum possible value is ${dayjs(end, timeSpanString).format(time24HourFormat)}`
-          );
+      if (upEnabled) {
+        onChange(dayjs(value, timeSpanString).add(gap, 'minute').format(timeSpanString));
+      } else {
+        showError(
+          upArrowErrorText ??
+            `The maximum possible value is ${dayjs(end, timeSpanString).format(time24HourFormat)}`
+        );
+      }
     }
   };
   const onClickDown = () => {
     if (!disabled) {
-      downEnabled
-        ? onChange(dayjs(value, timeSpanString).subtract(gap, 'minute').format(timeSpanString))
-        : showError(
-            downArrowErrorText ??
-              `The minimum possible value is ${dayjs(start, timeSpanString).format(time24HourFormat)}`
-          );
+      if (downEnabled) {
+        onChange(dayjs(value, timeSpanString).subtract(gap, 'minute').format(timeSpanString));
+      } else {
+        showError(
+          downArrowErrorText ??
+            `The minimum possible value is ${dayjs(start, timeSpanString).format(time24HourFormat)}`
+        );
+      }
     }
   };
 

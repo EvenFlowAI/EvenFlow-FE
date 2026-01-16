@@ -37,7 +37,7 @@ export const TimeOfYearModal: React.FC<
 
   const monthData = useMemo(() => {
     const months: ITimeOfYearSetting[][] = [[], [], [], [], [], [], [], [], [], [], [], []];
-    for (let data of timeOfYearData) {
+    for (const data of timeOfYearData) {
       months[dayjs(data.date).month()].push(data);
     }
     return months;

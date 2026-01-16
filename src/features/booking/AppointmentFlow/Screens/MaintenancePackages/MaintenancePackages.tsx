@@ -265,7 +265,7 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     <PackagesStepWrapper>
       <NoItemsLoading
         wrapperStyles={{ marginTop: 20 }}
-        items={packages}
+        items={packages.length}
         loading={loading}
         label={t('There are no packages available')}
       />

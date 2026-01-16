@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 import { styled } from '@mui/material';
 import { TStyleProps } from './types';
 
-export const ZoneContainer = styled('div')<TStyleProps>(({ theme, isSelected }) => ({
+export const ZoneContainer = styled('div')<TStyleProps>(({ isSelected }) => ({
   display: 'grid',
   gridTemplateColumns: '2fr 3fr',
   alignItems: 'flex-start',

@@ -55,7 +55,7 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
     header: 'Vehicle',
     required: true,
     val: el => {
-      const vehicleData = `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${Boolean(el.vehicle?.year) ? el.vehicle?.year : ''}`;
+      const vehicleData = `${el.vehicle?.make ?? ''} ${el.vehicle?.model ?? ''} ${el.vehicle?.year ? el.vehicle?.year : ''}`;
       return el.vehicle?.make || el.vehicle?.model || Boolean(el.vehicle?.year)
         ? vehicleData
         : 'DMS missing vehicle data';

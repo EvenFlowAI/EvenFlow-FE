@@ -90,7 +90,7 @@ export const ActiveOffers = () => {
             );
           })
         ) : (
-          <NoItemsLoading items={offers} label={'There are no active offers.'} />
+          <NoItemsLoading items={offers.length} label={'There are no active offers.'} />
         )}
         {numberOfRecords > offersPageData.pageSize ? (
           <Grid item xs={12}>

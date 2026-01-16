@@ -44,7 +44,7 @@ const OpCodeFieldsAndDayOfWeekRender = ({
       const current = rules[ruleIdx].serviceRequests ?? [];
 
       const exists = current.some(o => o.value === option.value);
-      let next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
+      const next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
 
       updateLocalRule(ruleIdx, { serviceRequests: next });
       dispatch(setFormIsChecked(false));

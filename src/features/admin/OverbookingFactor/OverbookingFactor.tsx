@@ -46,7 +46,7 @@ export const OverbookingFactor = () => {
   const setInitialData = useCallback(() => {
     const nForm = {} as TForm;
     if (overbookingList.length) {
-      for (let overbookingItem of overbookingList) {
+      for (const overbookingItem of overbookingList) {
         nForm[overbookingItem.day] = overbookingItem;
       }
       setForm(nForm);

@@ -24,8 +24,8 @@ export const PodSelector = ({ individualStyles }: { individualStyles?: boolean }
   const { pathname } = useLocation();
 
   const show = useMemo(() => {
-    for (let route of selectedRoutes) {
-      if (Boolean(matchPath(pathname, route))) return true;
+    for (const route of selectedRoutes) {
+      if (matchPath(pathname, route)) return true;
     }
     return false;
   }, [pathname]);

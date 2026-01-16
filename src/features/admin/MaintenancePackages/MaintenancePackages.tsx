@@ -72,7 +72,7 @@ export const MaintenancePackages = () => {
       );
       setPresentedOptions(options);
       const source = PackageSourceTypes.find(p => p.value === selectedSC.packageSource);
-      setPackageSourceType(source!!);
+      setPackageSourceType(source!);
     }
   }, [selectedSC, packagesPageData]);
 
@@ -110,7 +110,7 @@ export const MaintenancePackages = () => {
     const value = e.target.value;
 
     const selected = PackageSourceTypes.find(p => p.value === value);
-    setPackageSourceType(selected!!);
+    setPackageSourceType(selected!);
     dispatch(setPackageSource(selectedSC.id, selected?.value, showError));
   };
 

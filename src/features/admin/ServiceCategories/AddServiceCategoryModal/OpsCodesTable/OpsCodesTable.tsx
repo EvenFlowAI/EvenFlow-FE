@@ -80,7 +80,7 @@ export const OpsCodesTable: React.FC<
           color="primary"
           disabled={disabled}
           icon={
-            !!selectedCodes.find(item => item.id === el.id) ? (
+            selectedCodes.find(item => item.id === el.id) ? (
               <CheckBoxOutlined htmlColor="#3855FE" />
             ) : (
               <CheckBoxOutlineBlank htmlColor="#DADADA" />

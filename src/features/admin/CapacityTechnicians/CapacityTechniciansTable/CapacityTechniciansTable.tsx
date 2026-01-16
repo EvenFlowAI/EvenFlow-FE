@@ -65,7 +65,7 @@ const CapacityTechniciansTable: React.FC<{ selectedTab: string }> = ({ selectedT
   const onChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
     setTableChecked(false);
     setData(prev => {
-      let employee = prev.find(el => el.localId === +name);
+      const employee = prev.find(el => el.localId === +name);
       if (employee) {
         const updated = { ...employee, efficiency: +value };
         return prev

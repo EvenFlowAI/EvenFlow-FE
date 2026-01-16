@@ -37,13 +37,13 @@ const SummaryInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSu
 
   const getValue = (item: TSummaryCell) => {
     if (item.fieldName.toLowerCase().includes('price')) {
-      let value = Number.isInteger(+item.numberValue)
+      const value = Number.isInteger(+item.numberValue)
         ? item.numberValue
         : Number(item.numberValue).toFixed(2);
       return `$${value}`;
     }
     if (item.fieldName.toLowerCase().includes('hours')) {
-      let value = Number.isInteger(+item.numberValue)
+      const value = Number.isInteger(+item.numberValue)
         ? item.numberValue
         : Number(item.numberValue).toFixed(1);
       return `${value}h`;

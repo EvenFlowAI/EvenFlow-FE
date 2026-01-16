@@ -60,7 +60,7 @@ export const ArchiveOffers = () => {
   return (
     <Grid container spacing={2}>
       <NoItemsLoading
-        items={offers}
+        items={offers.length}
         loading={offersLoading}
         label={'There are no active offers.'}
       />

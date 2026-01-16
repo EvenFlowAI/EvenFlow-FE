@@ -7,7 +7,7 @@ import { SimpleData, TitleWrapper } from '../styles';
 export const VehicleDetails: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<{ payload: IAppointment }>>
 > = ({ payload }) => {
-  const vehicleData = `${payload.vehicle?.make ?? ''} ${payload.vehicle?.model ?? ''} ${Boolean(payload.vehicle?.year) ? payload.vehicle?.year : ''}`;
+  const vehicleData = `${payload.vehicle?.make ?? ''} ${payload.vehicle?.model ?? ''} ${payload.vehicle?.year ? payload.vehicle?.year : ''}`;
   return (
     <div>
       <TitleWrapper>Vehicle Details</TitleWrapper>
