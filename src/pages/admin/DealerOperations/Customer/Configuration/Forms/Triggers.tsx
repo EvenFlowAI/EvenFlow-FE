@@ -44,6 +44,10 @@ const Triggers = ({
 
   const handleRemoveTrigger = (index: number) => {
     setFirstTriggerDateError(false);
+    setTriggerDateErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
     setTriggers(prev => prev.filter((trigger, i) => i !== index));
   };
 
