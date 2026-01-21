@@ -195,7 +195,7 @@ export const CreateServiceCenterModal: React.FC<
     if (!formState.scName.trim().length) err = [...err, '"Service Center Name" must not be empty'];
 
     err.map(err => showError(err));
-    return !Boolean(err.length);
+    return !err.length;
   };
 
   const onSuccess = () => {

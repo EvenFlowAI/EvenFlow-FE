@@ -34,7 +34,7 @@ const CustomerConsents: React.FC<{ onNext: TCallback; onPrev?: TCallback }> = ({
 
   const onChange = () => {
     onClose();
-    onPrev && onPrev();
+    if (onPrev) onPrev();
   };
 
   return (

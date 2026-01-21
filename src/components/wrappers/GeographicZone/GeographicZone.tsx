@@ -27,7 +27,7 @@ const GeographicZone: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     setSelectedZone(zone);
   };
 
-  const deleteZipCode = (item: TZipCode) => (e: React.MouseEvent<{}>) => {
+  const deleteZipCode = (item: TZipCode) => () => {
     setCurrentZip(item);
     onRemoveZip();
   };

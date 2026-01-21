@@ -19,7 +19,6 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { useTimeSelectorStyles } from '../../../hooks/styling/useTmeSelectorStyles';
-import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,12 +27,11 @@ type TProps = {
   date: TParsableDate;
   loading: boolean;
   appointments?: TGroupedAppointment;
-  selectFirstSlot?: (date?: TParsableDate, newSeviceOption?: IFirstScreenOption) => void;
 };
 
 export const AppointmentTimeSelector: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TProps>>
-> = ({ date, loading, appointments, selectFirstSlot }) => {
+> = ({ date, loading, appointments }) => {
   const {
     appointment: selectedAppointment,
     scProfile,
@@ -72,7 +70,7 @@ export const AppointmentTimeSelector: React.FC<
     const slots: TSlot[] = [];
 
     // Create start and end times in local timezone
-    let start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0);
+    const start = dayjs.utc(date).hour(+startHours).minute(+startMinutes).second(0).millisecond(0);
     const end = dayjs.utc(date).hour(+endHours).minute(+endMinutes).second(0).millisecond(0);
 
     let cDate = start;

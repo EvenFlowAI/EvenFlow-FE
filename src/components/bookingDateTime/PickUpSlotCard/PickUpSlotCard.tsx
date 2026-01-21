@@ -36,7 +36,7 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     if (timeSlot?.date) {
       if (timeSlot?.date) {
         const timeSlotDate = timeSlot.date.toString().split('T')[0];
-        const [h, m, s] = timeSlot?.pickUpMin.split(':');
+        const [h, m, s] = timeSlot?.pickUpMin?.split(':') ?? [];
         const timeSlotTime = dayjs
           .utc(timeSlotDate)
           .set('hour', +h)

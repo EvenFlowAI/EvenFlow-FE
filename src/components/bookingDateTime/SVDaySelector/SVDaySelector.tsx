@@ -17,14 +17,12 @@ type TProps = {
   dateRangeUpdated: boolean;
   onDateRangeSet: TArgCallback<boolean>;
   onDateChange: TArgCallback<TParsableDate>;
-  loading: boolean;
   appointments: IServiceValetAppointment[];
 };
 
 export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
   date,
   onDateChange,
-  loading,
   appointments,
   dateRangeUpdated,
   onDateRangeSet,
@@ -54,7 +52,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
           .diff(dayjs.utc(dayjs(searchedDateRange.to).add(1, 'day')), 'days')
       );
       let currentDate = dayjs.utc(searchedDateRange.from);
-      let endDate = dayjs.utc(searchedDateRange.to).endOf('day');
+      const endDate = dayjs.utc(searchedDateRange.to).endOf('day');
       let i = 0;
       const maxAvailableDaysAmount = daysInMonth < WHILE_LIMIT ? WHILE_LIMIT : daysInMonth;
       while (currentDate.isSameOrBefore(endDate, 'date') && i < maxAvailableDaysAmount) {
@@ -79,7 +77,7 @@ export const SVDaySelector: React.FC<React.PropsWithChildren<React.PropsWithChil
         .startOf('day')
         .toISOString()
         .replace('.000', '');
-      let dateIdx = days.findIndex(el => el === formattedDate);
+      const dateIdx = days.findIndex(el => el === formattedDate);
       if (dateIdx === -1 || daysInMonth <= daysPerScreen) {
         setSliceIdx(0);
       } else {

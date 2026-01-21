@@ -49,7 +49,7 @@ export const ServiceCodes = () => {
 
   return (
     <div>
-      <NoItemsLoading items={srList} loading={loading} />
+      <NoItemsLoading items={srList.length} loading={loading} />
       {srList.length ? (
         <DenseTableWithPadding>
           <TableHead style={{ borderBottom: 'none' }}>

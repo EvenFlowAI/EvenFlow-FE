@@ -189,7 +189,7 @@ export const useServiceOption = (optionType: 'serviceType' | 'transportation') =
       newConfig?.advisorSelection &&
       (newOption?.type === EServiceType.VisitCenter ||
         Boolean(newOption?.type === EServiceType.PickUpDropOff && address && zipCode));
-    let isAdvisorSelectionOn = Boolean(
+    const isAdvisorSelectionOn = Boolean(
       config.find(item => item.serviceType === newOption.type)?.advisorSelection
     );
     dispatch(

@@ -650,7 +650,7 @@ const CustomerSearchTable: React.FC<
                       <IconsBlock>
                         <HtmlTooltip title="Create Appointment">
                           <IconButton
-                            disabled={!Boolean(customer.vehicleId)}
+                            disabled={!customer.vehicleId}
                             onClick={() => onCreateNewForCar(customer)}
                             size="small"
                             style={{ padding: '9px 3px' }}
@@ -661,16 +661,12 @@ const CustomerSearchTable: React.FC<
                         <HtmlTooltip title="Update Appointment">
                           <div>
                             <IconButton
-                              disabled={!Boolean(customer.hasPlannedAppointment)}
+                              disabled={!customer.hasPlannedAppointment}
                               onClick={() => onUpdateAppForCar(customer)}
                               size="small"
                               style={{ padding: '9px 3px' }}
                             >
-                              {Boolean(customer.hasPlannedAppointment) ? (
-                                <Update />
-                              ) : (
-                                <EditDisabled />
-                              )}
+                              {customer.hasPlannedAppointment ? <Update /> : <EditDisabled />}
                             </IconButton>
                           </div>
                         </HtmlTooltip>
@@ -693,12 +689,12 @@ const CustomerSearchTable: React.FC<
                         <HtmlTooltip title="Repair history">
                           <div>
                             <IconButton
-                              disabled={!Boolean(customer.hasOrders)}
+                              disabled={!customer.hasOrders}
                               onClick={() => onViewRepairHistory(customer)}
                               size="small"
                               style={{ padding: '9px 3px' }}
                             >
-                              {Boolean(customer.hasOrders) ? <Search /> : <SearchDisabled />}
+                              {customer.hasOrders ? <Search /> : <SearchDisabled />}
                             </IconButton>
                           </div>
                         </HtmlTooltip>

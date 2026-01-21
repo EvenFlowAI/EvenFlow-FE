@@ -116,7 +116,7 @@ export const YearModel: React.FC<
         <SelectsTitle>{t('SELECT YOUR VEHICLE')}</SelectsTitle>
         <NoItemsLoading
           wrapperStyles={{ marginTop: 20 }}
-          items={seriesModels}
+          items={seriesModels.length}
           loading={seriesModels === null}
           label={t('There are no models available')}
         />

@@ -1,27 +1,21 @@
 import React, { Dispatch, SetStateAction, useMemo } from 'react';
-import { Autocomplete, Divider, FormControlLabel, Grid, Switch } from '@mui/material';
+import { Autocomplete, Divider, Grid } from '@mui/material';
 import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
-import {
-  EDisplayOnBookingType,
-  EEmployeeType,
-  TDMSConsultantChange,
-  TEmployeeForm,
-  TSelectChange,
-} from '../types';
-import { ToggleButtons } from '../../../../buttons/ToggleButtons/ToggleButtons';
+import { EEmployeeType, TEmployeeForm } from '../types';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
 import { checkEmail, getOptions, validatePhoneNumber } from '../../../../../utils/utils';
 import 'react-phone-number-input/style.css';
-import { DmsRoles, superRoles } from '../constants';
-import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
-import { Roles, TTechnicianLevel } from '../../../../../types/types';
-import { loadDMSAdvisors } from '../../../../../store/reducers/employees/actions';
+import { superRoles } from '../constants';
+import { Roles } from '../../../../../types/types';
 import { TRole } from '../../../../../store/reducers/users/types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { useStyles } from './styles';
 import { TOption } from '../../../../../features/admin/ServiceBookModal/types';
 import { availableUserRoles, dealerShipAccessRoles } from '../../../../../utils/constants';
+import TechnicianEmployee from './TechnicianEmployee';
+import AdvisorEmployee from './AdvisorEmployee';
+import DmsForm from './forms/DmsForm';
+import ServiceCenterForm from './forms/ServiceCenterForm';
 
 type TTFormProps = {
   isEdit: boolean;
@@ -35,23 +29,8 @@ type TTFormProps = {
 export const CreateEmployeeForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
 > = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, initialForm, isEdit }) => {
-  const { shortSC, shortLoading } = useSelector((state: RootState) => state.serviceCenters);
-  const { DmsAdvisors: dmsAdvisors } = useSelector((state: RootState) => state.scEmployees);
-  const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
-  const dispatch = useDispatch();
+  const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
 
-  const { classes } = useStyles();
-  const dmsOptions = useMemo(
-    () => dmsAdvisors.filter(el => el.role && form.role && DmsRoles[el.role] === form.role),
-    [dmsAdvisors, form.role]
-  );
-  const dmsAdvisor = useMemo(
-    () =>
-      form?.dmsId && dmsAdvisors.length
-        ? dmsAdvisors.find(item => item.dmsId === form.dmsId)
-        : null,
-    [form?.dmsId, dmsAdvisors]
-  );
   const employeeTypeOptions: TOption[] = useMemo(
     () => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))),
     []
@@ -66,44 +45,7 @@ export const CreateEmployeeForm: React.FC<
     setEmployeeForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSelectChange: TSelectChange = (e, value) => {
-    setFormIsChecked(false);
-    if (value?.id) {
-      dispatch(loadDMSAdvisors(value.id));
-    }
-    setEmployeeForm(prev => ({ ...prev, serviceCenter: value ?? null }));
-  };
-
-  const handleSelfServiceChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    setFormIsChecked(false);
-    setEmployeeForm(prev => ({
-      ...prev,
-      displayOnBookingTypes: checked
-        ? prev.displayOnBookingTypes
-          ? [...prev.displayOnBookingTypes, EDisplayOnBookingType.SelfService]
-          : [EDisplayOnBookingType.SelfService]
-        : prev.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.SelfService),
-    }));
-  };
-
-  const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    setFormIsChecked(false);
-    setEmployeeForm(prev => ({
-      ...prev,
-      displayOnBookingTypes: checked
-        ? prev.displayOnBookingTypes
-          ? [...prev.displayOnBookingTypes, EDisplayOnBookingType.Employee]
-          : [EDisplayOnBookingType.Employee]
-        : prev.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.Employee),
-    }));
-  };
-
-  const handleDMSConsultantChange: TDMSConsultantChange = (e, value) => {
-    setFormIsChecked(false);
-    setEmployeeForm(prev => ({ ...prev, dmsId: value ? value.dmsId : null }));
-  };
-
-  const handleRoleChange = (e: any, value: string | null) => {
+  const handleRoleChange = (e: React.SyntheticEvent, value: string | null) => {
     setFormIsChecked(false);
     setEmployeeForm(prev => ({
       ...prev,
@@ -113,16 +55,6 @@ export const CreateEmployeeForm: React.FC<
       displayOnBookingTypes: value === 'Advisor' ? prev.displayOnBookingTypes : [],
       serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
     }));
-  };
-
-  const handleSwitchChange = (e: React.ChangeEvent<{}>, newVal: number) => {
-    setFormIsChecked(false);
-    if (newVal) {
-      setEmployeeForm(prev => ({
-        ...prev,
-        technicianLevel: newVal as TTechnicianLevel,
-      }));
-    }
   };
 
   const handleTypeChange = (e: React.SyntheticEvent<Element, Event>, value: TOption | null) => {
@@ -169,20 +101,13 @@ export const CreateEmployeeForm: React.FC<
             label="Service Center"
           />
         ) : (
-          <Autocomplete
-            disabled={isEdit && initialForm.role === form.role && form.role !== Roles.Advisor}
-            options={shortSC}
-            onChange={handleSelectChange}
-            getOptionLabel={i => i.name}
-            isOptionEqualToValue={(o, s) => o.id === s.id}
-            loading={shortLoading}
-            value={form.serviceCenter || initialForm?.serviceCenter || null}
-            renderInput={autocompleteRender({
-              label: 'Service center',
-              fullWidth: true,
-              placeholder: 'Select Service Center',
-              error: !form.serviceCenter && formIsChecked,
-            })}
+          <ServiceCenterForm
+            form={form}
+            formIsChecked={formIsChecked}
+            setEmployeeForm={setEmployeeForm}
+            setFormIsChecked={setFormIsChecked}
+            initialForm={initialForm}
+            isEdit={isEdit}
           />
         )}
       </Grid>
@@ -217,22 +142,7 @@ export const CreateEmployeeForm: React.FC<
       <Grid item xs={12}>
         <Divider color="#DADADA" style={{ margin: 0 }} />
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <Autocomplete
-          options={dmsOptions}
-          onChange={handleDMSConsultantChange}
-          getOptionLabel={i => (i.fullName ? `${i.fullName} - ${i.dmsId}` : `${i.dmsId}`)}
-          isOptionEqualToValue={(o, s) => o.id === s.id}
-          disabled={!form.role || shortLoading || loadingDMSAdvisors}
-          loading={shortLoading || loadingDMSAdvisors}
-          value={dmsAdvisor ?? null}
-          renderInput={autocompleteRender({
-            label: 'Assign Employee from DMS',
-            fullWidth: true,
-            placeholder: 'Assign Employee from DMS',
-          })}
-        />
-      </Grid>
+      <DmsForm form={form} setEmployeeForm={setEmployeeForm} setFormIsChecked={setFormIsChecked} />
       <Grid item xs={12} sm={6}>
         <TextField
           label="Position"
@@ -244,95 +154,17 @@ export const CreateEmployeeForm: React.FC<
           fullWidth
         />
       </Grid>
-      {form.role === Roles.Technician ? (
-        <>
-          <Grid item xs={12} sm={12} md={6}>
-            <Grid container spacing={3}>
-              <Grid item xs={6}>
-                <TextField
-                  id="hourlyRate"
-                  name="hourlyRate"
-                  label="Hourly rate"
-                  placeholder="Enter Rate"
-                  type="number"
-                  fullWidth
-                  onChange={handleChange}
-                  value={form.hourlyRate}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="overtimeRate"
-                  name="overtimeRate"
-                  label="Overtime rate"
-                  placeholder="Enter Rate"
-                  type="number"
-                  fullWidth
-                  onChange={handleChange}
-                  value={form.overtimeRate}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <ToggleButtons
-              value={form.technicianLevel}
-              label="Technician Level"
-              buttons={[
-                { id: '1', label: '1', value: 1 },
-                { id: '2', label: '2', value: 2 },
-                { id: '3', label: '3', value: 3 },
-              ]}
-              exclusive
-              onChange={handleSwitchChange}
-            />
-          </Grid>
-        </>
-      ) : null}
-      {form.role === Roles.Advisor ? (
-        <>
-          <Grid item xs={12} sm={6} container>
-            <Grid item xs={12}>
-              <div className={classes.switchersTitle}>Display On Booking Flow</div>
-            </Grid>
-
-            <Grid item xs={6}>
-              <FormControlLabel
-                className={classes.switcher}
-                labelPlacement="start"
-                control={
-                  <Switch
-                    disabled={!form.dmsId}
-                    name="selfService"
-                    onChange={handleSelfServiceChange}
-                    checked={form.displayOnBookingTypes?.includes(
-                      EDisplayOnBookingType.SelfService
-                    )}
-                    color="primary"
-                  />
-                }
-                label={<span>Self Service</span>}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FormControlLabel
-                labelPlacement="start"
-                className={classes.switcher}
-                control={
-                  <Switch
-                    disabled={!form.dmsId}
-                    name="employee"
-                    onChange={handleEmployeeChange}
-                    checked={form.displayOnBookingTypes?.includes(EDisplayOnBookingType.Employee)}
-                    color="primary"
-                  />
-                }
-                label={<span>Employee</span>}
-              />
-            </Grid>
-          </Grid>
-        </>
-      ) : null}
+      <TechnicianEmployee
+        setEmployeeForm={setEmployeeForm}
+        form={form}
+        handleChange={handleChange}
+        setFormIsChecked={setFormIsChecked}
+      />
+      <AdvisorEmployee
+        form={form}
+        setFormIsChecked={setFormIsChecked}
+        setEmployeeForm={setEmployeeForm}
+      />
       {[Roles.Advisor, Roles.Technician].includes(form.role as Roles) ? (
         <Grid item xs={12} sm={6}>
           <Autocomplete

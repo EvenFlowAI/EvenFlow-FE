@@ -8,14 +8,96 @@ import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { MainButtons } from './MainButtons/MainButtons';
 import { ButtonsWrapper, useStyles } from './styles';
+import { TConfirmModalPayload } from '../../../../store/reducers/modals/types';
 
-export const ConfirmModal: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<unknown>>
-> = () => {
-  const { open, payload } = useSelector((state: RootState) => state.modals.confirm);
-  const [loading, setLoading] = useState<boolean>(false);
-  const { closeConfirm } = useConfirm();
+const ConfirmTitle: React.FC<{
+  payload: TConfirmModalPayload;
+  closeConfirm: () => void;
+}> = ({ payload, closeConfirm }) => {
   const { classes } = useStyles();
+  return (
+    <DialogTitle onClose={closeConfirm}>
+      {' '}
+      {payload.icon || payload.isRemove ? (
+        <Grid container spacing={2} alignItems="center">
+          {' '}
+          <Grid item xs={2}>
+            {' '}
+            {payload.icon || (
+              <ReportProblemOutlined
+                fontSize="large"
+                color={payload.isBooking ? 'error' : 'secondary'}
+              />
+            )}{' '}
+          </Grid>{' '}
+          <Grid
+            item
+            xs={10}
+            className={payload.isBooking ? classes.titleBooking : classes.titleAdmin}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
+            {' '}
+            {payload.title}{' '}
+          </Grid>{' '}
+        </Grid>
+      ) : (
+        payload.title
+      )}{' '}
+    </DialogTitle>
+  );
+};
+
+const ConfirmButtons: React.FC<{
+  payload: TConfirmModalPayload;
+  loading: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}> = ({ payload, loading, onClose, onConfirm }) => {
+  const { classes } = useStyles();
+  return (
+    <ButtonsWrapper
+      style={{
+        justifyContent:
+          payload.additionalContent && payload.onAdditional ? 'space-between' : 'flex-end',
+      }}
+    >
+      {payload.additionalContent && payload.onAdditional && (
+        <LoadingButton
+          loading={loading}
+          onClick={payload.onAdditional}
+          color={payload.isBooking ? 'error' : 'secondary'}
+          style={payload.isBooking ? { borderRadius: 0 } : {}}
+          variant="text"
+        >
+          {payload.additionalContent}
+        </LoadingButton>
+      )}
+
+      <div
+        className={
+          payload.additionalContent && payload.onAdditional ? classes.buttonsWrapper : undefined
+        }
+      >
+        <MainButtons
+          loading={loading}
+          onClose={onClose}
+          onConfirm={onConfirm}
+          isRemove={payload.isRemove}
+          onCancel={payload.onCancel}
+          confirmContent={payload.confirmContent}
+          cancelContent={payload.cancelContent}
+          isBooking={payload.isBooking}
+          cancelBtnVariant={payload.cancelBtnVariant}
+        />
+      </div>
+    </ButtonsWrapper>
+  );
+};
+
+export const ConfirmModal: React.FC = () => {
+  const { open, payload } = useSelector((state: RootState) => state.modals.confirm);
+  const [loading, setLoading] = useState(false);
+  const { closeConfirm } = useConfirm();
 
   const onClose = useCallback(async () => {
     if (payload?.onCancel) {
@@ -23,7 +105,7 @@ export const ConfirmModal: React.FC<
       try {
         await payload.onCancel();
       } catch (e) {
-        console.log('on cancel error', e);
+        console.log(e);
       } finally {
         setLoading(false);
       }
@@ -37,7 +119,7 @@ export const ConfirmModal: React.FC<
       try {
         await payload.onConfirm();
       } catch (e) {
-        console.log('on confirm error', e);
+        console.log(e);
       } finally {
         setLoading(false);
       }
@@ -49,77 +131,10 @@ export const ConfirmModal: React.FC<
 
   return (
     <BaseModal width={payload?.width ?? 400} open={open} onClose={closeConfirm}>
-      <DialogTitle onClose={closeConfirm}>
-        {payload.icon || payload.isRemove ? (
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={2}>
-              {payload.icon || (
-                <ReportProblemOutlined
-                  fontSize="large"
-                  color={payload.isBooking ? 'error' : 'secondary'}
-                />
-              )}
-            </Grid>
-            <Grid
-              item
-              xs={10}
-              className={payload.isBooking ? classes.titleBooking : classes.titleAdmin}
-              style={{ display: 'flex', alignItems: 'center' }}
-            >
-              {payload.title}
-            </Grid>
-          </Grid>
-        ) : (
-          payload.title
-        )}
-      </DialogTitle>
-      {payload.content ? <DialogContent>{payload.content}</DialogContent> : null}
-      {payload.isRemove && !payload.isBooking ? <Divider style={{ margin: '0 0 10px' }} /> : null}
-      <ButtonsWrapper
-        style={{
-          justifyContent:
-            payload.additionalContent && payload.onAdditional ? 'space-between' : 'flex-end',
-        }}
-      >
-        {payload.additionalContent && payload.onAdditional ? (
-          <LoadingButton
-            loading={loading}
-            onClick={payload.onAdditional}
-            color={payload.isBooking ? 'error' : 'secondary'}
-            style={payload.isBooking ? { borderRadius: 0 } : {}}
-            variant="text"
-          >
-            {payload.additionalContent}
-          </LoadingButton>
-        ) : null}
-
-        {payload.additionalContent && payload.onAdditional ? (
-          <div className={classes.buttonsWrapper}>
-            <MainButtons
-              loading={loading}
-              onClose={onClose}
-              onConfirm={onConfirm}
-              isRemove={payload.isRemove}
-              onCancel={payload.onCancel}
-              confirmContent={payload.confirmContent}
-              cancelContent={payload.cancelContent}
-              isBooking={payload.isBooking}
-              cancelBtnVariant={payload.cancelBtnVariant}
-            />
-          </div>
-        ) : (
-          <MainButtons
-            loading={loading}
-            onClose={onClose}
-            onConfirm={onConfirm}
-            isRemove={payload.isRemove}
-            onCancel={payload.onCancel}
-            isBooking={payload.isBooking}
-            confirmContent={payload.confirmContent}
-            cancelContent={payload.cancelContent}
-          />
-        )}
-      </ButtonsWrapper>
+      <ConfirmTitle payload={payload} closeConfirm={closeConfirm} />
+      {payload.content && <DialogContent>{payload.content}</DialogContent>}
+      {payload.isRemove && !payload.isBooking && <Divider style={{ margin: '0 0 10px' }} />}
+      <ConfirmButtons payload={payload} loading={loading} onClose={onClose} onConfirm={onConfirm} />
     </BaseModal>
   );
 };

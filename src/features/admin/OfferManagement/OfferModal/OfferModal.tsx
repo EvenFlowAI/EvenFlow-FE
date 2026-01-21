@@ -309,7 +309,7 @@ export const OfferModal: React.FC<
               end: dayjs(form.timeOfDayTo, time12HourSeconds).format(timeSpanString),
             },
             isAllServiceRequestsIncluded: Boolean(form.serviceRequests.find(sr => sr.id === 0)),
-            serviceRequests: Boolean(form.serviceRequests.find(sr => sr.id === 0))
+            serviceRequests: form.serviceRequests.find(sr => sr.id === 0)
               ? null
               : form.serviceRequests.map(s => s.id),
             serviceType: form.serviceType ? { name: form.serviceType } : undefined,

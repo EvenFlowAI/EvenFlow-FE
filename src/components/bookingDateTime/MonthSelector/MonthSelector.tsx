@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 export const MonthSelector: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMonthProps>>
-> = ({ date, onDateChange, loading }) => {
+> = ({ date, onDateChange }) => {
   const handleNext = () => {
     onDateChange(dayjs.utc(date).startOf('month').add(1, 'month'));
   };

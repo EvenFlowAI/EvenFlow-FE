@@ -48,7 +48,7 @@ const MaintenancePackages = () => {
 
   return (
     <div>
-      <NoItemsLoading items={mpList} loading={isLoading} />
+      <NoItemsLoading items={mpList.length} loading={isLoading} />
       {mpList.length ? (
         <DenseTableWithPadding>
           <TableHead>

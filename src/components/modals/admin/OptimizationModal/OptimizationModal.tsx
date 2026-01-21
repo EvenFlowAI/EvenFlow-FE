@@ -21,12 +21,7 @@ type TProps = DialogProps<IOptimizationWindow> & {
   windowContent: TOptContentData;
 };
 
-export const OptimizationModal: React.FC<TProps> = ({
-  onAction,
-  windowContent,
-  payload,
-  ...props
-}) => {
+export const OptimizationModal: React.FC<TProps> = ({ windowContent, payload, ...props }) => {
   const [val, setVal] = useState<number>(0);
   const [saving, setSaving] = useState<boolean>(false);
   const dispatch = useDispatch();

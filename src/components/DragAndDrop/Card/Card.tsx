@@ -1,6 +1,6 @@
 import type { Identifier, XYCoord } from 'dnd-core';
 import React, { FC, useRef, useState, useEffect } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { DragSourceMonitor, useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../itemTypes';
 import { CardProps, DragItem } from '../types';
 import { Tooltip } from '@mui/material';
@@ -85,7 +85,7 @@ export const Card: FC<CardProps> = ({ id, text, index, moveCard, backGroundColor
     item: () => {
       return { id, index };
     },
-    collect: (monitor: any) => ({
+    collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
     canDrag: () => id !== 0,

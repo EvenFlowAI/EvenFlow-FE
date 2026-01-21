@@ -3,7 +3,7 @@ import {
   SelectWrapper,
   useAutocompleteStyles,
 } from '../../features/booking/AppointmentFlow/Screens/YourLocation/styles';
-import GooglePlacesAutocomplete, { geocodeByPlaceId } from 'react-google-places-autocomplete';
+import { geocodeByPlaceId } from 'react-google-places-autocomplete';
 import { Autocomplete } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { autocompleteRender } from '../../utils/autocompleteRenders';
@@ -16,15 +16,21 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { useTranslation } from 'react-i18next';
-import { useLocationStyles } from '../../hooks/styling/useLocationStyles';
 import { useException } from '../../hooks/useException/useException';
 import { parseGeoCode } from '../../features/booking/AppointmentFlow/Screens/YourLocation/utils';
+import GooglePlaces from './GooglePlaces';
 
 type TProps = {
   zip: string | null;
   setZip: Dispatch<SetStateAction<string | null>>;
+  // TODO: fix address type here
+  // eslint-disable-next-line
   userAddress: any;
+  // TODO: fix address type here
+  // eslint-disable-next-line
   setUserAddress: Dispatch<SetStateAction<any>>;
+  // TODO: fix address type here
+  // eslint-disable-next-line
   loadAncillaryPrice: (zip: string | null, address: any) => void;
   disabled: boolean;
   setAddressValid: Dispatch<SetStateAction<boolean>>;
@@ -50,7 +56,6 @@ const UserLocation: React.FC<TProps> = ({
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const error = isFormChecked && !zip;
-  const { classes } = useLocationStyles();
   const { classes: autocompleteClasses } = useAutocompleteStyles({ error: error });
   const showError = useException();
 
@@ -81,7 +86,7 @@ const UserLocation: React.FC<TProps> = ({
     }
   }, [customerLoadedData, address, zipCodeValue]);
 
-  const onInputChange = (e: React.ChangeEvent<{}>, value: string, reason: string) => {
+  const onInputChange = (e: React.SyntheticEvent, value: string, reason: string) => {
     if (scProfile) {
       if (reason === 'input') {
         if (value.length) {
@@ -115,6 +120,8 @@ const UserLocation: React.FC<TProps> = ({
     }
   };
 
+  // TODO: fix address type here
+  // eslint-disable-next-line
   const handleChangeAddress = async (e: any) => {
     setFormChecked(false);
     setUserAddress(e ?? null);
@@ -148,7 +155,7 @@ const UserLocation: React.FC<TProps> = ({
     }
   };
 
-  const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
+  const handleChangeZip = (e: React.SyntheticEvent, option: string | null) => {
     setFormChecked(false);
     if (option?.length === 5 && e.type !== 'blur') {
       loadAncillaryPrice(option, userAddress);
@@ -160,34 +167,11 @@ const UserLocation: React.FC<TProps> = ({
     <SelectWrapper>
       <div style={{ width: '100%' }}>
         <p className="label">{t('Your Address')}</p>
-        <GooglePlacesAutocomplete
-          apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
-          apiOptions={{ language: 'en-GB', region: 'us' }}
-          autocompletionRequest={{
-            componentRestrictions: {
-              country: ['us'],
-            },
-          }}
-          selectProps={{
-            addressValue:
-              typeof userAddress === 'string' && userAddress.length
-                ? userAddress
-                : (userAddress?.label ?? null),
-            className:
-              typeof userAddress === 'string' && userAddress.length
-                ? classes.select
-                : !userAddress?.label
-                  ? isFormChecked
-                    ? classes.errorSelect
-                    : classes.emptySelect
-                  : classes.select,
-            onChange: handleChangeAddress,
-            placeholder: placeholderLabel,
-            isClearable: true,
-            isSearchable: true,
-            key: userAddress?.label || 'label',
-            menuPosition: 'fixed',
-          }}
+        <GooglePlaces
+          userAddress={userAddress}
+          isFormChecked={isFormChecked}
+          handleChangeAddress={handleChangeAddress}
+          placeholderLabel={placeholderLabel}
         />
       </div>
 

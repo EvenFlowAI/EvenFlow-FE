@@ -72,6 +72,7 @@ const AskChangesCompleted = () => {
     dispatch(setChangesCompletedOpen(false));
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (e: any) => {
     const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes('time slot');
     const transportationUnavailable = e.response?.data?.message
@@ -83,10 +84,10 @@ const AskChangesCompleted = () => {
     const internalError = e.response?.data?.message?.toLowerCase().includes('internal server');
     if (timeSlotUnavailable || dateForZoneUnavailable) {
       dispatch(setChangesCompletedOpen(false));
-      currentScreen !== 'appointmentSelection' && dispatch(setSlotsWarningOpen(true));
+      if (currentScreen !== 'appointmentSelection') dispatch(setSlotsWarningOpen(true));
     } else if (transportationUnavailable) {
       dispatch(setChangesCompletedOpen(false));
-      currentScreen !== 'transportationNeeds' && dispatch(setSlotsWarningOpen(true));
+      if (currentScreen !== 'transportationNeeds') dispatch(setSlotsWarningOpen(true));
     } else if (internalError) {
       showError(
         `We’re sorry. Something went wrong on our end. Please try again shortly. Error identifier: ${e.response?.data?.id ?? 'unknown'}`

@@ -28,9 +28,6 @@ export type TEmployeeForm = {
   technicianLevel?: TTechnicianLevel;
 };
 
-export type TSelectChange = (e: React.ChangeEvent<{}>, value: IServiceCenter | null) => void;
+export type TSelectChange = (e: React.ChangeEvent, value: IServiceCenter | null) => void;
 
-export type TDMSConsultantChange = (
-  e: React.ChangeEvent<{}>,
-  value: TServiceConsultant | null
-) => void;
+export type TDMSConsultantChange = (e: React.ChangeEvent, value: TServiceConsultant | null) => void;

@@ -67,7 +67,7 @@ export const EditDemandSegmentsModal: React.FC<
   const checkIsValid = (): boolean => {
     const notValidItem = form.find(item => item.from > item.to);
     if (notValidItem) showError('"From" must be less than or equal to "To"');
-    return !Boolean(notValidItem);
+    return !notValidItem;
   };
 
   const handleSave = async () => {

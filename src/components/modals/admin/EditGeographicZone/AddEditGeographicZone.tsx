@@ -44,7 +44,6 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 type TEditZoneProps = DialogProps & {
   isEdit: boolean;
   zone?: TZone | null;
-  onRemoveZipOpen?: () => void;
   currentZip?: TZipCode | null;
   setCurrentZip?: Dispatch<SetStateAction<TZipCode | null>>;
   serviceType: TZonesServiceType;
@@ -52,7 +51,7 @@ type TEditZoneProps = DialogProps & {
 
 const AddEditGeographicZone: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TEditZoneProps>>
-> = ({ isEdit, zone, onRemoveZipOpen, currentZip, setCurrentZip, serviceType, ...props }) => {
+> = ({ isEdit, zone, currentZip, setCurrentZip, serviceType, ...props }) => {
   const {
     currentZone: currentMobileZone,
     isLoading: isMobileLoading,
@@ -121,11 +120,11 @@ const AddEditGeographicZone: React.FC<
     showError(err);
   };
 
-  const handleChangeZip = (e: React.ChangeEvent<{}>, option: string[]) => {
+  const handleChangeZip = (e: React.SyntheticEvent, option: string[]) => {
     setZipList(option);
   };
 
-  const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
+  const onInputChange = (e: React.SyntheticEvent, value: string) => {
     if (selectedSC) {
       dispatch(loadFilteredZip({ serviceCenterId: selectedSC.id, search: value }));
     }

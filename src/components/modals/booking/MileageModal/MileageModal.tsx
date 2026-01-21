@@ -30,19 +30,23 @@ const MileageModal: React.FC<
     setValue(selectedMileage?.value ? selectedMileage.value?.toString() : '');
   }, [selectedVehicle, mileage]);
 
-  const handleChange = (e: React.ChangeEvent<{}>, option: string) => {
+  const handleChange = (e: React.SyntheticEvent, option: string) => {
     setValue(option);
   };
 
   const updateData = async () => {
-    isAdminPanel && currentAppointment?.vehicle
-      ? await dispatch(
+    if (isAdminPanel) {
+      if (currentAppointment?.vehicle) {
+        await dispatch(
           getCurrentAppointment({
             ...currentAppointment,
             vehicle: { ...currentAppointment.vehicle, mileage: +value },
           })
-        )
-      : await dispatch(updateVehicle({ mileage: +value }));
+        );
+      } else {
+        await dispatch(updateVehicle({ mileage: +value }));
+      }
+    }
   };
 
   const handleSave = () => {

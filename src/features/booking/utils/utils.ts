@@ -86,7 +86,7 @@ export const getStepsMap = (
     payment: 6,
   };
   if (!isAdvisorAvailable && data.consultantSelection > -1) {
-    for (let key in data) {
+    for (const key in data) {
       if (data[key as keyof TData] > data.consultantSelection) {
         data[key as keyof TData] = data[key as keyof TData] - 1;
       }
@@ -97,7 +97,7 @@ export const getStepsMap = (
     data.appointmentTiming = -1;
   }
   if (!isTransportationNeeds && data.transportationNeeds > -1) {
-    for (let key in data) {
+    for (const key in data) {
       if (data[key as keyof TData] > data.transportationNeeds) {
         data[key as keyof TData] = data[key as keyof TData] - 1;
       }

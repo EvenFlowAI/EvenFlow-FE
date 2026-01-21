@@ -71,7 +71,7 @@ export const ScreenSettings = () => {
   }, [selectedSC, selectedPod]);
 
   const getEmailRequirementLabel = (): string => {
-    let str = 'No data';
+    const str = 'No data';
     if (emailRequirement) {
       const { adminAndEmployeesEnabled, customerSelfServiceEnabled } = emailRequirement;
       if (adminAndEmployeesEnabled && customerSelfServiceEnabled) return 'On';

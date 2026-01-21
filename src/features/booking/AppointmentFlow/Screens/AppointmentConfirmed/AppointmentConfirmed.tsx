@@ -135,9 +135,7 @@ export const AppointmentConfirmed: React.FC<
   );
   const isServiceValetManage = useMemo(
     () =>
-      !Boolean(appointment) &&
-      serviceTypeOption?.type === EServiceType.PickUpDropOff &&
-      appointmentByKey,
+      !appointment && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
     [appointment, serviceTypeOption]
   );
   const { appointmentRequestsPrices } = useSelector((state: RootState) => state.appointmentFrame);

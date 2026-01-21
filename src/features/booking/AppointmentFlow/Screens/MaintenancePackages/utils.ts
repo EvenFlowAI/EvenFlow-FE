@@ -11,12 +11,12 @@ export const getPackagesData = (
     const complimentary: TComplimentary[] = [];
     const upsells: TUpsell[] = [];
 
-    for (let option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
+    for (const option of loadedPackage.options.sort((a, b) => a.type - b.type)) {
       packages.push({
         ...option,
         moreIdx: [],
       });
-      for (let service of option.serviceRequests) {
+      for (const service of option.serviceRequests) {
         const pushedService = services.find(s => s.id === service.id);
         if (!pushedService) {
           services.push({
@@ -27,7 +27,7 @@ export const getPackagesData = (
           pushedService.packages = [...pushedService.packages, option.id];
         }
       }
-      for (let comp of option.complimentaryServices) {
+      for (const comp of option.complimentaryServices) {
         const present = complimentary.find(c => c.id === comp.id);
         if (!present) {
           complimentary.push({
@@ -39,7 +39,7 @@ export const getPackagesData = (
         }
       }
       if (option.intervalUpsells) {
-        for (let upsell of option.intervalUpsells) {
+        for (const upsell of option.intervalUpsells) {
           const present = upsells.find(c => c.id === upsell.id);
           if (!present) {
             upsells.push({

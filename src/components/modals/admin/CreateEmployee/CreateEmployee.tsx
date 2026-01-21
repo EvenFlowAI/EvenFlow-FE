@@ -112,7 +112,7 @@ export const CreateEmployee: React.FC<
     }
     if (!employeeForm.role) err = [...err, '"Role" must not be empty'];
     err.map(e => showError(e));
-    return !Boolean(err.length);
+    return !err.length;
   };
 
   const onClose = () => {
@@ -127,43 +127,50 @@ export const CreateEmployee: React.FC<
     onClose();
   };
 
+  const makeData = () => {
+    let data: IEmployeeForm | IUserForm;
+    const employeeData: TEmployeeForm = { ...employeeForm };
+
+    if (employeeForm.role !== Roles.Technician) {
+      data = {
+        ...employeeData,
+        dmsId: employeeForm?.dmsId ?? null,
+        serviceCenterId: employeeForm.serviceCenter?.id || null,
+      } as IUserForm;
+      if (employeeData.role && dealerShipAccessRoles.includes(employeeData.role)) {
+        delete data.serviceCenterId;
+      }
+    } else {
+      data = {
+        firstName: employeeForm.firstName,
+        lastName: employeeForm.lastName,
+        email: employeeForm.email || undefined,
+        serviceCenterId: employeeForm.serviceCenter?.id || null,
+        dmsId: employeeForm?.dmsId ?? null,
+        role: employeeForm.role,
+        employeeInfo: {
+          hourlyRate: employeeForm.hourlyRate || 0,
+          overtimeRate: employeeForm.overtimeRate || 0,
+          skillLevel: employeeForm.technicianLevel,
+        },
+      } as IEmployeeForm;
+    }
+    if ([Roles.Technician, Roles.Advisor].includes(employeeForm.role as Roles)) {
+      data.type = employeeForm.type;
+      data.displayOnBookingTypes = employeeForm.displayOnBookingTypes;
+    }
+
+    delete employeeData.serviceCenter;
+
+    return data;
+  };
+
   const handleCreate = async () => {
     setFormIsChecked(true);
     const isValid = checkIsValid();
     if (isValid) {
-      let data: IEmployeeForm | IUserForm;
-      const employeeData: TEmployeeForm = { ...employeeForm };
+      const data: IEmployeeForm | IUserForm = makeData();
 
-      delete employeeData.serviceCenter;
-
-      if (employeeForm.role !== Roles.Technician) {
-        data = {
-          ...employeeData,
-          dmsId: employeeForm?.dmsId ?? null,
-          serviceCenterId: employeeForm.serviceCenter?.id || null,
-        } as IUserForm;
-        if (employeeData.role && dealerShipAccessRoles.includes(employeeData.role)) {
-          delete data.serviceCenterId;
-        }
-      } else {
-        data = {
-          firstName: employeeForm.firstName,
-          lastName: employeeForm.lastName,
-          email: employeeForm.email || undefined,
-          serviceCenterId: employeeForm.serviceCenter?.id || null,
-          dmsId: employeeForm?.dmsId ?? null,
-          role: employeeForm.role,
-          employeeInfo: {
-            hourlyRate: employeeForm.hourlyRate || 0,
-            overtimeRate: employeeForm.overtimeRate || 0,
-            skillLevel: employeeForm.technicianLevel,
-          },
-        } as IEmployeeForm;
-      }
-      if ([Roles.Technician, Roles.Advisor].includes(employeeForm.role as Roles)) {
-        data.type = employeeForm.type;
-        data.displayOnBookingTypes = employeeForm.displayOnBookingTypes;
-      }
       try {
         if (payload?.id) {
           await dispatch(updateUser(data as IUserForm, payload.id, onSuccess, showError, avatar));

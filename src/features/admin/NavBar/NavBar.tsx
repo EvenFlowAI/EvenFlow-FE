@@ -65,8 +65,8 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({ sideBarOpened, onOpe
   const selectedRoutesForCustomLocation: string[] = [Routes.CapacityManagement.DemandManagement];
 
   const isCustomLocationRoute = useMemo(() => {
-    for (let route of selectedRoutesForCustomLocation) {
-      if (Boolean(matchPath(pathname, route))) return false;
+    for (const route of selectedRoutesForCustomLocation) {
+      if (matchPath(pathname, route)) return false;
     }
     return true;
   }, [pathname]);

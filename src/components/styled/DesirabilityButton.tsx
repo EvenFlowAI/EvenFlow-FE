@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 
 import { withStyles } from 'tss-react/mui';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const DesirabilityButton = withStyles(Button, theme => ({
   root: {
     textTransform: 'none',

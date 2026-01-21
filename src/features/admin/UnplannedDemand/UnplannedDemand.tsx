@@ -115,7 +115,7 @@ export const UnplannedDemand = () => {
   const setInitialData = useCallback(() => {
     const nForm = {} as TForm;
     if (overbookingList.length) {
-      for (let overbookingItem of overbookingList) {
+      for (const overbookingItem of overbookingList) {
         nForm[overbookingItem.day] = overbookingItem;
       }
       setForm(nForm);
@@ -127,7 +127,7 @@ export const UnplannedDemand = () => {
   const setDemandCapacity = useCallback(() => {
     const nForm = {} as DForm;
     if (demandCapacity.length) {
-      for (let item of demandCapacity) {
+      for (const item of demandCapacity) {
         nForm[item.dayOfWeek] = item;
       }
       setDemandForm(nForm);

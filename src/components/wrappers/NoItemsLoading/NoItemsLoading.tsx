@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 type TProps = {
   loading?: boolean;
   label?: string;
-  items: any[];
+  items: number;
   wrapperStyles?: React.CSSProperties;
 };
 
@@ -24,7 +24,7 @@ export const NoItemsLoading: React.FC<React.PropsWithChildren<React.PropsWithChi
         <CircularProgress />
       </div>
     );
-  } else if (!items.length) {
+  } else if (!items) {
     return (
       <div style={{ ...divStyles, ...(wrapperStyles ?? {}) }}>
         {label ? label : `${t('No items')}.`}

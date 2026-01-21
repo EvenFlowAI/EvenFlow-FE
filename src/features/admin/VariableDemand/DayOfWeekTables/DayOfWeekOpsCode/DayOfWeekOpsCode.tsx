@@ -262,7 +262,6 @@ const DayOfWeekOpsCode = () => {
       </Box>
       <EditDayOfWeekOpsCode open={isEditOpen} editingItem={editingItem} onClose={onEditClose} />
       <AddOpsCodeModal
-        setSelectedCodes={setSelectedCodes}
         selectedCodes={selectedCodes}
         handleSelect={handleSelectOpsCode}
         disabledIds={srPricingSettings.map(item => item.serviceRequestId)}
