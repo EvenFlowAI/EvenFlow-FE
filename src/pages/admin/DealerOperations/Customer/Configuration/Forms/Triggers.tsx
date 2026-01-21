@@ -11,6 +11,14 @@ import { useStyles } from '../../../styles';
 
 interface TriggersI {
   triggers: TriggerI[];
+  triggerDateErrors: {
+    [index: number]: boolean;
+  };
+  setTriggerDateErrors: React.Dispatch<
+    React.SetStateAction<{
+      [index: number]: boolean;
+    }>
+  >;
   setTriggers: React.Dispatch<React.SetStateAction<TriggerI[]>>;
   isEditTable: boolean;
   firstTriggerDateError: boolean;
@@ -20,6 +28,8 @@ interface TriggersI {
 
 const Triggers = ({
   triggers,
+  triggerDateErrors,
+  setTriggerDateErrors,
   setTriggers,
   isEditTable,
   firstTriggerDateError,
@@ -34,10 +44,19 @@ const Triggers = ({
 
   const handleRemoveTrigger = (index: number) => {
     setFirstTriggerDateError(false);
+    setTriggerDateErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
     setTriggers(prev => prev.filter((trigger, i) => i !== index));
   };
 
   const handleTriggerChange = (index: number, field: keyof TriggerI, newValue: string) => {
+    setTriggerDateErrors(prev => ({
+      ...prev,
+      [index]: false,
+    }));
+
     const updated = triggers.map(trigger => ({ ...trigger }));
     if (field === 'scheduledTime') {
       if (index === 0) {
@@ -79,7 +98,10 @@ const Triggers = ({
                       disabled={!isEditTable}
                       type="number"
                       inputProps={{ min: 0 }}
-                      error={!Number.isInteger(Number(trigger.daysFromListGeneration))}
+                      error={
+                        !Number.isInteger(Number(trigger.daysFromListGeneration)) ||
+                        triggerDateErrors[index]
+                      }
                       label="Days from list generation"
                       placeholder=""
                       onChange={e =>
