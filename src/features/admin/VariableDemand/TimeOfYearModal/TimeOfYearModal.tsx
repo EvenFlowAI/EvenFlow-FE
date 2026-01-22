@@ -20,7 +20,7 @@ import { TParsableDate } from '../../../../types/types';
 
 export const TimeOfYearModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ onAction, payload, ...props }) => {
+> = ({ ...props }) => {
   const [editedDate, setEditedDate] = useState<TParsableDate>(undefined);
   const [toy, setToy] = useState<ITimeOfYearSetting | undefined>(undefined);
   const { selectedSC } = useSCs();

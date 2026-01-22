@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useNotificationStyles = makeStyles()({
   tabTitle: {
     fontSize: 16,

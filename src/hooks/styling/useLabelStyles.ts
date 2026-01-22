@@ -1,6 +1,5 @@
 import { makeStyles } from 'tss-react/mui';
 
-//
 export const useLabelStyles = makeStyles()({
   label: {
     fontWeight: 'bold',

@@ -53,7 +53,7 @@ const DemandPredictionTable = ({
 
   const handleSwitch =
     (id: number | undefined, type: EDemandPredictionType, requestType: 'request' | 'prediction') =>
-    async (e: any, value: boolean) => {
+    async (e: React.SyntheticEvent, value: boolean) => {
       const itemToUpdate = id
         ? settings.find(el => el.podId === id)
         : settings.find(el => !el.podId);

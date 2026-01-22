@@ -107,7 +107,7 @@ const TableRowLayout = ({
       <StyledTableCell>
         <LabelLink
           style={{
-            textTransform: 'upperCase',
+            textTransform: 'uppercase',
             fontWeight: '700',
           }}
           subText={configured ? 'Configured' : 'Not Configured'}
@@ -160,7 +160,7 @@ const TableRowLayout = ({
   const renderRemoveCell = () => (
     <StyledTableCell>
       <LabelLink
-        style={{ textTransform: 'upperCase', fontWeight: '700' }}
+        style={{ textTransform: 'uppercase', fontWeight: '700' }}
         subText="Remove"
         color="#7898FF"
         onClick={() => handleDeleteCustomerEvent(event.id)}

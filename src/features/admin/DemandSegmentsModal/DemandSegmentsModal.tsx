@@ -36,7 +36,7 @@ const rowData: TableRowDataType<IDemandSegment>[] = [
 
 export const DemandSegmentsModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ onAction, payload, ...props }) => {
+> = ({ ...props }) => {
   const { demandSegmentList, listLoading } = useSelector(
     (state: RootState) => state.demandSegments
   );

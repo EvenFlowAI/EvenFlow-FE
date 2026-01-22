@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 
 export const SubLabel = styled('div', {
   shouldForwardProp: prop => prop !== 'color',
-})<{ color: string }>(({ theme, color }) => ({
+})<{ color: string }>(({ color }) => ({
   display: 'flex',
   gap: 8,
   alignItems: 'center',

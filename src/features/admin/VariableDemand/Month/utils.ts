@@ -15,13 +15,15 @@ export const getDays = (
 ): TDate[] => {
   const dates: TDate[] = [];
   let date = dayjs.utc(start);
-  while (1) {
+
+  while (dayjs.utc(date).isBefore(end, 'date')) {
     const data = dt.find(findD(date));
     dates.push({ date, data });
-    if (dayjs.utc(date).isSameOrAfter(end, 'date')) {
-      break;
-    }
     date = dayjs.utc(date).add(1, 'day');
   }
+
+  const data = dt.find(findD(end));
+  dates.push({ date: dayjs.utc(end), data });
+
   return dates;
 };

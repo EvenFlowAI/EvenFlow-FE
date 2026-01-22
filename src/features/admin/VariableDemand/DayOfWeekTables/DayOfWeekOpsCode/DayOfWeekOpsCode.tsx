@@ -142,7 +142,7 @@ const DayOfWeekOpsCode = () => {
   );
 
   const handleChange = useCallback(
-    (id: number, type: 'low' | 'high') => (e: any, val: number | number[]) => {
+    (id: number, type: 'low' | 'high') => (e: Event, val: number | number[]) => {
       setSlidersState(prev => ({ ...prev, [id]: { ...prev[id], [type]: val } }));
     },
     []

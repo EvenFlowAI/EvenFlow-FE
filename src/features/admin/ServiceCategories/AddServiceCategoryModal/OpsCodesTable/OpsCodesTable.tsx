@@ -7,6 +7,7 @@ import Checkbox from '../../../../../components/formControls/Checkbox/Checkbox';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import { useStyles } from './styles';
 import { TableRowDataType } from '../../../../../types/types';
+import { CategoryFormState } from '../types';
 
 const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
   {
@@ -47,14 +48,14 @@ const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
 ];
 
 type TOpsCodesTableProps = {
-  selectedCodes: IAssignedServiceRequest[];
-  setSelectedCodes: Dispatch<SetStateAction<IAssignedServiceRequest[]>>;
+  form: CategoryFormState;
+  setForm: Dispatch<SetStateAction<CategoryFormState>>;
   disabled: boolean;
 };
 
 export const OpsCodesTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TOpsCodesTableProps>>
-> = ({ selectedCodes, setSelectedCodes, disabled }) => {
+> = ({ form, setForm, disabled }) => {
   const { allAssignedList, assignedLoading } = useSelector(
     (state: RootState) => state.serviceRequests
   );
@@ -63,14 +64,21 @@ export const OpsCodesTable: React.FC<
   const handleSelect = useCallback(
     (el: IAssignedServiceRequest) => {
       if (!disabled) {
-        setSelectedCodes(prev => {
-          return prev.find(item => item.id === el.id)
-            ? prev.filter(item => item.id !== el.id)
-            : [...prev, el];
+        setForm(prev => {
+          const exists = prev.selectedCodes.find(item => item.id === el.id);
+
+          const updatedCodes = exists
+            ? prev.selectedCodes.filter(item => item.id !== el.id)
+            : [...prev.selectedCodes, el];
+
+          return {
+            ...prev,
+            selectedCodes: updatedCodes,
+          };
         });
       }
     },
-    [setSelectedCodes, disabled]
+    [disabled]
   );
 
   const preActions = useCallback(
@@ -80,18 +88,18 @@ export const OpsCodesTable: React.FC<
           color="primary"
           disabled={disabled}
           icon={
-            selectedCodes.find(item => item.id === el.id) ? (
+            form.selectedCodes.find(item => item.id === el.id) ? (
               <CheckBoxOutlined htmlColor="#3855FE" />
             ) : (
               <CheckBoxOutlineBlank htmlColor="#DADADA" />
             )
           }
-          checked={!!selectedCodes.find(item => item.id === el.id)}
+          checked={!!form.selectedCodes.find(item => item.id === el.id)}
           onChange={() => handleSelect(el)}
         />
       );
     },
-    [selectedCodes, handleSelect, disabled]
+    [form.selectedCodes, handleSelect, disabled]
   );
 
   return (

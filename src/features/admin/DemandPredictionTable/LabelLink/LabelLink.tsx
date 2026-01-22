@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { CSSProperties, ReactElement } from 'react';
 import { TCallback } from '../../../../types/types';
 import { SubLabel } from './styles';
 
@@ -7,7 +7,7 @@ type TProps = {
   icon?: ReactElement;
   onClick: TCallback;
   color: string;
-  style?: any;
+  style?: CSSProperties;
 };
 
 const LabelLink: React.FC<TProps> = props => {
@@ -19,7 +19,7 @@ const LabelLink: React.FC<TProps> = props => {
   };
   return (
     <SubLabel
-      style={props.style ? props.style : null}
+      style={props.style ? props.style : undefined}
       color={props.color}
       role="presentation"
       onClick={onClick}
