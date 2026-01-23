@@ -102,7 +102,6 @@ import { setConsentOpen, setSlotsWarningShowed } from '../modals/actions';
 import { API } from '../../../api/api';
 import { Dispatch, SetStateAction } from 'react';
 import { TTransportationData } from '../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
-import { ETransportationType } from '../transportationNeeds/types';
 import { collectServiceRequestsForConsents } from '../../../utils/collectServiceRequestsForConsents';
 import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
 
@@ -1659,7 +1658,6 @@ export const loadActiveTransportations =
     const { allCategories } = getState().categories;
     const { selectedSR, selectedSRComments, isCloneMode } = getState().appointment;
     const { transportation } = getState().appointmentFrame;
-    const { firstScreenOptions } = getState().serviceTypes;
     if (selectedVehicle) {
       dispatch(setTransportationsLoading(true));
       const maintenancePackageOption = selectedPackage
@@ -1693,12 +1691,7 @@ export const loadActiveTransportations =
       if (hashKey) data.appointmentHashKey = hashKey;
       Api.call<ITransportation[]>(Api.endpoints.TransportationOptions.GetActive, { data }).then(
         ({ data }) => {
-          const serviceValetOption = firstScreenOptions.find(
-            el => el.type === EServiceType.PickUpDropOff
-          );
-          const availableTransportations = serviceValetOption
-            ? data
-            : data.filter(el => el.type !== ETransportationType.PickUpDelivery);
+          const availableTransportations = data;
           dispatch(getActiveTransportations(availableTransportations));
 
           if (transportation) {
