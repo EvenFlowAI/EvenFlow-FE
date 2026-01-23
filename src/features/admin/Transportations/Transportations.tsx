@@ -33,7 +33,6 @@ import { QueryTypes, ServiceValetRoutes } from '../../../routes/types';
 export const Transportations = () => {
   const { push } = useHistory();
   const { options, isLoading } = useSelector((state: RootState) => state.transportation);
-  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const [editingElement, setEditingElement] = useState<ITransportationOptionFull | null>(null);
   const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
@@ -60,10 +59,9 @@ export const Transportations = () => {
     const option = options.find(item => item.id === id);
     if (selectedSC && option) {
       const pickUpConfig = config.find(el => el.serviceType === EServiceType.PickUpDropOff);
-      const pickUpOption = firstScreenOptions.find(el => el.type === EServiceType.PickUpDropOff);
       const isValid =
         value && option?.type === ETransportationType.PickUpDelivery
-          ? pickUpConfig?.available && pickUpOption
+          ? pickUpConfig?.available
           : true;
       if (isValid) {
         try {
@@ -80,7 +78,6 @@ export const Transportations = () => {
       } else {
         if (!pickUpConfig?.available)
           showError('Pick Up / Drop Off booking flow configuration must be "ON"');
-        if (!pickUpOption) showError('"Service Valet" First Screen Option should be added');
       }
     }
   };
