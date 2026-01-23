@@ -104,8 +104,16 @@ export const TransportationNeeds: React.FC<TProps> = ({
 
   const handleNext = (transportation: ITransportation | null): void => {
     handleGA(transportation);
+    const serviceValetOption = firstScreenOptions.find(
+      el => el.type === EServiceType.PickUpDropOff
+    );
+
     if (transportation?.type === ETransportationType.PickUpDelivery) {
-      switchToServiceValet();
+      if (serviceValetOption) {
+        switchToServiceValet();
+      } else {
+        onNext();
+      }
     } else {
       onNext();
     }
