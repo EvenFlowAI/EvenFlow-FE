@@ -11,6 +11,7 @@ import { TForm } from './types';
 import { TOption } from '../../ServiceBookModal/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
+import { SectionTitle } from './styles';
 
 interface ConsentSelectorsProps {
   form: TForm;
@@ -86,6 +87,9 @@ const ConsentSelectors = ({
 
   return (
     <>
+      <Grid item xs={12}>
+        <SectionTitle>Customer & Vehicle</SectionTitle>
+      </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <Autocomplete
           options={customerTypeOptions}

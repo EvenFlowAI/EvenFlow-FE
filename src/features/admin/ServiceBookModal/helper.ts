@@ -2,7 +2,6 @@ import { IMake, IModel } from '../../../api/types';
 import { IPodVehicleModel } from '../../../store/reducers/pods/types';
 import { TOption } from './types';
 
-// Функція для JobType
 export function mapJobTypeOption(
   options: TOption[],
   jobTypeValue: string | number | undefined
@@ -11,7 +10,6 @@ export function mapJobTypeOption(
   return options.find(opt => opt.value === jobTypeValue) ?? null;
 }
 
-// Функція для AppointmentType
 export function mapAppointmentTypeOption(
   options: TOption[],
   appointmentTypeValue: string | number | undefined

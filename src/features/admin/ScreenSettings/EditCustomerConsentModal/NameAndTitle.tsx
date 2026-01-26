@@ -3,6 +3,7 @@ import { Grid } from '@mui/material';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { TForm } from './types';
 import { Textarea } from '../../RecallsParts/AddRecallModal/styles';
+import { SectionTitle } from './styles';
 
 interface NameAndTitleProps {
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
@@ -26,6 +27,9 @@ const NameAndTitle = ({ setFormIsChecked, setForm, form, formIsChecked }: NameAn
 
   return (
     <>
+      <Grid item xs={12}>
+        <SectionTitle>Consent</SectionTitle>
+      </Grid>
       <Grid item xs={12} md={6}>
         <TextField
           id="name"

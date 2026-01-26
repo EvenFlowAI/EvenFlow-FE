@@ -236,9 +236,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
         ) : (
           <>
             <Grid container spacing={3} style={{ marginBottom: 36 }}>
-              <Grid item xs={12}>
-                <SectionTitle>Consent</SectionTitle>
-              </Grid>
               <NameAndTitle
                 form={form}
                 setForm={setForm}
@@ -247,9 +244,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
               />
             </Grid>
             <Grid container spacing={3} style={{ marginBottom: 36 }}>
-              <Grid item xs={12}>
-                <SectionTitle>Appointment Request</SectionTitle>
-              </Grid>
               <AutocompletesConsent
                 form={form}
                 setForm={setForm}
@@ -258,9 +252,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
               />
             </Grid>
             <Grid container spacing={3} style={{ marginBottom: 36 }}>
-              <Grid item xs={12}>
-                <SectionTitle>Customer & Vehicle</SectionTitle>
-              </Grid>
               <ConsentSelectors
                 form={form}
                 setForm={setForm}

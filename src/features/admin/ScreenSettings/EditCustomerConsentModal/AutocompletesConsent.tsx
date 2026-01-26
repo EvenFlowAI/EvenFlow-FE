@@ -12,6 +12,7 @@ import { TTransportationShort } from '../../../../store/reducers/transportationN
 import { TGeographicZoneShort } from '../../../../types/types';
 import { TForm } from './types';
 import { IAssignedServiceRequestShort } from '../../../../store/reducers/serviceRequests/types';
+import { SectionTitle } from './styles';
 
 interface AutocompletesConsentProps {
   form: TForm;
@@ -77,6 +78,9 @@ const AutocompletesConsent = ({
 
   return (
     <>
+      <Grid item xs={12}>
+        <SectionTitle>Appointment Request</SectionTitle>
+      </Grid>
       <Grid item xs={12} sm={12} md={6}>
         <Autocomplete
           multiple
