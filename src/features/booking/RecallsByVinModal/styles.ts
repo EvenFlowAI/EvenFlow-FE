@@ -40,7 +40,7 @@ export const useStyles = makeStyles()(theme => ({
       },
     },
   },
-  recallComponent: {
+  recallSubject: {
     fontSize: 16,
     color: '#828282',
     fontWeight: 600,

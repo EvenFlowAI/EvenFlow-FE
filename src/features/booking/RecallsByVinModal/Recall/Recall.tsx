@@ -31,7 +31,7 @@ const Recall: React.FC<TProps> = ({ item, recalls, onAddService, index }) => {
             <div className={classes.title}>
               {index + 1} {t('Recall')}
             </div>
-            <div className={classes.recallComponent}>{item.recallComponent}</div>
+            <div className={classes.recallSubject}>{item.recallSubject}</div>
           </div>
           <AddDeclineSwitcher item={item} onAddService={onAddService} recalls={recalls} />
         </div>

@@ -184,6 +184,7 @@ export interface IRecallByVin {
   id: number | null;
   serviceRequestId: number;
   campaignNumber?: string;
+  recallSubject: string;
   recallComponent: string;
   recallStatus: string;
   shortDescription: string;
