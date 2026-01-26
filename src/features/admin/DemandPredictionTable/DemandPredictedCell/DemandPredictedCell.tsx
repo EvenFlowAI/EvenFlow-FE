@@ -13,9 +13,6 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { RootState } from '../../../../store/rootReducer';
 import { updateDemandManagementSettings } from '../../../../store/reducers/demandManagement/actions';
 import { LinksWrapper } from './styles';
-import { setAllocationTab, setLocalTab } from '../../../../store/reducers/adminPanel/actions';
-import { useHistory } from 'react-router-dom';
-import { Routes } from '../../../../routes/constants';
 import { setSelectedPod } from '../../../../store/reducers/pods/actions';
 
 export const DemandPredictedCell: React.FC<{
@@ -26,7 +23,6 @@ export const DemandPredictedCell: React.FC<{
   const { shortPodsList } = useSelector((state: RootState) => state.pods);
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const history = useHistory();
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down('xl'));
 

@@ -31,7 +31,7 @@ import dayjs from 'dayjs';
 
 export const WorkWeekModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ onAction, payload, ...props }) => {
+> = ({ ...props }) => {
   const [form, setForm] = useState<TForm>(initialForm);
   const [saving, setSaving] = useState<boolean>(false);
   const showError = useException();
@@ -70,7 +70,7 @@ export const WorkWeekModal: React.FC<
         await dispatch(
           setWorkWeekPricing(
             Object.entries(form)
-              .filter(([k, v]) => !isNaN(Number(k)))
+              .filter(([k]) => !isNaN(Number(k)))
               .map(([k, v]) => {
                 return {
                   demandCategory: v,

@@ -20,10 +20,7 @@ import { TableCell, TableCellWithLittlePadding } from '../../../components/style
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useSelectedPod } from '../../../hooks/useSelectedPod/useSelectedPod';
 import dayjs from 'dayjs';
-import {
-  UnplannedTableCell,
-  UnplannedTableCellWithLittlePadding,
-} from './UnplannedDemandSlots/styles';
+import { UnplannedTableCellWithLittlePadding } from './UnplannedDemandSlots/styles';
 import { useStyles } from './styles';
 import { STextField } from '../AncillaryPriceByDistance/styles';
 import { TForm } from '../OverbookingFactor/types';

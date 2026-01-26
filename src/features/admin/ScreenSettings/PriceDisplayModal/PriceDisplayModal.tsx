@@ -36,7 +36,7 @@ const PriceDisplayModal: React.FC<DialogProps> = props => {
   };
 
   const onSave = () => {
-    selectedSC && dispatch(changeRoundPriceSetting(selectedSC.id, value === 'round', showError));
+    if (selectedSC) dispatch(changeRoundPriceSetting(selectedSC.id, value === 'round', showError));
     props.onClose();
   };
 

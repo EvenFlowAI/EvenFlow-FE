@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { ButtonsWrapper, Definition, Wrapper } from './styles';
 import { ReactComponent as Checked } from '../../../../assets/img/checkmark.svg';
 import { ReactComponent as Unchecked } from '../../../../assets/img/radiobutton_unchecked.svg';

@@ -7,21 +7,14 @@ import {
 } from '../../../components/modals/BaseModal/BaseModal';
 import { LoadingButton } from '../../../components/buttons/LoadingButton/LoadingButton';
 import { useActionButtonsStyles } from '../../../hooks/styling/useActionButtonsStyles';
-import { Autocomplete, Grid, InputAdornment, Switch } from '@mui/material';
-import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
+import { Grid } from '@mui/material';
 import { TOption } from '../ServiceBookModal/types';
-import { autocompleteRender } from '../../../utils/autocompleteRenders';
-import { Label, SubTitle } from './styles';
 import ClockTimePicker from '../../../components/pickers/ClockTimePicker/ClockTimePicker';
 import { TParsableDate } from '../../../types/types';
 import dayjs from 'dayjs';
 import { timeSpanString } from '../../../utils/constants';
 import { TDayTime, TForm, TProps } from './types';
 import { daysList, initialForm } from './constants';
-import {
-  SwitcherLabel,
-  SwitcherWrapper,
-} from '../EmployeesScheduleManagement/EmployeeScheduleModal/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import {
@@ -33,9 +26,18 @@ import { ReactComponent as Time } from '../../../assets/img/time.svg';
 import { ReactComponent as TimeDisabled } from '../../../assets/img/time_disabled.svg';
 import { useException } from '../../../hooks/useException/useException';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
-import { ICapacitySettingRequestData } from '../../../store/reducers/capacityManagement/types';
 import { useMessage } from '../../../hooks/useMessage/useMessage';
-import { getGapSlotOptions } from './utils';
+import {
+  buildCapacityData,
+  getGapSlotOptions,
+  validateCutOffTime,
+  validateGapSlotsType,
+  validateNumbers,
+  validateServiceBookName,
+  validateTechnicianEfficiency,
+} from './utils';
+import InputGroup from './InputGroup';
+import EmployeeSettingsForm from './EmployeeSettingsForm';
 
 const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem }) => {
   const { currentSetting, isLoading } = useSelector((state: RootState) => state.capacityManagement);
@@ -90,11 +92,6 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSelectGap = (e: React.ChangeEvent<{}>, val: TOption | null) => {
-    setFormChecked(false);
-    setForm({ ...form, gapSlotsType: val });
-  };
-
   const handleTimeChange = (day: number) => (date: TParsableDate) => {
     setFormChecked(false);
     setForm(prev => {
@@ -121,11 +118,6 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
       ...prev,
       cutOffTime: prev.cutOffTime.filter(el => el.day !== day),
     }));
-  };
-
-  const handleSwitch = (e: any, value: boolean) => {
-    setFormChecked(false);
-    setForm(prev => ({ ...prev, isAdvisorStaffingFactor: value }));
   };
 
   const onCancel = () => {
@@ -166,72 +158,17 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
   const checkIsValid = () => {
     setFormChecked(true);
     let isValid = true;
-
-    if (!form.gapSlotsType) {
-      isValid = false;
-      showError('"Appointment Gap Slots" must not be empty');
-    }
-    if (!form.serviceBookName && editingItem?.serviceBookId) {
-      isValid = false;
-      showError('"Service Book Name" must not be empty');
-    }
-    if (form.averageBillHoursPerRO && form.averageBillHoursPerRO < 0) {
-      isValid = false;
-      showError('"Average Bill Per RO" must be equal or more than 0');
-    }
-    if (form.appointmentLeadTime && form.appointmentLeadTime < 0) {
-      isValid = false;
-      showError('"Appointment Lead Time" must be equal or more than 0');
-    }
-    if (form.appointmentsPerSlot && form.appointmentsPerSlot < 0) {
-      isValid = false;
-      showError('"Appointments Per Slots" must be equal or more than 0');
-    }
-    if (form.technicianEfficiency) {
-      if (form.technicianEfficiency < 25) {
-        isValid = false;
-        showError('"Technician Efficiency" must be equal or more than 25');
-      }
-      if (form.technicianEfficiency > 999) {
-        isValid = false;
-        showError('"Technician Efficiency" must be  more than 999');
-      }
-      if (!Number.isInteger(+form.technicianEfficiency)) {
-        showError('"Technician Efficiency" must be a whole number');
-        isValid = false;
-      }
-    }
-    if (
-      form.cutOffTime.length &&
-      !form.cutOffTime.filter(el => el.time).find(el => checkTimeItemIsValid(el))
-    ) {
-      isValid = false;
-      showError('"Appointment Cut Off" should bi inside of the working hours');
-    }
+    isValid = validateGapSlotsType(form, showError) && isValid;
+    isValid = validateServiceBookName(form, editingItem, showError) && isValid;
+    isValid = validateNumbers(form, showError) && isValid;
+    isValid = validateTechnicianEfficiency(form, showError) && isValid;
+    isValid = validateCutOffTime(form.cutOffTime, checkTimeItemIsValid, showError) && isValid;
     return isValid;
   };
 
   const onSave = () => {
     if (checkIsValid() && selectedSC) {
-      const data: ICapacitySettingRequestData = {
-        serviceCenterId: selectedSC.id,
-        gapSlotsType: form.gapSlotsType?.value ?? null,
-        cutOffTime: form.cutOffTime.map(el => ({ day: el.day, value: el.time })),
-        serviceBookName: form.serviceBookName,
-      };
-      if (typeof form.isAdvisorStaffingFactor !== 'undefined')
-        data.isAdvisorStaffingFactor = form.isAdvisorStaffingFactor;
-      if (editingItem?.serviceBookId) data.serviceBookId = editingItem.serviceBookId;
-      if (editingItem?.serviceBookId && form.serviceBookName)
-        data.serviceBookName = form.serviceBookName;
-      if (form.technicianEfficiency !== null && form.technicianEfficiency >= 0)
-        data.technicianEfficiency = form.technicianEfficiency;
-      if (form.averageBillHoursPerRO !== null && form.averageBillHoursPerRO >= 0)
-        data.averageBillHoursPerRO = form.averageBillHoursPerRO;
-      if (form.appointmentLeadTime !== null && form.appointmentLeadTime >= 0)
-        data.appointmentLeadTime = form.appointmentLeadTime;
-      if (form.appointmentsPerSlot !== null && form.appointmentsPerSlot >= 0)
-        data.appointmentsPerSlot = form.appointmentsPerSlot;
+      const data = buildCapacityData(form, selectedSC.id, editingItem);
       dispatch(updateCapacitySettingById(data, showError, onSuccess));
     }
   };
@@ -250,76 +187,17 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
           <Loading />
         ) : (
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <TextField
-                id="serviceBookName"
-                name="serviceBookName"
-                label="Service Book Name"
-                placeholder="Type Name"
-                fullWidth
-                required
-                disabled
-                error={formIsChecked && !form.serviceBookName}
-                onChange={handleChange}
-                value={form.serviceBookName}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Autocomplete
-                id="gapSlotsType"
-                fullWidth
-                getOptionLabel={o => o.name}
-                onChange={handleSelectGap}
-                value={form.gapSlotsType}
-                isOptionEqualToValue={(o, v) => o === v}
-                options={gapSlotTypeOptions}
-                renderInput={autocompleteRender({
-                  label: 'Appointment Gap Slots',
-                  placeholder: 'Appointment Gap Slots',
-                  error: formIsChecked && !form.gapSlotsType,
-                  required: true,
-                })}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="appointmentsPerSlot"
-                name="appointmentsPerSlot"
-                label="Appointments Per Slot"
-                placeholder="Type Amount"
-                fullWidth
-                type="number"
-                error={
-                  formIsChecked && form.appointmentsPerSlot !== null && form.appointmentsPerSlot < 0
-                }
-                inputProps={{ min: 0 }}
-                onChange={handleChange}
-                value={form.appointmentsPerSlot}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="appointmentLeadTime"
-                name="appointmentLeadTime"
-                label="Appointment Lead Time"
-                placeholder="Type Time"
-                error={
-                  formIsChecked && form.appointmentLeadTime !== null && form.appointmentLeadTime < 0
-                }
-                fullWidth
-                type="number"
-                inputProps={{ min: 0 }}
-                onChange={handleChange}
-                value={form.appointmentLeadTime}
-              />
-            </Grid>
-            <Grid xs={12} item>
-              <SubTitle>Appointment Cut Off</SubTitle>
-            </Grid>
+            <InputGroup
+              form={form}
+              handleChange={handleChange}
+              setForm={setForm}
+              formIsChecked={formIsChecked}
+              setFormChecked={setFormChecked}
+            />
             {daysList.map(day => {
               const existingTime = form.cutOffTime.find(el => el.day === day);
               return (
-                <Grid item xs={6} md={3}>
+                <Grid key={day} item xs={6} md={3}>
                   <ClockTimePicker
                     fullWidth
                     withClear
@@ -342,58 +220,13 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
                 </Grid>
               );
             })}
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="technicianEfficiency"
-                name="technicianEfficiency"
-                label="Technician Efficiency"
-                placeholder="Type Efficiency, %"
-                fullWidth
-                type="number"
-                startAdornment={<InputAdornment position="start">%</InputAdornment>}
-                error={
-                  formIsChecked &&
-                  form.technicianEfficiency !== null &&
-                  (form.technicianEfficiency < 25 ||
-                    form.technicianEfficiency > 999 ||
-                    !Number.isInteger(+form.technicianEfficiency))
-                }
-                inputProps={{ min: 0, step: 1 }}
-                onChange={handleChange}
-                value={form.technicianEfficiency}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                id="averageBillHoursPerRO"
-                name="averageBillHoursPerRO"
-                label="Average RO Hours"
-                placeholder="Type RO Hours"
-                fullWidth
-                type="number"
-                inputProps={{ min: 0 }}
-                onChange={handleChange}
-                error={
-                  formIsChecked &&
-                  form.averageBillHoursPerRO !== null &&
-                  form.averageBillHoursPerRO < 0
-                }
-                value={form.averageBillHoursPerRO}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Label>Advisor Staffing Factor</Label>
-              <SwitcherWrapper>
-                <SwitcherLabel>OFF</SwitcherLabel>
-                <Switch
-                  disabled={typeof currentSetting?.isAdvisorStaffingFactor === 'undefined'}
-                  onChange={handleSwitch}
-                  checked={form.isAdvisorStaffingFactor}
-                  color="primary"
-                />
-                <SwitcherLabel>ON</SwitcherLabel>
-              </SwitcherWrapper>
-            </Grid>
+            <EmployeeSettingsForm
+              form={form}
+              handleChange={handleChange}
+              setForm={setForm}
+              formIsChecked={formIsChecked}
+              setFormChecked={setFormChecked}
+            />
           </Grid>
         )}
       </DialogContent>

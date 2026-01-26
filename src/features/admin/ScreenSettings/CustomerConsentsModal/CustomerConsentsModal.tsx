@@ -73,7 +73,7 @@ export const CustomerConsentsModal: React.FC<
     onClose();
   };
 
-  const handleSwitch = (el: ICustomerConsent) => (e: any, value: boolean) => {
+  const handleSwitch = (el: ICustomerConsent) => (e: React.SyntheticEvent, value: boolean) => {
     if (selectedSC) {
       dispatch(toggleCustomerConsent(selectedSC.id, el.id, value, showError, selectedPod?.id));
     }

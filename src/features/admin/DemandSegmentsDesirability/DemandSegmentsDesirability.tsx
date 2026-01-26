@@ -86,7 +86,7 @@ export const DemandSegmentsDesirability = () => {
     onOpen();
   };
 
-  const handleChange = (idx: number, name: keyof TForm) => (e: any, val: number | number[]) => {
+  const handleChange = (idx: number, name: keyof TForm) => (e: Event, val: number | number[]) => {
     const f = [...form];
     const r = { ...form[idx] };
     r[name] = val as number;

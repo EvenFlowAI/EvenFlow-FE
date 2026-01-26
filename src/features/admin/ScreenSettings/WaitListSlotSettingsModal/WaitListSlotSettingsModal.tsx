@@ -117,7 +117,7 @@ const WaitListSlotSettingsModal: React.FC<
     props.onClose();
   };
 
-  const handleSwitch = (e: any, value: boolean) => {
+  const handleSwitch = (e: React.SyntheticEvent, value: boolean) => {
     setFormIsChecked(false);
     setEnabled(value);
   };

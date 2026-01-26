@@ -29,7 +29,6 @@ type TProps = DialogProps<TParsableDate> & { data?: ITimeOfYearSetting };
 
 export const DateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps>>> = ({
   payload,
-  onAction,
   data,
   ...props
 }) => {
@@ -54,7 +53,7 @@ export const DateModal: React.FC<React.PropsWithChildren<React.PropsWithChildren
     }
   }, [data, props.open]);
 
-  const handleChange = (e: any, d: string) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, d: string) => {
     setDemand(Number(d) as EDemandCategory);
   };
   const handleCommentChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {

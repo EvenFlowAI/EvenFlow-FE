@@ -61,7 +61,7 @@ export const SliderTable: React.FC<React.PropsWithChildren<React.PropsWithChildr
     });
   }, [demand]);
 
-  const handleSlide = (t: EDayDemand) => (e: any, value: number | number[]) => {
+  const handleSlide = (t: EDayDemand) => (e: Event, value: number | number[]) => {
     setForm({ ...form, [t]: value as number });
   };
 
