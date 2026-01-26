@@ -23,6 +23,7 @@ import ConfigurationAgent from '../../pages/admin/ConfigurationAgent/Configurati
 import InsightsAgent from '../../pages/admin/InsightsAgent/InsightsAgent';
 import AnomalyAgent from '../../pages/admin/AnomalyAgent/AnomalyAgent';
 import { Roles } from '../../types/types';
+import RegroupRecallBoard from '../../features/admin/RegroupRecallBoard';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
@@ -45,6 +46,11 @@ export const AdminRoutes = () => {
     { path: Routes.Employees.Base, component: EmployeesRoutes, condition: !isRestrictedRole },
     { path: Routes.CenterProfile.Base, component: CenterProfileRoutes },
     { path: Routes.Admin.Appointments, component: AppointmentsPage },
+    {
+      path: Routes.Admin.RegroupRecallBoard,
+      component: RegroupRecallBoard,
+      condition: !isRestrictedRole,
+    },
     {
       path: Routes.Admin.AiAgents,
       component: AiAgents,

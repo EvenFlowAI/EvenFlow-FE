@@ -50,6 +50,12 @@ export const MainLinksWithSub: LinkTypeWithSub[] = [
   },
 
   {
+    to: Routes.Admin.RegroupRecallBoard,
+    name: 'Regroup Recall Board',
+    roles: baseRoles,
+  },
+
+  {
     to: Routes.CenterProfile.Base,
     name: 'Center Profile',
     roles: baseRoles,

@@ -3,6 +3,7 @@ export enum AdminRoutes {
   DealershipGroups = '/admin/dealership-groups',
   Appointments = '/admin/appointments',
   AiAgents = '/admin/ai-agents',
+  RegroupRecallBoard = '/admin/regroup-recall-board',
   ConfigurationAgent = '/admin/configuration-agent',
   InsightsAgent = '/admin/insights-agent',
   AnomalyAgent = '/admin/anomaly-agent',
