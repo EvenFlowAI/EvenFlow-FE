@@ -10,6 +10,7 @@ import {
 } from '../../../store/reducers/appointment/actions';
 import {
   clearAppointmentData,
+  getActiveTransportations,
   setCurrentFrameScreen,
   setServiceOptionChanged,
   setServiceTypeOption,
@@ -57,6 +58,7 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setCustomerLoadedData(null));
         dispatch(setWelcomeScreenView('serviceCenterSelect'));
         dispatch(setServiceTypeOption(null));
+        dispatch(getActiveTransportations([]));
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);
