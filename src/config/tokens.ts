@@ -1,1 +1,3 @@
 export const ClientId = '1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p';
+export const MUI_PRO_LICENSE_KEY =
+  '39058badb3c9294b11eb3b0fb367f3adTz0xMjQ5NDksRT0xODAxMTgwNzk5MDAwLFM9cHJvLExNPXN1YnNjcmlwdGlvbixQVj1RMy0yMDI0LEtWPTI=';
