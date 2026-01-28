@@ -51,19 +51,36 @@ const AvailabilityQueryXTime = ({
 
   useEffect(() => {
     if (form.make) {
-      setModels(makes.find(make => make.name === form.make)?.models.map(model => model.name) ?? []);
+      setModels(
+        makes.find(make => make.name === form.make?.name)?.models.map(model => model.name) ?? []
+      );
     } else {
       setForm(prev => ({ ...prev, model: null }));
     }
   }, [form.make]);
 
   const onServiceRequestChange = (newValue: string | null) => {
-    setForm(prev => ({ ...prev, opCode: newValue }));
-    setIsCheckedXTime(true);
+    setIsCheckedXTime(false);
+    const selectedOpCode = serviceRequests.find(opCode => opCode.code === newValue);
+    setForm(prev => ({
+      ...prev,
+      opCode: {
+        name: newValue,
+        id: selectedOpCode?.id || null,
+      },
+    }));
   };
 
   const onAdvisorChange = (newValue: string | null) => {
-    setForm(prev => ({ ...prev, advisor: newValue }));
+    setIsCheckedXTime(false);
+    const selectedAdvisor = advisorsList.find(advisor => advisor.fullName === newValue);
+    setForm(prev => ({
+      ...prev,
+      advisor: {
+        name: newValue,
+        id: selectedAdvisor?.id || null,
+      },
+    }));
   };
 
   const onTransportationChange = (newValue: string | null) => {
@@ -76,6 +93,7 @@ const AvailabilityQueryXTime = ({
       transportation: {
         name: newValue || '',
         type: selectedTransportation?.type || null,
+        id: selectedTransportation?.id || null,
       },
       pickUpAddress: null,
       dropOffAddress: null,
@@ -88,14 +106,36 @@ const AvailabilityQueryXTime = ({
   };
 
   const onMakeChange = (newValue: string | null) => {
-    setForm(prev => ({ ...prev, make: newValue }));
+    setIsCheckedXTime(false);
+    const selectedMake = makes.find(make => make.name === newValue);
+
+    setForm(prev => ({
+      ...prev,
+      make: {
+        name: newValue,
+        id: selectedMake?.id || null,
+      },
+    }));
   };
 
   const onModelChange = (newValue: string | null) => {
-    setForm(prev => ({ ...prev, model: newValue }));
+    setIsCheckedXTime(false);
+    const foundMake = makes.find(make => make.name === form.make?.name);
+    if (foundMake) {
+      const selectedModel = foundMake.models.find(model => model.name === newValue);
+
+      setForm(prev => ({
+        ...prev,
+        model: {
+          name: newValue,
+          id: selectedModel?.id || null,
+        },
+      }));
+    }
   };
 
   const onYearChange = (newValue: string | null) => {
+    setIsCheckedXTime(false);
     setForm(prev => ({ ...prev, year: newValue }));
   };
 
@@ -111,13 +151,13 @@ const AvailabilityQueryXTime = ({
           options={serviceRequests?.map(el => el.code) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={option => option}
-          value={form.opCode}
+          value={form.opCode?.name}
           isOptionEqualToValue={(o, v) => o === v}
           onChange={(e, newValue) => onServiceRequestChange(newValue)}
           renderInput={autocompleteRender({
             label: 'Op code  *',
             placeholder: 'Op code',
-            error: formIsCheckedXTime && !form.opCode?.length,
+            error: formIsCheckedXTime && !form.opCode?.name?.length,
           })}
         />
       </div>
@@ -126,7 +166,7 @@ const AvailabilityQueryXTime = ({
           options={advisorsList?.map(el => el.fullName) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
-          value={form.advisor}
+          value={form.advisor?.name}
           isOptionEqualToValue={(o, s) => o === s}
           onChange={(e, newValue) => onAdvisorChange(newValue)}
           renderInput={autocompleteRender({
@@ -162,13 +202,13 @@ const AvailabilityQueryXTime = ({
           options={makes?.map(el => el.name) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
-          value={form.make}
+          value={form.make?.name}
           isOptionEqualToValue={(o, s) => o === s}
           onChange={(e, newValue) => onMakeChange(newValue)}
           renderInput={autocompleteRender({
             label: 'Make *',
             placeholder: 'Make',
-            error: formIsCheckedXTime && !form.make?.length,
+            error: formIsCheckedXTime && !form.make?.name?.length,
           })}
         />
       </div>
@@ -178,13 +218,13 @@ const AvailabilityQueryXTime = ({
           disabled={!form.make}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
-          value={form.model}
+          value={form.model?.name}
           isOptionEqualToValue={(o, s) => o === s}
           onChange={(e, newValue) => onModelChange(newValue)}
           renderInput={autocompleteRender({
             label: 'Model *',
             placeholder: 'Model',
-            error: formIsCheckedXTime && !form.model?.length,
+            error: formIsCheckedXTime && !form.model?.name?.length,
           })}
         />
       </div>

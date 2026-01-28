@@ -7,36 +7,50 @@ import { SystemType } from '../../../store/reducers/serviceCenters/types';
 import AvailabilityQueryTekion from './query/AvailabilityQueryTekion';
 import { Button } from '@mui/material';
 import { validateTekion, validateXTime } from './query/helper';
+import {
+  getAppointmentAvailabilityTekion,
+  getAppointmentAvailabilityXTime,
+} from '../../../store/reducers/appointment/actions';
+import { useDispatch } from 'react-redux';
+import { useException } from '../../../hooks/useException/useException';
 
 const DmsAvailability = () => {
   const { classes } = useStyles();
+  const dispatch = useDispatch();
   const [formXTime, setFormXTime] = useState<TFormXTime>(defaultFormXTime);
   const [formTekion, setFormTekion] = useState<TFormTekion>(defaultFormTekion);
   const [formIsCheckedTekion, setIsCheckedTekion] = useState<boolean>(false);
   const [formIsCheckedXTime, setIsCheckedXTime] = useState<boolean>(false);
   const { selectedSC } = useSCs();
+  const showError = useException();
+
+  const handleError = (e: string) => {
+    showError(e);
+  };
 
   const handleLoad = () => {
-    if (selectedSC?.system === SystemType.Xtime) {
-      setIsCheckedXTime(true);
+    if (selectedSC?.id) {
+      if (selectedSC?.system === SystemType.Xtime) {
+        setIsCheckedXTime(true);
 
-      if (validateXTime(formXTime)) {
-        console.log('send to the backend');
+        if (validateXTime(formXTime)) {
+          dispatch(getAppointmentAvailabilityXTime(selectedSC?.id, formXTime, handleError));
+        } else {
+          console.log('have errors');
+        }
+
+        console.log(formXTime);
       } else {
-        console.log('have errors');
+        setIsCheckedTekion(true);
+
+        if (validateTekion(formTekion)) {
+          dispatch(getAppointmentAvailabilityTekion(selectedSC?.id, formTekion, handleError));
+        } else {
+          console.log('have errors');
+        }
+
+        console.log(formTekion);
       }
-
-      console.log(formXTime);
-    } else {
-      setIsCheckedTekion(true);
-
-      if (validateTekion(formTekion)) {
-        console.log('send to the backend');
-      } else {
-        console.log('have errors');
-      }
-
-      console.log(formTekion);
     }
   };
 
@@ -45,7 +59,7 @@ const DmsAvailability = () => {
       <div className={classes.queryWrapper}>
         <div className={classes.query}>
           <p className={classes.headerText}>Availability query</p>
-          {selectedSC?.system != SystemType.Xtime ? (
+          {selectedSC?.system === SystemType.Xtime ? (
             <AvailabilityQueryXTime
               form={formXTime}
               setForm={setFormXTime}
@@ -68,7 +82,9 @@ const DmsAvailability = () => {
           <hr className={classes.line} />
         </div>
       </div>
-      <div className={classes.results}></div>
+      <div className={classes.results}>
+        <p className={classes.headerText}>Appointment availability results</p>
+      </div>
     </div>
   );
 };

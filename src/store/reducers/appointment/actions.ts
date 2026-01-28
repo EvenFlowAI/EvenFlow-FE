@@ -48,6 +48,7 @@ import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DealershipsIds } from '../../../utils/constants';
+import { TFormTekion, TFormXTime } from '../../../features/admin/DmsAvailability/types';
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const setTopAligning = createAction<boolean>('Appointment/SetTopAligning');
@@ -383,3 +384,80 @@ export const clearAppointmentSlots = (): AppThunk => (dispatch, getState) => {
     dispatch(selectServiceValetAppointment(null));
   }
 };
+
+export const getAppointmentAvailabilityXTime =
+  (
+    serviceCenterId: number,
+    formXTime: TFormXTime,
+    showError: (errorText: string) => void
+  ): AppThunk =>
+  () => {
+    let pickUpAddress: string | null = null;
+    if (formXTime.pickUpAddress && typeof formXTime.pickUpAddress !== 'string') {
+      pickUpAddress = formXTime.pickUpAddress.address;
+    }
+    let dropOffAddress: string | null = null;
+    if (formXTime.dropOffAddress && typeof formXTime.dropOffAddress !== 'string') {
+      dropOffAddress = formXTime.dropOffAddress.address;
+    }
+
+    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailability, {
+      params: {
+        serviceCenterId,
+        MakeId: formXTime?.make?.id,
+        ModelId: formXTime?.model?.id,
+        Year: formXTime?.year,
+        StartDate: formXTime.date[0]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        EndDate: formXTime.date[1]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        AdvisorId: formXTime.advisor?.id,
+        ServiceRequestId: formXTime.opCode?.id,
+        TransportationOptionId: formXTime.transportation?.id,
+        PickUpAddress: pickUpAddress,
+        DropOffAddress: dropOffAddress,
+      },
+    })
+      .then(r => {
+        console.log(r);
+      })
+      .catch(e => {
+        console.log(e);
+        showError(e.message);
+      });
+  };
+
+export const getAppointmentAvailabilityTekion =
+  (
+    serviceCenterId: number,
+    formXTime: TFormTekion,
+    showError: (errorText: string) => void
+  ): AppThunk =>
+  () => {
+    let pickUpAddress: string | null = null;
+    if (formXTime.pickUpAddress && typeof formXTime.pickUpAddress !== 'string') {
+      pickUpAddress = formXTime.pickUpAddress.address;
+    }
+    let dropOffAddress: string | null = null;
+    if (formXTime.dropOffAddress && typeof formXTime.dropOffAddress !== 'string') {
+      dropOffAddress = formXTime.dropOffAddress.address;
+    }
+
+    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailability, {
+      params: {
+        serviceCenterId,
+        PodId: formXTime.pod?.id,
+        StartDate: formXTime.date[0]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        EndDate: formXTime.date[1]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        AdvisorId: formXTime.advisor?.id,
+        TransportationOptionId: formXTime.transportation?.id,
+        PickUpAddress: pickUpAddress,
+        DropOffAddress: dropOffAddress,
+      },
+    })
+      .then(r => {
+        console.log(r);
+      })
+      .catch(e => {
+        console.log(e);
+        showError(e.message);
+      });
+  };

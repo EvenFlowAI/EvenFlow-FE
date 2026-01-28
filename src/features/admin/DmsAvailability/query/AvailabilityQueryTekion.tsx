@@ -44,13 +44,29 @@ const AvailabilityQueryTekion = ({
   }, []);
 
   const onAdvisorChange = (newValue: string | null) => {
+    const selectedAdvisor = advisorsList.find(advisor => advisor.fullName === newValue);
+
     setIsCheckedTekion(false);
-    setForm(prev => ({ ...prev, advisor: newValue }));
+    setForm(prev => ({
+      ...prev,
+      advisor: {
+        name: newValue,
+        id: selectedAdvisor?.id || null,
+      },
+    }));
   };
 
   const onPodChange = (newValue: string | null) => {
+    const selectedPod = shortPodsList.find(pod => pod.name === newValue);
+
     setIsCheckedTekion(false);
-    setForm(prev => ({ ...prev, pod: newValue }));
+    setForm(prev => ({
+      ...prev,
+      pod: {
+        name: newValue,
+        id: selectedPod?.id || null,
+      },
+    }));
   };
 
   const onTransportationChange = (newValue: string | null) => {
@@ -63,6 +79,7 @@ const AvailabilityQueryTekion = ({
       transportation: {
         name: newValue || '',
         type: selectedTransportation?.type || null,
+        id: selectedTransportation?.id || null,
       },
       pickUpAddress: null,
       dropOffAddress: null,
@@ -86,13 +103,13 @@ const AvailabilityQueryTekion = ({
           options={shortPodsList?.map(el => el.name) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
-          value={form.pod}
+          value={form.pod?.name}
           isOptionEqualToValue={(o, s) => o === s}
           onChange={(e, newValue) => onPodChange(newValue)}
           renderInput={autocompleteRender({
             label: 'Service Book *',
             placeholder: 'Service Book',
-            error: formIsCheckedTekion && !form.pod?.length,
+            error: formIsCheckedTekion && !form.pod?.name?.length,
           })}
         />
       </div>
@@ -101,19 +118,23 @@ const AvailabilityQueryTekion = ({
           options={advisorsList?.map(el => el.fullName) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
-          value={form.advisor}
+          value={form.advisor?.name}
           isOptionEqualToValue={(o, s) => o === s}
           onChange={(e, newValue) => onAdvisorChange(newValue)}
           renderInput={autocompleteRender({
             label: 'Advisor *',
             placeholder: 'Advisor',
-            error: formIsCheckedTekion && !form.advisor?.length,
+            error: formIsCheckedTekion && !form.advisor?.name?.length,
           })}
         />
       </div>
       <div>
         <Autocomplete
-          options={transportations?.map(el => el.description) ?? []}
+          options={
+            transportations
+              ?.filter(transportation => transportation.type !== ETransportationType.PickUpDelivery)
+              .map(el => el.description) ?? []
+          }
           style={{ width: '329px' }}
           getOptionLabel={i => i}
           value={form.transportation?.name}

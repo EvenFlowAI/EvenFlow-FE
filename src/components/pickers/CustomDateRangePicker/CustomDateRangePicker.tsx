@@ -18,6 +18,19 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
     setAnchorEl(event.currentTarget as HTMLButtonElement);
   const handleClose = () => setAnchorEl(null);
+  const [errorText, setErrorText] = useState('');
+
+  const validateRange = (newValue: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => {
+    if (newValue[0] && newValue[1]) {
+      const diff = dayjs(newValue[1]).diff(dayjs(newValue[0]), 'day');
+      if (diff > 6 || diff < 0) {
+        setErrorText('Please select a date range between 1 and 7 days');
+        return;
+      }
+    }
+    setErrorText('');
+    setValue(newValue);
+  };
 
   return (
     <div style={{ width: '329px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -35,12 +48,23 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
       <div>
         <SingleInputDateRangeField
           value={value}
-          onChange={newValue => setValue(newValue)}
+          onChange={newValue => {
+            if (newValue[0] && newValue[1]) {
+              const diff = dayjs(newValue[1]).diff(dayjs(newValue[0]), 'day');
+              if (diff > 6 || diff < 0) {
+                setErrorText('Please select a date range between 1 and 7 days');
+                return;
+              }
+            }
+            setErrorText('');
+            setValue(newValue);
+          }}
           format={format}
           slotProps={{
             textField: {
               variant: 'outlined',
-              error: !value[0] || !value[1],
+              error: Boolean(errorText),
+              helperText: errorText,
               sx: {
                 width: 328,
                 fontSize: '0.875rem',
@@ -73,7 +97,7 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
           onClose={handleClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         >
-          <DateRangeCalendar value={value} onChange={newValue => setValue(newValue)} />
+          <DateRangeCalendar value={value} onChange={validateRange} />
         </Popover>
       </div>
     </div>

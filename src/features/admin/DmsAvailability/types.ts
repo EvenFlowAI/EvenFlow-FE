@@ -3,16 +3,29 @@ import { TParsedAddress } from '../../booking/AppointmentFlow/Screens/YourLocati
 import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 export type TFormXTime = {
-  opCode: string | null;
-  advisor: string | null;
+  opCode: {
+    name: string | null;
+    id: number | null;
+  } | null;
+  advisor: {
+    name: string | null;
+    id: string | null;
+  } | null;
   transportation: {
     name: string | null;
     type: ETransportationType | null;
+    id: number | null;
   } | null;
   pickUpAddress: string | null | TParsedAddress;
   dropOffAddress: string | null | TParsedAddress;
-  make: string | null;
-  model: string | null;
+  make: {
+    name: string | null;
+    id: number | null;
+  } | null;
+  model: {
+    name: string | null;
+    id: number | null;
+  } | null;
   year: string | null;
   date: [dayjs.Dayjs | null, dayjs.Dayjs | null];
 };
@@ -26,15 +39,22 @@ export const defaultFormXTime: TFormXTime = {
   make: null,
   model: null,
   year: null,
-  date: [dayjs().subtract(1, 'month'), dayjs()],
+  date: [dayjs().subtract(6, 'days'), dayjs()],
 };
 
 export type TFormTekion = {
-  advisor: string | null;
-  pod: string | null;
+  advisor: {
+    name: string | null;
+    id: string | null;
+  } | null;
+  pod: {
+    name: string | null;
+    id: number | null;
+  } | null;
   transportation: {
     name: string | null;
     type: ETransportationType | null;
+    id: number | null;
   } | null;
   pickUpAddress: string | null | TParsedAddress;
   dropOffAddress: string | null | TParsedAddress;
@@ -47,5 +67,5 @@ export const defaultFormTekion: TFormTekion = {
   transportation: null,
   pickUpAddress: null,
   dropOffAddress: null,
-  date: [dayjs().subtract(1, 'month'), dayjs()],
+  date: [dayjs().subtract(6, 'days'), dayjs()],
 };
