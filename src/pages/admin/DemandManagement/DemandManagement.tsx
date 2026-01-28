@@ -10,12 +10,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { UnplannedDemand } from '../../../features/admin/UnplannedDemand/UnplannedDemand';
 import ProbabilityApproach from '../../../features/admin/ProbabilityApproach/ProbabilityApproach';
-import DmsAvailability from '../../../features/admin/DmsAvailability/DmsAvailability';
-import { useSCs } from '../../../hooks/useSCs/useSCs';
 
 const DemandManagement = () => {
   const [selectedTab, setTab] = useState<string>('0');
-  const { selectedSC } = useSCs();
   const handleTabChange = (e: React.SyntheticEvent | null, tab: string) => {
     setTab(tab);
   };
@@ -33,7 +30,6 @@ const DemandManagement = () => {
         <Tab label="Demand Prediction" value="0" />
         <Tab label="Demand Adjustments" value="1" />
         <Tab label="RO Prediction Parameters" value="2" />
-        {selectedSC?.system && <Tab label="DMS Availability" value="3" />}
       </TabList>
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="0">
         {localTab === '2' ? (
@@ -48,11 +44,6 @@ const DemandManagement = () => {
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="2">
         <RoPredictionParameters />
       </TabPanel>
-      {selectedSC?.system && (
-        <TabPanel style={{ width: '100%', padding: '24px 0' }} value="3">
-          <DmsAvailability />
-        </TabPanel>
-      )}
     </TabContext>
   );
 };

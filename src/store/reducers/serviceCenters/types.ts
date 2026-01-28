@@ -6,11 +6,6 @@ import { TChangePageDataGeneric, TChangePagingGeneric } from '../types';
 import { EDay } from '../demandSegments/types';
 import { EAdvisorAssignMethod, IEmployeeAssignmentSetting } from '../employees/types';
 
-export enum SystemType {
-  Tekion = 'tekion',
-  Xtime = 'xtime',
-}
-
 export interface IServiceCenter {
   id: number;
   name: string;
@@ -31,7 +26,6 @@ export interface IServiceCenter {
   engineTypeFieldName?: string;
   emailRequirement?: TEmailRequirement;
   packageSource: PackageSourceType;
-  system?: SystemType;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
   countOfManagers: number;
