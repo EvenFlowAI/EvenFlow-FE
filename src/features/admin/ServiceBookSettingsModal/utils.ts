@@ -66,7 +66,7 @@ export function validateTechnicianEfficiency(
     showError('"Technician Efficiency" must be more than 999');
     return false;
   }
-  if (!Number.isInteger(form.technicianEfficiency)) {
+  if (!Number.isInteger(+form.technicianEfficiency)) {
     showError('"Technician Efficiency" must be a whole number');
     return false;
   }
