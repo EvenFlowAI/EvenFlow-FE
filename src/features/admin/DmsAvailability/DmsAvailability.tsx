@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStyles } from './styles';
 import { defaultFormTekion, defaultFormXTime, TFormTekion, TFormXTime } from './types';
 import AvailabilityQueryXTime from './query/AvailabilityQueryXTime';
@@ -11,46 +11,72 @@ import {
   getAppointmentAvailabilityTekion,
   getAppointmentAvailabilityXTime,
 } from '../../../store/reducers/appointment/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useException } from '../../../hooks/useException/useException';
+import { AvailabilityResults } from './results/AvailabilityResults';
+import { getAvailability } from '../../../store/reducers/demandManagement/actions';
+import { Loading } from '../../../components/wrappers/Loading/Loading';
+import { RootState } from '../../../store/rootReducer';
 
 const DmsAvailability = () => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
+  const { availability } = useSelector(({ demandManagement }: RootState) => demandManagement);
   const [formXTime, setFormXTime] = useState<TFormXTime>(defaultFormXTime);
   const [formTekion, setFormTekion] = useState<TFormTekion>(defaultFormTekion);
   const [formIsCheckedTekion, setIsCheckedTekion] = useState<boolean>(false);
   const [formIsCheckedXTime, setIsCheckedXTime] = useState<boolean>(false);
   const { selectedSC } = useSCs();
   const showError = useException();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => {
+      dispatch(getAvailability([]));
+    };
+  }, []);
+
+  if (!selectedSC) throw new Error('No service center selected');
 
   const handleError = (e: string) => {
     showError(e);
+    setLoading(false);
+  };
+
+  const handleSuccess = (message?: string) => {
+    setLoading(false);
+    if (message) showError(message);
   };
 
   const handleLoad = () => {
-    if (selectedSC?.id) {
-      if (selectedSC?.system === SystemType.Xtime) {
-        setIsCheckedXTime(true);
+    setLoading(true);
+    if (selectedSC?.system === SystemType.Xtime) {
+      setIsCheckedXTime(true);
 
-        if (validateXTime(formXTime)) {
-          dispatch(getAppointmentAvailabilityXTime(selectedSC?.id, formXTime, handleError));
-        } else {
-          console.log('have errors');
-        }
-
-        console.log(formXTime);
-      } else {
-        setIsCheckedTekion(true);
-
-        if (validateTekion(formTekion)) {
-          dispatch(getAppointmentAvailabilityTekion(selectedSC?.id, formTekion, handleError));
-        } else {
-          console.log('have errors');
-        }
-
-        console.log(formTekion);
+      if (validateXTime(formXTime)) {
+        setLoading(true);
+        dispatch(
+          getAppointmentAvailabilityXTime(selectedSC?.id, formXTime, handleError, handleSuccess)
+        );
       }
+    } else {
+      setIsCheckedTekion(true);
+
+      if (validateTekion(formTekion)) {
+        setLoading(true);
+        dispatch(
+          getAppointmentAvailabilityTekion(selectedSC?.id, formTekion, handleError, handleSuccess)
+        );
+      }
+    }
+    dispatch(getAvailability([]));
+  };
+
+  const isDisabledButton = () => {
+    if (selectedSC?.system === SystemType.Xtime) {
+      return !validateXTime(formXTime);
+    } else {
+      return !validateTekion(formTekion);
     }
   };
 
@@ -74,7 +100,7 @@ const DmsAvailability = () => {
               setIsCheckedTekion={setIsCheckedTekion}
             />
           )}
-          <Button variant="contained" onClick={handleLoad}>
+          <Button disabled={isDisabledButton()} variant="contained" onClick={handleLoad}>
             Get Availability
           </Button>
         </div>
@@ -84,6 +110,18 @@ const DmsAvailability = () => {
       </div>
       <div className={classes.results}>
         <p className={classes.headerText}>Appointment availability results</p>
+        {!loading && availability.length > 0 && (
+          <AvailabilityResults
+            formTekion={formTekion}
+            formXTime={formXTime}
+            setLoading={setLoading}
+          />
+        )}
+        {loading && (
+          <div className={classes.loadingWrapper}>
+            <Loading />
+          </div>
+        )}
       </div>
     </div>
   );

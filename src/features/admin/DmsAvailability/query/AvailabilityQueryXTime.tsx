@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { Autocomplete } from '@mui/material';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { loadSCAdvisors } from '../../../../store/reducers/employees/actions';
 import { loadTransportationOptions } from '../../../../store/reducers/transportationNeeds/actions';
 import { loadMakes } from '../../../../store/reducers/packages/actions';
 import CustomDateRangePicker from '../../../../components/pickers/CustomDateRangePicker/CustomDateRangePicker';
 import { ETransportationType } from '../../../../store/reducers/transportationNeeds/types';
 import AddressFields from './AddressFields';
 import { yearOptions } from '../../ScreenSettings/EditCustomerConsentModal/constants';
+import { loadServiceConsultants } from '../../../../store/reducers/appointments/actions';
 
 interface AvailabilityQueryProps {
   form: TFormXTime;
@@ -32,7 +32,7 @@ const AvailabilityQueryXTime = ({
   const { scRequestsShort: serviceRequests } = useSelector(
     ({ serviceRequests }: RootState) => serviceRequests
   );
-  const { advisorsList } = useSelector(({ scEmployees }: RootState) => scEmployees);
+  const { serviceAdvisors } = useSelector(({ appointments }: RootState) => appointments);
   const { options: transportations } = useSelector(
     ({ transportation }: RootState) => transportation
   );
@@ -44,7 +44,7 @@ const AvailabilityQueryXTime = ({
 
   useEffect(() => {
     dispatch(loadSCRequestsShort(selectedSC.id));
-    dispatch(loadSCAdvisors(selectedSC.id));
+    dispatch(loadServiceConsultants(selectedSC.id));
     dispatch(loadTransportationOptions(selectedSC.id));
     dispatch(loadMakes(selectedSC.id));
   }, []);
@@ -73,7 +73,7 @@ const AvailabilityQueryXTime = ({
 
   const onAdvisorChange = (newValue: string | null) => {
     setIsCheckedXTime(false);
-    const selectedAdvisor = advisorsList.find(advisor => advisor.fullName === newValue);
+    const selectedAdvisor = serviceAdvisors.find(advisor => advisor.fullName === newValue);
     setForm(prev => ({
       ...prev,
       advisor: {
@@ -163,7 +163,7 @@ const AvailabilityQueryXTime = ({
       </div>
       <div>
         <Autocomplete
-          options={advisorsList?.map(el => el.fullName) ?? []}
+          options={serviceAdvisors?.map(el => el.fullName) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
           value={form.advisor?.name}

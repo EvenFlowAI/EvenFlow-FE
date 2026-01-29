@@ -5,6 +5,12 @@ import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 
 export const setLoading = createAction<boolean>('DemandManagement/SetLoading');
 export const getSettings = createAction<IDemandPrediction[]>('DemandManagement/GetSettings');
+export const getAvailability = createAction<
+  {
+    openAppointmentDate: string;
+    openAppointmentTime: string[];
+  }[]
+>('DemandManagement/GetAvailability');
 
 export const loadDemandManagementSettings =
   (serviceCenterId: number): AppThunk =>

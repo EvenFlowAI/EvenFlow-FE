@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TabContext, TabPanel } from '@mui/lab';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { capacityManagementRoot } from '../../../utils/constants';
@@ -20,6 +20,12 @@ const DemandManagement = () => {
     setTab(tab);
   };
   const { localTab } = useSelector((state: RootState) => state.adminPanel);
+
+  useEffect(() => {
+    if (selectedSC) {
+      setTab('0');
+    }
+  }, [selectedSC]);
 
   return (
     <TabContext value={selectedTab}>

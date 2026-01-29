@@ -40,7 +40,6 @@ const AddressFields = ({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeAddress = (e: any) => {
-    console.log(e);
     setIsFormChecked(false);
     if (e?.value?.place_id && e?.label) {
       geocodeByPlaceId(e.value.place_id).then(res => {

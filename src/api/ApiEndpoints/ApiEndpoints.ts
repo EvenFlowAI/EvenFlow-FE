@@ -88,6 +88,7 @@ export class Api {
       GetSlots: { route: '/appointment-slots/by-query', method: 'post' },
       GetServiceValetSlots: { route: '/service-valet-appointment-slots/by-query', method: 'post' },
       GetDMSAvailability: { route: '/appointment-slots/dms-availability', method: 'get' },
+      GetDMSAvailabilityCSV: { route: '/appointment-slots/dms-availability/csv', method: 'get' },
     },
     AppointmentPricing: {
       GetPriceList: { route: '/appointment-pricing/requests-price-list', method: 'post' },

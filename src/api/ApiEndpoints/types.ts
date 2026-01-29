@@ -49,7 +49,7 @@ export interface IApiEndpoints {
   >;
   AppointmentPricing: Record<'GetPriceList', TApiEndpoint>;
   AppointmentSlots: Record<
-    'GetSlots' | 'GetServiceValetSlots' | 'GetDMSAvailability',
+    'GetSlots' | 'GetServiceValetSlots' | 'GetDMSAvailability' | 'GetDMSAvailabilityCSV',
     TApiEndpoint
   >;
   Authentications: Record<'Request' | 'Refresh' | 'Anonymous', TApiEndpoint>;

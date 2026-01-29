@@ -9,7 +9,7 @@ export type TFormXTime = {
   } | null;
   advisor: {
     name: string | null;
-    id: string | null;
+    id: number | null;
   } | null;
   transportation: {
     name: string | null;
@@ -45,7 +45,7 @@ export const defaultFormXTime: TFormXTime = {
 export type TFormTekion = {
   advisor: {
     name: string | null;
-    id: string | null;
+    id: number | null;
   } | null;
   pod: {
     name: string | null;

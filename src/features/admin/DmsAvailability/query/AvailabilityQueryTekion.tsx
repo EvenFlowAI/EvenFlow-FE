@@ -3,7 +3,6 @@ import { TFormTekion } from '../types';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { loadSCAdvisors } from '../../../../store/reducers/employees/actions';
 import { loadTransportationOptions } from '../../../../store/reducers/transportationNeeds/actions';
 import CustomDateRangePicker from '../../../../components/pickers/CustomDateRangePicker/CustomDateRangePicker';
 import { Autocomplete } from '@mui/material';
@@ -11,6 +10,7 @@ import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import AddressFields from './AddressFields';
 import { ETransportationType } from '../../../../store/reducers/transportationNeeds/types';
 import { loadPodsShort } from '../../../../store/reducers/pods/actions';
+import { loadServiceConsultants } from '../../../../store/reducers/appointments/actions';
 
 interface AvailabilityQueryTekionProps {
   form: TFormTekion;
@@ -27,7 +27,7 @@ const AvailabilityQueryTekion = ({
 }: AvailabilityQueryTekionProps) => {
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
-  const { advisorsList } = useSelector(({ scEmployees }: RootState) => scEmployees);
+  const { serviceAdvisors } = useSelector(({ appointments }: RootState) => appointments);
   const { shortPodsList } = useSelector(({ pods }: RootState) => pods);
 
   const { options: transportations } = useSelector(
@@ -38,13 +38,13 @@ const AvailabilityQueryTekion = ({
   if (!selectedSC) throw new Error('No selected SC');
 
   useEffect(() => {
-    dispatch(loadSCAdvisors(selectedSC.id));
+    dispatch(loadServiceConsultants(selectedSC.id));
     dispatch(loadTransportationOptions(selectedSC.id));
     dispatch(loadPodsShort(selectedSC.id));
   }, []);
 
   const onAdvisorChange = (newValue: string | null) => {
-    const selectedAdvisor = advisorsList.find(advisor => advisor.fullName === newValue);
+    const selectedAdvisor = serviceAdvisors.find(advisor => advisor.fullName === newValue);
 
     setIsCheckedTekion(false);
     setForm(prev => ({
@@ -115,7 +115,7 @@ const AvailabilityQueryTekion = ({
       </div>
       <div>
         <Autocomplete
-          options={advisorsList?.map(el => el.fullName) ?? []}
+          options={serviceAdvisors?.map(el => el.fullName) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
           value={form.advisor?.name}

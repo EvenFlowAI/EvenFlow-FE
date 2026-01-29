@@ -7,6 +7,12 @@ export const useStyles = makeStyles()({
     backgroundColor: 'rgba(255, 255, 255, 1)',
     border: '1px solid rgba(218, 218, 218, 1)',
     padding: '24px',
+
+    '@media (max-width: 1100px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '40px',
+    },
   },
   queryWrapper: {
     display: 'flex',
@@ -40,7 +46,20 @@ export const useStyles = makeStyles()({
   results: {
     display: 'flex',
     width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  loadingWrapper: {
+    marginTop: '16px',
+  },
+  downloadCSVWrapper: {
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
+    gap: '10px',
+  },
+  iconsWrapper: {
+    display: 'flex',
   },
   select: {
     '& > div': {

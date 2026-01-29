@@ -49,6 +49,7 @@ import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { DealershipsIds } from '../../../utils/constants';
 import { TFormTekion, TFormXTime } from '../../../features/admin/DmsAvailability/types';
+import { getAvailability } from '../demandManagement/actions';
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const setTopAligning = createAction<boolean>('Appointment/SetTopAligning');
@@ -389,7 +390,122 @@ export const getAppointmentAvailabilityXTime =
   (
     serviceCenterId: number,
     formXTime: TFormXTime,
-    showError: (errorText: string) => void
+    showError: (errorText: string) => void,
+    handleSuccess: (message?: string) => void
+  ): AppThunk =>
+  dispatch => {
+    let pickUpAddress: string | null = null;
+    if (formXTime.pickUpAddress && typeof formXTime.pickUpAddress !== 'string') {
+      pickUpAddress = formXTime.pickUpAddress.address;
+    }
+    let dropOffAddress: string | null = null;
+    if (formXTime.dropOffAddress && typeof formXTime.dropOffAddress !== 'string') {
+      dropOffAddress = formXTime.dropOffAddress.address;
+    }
+
+    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailability, {
+      params: {
+        serviceCenterId,
+        MakeId: formXTime?.make?.id,
+        ModelId: formXTime?.model?.id,
+        Year: formXTime?.year,
+        StartDate: formXTime.date[0]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        EndDate: formXTime.date[1]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        AdvisorId: formXTime.advisor?.id,
+        ServiceRequestId: formXTime.opCode?.id,
+        TransportationOptionId: formXTime.transportation?.id,
+        PickUpAddress: pickUpAddress,
+        DropOffAddress: dropOffAddress,
+      },
+    })
+      .then(r => {
+        if (r.data.availability.length) {
+          dispatch(getAvailability(r.data.availability));
+          handleSuccess();
+        } else {
+          handleSuccess('No availability data found.');
+        }
+      })
+      .catch(err => {
+        const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';
+        showError(backendMessage);
+      });
+  };
+
+export const getAppointmentAvailabilityTekion =
+  (
+    serviceCenterId: number,
+    formXTime: TFormTekion,
+    showError: (errorText: string) => void,
+    handleSuccess: (message?: string) => void
+  ): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailability, {
+      params: {
+        serviceCenterId,
+        PodId: formXTime.pod?.id,
+        StartDate: formXTime.date[0]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        EndDate: formXTime.date[1]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        AdvisorId: formXTime.advisor?.id,
+        TransportationOptionId: formXTime.transportation?.id,
+      },
+    })
+      .then(r => {
+        if (r.data.availability.length) {
+          dispatch(getAvailability(r.data.availability));
+          handleSuccess();
+        } else {
+          handleSuccess('No availability data found.');
+        }
+      })
+      .catch(err => {
+        const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';
+        showError(backendMessage);
+      });
+  };
+
+export const getAppointmentAvailabilityCSVTekion =
+  (
+    serviceCenterId: number,
+    formTekion: TFormTekion,
+    showError: (errorText: string) => void,
+    handleSuccess: () => void
+  ): AppThunk =>
+  () => {
+    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailabilityCSV, {
+      params: {
+        serviceCenterId,
+        PodId: formTekion.pod?.id,
+        StartDate: formTekion.date[0]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        EndDate: formTekion.date[1]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
+        AdvisorId: formTekion.advisor?.id,
+        TransportationOptionId: formTekion.transportation?.id,
+      },
+    })
+      .then(r => {
+        const blob = new Blob([r.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'availability.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        handleSuccess();
+      })
+      .catch(err => {
+        const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';
+        showError(backendMessage);
+      });
+  };
+
+export const getAppointmentAvailabilityCSVXTime =
+  (
+    serviceCenterId: number,
+    formXTime: TFormXTime,
+    showError: (errorText: string) => void,
+    handleSuccess: () => void
   ): AppThunk =>
   () => {
     let pickUpAddress: string | null = null;
@@ -417,47 +533,19 @@ export const getAppointmentAvailabilityXTime =
       },
     })
       .then(r => {
-        console.log(r);
+        const blob = new Blob([r.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'availability.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        handleSuccess();
       })
-      .catch(e => {
-        console.log(e);
-        showError(e.message);
-      });
-  };
-
-export const getAppointmentAvailabilityTekion =
-  (
-    serviceCenterId: number,
-    formXTime: TFormTekion,
-    showError: (errorText: string) => void
-  ): AppThunk =>
-  () => {
-    let pickUpAddress: string | null = null;
-    if (formXTime.pickUpAddress && typeof formXTime.pickUpAddress !== 'string') {
-      pickUpAddress = formXTime.pickUpAddress.address;
-    }
-    let dropOffAddress: string | null = null;
-    if (formXTime.dropOffAddress && typeof formXTime.dropOffAddress !== 'string') {
-      dropOffAddress = formXTime.dropOffAddress.address;
-    }
-
-    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailability, {
-      params: {
-        serviceCenterId,
-        PodId: formXTime.pod?.id,
-        StartDate: formXTime.date[0]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
-        EndDate: formXTime.date[1]?.format('YYYY-MM-DDTHH:mm:ss.SSS'),
-        AdvisorId: formXTime.advisor?.id,
-        TransportationOptionId: formXTime.transportation?.id,
-        PickUpAddress: pickUpAddress,
-        DropOffAddress: dropOffAddress,
-      },
-    })
-      .then(r => {
-        console.log(r);
-      })
-      .catch(e => {
-        console.log(e);
-        showError(e.message);
+      .catch(err => {
+        const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';
+        showError(backendMessage);
       });
   };
