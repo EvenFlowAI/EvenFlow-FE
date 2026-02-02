@@ -196,7 +196,6 @@ const EditCustomerConsentModal: React.FC<DialogProps & { consentId: number | und
       if (rule.condition(form)) {
         isValid = false;
         showError(rule.message);
-        break;
       }
     }
 
