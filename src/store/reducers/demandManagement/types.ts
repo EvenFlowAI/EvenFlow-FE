@@ -41,4 +41,8 @@ export interface IDemandPrediction extends IBaseDemandPrediction {
 export interface TState {
   isLoading: boolean;
   settings: IDemandPrediction[];
+  availability: {
+    openAppointmentDate: string;
+    openAppointmentTime: string[];
+  }[];
 }

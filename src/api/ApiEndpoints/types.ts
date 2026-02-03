@@ -48,7 +48,10 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   AppointmentPricing: Record<'GetPriceList', TApiEndpoint>;
-  AppointmentSlots: Record<'GetSlots' | 'GetServiceValetSlots', TApiEndpoint>;
+  AppointmentSlots: Record<
+    'GetSlots' | 'GetServiceValetSlots' | 'GetDMSAvailability' | 'GetDMSAvailabilityCSV',
+    TApiEndpoint
+  >;
   Authentications: Record<'Request' | 'Refresh' | 'Anonymous', TApiEndpoint>;
   BookingFlowConfig: Record<'Get' | 'Update', TApiEndpoint>;
   BookingFlowScreenSettings: Record<'GetEmailRequirement' | 'UpdateEmailRequirement', TApiEndpoint>;

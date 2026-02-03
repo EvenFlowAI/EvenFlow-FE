@@ -1,0 +1,101 @@
+import { makeStyles } from 'tss-react/mui';
+
+export const useStyles = makeStyles()({
+  wrapper: {
+    display: 'flex',
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    border: '1px solid rgba(218, 218, 218, 1)',
+    padding: '24px',
+
+    '@media (max-width: 1100px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '40px',
+    },
+  },
+  queryWrapper: {
+    display: 'flex',
+  },
+  headerText: {
+    fontSize: '18px',
+    color: 'rgba(37, 39, 51, 1)',
+    fontWeight: 700,
+    margin: 0,
+    textTransform: 'uppercase',
+  },
+  lineWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 16,
+    position: 'relative',
+    bottom: '25px',
+  },
+  line: {
+    border: 'none',
+    width: '1px',
+    backgroundColor: 'rgba(234, 235, 238, 1)',
+    height: '91%',
+  },
+  query: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
+  },
+  results: {
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  loadingWrapper: {
+    marginTop: '16px',
+  },
+  downloadCSVWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+  },
+  iconsWrapper: {
+    display: 'flex',
+  },
+  select: {
+    '& > div': {
+      borderRadius: 0,
+      backgroundColor: '#F7F8FB',
+      padding: 2,
+      border: '1px solid #DADADA',
+      '& > div > div': {
+        fontSize: '1rem',
+        color: '#212121',
+        backgroundColor: 'transparent',
+      },
+    },
+  },
+  emptySelect: {
+    '& > div': {
+      borderRadius: 0,
+      backgroundColor: '#F7F8FB',
+      padding: 2,
+      border: '1px solid #DADADA',
+      '& > div > div': {
+        fontSize: '1rem',
+      },
+    },
+  },
+  errorSelect: {
+    '& > div': {
+      borderRadius: 0,
+      backgroundColor: '#F7F8FB',
+      padding: 2,
+      border: '1px solid red !important',
+      '& > div > div': {
+        fontSize: '1rem',
+        // color: '#ff00006b',
+        opacity: 1,
+      },
+    },
+  },
+});

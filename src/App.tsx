@@ -25,6 +25,8 @@ import { AwsRum, AwsRumConfig } from 'aws-rum-web';
 import { setIsCloneMode } from './store/reducers/appointment/actions';
 import { useAppInitialization } from './hooks/useAppInitialization/useAppInitialization';
 import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandler';
+import { LicenseInfo } from '@mui/x-license';
+import { MUI_PRO_LICENSE_KEY } from './config/tokens';
 
 const App = () => {
   const { scProfile, isTopAligning, isCloneMode } = useSelector(
@@ -159,6 +161,8 @@ const App = () => {
     });
     disableEmotionWarning();
   }, []);
+
+  LicenseInfo.setLicenseKey(MUI_PRO_LICENSE_KEY);
 
   const handleMessage = (event: MessageEvent) => {
     const clientId = typeof event.data === 'string' ? event.data : '';
