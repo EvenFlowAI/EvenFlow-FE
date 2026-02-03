@@ -33,7 +33,7 @@ const AiAgents = () => {
     },
     {
       name: 'Anomaly Agent',
-      available: false,
+      available: true,
       description: 'View future appointment demand predictions and gaps',
       link: '/admin/anomaly-agent',
     },
