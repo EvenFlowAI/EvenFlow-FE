@@ -53,7 +53,7 @@ const AnomalyAgent = () => {
           ref={iframeRef}
           id="configuration-agent"
           src={ANOMALY_AGENT_URL}
-          width="102%"
+          width="100%"
           height="100%"
           style={{ border: 'none' }}
           allow="clipboard-write"
