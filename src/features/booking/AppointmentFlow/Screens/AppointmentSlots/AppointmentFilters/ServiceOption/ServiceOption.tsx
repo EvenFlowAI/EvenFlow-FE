@@ -1,12 +1,15 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Select, SelectChangeEvent } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import { useTranslation } from 'react-i18next';
 import { IFirstScreenOption } from '../../../../../../../store/reducers/serviceTypes/types';
 import { TCallback } from '../../../../../../../types/types';
 import { useStyles } from './styles';
 import clsx from 'clsx';
+import { loadActiveTransportations } from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
+import { useParams } from 'react-router-dom';
+import { decodeSCID } from '../../../../../../../utils/utils';
 
 type TProps = {
   hideLabel?: boolean;
@@ -28,6 +31,8 @@ const ServiceOption: React.FC<TProps> = ({
   const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+  const dispatch = useDispatch();
+  const { id } = useParams<{ id: string }>();
 
   const { t } = useTranslation();
   const { classes } = useStyles();
@@ -35,6 +40,7 @@ const ServiceOption: React.FC<TProps> = ({
   const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
     const newOption = firstScreenOptions.find(item => item.id === e.target.value);
     if (newOption) {
+      dispatch(loadActiveTransportations(decodeSCID(id)));
       setSelectedOption(newOption);
       onSwitchFlowOpen();
     }
