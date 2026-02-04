@@ -57,12 +57,11 @@ const DemandManagement = () => {
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="2">
         <RoPredictionParameters />
       </TabPanel>
-      {selectedSC?.system === SystemType.Tekion ||
-        (selectedSC?.system === SystemType.Xtime && (
-          <TabPanel style={{ width: '100%', padding: '24px 0' }} value="3">
-            <DmsAvailability />
-          </TabPanel>
-        ))}
+      {(selectedSC?.system === SystemType.Tekion || selectedSC?.system === SystemType.Xtime) && (
+        <TabPanel style={{ width: '100%', padding: '24px 0' }} value="3">
+          <DmsAvailability />
+        </TabPanel>
+      )}
     </TabContext>
   );
 };
