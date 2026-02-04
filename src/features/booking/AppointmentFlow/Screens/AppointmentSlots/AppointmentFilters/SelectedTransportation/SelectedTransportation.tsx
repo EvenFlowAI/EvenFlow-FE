@@ -10,6 +10,7 @@ import { ETransportationType } from '../../../../../../../store/reducers/transpo
 import { EServiceType } from '../../../../../../../store/reducers/appointmentFrameReducer/types';
 import { IFirstScreenOption } from '../../../../../../../store/reducers/serviceTypes/types';
 import { TCallback } from '../../../../../../../types/types';
+import { ITransportation } from '../../../../../../../api/types';
 
 type TProps = {
   isVisible: boolean;
@@ -48,20 +49,22 @@ const SelectedTransportation: React.FC<TProps> = ({
     return '';
   }, [transportation, serviceTypeOption]);
 
-  const switchToServiceValet = () => {
+  const switchToServiceValet = (selected: ITransportation) => {
     const serviceValetOption = firstScreenOptions.find(
       el => el.type === EServiceType.PickUpDropOff
     );
     if (serviceValetOption) {
       setSelectedOption(serviceValetOption);
       onSwitchFlowOpen();
+    } else {
+      dispatch(setTransportation(selected ?? null));
     }
   };
 
   const handleChange = (e: SelectChangeEvent<unknown>) => {
     const selected = transportations.find(item => item.id === e.target.value);
     if (selected?.type === ETransportationType.PickUpDelivery) {
-      switchToServiceValet();
+      switchToServiceValet(selected);
     } else {
       dispatch(setTransportation(selected ?? null));
     }
