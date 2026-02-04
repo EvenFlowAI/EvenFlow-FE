@@ -132,7 +132,11 @@ const AvailabilityQueryTekion = ({
         <Autocomplete
           options={
             transportations
-              ?.filter(transportation => transportation.type !== ETransportationType.PickUpDelivery)
+              ?.filter(
+                transportation =>
+                  transportation.type !== ETransportationType.PickUpDelivery &&
+                  transportation.state === 1
+              )
               .map(el => el.description) ?? []
           }
           style={{ width: '329px' }}

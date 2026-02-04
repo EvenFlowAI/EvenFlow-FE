@@ -17,6 +17,12 @@ export const demandManagementReducer = createReducer(initialState, builder =>
       return { ...state, settings: payload };
     })
     .addCase(getAvailability, (state, { payload }) => {
-      return { ...state, availability: payload };
+      return {
+        ...state,
+        availability: payload.sort(
+          (a, b) =>
+            new Date(a.openAppointmentDate).getTime() - new Date(b.openAppointmentDate).getTime()
+        ),
+      };
     })
 );

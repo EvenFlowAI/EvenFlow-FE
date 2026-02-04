@@ -177,7 +177,7 @@ const AvailabilityQueryXTime = ({
       </div>
       <div>
         <Autocomplete
-          options={transportations?.map(el => el.description) ?? []}
+          options={transportations?.filter(el => el.state === 1).map(el => el.description) ?? []}
           style={{ width: '329px' }}
           getOptionLabel={i => i}
           value={form.transportation?.name}

@@ -29,14 +29,12 @@ export const useStyles = makeStyles()({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 16,
-    position: 'relative',
-    bottom: '25px',
   },
   line: {
     border: 'none',
     width: '1px',
     backgroundColor: 'rgba(234, 235, 238, 1)',
-    height: '91%',
+    height: '100%',
   },
   query: {
     display: 'flex',
