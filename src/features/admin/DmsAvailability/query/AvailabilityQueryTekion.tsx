@@ -38,7 +38,7 @@ const AvailabilityQueryTekion = ({
   if (!selectedSC) throw new Error('No selected SC');
 
   useEffect(() => {
-    dispatch(loadServiceConsultants(selectedSC.id));
+    dispatch(loadServiceConsultants(selectedSC.id, true));
     dispatch(loadTransportationOptions(selectedSC.id));
     dispatch(loadPodsShort(selectedSC.id));
   }, []);

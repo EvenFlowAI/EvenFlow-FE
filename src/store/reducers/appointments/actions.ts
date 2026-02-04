@@ -237,11 +237,11 @@ export const loadSchedulerList = (): AppThunk => dispatch => {
 };
 
 export const loadServiceConsultants =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, isActive?: boolean): AppThunk =>
   dispatch => {
     dispatch(setAppointmentsLoading(true));
     Api.call<TServiceConsultant[]>(Api.endpoints.ServiceConsultants.GetByRole, {
-      params: { serviceCenterId, roles: ['Advisor', 'Technician'] },
+      params: { serviceCenterId, roles: ['Advisor', 'Technician'], showActive: isActive },
     })
       .then(result => {
         if (result?.data) {

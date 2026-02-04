@@ -44,7 +44,7 @@ const AvailabilityQueryXTime = ({
 
   useEffect(() => {
     dispatch(loadSCRequestsShort(selectedSC.id));
-    dispatch(loadServiceConsultants(selectedSC.id));
+    dispatch(loadServiceConsultants(selectedSC.id, true));
     dispatch(loadTransportationOptions(selectedSC.id));
     dispatch(loadMakes(selectedSC.id));
   }, []);
