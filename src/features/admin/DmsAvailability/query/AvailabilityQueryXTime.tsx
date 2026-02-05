@@ -115,22 +115,30 @@ const AvailabilityQueryXTime = ({
         name: newValue,
         id: selectedMake?.id || null,
       },
+      model: null,
     }));
   };
 
-  const onModelChange = (newValue: string | null) => {
+  const onModelChange = (
+    newValue: {
+      name: string | null;
+      id: number | null;
+    } | null
+  ) => {
     setIsCheckedXTime(false);
     const foundMake = makes.find(make => make.name === form.make?.name);
     if (foundMake) {
-      const selectedModel = foundMake.models.find(model => model.name === newValue);
+      const selectedModel = foundMake.models.find(model => model.name === newValue?.name);
 
-      setForm(prev => ({
-        ...prev,
-        model: {
-          name: newValue,
-          id: selectedModel?.id || null,
-        },
-      }));
+      if (newValue?.name) {
+        setForm(prev => ({
+          ...prev,
+          model: {
+            name: newValue?.name,
+            id: selectedModel?.id || null,
+          },
+        }));
+      }
     }
   };
 
@@ -138,6 +146,8 @@ const AvailabilityQueryXTime = ({
     setIsCheckedXTime(false);
     setForm(prev => ({ ...prev, year: newValue }));
   };
+
+  const modelOptions = (models ?? []).map(m => ({ name: m, id: null }));
 
   return (
     <>
@@ -214,12 +224,12 @@ const AvailabilityQueryXTime = ({
       </div>
       <div>
         <Autocomplete
-          options={models ?? []}
+          options={modelOptions}
           disabled={!form.make}
           style={{ width: '329px' }}
-          getOptionLabel={i => i}
-          value={form.model?.name}
-          isOptionEqualToValue={(o, s) => o === s}
+          getOptionLabel={i => i.name || ''}
+          value={form.model}
+          isOptionEqualToValue={(o, s) => o.name === s.name}
           onChange={(e, newValue) => onModelChange(newValue)}
           renderInput={autocompleteRender({
             label: 'Model *',
