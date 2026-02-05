@@ -517,7 +517,7 @@ export const getAppointmentAvailabilityCSVXTime =
       dropOffAddress = formXTime.dropOffAddress.address;
     }
 
-    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailability, {
+    Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailabilityCSV, {
       params: {
         serviceCenterId,
         MakeId: formXTime?.make?.id,

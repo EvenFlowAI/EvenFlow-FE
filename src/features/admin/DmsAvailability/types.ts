@@ -39,7 +39,7 @@ export const defaultFormXTime: TFormXTime = {
   make: null,
   model: null,
   year: null,
-  date: [dayjs().subtract(6, 'days'), dayjs()],
+  date: [dayjs(), dayjs().add(6, 'days')],
 };
 
 export type TFormTekion = {
@@ -67,5 +67,5 @@ export const defaultFormTekion: TFormTekion = {
   transportation: null,
   pickUpAddress: null,
   dropOffAddress: null,
-  date: [dayjs().subtract(6, 'days'), dayjs()],
+  date: [dayjs(), dayjs().add(6, 'days')],
 };

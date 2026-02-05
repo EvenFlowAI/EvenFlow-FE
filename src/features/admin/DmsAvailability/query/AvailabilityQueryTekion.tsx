@@ -38,7 +38,7 @@ const AvailabilityQueryTekion = ({
   if (!selectedSC) throw new Error('No selected SC');
 
   useEffect(() => {
-    dispatch(loadServiceConsultants(selectedSC.id));
+    dispatch(loadServiceConsultants(selectedSC.id, true));
     dispatch(loadTransportationOptions(selectedSC.id));
     dispatch(loadPodsShort(selectedSC.id));
   }, []);
@@ -132,7 +132,11 @@ const AvailabilityQueryTekion = ({
         <Autocomplete
           options={
             transportations
-              ?.filter(transportation => transportation.type !== ETransportationType.PickUpDelivery)
+              ?.filter(
+                transportation =>
+                  transportation.type !== ETransportationType.PickUpDelivery &&
+                  transportation.state === 1
+              )
               .map(el => el.description) ?? []
           }
           style={{ width: '329px' }}

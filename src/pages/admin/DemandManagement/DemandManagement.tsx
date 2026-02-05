@@ -12,6 +12,7 @@ import { UnplannedDemand } from '../../../features/admin/UnplannedDemand/Unplann
 import ProbabilityApproach from '../../../features/admin/ProbabilityApproach/ProbabilityApproach';
 import DmsAvailability from '../../../features/admin/DmsAvailability/DmsAvailability';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
+import { SystemType } from '../../../store/reducers/serviceCenters/types';
 
 const DemandManagement = () => {
   const [selectedTab, setTab] = useState<string>('0');
@@ -39,7 +40,9 @@ const DemandManagement = () => {
         <Tab label="Demand Prediction" value="0" />
         <Tab label="Demand Adjustments" value="1" />
         <Tab label="RO Prediction Parameters" value="2" />
-        {selectedSC?.system && <Tab label="DMS Availability" value="3" />}
+        {(selectedSC?.system === SystemType.Tekion || selectedSC?.system === SystemType.Xtime) && (
+          <Tab label="DMS Availability" value="3" />
+        )}
       </TabList>
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="0">
         {localTab === '2' ? (
@@ -54,7 +57,7 @@ const DemandManagement = () => {
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="2">
         <RoPredictionParameters />
       </TabPanel>
-      {selectedSC?.system && (
+      {(selectedSC?.system === SystemType.Tekion || selectedSC?.system === SystemType.Xtime) && (
         <TabPanel style={{ width: '100%', padding: '24px 0' }} value="3">
           <DmsAvailability />
         </TabPanel>
