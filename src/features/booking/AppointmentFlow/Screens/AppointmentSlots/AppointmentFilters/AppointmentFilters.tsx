@@ -14,6 +14,7 @@ import useTransportationVisibility from '../../../../../../hooks/useTransportati
 import SwitchFlowModal from '../../../../SwitchFlowModal/SwitchFlowModal';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { IFirstScreenOption } from '../../../../../../store/reducers/serviceTypes/types';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   isSm: boolean;
@@ -28,11 +29,12 @@ const AppointmentFilters: React.FC<TProps> = ({
   isServiceOptionOpen,
   onServiceOptionClose,
 }) => {
-  const { serviceTypeOption, consultants } = useSelector(
+  const { serviceTypeOption, consultants, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
 
   const [selectedOption, setSelectedOption] = useState<IFirstScreenOption | null>(null);
   const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm);
@@ -77,6 +79,14 @@ const AppointmentFilters: React.FC<TProps> = ({
     onServiceOptionClose();
   };
 
+  const isVisibleTransportation = () => {
+    if (transportation?.type === ETransportationType.PickUpDelivery) {
+      return !!isTransportationsVisible && !!transportation && isTransportationAvailable;
+    } else {
+      return !!isTransportationsVisible;
+    }
+  };
+
   return isVisible ? (
     <Wrapper>
       <TitleWrapper onClick={isSm ? onArrowClick : undefined}>
@@ -100,7 +110,7 @@ const AppointmentFilters: React.FC<TProps> = ({
             onSwitchFlowOpen={onSwitchFlowOpen}
           />
           <SelectedTransportation
-            isVisible={!!isTransportationsVisible}
+            isVisible={isVisibleTransportation()}
             setSelectedOption={setSelectedOption}
             onChangeServiceOption={onChangeServiceOption}
             onSwitchFlowOpen={onSwitchFlowOpen}

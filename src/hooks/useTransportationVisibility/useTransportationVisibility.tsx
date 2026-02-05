@@ -29,6 +29,9 @@ const useTransportationVisibility = () => {
     );
     const isDefaultTransportationOfTheUniqueServiceOption =
       firstScreenOptions.length === 1 && serviceTypeOption?.transportationOption;
+
+    console.log('isTransportationAvailable', isTransportationAvailable);
+
     return (
       ((someServicesHaveDefaultTransportation &&
         (serviceTypeOption?.transportationOption || isTransportationAvailable)) ||
