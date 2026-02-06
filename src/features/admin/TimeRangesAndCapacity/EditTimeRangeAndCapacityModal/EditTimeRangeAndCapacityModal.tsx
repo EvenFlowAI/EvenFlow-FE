@@ -37,6 +37,7 @@ const EditTimeRangeAndCapacityModal: React.FC<
   const [dropOffMax, setDropOffMax] = useState<TParsableDate>(null);
   const [dailyCapacity, setDailyCapacity] = useState<number | string>('');
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const [isCleared, setIsCleared] = useState<boolean>(false);
   const { selectedSC } = useSCs();
   const showError = useException();
   const { classes } = useStyles();
@@ -66,13 +67,25 @@ const EditTimeRangeAndCapacityModal: React.FC<
     onClose();
   };
 
+  const onClear = () => {
+    setFormIsChecked(false);
+    setPickUpMin(null);
+    setPickUpMax(null);
+    setDropOffMax(null);
+    setDropOffMin(null);
+    setDailyCapacity('');
+    setIsCleared(true);
+  };
+
   const handleChangePickUpMin = (date: TParsableDate) => {
     setFormIsChecked(false);
+    setIsCleared(false);
     setPickUpMin(dayjs(date));
   };
 
   const handleChangePickUpMax = (date: TParsableDate) => {
     setFormIsChecked(false);
+    setIsCleared(false);
     if (dayjs(pickUpMin).diff(dayjs(date)) <= 0) {
       setPickUpMax(dayjs(date));
     } else {
@@ -82,11 +95,13 @@ const EditTimeRangeAndCapacityModal: React.FC<
 
   const handleChangeDropOffMin = (date: TParsableDate) => {
     setFormIsChecked(false);
+    setIsCleared(false);
     setDropOffMin(dayjs(date));
   };
 
   const handleChangeDropOffMax = (date: TParsableDate) => {
     setFormIsChecked(false);
+    setIsCleared(false);
     if (dayjs(dropOffMin).diff(dayjs(date)) <= 0) {
       setDropOffMax(dayjs(date));
     } else {
@@ -98,6 +113,7 @@ const EditTimeRangeAndCapacityModal: React.FC<
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setFormIsChecked(false);
+    setIsCleared(false);
     setDailyCapacity(value ? +value : '');
   };
 
@@ -116,6 +132,24 @@ const EditTimeRangeAndCapacityModal: React.FC<
   };
 
   const onSave = () => {
+    if (isCleared && selectedSC) {
+      const data: ITimeRangeAndCapacity = {
+        serviceCenterId: selectedSC.id,
+        pickUpMin: null,
+        pickUpMax: null,
+        dropOffMin: null,
+        dropOffMax: null,
+        capacity: null,
+      };
+
+      if (editingElement.id) {
+        dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, showError, onCancel));
+      } else {
+        dispatch(createTimeRange(selectedSC.id, data, showError, onCancel));
+      }
+      return;
+    }
+
     setFormIsChecked(true);
     if (selectedSC && checkIsValid()) {
       const data: ITimeRangeAndCapacity = {
@@ -245,6 +279,9 @@ const EditTimeRangeAndCapacityModal: React.FC<
       <DialogActions>
         <div className={classes.wrapper}>
           <div className={classes.buttonsWrapper}>
+            <Button onClick={onClear} className={classes.cancelButton}>
+              Clear
+            </Button>
             <Button onClick={onCancel} className={classes.cancelButton}>
               Cancel
             </Button>
