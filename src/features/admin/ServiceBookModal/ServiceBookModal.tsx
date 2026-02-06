@@ -135,6 +135,7 @@ export const ServiceBookModal: React.FC<
   useLoadSCData(props.open, selectedSC);
 
   const checkIsValid = (): boolean => {
+    console.log(state);
     setFormIsChecked(true);
     let isValid = true;
     if (!form.name.length) {
@@ -168,6 +169,11 @@ export const ServiceBookModal: React.FC<
     if (state.mileageTo && state.mileageFrom && +state.mileageTo < +state.mileageFrom) {
       isValid = false;
       showError('"Mileage To" must be more than the "Mileage From"');
+    }
+    if (state.mobileZones.length && state.selectedServiceValetZones.length) {
+      isValid = false;
+      showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
+      showError('Visit Center option can not be selected as Mobile Service zones were added.');
     }
     return isValid;
   };
@@ -256,6 +262,7 @@ export const ServiceBookModal: React.FC<
               form={form}
               setForm={setForm}
               setFormIsChecked={setFormIsChecked}
+              formIsChecked={formIsChecked}
               loading={loading}
               state={state}
               setState={setState}
