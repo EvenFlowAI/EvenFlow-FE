@@ -97,12 +97,19 @@ const ServiceBookSettingsModal: React.FC<TProps> = ({ open, onClose, editingItem
     setForm(prev => {
       const itemToUpdate = prev.cutOffTime.find(el => el.day === day);
       if (itemToUpdate) {
-        const updated = { ...itemToUpdate, time: dayjs(date).format(timeSpanString) };
         const filtered = prev.cutOffTime.filter(el => el.day !== day);
-        return {
-          ...prev,
-          cutOffTime: [...filtered, updated].sort((a, b) => a.day - b.day),
-        };
+        if (date) {
+          const updated = { ...itemToUpdate, time: dayjs(date).format(timeSpanString) };
+          return {
+            ...prev,
+            cutOffTime: [...filtered, updated].sort((a, b) => a.day - b.day),
+          };
+        } else {
+          return {
+            ...prev,
+            cutOffTime: filtered.sort((a, b) => a.day - b.day),
+          };
+        }
       } else {
         const newItem: TDayTime = { day, time: dayjs(date).format(timeSpanString) };
         return {
