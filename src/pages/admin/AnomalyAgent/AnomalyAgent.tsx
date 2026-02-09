@@ -45,6 +45,26 @@ const AnomalyAgent = () => {
     }
   }, [selectedSC?.id, iframeLoaded]);
 
+  if (process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd') {
+    return (
+      <>
+        <Agent agentName={'Anomaly Agent'} />
+        <React.Fragment>
+          <p
+            style={{
+              fontSize: '24px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+            }}
+          >
+            Coming Soon
+          </p>
+        </React.Fragment>
+      </>
+    );
+  }
+
   return (
     <>
       <Agent agentName={'Anomaly Agent'} />
