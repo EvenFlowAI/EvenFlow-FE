@@ -34,6 +34,10 @@ import {
   mapAppointmentTypeOption,
   mapJobTypeOption,
   mapSelectedItems,
+  validateMileage,
+  validateName,
+  validateTechnicians,
+  validateZones,
 } from './helper';
 import { useLoadSCData } from './useLoadSCData';
 
@@ -135,47 +139,16 @@ export const ServiceBookModal: React.FC<
   useLoadSCData(props.open, selectedSC);
 
   const checkIsValid = (): boolean => {
-    console.log(state);
     setFormIsChecked(true);
-    let isValid = true;
-    if (!form.name.length) {
-      isValid = false;
-      showError('"Name" must not be empty');
-    }
-    if (!form.technicians.length) {
-      isValid = false;
-      showError('"Technicians" must not be empty');
-    }
-    if (state.mileageFrom) {
-      if (!Number.isInteger(+state.mileageFrom)) {
-        isValid = false;
-        showError('"Mileage From" must be a whole number');
-      }
-      if (+state.mileageFrom <= 0) {
-        isValid = false;
-        showError('"Mileage From" must be a positive number');
-      }
-    }
-    if (state.mileageTo) {
-      if (!Number.isInteger(+state.mileageTo)) {
-        isValid = false;
-        showError('"Mileage To" must be a whole number');
-      }
-      if (+state.mileageTo <= 0) {
-        isValid = false;
-        showError('"Mileage To" must be a positive number');
-      }
-    }
-    if (state.mileageTo && state.mileageFrom && +state.mileageTo < +state.mileageFrom) {
-      isValid = false;
-      showError('"Mileage To" must be more than the "Mileage From"');
-    }
-    if (state.mobileZones.length && state.selectedServiceValetZones.length) {
-      isValid = false;
-      showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
-      showError('Visit Center option can not be selected as Mobile Service zones were added.');
-    }
-    return isValid;
+
+    const results = [
+      validateName(form, showError),
+      validateTechnicians(form, showError),
+      validateMileage(state, showError),
+      validateZones(state, form, showError),
+    ];
+
+    return results.every(Boolean);
   };
 
   const handleSave = async () => {

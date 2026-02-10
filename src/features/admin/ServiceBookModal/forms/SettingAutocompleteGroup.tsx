@@ -11,6 +11,7 @@ import { IEngineType } from '../../../../store/reducers/vehicleDetails/types';
 import { ITransportationOptionFull } from '../../../../store/reducers/transportationNeeds/types';
 import { TZone } from '../../../../store/reducers/mobileService/types';
 import { ServiceBookState, TForm } from '../types';
+import { hasMobileZones, hasServiceValetZones, isVisitCenterSelected } from '../helper';
 
 interface SettingAutocompleteGroupProps {
   form: TForm;
@@ -63,16 +64,25 @@ const SettingAutocompleteGroup = ({
   };
 
   const onIsVisitCenterChange = () => {
+    setFormIsChecked(false);
     setForm(prev => ({ ...prev, isVisitCenter: !form.isVisitCenter }));
   };
 
-  const isErrorForZonesOnServiceCenter =
-    formIsChecked &&
-    ((!!state.mobileZones.length && !!state.selectedServiceValetZones.length) ||
-      (!!state.mobileZones.length && form.isVisitCenter));
+  const isErrorForZonesOnServiceCenter = (): boolean => {
+    return (
+      formIsChecked &&
+      ((hasMobileZones(state) && hasServiceValetZones(state) && isVisitCenterSelected(form)) ||
+        (hasMobileZones(state) && isVisitCenterSelected(form)))
+    );
+  };
 
-  const isErrorForZones =
-    formIsChecked && !!state.mobileZones.length && !!state.selectedServiceValetZones.length;
+  const isErrorForZones = (): boolean => {
+    return (
+      formIsChecked &&
+      ((hasMobileZones(state) && hasServiceValetZones(state)) ||
+        (hasMobileZones(state) && isVisitCenterSelected(form)))
+    );
+  };
 
   return (
     <>
@@ -176,13 +186,13 @@ const SettingAutocompleteGroup = ({
             label: 'Mobile Zones',
             fullWidth: true,
             placeholder: 'Select Mobile Zones',
-            error: isErrorForZones,
+            error: isErrorForZones(),
           })}
         />
       </Grid>
       <Grid item xs={12} sm={12} md={6}>
         <div style={{ height: '100%', display: 'flex', alignItems: 'flex-end' }}>
-          <FormControl error={isErrorForZones}>
+          <FormControl error={isErrorForZones()}>
             {' '}
             <FormControlLabel
               control={<Switch color="primary" disabled={podsLoading} />}
@@ -195,7 +205,7 @@ const SettingAutocompleteGroup = ({
                 '& .MuiFormControlLabel-label': {
                   fontWeight: 'bold',
                   textTransform: 'uppercase',
-                  color: isErrorForZonesOnServiceCenter ? 'red' : '#7898FF',
+                  color: isErrorForZonesOnServiceCenter() ? 'red' : '#7898FF',
                 },
               }}
             />
