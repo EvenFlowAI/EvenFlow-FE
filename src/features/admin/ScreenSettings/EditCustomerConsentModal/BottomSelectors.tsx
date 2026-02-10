@@ -6,14 +6,13 @@ import {
   autocompleteRender,
 } from '../../../../utils/autocompleteRenders';
 import { EDay } from '../../../../store/reducers/demandSegments/types';
+import { Label } from './styles';
+import TimeSelect from '../../../../components/pickers/TimeSelect/TimeSelect';
 import { TForm } from './types';
 import { TOption } from '../../ServiceBookModal/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { hasEndTimeError, hasStartTimeError } from './helper';
-import ClockTimePicker from '../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import dayjs from 'dayjs';
-import { useStyles } from '../styles';
 
 interface BottomSelectorsProps {
   form: TForm;
@@ -28,8 +27,6 @@ const BottomSelectors = ({
   form,
   formIsChecked,
 }: BottomSelectorsProps) => {
-  const { classes } = useStyles();
-
   const { slotRange } = useSelector(({ slotScoring }: RootState) => slotScoring);
 
   const startTimeError = useMemo(
@@ -42,7 +39,7 @@ const BottomSelectors = ({
     [formIsChecked, slotRange, form]
   );
 
-  const onAppointmentTimeChange = (value: string, field: keyof TForm) => {
+  const onAppointmentTimeChange = (value: string | undefined, field: keyof TForm) => {
     setFormIsChecked(false);
     setForm(prev => ({ ...prev, [field]: value }));
   };
@@ -75,38 +72,32 @@ const BottomSelectors = ({
           })}
         />
       </Grid>
-      <div className={classes.dateWrapper}>
-        <div>
-          <ClockTimePicker
-            value={form.appointmentTimeFrom ? dayjs(form.appointmentTimeFrom, 'HH:mm:ss') : null}
-            onChange={e =>
-              onAppointmentTimeChange(dayjs(e).format('HH:mm:ss'), 'appointmentTimeFrom')
-            }
-            label={'Appointment Time Of Day From'}
-            InputProps={{
-              className: 'ClockTimeTriggers',
-              id: 'Scheduled time',
-              placeholder: '',
-              error: startTimeError,
-            }}
-          />
-        </div>
-        <div>
-          <ClockTimePicker
-            value={form.appointmentTimeTo ? dayjs(form.appointmentTimeTo, 'HH:mm:ss') : null}
-            onChange={e =>
-              onAppointmentTimeChange(dayjs(e).format('HH:mm:ss'), 'appointmentTimeTo')
-            }
-            label={'Appointment Time Of Day To'}
-            InputProps={{
-              className: 'ClockTimeTriggers',
-              id: 'Scheduled time 2',
-              placeholder: '',
-              error: endTimeError,
-            }}
-          />
-        </div>
-      </div>
+      <Grid item xs={12} sm={6}>
+        <Label>Appointment Time Of Day From</Label>
+        <TimeSelect
+          disableClearable={false}
+          width={'100%'}
+          error={startTimeError}
+          gap={60}
+          start={slotRange?.start ?? ''}
+          end={slotRange?.end ?? ''}
+          value={form.appointmentTimeFrom}
+          onChange={value => onAppointmentTimeChange(value, 'appointmentTimeFrom')}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Label>Appointment Time Of Day To</Label>
+        <TimeSelect
+          disableClearable={false}
+          width={'100%'}
+          error={endTimeError}
+          gap={60}
+          start={slotRange?.start ?? ''}
+          end={slotRange?.end ?? ''}
+          value={form.appointmentTimeTo}
+          onChange={value => onAppointmentTimeChange(value, 'appointmentTimeTo')}
+        />
+      </Grid>
     </>
   );
 };

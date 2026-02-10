@@ -17,9 +17,4 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     marginBottom: 24,
   },
-  dateWrapper: {
-    display: 'flex',
-    paddingLeft: '24px',
-    marginTop: '24px',
-  },
 }));
