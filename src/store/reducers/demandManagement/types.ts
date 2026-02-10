@@ -43,6 +43,6 @@ export interface TState {
   settings: IDemandPrediction[];
   availability: {
     openAppointmentDate: string;
-    openAppointmentTime: string[];
+    openAppointmentDateTimes: string[];
   }[];
 }
