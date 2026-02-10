@@ -60,9 +60,7 @@ const content = (
   </ErrorBoundary>
 );
 
-root.render(
-  process.env.REACT_APP_ENV !== 'local' ? <React.StrictMode>{content}</React.StrictMode> : content
-);
+root.render(content);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
