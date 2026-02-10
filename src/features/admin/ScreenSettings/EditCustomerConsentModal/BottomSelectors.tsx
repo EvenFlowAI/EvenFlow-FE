@@ -44,7 +44,11 @@ const BottomSelectors = ({
 
   const onAppointmentTimeChange = (value: string, field: keyof TForm) => {
     setFormIsChecked(false);
-    setForm(prev => ({ ...prev, [field]: value }));
+    if (value === 'Invalid Date') {
+      setForm(prev => ({ ...prev, [field]: null }));
+    } else {
+      setForm(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const onDayOfWeekChange = (e: React.SyntheticEvent, value: TOption[]) => {
@@ -79,6 +83,7 @@ const BottomSelectors = ({
         <div>
           <ClockTimePicker
             value={form.appointmentTimeFrom ? dayjs(form.appointmentTimeFrom, 'HH:mm:ss') : null}
+            withClear
             onChange={e =>
               onAppointmentTimeChange(dayjs(e).format('HH:mm:ss'), 'appointmentTimeFrom')
             }
@@ -94,6 +99,7 @@ const BottomSelectors = ({
         <div>
           <ClockTimePicker
             value={form.appointmentTimeTo ? dayjs(form.appointmentTimeTo, 'HH:mm:ss') : null}
+            withClear
             onChange={e =>
               onAppointmentTimeChange(dayjs(e).format('HH:mm:ss'), 'appointmentTimeTo')
             }
