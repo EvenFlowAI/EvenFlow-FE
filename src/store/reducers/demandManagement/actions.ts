@@ -8,7 +8,7 @@ export const getSettings = createAction<IDemandPrediction[]>('DemandManagement/G
 export const getAvailability = createAction<
   {
     openAppointmentDate: string;
-    openAppointmentTime: string[];
+    openAppointmentDateTimes: string[];
   }[]
 >('DemandManagement/GetAvailability');
 

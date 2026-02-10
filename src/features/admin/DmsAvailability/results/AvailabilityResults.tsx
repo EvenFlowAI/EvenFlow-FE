@@ -45,12 +45,14 @@ export const AvailabilityResults = ({
   };
 
   const allTimeSlots = Array.from(
-    new Set(availability.flatMap(d => d.openAppointmentTime ?? []))
-  ).sort((a, b) => {
-    const [ah, am] = a.split(':').map(Number);
-    const [bh, bm] = b.split(':').map(Number);
-    return ah === bh ? am - bm : ah - bh;
-  });
+    new Set(
+      availability.flatMap(d =>
+        (d.openAppointmentDateTimes ?? []).map(t => dayjs.utc(t).format('hh:mm A'))
+      )
+    )
+  ).sort((a, b) => dayjs(a, 'hh:mm A').diff(dayjs(b, 'hh:mm A')));
+
+  console.log('allTimeSlots', allTimeSlots);
 
   if (availability.length === 0) return null;
 
@@ -126,10 +128,13 @@ export const AvailabilityResults = ({
                   padding: '0 16px',
                 }}
               >
-                {dayjs(time, 'HH:mm').format('HH:mm')}
+                {time}
               </td>
               {availability.map(slot => {
-                const isAvailable = slot?.openAppointmentTime.includes(time);
+                const isAvailable = slot?.openAppointmentDateTimes
+                  .map(t => dayjs.utc(t).format('hh:mm A'))
+                  .includes(time);
+
                 return (
                   <td
                     key={`${slot.openAppointmentDate}-${time}`}
