@@ -43,6 +43,14 @@ const PartsAvailability = () => {
     }
   }, [selectedSC, pageIndex, pageSize, order, searchTerm]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      setSearch('');
+      dispatch(setRecallSearch(''));
+    };
+  }, []);
+
   const onSearch = () => {
     dispatch(setRecallSearch(search));
   };
