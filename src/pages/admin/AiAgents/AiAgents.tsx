@@ -33,7 +33,9 @@ const AiAgents = () => {
     },
     {
       name: 'Anomaly Agent',
-      available: true,
+      available: !(
+        process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
+      ),
       description: 'View future appointment demand predictions and gaps',
       link: '/admin/anomaly-agent',
     },

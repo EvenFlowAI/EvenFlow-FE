@@ -26,6 +26,7 @@ import Timing from './Timing/Timing';
 import { TCallback, TParsableDate } from '../../../types/types';
 import Calendar from './Calendar/Calendar';
 import {
+  loadActiveTransportations,
   loadAncillaryPriceByZip,
   setCity,
   setFilteredZipCodes,
@@ -45,6 +46,8 @@ import {
   selectAppointment,
   selectServiceValetAppointment,
 } from '../../../store/reducers/appointment/actions';
+import { decodeSCID } from '../../../utils/utils';
+import { useParams } from 'react-router-dom';
 
 type TProps = DialogProps & {
   selectedOption: IFirstScreenOption | null;
@@ -57,6 +60,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     (state: RootState) => state.appointmentFrame
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);
+  const { id } = useParams<{ id: string }>();
 
   const [consultant, setConsultant] = useState<IServiceConsultant | null>(null);
   const [transportationOption, setTransportationOption] = useState<ITransportation | null>(null);
@@ -237,12 +241,16 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     onNext && onNext();
   };
 
-  const onClickNext = () => {
+  const moveToNextStep = () => {
     if (timingType === EAppointmentTimingType.PreferredDate) {
       setCalendarOpen(true);
     } else {
       handleNextStep();
     }
+  };
+
+  const onClickNext = () => {
+    dispatch(loadActiveTransportations(decodeSCID(id), moveToNextStep));
   };
 
   const onSuccess = useCallback(
