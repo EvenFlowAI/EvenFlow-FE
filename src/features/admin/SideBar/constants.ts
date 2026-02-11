@@ -38,6 +38,12 @@ export const SULinks: LinkTypeWithSub[] = [
         roles: [Roles.EvenFlowAdmin],
         sub: true,
       },
+      {
+        to: Routes.Admin.RoleManagement,
+        name: 'Role Management',
+        roles: [Roles.EvenFlowAdmin],
+        sub: true,
+      },
     ],
   },
 ];

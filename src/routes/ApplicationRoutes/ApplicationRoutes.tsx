@@ -5,6 +5,7 @@ import { Routes } from '../constants';
 import { PrivateRoute } from '../PrivateRoute/PrivateRoute';
 import ApplicationVehicles from '../../pages/admin/ApplicationVehicles/ApplicationVehicles';
 import ApplicationOpCodeCategory from '../../pages/admin/ApplicationOpCodeCategory/ApplicationOpCodeCategory';
+import RoleManagement from '../../pages/admin/RoleManagement/RoleManagement';
 
 const ApplicationRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const ApplicationRoutes = () => {
       <Switch>
         <PrivateRoute path={Routes.Admin.Vehicles} component={ApplicationVehicles} />
         <PrivateRoute path={Routes.Admin.OpCodeCategory} component={ApplicationOpCodeCategory} />
+        <PrivateRoute path={Routes.Admin.RoleManagement} component={RoleManagement} />
         <Redirect to={Routes.Admin.Vehicles} />
       </Switch>
     </ContentContainer>

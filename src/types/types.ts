@@ -239,6 +239,7 @@ export enum Titles {
   Reporting = 'Reporting',
   Vehicles = 'Vehicles',
   AiAgents = 'AI Agents (beta)',
+  RoleManagement = 'Role Management',
 }
 
 export enum LocalItems {

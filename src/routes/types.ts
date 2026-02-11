@@ -16,6 +16,7 @@ export enum AdminRoutes {
   Application = '/admin/application',
   Vehicles = '/admin/application/vehicles',
   OpCodeCategory = '/admin/application/op-code-category',
+  RoleManagement = '/admin/application/role-management',
 }
 
 export enum AdminLogin {
