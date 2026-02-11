@@ -68,31 +68,40 @@ export const changePageData: ActionCreator<
   };
 };
 
-export const loadAll = (): AppThunk => (dispatch, getState) => {
-  dispatch(loading(true));
-  const state = getState();
-  const { pageData, searchTerm } = state.dealershipGroups;
-  const data = { ...pageData, searchTerm };
-  Api.call<PaginatedAPIResponse<IDealershipGroupExtended>>(Api.endpoints.Dealerships.GetAll, {
-    data,
-  })
-    .then(result => {
-      if (result?.data) {
-        const { result: dealerships, paging } = result.data;
-        if (paging) {
-          dispatch(changePaging(paging));
-        }
-        if (dealerships) {
-          dispatch(getAll(dealerships));
-        }
-        dispatch(loading(false));
-      }
+export const loadAll =
+  (withoutPaging: boolean = false): AppThunk =>
+  (dispatch, getState) => {
+    dispatch(loading(true));
+    const state = getState();
+    const { pageData, searchTerm } = state.dealershipGroups;
+
+    let data;
+    if (withoutPaging) {
+      data = { ...pageData, searchTerm, pageSize: 0 };
+    } else {
+      data = { ...pageData, searchTerm };
+    }
+
+    Api.call<PaginatedAPIResponse<IDealershipGroupExtended>>(Api.endpoints.Dealerships.GetAll, {
+      data,
     })
-    .catch(err => {
-      dispatch(loading(false));
-      console.log('load all dealership', err);
-    });
-};
+      .then(result => {
+        if (result?.data) {
+          const { result: dealerships, paging } = result.data;
+          if (paging) {
+            dispatch(changePaging(paging));
+          }
+          if (dealerships) {
+            dispatch(getAll(dealerships));
+          }
+          dispatch(loading(false));
+        }
+      })
+      .catch(err => {
+        dispatch(loading(false));
+        console.log('load all dealership', err);
+      });
+  };
 
 export const createDealership: ActionCreator<
   ThunkAction<void, RootState, void, DealershipActions>

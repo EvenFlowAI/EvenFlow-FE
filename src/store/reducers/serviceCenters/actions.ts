@@ -65,30 +65,45 @@ export const changePageData: ActionCreator<ThunkAction<void, RootState, void, Ac
   };
 };
 
-export const loadAll: ActionCreator<AppThunk> = () => async (dispatch, getState) => {
-  dispatch(loading(true));
-  const state = getState();
-  const requestPayload = {
-    ...state.serviceCenters.pageData,
-    ...state.serviceCenters.order,
-    searchTerm: state.serviceCenters.searchTerm,
-    dealershipId: state.serviceCenters.dealershipId,
+export const loadAll: ActionCreator<AppThunk> =
+  (withoutPaging: boolean = false) =>
+  async (dispatch, getState) => {
+    dispatch(loading(true));
+    const state = getState();
+
+    let requestPayload;
+
+    if (withoutPaging) {
+      requestPayload = {
+        pageSize: 0,
+        ...state.serviceCenters.order,
+        searchTerm: state.serviceCenters.searchTerm,
+        dealershipId: state.serviceCenters.dealershipId,
+      };
+    } else {
+      requestPayload = {
+        ...state.serviceCenters.pageData,
+        ...state.serviceCenters.order,
+        searchTerm: state.serviceCenters.searchTerm,
+        dealershipId: state.serviceCenters.dealershipId,
+      };
+    }
+
+    try {
+      const {
+        data: { result, paging },
+      } = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(
+        Api.endpoints.ServiceCenters.GetAll,
+        { data: requestPayload }
+      );
+      dispatch(changePaging(paging));
+      dispatch(getAll(result));
+      dispatch(loading(false));
+    } catch (e) {
+      dispatch(loading(false));
+      console.log('load all service centers error', e);
+    }
   };
-  try {
-    const {
-      data: { result, paging },
-    } = await Api.call<PaginatedAPIResponse<IServiceCenterExtended>>(
-      Api.endpoints.ServiceCenters.GetAll,
-      { data: requestPayload }
-    );
-    dispatch(changePaging(paging));
-    dispatch(getAll(result));
-    dispatch(loading(false));
-  } catch (e) {
-    dispatch(loading(false));
-    console.log('load all service centers error', e);
-  }
-};
 export const setSCOrder = createAction<IOrder<IServiceCenterExtended>>(
   'ServiceCenters/ChangeOrder'
 );

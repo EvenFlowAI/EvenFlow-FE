@@ -41,6 +41,7 @@ export const getCurrentUser =
       }
       // eslint-disable-next-line
     } catch (e) {
+      console.log('getCurrentUser err', e);
     } finally {
       dispatch(loading(false));
     }

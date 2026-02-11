@@ -34,20 +34,6 @@ export type ValidationKeyPairs<U> = {
   message: string;
 };
 
-export interface ITimeSpan {
-  ticks: number;
-  days: number;
-  hours: number;
-  milliseconds: number;
-  minutes: number;
-  seconds: number;
-  totalDays: number;
-  totalHours: number;
-  totalMilliseconds: number;
-  totalMinutes: number;
-  totalSeconds: number;
-}
-
 export interface IPagingResponse {
   numberOfPages: number;
   numberOfRecords: number;
@@ -85,6 +71,14 @@ export type TOption = {
   name: string;
   value: string;
 };
+
+export type TOptionForUserAccountServiceCenters = {
+  name: string;
+  value: number;
+  categoryName: string;
+  categoryId: number;
+};
+
 export type TCallback = () => void;
 export type TArgCallback<T> = (arg: T) => void;
 
@@ -290,9 +284,4 @@ export type TDashboardItem = {
   label: string;
   icon: JSX.Element;
   action: () => void;
-};
-export type TDashboardCountData = {
-  technicians: number;
-  pods: number;
-  appointments: number;
 };
