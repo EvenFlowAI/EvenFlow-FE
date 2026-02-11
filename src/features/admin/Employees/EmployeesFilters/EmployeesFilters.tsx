@@ -54,6 +54,7 @@ const EmployeesFilters = () => {
     return () => {
       setSelectedRole('');
       dispatch(setEmployeeFilters({ role: '' }));
+      dispatch(setEmplSearch(''));
     };
   }, []);
 
