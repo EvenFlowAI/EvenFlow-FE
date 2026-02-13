@@ -6,7 +6,7 @@ export const useStyles = makeStyles()(() => ({
     borderRadius: '0.75rem',
     overflow: 'hidden',
     width: '100%',
-    height: '770px',
+    height: '727px',
     minWidth: '320px',
     minHeight: '400px',
     marginTop: '24px',
