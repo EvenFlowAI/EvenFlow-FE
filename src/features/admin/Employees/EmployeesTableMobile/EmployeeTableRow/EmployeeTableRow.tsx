@@ -59,7 +59,7 @@ const EmployeeTableRow: React.FC<TProps> = ({
     <>
       <Row style={{ backgroundColor: idx % 2 === 0 ? '#FFFFFF' : '#F2F4FB' }}>
         <Cell>{item.fullName}</Cell>
-        <Cell>{item.serviceCenter?.name}</Cell>
+        <Cell>{item.serviceCenters?.map(sc => sc.name).join(', ')}</Cell>
         <BtnsCell>
           <div>{viewActions(item)}</div>
           <div>

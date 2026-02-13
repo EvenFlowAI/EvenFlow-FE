@@ -47,8 +47,8 @@ const SURowData: TableRowDataType<IEmployee>[] = [
 const AdminRowData: TableRowDataType<IEmployee>[] = [
   { val: el => el.fullName, header: 'Name', orderId: 'name' },
   {
-    val: el => el.serviceCenter?.name || '-',
-    header: 'Service Center',
+    val: el => el.serviceCenters?.map(sc => sc.name).join(', ') || '-',
+    header: 'Service Centers',
     width: 170,
   },
   // {val: el => getServiceCentersNames(el.serviceCenters),
@@ -124,8 +124,11 @@ const EmployeesTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   }, [order, searchTerm, selectedSC]);
 
   const handleMenuOpen = (item: IEmployee) => (e: React.MouseEvent<HTMLButtonElement>) => {
-    setEditedItem(item);
-    setAnchorEl(e.currentTarget);
+    if (selectedSC) {
+      const updatedItem = { ...item, serviceCenterId: selectedSC.id };
+      setEditedItem(updatedItem);
+      setAnchorEl(e.currentTarget);
+    }
   };
   const editEmployee = () => {
     onOpen();

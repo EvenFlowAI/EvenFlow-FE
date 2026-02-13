@@ -58,7 +58,7 @@ export const TechniciansTable = () => {
     }
   };
   const openMenu = (u: IEmployee) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setEdit({ ...u, serviceCenterId: selectedSC?.id || 0, serviceCenter: selectedSC });
+    setEdit({ ...u, serviceCenterId: selectedSC?.id || 0 });
     setAnchorEl(e.currentTarget);
   };
   const openEdit = () => {

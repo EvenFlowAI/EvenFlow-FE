@@ -38,7 +38,7 @@ const ServiceCenterForm = ({
 
   return (
     <Autocomplete
-      disabled={isEdit && initialForm.role === form.role && form.role !== Roles.Advisor}
+      disabled={isEdit || (initialForm.role === form.role && form.role !== Roles.Advisor)}
       options={shortSC}
       onChange={handleSelectChange}
       getOptionLabel={i => i.name}
