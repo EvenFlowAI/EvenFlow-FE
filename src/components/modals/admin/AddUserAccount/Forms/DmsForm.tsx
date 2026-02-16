@@ -6,21 +6,33 @@ import { RootState } from '../../../../../store/rootReducer';
 import { TServiceConsultant } from '../../../../../store/reducers/appointments/types';
 import { DmsRoles } from '../../CreateEmployee/constants';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
+import { TOptionForUserAccountServiceCenters } from '../../../../../types/types';
 
 interface DmsFormProps {
+  sc: TOptionForUserAccountServiceCenters;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   form: TUserAccountForm;
 }
 
-const DmsForm = ({ setFormIsChecked, setEmployeeForm, form }: DmsFormProps) => {
+const DmsForm = ({ sc, setFormIsChecked, setEmployeeForm, form }: DmsFormProps) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
   const { DmsAdvisors: dmsAdvisors } = useSelector((state: RootState) => state.scEmployees);
 
   const handleDMSConsultantChange = (e: React.SyntheticEvent, value: TServiceConsultant | null) => {
     setFormIsChecked(false);
-    setEmployeeForm(prev => ({ ...prev, dmsId: value ? value.dmsId : null }));
+    setEmployeeForm(prev => ({
+      ...prev,
+      serviceCenters: prev.serviceCenters.map(el =>
+        el.value === sc.value
+          ? {
+              ...el,
+              dmsId: value ? value.dmsId : null,
+            }
+          : el
+      ),
+    }));
   };
 
   const dmsOptions = useMemo(
@@ -30,10 +42,8 @@ const DmsForm = ({ setFormIsChecked, setEmployeeForm, form }: DmsFormProps) => {
 
   const dmsAdvisor = useMemo(
     () =>
-      form?.dmsId && dmsAdvisors.length
-        ? dmsAdvisors.find(item => item.dmsId === form.dmsId)
-        : null,
-    [form?.dmsId, dmsAdvisors]
+      sc?.dmsId && dmsAdvisors.length ? dmsAdvisors.find(item => item.dmsId === sc.dmsId) : null,
+    [sc?.dmsId, dmsAdvisors]
   );
 
   return (

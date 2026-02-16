@@ -2,10 +2,15 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { Grid } from '@mui/material';
 import { TUserAccountForm } from '../types';
 import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
-import { Roles, TTechnicianLevel } from '../../../../../types/types';
+import {
+  Roles,
+  TOptionForUserAccountServiceCenters,
+  TTechnicianLevel,
+} from '../../../../../types/types';
 import { ToggleButtons } from '../../../../buttons/ToggleButtons/ToggleButtons';
 
 interface TechnicianEmployeeProps {
+  sc: TOptionForUserAccountServiceCenters;
   form: TUserAccountForm;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
@@ -13,6 +18,7 @@ interface TechnicianEmployeeProps {
 }
 
 const TechnicianEmployee = ({
+  sc,
   form,
   handleChange,
   setFormIsChecked,
@@ -23,7 +29,14 @@ const TechnicianEmployee = ({
     if (newVal) {
       setEmployeeForm(prev => ({
         ...prev,
-        technicianLevel: newVal as TTechnicianLevel,
+        serviceCenters: prev.serviceCenters.map(el =>
+          el.value === sc.value
+            ? {
+                ...el,
+                technicianLevel: newVal as TTechnicianLevel,
+              }
+            : el
+        ),
       }));
     }
   };
@@ -43,7 +56,7 @@ const TechnicianEmployee = ({
                   type="number"
                   fullWidth
                   onChange={handleChange}
-                  value={form.hourlyRate}
+                  value={sc.hourlyRate}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -55,14 +68,14 @@ const TechnicianEmployee = ({
                   type="number"
                   fullWidth
                   onChange={handleChange}
-                  value={form.overtimeRate}
+                  value={sc.overtimeRate}
                 />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} sm={6}>
             <ToggleButtons
-              value={form.technicianLevel || 1}
+              value={sc.technicianLevel || 1}
               label="Technician Level"
               buttons={[
                 { id: '1', label: '1', value: 1 },

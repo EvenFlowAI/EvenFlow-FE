@@ -11,6 +11,10 @@ import { Dayjs } from 'dayjs';
 import { TTimePeriod } from '../store/reducers/schedules/types';
 import { TDayType } from '../features/admin/AvailableStaffCalendar/types';
 import { EServiceType } from '../store/reducers/appointmentFrameReducer/types';
+import {
+  EDisplayOnBookingType,
+  EEmployeeType,
+} from '../components/modals/admin/CreateEmployee/types';
 
 export type LinkType = {
   to: string;
@@ -77,6 +81,13 @@ export type TOptionForUserAccountServiceCenters = {
   value: number;
   categoryName: string;
   categoryId: number;
+  dmsId?: string | null;
+  position: string;
+  displayOnBookingTypes?: EDisplayOnBookingType[];
+  type?: EEmployeeType | null;
+  hourlyRate?: number | '';
+  overtimeRate?: number | '';
+  technicianLevel?: TTechnicianLevel;
 };
 
 export type TCallback = () => void;

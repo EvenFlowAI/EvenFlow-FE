@@ -1,7 +1,6 @@
 import { TRole } from '../../../../store/reducers/users/types';
 import { IServiceCenter } from '../../../../store/reducers/serviceCenters/types';
-import { TOptionForUserAccountServiceCenters, TTechnicianLevel } from '../../../../types/types';
-import { EDisplayOnBookingType, EEmployeeType } from '../CreateEmployee/types';
+import { TOptionForUserAccountServiceCenters } from '../../../../types/types';
 import { TOption } from '../../../../utils/types';
 
 export type TUserAccountForm = {
@@ -12,11 +11,4 @@ export type TUserAccountForm = {
   serviceCenter?: IServiceCenter | null;
   dealerships: TOption[];
   serviceCenters: TOptionForUserAccountServiceCenters[];
-  dmsId?: string | null;
-  position: string;
-  displayOnBookingTypes?: EDisplayOnBookingType[];
-  type?: EEmployeeType | null;
-  hourlyRate?: number | '';
-  overtimeRate?: number | '';
-  technicianLevel?: TTechnicianLevel;
 };

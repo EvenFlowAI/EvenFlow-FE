@@ -2,27 +2,35 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { FormControlLabel, Grid, Switch } from '@mui/material';
 import { TUserAccountForm } from '../types';
 import { EDisplayOnBookingType } from '../../CreateEmployee/types';
-import { Roles } from '../../../../../types/types';
+import { Roles, TOptionForUserAccountServiceCenters } from '../../../../../types/types';
 import { useStyles } from '../../CreateEmployee/CreateEmployeeForm/styles';
 
 interface AdvisorEmployeeProps {
+  sc: TOptionForUserAccountServiceCenters;
   form: TUserAccountForm;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
 }
 
-const AdvisorEmployee = ({ form, setFormIsChecked, setEmployeeForm }: AdvisorEmployeeProps) => {
+const AdvisorEmployee = ({ sc, form, setFormIsChecked, setEmployeeForm }: AdvisorEmployeeProps) => {
   const { classes } = useStyles();
 
   const handleSelfServiceChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
     setEmployeeForm(prev => ({
       ...prev,
-      displayOnBookingTypes: checked
-        ? prev.displayOnBookingTypes
-          ? [...prev.displayOnBookingTypes, EDisplayOnBookingType.SelfService]
-          : [EDisplayOnBookingType.SelfService]
-        : prev.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.SelfService),
+      serviceCenters: prev.serviceCenters.map(el =>
+        el.value === sc.value
+          ? {
+              ...el,
+              displayOnBookingTypes: checked
+                ? el.displayOnBookingTypes
+                  ? [...el.displayOnBookingTypes, EDisplayOnBookingType.SelfService]
+                  : [EDisplayOnBookingType.SelfService]
+                : el.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.SelfService),
+            }
+          : el
+      ),
     }));
   };
 
@@ -30,11 +38,18 @@ const AdvisorEmployee = ({ form, setFormIsChecked, setEmployeeForm }: AdvisorEmp
     setFormIsChecked(false);
     setEmployeeForm(prev => ({
       ...prev,
-      displayOnBookingTypes: checked
-        ? prev.displayOnBookingTypes
-          ? [...prev.displayOnBookingTypes, EDisplayOnBookingType.Employee]
-          : [EDisplayOnBookingType.Employee]
-        : prev.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.Employee),
+      serviceCenters: prev.serviceCenters.map(el =>
+        el.value === sc.value
+          ? {
+              ...el,
+              displayOnBookingTypes: checked
+                ? el.displayOnBookingTypes
+                  ? [...el.displayOnBookingTypes, EDisplayOnBookingType.Employee]
+                  : [EDisplayOnBookingType.Employee]
+                : el.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.Employee),
+            }
+          : el
+      ),
     }));
   };
 
@@ -53,12 +68,10 @@ const AdvisorEmployee = ({ form, setFormIsChecked, setEmployeeForm }: AdvisorEmp
                 labelPlacement="start"
                 control={
                   <Switch
-                    disabled={!form.dmsId}
+                    disabled={!sc.dmsId}
                     name="selfService"
                     onChange={handleSelfServiceChange}
-                    checked={form.displayOnBookingTypes?.includes(
-                      EDisplayOnBookingType.SelfService
-                    )}
+                    checked={sc.displayOnBookingTypes?.includes(EDisplayOnBookingType.SelfService)}
                     color="primary"
                   />
                 }
@@ -71,10 +84,10 @@ const AdvisorEmployee = ({ form, setFormIsChecked, setEmployeeForm }: AdvisorEmp
                 className={classes.switcher}
                 control={
                   <Switch
-                    disabled={!form.dmsId}
+                    disabled={!sc.dmsId}
                     name="employee"
                     onChange={handleEmployeeChange}
-                    checked={form.displayOnBookingTypes?.includes(EDisplayOnBookingType.Employee)}
+                    checked={sc.displayOnBookingTypes?.includes(EDisplayOnBookingType.Employee)}
                     color="primary"
                   />
                 }

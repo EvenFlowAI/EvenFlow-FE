@@ -7,17 +7,14 @@ import { availableUserRoles, dealerShipAccessRoles } from '../../../../../utils/
 import { checkEmail, getOptions, validatePhoneNumber } from '../../../../../utils/utils';
 import { superRoles } from '../../CreateEmployee/constants';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-import { Roles } from '../../../../../types/types';
 import { EEmployeeType } from '../../CreateEmployee/types';
 import { TOption } from '../../../../../features/admin/ServiceBookModal/types';
 import { TRole } from '../../../../../store/reducers/users/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import DmsForm from './DmsForm';
-import TechnicianEmployee from './TechnicianEmployee';
-import AdvisorEmployee from './AdvisorEmployee';
 import AddDealershipGroupForm from './AddDealershipGroupForm';
 import AddCategoryDropdown from './AddCategoryDropdown';
+import { ServiceCenterSection } from './ServiceCenterSection';
 
 type TTFormProps = {
   form: TUserAccountForm;
@@ -52,16 +49,8 @@ export const AddUserAccountForm: React.FC<
       role: value as TRole,
       dmsId: null,
       type: null,
-      displayOnBookingTypes: value === 'Advisor' ? prev.displayOnBookingTypes : [],
+      displayOnBookingTypes: value === 'Advisor' ? [] : [],
       serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
-    }));
-  };
-
-  const handleTypeChange = (e: React.SyntheticEvent<Element, Event>, value: TOption | null) => {
-    setFormIsChecked(false);
-    setEmployeeForm(prev => ({
-      ...prev,
-      type: (value?.value as EEmployeeType) ?? null,
     }));
   };
 
@@ -108,14 +97,6 @@ export const AddUserAccountForm: React.FC<
             label="Service Center"
           />
         ) : (
-          // <ServiceCenterForm
-          //   form={form}
-          //   formIsChecked={formIsChecked}
-          //   setEmployeeForm={setEmployeeForm}
-          //   setFormIsChecked={setFormIsChecked}
-          //   initialForm={initialForm}
-          //   isEdit={isEdit}
-          // />
           <AddCategoryDropdown
             form={form}
             setEmployeeForm={setEmployeeForm}
@@ -152,48 +133,21 @@ export const AddUserAccountForm: React.FC<
         />
       </Grid>
       <Grid item xs={12}>
-        <Divider color="#DADADA" style={{ margin: 0 }} />
+        <Divider color="#DADADA" style={{ margin: '0 0 10px 0' }} />
       </Grid>
-      <DmsForm form={form} setEmployeeForm={setEmployeeForm} setFormIsChecked={setFormIsChecked} />
-      <Grid item xs={12} sm={6}>
-        <TextField
-          label="Position"
-          id="position"
-          value={form.position}
-          name="position"
-          placeholder="Type position"
-          onChange={handleChange}
-          fullWidth
-        />
-      </Grid>
-      <TechnicianEmployee
-        setEmployeeForm={setEmployeeForm}
-        form={form}
-        handleChange={handleChange}
-        setFormIsChecked={setFormIsChecked}
-      />
-      <AdvisorEmployee
-        form={form}
-        setFormIsChecked={setFormIsChecked}
-        setEmployeeForm={setEmployeeForm}
-      />
-      {[Roles.Advisor, Roles.Technician].includes(form.role as Roles) ? (
-        <Grid item xs={12} sm={6}>
-          <Autocomplete
-            options={employeeTypeOptions}
-            isOptionEqualToValue={(option, value) => option.value === value.value}
-            onChange={handleTypeChange}
-            getOptionLabel={o => o.name}
-            loading={shortLoading}
-            value={employeeTypeOptions.find(el => el.value === form.type) ?? null}
-            renderInput={autocompleteRender({
-              label: 'Type',
-              fullWidth: true,
-              placeholder: 'Select Type',
-            })}
+      <Grid container spacing={3} style={{ marginLeft: 0 }}>
+        {form.serviceCenters?.map(sc => (
+          <ServiceCenterSection
+            key={sc.value}
+            sc={sc}
+            form={form}
+            setEmployeeForm={setEmployeeForm}
+            setFormIsChecked={setFormIsChecked}
+            employeeTypeOptions={employeeTypeOptions}
+            shortLoading={shortLoading}
           />
-        </Grid>
-      ) : null}
+        ))}{' '}
+      </Grid>
     </Grid>
   );
 };

@@ -16,6 +16,13 @@ interface CategoryDropdownProps {
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
 }
 
+// створюємо дефолтний об'єкт для нового сервісного центру
+const makeDefaultServiceCenter = (option: TOptionForUserAccountServiceCenters) => ({
+  ...option,
+  dmsId: null,
+  position: '',
+});
+
 const AddCategoryDropdown = ({
   form,
   setEmployeeForm,
@@ -27,8 +34,8 @@ const AddCategoryDropdown = ({
 
   useEffect(() => {
     // залишаємо тільки ті сервісні центри, які належать до актуальних дилершипів
-    const validServiceCenters = (form.serviceCenters ?? []).filter(
-      sc => (form.dealerships ?? []).some(d => d.value === sc.categoryId) // categoryId = dealership.id
+    const validServiceCenters = (form.serviceCenters ?? []).filter(sc =>
+      (form.dealerships ?? []).some(d => d.value === sc.categoryId)
     );
 
     if (validServiceCenters.length !== (form.serviceCenters ?? []).length) {
@@ -44,17 +51,19 @@ const AddCategoryDropdown = ({
       name: sc.name,
       categoryName: sc.dealership.name,
       categoryId: Number(sc.dealership.id),
+      position: '',
     }));
 
   // додаємо Select all для кожної категорії
   const categoryGroups = Array.from(new Set(baseOptions.map(o => o.categoryName)));
-  const options = categoryGroups
+  const options: TOptionForUserAccountServiceCenters[] = categoryGroups
     .flatMap(cat => [
       {
-        value: -baseOptions.find(o => o.categoryName === cat)!.categoryId, // унікальний мінус ID
+        value: -baseOptions.find(o => o.categoryName === cat)!.categoryId,
         name: 'Select all',
         categoryName: cat,
         categoryId: 0,
+        position: '',
       },
       ...baseOptions.filter(o => o.categoryName === cat),
     ])
@@ -75,11 +84,13 @@ const AddCategoryDropdown = ({
           next = current.filter(sel => sel.categoryName !== category);
         } else {
           const withoutCategory = current.filter(sel => sel.categoryName !== category);
-          next = [...withoutCategory, ...categoryOptions];
+          next = [...withoutCategory, ...categoryOptions.map(o => makeDefaultServiceCenter(o))];
         }
       } else {
         const exists = current.some(o => o.value === option.value);
-        next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
+        next = exists
+          ? current.filter(o => o.value !== option.value)
+          : [...current, makeDefaultServiceCenter(option)];
       }
 
       setEmployeeForm(prev => ({ ...prev, serviceCenters: next }));
@@ -110,7 +121,7 @@ const AddCategoryDropdown = ({
             {...props}
             key={`${option.name}-${option.value}`}
             style={{ display: 'flex', alignItems: 'center' }}
-            onClick={() => onCheckboxChange(option)} // додано
+            onClick={() => onCheckboxChange(option)}
           >
             <Checkbox
               color="primary"
@@ -122,7 +133,7 @@ const AddCategoryDropdown = ({
                 )
               }
               checked={checked}
-              onClick={e => e.stopPropagation()} // щоб не дублювати вибір
+              onClick={e => e.stopPropagation()}
               onChange={() => onCheckboxChange(option)}
             />
             {option.name}
@@ -135,7 +146,13 @@ const AddCategoryDropdown = ({
   const handleChange = (e: React.SyntheticEvent, val: TOptionForUserAccountServiceCenters[]) => {
     setFormIsChecked(false);
     const filtered = val.filter(o => o.name !== 'Select all');
-    setEmployeeForm(prev => ({ ...prev, serviceCenters: filtered }));
+    setEmployeeForm(prev => ({
+      ...prev,
+      serviceCenters: filtered.map(o => {
+        const existing = prev.serviceCenters.find(sc => sc.value === o.value);
+        return existing ? existing : makeDefaultServiceCenter(o);
+      }),
+    }));
   };
 
   return (
@@ -155,7 +172,7 @@ const AddCategoryDropdown = ({
         },
       }}
       options={options}
-      groupBy={option => option.categoryName || ''} // групування по назві дилера
+      groupBy={option => option.categoryName || ''}
       renderGroup={params => (
         <li key={params.key}>
           <div className={classes.categoryWrapper}>{params.group}</div>
