@@ -150,7 +150,7 @@ export const setEmplOrder = createAction<IOrder<IEmployee>>('SCEmployees/SetOrde
 export const getDMSAdvisors = createAction<TServiceConsultant[]>('SCEmployees/GetDMSAdvisors');
 export const loadingDMSAdvisors = createAction<boolean>('SCEmployees/LoadingDMSAdvisors');
 export const loadDMSAdvisors =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, onSuccess?: (data: TServiceConsultant[]) => void): AppThunk =>
   dispatch => {
     dispatch(loadingDMSAdvisors(true));
     Api.call(Api.endpoints.ServiceConsultants.GetByRole, {
@@ -159,6 +159,10 @@ export const loadDMSAdvisors =
       .then(result => {
         if (result?.data) {
           dispatch(getDMSAdvisors(result.data));
+          // for adding a user account functionality
+          if (onSuccess) {
+            onSuccess(result.data);
+          }
         }
       })
       .catch(err => {

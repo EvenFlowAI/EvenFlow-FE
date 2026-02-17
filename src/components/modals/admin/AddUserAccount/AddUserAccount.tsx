@@ -26,7 +26,7 @@ export const AddUserAccount: React.FC<
   const handleCreate = async () => {
     console.log('form', userForm);
     console.log('avatar', avatar);
-    setLoading(true);
+    setLoading(false);
   };
 
   return (

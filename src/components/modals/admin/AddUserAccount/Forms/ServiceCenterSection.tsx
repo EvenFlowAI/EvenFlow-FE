@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
 import DmsForm from './DmsForm';
@@ -12,6 +12,9 @@ import { TUserAccountForm } from '../types';
 import { EEmployeeType } from '../../CreateEmployee/types';
 import { ReactComponent as ShowMark } from '../../../../../assets/img/ShowMark.svg';
 import { ReactComponent as HideMark } from '../../../../../assets/img/HideMark.svg';
+import { useDispatch } from 'react-redux';
+import { loadDMSAdvisors } from '../../../../../store/reducers/employees/actions';
+import { TServiceConsultant } from '../../../../../store/reducers/appointments/types';
 
 interface ServiceCenterSectionProps {
   sc: TOptionForUserAccountServiceCenters;
@@ -30,7 +33,19 @@ export const ServiceCenterSection = ({
   employeeTypeOptions,
   shortLoading,
 }: ServiceCenterSectionProps) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const [dmsAdvisors, setDmsAdvisors] = useState<TServiceConsultant[]>([]);
+
+  const onSuccess = (data: TServiceConsultant[]) => {
+    setDmsAdvisors(data);
+  };
+
+  useEffect(() => {
+    if (open) {
+      dispatch(loadDMSAdvisors(sc.value, onSuccess));
+    }
+  }, [open]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
     target: { name, value },
@@ -95,6 +110,7 @@ export const ServiceCenterSection = ({
         <>
           <DmsForm
             sc={sc}
+            dmsAdvisors={dmsAdvisors}
             form={form}
             setEmployeeForm={setEmployeeForm}
             setFormIsChecked={setFormIsChecked}

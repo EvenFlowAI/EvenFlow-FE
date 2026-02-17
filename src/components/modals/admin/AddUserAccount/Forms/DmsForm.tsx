@@ -10,15 +10,15 @@ import { TOptionForUserAccountServiceCenters } from '../../../../../types/types'
 
 interface DmsFormProps {
   sc: TOptionForUserAccountServiceCenters;
+  dmsAdvisors: TServiceConsultant[];
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   form: TUserAccountForm;
 }
 
-const DmsForm = ({ sc, setFormIsChecked, setEmployeeForm, form }: DmsFormProps) => {
+const DmsForm = ({ sc, dmsAdvisors, setFormIsChecked, setEmployeeForm, form }: DmsFormProps) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
-  const { DmsAdvisors: dmsAdvisors } = useSelector((state: RootState) => state.scEmployees);
 
   const handleDMSConsultantChange = (e: React.SyntheticEvent, value: TServiceConsultant | null) => {
     setFormIsChecked(false);

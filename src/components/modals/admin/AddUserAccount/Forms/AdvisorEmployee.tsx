@@ -27,7 +27,9 @@ const AdvisorEmployee = ({ sc, form, setFormIsChecked, setEmployeeForm }: Adviso
                 ? el.displayOnBookingTypes
                   ? [...el.displayOnBookingTypes, EDisplayOnBookingType.SelfService]
                   : [EDisplayOnBookingType.SelfService]
-                : el.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.SelfService),
+                : el.displayOnBookingTypes?.filter(
+                    value => value !== EDisplayOnBookingType.SelfService
+                  ),
             }
           : el
       ),
@@ -46,7 +48,9 @@ const AdvisorEmployee = ({ sc, form, setFormIsChecked, setEmployeeForm }: Adviso
                 ? el.displayOnBookingTypes
                   ? [...el.displayOnBookingTypes, EDisplayOnBookingType.Employee]
                   : [EDisplayOnBookingType.Employee]
-                : el.displayOnBookingTypes?.filter(el => el !== EDisplayOnBookingType.Employee),
+                : el.displayOnBookingTypes?.filter(
+                    value => value !== EDisplayOnBookingType.Employee
+                  ),
             }
           : el
       ),
