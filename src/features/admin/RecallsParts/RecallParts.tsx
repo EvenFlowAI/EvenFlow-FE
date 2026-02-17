@@ -47,6 +47,13 @@ const RecallParts = () => {
     if (selectedSC) dispatch(loadAllAssignedServiceRequests(selectedSC.id));
   }, [selectedSC]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      dispatch(setRecallSearch(''));
+    };
+  }, []);
+
   const handleAddRecall = () => {
     onOpen();
   };

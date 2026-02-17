@@ -72,6 +72,13 @@ export const OPsCodesListDialog: React.FC<
     }
   }, [props.open, !selectedPreviously]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      dispatch(setNonSelectedFilter({ searchTerm: '' }));
+    };
+  }, [props.open]);
+
   useEffect(() => {
     if (props.open && selectedSC) {
       dispatch(loadNonSelectedServiceRequests(selectedSC.id, true));

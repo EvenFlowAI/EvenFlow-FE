@@ -35,9 +35,8 @@ const EditTimeRangeAndCapacityModal: React.FC<
   const [pickUpMax, setPickUpMax] = useState<TParsableDate>(null);
   const [dropOffMin, setDropOffMin] = useState<TParsableDate>(null);
   const [dropOffMax, setDropOffMax] = useState<TParsableDate>(null);
-  const [dailyCapacity, setDailyCapacity] = useState<number | string>('');
+  const [dailyCapacity, setDailyCapacity] = useState<number | null>(null);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
-  const [isCleared, setIsCleared] = useState<boolean>(false);
   const { selectedSC } = useSCs();
   const showError = useException();
   const { classes } = useStyles();
@@ -63,30 +62,18 @@ const EditTimeRangeAndCapacityModal: React.FC<
     setPickUpMax(null);
     setDropOffMax(null);
     setDropOffMin(null);
-    setDailyCapacity('');
+    setDailyCapacity(null);
     onClose();
-  };
-
-  const onClear = () => {
-    setFormIsChecked(false);
-    setPickUpMin(null);
-    setPickUpMax(null);
-    setDropOffMax(null);
-    setDropOffMin(null);
-    setDailyCapacity('');
-    setIsCleared(true);
   };
 
   const handleChangePickUpMin = (date: TParsableDate) => {
     setFormIsChecked(false);
-    setIsCleared(false);
     setPickUpMin(dayjs(date));
   };
 
   const handleChangePickUpMax = (date: TParsableDate) => {
     setFormIsChecked(false);
-    setIsCleared(false);
-    if (dayjs(pickUpMin).diff(dayjs(date)) <= 0) {
+    if (pickUpMin && dayjs(pickUpMin).diff(dayjs(date)) <= 0) {
       setPickUpMax(dayjs(date));
     } else {
       showError('Pick Up Max Value must be more than Pick Up Min Value');
@@ -95,14 +82,12 @@ const EditTimeRangeAndCapacityModal: React.FC<
 
   const handleChangeDropOffMin = (date: TParsableDate) => {
     setFormIsChecked(false);
-    setIsCleared(false);
     setDropOffMin(dayjs(date));
   };
 
   const handleChangeDropOffMax = (date: TParsableDate) => {
     setFormIsChecked(false);
-    setIsCleared(false);
-    if (dayjs(dropOffMin).diff(dayjs(date)) <= 0) {
+    if (dropOffMin && dayjs(dropOffMin).diff(dayjs(date)) <= 0) {
       setDropOffMax(dayjs(date));
     } else {
       showError('Drop Off Max Value must be more than Drop Off Min Value');
@@ -113,52 +98,35 @@ const EditTimeRangeAndCapacityModal: React.FC<
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setFormIsChecked(false);
-    setIsCleared(false);
-    setDailyCapacity(value ? +value : '');
+    setDailyCapacity(value ? +value : null);
   };
 
   const checkIsValid = (): boolean => {
-    if (+dailyCapacity <= 0) {
-      showError('"Daily Capacity" must be more than 0');
+    if (dailyCapacity && +dailyCapacity < 0) {
+      showError('"Daily Capacity" must be more or equal than 0');
       return false;
     }
-    return (
-      Boolean(pickUpMin) &&
-      Boolean(pickUpMax) &&
-      Boolean(dropOffMin) &&
-      Boolean(dropOffMax) &&
-      +dailyCapacity > 0
-    );
+    return true;
   };
 
   const onSave = () => {
-    if (isCleared && selectedSC) {
-      const data: ITimeRangeAndCapacity = {
-        serviceCenterId: selectedSC.id,
-        pickUpMin: null,
-        pickUpMax: null,
-        dropOffMin: null,
-        dropOffMax: null,
-        capacity: null,
-      };
-
-      if (editingElement.id) {
-        dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, showError, onCancel));
-      } else {
-        dispatch(createTimeRange(selectedSC.id, data, showError, onCancel));
-      }
-      return;
-    }
-
     setFormIsChecked(true);
     if (selectedSC && checkIsValid()) {
+      console.log({
+        pickUpMin,
+        pickUpMax,
+        dropOffMin,
+        dropOffMax,
+        dailyCapacity,
+      });
+      const tryFormat = (d: TParsableDate) => (d ? dayjs(d).format(timeWithSecond) : null);
       const data: ITimeRangeAndCapacity = {
         serviceCenterId: selectedSC.id,
-        pickUpMin: dayjs(pickUpMin).format(timeWithSecond),
-        pickUpMax: dayjs(pickUpMax).format(timeWithSecond),
-        dropOffMin: dayjs(dropOffMin).format(timeWithSecond),
-        dropOffMax: dayjs(dropOffMax).format(timeWithSecond),
-        capacity: +dailyCapacity,
+        pickUpMin: tryFormat(pickUpMin),
+        pickUpMax: tryFormat(pickUpMax),
+        dropOffMin: tryFormat(dropOffMin),
+        dropOffMax: tryFormat(dropOffMax),
+        capacity: dailyCapacity !== null ? +dailyCapacity : null,
       };
       if (editingElement.id) {
         dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, showError, onCancel));
@@ -194,7 +162,6 @@ const EditTimeRangeAndCapacityModal: React.FC<
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !pickUpMin,
               }}
               name="pickUpMin"
               label="Pick Up Min"
@@ -213,7 +180,6 @@ const EditTimeRangeAndCapacityModal: React.FC<
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !pickUpMax,
               }}
               name="pickUpMax"
               label="Pick Up Max"
@@ -232,7 +198,6 @@ const EditTimeRangeAndCapacityModal: React.FC<
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !dropOffMin,
               }}
               name="dropOffMin"
               label="Drop Off Min"
@@ -251,7 +216,6 @@ const EditTimeRangeAndCapacityModal: React.FC<
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !dropOffMax,
               }}
               name="dropOffMax"
               label="Drop Off Max"
@@ -263,11 +227,11 @@ const EditTimeRangeAndCapacityModal: React.FC<
               label={'Daily Capacity'}
               name="dailyCapacity"
               type="number"
-              error={formIsChecked && (+dailyCapacity <= 0 || !dailyCapacity.toString().length)}
+              error={formIsChecked && dailyCapacity !== null && +dailyCapacity < 0}
               inputProps={{
                 min: 0,
               }}
-              value={dailyCapacity}
+              value={dailyCapacity ?? ''}
               onChange={handleChangeDailyCapacity}
               fullWidth
               id="dailyCapacity"
@@ -279,9 +243,6 @@ const EditTimeRangeAndCapacityModal: React.FC<
       <DialogActions>
         <div className={classes.wrapper}>
           <div className={classes.buttonsWrapper}>
-            <Button onClick={onClear} className={classes.cancelButton}>
-              Clear
-            </Button>
             <Button onClick={onCancel} className={classes.cancelButton}>
               Cancel
             </Button>

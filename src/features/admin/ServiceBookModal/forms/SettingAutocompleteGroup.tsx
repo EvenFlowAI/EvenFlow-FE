@@ -1,22 +1,23 @@
 import React from 'react';
-import { Autocomplete, Grid, Switch } from '@mui/material';
+import { Autocomplete, FormControl, FormControlLabel, Grid, Switch } from '@mui/material';
 import {
   autocompleteOptionsRender,
   autocompleteRender,
 } from '../../../../utils/autocompleteRenders';
 import { getTransportationOptionString } from '../../../../utils/utils';
-import { Label } from '../styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { IEngineType } from '../../../../store/reducers/vehicleDetails/types';
 import { ITransportationOptionFull } from '../../../../store/reducers/transportationNeeds/types';
 import { TZone } from '../../../../store/reducers/mobileService/types';
 import { ServiceBookState, TForm } from '../types';
+import { hasMobileZones, hasServiceValetZones, isVisitCenterSelected } from '../helper';
 
 interface SettingAutocompleteGroupProps {
   form: TForm;
   setForm: React.Dispatch<React.SetStateAction<TForm>>;
   setFormIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  formIsChecked: boolean;
   loading: boolean;
   state: ServiceBookState;
   setState: React.Dispatch<React.SetStateAction<ServiceBookState>>;
@@ -26,6 +27,7 @@ const SettingAutocompleteGroup = ({
   form,
   setForm,
   setFormIsChecked,
+  formIsChecked,
   loading,
   state,
   setState,
@@ -62,7 +64,24 @@ const SettingAutocompleteGroup = ({
   };
 
   const onIsVisitCenterChange = () => {
+    setFormIsChecked(false);
     setForm(prev => ({ ...prev, isVisitCenter: !form.isVisitCenter }));
+  };
+
+  const isErrorForZonesOnServiceCenter = (): boolean => {
+    return (
+      formIsChecked &&
+      ((hasMobileZones(state) && hasServiceValetZones(state) && isVisitCenterSelected(form)) ||
+        (hasMobileZones(state) && isVisitCenterSelected(form)))
+    );
+  };
+
+  const isErrorForZones = (): boolean => {
+    return (
+      formIsChecked &&
+      ((hasMobileZones(state) && hasServiceValetZones(state)) ||
+        (hasMobileZones(state) && isVisitCenterSelected(form)))
+    );
   };
 
   return (
@@ -138,6 +157,10 @@ const SettingAutocompleteGroup = ({
             label: 'Service Valet Zones',
             fullWidth: true,
             placeholder: 'Select Service Valet Zones',
+            error:
+              formIsChecked &&
+              !!state.mobileZones.length &&
+              !!state.selectedServiceValetZones.length,
           })}
         />
       </Grid>
@@ -163,18 +186,30 @@ const SettingAutocompleteGroup = ({
             label: 'Mobile Zones',
             fullWidth: true,
             placeholder: 'Select Mobile Zones',
+            error: isErrorForZones(),
           })}
         />
       </Grid>
       <Grid item xs={12} sm={12} md={6}>
         <div style={{ height: '100%', display: 'flex', alignItems: 'flex-end' }}>
-          <Label
-            checked={form.isVisitCenter}
-            onChange={() => onIsVisitCenterChange()}
-            label={'For Visit Center Only'}
-            labelPlacement="start"
-            control={<Switch color="primary" disabled={podsLoading} />}
-          />
+          <FormControl error={isErrorForZones()}>
+            {' '}
+            <FormControlLabel
+              control={<Switch color="primary" disabled={podsLoading} />}
+              checked={form.isVisitCenter}
+              onChange={() => onIsVisitCenterChange()}
+              label="For Visit Center Only"
+              labelPlacement="start"
+              sx={{
+                marginLeft: 0,
+                '& .MuiFormControlLabel-label': {
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  color: isErrorForZonesOnServiceCenter() ? 'red' : '#7898FF',
+                },
+              }}
+            />
+          </FormControl>
         </div>
       </Grid>
     </>

@@ -33,6 +33,13 @@ export const ServiceCenterActions = () => {
     }
   }, [currentUser]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      dispatch(setSCSearch(''));
+    };
+  }, []);
+
   const handleSearch = useCallback(
     (val: string) => {
       dispatch(setSCSearch(val));

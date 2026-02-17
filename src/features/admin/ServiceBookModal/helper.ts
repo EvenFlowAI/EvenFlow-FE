@@ -1,6 +1,6 @@
 import { IMake, IModel } from '../../../api/types';
 import { IPodVehicleModel } from '../../../store/reducers/pods/types';
-import { TOption } from './types';
+import { ServiceBookState, TForm, TOption } from './types';
 
 export function mapJobTypeOption(
   options: TOption[],
@@ -55,3 +55,86 @@ export function getSelectedModels(modelsOptions: IModel[], vehicleModels?: IPodV
     };
   });
 }
+
+export const validateName = (form: TForm, showError: (error: string) => void): boolean => {
+  if (!form.name.length) {
+    showError('"Name" must not be empty');
+    return false;
+  }
+  return true;
+};
+
+export const validateTechnicians = (form: TForm, showError: (error: string) => void): boolean => {
+  if (!form.technicians.length) {
+    showError('"Technicians" must not be empty');
+    return false;
+  }
+  return true;
+};
+
+export const validateMileage = (
+  state: ServiceBookState,
+  showError: (error: string) => void
+): boolean => {
+  let valid = true;
+
+  if (state.mileageFrom) {
+    if (!Number.isInteger(+state.mileageFrom)) {
+      showError('"Mileage From" must be a whole number');
+      valid = false;
+    }
+    if (+state.mileageFrom <= 0) {
+      showError('"Mileage From" must be a positive number');
+      valid = false;
+    }
+  }
+
+  if (state.mileageTo) {
+    if (!Number.isInteger(+state.mileageTo)) {
+      showError('"Mileage To" must be a whole number');
+      valid = false;
+    }
+    if (+state.mileageTo <= 0) {
+      showError('"Mileage To" must be a positive number');
+      valid = false;
+    }
+  }
+
+  if (state.mileageTo && state.mileageFrom && +state.mileageTo < +state.mileageFrom) {
+    showError('"Mileage To" must be more than the "Mileage From"');
+    valid = false;
+  }
+
+  return valid;
+};
+
+export const validateZones = (
+  state: ServiceBookState,
+  form: TForm,
+  showError: (error: string) => void
+): boolean => {
+  let valid = true;
+
+  if (state.mobileZones.length && state.selectedServiceValetZones.length && !form.isVisitCenter) {
+    showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
+    valid = false;
+  }
+
+  if (state.mobileZones.length && form.isVisitCenter && !state.selectedServiceValetZones.length) {
+    showError('Visit Center option can not be selected as Mobile Service zones were added');
+    valid = false;
+  }
+
+  if (state.mobileZones.length && state.selectedServiceValetZones.length && form.isVisitCenter) {
+    showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
+    showError('Visit Center option can not be selected as Mobile Service zones were added');
+    valid = false;
+  }
+
+  return valid;
+};
+
+export const hasMobileZones = (state: ServiceBookState): boolean => !!state.mobileZones.length;
+export const hasServiceValetZones = (state: ServiceBookState): boolean =>
+  !!state.selectedServiceValetZones.length;
+export const isVisitCenterSelected = (form: TForm): boolean => form.isVisitCenter;

@@ -34,6 +34,10 @@ import {
   mapAppointmentTypeOption,
   mapJobTypeOption,
   mapSelectedItems,
+  validateMileage,
+  validateName,
+  validateTechnicians,
+  validateZones,
 } from './helper';
 import { useLoadSCData } from './useLoadSCData';
 
@@ -136,40 +140,15 @@ export const ServiceBookModal: React.FC<
 
   const checkIsValid = (): boolean => {
     setFormIsChecked(true);
-    let isValid = true;
-    if (!form.name.length) {
-      isValid = false;
-      showError('"Name" must not be empty');
-    }
-    if (!form.technicians.length) {
-      isValid = false;
-      showError('"Technicians" must not be empty');
-    }
-    if (state.mileageFrom) {
-      if (!Number.isInteger(+state.mileageFrom)) {
-        isValid = false;
-        showError('"Mileage From" must be a whole number');
-      }
-      if (+state.mileageFrom <= 0) {
-        isValid = false;
-        showError('"Mileage From" must be a positive number');
-      }
-    }
-    if (state.mileageTo) {
-      if (!Number.isInteger(+state.mileageTo)) {
-        isValid = false;
-        showError('"Mileage To" must be a whole number');
-      }
-      if (+state.mileageTo <= 0) {
-        isValid = false;
-        showError('"Mileage To" must be a positive number');
-      }
-    }
-    if (state.mileageTo && state.mileageFrom && +state.mileageTo < +state.mileageFrom) {
-      isValid = false;
-      showError('"Mileage To" must be more than the "Mileage From"');
-    }
-    return isValid;
+
+    const results = [
+      validateName(form, showError),
+      validateTechnicians(form, showError),
+      validateMileage(state, showError),
+      validateZones(state, form, showError),
+    ];
+
+    return results.every(Boolean);
   };
 
   const handleSave = async () => {
@@ -256,6 +235,7 @@ export const ServiceBookModal: React.FC<
               form={form}
               setForm={setForm}
               setFormIsChecked={setFormIsChecked}
+              formIsChecked={formIsChecked}
               loading={loading}
               state={state}
               setState={setState}

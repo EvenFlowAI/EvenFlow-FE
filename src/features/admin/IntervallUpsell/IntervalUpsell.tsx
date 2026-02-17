@@ -119,6 +119,13 @@ export const IntervalUpsell = () => {
     }
   }, [selectedSC, dispatch, upsellPageData, upsellOrdering]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      dispatch(setUpsellFilter({ searchTerm: '' }));
+    };
+  }, []);
+
   const actions = (el: IUpsellServiceRequest) => {
     return (
       <IconButton onClick={handleOpenMenu(el)} size="large">

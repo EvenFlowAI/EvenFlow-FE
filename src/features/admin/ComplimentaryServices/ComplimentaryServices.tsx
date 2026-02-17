@@ -83,6 +83,13 @@ export const ComplimentaryServices = () => {
     }
   }, [selectedSC]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      dispatch(setComplimentarySearchTerm(''));
+    };
+  }, []);
+
   const handleAddManuallyClose = () => {
     setEditedItem(undefined);
     onAddManuallyClose();

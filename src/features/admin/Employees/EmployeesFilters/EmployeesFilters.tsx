@@ -49,6 +49,15 @@ const EmployeesFilters = () => {
     setSelectedRole(filters.role ?? '');
   }, [filters]);
 
+  // clear the search term when navigating to another page
+  useEffect(() => {
+    return () => {
+      setSelectedRole('');
+      dispatch(setEmployeeFilters({ role: '' }));
+      dispatch(setEmplSearch(''));
+    };
+  }, []);
+
   const handleSelectRole = (e: SelectChangeEvent<string>) => {
     dispatch(setEmployeeFilters({ role: e.target.value }));
     changePage(null, 0);
