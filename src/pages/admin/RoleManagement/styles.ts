@@ -14,7 +14,7 @@ export const useStyles = makeStyles()({
   details: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '6px',
   },
   text: {
     margin: 0,

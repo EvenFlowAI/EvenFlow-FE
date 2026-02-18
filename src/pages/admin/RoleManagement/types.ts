@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 export enum UserStatus {
   Active = 0,
   Inactive = 1,
@@ -54,9 +56,20 @@ export const mockData: IUserAccount[] = [
     status: UserStatus.Active,
     dealerships: [
       {
-        id: 13,
+        id: 523463,
         name: 'EvenFlow Dealert',
-        serviceCenters: [{ id: 55, name: 'Dominion', position: '' }],
+        serviceCenters: [
+          { id: 23678, name: 'Dominion', position: '' },
+          { id: 5436, name: 'Denver', position: '' },
+        ],
+      },
+      {
+        id: 7745,
+        name: 'EvenFlow Tekion',
+        serviceCenters: [
+          { id: 52362, name: 'Ternopil', position: '' },
+          { id: 645363, name: 'Tenerife', position: '' },
+        ],
       },
     ],
   },
@@ -73,9 +86,9 @@ export const mockData: IUserAccount[] = [
     status: UserStatus.Active,
     dealerships: [
       {
-        id: 13,
+        id: 23623623,
         name: 'EvenFlow Dealert',
-        serviceCenters: [{ id: 55, name: 'Dominion', position: '' }],
+        serviceCenters: [{ id: 235262, name: 'Dominion', position: '' }],
       },
     ],
   },
@@ -92,9 +105,9 @@ export const mockData: IUserAccount[] = [
     status: UserStatus.Active,
     dealerships: [
       {
-        id: 13,
+        id: 252462,
         name: 'EvenFlow Dealert',
-        serviceCenters: [{ id: 55, name: 'Dominion', dmsId: '', position: '' }],
+        serviceCenters: [{ id: 6262, name: 'Dominion', dmsId: '', position: '' }],
       },
     ],
   },
@@ -112,11 +125,11 @@ export const mockData: IUserAccount[] = [
     status: UserStatus.Active,
     dealerships: [
       {
-        id: 13,
+        id: 5252,
         name: 'EvenFlow Dealert',
         serviceCenters: [
           {
-            id: 55,
+            id: 673473,
             name: 'Dominion',
             dmsId: '997304',
             position: '',
@@ -141,17 +154,273 @@ export const mockData: IUserAccount[] = [
     status: UserStatus.Active,
     dealerships: [
       {
-        id: 13,
+        id: 5436363,
         name: 'EvenFlow Dealert',
         serviceCenters: [
           {
-            id: 55,
+            id: 63463,
             name: 'Dominion',
             dmsId: '997313',
             position: '',
             type: 0,
           },
         ],
+      },
+    ],
+  },
+  {
+    id: 'u6',
+    firstName: 'Lydia',
+    lastName: 'Hein',
+    fullName: 'Lydia Hein',
+    userName: 'lydia.hein@example.com',
+    email: 'lydia.hein@example.com',
+    role: 'Service Director',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 634634,
+        name: 'Performance Steven Motors',
+        serviceCenters: [
+          { id: 5345673, name: 'Steven Motors RGB', position: '' },
+          { id: 53467234, name: 'Steven Toyota', position: '' },
+        ],
+      },
+      {
+        id: 7542345,
+        name: 'Brandon Steven Motors',
+        serviceCenters: [
+          { id: 634737, name: 'Brandon Center 1', position: '' },
+          { id: 6745745, name: 'Brandon Center 2', position: '' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'u7',
+    firstName: 'Eric',
+    lastName: 'Young',
+    fullName: 'Eric Young',
+    userName: 'eric.young@example.com',
+    email: 'eric.young@example.com',
+    role: 'Advisor',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 34634634,
+        name: 'Global Motors',
+        serviceCenters: [
+          { id: 63463, name: 'Global Kyiv', position: '' },
+          { id: 20736736736, name: 'Global Lviv', position: '' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'u85151',
+    firstName: 'Anna',
+    lastName: 'Kovalenko',
+    fullName: 'Anna Kovalenko',
+    userName: 'anna.kovalenko@example.com',
+    email: 'anna.kovalenko@example.com',
+    role: 'Technician',
+    emailConfirmed: false,
+    avatarPath: '',
+    status: UserStatus.Inactive,
+    dealerships: [
+      {
+        id: 643634,
+        name: 'Mercedes-Benz',
+        serviceCenters: [{ id: 207, name: 'Mercedes Kharkiv', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'u951',
+    firstName: 'Dmytro',
+    lastName: 'Shevchenko',
+    fullName: 'Dmytro Shevchenko',
+    userName: 'dmytro.shevchenko@example.com',
+    email: 'dmytro.shevchenko@example.com',
+    role: 'Advisor',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 634636,
+        name: 'Ford Ukraine',
+        serviceCenters: [{ id: 25223, name: 'Ford Dnipro', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'u10654654',
+    firstName: 'Olena',
+    lastName: 'Bondar',
+    fullName: 'Olena Bondar',
+    userName: 'olena.bondar@example.com',
+    email: 'olena.bondar@example.com',
+    role: 'Technician',
+    emailConfirmed: false,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 53453453,
+        name: 'Audi Group',
+        serviceCenters: [{ id: 209, name: 'Audi Kyiv', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'u11636123',
+    firstName: 'Taras',
+    lastName: 'Melnyk',
+    fullName: 'Taras Melnyk',
+    userName: 'taras.melnyk@example.com',
+    email: 'taras.melnyk@example.com',
+    role: 'Advisor',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Removed,
+    dealerships: [
+      {
+        id: 543634,
+        name: 'Renault Ukraine',
+        serviceCenters: [{ id: 5345346, name: 'Renault Lviv', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'uвіфвф6',
+    firstName: 'Lydia',
+    lastName: 'Hein',
+    fullName: 'Lydia Hein',
+    userName: 'lydia.hein@example.com',
+    email: 'lydia.hein@example.com',
+    role: 'Service Director',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 223523520,
+        name: 'Performance Steven Motors',
+        serviceCenters: [
+          { id: 523673, name: 'Steven Motors RGB', position: '' },
+          { id: 20453452, name: 'Steven Toyota', position: '' },
+        ],
+      },
+      {
+        id: 63463463,
+        name: 'Brandon Steven Motors',
+        serviceCenters: [
+          { id: 206346345633, name: 'Brandon Center 1', position: '' },
+          { id: 52352356, name: 'Brandon Center 2', position: '' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'u741241',
+    firstName: 'Eric',
+    lastName: 'Young',
+    fullName: 'Eric Young',
+    userName: 'eric.young@example.com',
+    email: 'eric.young@example.com',
+    role: 'Advisor',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 4523523,
+        name: 'Global Motors',
+        serviceCenters: [
+          { id: 53256, name: 'Global Kyiv', position: '' },
+          { id: 2023452366, name: 'Global Lviv', position: '' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'u318',
+    firstName: 'Anna',
+    lastName: 'Kovalenko',
+    fullName: 'Anna Kovalenko',
+    userName: 'anna.kovalenko@example.com',
+    email: 'anna.kovalenko@example.com',
+    role: 'Technician',
+    emailConfirmed: false,
+    avatarPath: '',
+    status: UserStatus.Inactive,
+    dealerships: [
+      {
+        id: 347,
+        name: 'Mercedes-Benz',
+        serviceCenters: [{ id: 207, name: 'Mercedes Kharkiv', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'u9',
+    firstName: 'Dmytro',
+    lastName: 'Shevchenko',
+    fullName: 'Dmytro Shevchenko',
+    userName: 'dmytro.shevchenko@example.com',
+    email: 'dmytro.shevchenko@example.com',
+    role: 'Advisor',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 26436344,
+        name: 'Ford Ukraine',
+        serviceCenters: [{ id: 208, name: 'Ford Dnipro', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'u1534530',
+    firstName: 'Olena',
+    lastName: 'Bondar',
+    fullName: 'Olena Bondar',
+    userName: 'olena.bondar@example.com',
+    email: 'olena.bondar@example.com',
+    role: 'Technician',
+    emailConfirmed: false,
+    avatarPath: '',
+    status: UserStatus.Active,
+    dealerships: [
+      {
+        id: 64534,
+        name: 'Audi Group',
+        serviceCenters: [{ id: 209, name: 'Audi Kyiv', position: '' }],
+      },
+    ],
+  },
+  {
+    id: 'u11543543',
+    firstName: 'Paras',
+    lastName: 'Melnyk',
+    fullName: 'Taras Melnyk',
+    userName: 'taras.melnyk@example.com',
+    email: 'taras.melnyk@example.com',
+    role: 'Advisor',
+    emailConfirmed: true,
+    avatarPath: '',
+    status: UserStatus.Removed,
+    dealerships: [
+      {
+        id: 43413431,
+        name: 'Renault Ukraine',
+        serviceCenters: [{ id: 210, name: 'Renault Lviv', position: '' }],
       },
     ],
   },

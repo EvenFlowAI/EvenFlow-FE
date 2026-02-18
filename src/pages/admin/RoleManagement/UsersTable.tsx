@@ -15,31 +15,36 @@ interface UsersTableProps {
 const UsersTable = ({ data, isLoading }: UsersTableProps) => {
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 10 });
-  const [order, setOrder] = useState<IOrder<IUserAccount>>({ orderBy: 'name', isAscending: true });
+  const [order, setOrder] = useState<IOrder<IUserAccount>>({
+    orderBy: 'fullName',
+    isAscending: true,
+  });
   const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
   const [editedItem, setEditedItem] = useState<IUserAccount | null>(null);
 
   useEffect(() => {
+    const sortedData = [...data];
+
+    if (order.orderBy) {
+      const orderBy = order.orderBy as keyof IUserAccount;
+
+      sortedData.sort((a, b) => {
+        const aVal = String(a[orderBy] ?? '');
+        const bVal = String(b[orderBy] ?? '');
+        if (aVal < bVal) return order.isAscending ? -1 : 1;
+        if (aVal > bVal) return order.isAscending ? 1 : -1;
+        return 0;
+      });
+    }
+
     const start = pageData.pageIndex * pageData.pageSize;
     const end = start + pageData.pageSize;
-    let pageSlice = data.slice(start, end);
 
-    if (!order.orderBy) return;
-    const orderBy = order.orderBy as keyof IUserAccount;
-
-    pageSlice = [...pageSlice].sort((a, b) => {
-      const aVal = a[orderBy] ?? '';
-      const bVal = b[orderBy] ?? '';
-      if (aVal < bVal) return order.isAscending ? -1 : 1;
-      if (aVal > bVal) return order.isAscending ? 1 : -1;
-      return 0;
-    });
-
-    setVisibleData(pageSlice);
+    setVisibleData(sortedData.slice(start, end));
   }, [data, pageData, order]);
 
   const rowData: TableRowDataType<IUserAccount>[] = [
-    { val: el => el.fullName, header: 'Name', orderId: 'name' },
+    { val: el => el.fullName, header: 'Name', orderId: 'fullName' },
     {
       val: el => <RenderDealershipsAccordion dealerships={el.dealerships} isSc={false} />,
       header: 'Dealership Group',
@@ -63,20 +68,6 @@ const UsersTable = ({ data, isLoading }: UsersTableProps) => {
 
   const handleSort = (newOrder: IOrder<IUserAccount>) => () => {
     setOrder(newOrder);
-
-    if (!newOrder.orderBy) return;
-
-    const orderBy = newOrder.orderBy as keyof IUserAccount;
-
-    const sortedData = [...visibleData].sort((a, b) => {
-      const aVal = a[orderBy] ?? '';
-      const bVal = b[orderBy] ?? '';
-      if (aVal < bVal) return newOrder.isAscending ? -1 : 1;
-      if (aVal > bVal) return newOrder.isAscending ? 1 : -1;
-      return 0;
-    });
-
-    setVisibleData(sortedData);
   };
 
   const closeMenu = () => {
