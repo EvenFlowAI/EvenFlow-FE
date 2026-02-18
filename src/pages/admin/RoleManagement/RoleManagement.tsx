@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { Titles } from '../../../types/types';
 import { applicationRoot } from '../../../utils/constants';
@@ -10,18 +10,24 @@ import { AddUserAccount } from '../../../components/modals/admin/AddUserAccount/
 import { loadAll as loadDealershipsGroup } from '../../../store/reducers/dealershipGroups/actions';
 import { loadAll as loadServiceCentersGroup } from '../../../store/reducers/serviceCenters/actions';
 import { useDispatch } from 'react-redux';
+import { IUserAccount, mockData } from './types';
+import UsersTable from './UsersTable';
 
 const RoleManagement = () => {
   const { classes } = useStyles();
   const { onOpen, isOpen, onClose } = useModal();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<IUserAccount[]>(mockData);
+
   const dispatch = useDispatch();
-  const onClick = () => {
-    onOpen();
-  };
+  const onClick = () => onOpen();
 
   useEffect(() => {
     dispatch(loadDealershipsGroup(true));
     dispatch(loadServiceCentersGroup(true));
+    setIsLoading(false);
+    setData(mockData);
   }, []);
 
   return (
@@ -33,6 +39,7 @@ const RoleManagement = () => {
         </Button>
       </div>
       <Filters />
+      <UsersTable data={data} isLoading={isLoading} />
       <AddUserAccount open={isOpen} onClose={onClose} />
     </div>
   );
