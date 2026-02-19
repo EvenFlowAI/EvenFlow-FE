@@ -17,8 +17,9 @@ const RoleManagement = () => {
   const { classes } = useStyles();
   const { onOpen, isOpen, onClose } = useModal();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [originalData, setOriginalData] = useState<IUserAccount[]>(mockData);
   const [data, setData] = useState<IUserAccount[]>(mockData);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const onClick = () => onOpen();
@@ -27,6 +28,7 @@ const RoleManagement = () => {
     dispatch(loadDealershipsGroup(true));
     dispatch(loadServiceCentersGroup(true));
     setIsLoading(false);
+    setOriginalData(mockData);
     setData(mockData);
   }, []);
 
@@ -38,7 +40,7 @@ const RoleManagement = () => {
           Add user account
         </Button>
       </div>
-      <Filters />
+      <Filters setData={setData} originalData={originalData} />
       <UsersTable data={data} isLoading={isLoading} />
       <AddUserAccount open={isOpen} onClose={onClose} />
     </div>

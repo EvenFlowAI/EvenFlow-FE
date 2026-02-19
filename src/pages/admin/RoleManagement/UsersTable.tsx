@@ -52,10 +52,11 @@ const UsersTable = ({ data, isLoading }: UsersTableProps) => {
     {
       val: el => <RenderDealershipsAccordion dealerships={el.dealerships} isSc={true} />,
       header: 'Service Center',
+      width: 350,
     },
 
-    { val: el => el.role, header: 'Role', orderId: 'role' },
-    { val: el => statusLabels[el.status], header: 'Status', orderId: 'status' },
+    { val: el => el.role, header: 'Role', orderId: 'role', width: 150 },
+    { val: el => statusLabels[el.status], header: 'Status', orderId: 'status', width: 100 },
   ];
 
   const changePage = (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {

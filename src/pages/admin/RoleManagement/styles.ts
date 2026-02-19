@@ -4,7 +4,7 @@ export const useStyles = makeStyles()({
   buttonWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   root: {
     display: 'flex',

@@ -57,10 +57,10 @@ export const mockData: IUserAccount[] = [
     dealerships: [
       {
         id: 523463,
-        name: 'EvenFlow Dealert',
+        name: 'EvenFlow Dealert Test Length',
         serviceCenters: [
-          { id: 23678, name: 'Dominion', position: '' },
-          { id: 5436, name: 'Denver', position: '' },
+          { id: 23678, name: 'Dominion Service Center Test Length', position: '' },
+          { id: 5436, name: "Hennessy's River View Ford Main Service Drive", position: '' },
         ],
       },
       {
@@ -130,7 +130,7 @@ export const mockData: IUserAccount[] = [
         serviceCenters: [
           {
             id: 673473,
-            name: 'Dominion',
+            name: 'Dominion Test Service Center',
             dmsId: '997304',
             position: '',
             type: 0,
@@ -272,7 +272,7 @@ export const mockData: IUserAccount[] = [
     dealerships: [
       {
         id: 53453453,
-        name: 'Audi Group',
+        name: 'Audi Test',
         serviceCenters: [{ id: 209, name: 'Audi Kyiv', position: '' }],
       },
     ],
