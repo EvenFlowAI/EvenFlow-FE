@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from '../store/rootReducer';
 import { Action } from 'redux';
@@ -221,6 +223,19 @@ export enum Roles {
   EvenFlowAccountManager = 'EvenFlow Account Manager',
   EvenFlowSupport = 'EvenFlow Support',
   EvenFlowAIAgent = 'EvenFlow Agentic AI Configuration Agent',
+  DealerOwner = 'Dealer Owner',
+  ServiceDirector = 'Service Director',
+  ServiceManager = 'Service Manager',
+  BDCManager = 'BDC Manager',
+  BDCAgent = 'BDC Agent',
+  Advisor = 'Advisor',
+  Technician = 'Technician',
+  Staff = 'Staff',
+  Vendor = 'Vendor',
+  AIBookingAgent = 'AI Booking Agent',
+}
+
+export enum CleanestRoles {
   DealerOwner = 'Dealer Owner',
   ServiceDirector = 'Service Director',
   ServiceManager = 'Service Manager',

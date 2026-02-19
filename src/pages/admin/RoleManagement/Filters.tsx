@@ -4,42 +4,44 @@ import { TextField } from '../../../components/formControls/TextFieldStyled/Text
 import { EmptyMenuItem } from '../../../features/admin/Appointments/AppointmentFilters/styles';
 import { IDealership, IServiceCenter, IUserAccount, UserStatus } from './types';
 import { useLabelStyles } from '../../../hooks/styling/useLabelStyles';
-import { Roles } from '../../../types/types';
+import { CleanestRoles } from '../../../types/types';
 import { Search } from '@mui/icons-material';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/rootReducer';
 
 interface FiltersProps {
-  originalData: IUserAccount[];
   setData: React.Dispatch<React.SetStateAction<IUserAccount[]>>;
 }
 
 export interface IUserFilters {
-  role?: Roles;
+  role?: CleanestRoles;
   dealershipId?: string;
   serviceCenterId?: string;
   status?: UserStatus | null;
   searchTerm?: string;
 }
 
-const Filters = ({ setData, originalData }: FiltersProps) => {
+const Filters = ({ setData }: FiltersProps) => {
   const [dealerships, setDealerships] = useState<IDealership[]>([]);
   const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
   const [filters, setFilters] = useState<IUserFilters>({});
   const { classes } = useLabelStyles();
+  const { users } = useSelector((state: RootState) => state.roleManagement);
 
   useEffect(() => {
-    if (originalData && Array.isArray(originalData)) {
-      const allDealerships = originalData.flatMap(user => user.dealerships);
+    if (users && Array.isArray(users)) {
+      const allDealerships = users.flatMap(user => user.dealerships);
       setDealerships(allDealerships);
 
-      const allServiceCenters = originalData.flatMap(user =>
+      const allServiceCenters = users.flatMap(user =>
         user.dealerships.flatMap(d => d.serviceCenters ?? [])
       );
       setServiceCenters(allServiceCenters);
     }
-  }, [originalData]);
+  }, [users]);
 
   const applyFilters = (newFilters: IUserFilters) => {
-    let filtered = [...originalData];
+    let filtered = [...users];
 
     if (newFilters.dealershipId) {
       filtered = filtered.filter(user =>
@@ -95,7 +97,7 @@ const Filters = ({ setData, originalData }: FiltersProps) => {
     const selectedValue = event.target.value; // завжди string
     const newFilters = {
       ...filters,
-      role: selectedValue === '' ? undefined : (selectedValue as Roles),
+      role: selectedValue === '' ? undefined : (selectedValue as CleanestRoles),
     };
     setFilters(newFilters);
     applyFilters(newFilters);
@@ -180,7 +182,7 @@ const Filters = ({ setData, originalData }: FiltersProps) => {
           input={<TextField />}
         >
           <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-          {Object.values(Roles).map(role => (
+          {Object.values(CleanestRoles).map(role => (
             <MenuItem key={role} value={role}>
               {role}
             </MenuItem>

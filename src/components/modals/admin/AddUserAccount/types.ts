@@ -4,6 +4,7 @@ import { TOptionForUserAccountServiceCenters } from '../../../../types/types';
 import { TOption } from '../../../../utils/types';
 
 export type TUserAccountForm = {
+  avatarPath?: string;
   firstName: string;
   email: string;
   role: TRole | null;

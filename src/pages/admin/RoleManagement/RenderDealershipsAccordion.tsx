@@ -52,7 +52,7 @@ export const RenderDealershipsAccordion: React.FC<{
                     boxShadow: 'none',
                     backgroundColor: 'transparent',
                     '&::before': { display: 'none' },
-                    marginBottom: 0,
+                    margin: '0 0 6px 0 !important',
                   }}
                 >
                   <AccordionSummary

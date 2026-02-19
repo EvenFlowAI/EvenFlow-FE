@@ -113,7 +113,11 @@ const UsersTable = ({ data, isLoading }: UsersTableProps) => {
         order={order.orderBy}
         onSort={handleSort}
         isAscending={order.isAscending}
-        noDataTitle="No users were found. Please try changing the filters or search criteria"
+        noDataTitle={
+          !isLoading
+            ? 'No users were found. Please try changing the filters or search criteria'
+            : ''
+        }
         isLoading={isLoading}
         rowData={rowData}
         onChangePage={changePage}

@@ -87,6 +87,7 @@ export const StyledTableHead = styled(TableCell, {
 export const useStyles = makeStyles()(theme => ({
   root: {
     maxWidth: theme.breakpoints.values.lg,
+    marginBottom: '6px',
   },
   pagination: {
     flexShrink: 0,
