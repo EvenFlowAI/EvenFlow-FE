@@ -6,13 +6,17 @@ import { MoreHoriz } from '@mui/icons-material';
 import { TableAvatarAccounts } from '../../../components/wrappers/TableAvatar/TableAvatarAccounts';
 import { IOrder, TableRowDataType } from '../../../types/types';
 import { RenderDealershipsAccordion } from './RenderDealershipsAccordion';
+import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 
 interface UsersTableProps {
+  editedItem: TUserAccountForm | null;
+  setEditedItem: React.Dispatch<React.SetStateAction<TUserAccountForm | null>>;
   data: IUserAccount[];
   isLoading: boolean;
+  openEdit: () => void;
 }
 
-const UsersTable = ({ data, isLoading }: UsersTableProps) => {
+const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: UsersTableProps) => {
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 10 });
   const [order, setOrder] = useState<IOrder<IUserAccount>>({
@@ -20,7 +24,6 @@ const UsersTable = ({ data, isLoading }: UsersTableProps) => {
     isAscending: true,
   });
   const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
-  const [editedItem, setEditedItem] = useState<IUserAccount | null>(null);
 
   useEffect(() => {
     const sortedData = [...data];
@@ -77,7 +80,33 @@ const UsersTable = ({ data, isLoading }: UsersTableProps) => {
   };
 
   const openMenu = (el: IUserAccount) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setEditedItem(el);
+    setEditedItem({
+      avatarPath: el.avatarPath,
+      firstName: el.firstName,
+      email: el.email,
+      role: el.role,
+      lastName: el.lastName,
+      dealerships: el.dealerships.map(d => ({
+        name: d.name,
+        value: d.id,
+      })),
+      serviceCenters: el.dealerships.flatMap(d =>
+        d.serviceCenters.map(sc => ({
+          name: sc.name,
+          value: sc.id,
+          categoryName: d.name,
+          categoryId: d.id,
+          dmsId: sc.dmsId ?? null,
+          position: sc.position ?? '',
+          displayOnBookingTypes: sc.displayOnBookingTypes,
+          type: sc.type ?? null,
+          // решта полів можна залишити пустими або дефолтними
+          hourlyRate: '',
+          overtimeRate: '',
+          technicianLevel: undefined,
+        }))
+      ),
+    });
     setAnchorEl(e.currentTarget);
   };
 
@@ -94,7 +123,8 @@ const UsersTable = ({ data, isLoading }: UsersTableProps) => {
 
   const handleEdit = async () => {
     if (!editedItem) return;
-    console.log(editedItem);
+    setAnchorEl(null);
+    openEdit();
   };
 
   const handleResend = async () => {

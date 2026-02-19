@@ -14,17 +14,22 @@ import { IUserAccount } from './types';
 import UsersTable from './UsersTable';
 import { loadRoleUsers } from '../../../store/reducers/roleManagement/actions';
 import { RootState } from '../../../store/rootReducer';
+import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 
 const RoleManagement = () => {
   const { classes } = useStyles();
   const { onOpen, isOpen, onClose } = useModal();
   const { users } = useSelector((state: RootState) => state.roleManagement);
 
-  const [visibleData, serVisibleDate] = useState<IUserAccount[]>([]);
+  const [visibleData, setVisibleDate] = useState<IUserAccount[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [editedItem, setEditedItem] = useState<TUserAccountForm | null>(null);
 
   const dispatch = useDispatch();
-  const onClick = () => onOpen();
+  const onClick = () => {
+    console.log(editedItem);
+    onOpen();
+  };
 
   const onSuccess = () => {
     setIsLoading(false);
@@ -39,7 +44,7 @@ const RoleManagement = () => {
 
   useEffect(() => {
     if (users.length) {
-      serVisibleDate(users);
+      setVisibleDate(users);
     }
   }, [users]);
 
@@ -51,9 +56,15 @@ const RoleManagement = () => {
           Add user account
         </Button>
       </div>
-      <Filters setData={serVisibleDate} />
-      <UsersTable data={visibleData} isLoading={isLoading} />
-      <AddUserAccount open={isOpen} onClose={onClose} />
+      <Filters setData={setVisibleDate} />
+      <UsersTable
+        openEdit={onClick}
+        data={visibleData}
+        isLoading={isLoading}
+        setEditedItem={setEditedItem}
+        editedItem={editedItem}
+      />
+      <AddUserAccount open={isOpen} onClose={onClose} payload={editedItem} />
     </div>
   );
 };

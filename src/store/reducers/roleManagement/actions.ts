@@ -11,7 +11,7 @@ export const loadRoleUsers =
     // replace that to a real api call when it is ready, for now we just load data from JSON file with timeout to simulate loading time
     setTimeout(() => {
       try {
-        const users = packageJson;
+        const users = packageJson as IUserAccount[];
 
         console.log('Loaded users from package.json:', users);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
 import { Button } from '@mui/material';
 import { AvatarWrapper } from '../../../wrappers/AvatarWrapper/AvatarWrapper';
@@ -7,15 +7,20 @@ import { AddUserAccountForm } from './Forms/AddUserAccountForm';
 import { TUserAccountForm } from './types';
 import { initialUserAccountForm } from './data';
 import { DialogProps } from '../../BaseModal/types';
-import { IEmployee } from '../../../../store/reducers/employees/types';
 
 export const AddUserAccount: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEmployee>>>
+  React.PropsWithChildren<React.PropsWithChildren<DialogProps<TUserAccountForm | null>>>
 > = ({ payload, ...props }) => {
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [userForm, setUserForm] = useState<TUserAccountForm>(initialUserAccountForm);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | undefined>();
+
+  useEffect(() => {
+    if (payload) {
+      setUserForm(payload);
+    }
+  }, [payload]);
 
   const onClose = () => {
     setUserForm(initialUserAccountForm);

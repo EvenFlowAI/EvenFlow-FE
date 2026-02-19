@@ -1,5 +1,7 @@
 /* eslint-disable max-lines */
 
+import { TRole } from '../../../store/reducers/users/types';
+
 export enum UserStatus {
   Active = 0,
   Inactive = 1,
@@ -35,7 +37,7 @@ export interface IUserAccount {
   userName: string;
   email: string;
   phoneNumber?: string;
-  role: string;
+  role: TRole;
   emailConfirmed: boolean;
   avatarPath: string;
   status: UserStatus;
