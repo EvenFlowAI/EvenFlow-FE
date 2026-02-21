@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { InputBase as DefaultTextField } from '@mui/material';
+import { FormHelperText, InputBase as DefaultTextField } from '@mui/material';
 import theme from '../../../theme/theme';
 import { TextInputProps } from '../types';
 
@@ -36,6 +36,11 @@ export const TextField = forwardRef<unknown, TextInputProps>(
           {...props}
           style={{ marginBottom: spacing === 'normal' ? theme.spacing(2) : 0, ...props.style }}
         />
+        {props.helperText && props.formIsChecked && (
+          <FormHelperText style={{ fontSize: 14, color: '#F50057' }} error={props.error}>
+            {props.helperText}
+          </FormHelperText>
+        )}
       </>
     );
   }

@@ -87,8 +87,8 @@ export type TOptionForUserAccountServiceCenters = {
   position: string;
   displayOnBookingTypes?: EDisplayOnBookingType[];
   type?: EEmployeeType | null;
-  hourlyRate?: number | '';
-  overtimeRate?: number | '';
+  hourlyRate?: string | '';
+  overtimeRate?: string | '';
   technicianLevel?: TTechnicianLevel;
 };
 

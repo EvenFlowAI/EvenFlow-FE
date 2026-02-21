@@ -7,6 +7,14 @@ import { AddUserAccountForm } from './Forms/AddUserAccountForm';
 import { TUserAccountForm } from './types';
 import { initialUserAccountForm } from './data';
 import { DialogProps } from '../../BaseModal/types';
+import {
+  createRoleManagementUser,
+  updateRoleManagementUser,
+} from '../../../../store/reducers/users/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { INewUserAccount, IUserAccount } from '../../../../pages/admin/RoleManagement/types';
+import { RootState } from '../../../../store/rootReducer';
+import { TOption } from '../../../../utils/types';
 
 export const AddUserAccount: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<TUserAccountForm | null>>>
@@ -15,6 +23,8 @@ export const AddUserAccount: React.FC<
   const [userForm, setUserForm] = useState<TUserAccountForm>(initialUserAccountForm);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | undefined>();
+  const dispatch = useDispatch();
+  const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
 
   useEffect(() => {
     if (payload) {
@@ -24,14 +34,105 @@ export const AddUserAccount: React.FC<
 
   const onClose = () => {
     setUserForm(initialUserAccountForm);
+    setAvatar(undefined);
     setFormIsChecked(false);
+    setLoading(false);
     props.onClose();
   };
 
+  function getDealershipWithAccess(dealership: TOption, user: TUserAccountForm) {
+    // усі СЦ цього дилершипа
+    const allCentersForDealership = serviceCenters.filter(
+      sc => sc.dealershipId === dealership.value
+    );
+
+    // вибрані СЦ цього дилершипа
+    const selectedCentersForDealership = user.serviceCenters.filter(
+      sc => sc.categoryId === dealership.value
+    );
+
+    const hasFullAccess =
+      selectedCentersForDealership.length === allCentersForDealership.length &&
+      allCentersForDealership.length > 0;
+
+    return {
+      id: dealership.value,
+      name: dealership.name,
+      hasFullAccess,
+      serviceCenters: selectedCentersForDealership.map(sc => {
+        const isTechnician = user.role === 'Technician';
+        const hasDetails = Boolean(sc.hourlyRate) || Boolean(sc.overtimeRate) || isTechnician;
+
+        return {
+          id: sc.value,
+          name: sc.name,
+          dmsId: sc.dmsId ?? undefined,
+          type: sc.type ?? undefined,
+          ...(hasDetails && {
+            details: {
+              ...(sc.hourlyRate && { hourlyRate: sc.hourlyRate }),
+              ...(sc.overtimeRate && { overtimeRate: sc.overtimeRate }),
+              ...(isTechnician && {
+                skillLevel: sc.technicianLevel || 1,
+              }),
+            },
+          }),
+        };
+      }),
+    };
+  }
+
+  function mapUserBase(user: TUserAccountForm) {
+    return {
+      status: user.status || 0,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      fullName: `${user.firstName} ${user.lastName}`,
+      userName: user.email,
+      email: user.email,
+      role: user.role || 'EvenFlow Admin',
+      avatarPath: user.avatarPath ?? '',
+      dealerships: user.dealerships.map(d => getDealershipWithAccess(d, user)),
+    };
+  }
+
+  function mapUser(user: TUserAccountForm): INewUserAccount | IUserAccount {
+    const base = mapUserBase(user);
+
+    return user.id ? { ...base, id: user.id, emailConfirmed: user.emailConfirmed } : base;
+  }
+
   const handleCreate = async () => {
-    console.log('form', userForm);
-    console.log('avatar', avatar);
-    setLoading(false);
+    setFormIsChecked(true);
+    setLoading(true);
+
+    console.log(userForm);
+    const mappedUser = mapUser(userForm);
+
+    if (userForm.id) {
+      dispatch(
+        updateRoleManagementUser(
+          mappedUser as IUserAccount,
+          userForm.id,
+          onClose,
+          () => {
+            setLoading(false);
+          },
+          avatar
+        )
+      );
+    } else {
+      dispatch(
+        createRoleManagementUser(
+          mappedUser as INewUserAccount,
+          onClose,
+          () => {
+            setLoading(false);
+          },
+          avatar
+        )
+      );
+    }
   };
 
   return (

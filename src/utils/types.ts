@@ -30,6 +30,7 @@ export type TGroupedAppointments = {
 export type TOption = {
   value: number;
   name: string;
+  hasFullAccess?: boolean;
 };
 
 export type TTextParams = {

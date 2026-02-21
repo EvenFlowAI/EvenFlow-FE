@@ -26,8 +26,8 @@ const RoleManagement = () => {
   const [editedItem, setEditedItem] = useState<TUserAccountForm | null>(null);
 
   const dispatch = useDispatch();
-  const onClick = () => {
-    console.log(editedItem);
+  const onClick = (edit: boolean) => {
+    if (!edit) setEditedItem(null);
     onOpen();
   };
 
@@ -52,11 +52,11 @@ const RoleManagement = () => {
     <div className={classes.root}>
       <TitleContainer title={Titles.RoleManagement} parent={applicationRoot} pad />
       <div className={classes.buttonWrapper}>
-        <Button variant="contained" onClick={onClick} color="primary">
+        <Button variant="contained" onClick={() => onClick(false)} color="primary">
           Add user account
         </Button>
       </div>
-      <Filters setData={setVisibleDate} />
+      {!isLoading ? <Filters setData={setVisibleDate} /> : null}
       <UsersTable
         openEdit={onClick}
         data={visibleData}

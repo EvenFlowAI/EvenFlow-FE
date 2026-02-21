@@ -576,6 +576,7 @@ export class Api {
     },
     Users: {
       GetAll: { route: '/users/by-query', method: 'post' },
+      Get: { route: '/users', method: 'get' },
       Create: { route: '/users', method: 'post' },
       Remove: { route: '/users/{id}', method: 'delete' },
       Retrieve: { route: '/users/{id}', method: 'get' },

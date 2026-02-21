@@ -20,6 +20,7 @@ interface ServiceCenterSectionProps {
   sc: TOptionForUserAccountServiceCenters;
   form: TUserAccountForm;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
+  formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   employeeTypeOptions: TOption[];
   shortLoading: boolean;
@@ -30,6 +31,7 @@ export const ServiceCenterSection = ({
   form,
   setEmployeeForm,
   setFormIsChecked,
+  formIsChecked,
   employeeTypeOptions,
   shortLoading,
 }: ServiceCenterSectionProps) => {
@@ -154,6 +156,7 @@ export const ServiceCenterSection = ({
                   label: 'Type',
                   fullWidth: true,
                   placeholder: 'Select Type',
+                  error: formIsChecked && (sc.type === null || sc.type === undefined),
                 })}
               />
             </Grid>

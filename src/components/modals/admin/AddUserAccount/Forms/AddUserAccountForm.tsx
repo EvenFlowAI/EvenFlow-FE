@@ -13,7 +13,7 @@ import { TRole } from '../../../../../store/reducers/users/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import AddDealershipGroupForm from './AddDealershipGroupForm';
-import AddCategoryDropdown from './AddCategoryDropdown';
+import ServiceCenterCategoryDropdown from './ServiceCenterCategoryDropdown';
 import { ServiceCenterSection } from './ServiceCenterSection';
 
 type TTFormProps = {
@@ -27,6 +27,7 @@ export const AddUserAccountForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
 > = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form }) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
+  const { users } = useSelector((state: RootState) => state.roleManagement);
 
   const employeeTypeOptions: TOption[] = useMemo(
     () => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))),
@@ -52,6 +53,10 @@ export const AddUserAccountForm: React.FC<
       displayOnBookingTypes: value === 'Advisor' ? [] : [],
       serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
     }));
+  };
+
+  const emailExists = (value: string) => {
+    return users.some(user => user.email === value && user.id !== form.id);
   };
 
   return (
@@ -83,6 +88,7 @@ export const AddUserAccountForm: React.FC<
       <Grid item xs={12} sm={6}>
         <AddDealershipGroupForm
           form={form}
+          formIsChecked={formIsChecked}
           setEmployeeForm={setEmployeeForm}
           setFormIsChecked={setFormIsChecked}
         />
@@ -97,8 +103,9 @@ export const AddUserAccountForm: React.FC<
             label="Service Center"
           />
         ) : (
-          <AddCategoryDropdown
+          <ServiceCenterCategoryDropdown
             form={form}
+            formIsChecked={formIsChecked}
             setEmployeeForm={setEmployeeForm}
             setFormIsChecked={setFormIsChecked}
           />
@@ -112,9 +119,16 @@ export const AddUserAccountForm: React.FC<
           fullWidth
           placeholder="Type Email"
           value={form.email}
-          error={Boolean(form.email?.length) && !checkEmail(form.email) && formIsChecked}
+          error={
+            formIsChecked &&
+            (!form.email?.length || !checkEmail(form.email) || emailExists(form.email))
+          }
           onChange={handleChange}
           label="Email"
+          formIsChecked={formIsChecked}
+          helperText={
+            emailExists(form.email) ? 'A user with this email already exists in the system' : ''
+          }
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -139,6 +153,7 @@ export const AddUserAccountForm: React.FC<
         {form.serviceCenters?.map(sc => (
           <ServiceCenterSection
             key={sc.value}
+            formIsChecked={formIsChecked}
             sc={sc}
             form={form}
             setEmployeeForm={setEmployeeForm}

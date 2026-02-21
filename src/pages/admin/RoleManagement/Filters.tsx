@@ -30,13 +30,19 @@ const Filters = ({ setData }: FiltersProps) => {
 
   useEffect(() => {
     if (users && Array.isArray(users)) {
+      // Унікальні дилершипи
       const allDealerships = users.flatMap(user => user.dealerships);
-      setDealerships(allDealerships);
+      const uniqueDealerships = Array.from(new Map(allDealerships.map(d => [d.id, d])).values());
+      setDealerships(uniqueDealerships);
 
+      // Унікальні сервісні центри
       const allServiceCenters = users.flatMap(user =>
         user.dealerships.flatMap(d => d.serviceCenters ?? [])
       );
-      setServiceCenters(allServiceCenters);
+      const uniqueServiceCenters = Array.from(
+        new Map(allServiceCenters.map(sc => [sc.id, sc])).values()
+      );
+      setServiceCenters(uniqueServiceCenters);
     }
   }, [users]);
 
@@ -67,7 +73,7 @@ const Filters = ({ setData }: FiltersProps) => {
 
     if (newFilters.searchTerm && newFilters.searchTerm.trim() !== '') {
       const term = newFilters.searchTerm.toLowerCase();
-      filtered = filtered.filter(user => user.fullName.toLowerCase().includes(term));
+      filtered = filtered.filter(u => u.fullName.toLowerCase().includes(term.toLowerCase()));
     }
 
     setData(filtered);

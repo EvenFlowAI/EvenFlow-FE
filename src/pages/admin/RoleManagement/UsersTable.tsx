@@ -13,7 +13,7 @@ interface UsersTableProps {
   setEditedItem: React.Dispatch<React.SetStateAction<TUserAccountForm | null>>;
   data: IUserAccount[];
   isLoading: boolean;
-  openEdit: () => void;
+  openEdit: (edit: boolean) => void;
 }
 
 const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: UsersTableProps) => {
@@ -81,6 +81,9 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
 
   const openMenu = (el: IUserAccount) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setEditedItem({
+      id: el.id,
+      status: el.status,
+      emailConfirmed: el.emailConfirmed,
       avatarPath: el.avatarPath,
       firstName: el.firstName,
       email: el.email,
@@ -101,9 +104,9 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
           displayOnBookingTypes: sc.displayOnBookingTypes,
           type: sc.type ?? null,
           // решта полів можна залишити пустими або дефолтними
-          hourlyRate: '',
-          overtimeRate: '',
-          technicianLevel: undefined,
+          hourlyRate: sc.details?.hourlyRate,
+          overtimeRate: sc.details?.overtimeRate,
+          technicianLevel: sc.details?.skillLevel,
         }))
       ),
     });
@@ -124,7 +127,7 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   const handleEdit = async () => {
     if (!editedItem) return;
     setAnchorEl(null);
-    openEdit();
+    openEdit(true);
   };
 
   const handleResend = async () => {

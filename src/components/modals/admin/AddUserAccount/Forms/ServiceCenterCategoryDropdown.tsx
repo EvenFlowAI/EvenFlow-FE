@@ -13,6 +13,7 @@ import { useStyles } from './styles';
 interface CategoryDropdownProps {
   form: TUserAccountForm;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
+  formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -23,9 +24,10 @@ const makeDefaultServiceCenter = (option: TOptionForUserAccountServiceCenters) =
   position: '',
 });
 
-const AddCategoryDropdown = ({
+const ServiceCenterCategoryDropdown = ({
   form,
   setEmployeeForm,
+  formIsChecked,
   setFormIsChecked,
 }: CategoryDropdownProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
@@ -195,9 +197,10 @@ const AddCategoryDropdown = ({
       renderInput={autocompleteRender({
         label: 'Service center',
         placeholder: form.serviceCenters.length ? '' : 'Search Service center',
+        error: !form.serviceCenters.length && formIsChecked,
       })}
     />
   );
 };
 
-export default AddCategoryDropdown;
+export default ServiceCenterCategoryDropdown;

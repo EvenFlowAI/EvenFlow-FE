@@ -38,6 +38,8 @@ export const ServiceCenterSelector = () => {
     }
   };
 
+  // TODO: EF-7327
+
   const { classes } = useStyles();
   if (!scList || !scList.length) return null;
   if (!currentUser || currentUser.isSuperUser) return null;
