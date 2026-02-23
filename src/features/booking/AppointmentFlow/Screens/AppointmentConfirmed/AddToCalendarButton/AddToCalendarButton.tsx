@@ -172,7 +172,7 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
       {
         label: t('SERVICE REQUESTS'),
         content: servicesList
-          .map(item => (item.includes('Going') ? t('My Description Of Need') : item))
+          .map(item => (item?.includes('Going') ? t('My Description Of Need') : item))
           .join(', '),
       },
       {

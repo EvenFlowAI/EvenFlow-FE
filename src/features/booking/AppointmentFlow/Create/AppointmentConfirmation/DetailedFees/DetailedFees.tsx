@@ -93,7 +93,7 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
             ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
                 <li className={classes.item} key={item.requestName}>
                   <span>
-                    {item.requestName.includes('Going')
+                    {item.requestName?.includes('Going')
                       ? t('My Description of Needs')
                       : item.requestName}
                   </span>
@@ -111,7 +111,7 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
             : appointment?.serviceRequestPrices?.map(item => (
                 <li className={classes.item} key={item.requestName}>
                   <span>
-                    {item.requestName.includes('Going')
+                    {item.requestName?.includes('Going')
                       ? t('My Description of Needs')
                       : item.requestName}
                   </span>
