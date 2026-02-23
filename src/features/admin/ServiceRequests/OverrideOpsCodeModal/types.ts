@@ -1,4 +1,5 @@
 export type TForm = {
+  laborType: string;
   description: string;
   durationInHours: string;
   countOfTechnicians: string;

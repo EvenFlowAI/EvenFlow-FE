@@ -296,6 +296,7 @@ export interface IApiEndpoints {
     | 'GetShort'
     | 'Eligibility'
     | 'ChangePricingDisplayType'
+    | 'DefaultLaborTypes'
     | 'EditSkills'
     | 'Prioritize',
     TApiEndpoint

@@ -2,6 +2,7 @@ import { createAction } from '@reduxjs/toolkit';
 import { AppThunk, TArgCallback, TCallback } from '../../../types/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { ESettingType, IGeneralSetting } from './types';
+import { setLaborType } from '../serviceRequests/actions';
 
 export const getSettings = createAction<IGeneralSetting[]>('GeneralSettings/GetSettings');
 export const setSettingsLoading = createAction<boolean>('GeneralSettings/SetLoading');
@@ -17,6 +18,7 @@ export const loadGeneralSettings =
       .then(result => {
         if (result) {
           dispatch(getSettings(result.data));
+          if (result.data[0].data.laborType) dispatch(setLaborType(result.data[0].data.laborType));
         }
       })
       .catch(err => {
