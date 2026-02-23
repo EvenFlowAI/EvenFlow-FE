@@ -22,8 +22,11 @@ import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import { TOption } from '../../../../utils/types';
 import { EmptyMenuItem } from '../../Appointments/AppointmentFilters/styles';
+import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 const initialForm: TForm = {
+  laborType: '',
   description: '',
   durationInHours: '',
   countOfTechnicians: '',
@@ -46,6 +49,7 @@ export const OverrideOPsCodeModal: React.FC<
   const [form, setForm] = useState<TForm>(initialForm);
   const [isLoading, setLoading] = useState<boolean>(false);
   const showMessage = useMessage();
+  const { selectedSC } = useSCs();
   const showError = useException();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -82,6 +86,11 @@ export const OverrideOPsCodeModal: React.FC<
   const handleLevelChange = (e: SelectChangeEvent<number>) => {
     setForm({ ...form, skillLevelOfTechnicians: +e.target.value });
   };
+
+  const handleLaborTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) setForm({ ...form, laborType: e.target.value });
+  };
+
   const handleSave = async () => {
     if (!payload) {
       showError('Data is not loaded');
@@ -89,7 +98,7 @@ export const OverrideOPsCodeModal: React.FC<
       setLoading(true);
 
       try {
-        const { description, ...f } = form;
+        const { description, laborType, ...f } = form;
 
         const data: IServiceRequestOverrideEditRequest = {
           serviceRequestInfo: {
@@ -99,7 +108,9 @@ export const OverrideOPsCodeModal: React.FC<
               {} as Partial<IServiceRequestOverride>
             ),
           },
+          laborType,
         };
+
         await dispatch(
           updateAssignedServiceRequest(
             data,
@@ -123,7 +134,7 @@ export const OverrideOPsCodeModal: React.FC<
       <DialogTitle onClose={props.onClose}>Edit Op Code</DialogTitle>
       <DialogContent>
         <Grid container spacing={3} alignItems="flex-end">
-          <Grid item xs={12}>
+          <Grid item xs={selectedSC?.integration === SystemIntegrationType.Fortellis ? 6 : 12}>
             <TextField
               label="Op Code"
               disabled
@@ -131,6 +142,17 @@ export const OverrideOPsCodeModal: React.FC<
               value={payload?.serviceRequest.code || ''}
             />
           </Grid>
+          {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
+            <Grid item xs={6}>
+              <TextField
+                label="Labor Type"
+                placeholder="Labor Type"
+                onChange={handleLaborTypeChange}
+                fullWidth
+                value={payload?.laborType}
+              />
+            </Grid>
+          ) : null}
           <Grid item xs={12}>
             <TextField
               fullWidth

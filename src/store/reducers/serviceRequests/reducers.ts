@@ -40,6 +40,8 @@ import {
   setUpsellPageData,
   setRules,
   setFormIsChecked,
+  setLaborType,
+  setLaborTypeOption,
 } from './actions';
 import { defaultOrder } from '../../../config/config';
 import { TRuleState } from '../../../features/admin/Transportations/EditTransportationModal/helper';
@@ -59,6 +61,7 @@ type TState = {
   assignedPaging: IPagingResponse;
   assignedPageData: IPageRequest;
   assignedFilter: IServiceRequestNonAddedFilter;
+  laborType: string;
   urgentList: IAssignedServiceRequestShort[];
   urgentLoading: boolean;
   urgentPaging: IPagingResponse;
@@ -77,6 +80,7 @@ type TState = {
   upsellLoading: boolean;
   rules: TRuleState[];
   formIsChecked: boolean;
+  defaultLaborTypesOptions: string[];
 };
 const initialState: TState = {
   nonSelectedList: [],
@@ -93,6 +97,7 @@ const initialState: TState = {
   assignedOrdering: { ...defaultOrder },
   assignedPageData: { ...defaultPageData },
   assignedFilter: { searchTerm: '' },
+  laborType: '',
   urgentList: [],
   urgentLoading: false,
   urgentPaging: { ...defaultPaging },
@@ -111,6 +116,7 @@ const initialState: TState = {
   upsellLoading: false,
   rules: [],
   formIsChecked: false,
+  defaultLaborTypesOptions: [],
 };
 
 export const serviceRequestsReducer = createReducer(initialState, builder =>
@@ -148,6 +154,9 @@ export const serviceRequestsReducer = createReducer(initialState, builder =>
     })
     .addCase(setAssignedPaging, (state, { payload }) => {
       return { ...state, assignedPaging: payload };
+    })
+    .addCase(setLaborType, (state, { payload }) => {
+      return { ...state, laborType: payload };
     })
     .addCase(setAssignedPageData, (state, { payload }) => {
       return { ...state, assignedPageData: { ...state.assignedPageData, ...payload } };
@@ -215,5 +224,8 @@ export const serviceRequestsReducer = createReducer(initialState, builder =>
     })
     .addCase(setFormIsChecked, (state, { payload }) => {
       return { ...state, formIsChecked: payload };
+    })
+    .addCase(setLaborTypeOption, (state, { payload }) => {
+      return { ...state, defaultLaborTypesOptions: payload };
     })
 );
