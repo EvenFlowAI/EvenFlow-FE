@@ -137,7 +137,7 @@ export const AddUserAccount: React.FC<
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
-      <DialogTitle onClose={onClose}>Add User Account</DialogTitle>
+      <DialogTitle onClose={onClose}>{payload ? 'Edit' : 'Add'} User Account</DialogTitle>
       <DialogContent>
         <AvatarWrapper onChange={f => setAvatar(f)} dataUrl={payload?.avatarPath} />
         <AddUserAccountForm
