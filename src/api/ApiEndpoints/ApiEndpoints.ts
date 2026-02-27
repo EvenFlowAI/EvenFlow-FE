@@ -582,6 +582,7 @@ export class Api {
       Retrieve: { route: '/users/{id}', method: 'get' },
       Update: { route: '/users/{id}', method: 'put' },
       Avatar: { route: '/users/{id}/avatar', method: 'patch' },
+      Restore: { route: '/users/{id}/restore', method: 'patch' },
       GetShort: { route: '/users/short-by-query', method: 'post' },
     },
     Holidays: {

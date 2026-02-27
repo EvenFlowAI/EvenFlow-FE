@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { INewUserAccount, IUserAccount } from '../../../../pages/admin/RoleManagement/types';
 import { RootState } from '../../../../store/rootReducer';
 import { TOption } from '../../../../utils/types';
+import { setLoading as setTableLoading } from '../../../../store/reducers/roleManagement/actions';
 
 export const AddUserAccount: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<TUserAccountForm | null>>>
@@ -105,6 +106,7 @@ export const AddUserAccount: React.FC<
   const handleCreate = async () => {
     setFormIsChecked(true);
     setLoading(true);
+    dispatch(setTableLoading(true));
 
     console.log(userForm);
     const mappedUser = mapUser(userForm);

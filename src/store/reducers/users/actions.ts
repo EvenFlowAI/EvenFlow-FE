@@ -156,7 +156,6 @@ export const createRoleManagementUser =
   async dispatch => {
     try {
       const { data } = await Api.call(Api.endpoints.Users.Create, { data: payload });
-      console.log('DATAAAAAAAAAAAAAAA', data);
       if (avatar) {
         await dispatch(
           saveEmployeeAvatar(avatar, typeof data.data === 'string' ? data.data : data.id, onError)

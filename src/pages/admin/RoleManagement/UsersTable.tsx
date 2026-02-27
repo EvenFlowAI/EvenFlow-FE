@@ -7,6 +7,14 @@ import { TableAvatarAccounts } from '../../../components/wrappers/TableAvatar/Ta
 import { IOrder, TableRowDataType } from '../../../types/types';
 import { RenderDealershipsAccordion } from './RenderDealershipsAccordion';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
+import {
+  removeUser,
+  resendEmailForUser,
+  restoreUser,
+  setLoading,
+} from '../../../store/reducers/roleManagement/actions';
+import { useDispatch } from 'react-redux';
+import { useMessage } from '../../../hooks/useMessage/useMessage';
 
 interface UsersTableProps {
   editedItem: TUserAccountForm | null;
@@ -17,6 +25,8 @@ interface UsersTableProps {
 }
 
 const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: UsersTableProps) => {
+  const dispatch = useDispatch();
+  const showMessage = useMessage();
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 10 });
   const [order, setOrder] = useState<IOrder<IUserAccount>>({
@@ -119,9 +129,25 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
     </IconButton>
   );
 
+  const onSuccess = (message: string) => {
+    showMessage(message);
+    dispatch(setLoading(false));
+  };
+
   const handleRemove = async () => {
-    if (!editedItem) return;
-    console.log(editedItem);
+    dispatch(setLoading(true));
+    if (editedItem?.id) {
+      dispatch(removeUser(editedItem.id, onSuccess));
+      setAnchorEl(null);
+    }
+  };
+
+  const handleRestore = async () => {
+    dispatch(setLoading(true));
+    if (editedItem?.id) {
+      dispatch(restoreUser(editedItem.id, onSuccess));
+      setAnchorEl(null);
+    }
   };
 
   const handleEdit = async () => {
@@ -131,8 +157,11 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   };
 
   const handleResend = async () => {
-    if (!editedItem) return;
-    console.log(editedItem);
+    dispatch(setLoading(true));
+    if (editedItem?.id) {
+      dispatch(resendEmailForUser(editedItem.id, onSuccess));
+      setAnchorEl(null);
+    }
   };
 
   const startActions = (el: IUserAccount) => (
@@ -164,8 +193,12 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
       />
       <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleRemove}>Remove</MenuItem>
-        <MenuItem onClick={handleResend}>Resend</MenuItem>
+        {editedItem?.status === 1 || editedItem?.status === 0 ? (
+          <MenuItem onClick={handleRemove}>Remove</MenuItem>
+        ) : (
+          <MenuItem onClick={handleRestore}>Restore</MenuItem>
+        )}
+        {!editedItem?.emailConfirmed ? <MenuItem onClick={handleResend}>Resend</MenuItem> : null}
       </Menu>
     </>
   );

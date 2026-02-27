@@ -12,17 +12,15 @@ import { loadAll as loadServiceCentersGroup } from '../../../store/reducers/serv
 import { useDispatch, useSelector } from 'react-redux';
 import { IUserAccount } from './types';
 import UsersTable from './UsersTable';
-import { loadRoleUsers } from '../../../store/reducers/roleManagement/actions';
+import { loadRoleUsers, setLoading } from '../../../store/reducers/roleManagement/actions';
 import { RootState } from '../../../store/rootReducer';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 
 const RoleManagement = () => {
   const { classes } = useStyles();
   const { onOpen, isOpen, onClose } = useModal();
-  const { users } = useSelector((state: RootState) => state.roleManagement);
-
+  const { users, isLoading } = useSelector((state: RootState) => state.roleManagement);
   const [visibleData, setVisibleDate] = useState<IUserAccount[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [editedItem, setEditedItem] = useState<TUserAccountForm | null>(null);
 
   const dispatch = useDispatch();
@@ -32,13 +30,13 @@ const RoleManagement = () => {
   };
 
   const onSuccess = () => {
-    setIsLoading(false);
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
+    dispatch(setLoading(true));
     dispatch(loadDealershipsGroup(true));
     dispatch(loadServiceCentersGroup(true));
-    setIsLoading(true);
     dispatch(loadRoleUsers(onSuccess));
   }, []);
 

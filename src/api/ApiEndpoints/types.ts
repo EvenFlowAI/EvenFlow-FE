@@ -345,7 +345,15 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   Users: Record<
-    'GetAll' | 'Get' | 'Create' | 'Update' | 'Remove' | 'Retrieve' | 'Avatar' | 'GetShort',
+    | 'GetAll'
+    | 'Get'
+    | 'Create'
+    | 'Update'
+    | 'Remove'
+    | 'Retrieve'
+    | 'Avatar'
+    | 'Restore'
+    | 'GetShort',
     TApiEndpoint
   >;
   ValueSettings: Record<
