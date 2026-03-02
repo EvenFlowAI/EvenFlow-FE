@@ -22,6 +22,7 @@ export class Api {
       Verification: { route: '/accounts/verification', method: 'patch' },
       Profile: { route: '/accounts/profile', method: 'get' },
       Dealership: { route: '/accounts/dealership', method: 'get' },
+      AccessibleDealerships: { route: '/accounts/accessible-dealerships', method: 'get' },
       ResendEmail: { route: '/accounts/invitation-email', method: 'post' },
     },
     AncillaryPricing: {

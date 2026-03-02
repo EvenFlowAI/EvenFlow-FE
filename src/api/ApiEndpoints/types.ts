@@ -5,7 +5,14 @@ export type TApiEndpoint = {
 
 export interface IApiEndpoints {
   Accounts: Record<
-    'Recovery' | 'Reset' | 'Change' | 'Verification' | 'Profile' | 'Dealership' | 'ResendEmail',
+    | 'Recovery'
+    | 'Reset'
+    | 'Change'
+    | 'Verification'
+    | 'Profile'
+    | 'Dealership'
+    | 'AccessibleDealerships'
+    | 'ResendEmail',
     TApiEndpoint
   >;
   AncillaryPricing: Record<

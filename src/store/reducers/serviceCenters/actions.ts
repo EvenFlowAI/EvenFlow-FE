@@ -97,6 +97,7 @@ export const loadAll: ActionCreator<AppThunk> =
         { data: requestPayload }
       );
       dispatch(changePaging(paging));
+      console.log('result', result);
       dispatch(getAll(result));
       dispatch(loading(false));
     } catch (e) {

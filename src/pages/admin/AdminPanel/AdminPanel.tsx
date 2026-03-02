@@ -7,7 +7,10 @@ import { Toolbar } from '@mui/material';
 import { PrivateRoute } from '../../../routes/PrivateRoute/PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../../../store/reducers/users/actions';
-import { loadDealershipProfile } from '../../../store/reducers/dealershipGroups/actions';
+import {
+  getAccessibleDealerships,
+  loadDealershipProfile,
+} from '../../../store/reducers/dealershipGroups/actions';
 import { loadAllSCs } from '../../../store/reducers/serviceCenters/actions';
 import { getPodsShort, loadPodsShort } from '../../../store/reducers/pods/actions';
 import clsx from 'clsx';
@@ -48,6 +51,7 @@ export const AdminPanel = () => {
     dispatch(getCurrentUser());
     dispatch(loadDealershipProfile(onSuccess));
     dispatch(loadAllSCs());
+    dispatch(getAccessibleDealerships());
   }, [dispatch]);
 
   useEffect(() => {

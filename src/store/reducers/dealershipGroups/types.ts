@@ -1,4 +1,5 @@
 import { IPageRequest, IPagingResponse } from '../../../types/types';
+import { IDealership } from '../../../pages/admin/RoleManagement/types';
 
 export interface IDealershipGroupShort {
   id: number;
@@ -59,6 +60,10 @@ type Remove = { type: 'Dealership/Remove'; payload: number };
 type Profile = { type: 'Dealership/Profile'; payload: IDealershipProfile };
 type SetSearchTerm = { type: 'Dealership/SetSearchTerm'; payload: string };
 type SetSidebarColorHex = { type: 'Dealership/SetSidebarColorHex'; payload: string | undefined };
+type getAccessibleDealershipsForProfile = {
+  type: 'Dealership/AccessibleDealerships';
+  payload: IDealership[];
+};
 type SetCustomLogoPath = {
   type: 'Dealership/SetCustomLogoPath';
   payload: string | undefined;
@@ -75,7 +80,8 @@ export type DealershipActions =
   | ChangePageData
   | SetSearchTerm
   | SetSidebarColorHex
-  | SetCustomLogoPath;
+  | SetCustomLogoPath
+  | getAccessibleDealershipsForProfile;
 
 export type DealershipState = {
   dealershipList: IDealershipGroupExtended[];
@@ -87,4 +93,5 @@ export type DealershipState = {
   searchTerm: string;
   sidebarColorHex?: string; // 6-char hex without '#'
   customLogoPath?: string;
+  accessibleDealerships: IDealership[];
 };

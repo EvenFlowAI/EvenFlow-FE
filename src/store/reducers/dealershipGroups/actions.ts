@@ -18,6 +18,7 @@ import {
 import { RootState } from '../../rootReducer';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { DEFAULT_SIDEBAR_HEX } from '../../../utils/constants';
+import { IDealership } from '../../../pages/admin/RoleManagement/types';
 
 export const loading = (payload: boolean): DealershipActions => ({
   type: 'Dealership/Loading',
@@ -31,6 +32,11 @@ export const saving = (payload: boolean): DealershipActions => ({
 
 const getAll = (payload: IDealershipGroupExtended[]): DealershipActions => ({
   type: 'Dealership/GetAll',
+  payload,
+});
+
+const getAccessibleDealershipsForProfile = (payload: IDealership[]): DealershipActions => ({
+  type: 'Dealership/AccessibleDealerships',
   payload,
 });
 
@@ -266,3 +272,14 @@ export const updateLeftPanelColor =
         dispatch(saving(false));
       });
   };
+
+export const getAccessibleDealerships = (): AppThunk => async dispatch => {
+  try {
+    const response = await Api.call(Api.endpoints.Accounts.AccessibleDealerships);
+    if (response.data) {
+      dispatch(getAccessibleDealershipsForProfile(response.data.data));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
