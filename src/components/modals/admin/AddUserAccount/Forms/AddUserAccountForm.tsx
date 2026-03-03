@@ -33,6 +33,7 @@ export const AddUserAccountForm: React.FC<
     () => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))),
     []
   );
+
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
     target: { name, value },
   }) => {

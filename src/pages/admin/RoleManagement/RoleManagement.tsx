@@ -11,7 +11,7 @@ import { loadAll as loadDealershipsGroup } from '../../../store/reducers/dealers
 import { loadAll as loadServiceCentersGroup } from '../../../store/reducers/serviceCenters/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { IUserAccount } from './types';
-import UsersTable from './UsersTable';
+import UsersTableWrapper from './UsersTableWrapper';
 import { loadRoleUsers, setLoading } from '../../../store/reducers/roleManagement/actions';
 import { RootState } from '../../../store/rootReducer';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
@@ -19,13 +19,14 @@ import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccoun
 const RoleManagement = () => {
   const { classes } = useStyles();
   const { onOpen, isOpen, onClose } = useModal();
-  const { users, isLoading } = useSelector((state: RootState) => state.roleManagement);
+  const dispatch = useDispatch();
+
+  const { isLoading } = useSelector((state: RootState) => state.roleManagement);
   const [visibleData, setVisibleDate] = useState<IUserAccount[]>([]);
   const [editedItem, setEditedItem] = useState<TUserAccountForm | null>(null);
 
-  const dispatch = useDispatch();
-  const onClick = (edit: boolean) => {
-    if (!edit) setEditedItem(null);
+  const handleAddUserAccount = (isEdit: boolean) => {
+    if (!isEdit) setEditedItem(null);
     onOpen();
   };
 
@@ -40,23 +41,17 @@ const RoleManagement = () => {
     dispatch(loadRoleUsers(onSuccess));
   }, []);
 
-  useEffect(() => {
-    if (users.length) {
-      setVisibleDate(users);
-    }
-  }, [users]);
-
   return (
     <div className={classes.root}>
       <TitleContainer title={Titles.RoleManagement} parent={applicationRoot} pad />
       <div className={classes.buttonWrapper}>
-        <Button variant="contained" onClick={() => onClick(false)} color="primary">
+        <Button variant="contained" onClick={() => handleAddUserAccount(false)} color="primary">
           Add user account
         </Button>
       </div>
       {!isLoading ? <Filters setData={setVisibleDate} /> : null}
-      <UsersTable
-        openEdit={onClick}
+      <UsersTableWrapper
+        openEdit={handleAddUserAccount}
         data={visibleData}
         isLoading={isLoading}
         setEditedItem={setEditedItem}

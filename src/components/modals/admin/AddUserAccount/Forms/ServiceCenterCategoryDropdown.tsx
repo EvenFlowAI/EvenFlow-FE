@@ -17,7 +17,7 @@ interface CategoryDropdownProps {
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
 }
 
-// створюємо дефолтний об'єкт для нового сервісного центру
+// create a new default object for a new service center
 const makeDefaultServiceCenter = (option: TOptionForUserAccountServiceCenters) => ({
   ...option,
   dmsId: null,
@@ -35,7 +35,7 @@ const ServiceCenterCategoryDropdown = ({
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
 
   useEffect(() => {
-    // залишаємо тільки ті сервісні центри, які належать до актуальних дилершипів
+    // leave only those service centers that belong to current dealerships
     const validServiceCenters = (form.serviceCenters ?? []).filter(sc =>
       (form.dealerships ?? []).some(d => d.value === sc.categoryId)
     );
@@ -45,7 +45,7 @@ const ServiceCenterCategoryDropdown = ({
     }
   }, [form.dealerships]);
 
-  // формуємо список опцій
+  // forming option list
   const baseOptions = serviceCenters
     .filter(sc => (form.dealerships ?? []).some(d => d.value === sc.dealership.id))
     .map(sc => ({
@@ -56,7 +56,7 @@ const ServiceCenterCategoryDropdown = ({
       position: '',
     }));
 
-  // додаємо Select all для кожної категорії
+  // adding select to every category
   const categoryGroups = Array.from(new Set(baseOptions.map(o => o.categoryName)));
   const options: TOptionForUserAccountServiceCenters[] = categoryGroups
     .flatMap(cat => [
@@ -122,7 +122,7 @@ const ServiceCenterCategoryDropdown = ({
           <li
             {...props}
             key={`${option.name}-${option.value}`}
-            style={{ display: 'flex', alignItems: 'center' }}
+            style={{ display: 'flex', alignItems: 'center', height: '34px' }}
             onClick={() => onCheckboxChange(option)}
           >
             <Checkbox
@@ -138,7 +138,7 @@ const ServiceCenterCategoryDropdown = ({
               onClick={e => e.stopPropagation()}
               onChange={() => onCheckboxChange(option)}
             />
-            {option.name}
+            <span>{option.name}</span>
           </li>
         );
       },

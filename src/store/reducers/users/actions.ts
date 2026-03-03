@@ -7,7 +7,7 @@ import {
   setWelcomeScreenView,
 } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
-import { loadRoleUsers } from '../roleManagement/actions';
+import { getRoleUsers, loadRoleUsers } from '../roleManagement/actions';
 import { INewUserAccount, IUserAccount } from '../../../pages/admin/RoleManagement/types';
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
@@ -132,13 +132,15 @@ export const updateRoleManagementUser =
     onError: (err: any) => void,
     avatar?: File
   ): AppThunk =>
-  async dispatch => {
+  async (dispatch, getState) => {
+    const { users } = getState().roleManagement;
     try {
       await Api.call(Api.endpoints.Users.Update, { urlParams: { id }, data: payload });
       if (avatar) {
         await dispatch(saveEmployeeAvatar(avatar, id, onError));
       }
-      dispatch(loadRoleUsers(onSuccess));
+      dispatch(getRoleUsers(users.map(user => (user.id === id ? { ...user, ...payload } : user))));
+      onSuccess();
     } catch (e) {
       onError(e);
       console.log('updateUser', e);

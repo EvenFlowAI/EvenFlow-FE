@@ -37,17 +37,13 @@ export const ServiceCenterSelector = () => {
     setAnchorEl(null);
   };
   const handleChooseServiceCenter = (sc: IServiceCenter) => () => {
-    console.log('test');
     handleMenuClose();
     const selectedSc = fullSCList.find(s => s.id === sc.id);
-    console.log('selectedSc', selectedSc);
     if (selectedSc) selectSC(selectedSc);
     if (history.location.pathname.includes('reporting')) {
       setTimeout(() => window.location.reload(), 500);
     }
   };
-
-  // TODO: EF-7327
 
   const { classes } = useStyles();
   if (!scList || !scList.length) return null;
@@ -62,7 +58,6 @@ export const ServiceCenterSelector = () => {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
         {accessibleDealerships.map(dealership => (
           <React.Fragment key={dealership.id}>
-            {/* Категорія */}
             <MenuItem
               disabled
               sx={{
@@ -76,7 +71,6 @@ export const ServiceCenterSelector = () => {
               {dealership.name}
             </MenuItem>
 
-            {/* Сервіс центри */}
             {dealership.serviceCenters.map(sc => (
               <MenuItem
                 key={sc.id}

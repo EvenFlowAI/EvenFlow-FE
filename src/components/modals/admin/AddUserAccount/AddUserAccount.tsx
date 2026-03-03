@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BaseModal, DialogActions, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
 import { Button } from '@mui/material';
 import { AvatarWrapper } from '../../../wrappers/AvatarWrapper/AvatarWrapper';
@@ -26,6 +26,7 @@ export const AddUserAccount: React.FC<
   const [avatar, setAvatar] = useState<File | undefined>();
   const dispatch = useDispatch();
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
+  const { users } = useSelector((state: RootState) => state.roleManagement);
 
   useEffect(() => {
     if (payload) {
@@ -41,13 +42,17 @@ export const AddUserAccount: React.FC<
     props.onClose();
   };
 
+  const emailExists = (value: string) => {
+    return users.some(user => user.email === value && user.id !== userForm?.id);
+  };
+
   function getDealershipWithAccess(dealership: TOption, user: TUserAccountForm) {
-    // усі СЦ цього дилершипа
+    // all SC from this dealership
     const allCentersForDealership = serviceCenters.filter(
       sc => sc.dealershipId === dealership.value
     );
 
-    // вибрані СЦ цього дилершипа
+    // selected SC from this dealership
     const selectedCentersForDealership = user.serviceCenters.filter(
       sc => sc.categoryId === dealership.value
     );
@@ -99,18 +104,19 @@ export const AddUserAccount: React.FC<
 
   function mapUser(user: TUserAccountForm): INewUserAccount | IUserAccount {
     const base = mapUserBase(user);
-
     return user.id ? { ...base, id: user.id, emailConfirmed: user.emailConfirmed } : base;
   }
 
-  const handleCreate = async () => {
+  const handleCreateOrSave = async () => {
     setFormIsChecked(true);
+
+    if (emailExists(userForm.email)) {
+      return;
+    }
+
     setLoading(true);
-    dispatch(setTableLoading(true));
 
-    console.log(userForm);
     const mappedUser = mapUser(userForm);
-
     if (userForm.id) {
       dispatch(
         updateRoleManagementUser(
@@ -124,6 +130,8 @@ export const AddUserAccount: React.FC<
         )
       );
     } else {
+      dispatch(setTableLoading(true));
+
       dispatch(
         createRoleManagementUser(
           mappedUser as INewUserAccount,
@@ -136,6 +144,26 @@ export const AddUserAccount: React.FC<
       );
     }
   };
+
+  const isDisabledSave = useMemo(() => {
+    const noUserData =
+      !userForm.firstName.length ||
+      !userForm.lastName.length ||
+      !userForm.email.length ||
+      !userForm.role?.length;
+
+    const noDealerships = !userForm.dealerships || userForm.dealerships.length === 0;
+
+    const invalidServiceCenters = userForm.serviceCenters?.some(sc => {
+      if (userForm.role === 'Technician' || userForm.role === 'Advisor') {
+        return sc.type !== 0 && sc.type !== 1;
+      } else {
+        return false;
+      }
+    });
+
+    return noUserData || noDealerships || invalidServiceCenters;
+  }, [userForm]);
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
@@ -152,9 +180,10 @@ export const AddUserAccount: React.FC<
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <LoadingButton
+          disabled={isDisabledSave}
           loading={isLoading}
           color="primary"
-          onClick={handleCreate}
+          onClick={handleCreateOrSave}
           variant="contained"
         >
           Save

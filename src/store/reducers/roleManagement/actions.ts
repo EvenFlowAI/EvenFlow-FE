@@ -38,10 +38,11 @@ export const removeUser =
 
 export const restoreUser =
   (id: string, onSuccess: (message: string) => void): AppThunk =>
-  async dispatch => {
+  async (dispatch, getState) => {
     try {
+      const { users } = getState().roleManagement;
       await Api.call(Api.endpoints.Users.Restore, { urlParams: { id } });
-      dispatch(loadRoleUsers(() => {}));
+      dispatch(getRoleUsers(users.map(user => (user.id === id ? { ...user, status: 0 } : user))));
       onSuccess('Restore user successfully');
     } catch (err) {
       dispatch(setLoading(false));

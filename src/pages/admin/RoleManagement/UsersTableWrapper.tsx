@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { IUserAccount, statusLabels } from './types';
-import { AccountsTable } from '../../../components/tables/AccountsTable/AccountsTable';
+import { UsersTable } from '../../../components/tables/UsersTable/UsersTable';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { TableAvatarAccounts } from '../../../components/wrappers/TableAvatar/TableAvatarAccounts';
 import { IOrder, TableRowDataType } from '../../../types/types';
-import { RenderDealershipsAccordion } from './RenderDealershipsAccordion';
+import { RenderDealershipAndServiceAccordion } from './RenderDealershipAndServiceAccordion';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 import {
   removeUser,
@@ -15,6 +15,7 @@ import {
 } from '../../../store/reducers/roleManagement/actions';
 import { useDispatch } from 'react-redux';
 import { useMessage } from '../../../hooks/useMessage/useMessage';
+import { convertUserAccountToEditedItem } from './helper';
 
 interface UsersTableProps {
   editedItem: TUserAccountForm | null;
@@ -24,7 +25,13 @@ interface UsersTableProps {
   openEdit: (edit: boolean) => void;
 }
 
-const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: UsersTableProps) => {
+const UsersTableWrapper = ({
+  data,
+  isLoading,
+  setEditedItem,
+  editedItem,
+  openEdit,
+}: UsersTableProps) => {
   const dispatch = useDispatch();
   const showMessage = useMessage();
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
@@ -59,11 +66,12 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   const rowData: TableRowDataType<IUserAccount>[] = [
     { val: el => el.fullName, header: 'Name', orderId: 'fullName' },
     {
-      val: el => <RenderDealershipsAccordion dealerships={el.dealerships} isSc={false} />,
+      val: el => <RenderDealershipAndServiceAccordion dealerships={el.dealerships} isSc={false} />,
       header: 'Dealership Group',
+      width: 230,
     },
     {
-      val: el => <RenderDealershipsAccordion dealerships={el.dealerships} isSc={true} />,
+      val: el => <RenderDealershipAndServiceAccordion dealerships={el.dealerships} isSc={true} />,
       header: 'Service Center',
       width: 350,
     },
@@ -90,36 +98,7 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   };
 
   const openMenu = (el: IUserAccount) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    setEditedItem({
-      id: el.id,
-      status: el.status,
-      emailConfirmed: el.emailConfirmed,
-      avatarPath: el.avatarPath,
-      firstName: el.firstName,
-      email: el.email,
-      role: el.role,
-      lastName: el.lastName,
-      dealerships: el.dealerships.map(d => ({
-        name: d.name,
-        value: d.id,
-      })),
-      serviceCenters: el.dealerships.flatMap(d =>
-        d.serviceCenters.map(sc => ({
-          name: sc.name,
-          value: sc.id,
-          categoryName: d.name,
-          categoryId: d.id,
-          dmsId: sc.dmsId ?? null,
-          position: sc.position ?? '',
-          displayOnBookingTypes: sc.displayOnBookingTypes,
-          type: sc.type ?? null,
-          // решта полів можна залишити пустими або дефолтними
-          hourlyRate: sc.details?.hourlyRate,
-          overtimeRate: sc.details?.overtimeRate,
-          technicianLevel: sc.details?.skillLevel,
-        }))
-      ),
-    });
+    setEditedItem(convertUserAccountToEditedItem(el));
     setAnchorEl(e.currentTarget);
   };
 
@@ -135,15 +114,14 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   };
 
   const handleRemove = async () => {
-    dispatch(setLoading(true));
     if (editedItem?.id) {
+      dispatch(setLoading(true));
       dispatch(removeUser(editedItem.id, onSuccess));
       setAnchorEl(null);
     }
   };
 
   const handleRestore = async () => {
-    dispatch(setLoading(true));
     if (editedItem?.id) {
       dispatch(restoreUser(editedItem.id, onSuccess));
       setAnchorEl(null);
@@ -157,8 +135,8 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   };
 
   const handleResend = async () => {
-    dispatch(setLoading(true));
     if (editedItem?.id) {
+      dispatch(setLoading(true));
       dispatch(resendEmailForUser(editedItem.id, onSuccess));
       setAnchorEl(null);
     }
@@ -170,7 +148,7 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
 
   return (
     <>
-      <AccountsTable<IUserAccount>
+      <UsersTable<IUserAccount>
         data={visibleData}
         order={order.orderBy}
         onSort={handleSort}
@@ -204,4 +182,4 @@ const UsersTable = ({ data, isLoading, setEditedItem, editedItem, openEdit }: Us
   );
 };
 
-export default UsersTable;
+export default UsersTableWrapper;

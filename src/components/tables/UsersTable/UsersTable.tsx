@@ -15,7 +15,7 @@ import { Loading } from '../../wrappers/Loading/Loading';
 import { StyledTableCell, StyledTableHead, TStyleProps, useStyles } from './styles';
 import { ITableProps } from '../../../types/types';
 
-export function AccountsTable<U>({
+export function UsersTable<U>({
   changeRowsPerPageCb,
   changePageCb,
   ...props

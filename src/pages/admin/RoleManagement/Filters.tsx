@@ -8,6 +8,7 @@ import { CleanestRoles } from '../../../types/types';
 import { Search } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
+import { useStyles } from './styles';
 
 interface FiltersProps {
   setData: React.Dispatch<React.SetStateAction<IUserAccount[]>>;
@@ -26,16 +27,17 @@ const Filters = ({ setData }: FiltersProps) => {
   const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
   const [filters, setFilters] = useState<IUserFilters>({});
   const { classes } = useLabelStyles();
+  const { classes: componentClasses } = useStyles();
   const { users } = useSelector((state: RootState) => state.roleManagement);
 
   useEffect(() => {
     if (users && Array.isArray(users)) {
-      // Унікальні дилершипи
+      // Unique dealerships
       const allDealerships = users.flatMap(user => user.dealerships);
       const uniqueDealerships = Array.from(new Map(allDealerships.map(d => [d.id, d])).values());
       setDealerships(uniqueDealerships);
 
-      // Унікальні сервісні центри
+      // Unique service centers
       const allServiceCenters = users.flatMap(user =>
         user.dealerships.flatMap(d => d.serviceCenters ?? [])
       );
@@ -43,6 +45,7 @@ const Filters = ({ setData }: FiltersProps) => {
         new Map(allServiceCenters.map(sc => [sc.id, sc])).values()
       );
       setServiceCenters(uniqueServiceCenters);
+      applyFilters(filters);
     }
   }, [users]);
 
@@ -130,16 +133,8 @@ const Filters = ({ setData }: FiltersProps) => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        gap: 12,
-        marginBottom: 24,
-        flexWrap: 'wrap',
-        alignItems: 'flex-end',
-      }}
-    >
-      <div style={{ width: 180 }}>
+    <div className={componentClasses.filtersWrapper}>
+      <div className={componentClasses.filter}>
         <div className={classes.label}>Dealership Group</div>
         <Select
           fullWidth
@@ -158,7 +153,7 @@ const Filters = ({ setData }: FiltersProps) => {
         </Select>
       </div>
 
-      <div style={{ width: 180 }}>
+      <div className={componentClasses.filter}>
         <div className={classes.label}>Service Center</div>
         <Select
           fullWidth
@@ -196,7 +191,7 @@ const Filters = ({ setData }: FiltersProps) => {
         </Select>
       </div>
 
-      <div style={{ width: 180 }}>
+      <div className={componentClasses.filter}>
         <div className={classes.label}>Status</div>
         <Select
           fullWidth

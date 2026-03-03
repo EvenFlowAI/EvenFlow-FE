@@ -20,10 +20,13 @@ import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { Routes } from '../../../routes/constants';
 import { setGlobalLoader } from '../../../store/reducers/adminPanel/actions';
 import { RootState } from '../../../store/rootReducer';
+import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
+import { Roles } from '../../../types/types';
 
 export const AdminPanel = () => {
   const [navBarHeight, setNavBarHeight] = useState<number>(0);
   const { globalLoader } = useSelector((state: RootState) => state.adminPanel);
+  const currentUser = useCurrentUser();
 
   const { selectedSC } = useSCs();
   const { isOpened, onOpen, onClose } = useSideBar();
@@ -47,12 +50,18 @@ export const AdminPanel = () => {
 
   useEffect(() => {
     dispatch(setGlobalLoader(true));
-
     dispatch(getCurrentUser());
-    dispatch(loadDealershipProfile(onSuccess));
-    dispatch(loadAllSCs());
-    dispatch(getAccessibleDealerships());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentUser?.role && currentUser?.role !== Roles.EvenFlowAdmin) {
+      dispatch(loadDealershipProfile(onSuccess));
+    } else {
+      onSuccess();
+      dispatch(loadAllSCs());
+      dispatch(getAccessibleDealerships());
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (selectedSC) {

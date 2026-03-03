@@ -45,7 +45,7 @@ const AddDealershipGroupForm = ({
         const exists = current.some(o => o.value === option.value);
         next = exists ? current.filter(o => o.value !== option.value) : [...current, option];
 
-        // якщо всі вибрані вручну → додаємо всі
+        // if all selected - adding all
         if (next.length === allOptions.length) {
           next = [...allOptions];
         }
@@ -57,7 +57,7 @@ const AddDealershipGroupForm = ({
     [form.dealerships]
   );
 
-  const makeRenderDayOption = useCallback(
+  const makeRenderDealershipGroupOption = useCallback(
     () => (props: React.HTMLAttributes<HTMLLIElement>, option: TOption) => {
       const selected = form.dealerships ?? [];
       const checked =
@@ -69,8 +69,8 @@ const AddDealershipGroupForm = ({
         <li
           {...props}
           key={`${option.name}-${option.value}`}
-          style={{ display: 'flex', alignItems: 'center' }}
-          onClick={() => onCheckboxChange(option)} // додано
+          style={{ display: 'flex', alignItems: 'center', height: '34px' }}
+          onClick={() => onCheckboxChange(option)} // added
         >
           <Checkbox
             color="primary"
@@ -82,7 +82,7 @@ const AddDealershipGroupForm = ({
               )
             }
             checked={checked}
-            onClick={e => e.stopPropagation()} // щоб не дублювати вибір
+            onClick={e => e.stopPropagation()} // not duplicate select
             onChange={() => onCheckboxChange(option)}
           />
           {option.name}
@@ -94,7 +94,7 @@ const AddDealershipGroupForm = ({
 
   const handleSelectDealerships = (e: React.SyntheticEvent, val: TOption[]) => {
     setFormIsChecked(false);
-    // тут прибираємо Select all із value, щоб він не з'являвся як тег
+    // clean Select All from values
     const filtered = val.filter(o => o.name !== 'Select all');
     setEmployeeForm(prev => ({ ...prev, dealerships: filtered }));
   };
@@ -115,11 +115,11 @@ const AddDealershipGroupForm = ({
           padding: '0',
         },
       }}
-      renderOption={makeRenderDayOption()}
+      renderOption={makeRenderDealershipGroupOption()}
       value={form.dealerships}
       onChange={handleSelectDealerships}
       renderTags={(selected, getTagProps) =>
-        // показуємо тільки реальні елементи, без Select all
+        // show real elements, without Select All
         renderChipTagsForDealership(
           selected.filter(o => o.name !== 'Select all'),
           getTagProps

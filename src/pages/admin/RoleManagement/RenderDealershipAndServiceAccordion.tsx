@@ -4,7 +4,7 @@ import React from 'react';
 import { useStyles } from './styles';
 import { IDealership } from './types';
 
-export const RenderDealershipsAccordion: React.FC<{
+export const RenderDealershipAndServiceAccordion: React.FC<{
   dealerships: IDealership[];
   isSc: boolean;
 }> = ({ dealerships, isSc }) => {

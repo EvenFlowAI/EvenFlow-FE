@@ -20,4 +20,14 @@ export const useStyles = makeStyles()({
     margin: 0,
     fontSize: '16px',
   },
+  filtersWrapper: {
+    display: 'flex',
+    gap: 12,
+    marginBottom: 24,
+    flexWrap: 'wrap',
+    alignItems: 'flex-end',
+  },
+  filter: {
+    width: 180,
+  },
 });
