@@ -5,15 +5,19 @@ import { useHistory } from 'react-router-dom';
 import { useStyles } from './styles';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { IServiceCenter } from '../../../../pages/admin/RoleManagement/types';
+import { authService } from '../../../../api/AuthService/AuthService';
+import { loadAll } from '../../../../store/reducers/serviceCenters/actions';
+import { IServiceCenterExtended } from '../../../../store/reducers/serviceCenters/types';
 
 export const ServiceCenterSelector = () => {
   const { selectSC, selectedSC, scList } = useSCs();
   const currentUser = useCurrentUser();
   const history = useHistory();
   const { fullSCList } = useSelector((state: RootState) => state.serviceCenters);
+  const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null | undefined>(null);
   const { accessibleDealerships } = useSelector((state: RootState) => state.dealershipGroups);
@@ -25,10 +29,31 @@ export const ServiceCenterSelector = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  const handleChooseServiceCenter = (sc: IServiceCenter) => () => {
+
+  const applySelectedServiceCenter = (scId: number, data: IServiceCenterExtended[]) => {
+    const selectedSc = data?.find(s => s.id === scId);
+    if (selectedSc) {
+      selectSC(selectedSc);
+      window.location.reload();
+    }
+  };
+
+  const handleLoginToDealership = async (scId: number, dealershipId: number) => {
+    await authService.dealershipLogin(dealershipId ?? 0);
+    dispatch(
+      loadAll(true, (data: IServiceCenterExtended[]) => applySelectedServiceCenter(scId, data))
+    );
+  };
+
+  const handleChooseServiceCenter = (sc: IServiceCenter, dealershipId: number) => () => {
     handleMenuClose();
-    const selectedSc = fullSCList.find(s => s.id === sc.id);
-    if (selectedSc) selectSC(selectedSc);
+    const selectedScInMyDealership = fullSCList.find(s => s.id === sc.id);
+    if (selectedScInMyDealership) {
+      selectSC(selectedScInMyDealership);
+    } else {
+      // if we choose a service center from another dealership, do log in to this dealership
+      handleLoginToDealership(sc.id, dealershipId);
+    }
     if (history.location.pathname.includes('reporting')) {
       setTimeout(() => window.location.reload(), 500);
     }
@@ -62,7 +87,7 @@ export const ServiceCenterSelector = () => {
             {dealership.serviceCenters.map(sc => (
               <MenuItem
                 key={sc.id}
-                onClick={handleChooseServiceCenter(sc)}
+                onClick={handleChooseServiceCenter(sc, dealership.id)}
                 sx={{
                   pl: 4,
                   backgroundColor: selectedSC?.id === sc.id ? '#DADADA' : 'white',

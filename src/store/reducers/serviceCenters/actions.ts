@@ -66,7 +66,7 @@ export const changePageData: ActionCreator<ThunkAction<void, RootState, void, Ac
 };
 
 export const loadAll: ActionCreator<AppThunk> =
-  (withoutPaging: boolean = false) =>
+  (withoutPaging: boolean = false, onSuccess?: (data: IServiceCenterExtended[]) => void) =>
   async (dispatch, getState) => {
     dispatch(loading(true));
     const state = getState();
@@ -97,7 +97,7 @@ export const loadAll: ActionCreator<AppThunk> =
         { data: requestPayload }
       );
       dispatch(changePaging(paging));
-      console.log('result', result);
+      if (onSuccess) onSuccess(result);
       dispatch(getAll(result));
       dispatch(loading(false));
     } catch (e) {
