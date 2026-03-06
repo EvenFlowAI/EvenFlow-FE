@@ -11,6 +11,16 @@ export enum SystemType {
   Xtime = 'xtime',
 }
 
+export enum SystemIntegrationType {
+  Fortellis = 1,
+  Motive = 2,
+  DealerTrack = 4,
+  Reynolds = 8,
+  CDK = 16,
+  DealerBuilt = 32,
+  Dominion = 64,
+}
+
 export interface IServiceCenter {
   id: number;
   name: string;
@@ -32,6 +42,7 @@ export interface IServiceCenter {
   emailRequirement?: TEmailRequirement;
   packageSource: PackageSourceType;
   system?: SystemType;
+  integration?: number;
 }
 export interface IServiceCenterExtended extends IServiceCenter {
   countOfManagers: number;

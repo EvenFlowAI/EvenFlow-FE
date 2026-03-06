@@ -520,6 +520,7 @@ export class Api {
         route: '/service-requests/overrides/{id}/pricing-display-type',
         method: 'patch',
       },
+      DefaultLaborTypes: { route: '/labor-types', method: 'get' },
     },
     ServiceTypes: {
       Create: { route: '/service-type-options', method: 'post' },
