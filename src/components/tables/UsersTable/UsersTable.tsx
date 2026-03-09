@@ -10,10 +10,10 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { defaultRowsPerPage, defaultRowsPerPageOptions } from '../../../config/config';
 import { Loading } from '../../wrappers/Loading/Loading';
 import { StyledTableCell, StyledTableHead, TStyleProps, useStyles } from './styles';
 import { ITableProps } from '../../../types/types';
+import { usersRowsPerPage, usersRowsPerPageOptions } from '../../../config/config';
 
 export function UsersTable<U>({
   changeRowsPerPageCb,
@@ -21,7 +21,7 @@ export function UsersTable<U>({
   ...props
 }: ITableProps<U>): JSX.Element {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage);
+  const [rowsPerPage, setRowsPerPage] = React.useState(usersRowsPerPage);
 
   const { classes } = useStyles();
   const theme = useTheme();
@@ -178,7 +178,7 @@ export function UsersTable<U>({
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           rowsPerPage={nRowsPerPage}
-          rowsPerPageOptions={defaultRowsPerPageOptions}
+          rowsPerPageOptions={usersRowsPerPageOptions}
         />
       ) : null}
     </>

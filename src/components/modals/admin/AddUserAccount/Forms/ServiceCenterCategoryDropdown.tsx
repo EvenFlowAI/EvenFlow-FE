@@ -15,6 +15,7 @@ interface CategoryDropdownProps {
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
 }
 
 // create a new default object for a new service center
@@ -29,6 +30,7 @@ const ServiceCenterCategoryDropdown = ({
   setEmployeeForm,
   formIsChecked,
   setFormIsChecked,
+  setErrorForDmsId,
 }: CategoryDropdownProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
   const { classes } = useStyles();
@@ -97,6 +99,7 @@ const ServiceCenterCategoryDropdown = ({
 
       setEmployeeForm(prev => ({ ...prev, serviceCenters: next }));
       setFormIsChecked(false);
+      setErrorForDmsId(false);
     },
     [form.serviceCenters, baseOptions]
   );
@@ -147,6 +150,7 @@ const ServiceCenterCategoryDropdown = ({
 
   const handleChange = (e: React.SyntheticEvent, val: TOptionForUserAccountServiceCenters[]) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     const filtered = val.filter(o => o.name !== 'Select all');
     setEmployeeForm(prev => ({
       ...prev,

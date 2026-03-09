@@ -15,19 +15,33 @@ import { RootState } from '../../../../../store/rootReducer';
 import AddDealershipGroupForm from './AddDealershipGroupForm';
 import ServiceCenterCategoryDropdown from './ServiceCenterCategoryDropdown';
 import { ServiceCenterSection } from './ServiceCenterSection';
+import { Roles } from '../../../../../types/types';
 
 type TTFormProps = {
   form: TUserAccountForm;
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
+  errorForDmsId: boolean;
 };
 
 export const AddUserAccountForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
-> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form }) => {
+> = ({
+  setEmployeeForm,
+  setFormIsChecked,
+  setErrorForDmsId,
+  formIsChecked,
+  form,
+  errorForDmsId,
+}) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { users } = useSelector((state: RootState) => state.roleManagement);
+  const ERROR_MESSAGES = {
+    duplicateEmail: 'A user with this email already exists in the system',
+    duplicateDmsId: 'A user with this DMS ID already exists in the system',
+  };
 
   const employeeTypeOptions: TOption[] = useMemo(
     () => getOptions(Object.keys(EEmployeeType).filter(key => Number.isNaN(+key))),
@@ -38,6 +52,7 @@ export const AddUserAccountForm: React.FC<
     target: { name, value },
   }) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     if (name === 'phoneNumber') {
       value = validatePhoneNumber(value);
     }
@@ -46,12 +61,13 @@ export const AddUserAccountForm: React.FC<
 
   const handleRoleChange = (e: React.SyntheticEvent, value: string | null) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       role: value as TRole,
       dmsId: null,
       type: null,
-      displayOnBookingTypes: value === 'Advisor' ? [] : [],
+      displayOnBookingTypes: value === Roles.Advisor ? [] : [],
       serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
     }));
   };
@@ -92,6 +108,7 @@ export const AddUserAccountForm: React.FC<
           formIsChecked={formIsChecked}
           setEmployeeForm={setEmployeeForm}
           setFormIsChecked={setFormIsChecked}
+          setErrorForDmsId={setErrorForDmsId}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -108,6 +125,7 @@ export const AddUserAccountForm: React.FC<
             form={form}
             formIsChecked={formIsChecked}
             setEmployeeForm={setEmployeeForm}
+            setErrorForDmsId={setErrorForDmsId}
             setFormIsChecked={setFormIsChecked}
           />
         )}
@@ -127,9 +145,7 @@ export const AddUserAccountForm: React.FC<
           onChange={handleChange}
           label="Email"
           formIsChecked={formIsChecked}
-          helperText={
-            emailExists(form.email) ? 'A user with this email already exists in the system' : ''
-          }
+          helperText={emailExists(form.email) ? ERROR_MESSAGES.duplicateEmail : ''}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -143,9 +159,14 @@ export const AddUserAccountForm: React.FC<
             label: 'Role',
             fullWidth: true,
             placeholder: 'Select Role',
-            error: !form.role && formIsChecked,
+            error: formIsChecked && (!form.role || errorForDmsId),
           })}
         />
+        {errorForDmsId && (
+          <span style={{ fontSize: 14, color: 'red', display: 'block', marginTop: 3 }}>
+            {ERROR_MESSAGES.duplicateDmsId}
+          </span>
+        )}
       </Grid>
       <Grid item xs={12}>
         <Divider color="#DADADA" style={{ margin: '0 0 10px 0' }} />
@@ -153,6 +174,7 @@ export const AddUserAccountForm: React.FC<
       <Grid container spacing={3} style={{ marginLeft: 0 }}>
         {form.serviceCenters?.map(sc => (
           <ServiceCenterSection
+            setErrorForDmsId={setErrorForDmsId}
             key={sc.value}
             formIsChecked={formIsChecked}
             sc={sc}

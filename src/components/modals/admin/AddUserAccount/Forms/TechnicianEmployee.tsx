@@ -14,6 +14,7 @@ interface TechnicianEmployeeProps {
   form: TUserAccountForm;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
 }
 
@@ -22,10 +23,12 @@ const TechnicianEmployee = ({
   form,
   handleChange,
   setFormIsChecked,
+  setErrorForDmsId,
   setEmployeeForm,
 }: TechnicianEmployeeProps) => {
   const handleSwitchChange = (e: React.SyntheticEvent, newVal: number) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     if (newVal) {
       setEmployeeForm(prev => ({
         ...prev,

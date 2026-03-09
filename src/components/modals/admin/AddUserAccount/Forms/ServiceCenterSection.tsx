@@ -22,6 +22,7 @@ interface ServiceCenterSectionProps {
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
   employeeTypeOptions: TOption[];
   shortLoading: boolean;
 }
@@ -31,6 +32,7 @@ export const ServiceCenterSection = ({
   form,
   setEmployeeForm,
   setFormIsChecked,
+  setErrorForDmsId,
   formIsChecked,
   employeeTypeOptions,
   shortLoading,
@@ -53,6 +55,7 @@ export const ServiceCenterSection = ({
     target: { name, value },
   }) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       serviceCenters: prev.serviceCenters.map(el =>
@@ -68,6 +71,7 @@ export const ServiceCenterSection = ({
 
   const handleTypeChange = (e: React.SyntheticEvent<Element, Event>, value: TOption | null) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       serviceCenters: prev.serviceCenters.map(el =>
@@ -93,7 +97,7 @@ export const ServiceCenterSection = ({
             fontWeight: 'bold',
           }}
         >
-          <span>{sc.name}</span>
+          <span>{sc.name} Configuration</span>
           <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => setOpen(!open)}>
             {open ? (
               <span>
@@ -115,6 +119,7 @@ export const ServiceCenterSection = ({
             dmsAdvisors={dmsAdvisors}
             form={form}
             setEmployeeForm={setEmployeeForm}
+            setErrorForDmsId={setErrorForDmsId}
             setFormIsChecked={setFormIsChecked}
           />
           <Grid item xs={12} sm={6}>
@@ -133,11 +138,13 @@ export const ServiceCenterSection = ({
             setEmployeeForm={setEmployeeForm}
             form={form}
             handleChange={handleChange}
+            setErrorForDmsId={setErrorForDmsId}
             setFormIsChecked={setFormIsChecked}
           />
           <AdvisorEmployee
             sc={sc}
             form={form}
+            setErrorForDmsId={setErrorForDmsId}
             setFormIsChecked={setFormIsChecked}
             setEmployeeForm={setEmployeeForm}
           />

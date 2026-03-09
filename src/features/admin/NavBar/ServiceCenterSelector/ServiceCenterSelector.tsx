@@ -69,36 +69,46 @@ export const ServiceCenterSelector = () => {
         {selectedSC?.name}
       </Button>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-        {accessibleDealerships.map(dealership => (
-          <React.Fragment key={dealership.id}>
-            <MenuItem
-              disabled
-              sx={{
-                opacity: '1 !important',
-                fontWeight: 700,
-                cursor: 'default',
-                textTransform: 'uppercase',
-                color: '#252733',
-              }}
-            >
-              {dealership.name}
-            </MenuItem>
+        {accessibleDealerships.map(dealership => {
+          if (!dealership.serviceCenters.length) return null;
 
-            {dealership.serviceCenters.map(sc => (
-              <MenuItem
-                key={sc.id}
-                onClick={handleChooseServiceCenter(sc, dealership.id)}
-                sx={{
-                  pl: 4,
-                  backgroundColor: selectedSC?.id === sc.id ? '#DADADA' : 'white',
-                  '&:hover': { backgroundColor: selectedSC?.id !== sc.id ? '#F0F0F0' : '#DADADA' },
-                }}
-              >
-                {sc.name}
-              </MenuItem>
-            ))}
-          </React.Fragment>
-        ))}
+          const showDealershipName = accessibleDealerships.length > 1;
+
+          return (
+            <React.Fragment key={dealership.id}>
+              {showDealershipName && (
+                <MenuItem
+                  disabled
+                  sx={{
+                    opacity: '1 !important',
+                    fontWeight: 700,
+                    cursor: 'default',
+                    textTransform: 'uppercase',
+                    color: '#252733',
+                  }}
+                >
+                  {dealership.name}
+                </MenuItem>
+              )}
+
+              {dealership.serviceCenters.map(sc => (
+                <MenuItem
+                  key={sc.id}
+                  onClick={() => handleChooseServiceCenter(sc, dealership.id)}
+                  sx={{
+                    pl: showDealershipName ? 4 : 2,
+                    backgroundColor: selectedSC?.id === sc.id ? '#DADADA' : 'white',
+                    '&:hover': {
+                      backgroundColor: selectedSC?.id !== sc.id ? '#F0F0F0' : '#DADADA',
+                    },
+                  }}
+                >
+                  {sc.name}
+                </MenuItem>
+              ))}
+            </React.Fragment>
+          );
+        })}
       </Menu>
     </div>
   );

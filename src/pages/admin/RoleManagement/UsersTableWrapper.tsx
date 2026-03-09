@@ -35,12 +35,14 @@ const UsersTableWrapper = ({
   const dispatch = useDispatch();
   const showMessage = useMessage();
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
-  const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 10 });
+  const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
   const [order, setOrder] = useState<IOrder<IUserAccount>>({
     orderBy: 'fullName',
     isAscending: true,
   });
   const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
+  const emptySearchResultMessage =
+    'No users were found. Please try changing the filters or search criteria';
 
   useEffect(() => {
     const sortedData = [...data];
@@ -93,8 +95,11 @@ const UsersTableWrapper = ({
   };
 
   const closeMenu = () => {
-    setEditedItem(null);
     setAnchorEl(null);
+    // prevent all menu items blicking
+    setTimeout(() => {
+      setEditedItem(null);
+    }, 200);
   };
 
   const openMenu = (el: IUserAccount) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -153,11 +158,7 @@ const UsersTableWrapper = ({
         order={order.orderBy}
         onSort={handleSort}
         isAscending={order.isAscending}
-        noDataTitle={
-          !isLoading
-            ? 'No users were found. Please try changing the filters or search criteria'
-            : ''
-        }
+        noDataTitle={!isLoading ? emptySearchResultMessage : ''}
         isLoading={isLoading}
         rowData={rowData}
         onChangePage={changePage}

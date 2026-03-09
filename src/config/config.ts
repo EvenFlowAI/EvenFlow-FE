@@ -31,6 +31,8 @@ export const APIHost = apiHost;
 export const APIUrl = `${APIHost}/api/v0`;
 
 export const defaultRowsPerPageOptions = [10, 50, 100];
+export const usersRowsPerPageOptions = [25, 50, 100];
 export const defaultRowsPerPage = 10;
+export const usersRowsPerPage = 25;
 export const defaultOrder: IOrder = { isAscending: true };
 export const superUser: TRole = Roles.EvenFlowAdmin;

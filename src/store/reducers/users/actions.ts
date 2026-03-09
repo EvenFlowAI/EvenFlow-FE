@@ -141,8 +141,10 @@ export const updateRoleManagementUser =
       }
       dispatch(getRoleUsers(users.map(user => (user.id === id ? { ...user, ...payload } : user))));
       onSuccess();
-    } catch (e) {
-      onError(e);
+      // eslint-disable-next-line
+    } catch (e: any) {
+      const errorCode = e?.response?.data?.error?.errorCode;
+      onError(errorCode);
       console.log('updateUser', e);
     }
   };
@@ -164,8 +166,10 @@ export const createRoleManagementUser =
         );
       }
       dispatch(loadRoleUsers(onSuccess));
-    } catch (e) {
-      onError(e);
+      // eslint-disable-next-line
+    } catch (e: any) {
+      const errorCode = e?.response?.data?.error?.errorCode;
+      onError(errorCode);
       console.log('updateUser', e);
     }
   };

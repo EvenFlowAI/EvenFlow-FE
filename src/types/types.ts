@@ -236,7 +236,6 @@ export enum Roles {
 }
 
 export enum CleanestRoles {
-  DealerOwner = 'Dealer Owner',
   ServiceDirector = 'Service Director',
   ServiceManager = 'Service Manager',
   BDCManager = 'BDC Manager',

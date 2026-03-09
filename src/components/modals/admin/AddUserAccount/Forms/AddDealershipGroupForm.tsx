@@ -14,6 +14,7 @@ interface DealershipGroupProps {
   formIsChecked: boolean;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
 }
 
 const AddDealershipGroupForm = ({
@@ -21,6 +22,7 @@ const AddDealershipGroupForm = ({
   setEmployeeForm,
   formIsChecked,
   setFormIsChecked,
+  setErrorForDmsId,
 }: DealershipGroupProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
 
@@ -53,6 +55,7 @@ const AddDealershipGroupForm = ({
 
       setEmployeeForm(prev => ({ ...prev, dealerships: next }));
       setFormIsChecked(false);
+      setErrorForDmsId(false);
     },
     [form.dealerships]
   );
@@ -94,6 +97,8 @@ const AddDealershipGroupForm = ({
 
   const handleSelectDealerships = (e: React.SyntheticEvent, val: TOption[]) => {
     setFormIsChecked(false);
+    setErrorForDmsId(false);
+
     // clean Select All from values
     const filtered = val.filter(o => o.name !== 'Select all');
     setEmployeeForm(prev => ({ ...prev, dealerships: filtered }));

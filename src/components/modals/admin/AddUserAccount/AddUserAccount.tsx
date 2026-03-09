@@ -16,6 +16,7 @@ import { INewUserAccount, IUserAccount } from '../../../../pages/admin/RoleManag
 import { RootState } from '../../../../store/rootReducer';
 import { TOption } from '../../../../utils/types';
 import { setLoading as setTableLoading } from '../../../../store/reducers/roleManagement/actions';
+import { Roles } from '../../../../types/types';
 
 export const AddUserAccount: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<TUserAccountForm | null>>>
@@ -27,6 +28,7 @@ export const AddUserAccount: React.FC<
   const dispatch = useDispatch();
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
   const { users } = useSelector((state: RootState) => state.roleManagement);
+  const [errorForDmsId, setErrorForDmsId] = useState<boolean>(false);
 
   useEffect(() => {
     if (payload) {
@@ -38,6 +40,7 @@ export const AddUserAccount: React.FC<
     setUserForm(initialUserAccountForm);
     setAvatar(undefined);
     setFormIsChecked(false);
+    setErrorForDmsId(false);
     setLoading(false);
     props.onClose();
   };
@@ -66,7 +69,7 @@ export const AddUserAccount: React.FC<
       name: dealership.name,
       hasFullAccess,
       serviceCenters: selectedCentersForDealership.map(sc => {
-        const isTechnician = user.role === 'Technician';
+        const isTechnician = user.role === Roles.Technician;
         const hasDetails = Boolean(sc.hourlyRate) || Boolean(sc.overtimeRate) || isTechnician;
 
         return {
@@ -96,7 +99,7 @@ export const AddUserAccount: React.FC<
       fullName: `${user.firstName} ${user.lastName}`,
       userName: user.email,
       email: user.email,
-      role: user.role || 'EvenFlow Admin',
+      role: user.role || Roles.EvenFlowAdmin,
       avatarPath: user.avatarPath ?? '',
       dealerships: user.dealerships.map(d => getDealershipWithAccess(d, user)),
     };
@@ -123,7 +126,10 @@ export const AddUserAccount: React.FC<
           mappedUser as IUserAccount,
           userForm.id,
           onClose,
-          () => {
+          (errorCode: number) => {
+            if (errorCode === 4) {
+              setErrorForDmsId(true);
+            }
             setLoading(false);
           },
           avatar
@@ -136,7 +142,10 @@ export const AddUserAccount: React.FC<
         createRoleManagementUser(
           mappedUser as INewUserAccount,
           onClose,
-          () => {
+          (errorCode: number) => {
+            if (errorCode === 4) {
+              setErrorForDmsId(true);
+            }
             setLoading(false);
           },
           avatar
@@ -154,16 +163,22 @@ export const AddUserAccount: React.FC<
 
     const noDealerships = !userForm.dealerships || userForm.dealerships.length === 0;
 
+    const noServiceCenters =
+      !!userForm.dealerships.length &&
+      (!userForm.serviceCenters || userForm.serviceCenters.length === 0);
+
     const invalidServiceCenters = userForm.serviceCenters?.some(sc => {
-      if (userForm.role === 'Technician' || userForm.role === 'Advisor') {
+      if (userForm.role === Roles.Technician || userForm.role === Roles.Advisor) {
         return sc.type !== 0 && sc.type !== 1;
       } else {
         return false;
       }
     });
 
-    return noUserData || noDealerships || invalidServiceCenters;
-  }, [userForm]);
+    return (
+      noUserData || noDealerships || noServiceCenters || errorForDmsId || invalidServiceCenters
+    );
+  }, [userForm, errorForDmsId]);
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
@@ -171,9 +186,11 @@ export const AddUserAccount: React.FC<
       <DialogContent>
         <AvatarWrapper onChange={f => setAvatar(f)} dataUrl={payload?.avatarPath} />
         <AddUserAccountForm
+          errorForDmsId={errorForDmsId}
           formIsChecked={formIsChecked}
           form={userForm}
           setFormIsChecked={setFormIsChecked}
+          setErrorForDmsId={setErrorForDmsId}
           setEmployeeForm={setUserForm}
         />
       </DialogContent>

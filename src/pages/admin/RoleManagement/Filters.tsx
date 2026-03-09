@@ -4,7 +4,7 @@ import { TextField } from '../../../components/formControls/TextFieldStyled/Text
 import { EmptyMenuItem } from '../../../features/admin/Appointments/AppointmentFilters/styles';
 import { IDealership, IServiceCenter, IUserAccount, UserStatus } from './types';
 import { useLabelStyles } from '../../../hooks/styling/useLabelStyles';
-import { CleanestRoles } from '../../../types/types';
+import { CleanestRoles, Roles } from '../../../types/types';
 import { Search } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
@@ -78,6 +78,8 @@ const Filters = ({ setData }: FiltersProps) => {
       const term = newFilters.searchTerm.toLowerCase();
       filtered = filtered.filter(u => u.fullName.toLowerCase().includes(term.toLowerCase()));
     }
+
+    filtered = filtered.filter(u => u.role !== Roles.DealerOwner);
 
     setData(filtered);
   };
