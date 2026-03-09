@@ -34,7 +34,6 @@ export const ServiceCenterSelector = () => {
     const selectedSc = data?.find(s => s.id === scId);
     if (selectedSc) {
       selectSC(selectedSc);
-      window.location.reload();
     }
   };
 
@@ -45,7 +44,7 @@ export const ServiceCenterSelector = () => {
     );
   };
 
-  const handleChooseServiceCenter = (sc: IServiceCenter, dealershipId: number) => () => {
+  const handleChooseServiceCenter = (sc: IServiceCenter, dealershipId: number) => {
     handleMenuClose();
     const selectedScInMyDealership = fullSCList.find(s => s.id === sc.id);
     if (selectedScInMyDealership) {
