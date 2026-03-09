@@ -420,8 +420,8 @@ export const setDefaultLaborTypes =
       params.append('serviceCenterId', `${serviceCenterId}`);
 
       Api.call(Api.endpoints.ServiceRequests.DefaultLaborTypes, { params }).then(r => {
-        if (r.data.length) {
-          dispatch(setLaborTypeOption(r.data));
+        if (r.data.data.length) {
+          dispatch(setLaborTypeOption(r.data.data));
         }
       });
     } catch (err) {
