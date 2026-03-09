@@ -66,6 +66,7 @@ export const OverrideOPsCodeModal: React.FC<
       setForm({
         ...initialForm,
         description: override?.description || request?.description || '',
+        laborType: payload.laborType,
         countOfTechnicians: override?.countOfTechnicians?.toString() || '',
         durationInHours: override?.durationInHours?.toString() || '',
         invoiceAmount: override?.invoiceAmount?.toFixed(2) || '',
@@ -88,6 +89,7 @@ export const OverrideOPsCodeModal: React.FC<
   };
 
   const handleLaborTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
     if (e.target.value) setForm({ ...form, laborType: e.target.value });
   };
 
@@ -149,7 +151,7 @@ export const OverrideOPsCodeModal: React.FC<
                 placeholder="Labor Type"
                 onChange={handleLaborTypeChange}
                 fullWidth
-                value={payload?.laborType}
+                value={form?.laborType}
               />
             </Grid>
           ) : null}
