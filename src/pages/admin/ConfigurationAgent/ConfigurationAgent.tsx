@@ -3,6 +3,7 @@ import { getAuthenticationTokenForAdmin } from '../../../api/helper';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import Agent from '../../../features/admin/Agent/Agent';
 import { useStyles } from './styles';
+import { authService } from '../../../api/AuthService/AuthService';
 
 const CONFIGURATION_AGENT_URL =
   process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
@@ -35,8 +36,33 @@ const ConfigurationAgent = () => {
       setIframeLoaded(true);
     };
 
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== new URL(CONFIGURATION_AGENT_URL).origin) return;
+
+      if (event.data.shouldRefreshToken === true) {
+        console.log('Refreshing...');
+        // eslint-disable-next-line no-self-assign
+        authService
+          .refresh()
+          .then(() => {
+            sendDataToAgent();
+            // eslint-disable-next-line no-self-assign
+            iframe.src = iframe.src;
+          })
+          .catch(e => {
+            console.log('Error refreshing token: ', e);
+          });
+      } else {
+        console.log('Refresh token flag was not received.');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
     iframe.addEventListener('load', handleLoad);
-    return () => iframe.removeEventListener('load', handleLoad);
+    return () => {
+      iframe.removeEventListener('load', handleLoad);
+      window.removeEventListener('message', handleMessage);
+    };
   }, []);
 
   useEffect(() => {
