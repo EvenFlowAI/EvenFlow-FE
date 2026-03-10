@@ -52,16 +52,20 @@ export const OverrideOPsCodeModal: React.FC<
   const { selectedSC } = useSCs();
   const showError = useException();
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (props.open) {
       setForm(initialForm);
     }
+    return () => setForm(initialForm);
   }, [props.open]);
 
   useEffect(() => {
     if (props.open && (payload?.serviceRequestOverride || payload?.serviceRequest)) {
       const override = payload.serviceRequestOverride;
       const request = payload.serviceRequest;
+
+      console.log(payload);
 
       setForm({
         ...initialForm,
@@ -89,8 +93,7 @@ export const OverrideOPsCodeModal: React.FC<
   };
 
   const handleLaborTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    if (e.target.value) setForm({ ...form, laborType: e.target.value });
+    setForm({ ...form, laborType: e.target.value });
   };
 
   const handleSave = async () => {
