@@ -39,14 +39,21 @@ const ConfigurationAgent = () => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== new URL(CONFIGURATION_AGENT_URL).origin) return;
 
-      if (iframe && event.data.needReload === true) {
+      if (event.data.shouldRefreshToken === true) {
         console.log('Refreshing...');
         // eslint-disable-next-line no-self-assign
-        authService.refresh().then(() => {
-          sendDataToAgent();
-          // eslint-disable-next-line no-self-assign
-          iframe.src = iframe.src;
-        });
+        authService
+          .refresh()
+          .then(() => {
+            sendDataToAgent();
+            // eslint-disable-next-line no-self-assign
+            iframe.src = iframe.src;
+          })
+          .catch(e => {
+            console.log('Error refreshing token: ', e);
+          });
+      } else {
+        console.log('Refresh token flag was not received.');
       }
     };
 
