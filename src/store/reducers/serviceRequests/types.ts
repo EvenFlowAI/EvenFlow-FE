@@ -43,7 +43,7 @@ export interface IServiceRequestOverride {
 }
 export interface IServiceRequestOverrideEditRequest {
   serviceRequestInfo: Partial<IServiceRequestOverride>;
-  laborType?: string;
+  laborType?: string | null;
 }
 
 export interface IRequiredSkill {
