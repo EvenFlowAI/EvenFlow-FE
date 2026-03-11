@@ -9,13 +9,17 @@ import { RenderDealershipAndServiceAccordion } from './RenderDealershipAndServic
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 import {
   removeUser,
-  resendEmailForUser,
   restoreUser,
   setLoading,
 } from '../../../store/reducers/roleManagement/actions';
 import { useDispatch } from 'react-redux';
 import { useMessage } from '../../../hooks/useMessage/useMessage';
-import { convertUserAccountToEditedItem } from './helper';
+import { convertUserAccountToEditedItem, truncateText } from './helper';
+import { EEmployeeType } from '../../../components/modals/admin/CreateEmployee/types';
+import { getDisplayData } from '../../../features/admin/Employees/EmployeesTable/utils';
+import RenderServiceCenters from './RenderServiceCenters';
+import ResendEmailModal from '../../../features/admin/Employees/ResendEmailModal/ResendEmailModal';
+import { useModal } from '../../../hooks/useModal/useModal';
 
 interface UsersTableProps {
   editedItem: TUserAccountForm | null;
@@ -23,6 +27,7 @@ interface UsersTableProps {
   data: IUserAccount[];
   isLoading: boolean;
   openEdit: (edit: boolean) => void;
+  isAdminPanel: boolean;
 }
 
 const UsersTableWrapper = ({
@@ -31,11 +36,14 @@ const UsersTableWrapper = ({
   setEditedItem,
   editedItem,
   openEdit,
+  isAdminPanel,
 }: UsersTableProps) => {
   const dispatch = useDispatch();
   const showMessage = useMessage();
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
+  const { onOpen: onOpenResend, onClose: onCloseResend, isOpen: isOpenResend } = useModal();
+
   const [order, setOrder] = useState<IOrder<IUserAccount>>({
     orderBy: 'fullName',
     isAscending: true,
@@ -43,6 +51,14 @@ const UsersTableWrapper = ({
   const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
   const emptySearchResultMessage =
     'No users were found. Please try changing the filters or search criteria';
+
+  const reformatType = (type?: number) => {
+    return type === EEmployeeType.Individual
+      ? 'Individual'
+      : type === EEmployeeType.Team
+        ? 'Team'
+        : '-';
+  };
 
   useEffect(() => {
     const sortedData = [...data];
@@ -65,7 +81,35 @@ const UsersTableWrapper = ({
     setVisibleData(sortedData.slice(start, end));
   }, [data, pageData, order]);
 
-  const rowData: TableRowDataType<IUserAccount>[] = [
+  const AdminPanelRowData = (): TableRowDataType<IUserAccount>[] => [
+    { val: el => el.fullName, header: 'Name', orderId: 'fullName', width: 150 },
+    {
+      val: el => <RenderServiceCenters serviceCenters={el.dealerships[0].serviceCenters} />,
+      header: 'Service Center',
+      width: 250,
+    },
+    { val: el => el.role, header: 'Role' },
+    {
+      val: el =>
+        el.dealerships[0].serviceCenters.length === 1
+          ? reformatType(el.dealerships[0].serviceCenters[0].type)
+          : '-',
+      header: 'Type',
+      orderId: 'type',
+      width: 150,
+    },
+    { val: el => truncateText(el.email, 25), header: 'Email', width: 167 },
+    {
+      val: el =>
+        el.dealerships[0].serviceCenters.length === 1
+          ? el.dealerships[0].serviceCenters[0]?.dmsId
+          : '-',
+      header: 'Employee ID',
+    },
+    { header: 'Booking Display', val: el => getDisplayData(el), width: 120 },
+  ];
+
+  const UserPanelRowData = (): TableRowDataType<IUserAccount>[] => [
     { val: el => el.fullName, header: 'Name', orderId: 'fullName' },
     {
       val: el => <RenderDealershipAndServiceAccordion dealerships={el.dealerships} isSc={false} />,
@@ -77,10 +121,13 @@ const UsersTableWrapper = ({
       header: 'Service Center',
       width: 350,
     },
-
     { val: el => el.role, header: 'Role', orderId: 'role', width: 150 },
     { val: el => statusLabels[el.status], header: 'Status', orderId: 'status', width: 100 },
   ];
+
+  const rowData: TableRowDataType<IUserAccount>[] = isAdminPanel
+    ? AdminPanelRowData()
+    : UserPanelRowData();
 
   const changePage = (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
     setPageData(prev => ({ ...prev, pageIndex: pageNumber }));
@@ -141,8 +188,7 @@ const UsersTableWrapper = ({
 
   const handleResend = async () => {
     if (editedItem?.id) {
-      dispatch(setLoading(true));
-      dispatch(resendEmailForUser(editedItem.id, onSuccess));
+      onOpenResend();
       setAnchorEl(null);
     }
   };
@@ -172,13 +218,22 @@ const UsersTableWrapper = ({
       />
       <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        {editedItem?.status === 1 || editedItem?.status === 0 ? (
-          <MenuItem onClick={handleRemove}>Remove</MenuItem>
-        ) : (
-          <MenuItem onClick={handleRestore}>Restore</MenuItem>
-        )}
+        {!isAdminPanel ? (
+          editedItem?.status === 1 || editedItem?.status === 0 ? (
+            <MenuItem onClick={handleRemove}>Remove</MenuItem>
+          ) : (
+            <MenuItem onClick={handleRestore}>Restore</MenuItem>
+          )
+        ) : null}
         {!editedItem?.emailConfirmed ? <MenuItem onClick={handleResend}>Resend</MenuItem> : null}
       </Menu>
+      <ResendEmailModal
+        open={isOpenResend}
+        onClose={onCloseResend}
+        employeeEmail={editedItem?.email}
+        employeeId={editedItem?.id}
+        employeeName={editedItem?.firstName + ' ' + editedItem?.lastName}
+      />
     </>
   );
 };

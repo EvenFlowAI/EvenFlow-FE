@@ -72,11 +72,14 @@ export const AddUserAccount: React.FC<
         const isTechnician = user.role === Roles.Technician;
         const hasDetails = Boolean(sc.hourlyRate) || Boolean(sc.overtimeRate) || isTechnician;
 
+        console.log('sc.displayOnBookingTypes', sc.displayOnBookingTypes);
+
         return {
           id: sc.value,
           name: sc.name,
           dmsId: sc.dmsId ?? undefined,
           type: sc.type ?? undefined,
+          displayOnBookingTypes: sc.displayOnBookingTypes,
           ...(hasDetails && {
             details: {
               ...(sc.hourlyRate && { hourlyRate: sc.hourlyRate }),

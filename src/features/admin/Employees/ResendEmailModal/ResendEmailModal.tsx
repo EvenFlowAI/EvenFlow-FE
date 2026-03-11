@@ -43,8 +43,8 @@ const ResendEmailModal: React.FC<TProps> = ({
   };
 
   return (
-    <BaseModal width={400} open={open} onClose={onClose}>
-      <DialogTitle onClose={onClose} style={{ textAlign: 'left' }}>
+    <BaseModal width={400} open={open} onClose={loading ? () => {} : onClose}>
+      <DialogTitle onClose={loading ? () => {} : onClose} style={{ textAlign: 'left' }}>
         Account Activation Email
       </DialogTitle>
       <DialogContent style={{ fontSize: 16, paddingTop: 8 }}>
@@ -64,10 +64,16 @@ const ResendEmailModal: React.FC<TProps> = ({
         )}
       </DialogContent>
       <DialogActions>
-        <Button variant="text" color="info" onClick={onClose} style={{ marginRight: 12 }}>
+        <Button
+          disabled={loading}
+          variant="text"
+          color="info"
+          onClick={onClose}
+          style={{ marginRight: 12 }}
+        >
           Cancel
         </Button>
-        <Button variant="contained" onClick={onResend}>
+        <Button disabled={loading} variant="contained" onClick={onResend}>
           Confirm
         </Button>
       </DialogActions>

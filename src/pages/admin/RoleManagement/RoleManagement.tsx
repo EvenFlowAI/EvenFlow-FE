@@ -51,6 +51,7 @@ const RoleManagement = () => {
       </div>
       {!isLoading ? <Filters setData={setVisibleDate} /> : null}
       <UsersTableWrapper
+        isAdminPanel={false}
         openEdit={handleAddUserAccount}
         data={visibleData}
         isLoading={isLoading}

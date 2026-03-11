@@ -49,18 +49,3 @@ export const restoreUser =
       console.log('restore employee err', err);
     }
   };
-
-export const resendEmailForUser =
-  (employeeId: string, onSuccess: (message: string) => void): AppThunk =>
-  async dispatch => {
-    if (employeeId) {
-      Api.call(Api.endpoints.Accounts.ResendEmail, { data: { userId: employeeId } })
-        .then(() => {
-          onSuccess('Resend email successfully');
-        })
-        .catch(err => {
-          dispatch(setLoading(false));
-          console.log('resend email err', err);
-        });
-    }
-  };
