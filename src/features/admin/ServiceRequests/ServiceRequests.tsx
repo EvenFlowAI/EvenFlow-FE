@@ -140,6 +140,7 @@ export const ServiceRequests = () => {
             {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
               <Autocomplete
                 style={{ width: 170 }}
+                disableClearable
                 options={defaultLaborTypesOptions}
                 isOptionEqualToValue={(option, value) => option === value}
                 value={laborType}

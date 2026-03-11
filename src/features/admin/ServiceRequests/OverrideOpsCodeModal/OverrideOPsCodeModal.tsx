@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import {
   IAssignedServiceRequest,
@@ -11,9 +11,9 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Autocomplete, Button, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateAssignedServiceRequest } from '../../../../store/reducers/serviceRequests/actions';
 import { TForm } from './types';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
@@ -24,6 +24,8 @@ import { TOption } from '../../../../utils/types';
 import { EmptyMenuItem } from '../../Appointments/AppointmentFilters/styles';
 import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { RootState } from '../../../../store/rootReducer';
 
 const initialForm: TForm = {
   laborType: '',
@@ -52,6 +54,9 @@ export const OverrideOPsCodeModal: React.FC<
   const { selectedSC } = useSCs();
   const showError = useException();
   const dispatch = useDispatch();
+  const { defaultLaborTypesOptions } = useSelector(
+    ({ serviceRequests }: RootState) => serviceRequests
+  );
 
   useEffect(() => {
     if (props.open) {
@@ -92,8 +97,8 @@ export const OverrideOPsCodeModal: React.FC<
     setForm({ ...form, skillLevelOfTechnicians: +e.target.value });
   };
 
-  const handleLaborTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, laborType: e.target.value });
+  const handleLaborTypeChange = (e: SyntheticEvent, value: string | null) => {
+    setForm({ ...form, laborType: value });
   };
 
   const handleSave = async () => {
@@ -113,7 +118,7 @@ export const OverrideOPsCodeModal: React.FC<
               {} as Partial<IServiceRequestOverride>
             ),
           },
-          laborType,
+          laborType: laborType,
         };
 
         await dispatch(
@@ -149,12 +154,16 @@ export const OverrideOPsCodeModal: React.FC<
           </Grid>
           {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
             <Grid item xs={6}>
-              <TextField
-                label="Labor Type"
-                placeholder="Labor Type"
+              <Autocomplete
+                style={{ width: 170 }}
+                options={defaultLaborTypesOptions}
+                isOptionEqualToValue={(option, value) => option === value}
+                value={form.laborType}
                 onChange={handleLaborTypeChange}
-                fullWidth
-                value={form?.laborType}
+                renderInput={autocompleteRender({
+                  label: 'Default Labor Type',
+                  placeholder: 'Labor Type',
+                })}
               />
             </Grid>
           ) : null}
