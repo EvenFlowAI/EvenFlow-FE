@@ -281,38 +281,41 @@ export const clearSC = (): AppThunk => dispatch => {
   localStorage.removeItem(LocalItems.selectedSC);
   dispatch(_selectSc(undefined));
 };
-export const loadAllSCs = (): AppThunk => async (dispatch, getState) => {
-  try {
-    const {
-      data: { result },
-    } = await Api.call<PaginatedAPIResponse<IServiceCenter>>(
-      Api.endpoints.ServiceCenters.GetShort,
-      { params: { pageSize: 0, pageIndex: 0 } }
-    );
-    if (result.length) {
-      dispatch(_loadAllSCS(result));
-      const user = getState().users.currentUser;
-      if (!user?.isSuperUser) {
-        const prevSelected = localStorage.getItem(LocalItems.selectedSC);
-        const assignedTo = result.find(i => i.id === user?.serviceCenterId);
-        if (prevSelected || assignedTo) {
-          const selected = result.find(i => i.id === Number(prevSelected));
-          if (assignedTo && user?.role !== 'Service Director') {
-            dispatch(selectSC(assignedTo));
-          } else if (selected) {
-            dispatch(selectSC(selected));
+export const loadAllSCs =
+  (onSuccess?: () => void): AppThunk =>
+  async (dispatch, getState) => {
+    try {
+      const {
+        data: { result },
+      } = await Api.call<PaginatedAPIResponse<IServiceCenter>>(
+        Api.endpoints.ServiceCenters.GetShort,
+        { params: { pageSize: 0, pageIndex: 0 } }
+      );
+      if (result.length) {
+        dispatch(_loadAllSCS(result));
+        const user = getState().users.currentUser;
+        if (!user?.isSuperUser) {
+          const prevSelected = localStorage.getItem(LocalItems.selectedSC);
+          const assignedTo = result.find(i => i.id === user?.serviceCenterId);
+          if (prevSelected || assignedTo) {
+            const selected = result.find(i => i.id === Number(prevSelected));
+            if (assignedTo && user?.role !== 'Service Director') {
+              dispatch(selectSC(assignedTo));
+            } else if (selected) {
+              dispatch(selectSC(selected));
+            } else {
+              dispatch(selectSC(result[0]));
+            }
           } else {
             dispatch(selectSC(result[0]));
           }
-        } else {
-          dispatch(selectSC(result[0]));
+          if (onSuccess) onSuccess();
         }
       }
+    } catch (err) {
+      console.log(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
-};
+  };
 export const getWorkingDays = createAction<EDay[]>('ServiceCenters/WorkingDays');
 export const loadWorkingDays =
   (serviceCenterId: number): AppThunk =>

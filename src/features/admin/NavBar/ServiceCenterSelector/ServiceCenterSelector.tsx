@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { IServiceCenter } from '../../../../pages/admin/RoleManagement/types';
 import { authService } from '../../../../api/AuthService/AuthService';
-import { loadAll } from '../../../../store/reducers/serviceCenters/actions';
+import { loadAll, loadAllSCs } from '../../../../store/reducers/serviceCenters/actions';
 import { IServiceCenterExtended } from '../../../../store/reducers/serviceCenters/types';
 
 export const ServiceCenterSelector = () => {
@@ -18,6 +18,7 @@ export const ServiceCenterSelector = () => {
   const history = useHistory();
   const { fullSCList } = useSelector((state: RootState) => state.serviceCenters);
   const dispatch = useDispatch();
+  const [disabled, setDisabled] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null | undefined>(null);
   const { accessibleDealerships } = useSelector((state: RootState) => state.dealershipGroups);
@@ -38,10 +39,12 @@ export const ServiceCenterSelector = () => {
   };
 
   const handleLoginToDealership = async (scId: number, dealershipId: number) => {
+    setDisabled(true);
     await authService.dealershipLogin(dealershipId ?? 0);
     dispatch(
       loadAll(true, (data: IServiceCenterExtended[]) => applySelectedServiceCenter(scId, data))
     );
+    dispatch(loadAllSCs(() => setDisabled(false)));
   };
 
   const handleChooseServiceCenter = (sc: IServiceCenter, dealershipId: number) => {
@@ -67,7 +70,7 @@ export const ServiceCenterSelector = () => {
       <Button className={classes.root} onClick={handleMenuOpen} endIcon={<ArrowDropDown />}>
         {selectedSC?.name}
       </Button>
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl) && !disabled} onClose={handleMenuClose}>
         {accessibleDealerships.map(dealership => {
           if (!dealership.serviceCenters.length) return null;
 
