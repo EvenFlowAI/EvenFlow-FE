@@ -11,6 +11,7 @@ import { IServiceCenter } from '../../../../pages/admin/RoleManagement/types';
 import { authService } from '../../../../api/AuthService/AuthService';
 import { loadAll, loadAllSCs } from '../../../../store/reducers/serviceCenters/actions';
 import { IServiceCenterExtended } from '../../../../store/reducers/serviceCenters/types';
+import { loadDealershipProfile } from '../../../../store/reducers/dealershipGroups/actions';
 
 export const ServiceCenterSelector = () => {
   const { selectSC, selectedSC, scList } = useSCs();
@@ -35,6 +36,7 @@ export const ServiceCenterSelector = () => {
     const selectedSc = data?.find(s => s.id === scId);
     if (selectedSc) {
       selectSC(selectedSc);
+      dispatch(loadDealershipProfile());
     }
   };
 

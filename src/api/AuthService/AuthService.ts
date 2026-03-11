@@ -1,6 +1,6 @@
 import { ICredentials, IRefreshTokenData, ITokens, LocalTokens } from '../../types/auth';
 import { API } from '../api';
-import { request } from '../request';
+import { ErrorCode, request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';
 import { authChannel } from '../../index';
 import { ADMIN_TOKEN_UPDATED } from '../../config/data';
@@ -108,15 +108,20 @@ class AuthService {
 
   async dealershipLogin(dealershipId: number) {
     try {
-      const { data: tokens } = await API.authentication.dealership(dealershipId);
-      this.setDealershipTokens(tokens);
+      const response = await API.authentication.dealership(dealershipId);
+
+      console.log(response);
+      this.setDealershipTokens(response.data);
 
       // send a message for reload all pages with opened booking/admin-panel
       authChannel.postMessage({
         type: ADMIN_TOKEN_UPDATED,
       });
       this.syncRequestAuthWithLocalStorage();
-    } catch (e) {
+    } catch (e: any) {
+      if (e?.response?.data?.errorCode === ErrorCode.ServiceCenterAccessDenied) {
+        window.location.reload();
+      }
       console.error(e);
     }
   }

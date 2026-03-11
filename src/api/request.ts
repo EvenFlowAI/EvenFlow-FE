@@ -11,7 +11,7 @@ import {
   setRefreshTokenForSelfCustomer,
 } from './helper';
 
-enum ErrorCode {
+export enum ErrorCode {
   ServiceCenterAccessDenied = 2,
 }
 
