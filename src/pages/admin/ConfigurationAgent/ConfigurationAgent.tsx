@@ -4,6 +4,7 @@ import { useSCs } from '../../../hooks/useSCs/useSCs';
 import Agent from '../../../features/admin/Agent/Agent';
 import { useStyles } from './styles';
 import { authService } from '../../../api/AuthService/AuthService';
+import { useException } from '../../../hooks/useException/useException';
 
 const CONFIGURATION_AGENT_URL =
   process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
@@ -16,6 +17,7 @@ const ConfigurationAgent = () => {
   const { classes } = useStyles();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const showError = useException();
 
   const sendDataToAgent = (token?: string) => {
     const iframe = iframeRef.current;
@@ -47,13 +49,12 @@ const ConfigurationAgent = () => {
         // eslint-disable-next-line no-self-assign
         authService
           .refresh()
-          .then(data => {
+          .then(token => {
             console.log('Token refreshed successfully.');
-            if (data) {
-              console.log('Sending data to iframe: ', data);
-              sendDataToAgent(data.token);
-              // eslint-disable-next-line no-self-assign
-              // iframe.src = iframe.src;
+            if (token) {
+              console.log('Sending data to iframe: ', token);
+              sendDataToAgent(token);
+              showError('Sorry, your message wasn’t sent. Please send it again!');
             }
           })
           .catch(e => {
