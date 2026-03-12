@@ -17,14 +17,17 @@ const ConfigurationAgent = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
-  const sendDataToAgent = () => {
+  const sendDataToAgent = (token?: string) => {
     const iframe = iframeRef.current;
     if (selectedSC) {
       iframe?.contentWindow?.postMessage(
-        { scID: selectedSC.id, accessToken: accessToken },
+        { scID: selectedSC.id, accessToken: token || accessToken },
         CONFIGURATION_AGENT_URL
       );
-      console.log(`Message sent to iframe successfully with service center ID and access token.`);
+      console.log(
+        `Message sent to iframe successfully with service center ID and access token.`,
+        token || accessToken
+      );
     }
   };
 
@@ -48,7 +51,7 @@ const ConfigurationAgent = () => {
             console.log('Token refreshed successfully.');
             if (data) {
               console.log('Sending data to iframe: ', data);
-              sendDataToAgent();
+              sendDataToAgent(data.token);
               // eslint-disable-next-line no-self-assign
               iframe.src = iframe.src;
             }
