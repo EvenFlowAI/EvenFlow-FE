@@ -88,6 +88,7 @@ class AuthService {
       const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Refresh, { data });
       this.setTokenForRefresh(resp.data);
       this.syncRequestAuthWithLocalStorage();
+      return data;
     } catch (e) {
       // for refresh dead token
       removeAuthenticationTokenForSelfCustomer();

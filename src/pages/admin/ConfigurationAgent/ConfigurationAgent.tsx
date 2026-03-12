@@ -44,10 +44,14 @@ const ConfigurationAgent = () => {
         // eslint-disable-next-line no-self-assign
         authService
           .refresh()
-          .then(() => {
-            sendDataToAgent();
-            // eslint-disable-next-line no-self-assign
-            iframe.src = iframe.src;
+          .then(data => {
+            console.log('Token refreshed successfully.');
+            if (data) {
+              console.log('Sending data to iframe: ', data);
+              sendDataToAgent();
+              // eslint-disable-next-line no-self-assign
+              iframe.src = iframe.src;
+            }
           })
           .catch(e => {
             console.log('Error refreshing token: ', e);
