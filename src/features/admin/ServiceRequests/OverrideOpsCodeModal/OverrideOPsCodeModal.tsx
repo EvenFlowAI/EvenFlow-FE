@@ -161,7 +161,7 @@ export const OverrideOPsCodeModal: React.FC<
                 value={form.laborType}
                 onChange={handleLaborTypeChange}
                 renderInput={autocompleteRender({
-                  label: 'Default Labor Type',
+                  label: 'Labor Type',
                   placeholder: 'Labor Type',
                 })}
               />

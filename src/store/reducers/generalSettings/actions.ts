@@ -18,7 +18,11 @@ export const loadGeneralSettings =
       .then(result => {
         if (result) {
           dispatch(getSettings(result.data));
-          if (result.data[0].data.laborType) dispatch(setLaborType(result.data[0].data.laborType));
+          if (result.data[0].data.laborType) {
+            dispatch(setLaborType(result.data[0].data.laborType));
+          } else {
+            dispatch(setLaborType(''));
+          }
         }
       })
       .catch(err => {
