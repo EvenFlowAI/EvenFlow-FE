@@ -53,7 +53,7 @@ const ConfigurationAgent = () => {
               console.log('Sending data to iframe: ', data);
               sendDataToAgent(data.token);
               // eslint-disable-next-line no-self-assign
-              iframe.src = iframe.src;
+              // iframe.src = iframe.src;
             }
           })
           .catch(e => {
