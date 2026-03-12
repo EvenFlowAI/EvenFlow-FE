@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { employeesRoot } from '../../../utils/constants';
-import { Button, useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { useStyles } from '../RoleManagement/styles';
 import { loadRoleUsers, setLoading } from '../../../store/reducers/roleManagement/actions';
 import { loadAll as loadDealershipsGroup } from '../../../store/reducers/dealershipGroups/actions';
@@ -21,6 +21,7 @@ export const EmployeesAddDelete = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state: RootState) => state.roleManagement);
   const [visibleData, setVisibleDate] = useState<IUserAccount[]>([]);
+  const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
@@ -46,13 +47,17 @@ export const EmployeesAddDelete = () => {
     <div className={classes.root}>
       <TitleContainer title={'Add & Delete'} pad={!isMobile} parent={employeesRoot} />
 
-      <div className={classes.buttonWrapper}>
-        <Button variant="contained" onClick={() => handleAddUserAccount(false)} color="primary">
-          Add user account
-        </Button>
-      </div>
-      {!isLoading ? <Filters setData={setVisibleDate} /> : null}
+      {!isLoading ? (
+        <Filters
+          setData={setVisibleDate}
+          isAdminPanel={true}
+          handleAddUserAccount={handleAddUserAccount}
+          setPageData={setPageData}
+        />
+      ) : null}
       <UsersTableWrapper
+        pageData={pageData}
+        setPageData={setPageData}
         isAdminPanel={true}
         openEdit={handleAddUserAccount}
         data={visibleData}

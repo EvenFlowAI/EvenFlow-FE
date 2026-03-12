@@ -28,6 +28,8 @@ interface UsersTableProps {
   isLoading: boolean;
   openEdit: (edit: boolean) => void;
   isAdminPanel: boolean;
+  pageData: { pageIndex: number; pageSize: number };
+  setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
 }
 
 const UsersTableWrapper = ({
@@ -37,11 +39,12 @@ const UsersTableWrapper = ({
   editedItem,
   openEdit,
   isAdminPanel,
+  pageData,
+  setPageData,
 }: UsersTableProps) => {
   const dispatch = useDispatch();
   const showMessage = useMessage();
   const [visibleData, setVisibleData] = useState<IUserAccount[]>([]);
-  const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
   const { onOpen: onOpenResend, onClose: onCloseResend, isOpen: isOpenResend } = useModal();
 
   const [order, setOrder] = useState<IOrder<IUserAccount>>({
@@ -96,9 +99,8 @@ const UsersTableWrapper = ({
           : '-',
       header: 'Type',
       orderId: 'type',
-      width: 150,
     },
-    { val: el => truncateText(el.email, 25), header: 'Email', width: 167 },
+    { val: el => truncateText(el.email, 25), header: 'Email', width: 180 },
     {
       val: el =>
         el.dealerships[0].serviceCenters.length === 1

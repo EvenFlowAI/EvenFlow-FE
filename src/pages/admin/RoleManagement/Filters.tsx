@@ -9,9 +9,13 @@ import { Search } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { useStyles } from './styles';
+import { AddUserButtonWrapper } from '../EmployeesAddDelete/AddUserButtonWrapper';
 
 interface FiltersProps {
   setData: React.Dispatch<React.SetStateAction<IUserAccount[]>>;
+  isAdminPanel?: boolean;
+  handleAddUserAccount?: (isEdit: boolean) => void;
+  setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
 }
 
 export interface IUserFilters {
@@ -22,7 +26,7 @@ export interface IUserFilters {
   searchTerm?: string;
 }
 
-const Filters = ({ setData }: FiltersProps) => {
+const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: FiltersProps) => {
   const [dealerships, setDealerships] = useState<IDealership[]>([]);
   const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
   const [filters, setFilters] = useState<IUserFilters>({});
@@ -82,6 +86,7 @@ const Filters = ({ setData }: FiltersProps) => {
     filtered = filtered.filter(u => u.role !== Roles.DealerOwner);
 
     setData(filtered);
+    setPageData({ pageIndex: 0, pageSize: 25 });
   };
 
   const handleSelectDealership = (event: SelectChangeEvent) => {
@@ -136,24 +141,26 @@ const Filters = ({ setData }: FiltersProps) => {
 
   return (
     <div className={componentClasses.filtersWrapper}>
-      <div className={componentClasses.filter}>
-        <div className={classes.label}>Dealership Group</div>
-        <Select
-          fullWidth
-          displayEmpty
-          style={{ color: filters.dealershipId ? 'inherit' : '#858585' }}
-          onChange={handleSelectDealership}
-          value={filters.dealershipId ?? ''}
-          input={<TextField />}
-        >
-          <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-          {dealerships.map(el => (
-            <MenuItem key={el.id} value={String(el.id)}>
-              {el.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </div>
+      {!isAdminPanel && (
+        <div className={componentClasses.filter}>
+          <div className={classes.label}>Dealership Group</div>
+          <Select
+            fullWidth
+            displayEmpty
+            style={{ color: filters.dealershipId ? 'inherit' : '#858585' }}
+            onChange={handleSelectDealership}
+            value={filters.dealershipId ?? ''}
+            input={<TextField />}
+          >
+            <EmptyMenuItem value="">Not selected</EmptyMenuItem>
+            {dealerships.map(el => (
+              <MenuItem key={el.id} value={String(el.id)}>
+                {el.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
+      )}
 
       <div className={componentClasses.filter}>
         <div className={classes.label}>Service Center</div>
@@ -193,26 +200,29 @@ const Filters = ({ setData }: FiltersProps) => {
         </Select>
       </div>
 
-      <div className={componentClasses.filter}>
-        <div className={classes.label}>Status</div>
-        <Select
-          fullWidth
-          displayEmpty
-          style={{
-            color: filters.status !== undefined && filters.status !== null ? 'inherit' : '#858585',
-          }}
-          onChange={handleSelectStatus}
-          value={
-            filters.status !== undefined && filters.status !== null ? String(filters.status) : ''
-          }
-          input={<TextField />}
-        >
-          <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-          <MenuItem value={UserStatus.Active}>Active</MenuItem>
-          <MenuItem value={UserStatus.Inactive}>Inactive</MenuItem>
-          <MenuItem value={UserStatus.Removed}>Removed</MenuItem>
-        </Select>
-      </div>
+      {!isAdminPanel && (
+        <div className={componentClasses.filter}>
+          <div className={classes.label}>Status</div>
+          <Select
+            fullWidth
+            displayEmpty
+            style={{
+              color:
+                filters.status !== undefined && filters.status !== null ? 'inherit' : '#858585',
+            }}
+            onChange={handleSelectStatus}
+            value={
+              filters.status !== undefined && filters.status !== null ? String(filters.status) : ''
+            }
+            input={<TextField />}
+          >
+            <EmptyMenuItem value="">Not selected</EmptyMenuItem>
+            <MenuItem value={UserStatus.Active}>Active</MenuItem>
+            <MenuItem value={UserStatus.Inactive}>Inactive</MenuItem>
+            <MenuItem value={UserStatus.Removed}>Removed</MenuItem>
+          </Select>
+        </div>
+      )}
 
       <TextField
         style={{ height: 43, flexGrow: 1 }}
@@ -221,6 +231,10 @@ const Filters = ({ setData }: FiltersProps) => {
         value={filters.searchTerm}
         onChange={handleSearchChange}
       />
+
+      {handleAddUserAccount && (
+        <AddUserButtonWrapper isAdminPanel handleAddUserAccount={handleAddUserAccount} />
+      )}
     </div>
   );
 };
