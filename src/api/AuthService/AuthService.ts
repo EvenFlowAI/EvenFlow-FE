@@ -141,15 +141,18 @@ class AuthService {
     this.syncRequestAuthWithLocalStorage();
   }
 
-  logout(): void {
+  logout(isSuperUser: boolean): void {
     // remove admin tokens
     removeAuthenticationTokenForAdmin();
     removeRefreshTokenForAdmin();
 
     const suTokens = getSuTokens();
+
     if (suTokens) {
       removeSuTokens();
-      this.setTokens(JSON.parse(suTokens) as ITokens);
+      if (isSuperUser) {
+        this.setTokens(JSON.parse(suTokens) as ITokens);
+      }
       authChannel.postMessage({
         type: ADMIN_TOKEN_UPDATED,
       });
