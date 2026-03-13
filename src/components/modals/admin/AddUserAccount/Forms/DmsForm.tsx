@@ -13,24 +13,15 @@ interface DmsFormProps {
   dmsAdvisors: TServiceConsultant[];
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
-  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
   form: TUserAccountForm;
 }
 
-const DmsForm = ({
-  sc,
-  dmsAdvisors,
-  setFormIsChecked,
-  setErrorForDmsId,
-  setEmployeeForm,
-  form,
-}: DmsFormProps) => {
+const DmsForm = ({ sc, dmsAdvisors, setFormIsChecked, setEmployeeForm, form }: DmsFormProps) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { loadingDMSAdvisors } = useSelector((state: RootState) => state.employees);
 
   const handleDMSConsultantChange = (e: React.SyntheticEvent, value: TServiceConsultant | null) => {
     setFormIsChecked(false);
-    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       serviceCenters: prev.serviceCenters.map(el =>

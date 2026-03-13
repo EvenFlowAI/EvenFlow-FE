@@ -21,23 +21,15 @@ type TTFormProps = {
   form: TUserAccountForm;
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
-  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
-  errorForDmsId: boolean;
 };
 
 export const AddUserAccountForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
-> = ({
-  setEmployeeForm,
-  setFormIsChecked,
-  setErrorForDmsId,
-  formIsChecked,
-  form,
-  errorForDmsId,
-}) => {
+> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form }) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
-  const { users } = useSelector((state: RootState) => state.roleManagement);
+  const { users, emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
+
   const ERROR_MESSAGES = {
     duplicateEmail: 'A user with this email already exists in the system',
     duplicateDmsId: 'A user with this DMS ID already exists in the system',
@@ -52,7 +44,6 @@ export const AddUserAccountForm: React.FC<
     target: { name, value },
   }) => {
     setFormIsChecked(false);
-    setErrorForDmsId(false);
     if (name === 'phoneNumber') {
       value = validatePhoneNumber(value);
     }
@@ -61,7 +52,6 @@ export const AddUserAccountForm: React.FC<
 
   const handleRoleChange = (e: React.SyntheticEvent, value: string | null) => {
     setFormIsChecked(false);
-    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       role: value as TRole,
@@ -108,7 +98,6 @@ export const AddUserAccountForm: React.FC<
           formIsChecked={formIsChecked}
           setEmployeeForm={setEmployeeForm}
           setFormIsChecked={setFormIsChecked}
-          setErrorForDmsId={setErrorForDmsId}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -125,7 +114,6 @@ export const AddUserAccountForm: React.FC<
             form={form}
             formIsChecked={formIsChecked}
             setEmployeeForm={setEmployeeForm}
-            setErrorForDmsId={setErrorForDmsId}
             setFormIsChecked={setFormIsChecked}
           />
         )}
@@ -140,12 +128,15 @@ export const AddUserAccountForm: React.FC<
           value={form.email}
           error={
             formIsChecked &&
-            (!form.email?.length || !checkEmail(form.email) || emailExists(form.email))
+            (!form.email?.length ||
+              !checkEmail(form.email) ||
+              emailExists(form.email) ||
+              emailError)
           }
           onChange={handleChange}
           label="Email"
           formIsChecked={formIsChecked}
-          helperText={emailExists(form.email) ? ERROR_MESSAGES.duplicateEmail : ''}
+          helperText={emailExists(form.email) || emailError ? ERROR_MESSAGES.duplicateEmail : ''}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -159,10 +150,10 @@ export const AddUserAccountForm: React.FC<
             label: 'Role',
             fullWidth: true,
             placeholder: 'Select Role',
-            error: formIsChecked && (!form.role || errorForDmsId),
+            error: formIsChecked && (!form.role || dmsIdError),
           })}
         />
-        {errorForDmsId && (
+        {dmsIdError && (
           <span style={{ fontSize: 14, color: 'red', display: 'block', marginTop: 3 }}>
             {ERROR_MESSAGES.duplicateDmsId}
           </span>
@@ -174,7 +165,6 @@ export const AddUserAccountForm: React.FC<
       <Grid container spacing={3} style={{ marginLeft: 0 }}>
         {form.serviceCenters?.map(sc => (
           <ServiceCenterSection
-            setErrorForDmsId={setErrorForDmsId}
             key={sc.value}
             formIsChecked={formIsChecked}
             sc={sc}

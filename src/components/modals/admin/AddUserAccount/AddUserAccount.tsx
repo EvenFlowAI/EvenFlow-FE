@@ -15,8 +15,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { INewUserAccount, IUserAccount } from '../../../../pages/admin/RoleManagement/types';
 import { RootState } from '../../../../store/rootReducer';
 import { TOption } from '../../../../utils/types';
-import { setLoading as setTableLoading } from '../../../../store/reducers/roleManagement/actions';
+import {
+  setDmsIdError,
+  setEmailError,
+  setLoading as setTableLoading,
+} from '../../../../store/reducers/roleManagement/actions';
 import { Roles } from '../../../../types/types';
+
+enum ERROR_CODES {
+  EMAIL_ALREADY_IN_USE = 9,
+  USER_WITH_DMS_ID_ALREADY_EXISTS = 5,
+}
 
 export const AddUserAccount: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<TUserAccountForm | null>>>
@@ -27,8 +36,7 @@ export const AddUserAccount: React.FC<
   const [avatar, setAvatar] = useState<File | undefined>();
   const dispatch = useDispatch();
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
-  const { users } = useSelector((state: RootState) => state.roleManagement);
-  const [errorForDmsId, setErrorForDmsId] = useState<boolean>(false);
+  const { users, emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
 
   useEffect(() => {
     if (payload) {
@@ -36,11 +44,17 @@ export const AddUserAccount: React.FC<
     }
   }, [payload]);
 
+  useEffect(() => {
+    dispatch(setDmsIdError(false));
+    dispatch(setEmailError(false));
+  }, [userForm]);
+
   const onClose = () => {
     setUserForm(initialUserAccountForm);
     setAvatar(undefined);
     setFormIsChecked(false);
-    setErrorForDmsId(false);
+    dispatch(setDmsIdError(false));
+    dispatch(setEmailError(false));
     setLoading(false);
     props.onClose();
   };
@@ -71,8 +85,6 @@ export const AddUserAccount: React.FC<
       serviceCenters: selectedCentersForDealership.map(sc => {
         const isTechnician = user.role === Roles.Technician;
         const hasDetails = Boolean(sc.hourlyRate) || Boolean(sc.overtimeRate) || isTechnician;
-
-        console.log('sc.displayOnBookingTypes', sc.displayOnBookingTypes);
 
         return {
           id: sc.value,
@@ -113,6 +125,17 @@ export const AddUserAccount: React.FC<
     return user.id ? { ...base, id: user.id, emailConfirmed: user.emailConfirmed } : base;
   }
 
+  const handleError = (errorCode: number) => {
+    if (errorCode === ERROR_CODES.USER_WITH_DMS_ID_ALREADY_EXISTS) {
+      dispatch(setDmsIdError(true));
+    }
+    if (errorCode === ERROR_CODES.EMAIL_ALREADY_IN_USE) {
+      dispatch(setEmailError(true));
+    }
+    setLoading(false);
+    dispatch(setTableLoading(false));
+  };
+
   const handleCreateOrSave = async () => {
     setFormIsChecked(true);
 
@@ -129,12 +152,7 @@ export const AddUserAccount: React.FC<
           mappedUser as IUserAccount,
           userForm.id,
           onClose,
-          (errorCode: number) => {
-            if (errorCode === 4) {
-              setErrorForDmsId(true);
-            }
-            setLoading(false);
-          },
+          handleError,
           avatar
         )
       );
@@ -142,17 +160,7 @@ export const AddUserAccount: React.FC<
       dispatch(setTableLoading(true));
 
       dispatch(
-        createRoleManagementUser(
-          mappedUser as INewUserAccount,
-          onClose,
-          (errorCode: number) => {
-            if (errorCode === 4) {
-              setErrorForDmsId(true);
-            }
-            setLoading(false);
-          },
-          avatar
-        )
+        createRoleManagementUser(mappedUser as INewUserAccount, onClose, handleError, avatar)
       );
     }
   };
@@ -179,9 +187,14 @@ export const AddUserAccount: React.FC<
     });
 
     return (
-      noUserData || noDealerships || noServiceCenters || errorForDmsId || invalidServiceCenters
+      noUserData ||
+      noDealerships ||
+      noServiceCenters ||
+      dmsIdError ||
+      invalidServiceCenters ||
+      emailError
     );
-  }, [userForm, errorForDmsId]);
+  }, [userForm, dmsIdError, emailError]);
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
@@ -189,11 +202,9 @@ export const AddUserAccount: React.FC<
       <DialogContent>
         <AvatarWrapper onChange={f => setAvatar(f)} dataUrl={payload?.avatarPath} />
         <AddUserAccountForm
-          errorForDmsId={errorForDmsId}
           formIsChecked={formIsChecked}
           form={userForm}
           setFormIsChecked={setFormIsChecked}
-          setErrorForDmsId={setErrorForDmsId}
           setEmployeeForm={setUserForm}
         />
       </DialogContent>

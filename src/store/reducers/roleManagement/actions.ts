@@ -4,6 +4,8 @@ import { AppThunk } from '../../../types/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 
 export const getRoleUsers = createAction<IUserAccount[]>('Users/GetRoles');
+export const setDmsIdError = createAction<boolean>('Users/setDmsIdError');
+export const setEmailError = createAction<boolean>('Users/setEmailError');
 export const setLoading = createAction<boolean>('Users/setLoading');
 
 export const loadRoleUsers =

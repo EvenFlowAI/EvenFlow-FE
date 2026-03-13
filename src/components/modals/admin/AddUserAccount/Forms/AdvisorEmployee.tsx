@@ -9,22 +9,14 @@ interface AdvisorEmployeeProps {
   sc: TOptionForUserAccountServiceCenters;
   form: TUserAccountForm;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
-  setErrorForDmsId: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
 }
 
-const AdvisorEmployee = ({
-  sc,
-  form,
-  setFormIsChecked,
-  setErrorForDmsId,
-  setEmployeeForm,
-}: AdvisorEmployeeProps) => {
+const AdvisorEmployee = ({ sc, form, setFormIsChecked, setEmployeeForm }: AdvisorEmployeeProps) => {
   const { classes } = useStyles();
 
   const handleSelfServiceChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
-    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       serviceCenters: prev.serviceCenters.map(el =>
@@ -46,7 +38,6 @@ const AdvisorEmployee = ({
 
   const handleEmployeeChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setFormIsChecked(false);
-    setErrorForDmsId(false);
     setEmployeeForm(prev => ({
       ...prev,
       serviceCenters: prev.serviceCenters.map(el =>

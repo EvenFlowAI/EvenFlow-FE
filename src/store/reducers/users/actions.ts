@@ -169,6 +169,7 @@ export const createRoleManagementUser =
       // eslint-disable-next-line
     } catch (e: any) {
       const errorCode = e?.response?.data?.error?.errorCode;
+      console.log(e);
       onError(errorCode);
       console.log('updateUser', e);
     }
