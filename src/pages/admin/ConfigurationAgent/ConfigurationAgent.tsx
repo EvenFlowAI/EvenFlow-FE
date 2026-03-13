@@ -68,7 +68,7 @@ const ConfigurationAgent = () => {
       iframe.removeEventListener('load', handleLoad);
       window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [selectedSC?.id, iframeLoaded]);
 
   useEffect(() => {
     if (selectedSC && iframeRef.current && iframeLoaded) {
