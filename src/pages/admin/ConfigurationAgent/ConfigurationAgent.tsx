@@ -26,10 +26,7 @@ const ConfigurationAgent = () => {
         { scID: selectedSC.id, accessToken: token || accessToken },
         CONFIGURATION_AGENT_URL
       );
-      console.log(
-        `Message sent to iframe successfully with service center ID and access token.`,
-        token || accessToken
-      );
+      console.log(`Message sent to iframe successfully with service center ID and access token.`);
     }
   };
 
@@ -52,7 +49,7 @@ const ConfigurationAgent = () => {
           .then(token => {
             console.log('Token refreshed successfully.');
             if (token) {
-              console.log('Sending data to iframe: ', token);
+              console.log('Sending token to iframe.');
               sendDataToAgent(token);
               showError('Sorry, your message wasn’t sent. Please send it again!');
             }
