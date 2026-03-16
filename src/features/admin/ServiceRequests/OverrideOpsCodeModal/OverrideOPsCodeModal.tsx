@@ -70,8 +70,6 @@ export const OverrideOPsCodeModal: React.FC<
       const override = payload.serviceRequestOverride;
       const request = payload.serviceRequest;
 
-      console.log(payload);
-
       setForm({
         ...initialForm,
         description: override?.description || request?.description || '',
