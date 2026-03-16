@@ -11,16 +11,18 @@ import { TOption } from '../../../../../utils/types';
 
 interface DealershipGroupProps {
   form: TUserAccountForm;
-  formIsChecked: boolean;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  isAdding: boolean;
+  formIsChecked: boolean;
 }
 
 const AddDealershipGroupForm = ({
   form,
   setEmployeeForm,
-  formIsChecked,
   setFormIsChecked,
+  isAdding,
+  formIsChecked,
 }: DealershipGroupProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
 
@@ -127,9 +129,9 @@ const AddDealershipGroupForm = ({
         )
       }
       renderInput={autocompleteRender({
-        label: 'Dealership group',
+        label: isAdding ? 'Dealership group *' : 'Dealership group',
         placeholder: form.dealerships.length ? '' : 'Search Dealership group',
-        error: !form.dealerships.length && formIsChecked,
+        error: isAdding ? !form.dealerships.length && formIsChecked : false,
       })}
     />
   );

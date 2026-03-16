@@ -153,7 +153,7 @@ export const ServiceCenterSection = ({
                 loading={shortLoading}
                 value={employeeTypeOptions.find(el => el.value === sc.type) ?? null}
                 renderInput={autocompleteRender({
-                  label: 'Type',
+                  label: 'Type *',
                   fullWidth: true,
                   placeholder: 'Select Type',
                   error: formIsChecked && (sc.type === null || sc.type === undefined),

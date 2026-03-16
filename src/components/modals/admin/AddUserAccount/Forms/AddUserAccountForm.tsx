@@ -22,11 +22,12 @@ type TTFormProps = {
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
+  isAdding: boolean;
 };
 
 export const AddUserAccountForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
-> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form }) => {
+> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isAdding }) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { users, emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
 
@@ -77,7 +78,7 @@ export const AddUserAccountForm: React.FC<
           name="firstName"
           fullWidth
           error={!form.firstName?.length && formIsChecked}
-          label="First name"
+          label="First name *"
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -89,11 +90,12 @@ export const AddUserAccountForm: React.FC<
           error={!form.lastName?.length && formIsChecked}
           placeholder="Type Last name"
           name="lastName"
-          label="Last name"
+          label="Last name *"
         />
       </Grid>
       <Grid item xs={12} sm={6}>
         <AddDealershipGroupForm
+          isAdding={isAdding}
           form={form}
           formIsChecked={formIsChecked}
           setEmployeeForm={setEmployeeForm}
@@ -112,6 +114,7 @@ export const AddUserAccountForm: React.FC<
         ) : (
           <ServiceCenterCategoryDropdown
             form={form}
+            isAdding={isAdding}
             formIsChecked={formIsChecked}
             setEmployeeForm={setEmployeeForm}
             setFormIsChecked={setFormIsChecked}
@@ -134,7 +137,7 @@ export const AddUserAccountForm: React.FC<
               emailError)
           }
           onChange={handleChange}
-          label="Email"
+          label="Email *"
           formIsChecked={formIsChecked}
           helperText={emailExists(form.email) || emailError ? ERROR_MESSAGES.duplicateEmail : ''}
         />
@@ -147,7 +150,7 @@ export const AddUserAccountForm: React.FC<
           loading={shortLoading}
           value={form.role ?? null}
           renderInput={autocompleteRender({
-            label: 'Role',
+            label: 'Role *',
             fullWidth: true,
             placeholder: 'Select Role',
             error: formIsChecked && (!form.role || dmsIdError),

@@ -21,8 +21,10 @@ import {
   setLoading as setTableLoading,
 } from '../../../../store/reducers/roleManagement/actions';
 import { Roles } from '../../../../types/types';
+import { useException } from '../../../../hooks/useException/useException';
 
 enum ERROR_CODES {
+  DATA_NOT_COMPLETE = 1,
   EMAIL_ALREADY_IN_USE = 9,
   USER_WITH_DMS_ID_ALREADY_EXISTS = 5,
 }
@@ -37,10 +39,13 @@ export const AddUserAccount: React.FC<
   const dispatch = useDispatch();
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
   const { users, emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
+  const showError = useException();
 
   useEffect(() => {
     if (payload) {
       setUserForm(payload);
+    } else {
+      setUserForm(initialUserAccountForm);
     }
   }, [payload]);
 
@@ -116,21 +121,34 @@ export const AddUserAccount: React.FC<
       email: user.email,
       role: user.role || Roles.EvenFlowAdmin,
       avatarPath: user.avatarPath ?? '',
-      dealerships: user.dealerships.map(d => getDealershipWithAccess(d, user)),
+      dealerships: user.dealerships
+        .map(d => getDealershipWithAccess(d, user))
+        .filter(d =>
+          user.role === Roles.ServiceDirector ||
+          user.role === Roles.BDCAgent ||
+          user.role === Roles.BDCManager
+            ? true
+            : d.serviceCenters.length > 0
+        ),
     };
   }
 
   function mapUser(user: TUserAccountForm): INewUserAccount | IUserAccount {
     const base = mapUserBase(user);
+    console.log(base);
     return user.id ? { ...base, id: user.id, emailConfirmed: user.emailConfirmed } : base;
   }
 
   const handleError = (errorCode: number) => {
+    console.log(errorCode);
     if (errorCode === ERROR_CODES.USER_WITH_DMS_ID_ALREADY_EXISTS) {
       dispatch(setDmsIdError(true));
     }
     if (errorCode === ERROR_CODES.EMAIL_ALREADY_IN_USE) {
       dispatch(setEmailError(true));
+    }
+    if (errorCode === ERROR_CODES.DATA_NOT_COMPLETE) {
+      showError('Please fill in all required fields');
     }
     setLoading(false);
     dispatch(setTableLoading(false));
@@ -138,6 +156,7 @@ export const AddUserAccount: React.FC<
 
   const handleCreateOrSave = async () => {
     setFormIsChecked(true);
+    dispatch(setTableLoading(true));
 
     if (emailExists(userForm.email)) {
       return;
@@ -147,18 +166,8 @@ export const AddUserAccount: React.FC<
 
     const mappedUser = mapUser(userForm);
     if (userForm.id) {
-      dispatch(
-        updateRoleManagementUser(
-          mappedUser as IUserAccount,
-          userForm.id,
-          onClose,
-          handleError,
-          avatar
-        )
-      );
+      dispatch(updateRoleManagementUser(mappedUser as IUserAccount, onClose, handleError, avatar));
     } else {
-      dispatch(setTableLoading(true));
-
       dispatch(
         createRoleManagementUser(mappedUser as INewUserAccount, onClose, handleError, avatar)
       );
@@ -166,35 +175,8 @@ export const AddUserAccount: React.FC<
   };
 
   const isDisabledSave = useMemo(() => {
-    const noUserData =
-      !userForm.firstName.length ||
-      !userForm.lastName.length ||
-      !userForm.email.length ||
-      !userForm.role?.length;
-
-    const noDealerships = !userForm.dealerships || userForm.dealerships.length === 0;
-
-    const noServiceCenters =
-      !!userForm.dealerships.length &&
-      (!userForm.serviceCenters || userForm.serviceCenters.length === 0);
-
-    const invalidServiceCenters = userForm.serviceCenters?.some(sc => {
-      if (userForm.role === Roles.Technician || userForm.role === Roles.Advisor) {
-        return sc.type !== 0 && sc.type !== 1;
-      } else {
-        return false;
-      }
-    });
-
-    return (
-      noUserData ||
-      noDealerships ||
-      noServiceCenters ||
-      dmsIdError ||
-      invalidServiceCenters ||
-      emailError
-    );
-  }, [userForm, dmsIdError, emailError]);
+    return dmsIdError || emailError;
+  }, [dmsIdError, emailError]);
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
@@ -206,6 +188,7 @@ export const AddUserAccount: React.FC<
           form={userForm}
           setFormIsChecked={setFormIsChecked}
           setEmployeeForm={setUserForm}
+          isAdding={!payload}
         />
       </DialogContent>
       <DialogActions>

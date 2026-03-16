@@ -15,6 +15,7 @@ interface CategoryDropdownProps {
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   formIsChecked: boolean;
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
+  isAdding: boolean;
 }
 
 // create a new default object for a new service center
@@ -29,6 +30,7 @@ const ServiceCenterCategoryDropdown = ({
   setEmployeeForm,
   formIsChecked,
   setFormIsChecked,
+  isAdding,
 }: CategoryDropdownProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
   const { classes } = useStyles();
@@ -195,9 +197,9 @@ const ServiceCenterCategoryDropdown = ({
         )
       }
       renderInput={autocompleteRender({
-        label: 'Service center',
+        label: isAdding ? 'Service center *' : 'Service center',
         placeholder: form.serviceCenters.length ? '' : 'Search Service center',
-        error: !form.serviceCenters.length && formIsChecked,
+        error: isAdding ? formIsChecked : false,
       })}
     />
   );

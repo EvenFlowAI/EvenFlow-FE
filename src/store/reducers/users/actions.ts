@@ -7,7 +7,7 @@ import {
   setWelcomeScreenView,
 } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
-import { getRoleUsers, loadRoleUsers } from '../roleManagement/actions';
+import { loadRoleUsers } from '../roleManagement/actions';
 import { INewUserAccount, IUserAccount } from '../../../pages/admin/RoleManagement/types';
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
@@ -126,24 +126,22 @@ export const updateUser =
 export const updateRoleManagementUser =
   (
     payload: IUserAccount,
-    id: string,
     onSuccess: () => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => void,
     avatar?: File
   ): AppThunk =>
-  async (dispatch, getState) => {
-    const { users } = getState().roleManagement;
+  async dispatch => {
+    const userId = payload.id;
     try {
-      await Api.call(Api.endpoints.Users.Update, { urlParams: { id }, data: payload });
+      await Api.call(Api.endpoints.Users.Update, { urlParams: { id: userId }, data: payload });
       if (avatar) {
-        await dispatch(saveEmployeeAvatar(avatar, id, onError));
+        await dispatch(saveEmployeeAvatar(avatar, userId, onError));
       }
-      dispatch(getRoleUsers(users.map(user => (user.id === id ? { ...user, ...payload } : user))));
-      onSuccess();
+      dispatch(loadRoleUsers(onSuccess));
       // eslint-disable-next-line
     } catch (e: any) {
-      const errorCode = e?.response?.data?.error?.errorCode;
+      const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
       onError(errorCode);
       console.log('updateUser', e);
     }
@@ -168,7 +166,7 @@ export const createRoleManagementUser =
       dispatch(loadRoleUsers(onSuccess));
       // eslint-disable-next-line
     } catch (e: any) {
-      const errorCode = e?.response?.data?.error?.errorCode;
+      const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
       console.log(e);
       onError(errorCode);
       console.log('updateUser', e);
