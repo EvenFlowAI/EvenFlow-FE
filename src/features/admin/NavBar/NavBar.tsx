@@ -54,8 +54,9 @@ export const NavBar = forwardRef<HTMLDivElement, TProps>(({ sideBarOpened, onOpe
   };
 
   const handleLogout = () => {
+    const isSuperUser = currentUser?.role === Roles.DealerOwner;
     setAnchorEl(null);
-    authService.logout();
+    authService.logout(isSuperUser);
     dispatch(clearSC());
     window.location.reload();
   };

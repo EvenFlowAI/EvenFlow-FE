@@ -5,7 +5,14 @@ export type TApiEndpoint = {
 
 export interface IApiEndpoints {
   Accounts: Record<
-    'Recovery' | 'Reset' | 'Change' | 'Verification' | 'Profile' | 'Dealership' | 'ResendEmail',
+    | 'Recovery'
+    | 'Reset'
+    | 'Change'
+    | 'Verification'
+    | 'Profile'
+    | 'Dealership'
+    | 'AccessibleDealerships'
+    | 'ResendEmail',
     TApiEndpoint
   >;
   AncillaryPricing: Record<
@@ -345,7 +352,15 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   Users: Record<
-    'GetAll' | 'Create' | 'Update' | 'Remove' | 'Retrieve' | 'Avatar' | 'GetShort',
+    | 'GetAll'
+    | 'Get'
+    | 'Create'
+    | 'Update'
+    | 'Remove'
+    | 'Retrieve'
+    | 'Avatar'
+    | 'Restore'
+    | 'GetShort',
     TApiEndpoint
   >;
   ValueSettings: Record<

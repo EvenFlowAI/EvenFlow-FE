@@ -22,6 +22,7 @@ export class Api {
       Verification: { route: '/accounts/verification', method: 'patch' },
       Profile: { route: '/accounts/profile', method: 'get' },
       Dealership: { route: '/accounts/dealership', method: 'get' },
+      AccessibleDealerships: { route: '/accounts/accessible-dealerships', method: 'get' },
       ResendEmail: { route: '/accounts/invitation-email', method: 'post' },
     },
     AncillaryPricing: {
@@ -576,11 +577,13 @@ export class Api {
     },
     Users: {
       GetAll: { route: '/users/by-query', method: 'post' },
+      Get: { route: '/users', method: 'get' },
       Create: { route: '/users', method: 'post' },
       Remove: { route: '/users/{id}', method: 'delete' },
       Retrieve: { route: '/users/{id}', method: 'get' },
       Update: { route: '/users/{id}', method: 'put' },
       Avatar: { route: '/users/{id}/avatar', method: 'patch' },
+      Restore: { route: '/users/{id}/restore', method: 'patch' },
       GetShort: { route: '/users/short-by-query', method: 'post' },
     },
     Holidays: {

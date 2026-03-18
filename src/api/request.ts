@@ -11,6 +11,10 @@ import {
   setRefreshTokenForSelfCustomer,
 } from './helper';
 
+export enum ErrorCode {
+  ServiceCenterAccessDenied = 2,
+}
+
 const setSelfCustomerToken = () => {
   Api.call<ITokens>(Api.endpoints.Authentications.Anonymous, {
     data: { ClientId: ClientId },
@@ -74,6 +78,9 @@ request.interceptors.response.use(
   resp => resp,
   async error => {
     if (error?.response?.status === 401 && authService.getRefreshToken()) {
+      if (error?.response?.data?.errorCode === ErrorCode.ServiceCenterAccessDenied) {
+        window.location.reload();
+      }
       const rq = error.config;
       try {
         await authService.refresh();

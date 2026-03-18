@@ -18,6 +18,7 @@ import {
 import { RootState } from '../../rootReducer';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { DEFAULT_SIDEBAR_HEX } from '../../../utils/constants';
+import { IDealership } from '../../../pages/admin/RoleManagement/types';
 
 export const loading = (payload: boolean): DealershipActions => ({
   type: 'Dealership/Loading',
@@ -31,6 +32,11 @@ export const saving = (payload: boolean): DealershipActions => ({
 
 const getAll = (payload: IDealershipGroupExtended[]): DealershipActions => ({
   type: 'Dealership/GetAll',
+  payload,
+});
+
+const getAccessibleDealershipsForProfile = (payload: IDealership[]): DealershipActions => ({
+  type: 'Dealership/AccessibleDealerships',
   payload,
 });
 
@@ -68,31 +74,40 @@ export const changePageData: ActionCreator<
   };
 };
 
-export const loadAll = (): AppThunk => (dispatch, getState) => {
-  dispatch(loading(true));
-  const state = getState();
-  const { pageData, searchTerm } = state.dealershipGroups;
-  const data = { ...pageData, searchTerm };
-  Api.call<PaginatedAPIResponse<IDealershipGroupExtended>>(Api.endpoints.Dealerships.GetAll, {
-    data,
-  })
-    .then(result => {
-      if (result?.data) {
-        const { result: dealerships, paging } = result.data;
-        if (paging) {
-          dispatch(changePaging(paging));
-        }
-        if (dealerships) {
-          dispatch(getAll(dealerships));
-        }
-        dispatch(loading(false));
-      }
+export const loadAll =
+  (withoutPaging: boolean = false): AppThunk =>
+  (dispatch, getState) => {
+    dispatch(loading(true));
+    const state = getState();
+    const { pageData, searchTerm } = state.dealershipGroups;
+
+    let data;
+    if (withoutPaging) {
+      data = { ...pageData, searchTerm, pageSize: 0 };
+    } else {
+      data = { ...pageData, searchTerm };
+    }
+
+    Api.call<PaginatedAPIResponse<IDealershipGroupExtended>>(Api.endpoints.Dealerships.GetAll, {
+      data,
     })
-    .catch(err => {
-      dispatch(loading(false));
-      console.log('load all dealership', err);
-    });
-};
+      .then(result => {
+        if (result?.data) {
+          const { result: dealerships, paging } = result.data;
+          if (paging) {
+            dispatch(changePaging(paging));
+          }
+          if (dealerships) {
+            dispatch(getAll(dealerships));
+          }
+          dispatch(loading(false));
+        }
+      })
+      .catch(err => {
+        dispatch(loading(false));
+        console.log('load all dealership', err);
+      });
+  };
 
 export const createDealership: ActionCreator<
   ThunkAction<void, RootState, void, DealershipActions>
@@ -257,3 +272,14 @@ export const updateLeftPanelColor =
         dispatch(saving(false));
       });
   };
+
+export const getAccessibleDealerships = (): AppThunk => async dispatch => {
+  try {
+    const response = await Api.call(Api.endpoints.Accounts.AccessibleDealerships);
+    if (response.data) {
+      dispatch(getAccessibleDealershipsForProfile(response.data.data));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};

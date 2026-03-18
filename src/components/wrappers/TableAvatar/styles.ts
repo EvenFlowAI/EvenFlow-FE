@@ -8,4 +8,10 @@ export const useStyles = makeStyles()(theme => ({
     width: 30,
     height: 30,
   },
+  rootAccounts: {
+    backgroundColor: '#536398',
+    fontSize: 18,
+    width: 30,
+    height: 30,
+  },
 }));
