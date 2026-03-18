@@ -57,7 +57,7 @@ const RoleManagement = () => {
         setEditedItem={setEditedItem}
         editedItem={editedItem}
       />
-      <AddUserAccount open={isOpen} onClose={onClose} payload={editedItem} />
+      <AddUserAccount open={isOpen} onClose={onClose} payload={editedItem} isAdminPanel={false} />
     </div>
   );
 };

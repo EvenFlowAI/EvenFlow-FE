@@ -29,9 +29,15 @@ enum ERROR_CODES {
   USER_WITH_DMS_ID_ALREADY_EXISTS = 5,
 }
 
-export const AddUserAccount: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<DialogProps<TUserAccountForm | null>>>
-> = ({ payload, ...props }) => {
+type AddUserAccountProps = React.PropsWithChildren<DialogProps<TUserAccountForm | null>> & {
+  isAdminPanel?: boolean;
+};
+
+export const AddUserAccount: React.FC<AddUserAccountProps> = ({
+  payload,
+  isAdminPanel,
+  ...props
+}) => {
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [userForm, setUserForm] = useState<TUserAccountForm>(initialUserAccountForm);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -180,7 +186,9 @@ export const AddUserAccount: React.FC<
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
-      <DialogTitle onClose={onClose}>{payload ? 'Edit' : 'Add'} User Account</DialogTitle>
+      <DialogTitle onClose={onClose}>
+        {payload ? 'Edit' : 'Add'} {!isAdminPanel ? 'User Account' : 'Employee'}
+      </DialogTitle>
       <DialogContent>
         <AvatarWrapper onChange={f => setAvatar(f)} dataUrl={payload?.avatarPath} />
         <AddUserAccountForm

@@ -109,8 +109,6 @@ class AuthService {
   async dealershipLogin(dealershipId: number) {
     try {
       const response = await API.authentication.dealership(dealershipId);
-
-      console.log(response);
       this.setDealershipTokens(response.data);
 
       // send a message for reload all pages with opened booking/admin-panel
