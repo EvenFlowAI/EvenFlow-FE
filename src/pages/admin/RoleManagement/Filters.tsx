@@ -110,7 +110,7 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
   };
 
   const handleSelectRole = (event: SelectChangeEvent) => {
-    const selectedValue = event.target.value; // завжди string
+    const selectedValue = event.target.value;
     const newFilters = {
       ...filters,
       role: selectedValue === '' ? undefined : (selectedValue as CleanestRoles),

@@ -141,12 +141,10 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
 
   function mapUser(user: TUserAccountForm): INewUserAccount | IUserAccount {
     const base = mapUserBase(user);
-    console.log(base);
     return user.id ? { ...base, id: user.id, emailConfirmed: user.emailConfirmed } : base;
   }
 
   const handleError = (errorCode: number) => {
-    console.log(errorCode);
     if (errorCode === ERROR_CODES.USER_WITH_DMS_ID_ALREADY_EXISTS) {
       dispatch(setDmsIdError(true));
     }

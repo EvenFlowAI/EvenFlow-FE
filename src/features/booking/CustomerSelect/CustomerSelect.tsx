@@ -58,7 +58,6 @@ export const CustomerSelect: React.FC<React.PropsWithChildren<React.PropsWithChi
   useEffect(() => {
     const uid = uuidv4();
     sessionStorage.setItem(LocalTokens.sessionId, uid);
-    console.log('test');
     window.addEventListener('unload', () => {
       sessionStorage.setItem(LocalTokens.sessionId, '');
     });
