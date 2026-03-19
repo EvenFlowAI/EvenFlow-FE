@@ -14,6 +14,12 @@ export type IData = {
   text: string;
 };
 
+export type IDataCodes = {
+  id: number;
+  text: string;
+  code: string;
+};
+
 export type TDnDProps = {
   data: IData[];
   setData: Dispatch<SetStateAction<IData[]>>;

@@ -4,6 +4,7 @@ import {
   loadMakes,
   loadGlobalMakes,
   loadMakesAll,
+  loadMakeCodes,
 } from '../../../store/reducers/vehicleDetails/actions';
 import { RootState } from '../../../store/rootReducer';
 import { Button } from '@mui/material';
@@ -30,7 +31,10 @@ export const MakesModels = () => {
 
   useEffect(() => {
     dispatch(loadGlobalMakes());
-  }, []);
+    if (selectedSC) {
+      dispatch(loadMakeCodes(selectedSC.id));
+    }
+  }, [selectedSC]);
 
   const existedMakes = makes.length > 0;
   return (

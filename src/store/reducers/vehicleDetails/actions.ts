@@ -7,7 +7,7 @@ import { ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage }
 import { loadAllSCs } from '../serviceCenters/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
-import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
+import { IGlobalMake, IGlobalModel, IMakeCode } from '../globalVehicles/types';
 import { enqueueSnackbar } from 'notistack';
 import { mapModelsWithParentNames } from '../../../utils/utils';
 
@@ -22,6 +22,7 @@ export const setPageData = createAction<Partial<IPageRequest>>('VehicleDetails/S
 export const setMakeOrder = createAction<IOrder<IMake>>('VehicleDetails/SetMakeOrder');
 export const setGlobalMakes = createAction<IGlobalMake[]>('VehicleDetails/SetGlobalMakes');
 export const setGlobalModels = createAction<IGlobalModel[]>('VehicleDetails/SetGlobalModels');
+export const setMakeCodes = createAction<IMakeCode[]>('VehicleDetails/setMakeCodes');
 
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
@@ -477,6 +478,32 @@ export const loadGlobalModels =
       .then(result => {
         if (result?.data) {
           dispatch(setGlobalModels(result.data.result));
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar(
+          err.response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      });
+  };
+
+export const loadMakeCodes =
+  (serviceCenterId: number): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Vehicles.GetMakeCodes, { params: { serviceCenterId } })
+      .then(result => {
+        console.log(result);
+        if (result?.data) {
+          console.log(result.data);
+          dispatch(setMakeCodes(result.data.result));
         }
       })
       .catch(err => {

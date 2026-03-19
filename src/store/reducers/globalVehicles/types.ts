@@ -12,6 +12,12 @@ export interface IGlobalMake {
   status?: EReviewStatus;
 }
 
+export interface IMakeCode {
+  name: string;
+  id: number;
+  code: string;
+}
+
 export interface IGlobalModel {
   id: number;
   vehiclesPercentage: number;
