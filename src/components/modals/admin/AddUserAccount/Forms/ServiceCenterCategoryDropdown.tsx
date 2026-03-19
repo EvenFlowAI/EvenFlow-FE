@@ -199,7 +199,7 @@ const ServiceCenterCategoryDropdown = ({
       renderInput={autocompleteRender({
         label: isAdding ? 'Service center *' : 'Service center',
         placeholder: form.serviceCenters.length ? '' : 'Search Service center',
-        error: isAdding ? formIsChecked : false,
+        error: isAdding ? formIsChecked && !form.serviceCenters.length : false,
       })}
     />
   );
