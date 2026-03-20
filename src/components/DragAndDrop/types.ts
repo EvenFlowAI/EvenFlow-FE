@@ -12,6 +12,7 @@ export type TContainerStyle = {
 export type IData = {
   id: number;
   text: string;
+  code?: string;
 };
 
 export type IDataCodes = {

@@ -623,6 +623,7 @@ export class Api {
       CreateEngineType: { route: '/vehicles/engine-type', method: 'post' },
       UpdateModel: { route: '/vehicles/models', method: 'put' },
       GetMakeCodes: { route: '/vehicles/make-codes', method: 'get' },
+      GetMakeModelCodes: { route: '/vehicles/make-model-codes', method: 'get' },
     },
     WaitListSettings: {
       Get: { route: '/waitlist-settings', method: 'get' },

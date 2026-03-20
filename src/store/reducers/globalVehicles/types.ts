@@ -13,9 +13,17 @@ export interface IGlobalMake {
 }
 
 export interface IMakeCode {
-  name: string;
-  id: number;
-  code: string;
+  makeCode: string;
+  makeName: string;
+}
+
+export interface IMakeModelCode {
+  id: string;
+  makeCode: string;
+  makeName: string;
+  modelName: string;
+  modelCode: string;
+  isActive: boolean;
 }
 
 export interface IGlobalModel {

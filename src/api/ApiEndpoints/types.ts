@@ -383,6 +383,7 @@ export interface IApiEndpoints {
     | 'RemoveEngineType'
     | 'CreateEngineType'
     | 'UpdateModel'
+    | 'GetMakeModelCodes'
     | 'GetMakeCodes',
     TApiEndpoint
   >;

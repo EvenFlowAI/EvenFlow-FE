@@ -15,18 +15,20 @@ import DragAndDrop from '../../../../components/DragAndDrop/DragAndDrop';
 import {
   createMake,
   loadGlobalModels,
+  loadMakeModelCodes,
   updateModel,
 } from '../../../../store/reducers/vehicleDetails/actions';
 import { useDispatch } from 'react-redux';
 import { IData } from '../../../../components/DragAndDrop/types';
 import { setCurrentMake } from '../../../../store/reducers/vehicleDetails/actions';
-import CodesConfiguration from '../CodesConfiguration/CodesConfiguration';
+import { MakeCodesConfiguration } from '../MakeCodesConfiguration/MakeCodesConfiguration';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 import MakeModelInput from './MakeModelInput';
 import { ModelsTitle } from './modelsTitle';
 import { RemoveMakeTitle } from './RemoveMakeTitle';
+import ModelCodesConfiguration from '../ModelCodesConfiguration/ModelCodesConfiguration';
 
 type TAddMakeModalProps = DialogProps & {
   isEditing?: boolean;
@@ -36,13 +38,18 @@ export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
 > = ({ isEditing, onClose, ...props }) => {
   const dispatch = useDispatch();
-  const { currentMake, globalMakes, globalModels, allMakes } = useSelector(
+  const { currentMake, globalMakes, globalModels, allMakes, makeModelCodes } = useSelector(
     (state: RootState) => state.vehicleDetails
   );
   const {
-    onOpen: opOpenConfigurationModal,
+    onOpen: onOpenConfigurationModal,
     onClose: onCloseConfigurationModal,
     isOpen: isOpenConfigurationModal,
+  } = useModal();
+  const {
+    onOpen: onOpenModelConfigurationModal,
+    onClose: onCloseModelConfigurationModal,
+    isOpen: isOpenModelConfigurationModal,
   } = useModal();
   const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
   const { askConfirm } = useConfirm();
@@ -55,6 +62,9 @@ export const AddMakeModelModal: React.FC<
 
   useEffect(() => {
     if (currentMake) {
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis && currentMake.makeCode) {
+        dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
+      }
       dispatch(loadGlobalModels(currentMake.globalId));
     }
   }, [currentMake]);
@@ -65,6 +75,7 @@ export const AddMakeModelModal: React.FC<
       .map(el => ({
         id: el.globalId,
         text: el.name,
+        code: el.makeCode,
       }));
 
     setConfiguredMakes(filteredMakes);
@@ -76,6 +87,7 @@ export const AddMakeModelModal: React.FC<
       .map(el => ({
         id: el.globalId,
         text: el.name,
+        code: el.modelCode?.modelCode,
       }));
     setConfiguredModels(filteredModels ?? []);
   }, [currentMake]);
@@ -99,7 +111,7 @@ export const AddMakeModelModal: React.FC<
 
   const handleSaveMakes = () => {
     if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
-      opOpenConfigurationModal();
+      onOpenConfigurationModal();
     } else {
       onSaveMakes();
     }
@@ -107,23 +119,46 @@ export const AddMakeModelModal: React.FC<
 
   const handleSaveModels = () => {
     if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
-      opOpenConfigurationModal();
+      onOpenModelConfigurationModal();
     } else {
       onSaveModels();
     }
   };
 
   const saveMakes = (globalIds: number[]) => {
+    const makeCodes: Record<string, string> = Object.fromEntries(
+      configuredMakes.map(make => [make.id, make.code!])
+    );
+
     if (globalIds.length && selectedSC) {
-      dispatch(
-        createMake(
-          {
-            serviceCenterId: selectedSC?.id,
-            globalIds,
-          },
-          onCloseModal
-        )
-      );
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        dispatch(
+          createMake(
+            {
+              serviceCenterId: selectedSC?.id,
+              globalIds,
+              makeCodes,
+            },
+            () => {
+              onCloseModal();
+              onCloseConfigurationModal();
+            }
+          )
+        );
+      } else {
+        dispatch(
+          createMake(
+            {
+              serviceCenterId: selectedSC?.id,
+              globalIds,
+            },
+            () => {
+              onCloseModal();
+              onCloseConfigurationModal();
+            }
+          )
+        );
+      }
     }
   };
 
@@ -160,9 +195,34 @@ export const AddMakeModelModal: React.FC<
 
   const saveModels = () => {
     if (selectedSC && currentMake) {
-      return dispatch(
-        updateModel(selectedSC?.id, currentMake?.globalId, getModelIds(), onCloseModal)
-      );
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        const modelCodes: Record<string, string> = Object.fromEntries(
+          configuredModels.map(model => {
+            const found = makeModelCodes.find(mm => mm.modelCode === model.code);
+            return [model.id, found?.id?.toString() ?? ''];
+          })
+        );
+
+        return dispatch(
+          updateModel(
+            selectedSC?.id,
+            currentMake?.globalId,
+            getModelIds(),
+            () => {
+              onCloseModal();
+              onCloseModelConfigurationModal();
+            },
+            modelCodes
+          )
+        );
+      } else {
+        return dispatch(
+          updateModel(selectedSC?.id, currentMake?.globalId, getModelIds(), () => {
+            onCloseModal();
+            onCloseModelConfigurationModal();
+          })
+        );
+      }
     }
   };
 
@@ -253,14 +313,20 @@ export const AddMakeModelModal: React.FC<
           </Button>
         </div>
       </DialogActions>
-      <CodesConfiguration
+      <MakeCodesConfiguration
         onClose={onCloseConfigurationModal}
         open={isOpenConfigurationModal}
-        isEditing={isEditing}
         onCloseModal={onCloseModal}
         configuredMakes={configuredMakes}
-        configuredModels={configuredModels}
+        setConfiguredMakes={setConfiguredMakes}
         onSaveMakes={onSaveMakes}
+      />
+      <ModelCodesConfiguration
+        onClose={onCloseModelConfigurationModal}
+        open={isOpenModelConfigurationModal}
+        onCloseModal={onCloseModal}
+        configuredModels={configuredModels}
+        setConfiguredModels={setConfiguredModels}
         onSaveModels={onSaveModels}
       />
     </BaseModal>
