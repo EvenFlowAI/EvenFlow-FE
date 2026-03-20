@@ -44,7 +44,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   const [avatar, setAvatar] = useState<File | undefined>();
   const dispatch = useDispatch();
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
-  const { users, emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
+  const { emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
   const showError = useException();
 
   useEffect(() => {
@@ -68,10 +68,6 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
     dispatch(setEmailError(false));
     setLoading(false);
     props.onClose();
-  };
-
-  const emailExists = (value: string) => {
-    return users.some(user => user.email === value && user.id !== userForm?.id);
   };
 
   function getDealershipWithAccess(dealership: TOption, user: TUserAccountForm) {
@@ -160,12 +156,8 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
 
   const handleCreateOrSave = async () => {
     setFormIsChecked(true);
+
     dispatch(setTableLoading(true));
-
-    if (emailExists(userForm.email)) {
-      return;
-    }
-
     setLoading(true);
 
     const mappedUser = mapUser(userForm);

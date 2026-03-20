@@ -29,7 +29,7 @@ export const AddUserAccountForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
 > = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isAdding }) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
-  const { users, emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
+  const { emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
 
   const ERROR_MESSAGES = {
     duplicateEmail: 'A user with this email already exists in the system',
@@ -61,10 +61,6 @@ export const AddUserAccountForm: React.FC<
       displayOnBookingTypes: value === Roles.Advisor ? [] : [],
       serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
     }));
-  };
-
-  const emailExists = (value: string) => {
-    return users.some(user => user.email === value && user.id !== form.id);
   };
 
   return (
@@ -129,17 +125,11 @@ export const AddUserAccountForm: React.FC<
           fullWidth
           placeholder="Type Email"
           value={form.email}
-          error={
-            formIsChecked &&
-            (!form.email?.length ||
-              !checkEmail(form.email) ||
-              emailExists(form.email) ||
-              emailError)
-          }
+          error={formIsChecked ? !checkEmail(form.email) || emailError : false}
           onChange={handleChange}
           label="Email *"
           formIsChecked={formIsChecked}
-          helperText={emailExists(form.email) || emailError ? ERROR_MESSAGES.duplicateEmail : ''}
+          helperText={formIsChecked ? (emailError ? ERROR_MESSAGES.duplicateEmail : '') : ''}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
