@@ -15,6 +15,7 @@ import { useStyles } from '../AddMakeModelModal/styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 
 type TModelCodesConfiguration = DialogProps & {
   configuredModels: IData[];
@@ -96,18 +97,28 @@ export const ModelCodesConfiguration: React.FC<
                   />
                 </TableCell>
                 <TableCell>
-                  <Autocomplete
-                    disabled={true}
-                    options={[]}
+                  {/*<Autocomplete*/}
+                  {/*  disabled={true}*/}
+                  {/*  options={[]}*/}
+                  {/*  style={{ width: '250px' }}*/}
+                  {/*  getOptionLabel={i => i}*/}
+                  {/*  value={getDesc(el.code || '')}*/}
+                  {/*  isOptionEqualToValue={(o, s) => o === s}*/}
+                  {/*  onChange={() => {}}*/}
+                  {/*  renderInput={autocompleteRender({*/}
+                  {/*    label: '',*/}
+                  {/*    placeholder: 'Model Description',*/}
+                  {/*  })}*/}
+                  {/*/>*/}
+                  <TextField
+                    id="description"
+                    disabled
                     style={{ width: '250px' }}
-                    getOptionLabel={i => i}
                     value={getDesc(el.code || '')}
-                    isOptionEqualToValue={(o, s) => o === s}
                     onChange={() => {}}
-                    renderInput={autocompleteRender({
-                      label: '',
-                      placeholder: 'Model Description',
-                    })}
+                    error={false}
+                    placeholder="Model Description"
+                    name="Description"
                   />
                 </TableCell>
               </TableRow>
