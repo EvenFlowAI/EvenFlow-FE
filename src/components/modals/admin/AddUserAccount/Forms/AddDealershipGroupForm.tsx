@@ -30,12 +30,12 @@ const AddDealershipGroupForm = ({
     (state: RootState) => state.dealershipGroups
   );
 
-  const allOptions: TOption[] = dealershipList.length
-    ? dealershipList.map(d => ({
+  const allOptions: TOption[] = accessibleDealerships.length
+    ? accessibleDealerships.map(d => ({
         value: d.id,
         name: d.name,
       }))
-    : accessibleDealerships.map(d => ({
+    : dealershipList.map(d => ({
         value: d.id,
         name: d.name,
       }));
