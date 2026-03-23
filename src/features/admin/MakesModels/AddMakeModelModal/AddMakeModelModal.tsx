@@ -177,9 +177,11 @@ export const AddMakeModelModal: React.FC<
     }
   };
 
-  const getGlobalIds = () => [...configuredMakes.map(el => el.id)];
+  const getGlobalIds = () =>
+    [...configuredMakes].sort(el => (el.text === 'OTHER' ? 1 : -1)).map(el => el.id);
 
-  const getModelIds = () => [...configuredModels.map(el => el.id)];
+  const getModelIds = () =>
+    [...configuredModels].sort(el => (el.text === 'OTHER' ? 1 : -1)).map(el => el.id);
 
   const saveModels = () => {
     if (selectedSC && currentMake) {

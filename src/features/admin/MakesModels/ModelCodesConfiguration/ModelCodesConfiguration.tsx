@@ -38,6 +38,12 @@ export const ModelCodesConfiguration: React.FC<
     return found ? `${found.makeName} ${found.modelName}` : '';
   };
 
+  const getIsActive = (code?: string | undefined) => {
+    if (!code) return true;
+    const found = makeModelCodes.find(m => m.modelCode === code);
+    return found ? found.isActive : false;
+  };
+
   return (
     <BaseModal {...props} width={860} onClose={onClose}>
       <DialogTitle onClose={onClose}>
@@ -70,12 +76,15 @@ export const ModelCodesConfiguration: React.FC<
           </TableHead>
           <TableBody>
             {configuredModels.map(el => (
-              <TableRow>
+              <TableRow key={el.id}>
                 <TableCell align="left">{el.text}</TableCell>
                 <TableCell>
                   <Autocomplete
                     options={makeModelCodes?.map(el => el.modelCode) ?? []}
-                    style={{ width: '190px' }}
+                    style={{
+                      width: '190px',
+                      border: getIsActive(el.code) ? 'none' : '1px solid red',
+                    }}
                     getOptionLabel={i => i}
                     value={el.code}
                     isOptionEqualToValue={(o, s) => o === s}

@@ -15,6 +15,7 @@ import { useStyles } from '../AddMakeModelModal/styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { capitalizeName } from '../helper';
 
 type TMakeCodesConfiguration = DialogProps & {
   configuredMakes: IData[];
@@ -31,11 +32,6 @@ export const MakeCodesConfiguration: React.FC<
   const handleUpdateCode = (prevEl: IData, value: string) => {
     setConfiguredMakes(prev => prev.map(el => (el.id === prevEl.id ? { ...el, code: value } : el)));
   };
-
-  function capitalizeName(name?: string): string {
-    if (!name) return '';
-    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-  }
 
   return (
     <BaseModal {...props} width={860} onClose={onClose}>

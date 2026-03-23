@@ -17,5 +17,8 @@ export const MakeCodeTable = withStyles(StyledTable, theme => ({
     '& .MuiTableRow-head': {
       borderBottom: 'none',
     },
+    '& .MuiTableRow-root': {
+      borderBottom: 'none',
+    },
   },
 }));

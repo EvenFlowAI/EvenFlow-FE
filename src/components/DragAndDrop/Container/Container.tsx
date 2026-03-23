@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useCallback } from 'react';
 import { Card } from '../Card/Card';
 import { TDnDProps, IData } from '../types';
+import { capitalizeName } from '../../../features/admin/MakesModels/helper';
 
 export const Container: FC<TDnDProps> = ({ style, data, setData, currentMake, isEditing }) => {
   const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
@@ -19,11 +20,6 @@ export const Container: FC<TDnDProps> = ({ style, data, setData, currentMake, is
     },
     [setData]
   );
-
-  function capitalizeName(name?: string): string {
-    if (!name) return '';
-    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
-  }
 
   const renderCard = useCallback(
     (card: IData, index: number) => {
