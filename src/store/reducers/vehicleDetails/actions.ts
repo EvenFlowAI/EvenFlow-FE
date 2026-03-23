@@ -7,7 +7,7 @@ import { ICreateMake, IEngineType, IMileage, TCreateEngineType, TCreateMileage }
 import { loadAllSCs } from '../serviceCenters/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
-import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
+import { IGlobalMake, IGlobalModel, IMakeCode, IMakeModelCode } from '../globalVehicles/types';
 import { enqueueSnackbar } from 'notistack';
 import { mapModelsWithParentNames } from '../../../utils/utils';
 
@@ -22,6 +22,8 @@ export const setPageData = createAction<Partial<IPageRequest>>('VehicleDetails/S
 export const setMakeOrder = createAction<IOrder<IMake>>('VehicleDetails/SetMakeOrder');
 export const setGlobalMakes = createAction<IGlobalMake[]>('VehicleDetails/SetGlobalMakes');
 export const setGlobalModels = createAction<IGlobalModel[]>('VehicleDetails/SetGlobalModels');
+export const setMakeCodes = createAction<IMakeCode[]>('VehicleDetails/SetMakeCodes');
+export const setMakeModelCodes = createAction<IMakeModelCode[]>('VehicleDetails/SetMakeModelCodes');
 
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
@@ -181,13 +183,14 @@ export const updateModel =
     serviceCenterId: number,
     globalMakeId: number,
     globalIds: number[],
-    onCloseModal: () => void
+    onCloseModal: () => void,
+    modelCodes?: Record<string, string>
   ): AppThunk =>
   async (dispatch, getState) => {
     const { selectedSC } = getState().serviceCenters;
     if (selectedSC) {
       Api.call(Api.endpoints.Vehicles.UpdateModel, {
-        data: { serviceCenterId, globalMakeId, globalIds },
+        data: { serviceCenterId, globalMakeId, globalIds, modelCodes },
       })
         .then(result => {
           if (result) {
@@ -477,6 +480,54 @@ export const loadGlobalModels =
       .then(result => {
         if (result?.data) {
           dispatch(setGlobalModels(result.data.result));
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar(
+          err.response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      });
+  };
+
+export const loadMakeCodes =
+  (serviceCenterId: number): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Vehicles.GetMakeCodes, { params: { serviceCenterId } })
+      .then(result => {
+        if (result?.data) {
+          dispatch(setMakeCodes(result.data.data));
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar(
+          err.response?.data?.message || 'An error occurred while processing your request',
+          {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+            },
+          }
+        );
+      });
+  };
+
+export const loadMakeModelCodes =
+  (serviceCenterId: number, makeCode?: string): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Vehicles.GetMakeModelCodes, { params: { serviceCenterId, makeCode } })
+      .then(result => {
+        if (result?.data) {
+          dispatch(setMakeModelCodes(result.data.data));
         }
       })
       .catch(err => {

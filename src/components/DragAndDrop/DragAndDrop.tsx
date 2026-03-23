@@ -3,17 +3,18 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Container } from './Container/Container';
 import { TDnDProps } from './types';
+import { dragAndDropStyle } from '../../features/admin/MakesModels/AddMakeModelModal/helper';
 
-const DragAndDrop: React.FC<TDnDProps> = ({ style, data, setData, isEditing, currentMakeName }) => {
+const DragAndDrop: React.FC<TDnDProps> = ({ data, setData, currentMake, isEditing }) => {
   return (
     <div>
       <DndProvider backend={HTML5Backend}>
         <Container
+          isEditing={isEditing}
           data={data}
           setData={setData}
-          style={style}
-          isEditing={isEditing}
-          currentMakeName={currentMakeName}
+          style={dragAndDropStyle}
+          currentMake={currentMake}
         />
       </DndProvider>
     </div>

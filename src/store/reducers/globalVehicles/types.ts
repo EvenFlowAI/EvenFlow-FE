@@ -12,6 +12,20 @@ export interface IGlobalMake {
   status?: EReviewStatus;
 }
 
+export interface IMakeCode {
+  makeCode: string;
+  makeName: string;
+}
+
+export interface IMakeModelCode {
+  id: string;
+  makeCode: string;
+  makeName: string;
+  modelName: string;
+  modelCode: string;
+  isActive: boolean;
+}
+
 export interface IGlobalModel {
   id: number;
   vehiclesPercentage: number;

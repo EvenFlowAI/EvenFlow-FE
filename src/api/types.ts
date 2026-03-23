@@ -505,6 +505,9 @@ export interface IModel {
   globalId: number;
   isReadOnly: boolean;
   orderIndex: number;
+  modelCode?: {
+    modelCode: string;
+  };
   id: number;
   name: string;
   code: string;
@@ -513,6 +516,7 @@ export interface IModel {
 export interface IMake {
   name: string;
   models: IModel[];
+  makeCode?: string;
   id: number;
   globalId: number;
   isReadOnly: boolean;
