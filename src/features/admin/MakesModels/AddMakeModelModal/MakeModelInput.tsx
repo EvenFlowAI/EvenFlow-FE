@@ -67,11 +67,7 @@ const MakeModelInput = ({
           : makesToAdd.length === filteredGlobalMakes.length && makesToAdd.length > 0;
 
         return (
-          <li
-            style={{ display: 'flex', alignItems: 'center' }}
-            key={option + new Date()}
-            {...props}
-          >
+          <li style={{ display: 'flex', alignItems: 'center' }} key={option.id} {...props}>
             <Checkbox size="small" style={{ marginRight: 8, padding: 0 }} checked={isAllSelected} />
             {label(option)}
           </li>
@@ -91,7 +87,7 @@ const MakeModelInput = ({
             opacity: isAlreadyConfigured ? 0.6 : 1,
             pointerEvents: isAlreadyConfigured ? 'none' : 'auto',
           }}
-          key={option + new Date()}
+          key={option.id}
           {...props}
         >
           <Checkbox

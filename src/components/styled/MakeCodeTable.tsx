@@ -1,17 +1,18 @@
 import { withStyles } from 'tss-react/mui';
 import { StyledTable } from './StyledTable';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const MakeCodeTable = withStyles(StyledTable, theme => ({
   root: {
-    // border: `1px solid ${theme.palette.divider}`,
+    border: 'none',
     '& .MuiTableCell-head': {
       textAlign: 'left',
-      color: '#858585',
+      color: theme.palette.text.secondary,
       textTransform: 'none',
+      border: 'none',
     },
     '& .MuiTableCell-body': {
       textAlign: 'left',
+      border: 'none',
     },
     '& .MuiTableRow-head': {
       borderBottom: 'none',

@@ -18,20 +18,24 @@ import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 
 type TMakeCodesConfiguration = DialogProps & {
   configuredMakes: IData[];
-  onCloseModal: () => void;
   onSaveMakes: () => void;
   setConfiguredMakes: React.Dispatch<React.SetStateAction<IData[]>>;
 };
 
 export const MakeCodesConfiguration: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMakeCodesConfiguration>>
-> = ({ onClose, configuredMakes, setConfiguredMakes, onCloseModal, onSaveMakes, ...props }) => {
+> = ({ onClose, configuredMakes, setConfiguredMakes, onSaveMakes, ...props }) => {
   const { classes } = useStyles();
   const { makeCodes } = useSelector((state: RootState) => state.vehicleDetails);
 
   const handleUpdateCode = (prevEl: IData, value: string) => {
     setConfiguredMakes(prev => prev.map(el => (el.id === prevEl.id ? { ...el, code: value } : el)));
   };
+
+  function capitalizeName(name?: string): string {
+    if (!name) return '';
+    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  }
 
   return (
     <BaseModal {...props} width={860} onClose={onClose}>
@@ -62,8 +66,9 @@ export const MakeCodesConfiguration: React.FC<
           </TableHead>
           <TableBody>
             {configuredMakes.map(el => (
-              <TableRow>
-                <TableCell align="left">{el.text}</TableCell>
+              <TableRow key={el.id}>
+                {' '}
+                <TableCell align="left">{capitalizeName(el.text)}</TableCell>
                 <TableCell>
                   <Autocomplete
                     options={makeCodes?.map(el => el.makeCode) ?? []}
@@ -86,7 +91,7 @@ export const MakeCodesConfiguration: React.FC<
       <DialogActions>
         <div className={classes.buttonsWrapper}>
           <Button onClick={onClose} className={classes.cancelButton}>
-            Cancel
+            Back
           </Button>
           <Button onClick={onSaveMakes} className={classes.saveButton}>
             Save

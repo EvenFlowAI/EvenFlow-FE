@@ -6,7 +6,7 @@ export interface ICreateMake {
   globalIds: number[];
   makeCodes?: {
     [key: string]: string;
-  };
+  } | null;
 }
 
 export interface IMileage {

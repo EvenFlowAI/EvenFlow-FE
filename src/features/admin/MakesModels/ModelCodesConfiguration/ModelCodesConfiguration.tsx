@@ -18,14 +18,12 @@ import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 
 type TModelCodesConfiguration = DialogProps & {
   configuredModels: IData[];
-  onCloseModal: () => void;
   onSaveModels: () => void;
   setConfiguredModels: React.Dispatch<React.SetStateAction<IData[]>>;
 };
-
 export const ModelCodesConfiguration: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TModelCodesConfiguration>>
-> = ({ onClose, configuredModels, setConfiguredModels, onCloseModal, onSaveModels, ...props }) => {
+> = ({ onClose, configuredModels, setConfiguredModels, onSaveModels, ...props }) => {
   const { classes } = useStyles();
   const { makeModelCodes } = useSelector((state: RootState) => state.vehicleDetails);
 
@@ -37,7 +35,7 @@ export const ModelCodesConfiguration: React.FC<
 
   const getDesc = (code: string) => {
     const found = makeModelCodes.find(m => m.modelCode === code);
-    return found ? found.makeName + found.modelName : '';
+    return found ? `${found.makeName} ${found.modelName}` : '';
   };
 
   return (

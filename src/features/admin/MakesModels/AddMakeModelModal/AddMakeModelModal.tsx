@@ -38,7 +38,7 @@ export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
 > = ({ isEditing, onClose, ...props }) => {
   const dispatch = useDispatch();
-  const { currentMake, globalMakes, globalModels, allMakes, makeModelCodes } = useSelector(
+  const { currentMake, allMakes, makeModelCodes } = useSelector(
     (state: RootState) => state.vehicleDetails
   );
   const {
@@ -67,38 +67,34 @@ export const AddMakeModelModal: React.FC<
       }
       dispatch(loadGlobalModels(currentMake.globalId));
     }
-  }, [currentMake]);
+  }, [currentMake, dispatch, selectedSC]);
 
   useEffect(() => {
-    const filteredMakes = allMakes
-      .filter(el => !el.isReadOnly)
-      .map(el => ({
-        id: el.globalId,
-        text: el.name,
-        code: el.makeCode,
-      }));
+    const filteredMakes = allMakes.map(el => ({
+      id: el.globalId,
+      text: el.name,
+      code: el.makeCode,
+    }));
 
     setConfiguredMakes(filteredMakes);
   }, [allMakes]);
 
   useEffect(() => {
-    const filteredModels = currentMake?.models
-      .filter(el => !el.isReadOnly)
-      .map(el => ({
-        id: el.globalId,
-        text: el.name,
-        code: el.modelCode?.modelCode,
-      }));
+    const filteredModels = currentMake?.models.map(el => ({
+      id: el.globalId,
+      text: el.name,
+      code: el.modelCode?.modelCode,
+    }));
     setConfiguredModels(filteredModels ?? []);
   }, [currentMake]);
 
   const onCloseModal = () => {
+    onClose();
+    dispatch(setCurrentMake(null));
     setModelsToAdd([]);
     setMakesToAdd([]);
     setConfiguredMakes([]);
     setConfiguredModels([]);
-    dispatch(setCurrentMake(null));
-    onClose();
   };
 
   const removedMakes = allMakes
@@ -126,9 +122,7 @@ export const AddMakeModelModal: React.FC<
   };
 
   const saveMakes = (globalIds: number[]) => {
-    const makeCodes: Record<string, string> = Object.fromEntries(
-      configuredMakes.map(make => [make.id, make.code!])
-    );
+    const makeCodes = Object.fromEntries(configuredMakes.map(m => [m.id, m.code!]));
 
     if (globalIds.length && selectedSC) {
       if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
@@ -183,15 +177,9 @@ export const AddMakeModelModal: React.FC<
     }
   };
 
-  const getGlobalIds = () => [
-    ...configuredMakes.map(el => el.id),
-    ...globalMakes.filter(el => el.isReadOnly).map(el => el.id),
-  ];
+  const getGlobalIds = () => [...configuredMakes.map(el => el.id)];
 
-  const getModelIds = () => [
-    ...configuredModels.map(el => el.id),
-    ...globalModels.filter(el => el.vinModel === 'OTHER').map(el => el.id),
-  ];
+  const getModelIds = () => [...configuredModels.map(el => el.id)];
 
   const saveModels = () => {
     if (selectedSC && currentMake) {
@@ -276,9 +264,10 @@ export const AddMakeModelModal: React.FC<
                 {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
                   <p style={{ margin: 0 }}>
                     Click <span style={{ fontWeight: 'bold' }}>Next</span> to configure the
-                    corresponding CDK{' '}
-                    <span style={{ fontWeight: 'bold' }}>{isEditing ? 'Model' : 'Make'}</span>{' '}
-                    Codes.
+                    corresponding{' '}
+                    <span style={{ fontWeight: 'bold' }}>
+                      CDK {isEditing ? 'Model' : 'Make'} Codes.
+                    </span>
                   </p>
                 ) : null}
               </div>
@@ -291,8 +280,8 @@ export const AddMakeModelModal: React.FC<
               {isEditing ? 'configured models' : 'configured makes'}
             </div>
             <DragAndDrop
-              currentMakeName={currentMake?.name}
-              isEditing={isEditing ?? false}
+              currentMake={currentMake}
+              isEditing={isEditing}
               data={isEditing ? configuredModels : configuredMakes}
               setData={isEditing ? setConfiguredModels : setConfiguredMakes}
             />
@@ -309,14 +298,13 @@ export const AddMakeModelModal: React.FC<
             onClick={() => (isEditing ? handleSaveModels() : handleSaveMakes())}
             className={classes.saveButton}
           >
-            Next
+            {selectedSC?.integration === SystemIntegrationType.Fortellis ? 'Next' : 'Save'}
           </Button>
         </div>
       </DialogActions>
       <MakeCodesConfiguration
         onClose={onCloseConfigurationModal}
         open={isOpenConfigurationModal}
-        onCloseModal={onCloseModal}
         configuredMakes={configuredMakes}
         setConfiguredMakes={setConfiguredMakes}
         onSaveMakes={onSaveMakes}
@@ -324,7 +312,6 @@ export const AddMakeModelModal: React.FC<
       <ModelCodesConfiguration
         onClose={onCloseModelConfigurationModal}
         open={isOpenModelConfigurationModal}
-        onCloseModal={onCloseModal}
         configuredModels={configuredModels}
         setConfiguredModels={setConfiguredModels}
         onSaveModels={onSaveModels}

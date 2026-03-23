@@ -31,10 +31,13 @@ export const MakesModels = () => {
 
   useEffect(() => {
     dispatch(loadGlobalMakes());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (selectedSC) {
       dispatch(loadMakeCodes(selectedSC.id));
     }
-  }, [selectedSC]);
+  }, [selectedSC, dispatch]);
 
   const existedMakes = makes.length > 0;
   return (

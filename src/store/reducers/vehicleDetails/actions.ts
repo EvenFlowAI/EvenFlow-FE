@@ -22,8 +22,8 @@ export const setPageData = createAction<Partial<IPageRequest>>('VehicleDetails/S
 export const setMakeOrder = createAction<IOrder<IMake>>('VehicleDetails/SetMakeOrder');
 export const setGlobalMakes = createAction<IGlobalMake[]>('VehicleDetails/SetGlobalMakes');
 export const setGlobalModels = createAction<IGlobalModel[]>('VehicleDetails/SetGlobalModels');
-export const setMakeCodes = createAction<IMakeCode[]>('VehicleDetails/setMakeCodes');
-export const setMakeModelCodes = createAction<IMakeModelCode[]>('VehicleDetails/setMakeModelCodes');
+export const setMakeCodes = createAction<IMakeCode[]>('VehicleDetails/SetMakeCodes');
+export const setMakeModelCodes = createAction<IMakeModelCode[]>('VehicleDetails/SetMakeModelCodes');
 
 export const loadMakes =
   (serviceCenterId: number): AppThunk =>
