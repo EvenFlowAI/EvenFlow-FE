@@ -173,11 +173,13 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
           input={<TextField />}
         >
           <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-          {serviceCenters.map(sc => (
-            <MenuItem key={sc.id} value={String(sc.id)}>
-              {sc.name}
-            </MenuItem>
-          ))}
+          <div style={{ maxHeight: '790px' }}>
+            {serviceCenters.map(sc => (
+              <MenuItem key={sc.id} value={String(sc.id)}>
+                {sc.name}
+              </MenuItem>
+            ))}
+          </div>
         </Select>
       </div>
 
