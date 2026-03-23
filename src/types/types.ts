@@ -245,6 +245,7 @@ export enum CleanestRoles {
   Staff = 'Staff',
   Vendor = 'Vendor',
   AIBookingAgent = 'AI Booking Agent',
+  EvenFlowAccountManager = 'EvenFlow Account Manager',
 }
 
 export enum Titles {
