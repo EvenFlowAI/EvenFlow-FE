@@ -132,10 +132,6 @@ export const MakesModelsTable: React.FC<
   };
 
   const openEdit = () => {
-    if (currentMake?.isReadOnly) {
-      showError('You cannot edit a read-only make');
-      return;
-    }
     setAnchorEl(null);
     onOpen();
   };
