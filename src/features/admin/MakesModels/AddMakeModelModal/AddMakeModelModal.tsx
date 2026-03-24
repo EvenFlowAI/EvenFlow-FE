@@ -177,11 +177,17 @@ export const AddMakeModelModal: React.FC<
     }
   };
 
-  const getGlobalIds = () =>
-    [...configuredMakes].sort(el => (el.text === 'OTHER' ? 1 : -1)).map(el => el.id);
+  const othersLast = (arr: IData[]) => {
+    const idx = arr.findIndex(el => el.text === 'OTHER');
+    if (idx === -1) return arr.map(el => el.id);
+    const copy = [...arr];
+    const [other] = copy.splice(idx, 1);
+    return [...copy.map(el => el.id), other.id];
+  };
 
-  const getModelIds = () =>
-    [...configuredModels].sort(el => (el.text === 'OTHER' ? 1 : -1)).map(el => el.id);
+  const getGlobalIds = () => othersLast(configuredMakes);
+
+  const getModelIds = () => othersLast(configuredModels);
 
   const saveModels = () => {
     if (selectedSC && currentMake) {
