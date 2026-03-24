@@ -46,22 +46,20 @@ export const ModelCodesConfiguration: React.FC<
   };
 
   return (
-    <BaseModal {...props} width={860} onClose={onClose}>
+    <BaseModal {...props} width={860} height={770} onClose={onClose}>
       <DialogTitle onClose={onClose}>
         <span>CDK Model Codes Configuration</span>
       </DialogTitle>
-      <DialogContent style={{ marginBottom: '12px' }}>
-        <p
-          style={{
-            textTransform: 'uppercase',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            marginBottom: '10px',
-          }}
-        >
-          Configured Models
-        </p>
-        <MakeCodeTable>
+      <p className={classes.codeTitle}>Configured Models</p>
+      <DialogContent
+        style={{
+          marginBottom: '12px',
+          backgroundColor: '#F7F8FB',
+          padding: 0,
+          margin: '10px 25px',
+        }}
+      >
+        <MakeCodeTable stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell width="60%" align="left">
@@ -97,19 +95,6 @@ export const ModelCodesConfiguration: React.FC<
                   />
                 </TableCell>
                 <TableCell>
-                  {/*<Autocomplete*/}
-                  {/*  disabled={true}*/}
-                  {/*  options={[]}*/}
-                  {/*  style={{ width: '250px' }}*/}
-                  {/*  getOptionLabel={i => i}*/}
-                  {/*  value={getDesc(el.code || '')}*/}
-                  {/*  isOptionEqualToValue={(o, s) => o === s}*/}
-                  {/*  onChange={() => {}}*/}
-                  {/*  renderInput={autocompleteRender({*/}
-                  {/*    label: '',*/}
-                  {/*    placeholder: 'Model Description',*/}
-                  {/*  })}*/}
-                  {/*/>*/}
                   <TextField
                     id="description"
                     disabled
@@ -124,7 +109,7 @@ export const ModelCodesConfiguration: React.FC<
               </TableRow>
             ))}
           </TableBody>
-        </MakeCodeTable>
+        </MakeCodeTable>{' '}
       </DialogContent>
       <DialogActions>
         <div className={classes.buttonsWrapper}>

@@ -503,7 +503,13 @@ export const loadMakeCodes =
     Api.call(Api.endpoints.Vehicles.GetMakeCodes, { params: { serviceCenterId } })
       .then(result => {
         if (result?.data) {
-          dispatch(setMakeCodes(result.data.data));
+          if (result.data.data.length) {
+            dispatch(setMakeCodes(result.data.data));
+          } else {
+            dispatch(setMakeCodes([]));
+          }
+        } else {
+          dispatch(setMakeCodes([]));
         }
       })
       .catch(err => {
@@ -527,7 +533,11 @@ export const loadMakeModelCodes =
     Api.call(Api.endpoints.Vehicles.GetMakeModelCodes, { params: { serviceCenterId, makeCode } })
       .then(result => {
         if (result?.data) {
-          dispatch(setMakeModelCodes(result.data.data));
+          if (result.data.data.length) {
+            dispatch(setMakeModelCodes(result.data.data));
+          } else {
+            dispatch(setMakeModelCodes([]));
+          }
         }
       })
       .catch(err => {

@@ -16,6 +16,7 @@ import {
   createMake,
   loadGlobalModels,
   loadMakeModelCodes,
+  setMakeModelCodes,
   updateModel,
 } from '../../../../store/reducers/vehicleDetails/actions';
 import { useDispatch } from 'react-redux';
@@ -62,8 +63,12 @@ export const AddMakeModelModal: React.FC<
 
   useEffect(() => {
     if (currentMake) {
-      if (selectedSC?.integration === SystemIntegrationType.Fortellis && currentMake.makeCode) {
-        dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        if (currentMake.makeCode) {
+          dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
+        } else {
+          dispatch(setMakeModelCodes([]));
+        }
       }
       dispatch(loadGlobalModels(currentMake.globalId));
     }
@@ -243,7 +248,7 @@ export const AddMakeModelModal: React.FC<
   };
 
   return (
-    <BaseModal {...props} width={860} onClose={onCloseModal}>
+    <BaseModal {...props} width={860} height={770} onClose={onCloseModal}>
       <DialogTitle onClose={onCloseModal}>
         {isEditing ? `${currentMake?.name} Model Options` : 'Make options'}
       </DialogTitle>
