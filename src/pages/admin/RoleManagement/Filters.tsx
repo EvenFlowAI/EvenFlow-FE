@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
-import { IDealership, IServiceCenter, IUserAccount, statusLabels, UserStatus } from './types';
+import { IUserAccount, statusLabels, UserStatus } from './types';
 import { useLabelStyles } from '../../../hooks/styling/useLabelStyles';
 import { CleanestRoles, Roles } from '../../../types/types';
 import { Search } from '@mui/icons-material';
@@ -27,8 +27,8 @@ export interface IUserFilters {
 }
 
 const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: FiltersProps) => {
-  const [dealerships, setDealerships] = useState<IDealership[]>([]);
-  const [serviceCenters, setServiceCenters] = useState<IServiceCenter[]>([]);
+  const { dealershipList } = useSelector((state: RootState) => state.dealershipGroups);
+  const { serviceCenters } = useSelector(({ serviceCenters }: RootState) => serviceCenters);
   const [filters, setFilters] = useState<IUserFilters>({});
   const { classes } = useLabelStyles();
   const { classes: componentClasses } = useStyles();
@@ -36,19 +36,6 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
 
   useEffect(() => {
     if (users && Array.isArray(users)) {
-      // Unique dealerships
-      const allDealerships = users.flatMap(user => user.dealerships);
-      const uniqueDealerships = Array.from(new Map(allDealerships.map(d => [d.id, d])).values());
-      setDealerships(uniqueDealerships);
-
-      // Unique service centers
-      const allServiceCenters = users.flatMap(user =>
-        user.dealerships.flatMap(d => d.serviceCenters ?? [])
-      );
-      const uniqueServiceCenters = Array.from(
-        new Map(allServiceCenters.map(sc => [sc.id, sc])).values()
-      );
-      setServiceCenters(uniqueServiceCenters);
       applyFilters(filters);
     }
   }, [users]);
@@ -141,10 +128,10 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
         <div className={componentClasses.filter} style={{ width: 240 }}>
           <div className={classes.label}>Dealership Group</div>
           <Autocomplete
-            options={dealerships}
+            options={dealershipList}
             getOptionLabel={option => option.name}
             isOptionEqualToValue={(option, value) => option.id === value.id}
-            value={dealerships.find(d => String(d.id) === filters.dealershipId) ?? null}
+            value={dealershipList.find(d => String(d.id) === filters.dealershipId) ?? null}
             onChange={(event, newValue) => {
               handleSelectDealership(event, newValue ? String(newValue.id) : '');
             }}
