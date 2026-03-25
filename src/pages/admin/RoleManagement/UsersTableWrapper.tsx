@@ -30,6 +30,7 @@ interface UsersTableProps {
   isAdminPanel: boolean;
   pageData: { pageIndex: number; pageSize: number };
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
+  filterServiceCenterId?: number;
 }
 
 const UsersTableWrapper = ({
@@ -41,6 +42,7 @@ const UsersTableWrapper = ({
   isAdminPanel,
   pageData,
   setPageData,
+  filterServiceCenterId,
 }: UsersTableProps) => {
   const dispatch = useDispatch();
   const showMessage = useMessage();
@@ -93,22 +95,34 @@ const UsersTableWrapper = ({
     },
     { val: el => el.role, header: 'Role' },
     {
-      val: el =>
-        el.dealerships[0].serviceCenters.length === 1
+      val: el => {
+        if (filterServiceCenterId) {
+          const sc = el.dealerships[0].serviceCenters.find(s => s.id === filterServiceCenterId);
+          return sc ? reformatType(sc.type) : '-';
+        }
+
+        return el.dealerships[0].serviceCenters.length === 1
           ? reformatType(el.dealerships[0].serviceCenters[0].type)
-          : '-',
+          : '-';
+      },
       header: 'Type',
       orderId: 'type',
     },
     { val: el => truncateText(el.email, 25), header: 'Email', width: 180 },
     {
-      val: el =>
-        el.dealerships[0].serviceCenters.length === 1
-          ? el.dealerships[0].serviceCenters[0]?.dmsId
-          : '-',
+      val: el => {
+        if (filterServiceCenterId) {
+          const sc = el.dealerships[0].serviceCenters.find(s => s.id === filterServiceCenterId);
+          return sc ? sc.dmsId : '-';
+        }
+
+        return el.dealerships[0].serviceCenters.length === 1
+          ? el.dealerships[0].serviceCenters[0].dmsId
+          : '-';
+      },
       header: 'Employee ID',
     },
-    { header: 'Booking Display', val: el => getDisplayData(el), width: 120 },
+    { header: 'Booking Display', val: el => getDisplayData(el, filterServiceCenterId), width: 120 },
   ];
 
   const UserPanelRowData = (): TableRowDataType<IUserAccount>[] => [

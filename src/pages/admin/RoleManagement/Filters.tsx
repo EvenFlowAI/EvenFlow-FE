@@ -16,6 +16,7 @@ interface FiltersProps {
   isAdminPanel?: boolean;
   handleAddUserAccount?: (isEdit: boolean) => void;
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
+  setFilterServiceCenterId?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface IUserFilters {
@@ -26,7 +27,13 @@ export interface IUserFilters {
   searchTerm?: string;
 }
 
-const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: FiltersProps) => {
+const Filters = ({
+  setData,
+  isAdminPanel,
+  handleAddUserAccount,
+  setPageData,
+  setFilterServiceCenterId,
+}: FiltersProps) => {
   const { dealershipList } = useSelector((state: RootState) => state.dealershipGroups);
   const { serviceCenters } = useSelector(({ serviceCenters }: RootState) => serviceCenters);
   const [filters, setFilters] = useState<IUserFilters>({});
@@ -42,6 +49,7 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
 
   const applyFilters = (newFilters: IUserFilters) => {
     let filtered = [...users];
+    if (setFilterServiceCenterId) setFilterServiceCenterId(0);
 
     if (newFilters.dealershipId) {
       filtered = filtered.filter(user =>
@@ -50,6 +58,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     }
 
     if (newFilters.serviceCenterId) {
+      if (setFilterServiceCenterId && isAdminPanel)
+        setFilterServiceCenterId(+newFilters.serviceCenterId);
       filtered = filtered.filter(user =>
         user.dealerships.some(d =>
           d.serviceCenters?.some(sc => String(sc.id) === newFilters.serviceCenterId)

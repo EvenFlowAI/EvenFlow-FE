@@ -24,6 +24,7 @@ export const EmployeesAddDelete = () => {
   const [visibleData, setVisibleDate] = useState<IUserAccount[]>([]);
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
   const { selectedSC } = useSCs();
+  const [filterServiceCenterId, setFilterServiceCenterId] = useState<number>(0);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
@@ -51,6 +52,7 @@ export const EmployeesAddDelete = () => {
 
       {!isLoading ? (
         <Filters
+          setFilterServiceCenterId={setFilterServiceCenterId}
           setData={setVisibleDate}
           isAdminPanel={true}
           handleAddUserAccount={handleAddUserAccount}
@@ -58,6 +60,7 @@ export const EmployeesAddDelete = () => {
         />
       ) : null}
       <UsersTableWrapper
+        filterServiceCenterId={filterServiceCenterId}
         pageData={pageData}
         setPageData={setPageData}
         isAdminPanel={true}
