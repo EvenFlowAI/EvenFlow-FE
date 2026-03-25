@@ -98,12 +98,19 @@ export const ModelCodesConfiguration: React.FC<
                   <TextField
                     id="description"
                     disabled
-                    style={{ width: '250px' }}
                     value={getDesc(el.code || '')}
                     onChange={() => {}}
                     error={false}
                     placeholder="Model Description"
                     name="Description"
+                    inputProps={{
+                      style: {
+                        width: '250px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      },
+                    }}
                   />
                 </TableCell>
               </TableRow>
