@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Autocomplete, Button, TableBody, TableHead } from '@mui/material';
+import { Autocomplete, Button, TableBody, TableHead, Tooltip } from '@mui/material';
 import { IData } from '../../../../components/DragAndDrop/types';
 import { TableRow } from '../../../../components/styled/TableRow';
 import { TableCell } from '../../../../components/styled/TableCell';
@@ -34,9 +34,15 @@ export const ModelCodesConfiguration: React.FC<
     );
   };
 
-  const getDesc = (code: string) => {
+  const getDesc = (code: string, isShort: boolean) => {
     const found = makeModelCodes.find(m => m.modelCode === code);
-    return found ? `${found.makeName} ${found.modelName}` : '';
+    if (!found) return '';
+    const text = `${found.makeName} ${found.modelName}`;
+    if (isShort) {
+      return text.length > 29 ? text.slice(0, 29) + '...' : text;
+    }
+
+    return text;
   };
 
   const getIsActive = (code?: string | undefined) => {
@@ -62,13 +68,13 @@ export const ModelCodesConfiguration: React.FC<
         <MakeCodeTable stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell width="60%" align="left">
+              <TableCell width="60%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Model
               </TableCell>
-              <TableCell width="20%" align="left">
+              <TableCell width="20%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Model Code
               </TableCell>
-              <TableCell width="30%" align="left">
+              <TableCell width="30%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Model Description
               </TableCell>
             </TableRow>
@@ -95,23 +101,41 @@ export const ModelCodesConfiguration: React.FC<
                   />
                 </TableCell>
                 <TableCell>
-                  <TextField
-                    id="description"
-                    disabled
-                    value={getDesc(el.code || '')}
-                    onChange={() => {}}
-                    error={false}
-                    placeholder="Model Description"
-                    name="Description"
-                    inputProps={{
-                      style: {
-                        width: '250px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      },
-                    }}
-                  />
+                  {getDesc(el.code || '', false).length > 29 ? (
+                    <Tooltip placement="top" title={getDesc(el.code || '', false)}>
+                      <strong style={{ cursor: 'pointer', userSelect: 'none' }}>
+                        <TextField
+                          id="description"
+                          disabled
+                          value={getDesc(el.code || '', true)}
+                          onChange={() => {}}
+                          error={false}
+                          placeholder="Model Description"
+                          name="Description"
+                          inputProps={{
+                            style: {
+                              width: '250px',
+                            },
+                          }}
+                        />
+                      </strong>
+                    </Tooltip>
+                  ) : (
+                    <TextField
+                      id="description"
+                      disabled
+                      value={getDesc(el.code || '', true)}
+                      onChange={() => {}}
+                      error={false}
+                      placeholder="Model Description"
+                      name="Description"
+                      inputProps={{
+                        style: {
+                          width: '250px',
+                        },
+                      }}
+                    />
+                  )}
                 </TableCell>
               </TableRow>
             ))}

@@ -50,10 +50,10 @@ export const MakeCodesConfiguration: React.FC<
         <MakeCodeTable stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell width="80%" align="left">
+              <TableCell width="80%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Make
               </TableCell>
-              <TableCell width="20%" align="left">
+              <TableCell width="20%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Make Code
               </TableCell>
             </TableRow>
