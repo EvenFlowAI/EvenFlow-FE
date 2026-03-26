@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useCallback, useEffect } from 'react';
-import { Autocomplete, Checkbox } from '@mui/material';
+import { Autocomplete, Checkbox, Tooltip } from '@mui/material';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
 import { useMultipleACStyles } from '../../../../../features/admin/Transportations/EditTransportationModal/styles';
@@ -146,7 +146,15 @@ const ServiceCenterCategoryDropdown = ({
               onClick={e => e.stopPropagation()}
               onChange={() => onCheckboxChange(option)}
             />
-            <span>{option.name}</span>
+            {option.name.length > 46 ? (
+              <Tooltip placement="top" title={option.name}>
+                <span>
+                  {option.name.length > 46 ? option.name.slice(0, 42).concat('...') : option.name}
+                </span>
+              </Tooltip>
+            ) : (
+              <span>{option.name}</span>
+            )}
           </li>
         );
       },

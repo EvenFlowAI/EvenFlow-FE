@@ -30,7 +30,7 @@ enum ERROR_CODES {
 }
 
 type AddUserAccountProps = React.PropsWithChildren<DialogProps<TUserAccountForm | null>> & {
-  isAdminPanel?: boolean;
+  isAdminPanel: boolean;
 };
 
 export const AddUserAccount: React.FC<AddUserAccountProps> = ({
@@ -182,6 +182,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
       <DialogContent>
         <AvatarWrapper onChange={f => setAvatar(f)} dataUrl={payload?.avatarPath} />
         <AddUserAccountForm
+          isAdminPanel={isAdminPanel}
           formIsChecked={formIsChecked}
           form={userForm}
           setFormIsChecked={setFormIsChecked}

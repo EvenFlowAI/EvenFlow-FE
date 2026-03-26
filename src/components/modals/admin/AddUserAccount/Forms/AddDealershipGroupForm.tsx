@@ -15,6 +15,7 @@ interface DealershipGroupProps {
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   isAdding: boolean;
   formIsChecked: boolean;
+  isAdminPanel: boolean;
 }
 
 const AddDealershipGroupForm = ({
@@ -23,22 +24,24 @@ const AddDealershipGroupForm = ({
   setFormIsChecked,
   isAdding,
   formIsChecked,
+  isAdminPanel,
 }: DealershipGroupProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
 
-  const { dealershipList, accessibleDealerships } = useSelector(
+  const { dealershipList, accessibleDealerships, profile } = useSelector(
     (state: RootState) => state.dealershipGroups
   );
 
-  const allOptions: TOption[] = accessibleDealerships.length
-    ? accessibleDealerships.map(d => ({
-        value: d.id,
-        name: d.name,
-      }))
-    : dealershipList.map(d => ({
-        value: d.id,
-        name: d.name,
-      }));
+  const baseList = accessibleDealerships.length ? accessibleDealerships : dealershipList;
+
+  const mappedOptions: TOption[] = baseList.map(d => ({
+    value: d.id,
+    name: d.name,
+  }));
+
+  const allOptions: TOption[] = isAdminPanel
+    ? mappedOptions.filter(d => d.value === profile?.id)
+    : mappedOptions;
 
   const options: TOption[] =
     allOptions.length > 1 ? [{ value: 0, name: 'Select all' }, ...allOptions] : allOptions;

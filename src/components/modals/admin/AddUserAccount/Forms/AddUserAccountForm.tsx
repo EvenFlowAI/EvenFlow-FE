@@ -23,11 +23,12 @@ type TTFormProps = {
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   setEmployeeForm: Dispatch<SetStateAction<TUserAccountForm>>;
   isAdding: boolean;
+  isAdminPanel: boolean;
 };
 
 export const AddUserAccountForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TTFormProps>>
-> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isAdding }) => {
+> = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isAdding, isAdminPanel }) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
 
@@ -98,6 +99,7 @@ export const AddUserAccountForm: React.FC<
       </Grid>
       <Grid item xs={12} sm={6}>
         <AddDealershipGroupForm
+          isAdminPanel={isAdminPanel}
           isAdding={isAdding}
           form={form}
           formIsChecked={formIsChecked}
