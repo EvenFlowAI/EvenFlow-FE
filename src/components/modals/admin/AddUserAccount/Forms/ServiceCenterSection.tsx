@@ -14,7 +14,10 @@ import { ReactComponent as ShowMark } from '../../../../../assets/img/ShowMark.s
 import { ReactComponent as HideMark } from '../../../../../assets/img/HideMark.svg';
 import { useDispatch } from 'react-redux';
 import { loadDMSAdvisors } from '../../../../../store/reducers/employees/actions';
-import { TServiceConsultant } from '../../../../../store/reducers/appointments/types';
+import {
+  EConsultantRole,
+  TServiceConsultant,
+} from '../../../../../store/reducers/appointments/types';
 
 interface ServiceCenterSectionProps {
   sc: TOptionForUserAccountServiceCenters;
@@ -24,6 +27,7 @@ interface ServiceCenterSectionProps {
   setFormIsChecked: Dispatch<SetStateAction<boolean>>;
   employeeTypeOptions: TOption[];
   shortLoading: boolean;
+  isAdding: boolean;
 }
 
 export const ServiceCenterSection = ({
@@ -34,18 +38,33 @@ export const ServiceCenterSection = ({
   formIsChecked,
   employeeTypeOptions,
   shortLoading,
+  isAdding,
 }: ServiceCenterSectionProps) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const [dmsAdvisors, setDmsAdvisors] = useState<TServiceConsultant[]>([]);
 
   const onSuccess = (data: TServiceConsultant[]) => {
-    setDmsAdvisors(data);
+    if (isAdding || !sc.dmsId) {
+      setDmsAdvisors(data);
+    } else {
+      // add existing dms advisor to the list
+      if (sc.dmsId) {
+        setDmsAdvisors([
+          ...data,
+          {
+            dmsId: sc.dmsId,
+            role: form.role ? EConsultantRole[form.role as keyof typeof EConsultantRole] : 0,
+            fullName: form.firstName + form.lastName,
+          } as TServiceConsultant,
+        ]);
+      }
+    }
   };
 
   useEffect(() => {
     if (open) {
-      dispatch(loadDMSAdvisors(sc.value, onSuccess));
+      dispatch(loadDMSAdvisors(sc.value, onSuccess, true));
     }
   }, [open]);
 
