@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
-import { EmptyMenuItem } from '../../../features/admin/Appointments/AppointmentFilters/styles';
-import { IDealership, IServiceCenter, IUserAccount, UserStatus } from './types';
+import { IDealership, IServiceCenter, IUserAccount, statusLabels, UserStatus } from './types';
 import { useLabelStyles } from '../../../hooks/styling/useLabelStyles';
 import { CleanestRoles, Roles } from '../../../types/types';
 import { Search } from '@mui/icons-material';
@@ -10,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { useStyles } from './styles';
 import { AddUserButtonWrapper } from '../EmployeesAddDelete/AddUserButtonWrapper';
+import { autocompleteRender } from '../../../utils/autocompleteRenders';
 
 interface FiltersProps {
   setData: React.Dispatch<React.SetStateAction<IUserAccount[]>>;
@@ -89,8 +89,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     setPageData({ pageIndex: 0, pageSize: 25 });
   };
 
-  const handleSelectDealership = (event: SelectChangeEvent) => {
-    const selectedId = event.target.value;
+  const handleSelectDealership = (e: React.SyntheticEvent, value: string) => {
+    const selectedId = value;
     const newFilters = {
       ...filters,
       dealershipId: selectedId === '' ? undefined : selectedId,
@@ -99,8 +99,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     applyFilters(newFilters);
   };
 
-  const handleSelectServiceCenter = (event: SelectChangeEvent) => {
-    const selectedId = event.target.value;
+  const handleSelectServiceCenter = (e: React.SyntheticEvent, value: string) => {
+    const selectedId = value;
     const newFilters = {
       ...filters,
       serviceCenterId: selectedId === '' ? undefined : selectedId,
@@ -109,8 +109,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     applyFilters(newFilters);
   };
 
-  const handleSelectRole = (event: SelectChangeEvent) => {
-    const selectedValue = event.target.value;
+  const handleSelectRole = (e: React.SyntheticEvent, value: string) => {
+    const selectedValue = value;
     const newFilters = {
       ...filters,
       role: selectedValue === '' ? undefined : (selectedValue as CleanestRoles),
@@ -119,9 +119,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     applyFilters(newFilters);
   };
 
-  const handleSelectStatus = (event: SelectChangeEvent) => {
-    const selectedStatus =
-      event.target.value === '' ? null : (Number(event.target.value) as UserStatus);
+  const handleSelectStatus = (e: React.SyntheticEvent, value: string) => {
+    const selectedStatus = value === '' ? null : (Number(value) as UserStatus);
     const newFilters = {
       ...filters,
       status: selectedStatus,
@@ -142,90 +141,78 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
   return (
     <div className={componentClasses.filtersWrapper}>
       {!isAdminPanel && (
-        <div className={componentClasses.filter}>
+        <div className={componentClasses.filter} style={{ width: 240 }}>
           <div className={classes.label}>Dealership Group</div>
-          <Select
-            fullWidth
-            displayEmpty
-            style={{ color: filters.dealershipId ? 'inherit' : '#858585' }}
-            onChange={handleSelectDealership}
-            value={filters.dealershipId ?? ''}
-            input={<TextField />}
-          >
-            <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-            {dealerships.map(el => (
-              <MenuItem key={el.id} value={String(el.id)}>
-                {el.name}
-              </MenuItem>
-            ))}
-          </Select>
+          <Autocomplete
+            options={dealerships}
+            getOptionLabel={option => option.name}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            value={dealerships.find(d => String(d.id) === filters.dealershipId) ?? null}
+            onChange={(event, newValue) => {
+              handleSelectDealership(event, newValue ? String(newValue.id) : '');
+            }}
+            renderInput={autocompleteRender({
+              label: '',
+              fullWidth: true,
+              placeholder: 'Not selected',
+            })}
+          />
         </div>
       )}
 
-      <div className={componentClasses.filter}>
+      <div className={componentClasses.filter} style={{ width: 240 }}>
         <div className={classes.label}>Service Center</div>
-        <Select
-          fullWidth
-          displayEmpty
-          style={{ color: filters.serviceCenterId ? 'inherit' : '#858585' }}
-          onChange={handleSelectServiceCenter}
-          value={filters.serviceCenterId ?? ''}
-          input={<TextField />}
-          MenuProps={{
-            PaperProps: {
-              style: { maxHeight: 790 },
-            },
+        <Autocomplete
+          options={serviceCenters}
+          getOptionLabel={option => option.name}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          value={serviceCenters.find(sc => String(sc.id) === filters.serviceCenterId) ?? null}
+          onChange={(event, newValue) => {
+            handleSelectServiceCenter(event, newValue ? String(newValue.id) : '');
           }}
-        >
-          <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-            {serviceCenters.map(sc => (
-              <MenuItem key={sc.id} value={String(sc.id)}>
-                {sc.name}
-              </MenuItem>
-            ))}  
-        </Select>
+          renderInput={autocompleteRender({
+            label: '',
+            fullWidth: true,
+            placeholder: 'Not selected',
+          })}
+        />
       </div>
 
-      <div style={{ width: 220 }}>
+      <div style={{ width: isAdminPanel ? 220 : 180 }}>
         <div className={classes.label}>Role</div>
-        <Select
-          fullWidth
-          displayEmpty
-          style={{ color: filters.role ? 'inherit' : '#858585' }}
-          onChange={handleSelectRole}
-          value={filters.role ?? ''}
-          input={<TextField />}
-        >
-          <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-          {Object.values(CleanestRoles).map(role => (
-            <MenuItem key={role} value={role}>
-              {role}
-            </MenuItem>
-          ))}
-        </Select>
+        <Autocomplete
+          options={Object.values(CleanestRoles)}
+          getOptionLabel={option => option}
+          isOptionEqualToValue={(option, value) => option === value}
+          value={filters.role}
+          onChange={(event, newValue) => {
+            handleSelectRole(event, newValue ? newValue : '');
+          }}
+          renderInput={autocompleteRender({
+            label: '',
+            fullWidth: true,
+            placeholder: 'Not selected',
+          })}
+        />
       </div>
 
       {!isAdminPanel && (
-        <div className={componentClasses.filter}>
+        <div className={componentClasses.filter} style={{ width: 180 }}>
           <div className={classes.label}>Status</div>
-          <Select
-            fullWidth
-            displayEmpty
-            style={{
-              color:
-                filters.status !== undefined && filters.status !== null ? 'inherit' : '#858585',
+          <Autocomplete
+            options={Object.values(statusLabels)}
+            getOptionLabel={option => option}
+            isOptionEqualToValue={(option, value) => option === value}
+            value={filters.role}
+            onChange={(event, newValue) => {
+              handleSelectStatus(event, newValue ? newValue : '');
             }}
-            onChange={handleSelectStatus}
-            value={
-              filters.status !== undefined && filters.status !== null ? String(filters.status) : ''
-            }
-            input={<TextField />}
-          >
-            <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-            <MenuItem value={UserStatus.Active}>Active</MenuItem>
-            <MenuItem value={UserStatus.Inactive}>Inactive</MenuItem>
-            <MenuItem value={UserStatus.Removed}>Removed</MenuItem>
-          </Select>
+            renderInput={autocompleteRender({
+              label: '',
+              fullWidth: true,
+              placeholder: 'Not selected',
+            })}
+          />
         </div>
       )}
 
