@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Autocomplete, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
-import { EmptyMenuItem } from '../../../features/admin/Appointments/AppointmentFilters/styles';
-import { IDealership, IServiceCenter, IUserAccount, UserStatus } from './types';
+import { IDealership, IServiceCenter, IUserAccount, statusLabels, UserStatus } from './types';
 import { useLabelStyles } from '../../../hooks/styling/useLabelStyles';
 import { CleanestRoles, Roles } from '../../../types/types';
 import { Search } from '@mui/icons-material';
@@ -110,8 +109,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     applyFilters(newFilters);
   };
 
-  const handleSelectRole = (event: SelectChangeEvent) => {
-    const selectedValue = event.target.value;
+  const handleSelectRole = (e: React.SyntheticEvent, value: string) => {
+    const selectedValue = value;
     const newFilters = {
       ...filters,
       role: selectedValue === '' ? undefined : (selectedValue as CleanestRoles),
@@ -120,9 +119,8 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     applyFilters(newFilters);
   };
 
-  const handleSelectStatus = (event: SelectChangeEvent) => {
-    const selectedStatus =
-      event.target.value === '' ? null : (Number(event.target.value) as UserStatus);
+  const handleSelectStatus = (e: React.SyntheticEvent, value: string) => {
+    const selectedStatus = value === '' ? null : (Number(value) as UserStatus);
     const newFilters = {
       ...filters,
       status: selectedStatus,
@@ -182,44 +180,39 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
 
       <div style={{ width: isAdminPanel ? 220 : 180 }}>
         <div className={classes.label}>Role</div>
-        <Select
-          fullWidth
-          displayEmpty
-          style={{ color: filters.role ? 'inherit' : '#858585' }}
-          onChange={handleSelectRole}
-          value={filters.role ?? ''}
-          input={<TextField />}
-        >
-          <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-          {Object.values(CleanestRoles).map(role => (
-            <MenuItem key={role} value={role}>
-              {role}
-            </MenuItem>
-          ))}
-        </Select>
+        <Autocomplete
+          options={Object.values(CleanestRoles)}
+          getOptionLabel={option => option}
+          isOptionEqualToValue={(option, value) => option === value}
+          value={filters.role}
+          onChange={(event, newValue) => {
+            handleSelectRole(event, newValue ? newValue : '');
+          }}
+          renderInput={autocompleteRender({
+            label: '',
+            fullWidth: true,
+            placeholder: 'Not selected',
+          })}
+        />
       </div>
 
       {!isAdminPanel && (
         <div className={componentClasses.filter} style={{ width: 180 }}>
           <div className={classes.label}>Status</div>
-          <Select
-            fullWidth
-            displayEmpty
-            style={{
-              color:
-                filters.status !== undefined && filters.status !== null ? 'inherit' : '#858585',
+          <Autocomplete
+            options={Object.values(statusLabels)}
+            getOptionLabel={option => option}
+            isOptionEqualToValue={(option, value) => option === value}
+            value={filters.role}
+            onChange={(event, newValue) => {
+              handleSelectStatus(event, newValue ? newValue : '');
             }}
-            onChange={handleSelectStatus}
-            value={
-              filters.status !== undefined && filters.status !== null ? String(filters.status) : ''
-            }
-            input={<TextField />}
-          >
-            <EmptyMenuItem value="">Not selected</EmptyMenuItem>
-            <MenuItem value={UserStatus.Active}>Active</MenuItem>
-            <MenuItem value={UserStatus.Inactive}>Inactive</MenuItem>
-            <MenuItem value={UserStatus.Removed}>Removed</MenuItem>
-          </Select>
+            renderInput={autocompleteRender({
+              label: '',
+              fullWidth: true,
+              placeholder: 'Not selected',
+            })}
+          />
         </div>
       )}
 
