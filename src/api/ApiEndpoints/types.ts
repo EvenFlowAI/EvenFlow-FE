@@ -382,7 +382,9 @@ export interface IApiEndpoints {
     | 'GetEngineType'
     | 'RemoveEngineType'
     | 'CreateEngineType'
-    | 'UpdateModel',
+    | 'UpdateModel'
+    | 'GetMakeModelCodes'
+    | 'GetMakeCodes',
     TApiEndpoint
   >;
   WaitListSettings: Record<'Get' | 'Update' | 'Toggle', TApiEndpoint>;

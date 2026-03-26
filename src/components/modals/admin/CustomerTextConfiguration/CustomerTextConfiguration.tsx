@@ -210,11 +210,17 @@ const CustomerTextConfiguration = ({
             <p className={classes.testMessageText}>
               <span>Send Test Message</span>
               <LightTooltip
-                width={185}
                 title="Test messages will display the tag field name and not actual values"
                 placement="top-start"
+                slotProps={{
+                  tooltip: {
+                    sx: { maxWidth: 160 },
+                  },
+                }}
               >
-                <Info />
+                <span style={{ display: 'flex' }}>
+                  <Info />
+                </span>
               </LightTooltip>
             </p>
             <TextField

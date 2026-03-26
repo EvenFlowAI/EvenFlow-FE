@@ -19,6 +19,7 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { truncateMakes } from './utils';
 import { usePagination } from '../../../../hooks/usePaginations/usePaginations';
+import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 const RowData: TableRowDataType<IMake>[] = [
   {
     val: (el: IMake) => <span style={{ fontWeight: 'bold' }}>{el.name}</span>,
@@ -132,9 +133,11 @@ export const MakesModelsTable: React.FC<
   };
 
   const openEdit = () => {
-    if (currentMake?.isReadOnly) {
-      showError('You cannot edit a read-only make');
-      return;
+    if (selectedSC?.integration !== SystemIntegrationType.Fortellis) {
+      if (currentMake?.isReadOnly) {
+        showError('You cannot edit a read-only make');
+        return;
+      }
     }
     setAnchorEl(null);
     onOpen();
@@ -167,10 +170,12 @@ export const MakesModelsTable: React.FC<
         rowsPerPage={pageSize}
         count={numberOfRecords}
       />
-      <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
-        <MenuItem onClick={openEdit}>Edit Models</MenuItem>
-        {currentMake?.isReadOnly ? null : <MenuItem onClick={askRemove}>Remove</MenuItem>}
-      </Menu>
+      {anchorEl && currentMake && (
+        <Menu open onClose={onMenuClose} anchorEl={anchorEl}>
+          <MenuItem onClick={openEdit}>Edit Models</MenuItem>
+          {!currentMake.isReadOnly && <MenuItem onClick={askRemove}>Remove</MenuItem>}
+        </Menu>
+      )}
     </div>
   );
 };
