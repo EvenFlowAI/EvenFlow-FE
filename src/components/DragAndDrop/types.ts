@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { TArgCallback } from '../../types/types';
+import { IMake } from '../../api/types';
 
 export type TContainerStyle = {
   width?: number | string;
@@ -12,14 +13,15 @@ export type TContainerStyle = {
 export type IData = {
   id: number;
   text: string;
+  code?: string;
 };
 
 export type TDnDProps = {
   data: IData[];
   setData: Dispatch<SetStateAction<IData[]>>;
   style?: TContainerStyle;
-  isEditing: boolean;
-  currentMakeName?: string;
+  currentMake: IMake | null;
+  isEditing?: boolean;
 };
 
 export interface CardProps {
