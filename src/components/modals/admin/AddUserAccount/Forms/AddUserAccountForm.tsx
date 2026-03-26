@@ -3,7 +3,7 @@ import { Autocomplete, Divider, Grid } from '@mui/material';
 import 'react-phone-number-input/style.css';
 import { TUserAccountForm } from '../types';
 import { TextField } from '../../../../formControls/TextFieldStyled/TextField';
-import { availableUserRoles, dealerShipAccessRoles } from '../../../../../utils/constants';
+import { availableUserRoles } from '../../../../../utils/constants';
 import { checkEmail, getOptions, validatePhoneNumber } from '../../../../../utils/utils';
 import { superRoles } from '../../CreateEmployee/constants';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
@@ -59,7 +59,14 @@ export const AddUserAccountForm: React.FC<
       dmsId: null,
       type: null,
       displayOnBookingTypes: value === Roles.Advisor ? [] : [],
-      serviceCenter: dealerShipAccessRoles.includes(value as TRole) ? null : prev.serviceCenter,
+      serviceCenters: prev.serviceCenters.map(sc => {
+        return {
+          ...sc,
+          dmsId: null,
+          type: null,
+          displayOnBookingTypes: [],
+        };
+      }),
     }));
   };
 

@@ -19,7 +19,6 @@ export const WeekDayNames = [
 
 export const availableUserRoles: TRole[] = [
   Roles.EvenFlowAdmin,
-  Roles.EvenFlowAccountManager,
   Roles.EvenFlowSupport,
   Roles.EvenFlowAIAgent,
   Roles.DealerOwner,
@@ -32,6 +31,7 @@ export const availableUserRoles: TRole[] = [
   Roles.Staff,
   Roles.Vendor,
   Roles.AIBookingAgent,
+  Roles.EvenFlowAccountManager,
 ];
 export const canNotBookAppointmentRoles: TRole[] = [
   Roles.EvenFlowAIAgent,
