@@ -15,7 +15,15 @@ import { StyledDialog, useStyles } from './styles';
 export const BaseModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
 > = props => {
-  return <StyledDialog maxWidth={props.maxWidth ?? 'md'} fullWidth {...props} mW={props.width} />;
+  return (
+    <StyledDialog
+      maxWidth={props.maxWidth ?? 'md'}
+      fullWidth
+      {...props}
+      sx={{ '& .MuiDialog-paper': { height: props.height } }}
+      mW={props.width}
+    />
+  );
 };
 
 export const DialogContent: React.FC<

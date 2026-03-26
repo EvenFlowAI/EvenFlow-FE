@@ -34,28 +34,26 @@ export const MakeCodesConfiguration: React.FC<
   };
 
   return (
-    <BaseModal {...props} width={860} onClose={onClose}>
+    <BaseModal {...props} width={860} height={770} onClose={onClose}>
       <DialogTitle onClose={onClose}>
         <span>CDK Make Codes Configuration</span>
       </DialogTitle>
-      <DialogContent style={{ marginBottom: '12px' }}>
-        <p
-          style={{
-            textTransform: 'uppercase',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            marginBottom: '10px',
-          }}
-        >
-          Configured Makes
-        </p>
-        <MakeCodeTable>
+      <p className={classes.codeTitle}>Configured Makes</p>
+      <DialogContent
+        style={{
+          marginBottom: '12px',
+          backgroundColor: '#F7F8FB',
+          padding: 0,
+          margin: '10px 25px',
+        }}
+      >
+        <MakeCodeTable stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell width="80%" align="left">
+              <TableCell width="80%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Make
               </TableCell>
-              <TableCell width="20%" align="left">
+              <TableCell width="20%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Make Code
               </TableCell>
             </TableRow>
@@ -63,7 +61,6 @@ export const MakeCodesConfiguration: React.FC<
           <TableBody>
             {configuredMakes.map(el => (
               <TableRow key={el.id}>
-                {' '}
                 <TableCell align="left">{capitalizeName(el.text)}</TableCell>
                 <TableCell>
                   <Autocomplete

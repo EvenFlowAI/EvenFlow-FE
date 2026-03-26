@@ -40,6 +40,7 @@ const MakeModelInput = ({
   const { classes } = useStyles();
   const autocompleteClasses = useAutocompleteStyles();
   const { globalMakes, globalModels } = useSelector((state: RootState) => state.vehicleDetails);
+  const { currentMake } = useSelector((state: RootState) => state.vehicleDetails);
   const filteredGlobalMakes = globalMakes
     .filter(el => !el.isReadOnly)
     .map(el => ({
@@ -284,7 +285,7 @@ const MakeModelInput = ({
           isEditing ? onChangeModels(value) : onChangeMakes(value);
         }}
         value={isEditing ? modelsToAdd : makesToAdd}
-        disabled={false}
+        disabled={currentMake?.name === 'OTHER'}
         renderInput={params =>
           autocompleteRender({
             ...params,

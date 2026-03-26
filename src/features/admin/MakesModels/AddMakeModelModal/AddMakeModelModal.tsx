@@ -16,6 +16,7 @@ import {
   createMake,
   loadGlobalModels,
   loadMakeModelCodes,
+  setMakeModelCodes,
   updateModel,
 } from '../../../../store/reducers/vehicleDetails/actions';
 import { useDispatch } from 'react-redux';
@@ -62,8 +63,12 @@ export const AddMakeModelModal: React.FC<
 
   useEffect(() => {
     if (currentMake) {
-      if (selectedSC?.integration === SystemIntegrationType.Fortellis && currentMake.makeCode) {
-        dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        if (currentMake.makeCode) {
+          dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
+        } else {
+          dispatch(setMakeModelCodes([]));
+        }
       }
       dispatch(loadGlobalModels(currentMake.globalId));
     }
@@ -177,11 +182,17 @@ export const AddMakeModelModal: React.FC<
     }
   };
 
-  const getGlobalIds = () =>
-    [...configuredMakes].sort(el => (el.text === 'OTHER' ? 1 : -1)).map(el => el.id);
+  const othersLast = (arr: IData[]) => {
+    const idx = arr.findIndex(el => el.text === 'OTHER');
+    if (idx === -1) return arr.map(el => el.id);
+    const copy = [...arr];
+    const [other] = copy.splice(idx, 1);
+    return [...copy.map(el => el.id), other.id];
+  };
 
-  const getModelIds = () =>
-    [...configuredModels].sort(el => (el.text === 'OTHER' ? 1 : -1)).map(el => el.id);
+  const getGlobalIds = () => othersLast(configuredMakes);
+
+  const getModelIds = () => othersLast(configuredModels);
 
   const saveModels = () => {
     if (selectedSC && currentMake) {
@@ -237,7 +248,7 @@ export const AddMakeModelModal: React.FC<
   };
 
   return (
-    <BaseModal {...props} width={860} onClose={onCloseModal}>
+    <BaseModal {...props} width={860} height={770} onClose={onCloseModal}>
       <DialogTitle onClose={onCloseModal}>
         {isEditing ? `${currentMake?.name} Model Options` : 'Make options'}
       </DialogTitle>
