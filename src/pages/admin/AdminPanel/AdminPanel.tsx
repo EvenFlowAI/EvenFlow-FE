@@ -56,7 +56,6 @@ export const AdminPanel = () => {
   useEffect(() => {
     if (currentUser?.role && currentUser?.role !== Roles.EvenFlowAdmin) {
       dispatch(loadDealershipProfile(onSuccess));
-      dispatch(getAccessibleDealerships());
     } else {
       onSuccess();
       dispatch(loadAllSCs());
@@ -66,6 +65,7 @@ export const AdminPanel = () => {
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadPodsShort(selectedSC.id));
+      dispatch(getAccessibleDealerships());
     } else {
       dispatch(getPodsShort([]));
     }

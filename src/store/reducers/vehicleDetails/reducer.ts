@@ -11,6 +11,8 @@ import {
   setGlobalModels,
   setPageData,
   setAllMakes,
+  setMakeCodes,
+  setMakeModelCodes,
 } from './actions';
 import { TState } from './types';
 import { defaultPaging, defaultPageData } from '../constants';
@@ -28,6 +30,8 @@ const initialState: TState = {
   globalMakes: [],
   globalModels: [],
   makesModels: [],
+  makeCodes: [],
+  makeModelCodes: [],
 };
 
 export const vehicleDetailsReducer = createReducer<TState>(initialState, builder =>
@@ -64,5 +68,11 @@ export const vehicleDetailsReducer = createReducer<TState>(initialState, builder
     })
     .addCase(setGlobalModels, (state, { payload }) => {
       return { ...state, globalModels: payload };
+    })
+    .addCase(setMakeCodes, (state, { payload }) => {
+      return { ...state, makeCodes: payload };
+    })
+    .addCase(setMakeModelCodes, (state, { payload }) => {
+      return { ...state, makeModelCodes: payload };
     })
 );

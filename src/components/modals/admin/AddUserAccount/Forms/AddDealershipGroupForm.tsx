@@ -26,14 +26,22 @@ const AddDealershipGroupForm = ({
 }: DealershipGroupProps) => {
   const { classes: multipleACSClasses } = useMultipleACStyles();
 
-  const { dealershipList } = useSelector((state: RootState) => state.dealershipGroups);
+  const { dealershipList, accessibleDealerships } = useSelector(
+    (state: RootState) => state.dealershipGroups
+  );
 
-  const allOptions: TOption[] = dealershipList.map(d => ({
-    value: d.id,
-    name: d.name,
-  }));
+  const allOptions: TOption[] = accessibleDealerships.length
+    ? accessibleDealerships.map(d => ({
+        value: d.id,
+        name: d.name,
+      }))
+    : dealershipList.map(d => ({
+        value: d.id,
+        name: d.name,
+      }));
 
-  const options: TOption[] = [{ value: 0, name: 'Select all' }, ...allOptions];
+  const options: TOption[] =
+    allOptions.length > 1 ? [{ value: 0, name: 'Select all' }, ...allOptions] : allOptions;
 
   const onCheckboxChange = useCallback(
     (option: TOption) => {

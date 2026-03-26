@@ -61,16 +61,22 @@ const ServiceCenterCategoryDropdown = ({
   // adding select to every category
   const categoryGroups = Array.from(new Set(baseOptions.map(o => o.categoryName)));
   const options: TOptionForUserAccountServiceCenters[] = categoryGroups
-    .flatMap(cat => [
-      {
-        value: -baseOptions.find(o => o.categoryName === cat)!.categoryId,
-        name: 'Select all',
-        categoryName: cat,
-        categoryId: 0,
-        position: '',
-      },
-      ...baseOptions.filter(o => o.categoryName === cat),
-    ])
+    .flatMap(cat => {
+      const catOptions = baseOptions.filter(o => o.categoryName === cat);
+
+      return catOptions.length > 1
+        ? [
+            {
+              value: -catOptions[0].categoryId,
+              name: 'Select all',
+              categoryName: cat,
+              categoryId: 0,
+              position: '',
+            },
+            ...catOptions,
+          ]
+        : catOptions;
+    })
     .sort((a, b) => a.categoryName.localeCompare(b.categoryName));
 
   const onCheckboxChange = useCallback(

@@ -14,6 +14,7 @@ import { AddUserAccount } from '../../../components/modals/admin/AddUserAccount/
 import { RootState } from '../../../store/rootReducer';
 import { IUserAccount } from '../RoleManagement/types';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
+import { useSCs } from '../../../hooks/useSCs/useSCs';
 
 export const EmployeesAddDelete = () => {
   const [editedItem, setEditedItem] = useState<TUserAccountForm | null>(null);
@@ -22,6 +23,7 @@ export const EmployeesAddDelete = () => {
   const { isLoading } = useSelector((state: RootState) => state.roleManagement);
   const [visibleData, setVisibleDate] = useState<IUserAccount[]>([]);
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
+  const { selectedSC } = useSCs();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
@@ -41,7 +43,7 @@ export const EmployeesAddDelete = () => {
     dispatch(loadDealershipsGroup(true));
     dispatch(loadServiceCentersGroup(true));
     dispatch(loadRoleUsers(onSuccess));
-  }, []);
+  }, [selectedSC]);
 
   return (
     <div className={classes.root}>

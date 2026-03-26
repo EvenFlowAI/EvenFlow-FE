@@ -99,23 +99,13 @@ export const AddUserAccountForm: React.FC<
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        {form.role && dealerShipAccessRoles.includes(form.role) ? (
-          <TextField
-            disabled
-            value={null}
-            placeholder="Select Service Center"
-            fullWidth
-            label="Service Center"
-          />
-        ) : (
-          <ServiceCenterCategoryDropdown
-            form={form}
-            isAdding={isAdding}
-            formIsChecked={formIsChecked}
-            setEmployeeForm={setEmployeeForm}
-            setFormIsChecked={setFormIsChecked}
-          />
-        )}
+        <ServiceCenterCategoryDropdown
+          form={form}
+          isAdding={isAdding}
+          formIsChecked={formIsChecked}
+          setEmployeeForm={setEmployeeForm}
+          setFormIsChecked={setFormIsChecked}
+        />
       </Grid>
 
       <Grid item xs={12} sm={6}>
