@@ -119,12 +119,9 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
     applyFilters(newFilters);
   };
 
-  const handleSelectStatus = (e: React.SyntheticEvent, value: string) => {
-    const selectedStatus = value === '' ? null : (Number(value) as UserStatus);
-    const newFilters = {
-      ...filters,
-      status: selectedStatus,
-    };
+  const handleSelectStatus = (e: React.SyntheticEvent, newValue: UserStatus | null) => {
+    const selectedStatus = newValue ?? null;
+    const newFilters = { ...filters, status: selectedStatus };
     setFilters(newFilters);
     applyFilters(newFilters);
   };
@@ -200,13 +197,11 @@ const Filters = ({ setData, isAdminPanel, handleAddUserAccount, setPageData }: F
         <div className={componentClasses.filter} style={{ width: 180 }}>
           <div className={classes.label}>Status</div>
           <Autocomplete
-            options={Object.values(statusLabels)}
-            getOptionLabel={option => option}
+            options={Object.values(UserStatus).filter(v => typeof v === 'number') as UserStatus[]}
+            getOptionLabel={option => statusLabels[option]}
             isOptionEqualToValue={(option, value) => option === value}
-            value={filters.role}
-            onChange={(event, newValue) => {
-              handleSelectStatus(event, newValue ? newValue : '');
-            }}
+            value={filters.status ?? null}
+            onChange={(event, newValue) => handleSelectStatus(event, newValue)}
             renderInput={autocompleteRender({
               label: '',
               fullWidth: true,
