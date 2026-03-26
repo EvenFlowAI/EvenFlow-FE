@@ -75,6 +75,7 @@ export const ServiceCenterSelector = () => {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl) && !disabled} onClose={handleMenuClose}>
         {accessibleDealerships.map(dealership => {
           if (!dealership.serviceCenters.length) return null;
+          const sortedSCs = [...dealership.serviceCenters].sort((a, b) => a.id - b.id);
 
           const showDealershipName = accessibleDealerships.length > 1;
 
@@ -95,7 +96,7 @@ export const ServiceCenterSelector = () => {
                 </MenuItem>
               )}
 
-              {dealership.serviceCenters.map(sc => (
+              {sortedSCs.map(sc => (
                 <MenuItem
                   key={sc.id}
                   onClick={() => handleChooseServiceCenter(sc, dealership.id)}
