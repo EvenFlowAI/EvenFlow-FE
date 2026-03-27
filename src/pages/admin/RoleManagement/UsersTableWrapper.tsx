@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IUserAccount, statusLabels } from './types';
+import { IUserAccount, statusLabels, UserStatus } from './types';
 import { UsersTable } from '../../../components/tables/UsersTable/UsersTable';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
@@ -219,15 +219,21 @@ const UsersTableWrapper = ({
         actions={viewActions}
       />
       <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem disabled={editedItem?.status === UserStatus.Removed} onClick={handleEdit}>
+          Edit
+        </MenuItem>
         {!isAdminPanel ? (
-          editedItem?.status === 1 || editedItem?.status === 0 ? (
+          editedItem?.status === UserStatus.Active || editedItem?.status === UserStatus.Inactive ? (
             <MenuItem onClick={handleRemove}>Remove</MenuItem>
           ) : (
             <MenuItem onClick={handleRestore}>Restore</MenuItem>
           )
         ) : null}
-        {!editedItem?.emailConfirmed ? <MenuItem onClick={handleResend}>Resend</MenuItem> : null}
+        {!editedItem?.emailConfirmed ? (
+          <MenuItem disabled={editedItem?.status === UserStatus.Removed} onClick={handleResend}>
+            Resend
+          </MenuItem>
+        ) : null}
       </Menu>
       <ResendEmailModal
         open={isOpenResend}
