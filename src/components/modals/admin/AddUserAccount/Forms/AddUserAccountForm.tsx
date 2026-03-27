@@ -165,6 +165,7 @@ export const AddUserAccountForm: React.FC<
             setFormIsChecked={setFormIsChecked}
             employeeTypeOptions={employeeTypeOptions}
             shortLoading={shortLoading}
+            isAdding={isAdding}
           />
         ))}{' '}
       </Grid>
