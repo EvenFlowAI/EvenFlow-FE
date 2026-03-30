@@ -55,7 +55,7 @@ export const ServiceCenterSection = ({
           {
             dmsId: sc.dmsId,
             role: form.role ? EConsultantRole[form.role as keyof typeof EConsultantRole] : 0,
-            fullName: form.firstName + form.lastName,
+            fullName: form.firstName + ' ' + form.lastName,
           } as TServiceConsultant,
         ]);
       }
