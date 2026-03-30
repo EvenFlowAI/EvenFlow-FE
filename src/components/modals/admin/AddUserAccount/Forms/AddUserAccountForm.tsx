@@ -56,7 +56,7 @@ export const AddUserAccountForm: React.FC<
 
   const handleRoleChange = (e: React.SyntheticEvent, value: string | null) => {
     if (!isAdding) {
-      showMessage('Previous role configurations have been cleared.');
+      showMessage('Previous role configurations will be changed.');
     }
     setFormIsChecked(false);
     setEmployeeForm(prev => ({
