@@ -16,6 +16,7 @@ import AddDealershipGroupForm from './AddDealershipGroupForm';
 import ServiceCenterCategoryDropdown from './ServiceCenterCategoryDropdown';
 import { ServiceCenterSection } from './ServiceCenterSection';
 import { Roles } from '../../../../../types/types';
+import { useMessage } from '../../../../../hooks/useMessage/useMessage';
 
 type TTFormProps = {
   form: TUserAccountForm;
@@ -31,6 +32,7 @@ export const AddUserAccountForm: React.FC<
 > = ({ setEmployeeForm, setFormIsChecked, formIsChecked, form, isAdding, isAdminPanel }) => {
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const { emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
+  const showMessage = useMessage();
 
   const ERROR_MESSAGES = {
     duplicateEmail: 'A user with this email already exists in the system',
@@ -53,6 +55,9 @@ export const AddUserAccountForm: React.FC<
   };
 
   const handleRoleChange = (e: React.SyntheticEvent, value: string | null) => {
+    if (!isAdding) {
+      showMessage('Previous role configurations have been cleared.');
+    }
     setFormIsChecked(false);
     setEmployeeForm(prev => ({
       ...prev,
