@@ -260,6 +260,7 @@ export enum Titles {
   Vehicles = 'Vehicles',
   AiAgents = 'AI Agents (beta)',
   RoleManagement = 'Role Management',
+  RecallDatabase = 'Recall Database',
 }
 
 export enum LocalItems {

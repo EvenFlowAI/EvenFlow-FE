@@ -44,6 +44,12 @@ export const SULinks: LinkTypeWithSub[] = [
         roles: [Roles.EvenFlowAdmin],
         sub: true,
       },
+      {
+        to: Routes.Admin.RecallDatabase,
+        name: 'Recall Database',
+        roles: [Roles.EvenFlowAdmin],
+        sub: true,
+      },
     ],
   },
 ];

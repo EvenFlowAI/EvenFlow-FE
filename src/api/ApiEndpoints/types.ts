@@ -136,6 +136,7 @@ export interface IApiEndpoints {
     | 'GetModelsStatistic',
     TApiEndpoint
   >;
+  GlobalRecalls: Record<'GetGlobalRecalls' | 'GlobalRecallCampaign', TApiEndpoint>;
   Holidays: Record<'Create' | 'Update' | 'Remove' | 'Retrieve' | 'GetAll', TApiEndpoint>;
   IntervalUpsell: Record<
     'GetUpsellByQuery' | 'EditUpsell' | 'RemoveUpsell' | 'AddUpsell' | 'GetUpsellById',

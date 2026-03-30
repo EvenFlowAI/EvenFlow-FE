@@ -1,0 +1,113 @@
+import { IGlobalRecall, OrderByField } from './types';
+
+export const initialOrder = {
+  orderBy: String(OrderByField.ReportedDate),
+  isAscending: true,
+};
+
+export const sortById = (a: IGlobalRecall, b: IGlobalRecall): number => {
+  return a.id - b.id;
+};
+
+export const globalRecalls: IGlobalRecall[] = [
+  {
+    id: 1,
+    nhtsaCampaign: '25V001000',
+    oemProgram: 'Toyota Safety Recall',
+    manufacturer: 'Toyota Motor Corporation',
+    recallComponent: 'Airbag',
+    recallComponentBookingFlow: 'Passenger airbag deployment issue',
+    impactedVehicles: 120000,
+    reportedDate: '2026-01-10',
+  },
+  {
+    id: 2,
+    nhtsaCampaign: '25V002000',
+    oemProgram: 'Ford Recall Program',
+    manufacturer: 'Ford Motor Company',
+    recallComponent: 'Brakes',
+    recallComponentBookingFlow: 'Rear brake caliper defect',
+    impactedVehicles: 85000,
+    reportedDate: '2026-01-18',
+  },
+  {
+    id: 3,
+    nhtsaCampaign: '25V003000',
+    oemProgram: 'Honda Safety Campaign',
+    manufacturer: 'Honda Motor Co., Ltd.',
+    recallComponent: 'Fuel System',
+    recallComponentBookingFlow: 'Fuel pump malfunction',
+    impactedVehicles: 45000,
+    reportedDate: '2026-01-25',
+  },
+  {
+    id: 4,
+    nhtsaCampaign: '25V004000',
+    oemProgram: 'BMW Recall Notice',
+    manufacturer: 'BMW AG',
+    recallComponent: 'Steering',
+    recallComponentBookingFlow: 'Steering shaft defect',
+    impactedVehicles: 32000,
+    reportedDate: '2026-02-02',
+  },
+  {
+    id: 5,
+    nhtsaCampaign: '25V005000',
+    oemProgram: 'Mercedes-Benz Recall',
+    manufacturer: 'Mercedes-Benz Group AG',
+    recallComponent: 'Electrical',
+    recallComponentBookingFlow: 'Battery wiring harness issue',
+    impactedVehicles: 27000,
+    reportedDate: '2026-02-09',
+  },
+  {
+    id: 6,
+    nhtsaCampaign: '25V006000',
+    oemProgram: 'Volkswagen Safety Program',
+    manufacturer: 'Volkswagen AG',
+    recallComponent: 'Transmission',
+    recallComponentBookingFlow: 'Gearbox control unit failure',
+    impactedVehicles: 60000,
+    reportedDate: '2026-02-15',
+  },
+  {
+    id: 7,
+    nhtsaCampaign: '25V007000',
+    oemProgram: 'Chevrolet Recall Campaign',
+    manufacturer: 'General Motors',
+    recallComponent: 'Suspension',
+    recallComponentBookingFlow: 'Front suspension arm defect',
+    impactedVehicles: 95000,
+    reportedDate: '2026-02-22',
+  },
+  {
+    id: 8,
+    nhtsaCampaign: '25V008000',
+    oemProgram: 'Nissan Safety Recall',
+    manufacturer: 'Nissan Motor Co., Ltd.',
+    recallComponent: 'Cooling System',
+    recallComponentBookingFlow: 'Radiator fan assembly issue',
+    impactedVehicles: 72000,
+    reportedDate: '2026-03-01',
+  },
+  {
+    id: 9,
+    nhtsaCampaign: '25V009000',
+    oemProgram: 'Hyundai Recall Program',
+    manufacturer: 'Hyundai Motor Company',
+    recallComponent: 'Engine',
+    recallComponentBookingFlow: 'Cylinder head gasket defect',
+    impactedVehicles: 51000,
+    reportedDate: '2026-03-08',
+  },
+  {
+    id: 10,
+    nhtsaCampaign: '25V010000',
+    oemProgram: 'Kia Safety Campaign',
+    manufacturer: 'Kia Corporation',
+    recallComponent: 'Lighting',
+    recallComponentBookingFlow: 'Headlight wiring harness issue',
+    impactedVehicles: 43000,
+    reportedDate: '2026-03-15',
+  },
+];

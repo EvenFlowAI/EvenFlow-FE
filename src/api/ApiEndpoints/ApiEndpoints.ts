@@ -226,6 +226,13 @@ export class Api {
       GetMakesStatistic: { route: '/global-vehicle-makes/statistics', method: 'get' },
       GetModelsStatistic: { route: '/global-vehicle-models/statistics', method: 'get' },
     },
+    GlobalRecalls: {
+      GetGlobalRecalls: { route: '/global-recall-campaigns/by-query', method: 'get' },
+      GlobalRecallCampaign: {
+        route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
+        method: 'patch',
+      },
+    },
     IntervalUpsell: {
       GetUpsellByQuery: { route: '/interval-upsells/by-query', method: 'post' },
       EditUpsell: { route: '/interval-upsells/{id}', method: 'put' },
