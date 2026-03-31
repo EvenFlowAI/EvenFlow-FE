@@ -45,6 +45,11 @@ export interface IPagingResponse {
   numberOfRecords: number;
 }
 
+export interface IPagingUpdatedResponse {
+  numberOfPages: number;
+  total: number;
+}
+
 export interface IPageRequest {
   pageIndex: number;
   pageSize: number;

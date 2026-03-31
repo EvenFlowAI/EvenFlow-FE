@@ -34,15 +34,16 @@ const RecallDatabase = () => {
 
   const onCancel = () => {
     setIsEdit(false);
+    setData(recallsDatabase);
   };
 
   const onSave = () => {
     data.forEach(item => {
       const globalRecall = recallsDatabase.find(recall => recall.id === item.id);
-      console.log(globalRecall);
       if (globalRecall) {
         if (
-          globalRecall.recallComponentBookingFlow.trim() !== item.recallComponentBookingFlow.trim()
+          globalRecall.recallComponentBookingFlow?.trim() !==
+          item.recallComponentBookingFlow?.trim()
         ) {
           dispatch(
             upsertBookingRecallComponent(globalRecall.id, item.recallComponentBookingFlow.trim())

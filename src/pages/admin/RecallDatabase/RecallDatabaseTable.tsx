@@ -5,7 +5,6 @@ import { IGlobalRecall, OrderByField } from './types';
 import { IOrder, IPageRequest, TableRowDataType } from '../../../types/types';
 import { RootState } from '../../../store/rootReducer';
 import { useException } from '../../../hooks/useException/useException';
-import { sortById } from './utils';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
 
 type TProps = {
@@ -33,15 +32,9 @@ const RecallDatabaseTable: React.FC<TProps> = ({
   const showError = useException();
 
   const onChangeRecallComponent = (el: IGlobalRecall, text: string) => {
-    setData(prev => {
-      const itemToChange = prev.find(item => item.id === el.id);
-      if (itemToChange) {
-        const updated = { ...itemToChange, recallComponentBookingFlow: text };
-        const filtered = prev.filter(item => item.id !== el.id);
-        return [...filtered, updated].sort(sortById);
-      }
-      return prev;
-    });
+    setData(prev =>
+      prev.map(item => (item.id === el.id ? { ...item, recallComponentBookingFlow: text } : item))
+    );
   };
 
   const RowData: TableRowDataType<IGlobalRecall>[] = [
