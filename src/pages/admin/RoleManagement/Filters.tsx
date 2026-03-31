@@ -10,6 +10,7 @@ import { RootState } from '../../../store/rootReducer';
 import { useStyles } from './styles';
 import { AddUserButtonWrapper } from '../EmployeesAddDelete/AddUserButtonWrapper';
 import { autocompleteRender } from '../../../utils/autocompleteRenders';
+import { IServiceCenterExtended } from '../../../store/reducers/serviceCenters/types';
 
 interface FiltersProps {
   setData: React.Dispatch<React.SetStateAction<IUserAccount[]>>;
@@ -132,6 +133,13 @@ const Filters = ({
     applyFilters(newFilters);
   };
 
+  const normalizeServiceCenters = (serviceCenters: IServiceCenterExtended[]) => {
+    return serviceCenters.map(sc => ({
+      ...sc,
+      name: `${sc.name} (id: ${sc.id})`,
+    }));
+  };
+
   return (
     <div className={componentClasses.filtersWrapper}>
       {!isAdminPanel && (
@@ -157,7 +165,7 @@ const Filters = ({
       <div className={componentClasses.filter} style={{ width: 240 }}>
         <div className={classes.label}>Service Center</div>
         <Autocomplete
-          options={serviceCenters}
+          options={normalizeServiceCenters(serviceCenters)}
           getOptionLabel={option => option.name}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           value={serviceCenters.find(sc => String(sc.id) === filters.serviceCenterId) ?? null}
