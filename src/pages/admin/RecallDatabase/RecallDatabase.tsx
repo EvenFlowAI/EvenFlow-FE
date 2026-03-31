@@ -17,6 +17,7 @@ import {
 } from '../../../store/reducers/recallDatabase/actions';
 import RecallDatabaseFilters from './RecallDatabaseFilters';
 import { useDebounce } from '../../../hooks/useDebounce/useDebounce';
+import dayjs from 'dayjs';
 
 const RecallDatabase = () => {
   const { classes } = useStyles();
@@ -25,7 +26,8 @@ const RecallDatabase = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [order, setOrder] = useState<IOrder<IGlobalRecall>>(initialOrder);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [manufacturer, setManufacturer] = useState<string>('');
+  const [manufacturer, setManufacturer] = useState<string[]>([]);
+  const [date, setDate] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null]>([null, null]);
   const { pageData, onChangePage, onChangeRowsPerPage } = useStatePagination();
   const dispatch = useDispatch();
   const debouncedSearchTerm = useDebounce(searchTerm.trim(), 300);
@@ -35,8 +37,8 @@ const RecallDatabase = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(loadRecallsDatabase(pageData, order, debouncedSearchTerm, manufacturer));
-  }, [pageData, order, debouncedSearchTerm, manufacturer]);
+    dispatch(loadRecallsDatabase(pageData, order, debouncedSearchTerm, manufacturer, date));
+  }, [pageData, order, debouncedSearchTerm, manufacturer, date]);
 
   useEffect(() => {
     setData(recallsDatabase);
@@ -72,6 +74,8 @@ const RecallDatabase = () => {
         searchTerm={searchTerm}
         manufacturer={manufacturer}
         setManufacturer={setManufacturer}
+        date={date}
+        setDate={setDate}
       />
       <div className={classes.tableWrapper}>
         <SaveEditBlock

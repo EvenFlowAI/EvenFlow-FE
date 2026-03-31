@@ -17,3 +17,21 @@ export enum OrderByField {
   RecallComponent = 4,
   ImpactedVehicles = 5,
 }
+
+export interface GlobalRecallComponent {
+  id: number;
+  recallComponent: string;
+  nhtsaCampaign: string;
+  oemProgram: string;
+  makes: {
+    name: string;
+    models: { name: string; year: number }[];
+  }[];
+  reportedDate: string;
+  impactedVehicles: number;
+  doNotDrive: boolean;
+  fireRisk: boolean;
+  summary: string;
+  safetyRisk: string;
+  remedy: string;
+}

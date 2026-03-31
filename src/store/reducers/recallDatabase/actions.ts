@@ -6,8 +6,9 @@ import {
   IPagingResponse,
   IPagingUpdatedResponse,
 } from '../../../types/types';
-import { IGlobalRecall } from '../../../pages/admin/RecallDatabase/types';
+import { GlobalRecallComponent, IGlobalRecall } from '../../../pages/admin/RecallDatabase/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import dayjs from 'dayjs';
 
 export const setPaging = createAction<IPagingResponse>('RecallDatabase/SetPaging');
 export const setLoading = createAction<boolean>('RecallDatabase/SetLoading');
@@ -21,7 +22,8 @@ export const loadRecallsDatabase =
     pageData: IPageRequest,
     order: IOrder<IGlobalRecall>,
     searchTerm: string,
-    manufacturer: string
+    manufacturer: string[],
+    date: [dayjs.Dayjs | null, dayjs.Dayjs | null]
   ): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
@@ -33,7 +35,9 @@ export const loadRecallsDatabase =
         orderBy: order.orderBy,
         isAscending: order.isAscending,
         searchTerm: searchTerm ? searchTerm : undefined,
-        manufacturers: manufacturer ? manufacturer : undefined,
+        manufacturers: manufacturer.length ? manufacturer.join('&') : undefined,
+        startDate: date[0] ? date[0].toISOString() : undefined,
+        endDate: date[1] ? date[1].toISOString() : undefined,
       },
     })
       .then(response => {
@@ -82,3 +86,22 @@ export const getManufacturers = (): AppThunk => dispatch => {
       console.log(err);
     });
 };
+
+export const getRecallComponent =
+  (id: number, onSuccess: (recall: GlobalRecallComponent) => void): AppThunk =>
+  dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.GlobalRecalls.GetRecallComponent, {
+      urlParams: { id },
+    })
+      .then(response => {
+        console.log(response);
+        if (response.data.data) {
+          onSuccess(response?.data?.data);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };

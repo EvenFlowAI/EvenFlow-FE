@@ -236,6 +236,10 @@ export class Api {
         route: '/global-recall-campaigns/manufacturers',
         method: 'get',
       },
+      GetRecallComponent: {
+        route: 'global-recall-campaigns/{id}',
+        method: 'get',
+      },
     },
     IntervalUpsell: {
       GetUpsellByQuery: { route: '/interval-upsells/by-query', method: 'post' },

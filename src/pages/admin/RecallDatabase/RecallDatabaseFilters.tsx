@@ -5,12 +5,17 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { autocompleteRender } from '../../../utils/autocompleteRenders';
 import { Autocomplete } from '@mui/material';
+import { useAutocompleteStyles } from '../../../hooks/styling/useAutocompleteStyles';
+import dayjs from 'dayjs';
+import CustomDateRangePicker from '../../../components/pickers/CustomDateRangePicker/CustomDateRangePicker';
 
 interface RecallDatabaseFiltersProps {
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  manufacturer: string;
-  setManufacturer: React.Dispatch<React.SetStateAction<string>>;
+  manufacturer: string[];
+  setManufacturer: React.Dispatch<React.SetStateAction<string[]>>;
+  date: [dayjs.Dayjs | null, dayjs.Dayjs | null];
+  setDate: React.Dispatch<React.SetStateAction<[dayjs.Dayjs | null, dayjs.Dayjs | null]>>;
 }
 
 const RecallDatabaseFilters = ({
@@ -18,8 +23,11 @@ const RecallDatabaseFilters = ({
   setSearchTerm,
   manufacturer,
   setManufacturer,
+  date,
+  setDate,
 }: RecallDatabaseFiltersProps) => {
   const { manufacturers } = useSelector((state: RootState) => state.recallDatabase);
+  const { classes } = useAutocompleteStyles();
 
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'end' }}>
@@ -31,7 +39,9 @@ const RecallDatabaseFilters = ({
         onChange={e => setSearchTerm(e.target.value)}
       />
       <Autocomplete
-        style={{ width: 180 }}
+        classes={classes}
+        style={{ width: 350 }}
+        multiple
         value={manufacturer}
         options={manufacturers}
         isOptionEqualToValue={(o, v) => o === v}
@@ -41,6 +51,12 @@ const RecallDatabaseFilters = ({
           label: 'Manufacturer',
           placeholder: 'Not selected',
         })}
+      />
+      <CustomDateRangePicker
+        title="Date Reported"
+        value={date}
+        setValue={date => setDate(date)}
+        format="MMM D, YYYY"
       />
     </div>
   );

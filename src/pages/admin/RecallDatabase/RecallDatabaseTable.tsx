@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Table } from '../../../components/tables/Table/Table';
 import { IGlobalRecall, OrderByField } from './types';
@@ -6,6 +6,10 @@ import { IOrder, IPageRequest, TableRowDataType } from '../../../types/types';
 import { RootState } from '../../../store/rootReducer';
 import { useException } from '../../../hooks/useException/useException';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
+import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
+import { MoreHoriz } from '@mui/icons-material';
+import { useModal } from '../../../hooks/useModal/useModal';
+import ViewGlobalRecall from '../../../components/modals/admin/ViewGlobalRecall/ViewGlobalRecall';
 
 type TProps = {
   isEdit: boolean;
@@ -30,6 +34,10 @@ const RecallDatabaseTable: React.FC<TProps> = ({
 }) => {
   const { isLoading, pagination } = useSelector((state: RootState) => state.recallDatabase);
   const showError = useException();
+  const [anchorEl, setAnchorEl] = useState<(EventTarget & HTMLButtonElement) | null>(null);
+  const [recallComponentId, setRecallComponentId] = useState<number | null>(null);
+  const { onOpen, isOpen, onClose } = useModal();
+  const recallIdRef = useRef<number | null>(null);
 
   const onChangeRecallComponent = (el: IGlobalRecall, text: string) => {
     setData(prev =>
@@ -76,12 +84,22 @@ const RecallDatabaseTable: React.FC<TProps> = ({
     {
       header: 'Recall Component',
       width: 234,
-      val: el => el.recallComponent,
+      val: el => {
+        const text = el.recallComponent ?? '';
+        return text.length > 20 ? (
+          <Tooltip placement="top" title={text}>
+            <p style={{ cursor: 'pointer', userSelect: 'none' }}>{text.slice(0, 20) + '...'}</p>
+          </Tooltip>
+        ) : (
+          text
+        );
+      },
       orderId: String(OrderByField.RecallComponent),
       align: 'left',
     },
     {
       header: 'Recall Component Booking Flow',
+      width: 191,
       val: el =>
         isEdit ? (
           <TextField
@@ -95,6 +113,8 @@ const RecallDatabaseTable: React.FC<TProps> = ({
             placeholder="Type recall text"
             sx={{ '& .MuiInputBase-input': { padding: '4px 8px' } }}
           />
+        ) : el.recallComponentBookingFlow?.length > 18 ? (
+          el.recallComponentBookingFlow.slice(0, 18) + '...'
         ) : (
           el.recallComponentBookingFlow
         ),
@@ -111,23 +131,52 @@ const RecallDatabaseTable: React.FC<TProps> = ({
     }
   };
 
+  const handleView = () => {
+    setRecallComponentId(recallIdRef.current);
+    onOpen();
+    setAnchorEl(null);
+  };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+    setRecallComponentId(null);
+  };
+
+  const openMenu = (el: IGlobalRecall) => (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    recallIdRef.current = el.id;
+    setAnchorEl(e.currentTarget);
+  };
+
+  const viewActions = (el: IGlobalRecall) => (
+    <IconButton size="small" onClick={openMenu(el)}>
+      <MoreHoriz />
+    </IconButton>
+  );
+
   return (
-    <Table<IGlobalRecall>
-      index="id"
-      noDataTitle="No results."
-      data={data}
-      order={order.orderBy}
-      isAscending={order.isAscending}
-      rowData={RowData}
-      rowsPerPage={pageData.pageSize}
-      page={pageData.pageIndex}
-      count={pagination.numberOfRecords}
-      onChangeRowsPerPage={onChangeRowsPerPage}
-      onChangePage={onChangePage}
-      onSort={handleSort}
-      hidePagination={pagination.numberOfRecords < 10}
-      isLoading={isLoading}
-    />
+    <>
+      <Table<IGlobalRecall>
+        index="id"
+        noDataTitle="No results."
+        data={data}
+        order={order.orderBy}
+        isAscending={order.isAscending}
+        rowData={RowData}
+        rowsPerPage={pageData.pageSize}
+        page={pageData.pageIndex}
+        count={pagination.numberOfRecords}
+        onChangeRowsPerPage={onChangeRowsPerPage}
+        onChangePage={onChangePage}
+        onSort={handleSort}
+        hidePagination={pagination.numberOfRecords < 10}
+        isLoading={isLoading}
+        actions={viewActions}
+      />
+      <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={closeMenu}>
+        <MenuItem onClick={handleView}>View</MenuItem>
+      </Menu>
+      <ViewGlobalRecall open={isOpen} onClose={onClose} recallId={recallComponentId} />
+    </>
   );
 };
 
