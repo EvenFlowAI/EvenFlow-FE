@@ -165,7 +165,7 @@ const Filters = ({
       <div className={componentClasses.filter} style={{ width: 240 }}>
         <div className={classes.label}>Service Center</div>
         <Autocomplete
-          options={normalizeServiceCenters(serviceCenters)}
+          options={isAdminPanel ? serviceCenters : normalizeServiceCenters(serviceCenters)}
           getOptionLabel={option => option.name}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           value={serviceCenters.find(sc => String(sc.id) === filters.serviceCenterId) ?? null}
