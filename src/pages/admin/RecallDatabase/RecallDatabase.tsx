@@ -11,9 +11,12 @@ import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEdi
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import {
+  getManufacturers,
   loadRecallsDatabase,
   upsertBookingRecallComponent,
 } from '../../../store/reducers/recallDatabase/actions';
+import RecallDatabaseFilters from './RecallDatabaseFilters';
+import { useDebounce } from '../../../hooks/useDebounce/useDebounce';
 
 const RecallDatabase = () => {
   const { classes } = useStyles();
@@ -21,12 +24,19 @@ const RecallDatabase = () => {
   const [data, setData] = useState<IGlobalRecall[]>([]);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [order, setOrder] = useState<IOrder<IGlobalRecall>>(initialOrder);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [manufacturer, setManufacturer] = useState<string>('');
   const { pageData, onChangePage, onChangeRowsPerPage } = useStatePagination();
   const dispatch = useDispatch();
+  const debouncedSearchTerm = useDebounce(searchTerm.trim(), 300);
 
   useEffect(() => {
-    dispatch(loadRecallsDatabase(pageData, order));
-  }, [pageData, order]);
+    dispatch(getManufacturers());
+  }, []);
+
+  useEffect(() => {
+    dispatch(loadRecallsDatabase(pageData, order, debouncedSearchTerm, manufacturer));
+  }, [pageData, order, debouncedSearchTerm, manufacturer]);
 
   useEffect(() => {
     setData(recallsDatabase);
@@ -57,6 +67,12 @@ const RecallDatabase = () => {
   return (
     <div className={classes.root}>
       <TitleContainer title={Titles.RecallDatabase} parent={applicationRoot} pad />
+      <RecallDatabaseFilters
+        setSearchTerm={setSearchTerm}
+        searchTerm={searchTerm}
+        manufacturer={manufacturer}
+        setManufacturer={setManufacturer}
+      />
       <div className={classes.tableWrapper}>
         <SaveEditBlock
           onSave={onSave}

@@ -232,6 +232,10 @@ export class Api {
         route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
         method: 'patch',
       },
+      GetManufacturers: {
+        route: '/global-recall-campaigns/manufacturers',
+        method: 'get',
+      },
     },
     IntervalUpsell: {
       GetUpsellByQuery: { route: '/interval-upsells/by-query', method: 'post' },
