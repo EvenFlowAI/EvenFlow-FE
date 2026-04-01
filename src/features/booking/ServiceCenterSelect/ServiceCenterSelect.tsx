@@ -8,12 +8,13 @@ import {
   setTrackerCreated,
   setWelcomeScreenView,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { useStyles } from './styles';
 import { ServiceCenterCard } from './ServiceCenterCard/ServiceCenterCard';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
 import { Roles } from '../../../types/types';
+import { decodeSCID } from '../../../utils/utils';
 
 const restrictedRoles: TRole[] = [
   Roles.ServiceManager,
@@ -28,6 +29,7 @@ const ServiceCenterSelect = () => {
   const { scProfile, isProfileLoading } = useSelector((state: RootState) => state.appointment);
   const { shortSC, shortLoading } = useSelector((state: RootState) => state.serviceCenters);
   const [centersList, setCentersList] = useState<IServiceCenter[]>([]);
+  const { id } = useParams<{ id: string }>();
 
   const { classes } = useStyles();
   const currentUser = useCurrentUser();
@@ -37,7 +39,7 @@ const ServiceCenterSelect = () => {
     if (shortSC?.length && currentUser) {
       setCentersList(() =>
         restrictedRoles.includes(currentUser?.role)
-          ? shortSC.filter(item => item.id === currentUser.serviceCenterId)
+          ? shortSC.filter(item => item.id === decodeSCID(id))
           : shortSC
       );
     }
