@@ -22,6 +22,7 @@ import {
 } from '../../../../store/reducers/roleManagement/actions';
 import { Roles } from '../../../../types/types';
 import { useException } from '../../../../hooks/useException/useException';
+import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 
 enum ERROR_CODES {
   DATA_NOT_COMPLETE = 1,
@@ -38,6 +39,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   isAdminPanel,
   ...props
 }) => {
+  const currentUser = useCurrentUser();
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [userForm, setUserForm] = useState<TUserAccountForm>(initialUserAccountForm);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -88,7 +90,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
     return {
       id: dealership.value,
       name: dealership.name,
-      hasFullAccess,
+      hasFullAccess: currentUser?.role === Roles.EvenFlowAdmin ? hasFullAccess : false,
       serviceCenters: selectedCentersForDealership.map(sc => {
         const isTechnician = user.role === Roles.Technician;
         const hasDetails = Boolean(sc.hourlyRate) || Boolean(sc.overtimeRate) || isTechnician;
