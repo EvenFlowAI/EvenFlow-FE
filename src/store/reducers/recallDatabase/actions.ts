@@ -95,7 +95,6 @@ export const getRecallComponent =
       urlParams: { id },
     })
       .then(response => {
-        console.log(response);
         if (response.data.data) {
           onSuccess(response?.data?.data);
         }

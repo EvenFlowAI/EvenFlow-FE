@@ -28,6 +28,12 @@ const ViewGlobalRecall: React.FC<
     }
   }, [recallId]);
 
+  const handleClick = () => {
+    if (!recall) return;
+    const url = `https://www.nhtsa.gov/recalls?nhtsaId=${recall.nhtsaCampaign}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <BaseModal {...props} width={835}>
       <Box className={classes.root}>
@@ -104,7 +110,12 @@ const ViewGlobalRecall: React.FC<
                 </Box>
                 <Box>
                   <Typography className={classes.label}>Recall Link</Typography>
-                  <Button variant="text" style={{ paddingLeft: 0, paddingTop: 0 }} color="primary">
+                  <Button
+                    onClick={handleClick}
+                    variant="text"
+                    style={{ paddingLeft: 0, paddingTop: 0 }}
+                    color="primary"
+                  >
                     Go to Recall
                   </Button>
                 </Box>
