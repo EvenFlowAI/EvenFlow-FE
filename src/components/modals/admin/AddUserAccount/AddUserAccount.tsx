@@ -90,7 +90,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
     return {
       id: dealership.value,
       name: dealership.name,
-      hasFullAccess: currentUser?.role === Roles.EvenFlowAdmin ? hasFullAccess : false,
+      hasFullAccess: currentUser?.role === Roles.EvenFlowAdmin ? hasFullAccess : null,
       serviceCenters: selectedCentersForDealership.map(sc => {
         const isTechnician = user.role === Roles.Technician;
         const hasDetails = Boolean(sc.hourlyRate) || Boolean(sc.overtimeRate) || isTechnician;

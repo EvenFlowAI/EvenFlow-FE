@@ -27,7 +27,7 @@ export interface IDealership {
   id: number;
   name: string;
   serviceCenters: IServiceCenter[];
-  hasFullAccess: boolean;
+  hasFullAccess: boolean | null;
 }
 
 export const statusLabels: Record<UserStatus, string> = {
