@@ -28,6 +28,7 @@ export const loadRecallsDatabase =
   dispatch => {
     dispatch(setLoading(true));
     const { pageIndex, pageSize } = pageData;
+
     Api.call(Api.endpoints.GlobalRecalls.GetGlobalRecalls, {
       params: {
         pageIndex,
@@ -36,8 +37,8 @@ export const loadRecallsDatabase =
         isAscending: order.isAscending,
         searchTerm: searchTerm ? searchTerm : undefined,
         manufacturers: manufacturer.length ? manufacturer.join('&') : undefined,
-        startDate: date[0] ? date[0].toISOString() : undefined,
-        endDate: date[1] ? date[1].toISOString() : undefined,
+        startDate: date[0]?.isValid() ? date[0].format('YYYY-MM-DDTHH:mm:ss[Z]') : undefined,
+        endDate: date[1]?.isValid() ? date[1].format('YYYY-MM-DDTHH:mm:ss[Z]') : undefined,
       },
     })
       .then(response => {

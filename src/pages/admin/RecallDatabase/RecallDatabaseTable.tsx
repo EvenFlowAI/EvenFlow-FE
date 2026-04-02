@@ -114,7 +114,11 @@ const RecallDatabaseTable: React.FC<TProps> = ({
             sx={{ '& .MuiInputBase-input': { padding: '4px 8px' } }}
           />
         ) : el.recallComponentBookingFlow?.length > 18 ? (
-          el.recallComponentBookingFlow.slice(0, 18) + '...'
+          <Tooltip placement="top" title={el.recallComponentBookingFlow}>
+            <p style={{ cursor: 'pointer', userSelect: 'none' }}>
+              {el.recallComponentBookingFlow.slice(0, 18) + '...'}
+            </p>
+          </Tooltip>
         ) : (
           el.recallComponentBookingFlow
         ),
