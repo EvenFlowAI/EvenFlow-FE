@@ -58,6 +58,7 @@ const productionTrackerMap: Record<string, string> = {
   [ServiceCenters.PorscheNashua]: 'G-Y41L9SH71Y',
   [ServiceCenters.JannsenKuenleCDJROfPlattsmouth]: 'G-RZJXL9LBL9',
   [ServiceCenters.WalserSubaruBurnsville]: 'G-KJ9VH7V9B9',
+  [ServiceCenters.ChevroletBuickGMCAtAttleboro]: 'G-6G3K67N1FR',
 };
 
 export const getTrackerById = (id: string): string => {
