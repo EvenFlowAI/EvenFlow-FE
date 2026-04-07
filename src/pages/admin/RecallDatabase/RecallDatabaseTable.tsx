@@ -10,6 +10,7 @@ import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { useModal } from '../../../hooks/useModal/useModal';
 import ViewGlobalRecall from '../../../components/modals/admin/ViewGlobalRecall/ViewGlobalRecall';
+import dayjs from 'dayjs';
 
 type TProps = {
   isEdit: boolean;
@@ -49,7 +50,7 @@ const RecallDatabaseTable: React.FC<TProps> = ({
     {
       header: 'Reported Date',
       width: 130,
-      val: el => el.reportedDate,
+      val: el => (el.reportedDate ? dayjs(el.reportedDate).format('MMM D, YYYY') : '-'),
       orderId: String(OrderByField.ReportedDate),
       align: 'left',
     },
@@ -136,6 +137,8 @@ const RecallDatabaseTable: React.FC<TProps> = ({
   };
 
   const handleView = () => {
+    return;
+
     setRecallComponentId(recallIdRef.current);
     onOpen();
     setAnchorEl(null);

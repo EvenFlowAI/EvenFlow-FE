@@ -62,11 +62,11 @@ const ViewGlobalRecall: React.FC<
                     <Typography className={classes.label}>OEM Program</Typography>
                     <Typography className={classes.value}>{recall.oemProgram || '-'}</Typography>
                   </Box>
-                  <Box>
+                  <Box className={classes.makesWrapper}>
                     <Typography className={classes.label}>Makes & Models</Typography>
                     {recall.makes && recall.makes.length > 0 ? (
                       recall.makes.map((make, idx) => (
-                        <Box key={make.name + idx} mb={1}>
+                        <Box key={make.name + idx}>
                           <Typography className={classes.value} component="span">
                             {make.name}
                           </Typography>

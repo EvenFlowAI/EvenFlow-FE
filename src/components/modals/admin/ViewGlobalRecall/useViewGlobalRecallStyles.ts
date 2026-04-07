@@ -44,6 +44,9 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
     flexDirection: 'column',
     width: '280px',
   },
+  makesWrapper: {
+    marginBottom: theme.spacing(2),
+  },
   divider: {
     margin: `${theme.spacing(2)} 0`,
   },
@@ -63,7 +66,6 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   models: {
     fontSize: 16,
     display: 'block',
-    marginBottom: theme.spacing(2),
   },
   summary: {
     marginBottom: '20px',
