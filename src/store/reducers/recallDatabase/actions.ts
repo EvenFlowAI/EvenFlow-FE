@@ -9,6 +9,7 @@ import {
 import { GlobalRecallComponent, IGlobalRecall } from '../../../pages/admin/RecallDatabase/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
+import queryString from 'query-string';
 
 export const setPaging = createAction<IPagingResponse>('RecallDatabase/SetPaging');
 export const setLoading = createAction<boolean>('RecallDatabase/SetLoading');
@@ -36,10 +37,11 @@ export const loadRecallsDatabase =
         orderBy: order.orderBy,
         isAscending: order.isAscending,
         searchTerm: searchTerm ? searchTerm : undefined,
-        manufacturers: manufacturer.length ? manufacturer.join('&') : undefined,
+        manufacturers: manufacturer.length ? manufacturer : undefined,
         startDate: date[0]?.isValid() ? date[0].format('YYYY-MM-DDTHH:mm:ss[Z]') : undefined,
         endDate: date[1]?.isValid() ? date[1].format('YYYY-MM-DDTHH:mm:ss[Z]') : undefined,
       },
+      paramsSerializer: params => queryString.stringify(params, { arrayFormat: 'none' }),
     })
       .then(response => {
         if (response?.data?.data) {
