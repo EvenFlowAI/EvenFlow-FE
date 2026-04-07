@@ -69,22 +69,24 @@ const RecallDatabase = () => {
   return (
     <div className={classes.root}>
       <TitleContainer title={Titles.RecallDatabase} parent={applicationRoot} pad />
-      <RecallDatabaseFilters
-        setSearchTerm={setSearchTerm}
-        searchTerm={searchTerm}
-        manufacturer={manufacturer}
-        setManufacturer={setManufacturer}
-        date={date}
-        setDate={setDate}
-      />
-      <div className={classes.tableWrapper}>
-        <SaveEditBlock
-          onSave={onSave}
-          onEdit={() => setIsEdit(true)}
-          onCancel={onCancel}
-          isEdit={isEdit}
-          isSaving={isLoading}
+      <div className={classes.filtersWrapper}>
+        <RecallDatabaseFilters
+          setSearchTerm={setSearchTerm}
+          searchTerm={searchTerm}
+          manufacturer={manufacturer}
+          setManufacturer={setManufacturer}
+          date={date}
+          setDate={setDate}
         />
+        <div className={classes.tableWrapper}>
+          <SaveEditBlock
+            onSave={onSave}
+            onEdit={() => setIsEdit(true)}
+            onCancel={onCancel}
+            isEdit={isEdit}
+            isSaving={isLoading}
+          />
+        </div>
       </div>
       <RecallDatabaseTable
         data={data}

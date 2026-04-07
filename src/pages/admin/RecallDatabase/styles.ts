@@ -13,7 +13,13 @@ export const useStyles = makeStyles()({
   },
   tableWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'end',
     justifyContent: 'end',
+    position: 'relative',
+    top: 4,
+  },
+  filtersWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 });

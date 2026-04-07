@@ -107,6 +107,7 @@ const RecallDatabaseTable: React.FC<TProps> = ({
             name={String(el.id)}
             value={el.recallComponentBookingFlow}
             type="text"
+            inputProps={{ maxLength: 250 }}
             onChange={e => onChangeRecallComponent(el, e.target.value)}
             id={String(el.id)}
             multiline
