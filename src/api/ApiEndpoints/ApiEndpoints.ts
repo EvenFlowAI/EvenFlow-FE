@@ -8,6 +8,7 @@ export type TOptions = {
   data?: any;
   params?: Record<string, any>;
   urlParams?: Record<string, any>;
+  paramsSerializer?: (params: any) => string;
 };
 
 export class Api {
@@ -670,6 +671,7 @@ export class Api {
       } else {
         return await request[r.method]<RValue, AxiosResponse<RValue>>(path, {
           params: options?.params,
+          paramsSerializer: options?.paramsSerializer,
         });
       }
     } catch (err) {
