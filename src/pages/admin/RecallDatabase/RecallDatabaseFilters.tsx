@@ -53,6 +53,7 @@ const RecallDatabaseFilters = ({
         })}
       />
       <CustomDateRangePicker
+        shortcuts
         title="Date Reported"
         value={date}
         setValue={date => setDate(date)}

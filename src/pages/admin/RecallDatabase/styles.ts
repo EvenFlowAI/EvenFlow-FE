@@ -21,5 +21,6 @@ export const useStyles = makeStyles()({
   filtersWrapper: {
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: 16,
   },
 });

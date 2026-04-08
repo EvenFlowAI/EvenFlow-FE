@@ -49,40 +49,38 @@ const CustomDateRangePicker = ({
 
   const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
     {
-      label: 'This Week',
+      label: 'This Month',
       getValue: () => {
         const today = dayjs();
-        return [today.startOf('week'), today.endOf('week')];
+        return [today.startOf('month'), today];
       },
     },
     {
-      label: 'Last Week',
+      label: 'Year to Date',
       getValue: () => {
         const today = dayjs();
-        const prevWeek = today.subtract(7, 'day');
-        return [prevWeek.startOf('week'), prevWeek.endOf('week')];
+        return [today.startOf('year'), today];
       },
     },
     {
-      label: 'Last 7 Days',
+      label: 'Last 12 Months',
       getValue: () => {
         const today = dayjs();
-        return [today.subtract(7, 'day'), today];
+        return [today.subtract(12, 'month'), today];
       },
     },
     {
-      label: 'Current Month',
+      label: 'Last Calendar Year',
       getValue: () => {
-        const today = dayjs();
-        return [today.startOf('month'), today.endOf('month')];
+        const lastYear = dayjs().subtract(1, 'year');
+        return [lastYear.startOf('year'), lastYear.endOf('year')];
       },
     },
     {
-      label: 'Next Month',
+      label: 'Last 2 Years',
       getValue: () => {
         const today = dayjs();
-        const startOfNextMonth = today.endOf('month').add(1, 'day');
-        return [startOfNextMonth, startOfNextMonth.endOf('month')];
+        return [today.subtract(2, 'year'), today];
       },
     },
     { label: 'Reset', getValue: () => [null, null] },

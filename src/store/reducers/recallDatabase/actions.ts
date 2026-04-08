@@ -69,7 +69,10 @@ export const upsertBookingRecallComponent =
     dispatch(setLoading(true));
     Api.call(Api.endpoints.GlobalRecalls.GlobalRecallCampaign, {
       urlParams: { id },
-      data: { recallComponentBookingFlow },
+      data: {
+        recallComponentBookingFlow:
+          recallComponentBookingFlow.length > 0 ? recallComponentBookingFlow : null,
+      },
     })
       .then(() => {})
       .catch(err => {
