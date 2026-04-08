@@ -138,8 +138,6 @@ const RecallDatabaseTable: React.FC<TProps> = ({
   };
 
   const handleView = () => {
-    return;
-
     setRecallComponentId(recallIdRef.current);
     onOpen();
     setAnchorEl(null);
