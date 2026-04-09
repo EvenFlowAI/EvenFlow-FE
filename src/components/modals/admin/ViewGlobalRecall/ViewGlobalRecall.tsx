@@ -22,11 +22,11 @@ const ViewGlobalRecall: React.FC<
   };
 
   useEffect(() => {
-    if (recallId) {
+    if (recallId && props.open) {
       setLoading(true);
       dispatch(getRecallComponent(recallId, handleSuccess));
     }
-  }, [recallId]);
+  }, [props.open, recallId]);
 
   const handleClick = () => {
     if (!recall) return;
