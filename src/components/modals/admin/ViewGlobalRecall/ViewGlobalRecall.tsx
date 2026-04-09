@@ -47,7 +47,18 @@ const ViewGlobalRecall: React.FC<
           </Typography>
         ) : (
           <>
-            <DialogTitle onClose={props.onClose} style={{ padding: '0' }}>
+            <DialogTitle
+              onClose={props.onClose}
+              style={{
+                padding: '0',
+                position: 'sticky',
+                top: 0,
+                left: 0,
+                zIndex: 100,
+                background: 'white',
+                marginTop: 0,
+              }}
+            >
               <div className={classes.titleWrapper}>
                 <p className={classes.title}>Recall Component</p>
                 <p className={classes.subTitle}>{recall.recallComponent}</p>

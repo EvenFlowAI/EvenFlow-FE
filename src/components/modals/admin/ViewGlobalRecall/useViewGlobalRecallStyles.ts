@@ -2,14 +2,13 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   root: {
-    padding: '24px 32px 24px 0',
     background: theme.palette.background.paper,
     borderRadius: '0',
+    paddingBottom: '32px',
   },
   titleWrapper: {
+    padding: '24px 32px',
     textAlign: 'left',
-    marginBottom: theme.spacing(2),
-    marginLeft: '32px',
   },
   title: {
     fontWeight: 700,
