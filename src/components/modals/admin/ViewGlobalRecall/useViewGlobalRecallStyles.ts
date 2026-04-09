@@ -5,7 +5,6 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
     background: theme.palette.background.paper,
     borderRadius: '0',
     paddingBottom: '24px',
-    paddingRight: '32px',
   },
   titleWrapper: {
     padding: '24px 32px',
@@ -89,5 +88,8 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
     display: 'flex',
     gap: theme.spacing(1),
     flexDirection: 'column',
+  },
+  detailsWrapper: {
+    paddingRight: '32px',
   },
 }));

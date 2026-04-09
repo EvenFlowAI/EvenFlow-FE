@@ -146,7 +146,7 @@ const ViewGlobalRecall: React.FC<
                   </Button>
                 </Box>
               </div>
-              <div>
+              <div className={classes.detailsWrapper}>
                 <Divider style={{ borderColor: '#EAEBEE' }} />
                 <Box className={classes.section}>
                   <Typography className={classes.bigLabel}>Summary</Typography>
