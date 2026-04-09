@@ -54,7 +54,9 @@ const ViewGlobalRecall: React.FC<
               </div>
             </DialogTitle>
             <div style={{ display: 'flex', width: '100%', gap: '24px' }}>
-              <div style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px', width: '286px' }}>
+              <div
+                style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px', width: '286px' }}
+              >
                 <Box className={classes.grid}>
                   <Box>
                     <Typography className={classes.label}>NHTSA Campaign</Typography>

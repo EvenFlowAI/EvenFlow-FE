@@ -19,7 +19,7 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   subTitle: {
     fontSize: 16,
     margin: 0,
-    fontWeight: 'normal'
+    fontWeight: 'normal',
   },
   section: {
     marginBottom: theme.spacing(2),
