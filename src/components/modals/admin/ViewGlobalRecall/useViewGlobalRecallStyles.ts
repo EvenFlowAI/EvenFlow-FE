@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   root: {
-    padding: '24px 32px 32px 0',
+    padding: '24px 32px 24px 0',
     background: theme.palette.background.paper,
     borderRadius: '0',
   },
@@ -15,6 +15,11 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
     fontWeight: 700,
     fontSize: 24,
     margin: 0,
+  },
+  subTitle: {
+    fontSize: 16,
+    margin: 0,
+    fontWeight: 'normal'
   },
   section: {
     marginBottom: theme.spacing(2),
@@ -43,7 +48,7 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   grid: {
     display: 'flex',
     flexDirection: 'column',
-    width: '280px',
+    width: '250px',
   },
   makesWrapper: {
     marginBottom: theme.spacing(2),

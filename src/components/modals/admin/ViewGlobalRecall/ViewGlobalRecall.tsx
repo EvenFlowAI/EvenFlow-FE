@@ -50,11 +50,11 @@ const ViewGlobalRecall: React.FC<
             <DialogTitle onClose={props.onClose} style={{ padding: '0' }}>
               <div className={classes.titleWrapper}>
                 <p className={classes.title}>Recall Component</p>
-                <p style={{ margin: '0', fontSize: '16px' }}>{recall.recallComponent}</p>
+                <p className={classes.subTitle}>{recall.recallComponent}</p>
               </div>
             </DialogTitle>
             <div style={{ display: 'flex', width: '100%', gap: '24px' }}>
-              <div style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px' }}>
+              <div style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px', width: '286px' }}>
                 <Box className={classes.grid}>
                   <Box>
                     <Typography className={classes.label}>NHTSA Campaign</Typography>
