@@ -7,6 +7,7 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
     borderRadius: '0',
   },
   titleWrapper: {
+    textAlign: 'left',
     marginBottom: theme.spacing(2),
     marginLeft: '32px',
   },

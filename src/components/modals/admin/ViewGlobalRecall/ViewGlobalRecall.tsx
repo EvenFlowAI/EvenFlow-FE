@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BaseModal } from '../../BaseModal/BaseModal';
+import { BaseModal, DialogTitle } from '../../BaseModal/BaseModal';
 import { DialogProps } from '../../BaseModal/types';
 import { useDispatch } from 'react-redux';
 import { getRecallComponent } from '../../../../store/reducers/recallDatabase/actions';
@@ -47,10 +47,12 @@ const ViewGlobalRecall: React.FC<
           </Typography>
         ) : (
           <>
-            <div className={classes.titleWrapper}>
-              <p className={classes.title}>Recall Component</p>
-              <p style={{ margin: '0', fontSize: '16px' }}>{recall.recallComponent}</p>
-            </div>
+            <DialogTitle onClose={props.onClose} style={{ padding: '0' }}>
+              <div className={classes.titleWrapper}>
+                <p className={classes.title}>Recall Component</p>
+                <p style={{ margin: '0', fontSize: '16px' }}>{recall.recallComponent}</p>
+              </div>
+            </DialogTitle>
             <div style={{ display: 'flex', width: '100%', gap: '24px' }}>
               <div style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px' }}>
                 <Box className={classes.grid}>
