@@ -4,7 +4,8 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   root: {
     background: theme.palette.background.paper,
     borderRadius: '0',
-    paddingBottom: '32px',
+    paddingBottom: '24px',
+    paddingRight: '32px',
   },
   titleWrapper: {
     padding: '24px 32px',
@@ -83,5 +84,10 @@ export const useViewGlobalRecallStyles = makeStyles()(theme => ({
   safetyRisk: {
     marginBottom: '20px',
     whiteSpace: 'pre-line',
+  },
+  makes: {
+    display: 'flex',
+    gap: theme.spacing(1),
+    flexDirection: 'column',
   },
 }));
