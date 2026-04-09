@@ -52,7 +52,12 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   return (
     <Grid item xs={12} sm={12} md={6} style={{ padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.existing}>
-        <form name="existingCustomerForm" role="form">
+        <form
+          name="existingCustomerForm"
+          id="existing_customer_form_id"
+          onSubmit={e => e.preventDefault()}
+          role="form"
+        >
           <span>{t('I’m an Existing Customer')}</span>
           <TextField
             style={{ marginTop: 20, marginBottom: 20 }}
@@ -74,6 +79,7 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
             className={classes.loadingButton}
             disabled={loading || !customerEnteredEmail}
             onClick={handleComplete}
+            type="submit"
           >
             {t('Search')}
           </LoadingButton>

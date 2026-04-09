@@ -149,7 +149,12 @@ const ReturningCustomerForAdmin: React.FC<
   return (
     <Grid item xs={12} sm={12} md={6} style={{ maxWidth: 440, padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.existing}>
-        <form name="existingCustomerForm" role="form">
+        <form
+          name="existingCustomerForm"
+          id="existing_customer_form_id"
+          onSubmit={e => e.preventDefault()}
+          role="form"
+        >
           <span style={{ fontSize: isSm ? 28 : 32 }}>{t('Existing Customer')}</span>
           {isSm ? null : (
             <div className={returningClasses.greyText}>
@@ -229,6 +234,7 @@ const ReturningCustomerForAdmin: React.FC<
               disabled={!formIsValid}
               className={classes.submitButton}
               onClick={onSubmit}
+              type="submit"
             >
               {t('Search')}
             </Button>
@@ -308,6 +314,7 @@ const ReturningCustomerForAdmin: React.FC<
                 disabled={!formIsValid}
                 className={classes.submitButton}
                 onClick={onSubmit}
+                type="submit"
               >
                 {t('Search')}
               </Button>
