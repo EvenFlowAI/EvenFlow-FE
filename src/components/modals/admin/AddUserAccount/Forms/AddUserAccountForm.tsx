@@ -76,6 +76,12 @@ export const AddUserAccountForm: React.FC<
     }));
   };
 
+  const isShowScConfiguration =
+    form.role &&
+    form.role !== Roles.EvenFlowAccountManager &&
+    form.role !== Roles.Vendor &&
+    form.role !== Roles.AIBookingAgent;
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={6}>
@@ -159,21 +165,23 @@ export const AddUserAccountForm: React.FC<
       <Grid item xs={12}>
         <Divider color="#DADADA" style={{ margin: '0 0 10px 0' }} />
       </Grid>
-      <Grid container spacing={3} style={{ marginLeft: 0 }}>
-        {form.serviceCenters?.map(sc => (
-          <ServiceCenterSection
-            key={sc.value}
-            formIsChecked={formIsChecked}
-            sc={sc}
-            form={form}
-            setEmployeeForm={setEmployeeForm}
-            setFormIsChecked={setFormIsChecked}
-            employeeTypeOptions={employeeTypeOptions}
-            shortLoading={shortLoading}
-            isAdding={isAdding}
-          />
-        ))}{' '}
-      </Grid>
+      {isShowScConfiguration && (
+        <Grid container spacing={3} style={{ marginLeft: 0 }}>
+          {form.serviceCenters?.map(sc => (
+            <ServiceCenterSection
+              key={sc.value}
+              formIsChecked={formIsChecked}
+              sc={sc}
+              form={form}
+              setEmployeeForm={setEmployeeForm}
+              setFormIsChecked={setFormIsChecked}
+              employeeTypeOptions={employeeTypeOptions}
+              shortLoading={shortLoading}
+              isAdding={isAdding}
+            />
+          ))}
+        </Grid>
+      )}
     </Grid>
   );
 };
