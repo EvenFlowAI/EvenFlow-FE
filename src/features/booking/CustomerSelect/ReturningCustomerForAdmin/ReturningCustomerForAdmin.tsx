@@ -149,158 +149,80 @@ const ReturningCustomerForAdmin: React.FC<
   return (
     <Grid item xs={12} sm={12} md={6} style={{ maxWidth: 440, padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.existing}>
-        <span style={{ fontSize: isSm ? 28 : 32 }}>{t('Existing Customer')}</span>
-        {isSm ? null : (
-          <div className={returningClasses.greyText}>
-            {t('Add Data and hit enter to search', {
-              button: `"${t('Enter')}"`,
-              button1: `"${t('Search')}"`,
-            })}
-          </div>
-        )}
-        <Divider style={{ marginBottom: isSm ? 8 : 16, marginTop: 17 }} />
-        <InputLabel label={t('Search Customer by Phone or Email')} />
-        <TextField
-          onKeyUp={onKeyUp}
-          style={{ marginBottom: isSm ? 12 : 28 }}
-          error={formIsChecked && (errors.includes('PhoneOrEmail') || !formIsValid)}
-          placeholder={t('Enter Phone or Email')}
-          InputProps={{
-            disableUnderline: true,
-            endAdornment: isLoading && customerEnteredEmail.length ? <LoadingProcess /> : null,
-          }}
-          variant="standard"
-          name="phoneOrEmail"
-          onChange={handlePhoneOrEmailChange}
-          value={customerEnteredEmail}
-          disabled={isLoading}
-          fullWidth
-        />
-        <InputLabel label={t('Search Customer by Name')} />
-        <div className={returningClasses.nameFieldsWrapper}>
-          <TextField
-            onKeyUp={onKeyUp}
-            name="firstName"
-            variant="standard"
-            placeholder={t('Enter First Name')}
-            error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
-            onChange={onTextChange('firstName')}
-            InputProps={{
-              disableUnderline: true,
-              endAdornment:
-                isLoading && customerSearchData.firstName.length ? <LoadingProcess /> : null,
-            }}
-            fullWidth
-            disabled={isLoading}
-            value={customerSearchData.firstName}
-          />
-          <TextField
-            onKeyUp={onKeyUp}
-            name="lastName"
-            variant="standard"
-            placeholder={t('Enter Last Name')}
-            error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
-            onChange={onTextChange('lastName')}
-            InputProps={{
-              disableUnderline: true,
-              endAdornment:
-                isLoading && customerSearchData.lastName.length ? <LoadingProcess /> : null,
-            }}
-            fullWidth
-            disabled={isLoading}
-            value={customerSearchData.lastName}
-          />
-        </div>
-        <div className={returningClasses.expandBtn} onClick={onExpandClick}>
-          {isExpanded
-            ? t('Collapse expanded search criteria')
-            : t('Expand advanced search criteria')}
-          {isExpanded ? (
-            <KeyboardArrowUp htmlColor="#142EA1" />
-          ) : (
-            <KeyboardArrowDown htmlColor="#142EA1" />
+        <form name="existingCustomerForm" role="form">
+          <span style={{ fontSize: isSm ? 28 : 32 }}>{t('Existing Customer')}</span>
+          {isSm ? null : (
+            <div className={returningClasses.greyText}>
+              {t('Add Data and hit enter to search', {
+                button: `"${t('Enter')}"`,
+                button1: `"${t('Search')}"`,
+              })}
+            </div>
           )}
-        </div>
-        {!isExpanded ? (
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!formIsValid}
-            className={classes.submitButton}
-            onClick={onSubmit}
-          >
-            {t('Search')}
-          </Button>
-        ) : null}
-        {isExpanded ? (
-          <React.Fragment>
-            {companyNameIsOn ? (
-              <>
-                <InputLabel label={t('Search by Company Name')} />
-                <TextField
-                  onKeyUp={onKeyUp}
-                  placeholder={t('Enter Company Name')}
-                  error={
-                    formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)
-                  }
-                  onChange={onTextChange('companyName')}
-                  InputProps={{
-                    disableUnderline: true,
-                    endAdornment:
-                      isLoading && customerSearchData.address.length ? <LoadingProcess /> : null,
-                  }}
-                  fullWidth
-                  variant="standard"
-                  name="companyName"
-                  disabled={isLoading}
-                  style={{ marginBottom: 16 }}
-                  value={customerSearchData.companyName}
-                />
-              </>
-            ) : null}
-            <InputLabel label={t('Search by Address')} />
+          <Divider style={{ marginBottom: isSm ? 8 : 16, marginTop: 17 }} />
+          <InputLabel label={t('Search Customer by Phone or Email')} />
+          <TextField
+            onKeyUp={onKeyUp}
+            style={{ marginBottom: isSm ? 12 : 28 }}
+            error={formIsChecked && (errors.includes('PhoneOrEmail') || !formIsValid)}
+            placeholder={t('Enter Phone or Email')}
+            InputProps={{
+              disableUnderline: true,
+              endAdornment: isLoading && customerEnteredEmail.length ? <LoadingProcess /> : null,
+            }}
+            variant="standard"
+            name="phoneOrEmail"
+            onChange={handlePhoneOrEmailChange}
+            value={customerEnteredEmail}
+            disabled={isLoading}
+            fullWidth
+          />
+          <InputLabel label={t('Search Customer by Name')} />
+          <div className={returningClasses.nameFieldsWrapper}>
             <TextField
               onKeyUp={onKeyUp}
-              placeholder={t('Enter Address')}
-              error={formIsChecked && (customerSearchData.address.length === 1 || !formIsValid)}
-              onChange={onTextChange('address')}
+              name="firstName"
+              variant="standard"
+              placeholder={t('Enter First Name')}
+              error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
+              onChange={onTextChange('firstName')}
               InputProps={{
                 disableUnderline: true,
                 endAdornment:
-                  isLoading && customerSearchData.address.length ? <LoadingProcess /> : null,
+                  isLoading && customerSearchData.firstName.length ? <LoadingProcess /> : null,
               }}
               fullWidth
-              variant="standard"
-              name="address"
               disabled={isLoading}
-              style={{ marginBottom: 16 }}
-              value={customerSearchData.address}
+              value={customerSearchData.firstName}
             />
-            <InputLabel label={t('Search by VIN (Last 8 digits)')} />
             <TextField
               onKeyUp={onKeyUp}
-              placeholder={t('Enter Last 8 VIN digits')}
+              name="lastName"
               variant="standard"
-              error={
-                formIsChecked &&
-                ((!!customerSearchData.lastVINCharacters.length &&
-                  customerSearchData.lastVINCharacters.length < 8) ||
-                  !formIsValid)
-              }
-              onChange={onTextChange('lastVINCharacters')}
+              placeholder={t('Enter Last Name')}
+              error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
+              onChange={onTextChange('lastName')}
               InputProps={{
                 disableUnderline: true,
                 endAdornment:
-                  isLoading && customerSearchData.lastVINCharacters.length ? (
-                    <LoadingProcess />
-                  ) : null,
+                  isLoading && customerSearchData.lastName.length ? <LoadingProcess /> : null,
               }}
-              name="lastVINCharacters"
               fullWidth
               disabled={isLoading}
-              style={{ marginBottom: 16 }}
-              value={customerSearchData.lastVINCharacters}
+              value={customerSearchData.lastName}
             />
+          </div>
+          <div className={returningClasses.expandBtn} onClick={onExpandClick}>
+            {isExpanded
+              ? t('Collapse expanded search criteria')
+              : t('Expand advanced search criteria')}
+            {isExpanded ? (
+              <KeyboardArrowUp htmlColor="#142EA1" />
+            ) : (
+              <KeyboardArrowDown htmlColor="#142EA1" />
+            )}
+          </div>
+          {!isExpanded ? (
             <Button
               variant="contained"
               color="primary"
@@ -310,22 +232,102 @@ const ReturningCustomerForAdmin: React.FC<
             >
               {t('Search')}
             </Button>
-          </React.Fragment>
-        ) : null}
-        <CustomerSearchResults
-          handleNew={handleNew}
-          loadData={loadData}
-          redirect={redirect}
-          onClose={onCloseSearchResults}
-          open={isOpenSearchResults}
-          onClearSearchForm={clearForm}
-        />
-        <CustomerNotFoundModal
-          open={isOpenNotFound}
-          onClose={onCloseNotFound}
-          handleNew={handleNew}
-          onTryAnotherName={onCloseNotFound}
-        />
+          ) : null}
+          {isExpanded ? (
+            <React.Fragment>
+              {companyNameIsOn ? (
+                <>
+                  <InputLabel label={t('Search by Company Name')} />
+                  <TextField
+                    onKeyUp={onKeyUp}
+                    placeholder={t('Enter Company Name')}
+                    error={
+                      formIsChecked && (customerSearchData.companyName.length === 1 || !formIsValid)
+                    }
+                    onChange={onTextChange('companyName')}
+                    InputProps={{
+                      disableUnderline: true,
+                      endAdornment:
+                        isLoading && customerSearchData.address.length ? <LoadingProcess /> : null,
+                    }}
+                    fullWidth
+                    variant="standard"
+                    name="companyName"
+                    disabled={isLoading}
+                    style={{ marginBottom: 16 }}
+                    value={customerSearchData.companyName}
+                  />
+                </>
+              ) : null}
+              <InputLabel label={t('Search by Address')} />
+              <TextField
+                onKeyUp={onKeyUp}
+                placeholder={t('Enter Address')}
+                error={formIsChecked && (customerSearchData.address.length === 1 || !formIsValid)}
+                onChange={onTextChange('address')}
+                InputProps={{
+                  disableUnderline: true,
+                  endAdornment:
+                    isLoading && customerSearchData.address.length ? <LoadingProcess /> : null,
+                }}
+                fullWidth
+                variant="standard"
+                name="address"
+                disabled={isLoading}
+                style={{ marginBottom: 16 }}
+                value={customerSearchData.address}
+              />
+              <InputLabel label={t('Search by VIN (Last 8 digits)')} />
+              <TextField
+                onKeyUp={onKeyUp}
+                placeholder={t('Enter Last 8 VIN digits')}
+                variant="standard"
+                error={
+                  formIsChecked &&
+                  ((!!customerSearchData.lastVINCharacters.length &&
+                    customerSearchData.lastVINCharacters.length < 8) ||
+                    !formIsValid)
+                }
+                onChange={onTextChange('lastVINCharacters')}
+                InputProps={{
+                  disableUnderline: true,
+                  endAdornment:
+                    isLoading && customerSearchData.lastVINCharacters.length ? (
+                      <LoadingProcess />
+                    ) : null,
+                }}
+                name="lastVINCharacters"
+                fullWidth
+                disabled={isLoading}
+                style={{ marginBottom: 16 }}
+                value={customerSearchData.lastVINCharacters}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!formIsValid}
+                className={classes.submitButton}
+                onClick={onSubmit}
+              >
+                {t('Search')}
+              </Button>
+            </React.Fragment>
+          ) : null}
+          <CustomerSearchResults
+            handleNew={handleNew}
+            loadData={loadData}
+            redirect={redirect}
+            onClose={onCloseSearchResults}
+            open={isOpenSearchResults}
+            onClearSearchForm={clearForm}
+          />
+          <CustomerNotFoundModal
+            open={isOpenNotFound}
+            onClose={onCloseNotFound}
+            handleNew={handleNew}
+            onTryAnotherName={onCloseNotFound}
+          />
+        </form>
       </div>
     </Grid>
   );

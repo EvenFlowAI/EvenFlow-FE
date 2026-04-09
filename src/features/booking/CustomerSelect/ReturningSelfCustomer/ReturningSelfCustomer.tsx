@@ -52,29 +52,32 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   return (
     <Grid item xs={12} sm={12} md={6} style={{ padding: isSm ? '16px 0' : 16 }}>
       <div className={classes.existing}>
-        <span>{t('I’m an Existing Customer')}</span>
-        <TextField
-          style={{ marginTop: 20, marginBottom: 20 }}
-          placeholder={`${t('Enter your')} ${t('Email or ')}${t('Phone')}`}
-          InputProps={{ disableUnderline: true }}
-          variant="standard"
-          onChange={handleChange}
-          onKeyUp={onKeyUp}
-          value={customerEnteredEmail}
-          fullWidth
-        />
-        <LoadingButton
-          fullWidth={isXs}
-          loading={loading}
-          variant="contained"
-          color="primary"
-          classes={loadingClasses}
-          className={classes.loadingButton}
-          disabled={loading || !customerEnteredEmail}
-          onClick={handleComplete}
-        >
-          {t('Search')}
-        </LoadingButton>
+        <form name="existingCustomerForm" role="form">
+          <span>{t('I’m an Existing Customer')}</span>
+          <TextField
+            style={{ marginTop: 20, marginBottom: 20 }}
+            name="phoneOrEmail"
+            placeholder={`${t('Enter your')} ${t('Email or ')}${t('Phone')}`}
+            InputProps={{ disableUnderline: true }}
+            variant="standard"
+            onChange={handleChange}
+            onKeyUp={onKeyUp}
+            value={customerEnteredEmail}
+            fullWidth
+          />
+          <LoadingButton
+            fullWidth={isXs}
+            loading={loading}
+            variant="contained"
+            color="primary"
+            classes={loadingClasses}
+            className={classes.loadingButton}
+            disabled={loading || !customerEnteredEmail}
+            onClick={handleComplete}
+          >
+            {t('Search')}
+          </LoadingButton>
+        </form>
       </div>
     </Grid>
   );
