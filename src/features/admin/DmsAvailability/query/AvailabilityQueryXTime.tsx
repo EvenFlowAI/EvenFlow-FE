@@ -152,6 +152,8 @@ const AvailabilityQueryXTime = ({
   return (
     <>
       <CustomDateRangePicker
+        title="Date Range *"
+        range={7}
         value={form.date}
         setValue={date => setForm(prev => ({ ...prev, date }))}
         format="MMM D, YYYY"

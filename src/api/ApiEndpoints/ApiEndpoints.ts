@@ -8,6 +8,7 @@ export type TOptions = {
   data?: any;
   params?: Record<string, any>;
   urlParams?: Record<string, any>;
+  paramsSerializer?: (params: any) => string;
 };
 
 export class Api {
@@ -225,6 +226,21 @@ export class Api {
       UpdateModels: { route: '/global-vehicle-models', method: 'put' },
       GetMakesStatistic: { route: '/global-vehicle-makes/statistics', method: 'get' },
       GetModelsStatistic: { route: '/global-vehicle-models/statistics', method: 'get' },
+    },
+    GlobalRecalls: {
+      GetGlobalRecalls: { route: '/global-recall-campaigns/by-query', method: 'get' },
+      GlobalRecallCampaign: {
+        route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
+        method: 'patch',
+      },
+      GetManufacturers: {
+        route: '/global-recall-campaigns/manufacturers',
+        method: 'get',
+      },
+      GetRecallComponent: {
+        route: 'global-recall-campaigns/{id}',
+        method: 'get',
+      },
     },
     IntervalUpsell: {
       GetUpsellByQuery: { route: '/interval-upsells/by-query', method: 'post' },
@@ -655,6 +671,7 @@ export class Api {
       } else {
         return await request[r.method]<RValue, AxiosResponse<RValue>>(path, {
           params: options?.params,
+          paramsSerializer: options?.paramsSerializer,
         });
       }
     } catch (err) {

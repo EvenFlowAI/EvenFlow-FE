@@ -45,6 +45,11 @@ export interface IPagingResponse {
   numberOfRecords: number;
 }
 
+export interface IPagingUpdatedResponse {
+  numberOfPages: number;
+  total: number;
+}
+
 export interface IPageRequest {
   pageIndex: number;
   pageSize: number;
@@ -260,6 +265,7 @@ export enum Titles {
   Vehicles = 'Vehicles',
   AiAgents = 'AI Agents (beta)',
   RoleManagement = 'Role Management',
+  RecallDatabase = 'Recall Database',
 }
 
 export enum LocalItems {

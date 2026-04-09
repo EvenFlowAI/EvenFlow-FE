@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
 import { InputAdornment } from '@mui/material';
-import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
+import {
+  DateRange,
+  PickersShortcutsItem,
+  SingleInputDateRangeField,
+  StaticDateRangePicker,
+} from '@mui/x-date-pickers-pro';
 import { Popover, IconButton } from '@mui/material';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { ReactComponent as Calendar } from '../../../assets/img/calendar.svg';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface CustomDateRangePickerProps {
   value: [dayjs.Dayjs | null, dayjs.Dayjs | null];
   setValue: (newValue: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => void;
   format?: string;
+  range?: number;
+  title: string;
+  shortcuts?: boolean;
 }
 
-const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePickerProps) => {
+const CustomDateRangePicker = ({
+  value,
+  setValue,
+  format,
+  range,
+  title,
+  shortcuts,
+}: CustomDateRangePickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
@@ -21,7 +36,7 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
   const [errorText, setErrorText] = useState('');
 
   const validateRange = (newValue: [dayjs.Dayjs | null, dayjs.Dayjs | null]) => {
-    if (newValue[0] && newValue[1]) {
+    if (newValue[0] && newValue[1] && range && range > 0) {
       const diff = dayjs(newValue[1]).diff(dayjs(newValue[0]), 'day');
       if (diff > 6 || diff < 0) {
         setErrorText('Please select a date range between 1 and 7 days');
@@ -31,6 +46,45 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
     setErrorText('');
     setValue(newValue);
   };
+
+  const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+    {
+      label: 'This Month',
+      getValue: () => {
+        const today = dayjs();
+        return [today.startOf('month'), today];
+      },
+    },
+    {
+      label: 'Year to Date',
+      getValue: () => {
+        const today = dayjs();
+        return [today.startOf('year'), today];
+      },
+    },
+    {
+      label: 'Last 12 Months',
+      getValue: () => {
+        const today = dayjs();
+        return [today.subtract(12, 'month'), today];
+      },
+    },
+    {
+      label: 'Last Calendar Year',
+      getValue: () => {
+        const lastYear = dayjs().subtract(1, 'year');
+        return [lastYear.startOf('year'), lastYear.endOf('year')];
+      },
+    },
+    {
+      label: 'Last 2 Years',
+      getValue: () => {
+        const today = dayjs();
+        return [today.subtract(2, 'year'), today];
+      },
+    },
+    { label: 'Reset', getValue: () => [null, null] },
+  ];
 
   return (
     <div style={{ width: '329px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -43,13 +97,13 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
           fontWeight: 600,
         }}
       >
-        Date Range *
+        {title}
       </p>
       <div>
         <SingleInputDateRangeField
           value={value}
           onChange={newValue => {
-            if (newValue[0] && newValue[1]) {
+            if (newValue[0] && newValue[1] && range && range > 0) {
               const diff = dayjs(newValue[1]).diff(dayjs(newValue[0]), 'day');
               if (diff > 6 || diff < 0) {
                 setErrorText('Please select a date range between 1 and 7 days');
@@ -97,7 +151,20 @@ const CustomDateRangePicker = ({ value, setValue, format }: CustomDateRangePicke
           onClose={handleClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         >
-          <DateRangeCalendar value={value} onChange={validateRange} />
+          {shortcuts ? (
+            <StaticDateRangePicker
+              value={value}
+              onChange={validateRange}
+              slotProps={{
+                shortcuts: {
+                  items: shortcutsItems,
+                },
+                actionBar: { actions: [] },
+              }}
+            />
+          ) : (
+            <DateRangeCalendar value={value} onChange={validateRange} />
+          )}
         </Popover>
       </div>
     </div>

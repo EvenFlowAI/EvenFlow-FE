@@ -38,6 +38,7 @@ import { generalSettingsReducer } from './reducers/generalSettings/reducer';
 import { globalVehiclesReducer } from './reducers/globalVehicles/reducer';
 import { dealerOperationsReducer } from './reducers/dealerOperations/reducer';
 import { roleManagementReducer } from './reducers/roleManagement/reducer';
+import { recallDatabaseReducer } from './reducers/recallDatabase/reducer';
 
 export const rootReducer = combineReducers({
   appointment: appointmentReducer,
@@ -80,5 +81,6 @@ export const rootReducer = combineReducers({
   generalSettings: generalSettingsReducer,
   globalVehicles: globalVehiclesReducer,
   roleManagement: roleManagementReducer,
+  recallDatabase: recallDatabaseReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
