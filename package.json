@@ -1,10 +1,6 @@
 {
   "name": "even_flow_ai",
-<<<<<<< EF-7294-add-clear-button-to-reset-time-ranges-and-capacity
-  "version": "1.2.4",
-=======
-  "version": "1.9.5",
->>>>>>> master
+  "version": "1.9.6",
   "private": true,
   "description": "EvenFlow AI frontend application. Run 'npm run setup-hooks' after cloning to enable automatic version incrementation.",
   "dependencies": {
