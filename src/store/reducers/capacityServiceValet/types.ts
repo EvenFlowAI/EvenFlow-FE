@@ -20,11 +20,11 @@ export interface ITimeRangeAndCapacity {
   serviceCenterId: number;
   id?: number;
   dayOfWeek?: number;
-  pickUpMin: string;
-  pickUpMax: string;
-  dropOffMin: string;
-  dropOffMax: string;
-  capacity: number;
+  pickUpMin: string | null;
+  pickUpMax: string | null;
+  dropOffMin: string | null;
+  dropOffMax: string | null;
+  capacity: number | null;
 }
 
 export interface ICenterSettingsSR {

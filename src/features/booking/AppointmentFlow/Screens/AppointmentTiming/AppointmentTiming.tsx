@@ -68,7 +68,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
 
   const isTimingValid = Boolean(
     selectedInitialTiming !== null &&
-    (selectedInitialTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
+      (selectedInitialTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
   );
 
   const handleSideBar = () => {

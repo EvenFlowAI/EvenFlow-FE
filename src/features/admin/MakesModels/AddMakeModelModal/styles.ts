@@ -11,12 +11,12 @@ export const useStyles = makeStyles()(() => ({
   },
   buttonsWrapper: {
     display: 'flex',
+    gap: '20px',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   cancelButton: {
     color: '#212121',
-    marginRight: 20,
     border: 'none',
     outline: 'none',
   },
