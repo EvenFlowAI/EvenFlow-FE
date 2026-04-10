@@ -90,7 +90,7 @@ const TimeRangesAndCapacity = () => {
     {
       header: 'Daily Capacity',
       align: 'center',
-      val: el => el.capacity.toString(),
+      val: el => el.capacity?.toString(),
     },
     {
       header: '',

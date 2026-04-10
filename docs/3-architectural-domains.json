@@ -1,215 +1,182 @@
 {
   "ui": {
-    "description": "React component layer using Material-UI for building user interfaces",
     "required_patterns": {
-      "mui-components": "All UI components extend from @mui/material",
-      "react-typescript": "All components are React.FC with TypeScript types",
-      "emotion-styled": "@emotion/react and @emotion/styled for component styling",
-      "tss-react-hooks": "tss-react with makeStyles() for styling hooks"
+      "react-fc": "UI components are written as React.FC with typed props.",
+      "mui-first": "Components are built primarily with @mui/material primitives.",
+      "tss-react-styling": "Styles are commonly defined with makeStyles from tss-react/mui."
     },
     "architectural_constraints": {
-      "component-structure": "Functional components with hooks, no class components",
-      "type-enforcement": "Props must be explicitly typed via interfaces/types",
-      "styling-location": "Styles either colocated in .module.css, in separate styles.ts files using tss-react makeStyles(), or inline with Emotion",
-      "mobileresponsiveness": "MUI breakpoints (xs, sm, md, lg, xl) for responsive design"
+      "functional-only": "No class components in core UI flows.",
+      "shared-wrappers": "Common wrappers (buttons, form controls, modals, tables) are reused from src/components.",
+      "theme-aware": "Styling follows theme tokens and breakpoints rather than ad-hoc CSS."
     }
   },
-  "routing": {
-    "description": "Client-side routing using React Router v5 with role-based access control",
+  "custom-hooks": {
     "required_patterns": {
-      "react-router": "React Router DOM 5.2.0 with Route, Switch, Redirect components",
-      "route-structure": "Organized by feature: AdminRoutes, BookingFlowRoutes, etc.",
-      "private-routes": "PrivateRoute component wraps protected routes and checks user permissions",
-      "role-based-access": "PERMISSIONS array in permissions.ts defines route access by role"
+      "hook-folders": "Hooks are organized in dedicated folders under src/hooks/useXxx.",
+      "logic-extraction": "Cross-cutting logic (modal/message/query/analytics/validation) is extracted into hooks.",
+      "ui-state-helpers": "Hooks expose helper actions and derived values for consuming components."
     },
     "architectural_constraints": {
-      "route-organization": "Routes organized in separate route files by feature/domain",
-      "permission-checking": "All admin routes must go through PrivateRoute and permission check",
-      "route-constants": "All route paths centralized in routes/constants.ts",
-      "query-params": "Query parameters handled via useQueryParams() custom hook"
+      "use-prefix": "Hook exports follow the use* naming convention.",
+      "domain-coupling": "Hooks integrate with Redux selectors/dispatch for global state concerns.",
+      "no-rendering": "Hooks encapsulate logic and side effects but do not render UI."
     }
   },
   "state-management": {
-    "description": "Redux-based global state management using Redux Toolkit",
     "required_patterns": {
-      "redux-toolkit": "Redux Toolkit with configureStore() for store setup",
-      "reducers": "Feature-based reducers in store/reducers/{feature}/ with reducer.ts, actions.ts, types.ts",
-      "thunk-actions": "Async operations via Redux Thunk middleware",
-      "persistence": "Redux Persist maintains auth state and settings across page reloads",
-      "selectors": "createSelector() patterns used in pricingSettings for memoized selectors"
+      "redux-toolkit-store": "Store setup uses configureStore and combineReducers from @reduxjs/toolkit.",
+      "feature-reducer-triad": "Reducers are feature-scoped with actions.ts, reducer.ts, and types.ts files.",
+      "thunk-async-flow": "Async behavior is implemented in thunk actions and dispatched through reducers."
     },
     "architectural_constraints": {
-      "reducer-pattern": "Each reducer has three files: types.ts (interfaces), actions.ts (creators), reducer.ts (logic)",
-      "typing": "All reducers and actions are fully typed with TypeScript",
-      "action-flow": "All state mutations go through Redux, no direct DOM state",
-      "thunk-pattern": "API calls wrapped in Redux Thunk actions that dispatch actions on success/failure",
-      "immutability": "Redux Toolkit uses Immer under the hood for immutable updates"
+      "centralized-global-state": "Global state mutations flow through store reducers, not React context slices.",
+      "typed-state-shape": "Feature state and action payloads are strongly typed in types.ts files.",
+      "selector-pattern": "Memoized selectors are used for expensive derived computations."
+    }
+  },
+  "routing": {
+    "required_patterns": {
+      "react-router-v5": "Routing relies on react-router-dom v5 APIs (Route, Redirect, Switch).",
+      "private-route": "Protected routes use src/routes/PrivateRoute/PrivateRoute.tsx.",
+      "route-constants": "Route path constants are centralized in src/routes/constants.ts."
+    },
+    "architectural_constraints": {
+      "permission-gated-admin": "Admin routes are checked against permission rules.",
+      "module-route-files": "Feature routes are split across route modules (AdminRoutes, BookingFlowRoutes, etc.).",
+      "query-hook": "Query parameter interactions are expected through useQueryParams hook patterns."
     }
   },
   "data-layer": {
-    "description": "Centralized API client and HTTP request management via Axios",
     "required_patterns": {
-      "axios-setup": "Axios instance created in api/request.ts with baseURL set to APIUrl",
-      "interceptors": "Request/response interceptors handle auth tokens and errors",
-      "api-endpoints": "API methods organized in api/api.ts exported as API object",
-      "auth-tokens": "Token management (access/refresh) via authService",
-      "typed-responses": "All API calls return typed Promise<AxiosResponse<T>>"
+      "shared-request-client": "API traffic goes through src/api/request.ts axios instance.",
+      "api-facade": "Endpoint methods are grouped in src/api/api.ts as API object sections.",
+      "interceptor-auth": "Interceptors inject auth/session headers and handle token refresh behavior."
     },
     "architectural_constraints": {
-      "single-client": "All HTTP requests must go through axios instance in api/request.ts",
-      "auth-header": "Authorization header automatically set from authService.getLocalToken()",
-      "session-id": "SessionId header added for self-booking flows",
-      "error-handling": "401 responses trigger token refresh via authService.refresh()",
-      "type-definitions": "All API request/response types defined in api/types.ts"
+      "no-direct-random-axios": "Feature code should not bypass the shared request/API layer.",
+      "typed-api-contracts": "Request and response contracts are defined in src/api/types.ts and related types.",
+      "two-session-modes": "Admin and self-booking token/session flows must both be respected."
     }
   },
   "authentication-and-authorization": {
-    "description": "Multi-role authentication system with JWT tokens and permission-based access",
     "required_patterns": {
-      "roles": "Multiple roles: EvenFlowAdmin, ServiceManager, Staff, etc. defined in types/types.ts",
-      "permissions": "PERMISSIONS array maps routes to allowed roles",
-      "private-route": "PrivateRoute component checks user permissions before rendering",
-      "token-storage": "Tokens stored in localStorage for admin, sessionStorage for self-booking",
-      "auth-service": "AuthService in api/AuthService/ handles token get/set operations"
+      "auth-service": "Token lifecycle is encapsulated in src/api/AuthService.",
+      "permissions-map": "Route access rules are declared in src/permissions.ts.",
+      "runtime-check": "PrivateRoute uses hasPermission and authService checks before rendering pages."
     },
     "architectural_constraints": {
-      "role-check": "hasPermission() utility function validates user role for route access",
-      "two-auth-flows": "Admin flow (localStorage tokens) and self-booking flow (sessionStorage/temp tokens)",
-      "token-refresh": "Automatic token refresh on 401 response via interceptor",
-      "logout-handling": "Tokens cleared and user redirected to login on auth failure",
-      "permission-denied": "Routes inaccessible to user are blocked by PrivateRoute"
+      "role-aware-navigation": "Protected navigation must validate current user role against route permissions.",
+      "token-storage-split": "Admin auth and self-booking auth use different storage and refresh flow expectations.",
+      "redirect-on-failure": "Unauthorized access is redirected to login or safe fallback routes."
     }
   },
   "forms-and-validation": {
-    "description": "Form input handling and data validation across booking and admin interfaces",
     "required_patterns": {
-      "controlled-inputs": "All form inputs controlled via React state",
-      "validation-hooks": "useValidation() custom hook for form validation logic",
-      "input-components": "Standardized form control components in components/formControls/",
-      "error-display": "Form errors displayed inline with red text and error states"
+      "form-controls-library": "Shared inputs live in src/components/formControls for consistent behavior.",
+      "validation-hook": "Validation logic is centralized via src/hooks/useValidation.",
+      "controlled-fields": "Form state is modeled with controlled values and explicit change handlers."
     },
     "architectural_constraints": {
-      "no-uncontrolled": "All input elements must have value and onChange handlers",
-      "validation-on-blur": "Validation typically occurs on input blur and form submission",
-      "error-messages": "Validation errors mapped to user-friendly messages",
-      "required-fields": "Required fields marked with asterisk and validated before submission"
+      "consistent-input-wrappers": "New forms should reuse existing form control wrappers when possible.",
+      "error-feedback": "Validation and API errors are surfaced in UI states/messages.",
+      "typed-form-models": "Form payloads and field models are typed to match reducer/API contracts."
     }
   },
   "modals-and-dialogs": {
-    "description": "Modal dialog implementation using MUI Dialog and custom BaseModal wrapper",
     "required_patterns": {
-      "base-modal": "BaseModal component wraps MUI Dialog with consistent styling",
-      "modal-state": "Modal open/close state managed via Redux (modals reducer)",
-      "useModal-hook": "useModal() custom hook provides modalopen, setOpen helpers",
-      "confirm-modal": "ConfirmModal for delete/action confirmations"
+      "base-modal": "Modal implementations commonly build on BaseModal and ConfirmModal components.",
+      "modal-hook": "useModal is used to coordinate open/close lifecycle in feature views.",
+      "feature-modals": "Admin and booking features define specialized modal components per workflow."
     },
     "architectural_constraints": {
-      "centralized-control": "Modal visibility controlled through Redux state",
-      "no-local-state": "Modal open/close should not use local component state except through useModal hook",
-      "consistent-styling": "All modals use BaseModal wrapper for consistent appearance"
+      "consistent-modal-shell": "Modal UX should follow shared wrappers and existing action/footer patterns.",
+      "predictable-state": "Visibility and dialog effects follow hook/Redux-driven state transitions.",
+      "reusable-confirmation": "Destructive actions prefer reusable confirmation modal patterns."
     }
   },
   "notifications-and-messages": {
-    "description": "User notifications via Notistack snackbars and message handling",
     "required_patterns": {
-      "notistack": "Notistack SnackbarProvider wraps app for global notifications",
-      "useMessage-hook": "useMessage() hook provides enqueueSnackbar functionality",
-      "notification-types": "success, error, warning, info notification types supported",
-      "dispatch-notifications": "Redux notifications reducer manages notification queue"
+      "notistack-provider": "Application notifications are surfaced through notistack provider usage.",
+      "use-message-hook": "useMessage hook exposes snack-style success/error/info notifications.",
+      "exception-pipeline": "Errors can be funneled through useException plus message hooks."
     },
     "architectural_constraints": {
-      "global-provider": "SnackbarProvider must be at top level in App.tsx",
-      "no-alerts": "Use Notistack instead of alert() for all notifications"
+      "non-blocking-feedback": "User feedback is delivered through snackbars instead of blocking alerts.",
+      "consistent-levels": "Message severity levels stay aligned with existing success/error/warning/info usage.",
+      "hook-driven-notify": "Components trigger notifications through hooks rather than ad-hoc globals."
     }
   },
-  "date-and-time": {
-    "description": "Date/time handling using Dayjs and MUI date pickers",
+  "date-and-time-handling": {
     "required_patterns": {
-      "dayjs-library": "Dayjs 1.11.10 for date manipulation (lighter than moment)",
-      "moment-adapter": "@date-io/moment for MUI date picker compatibility",
-      "mui-pickers": "@mui/x-date-pickers for date/time input components",
-      "timezone-handling": "TimeZoneClock component displays timezone-aware times"
+      "dayjs-usage": "Dayjs is used broadly for date math and formatting.",
+      "mui-date-pickers": "Date/time pickers are wrapped and reused from src/components/pickers.",
+      "booking-time-flows": "Booking steps rely on typed date/time models for slot selection."
     },
     "architectural_constraints": {
-      "consistent-library": "Use Dayjs for date operations, not native Date or moment",
-      "iso-format": "Dates serialized/deserialized in ISO format for API calls"
+      "single-date-approach": "Date transformations should align with existing dayjs-centric helper patterns.",
+      "picker-wrappers": "New date inputs should use existing picker abstractions before adding new libs.",
+      "timezone-awareness": "Timezone-specific displays follow existing utilities/components."
     }
   },
   "drag-and-drop": {
-    "description": "Drag-and-drop interfaces using React DnD and @hello-pangea/dnd libraries",
     "required_patterns": {
-      "react-dnd": "React DnD 16.0.1 for complex drag-drop logic",
-      "hello-pangea-dnd": "@hello-pangea/dnd 18.0.1 for sortable lists",
-      "item-types": "ItemTypes constant defines draggable item types",
-      "dnd-components": "DragableTable and Card/Container components in components/DragAndDrop/"
+      "react-dnd-stack": "Drag-and-drop uses react-dnd and @hello-pangea/dnd depending on interaction type.",
+      "dnd-components": "Reusable DnD pieces exist in src/components/DragAndDrop and table variants.",
+      "table-reordering": "Sortable/dragable table patterns are reused in admin experiences."
     },
     "architectural_constraints": {
-      "backend-driven": "Drag-drop reordering persisted to backend via API calls"
+      "reuse-existing-dnd": "New drag interactions should extend existing wrappers, item type models, and flows.",
+      "persist-ordering": "Ordering changes should integrate with existing reducer/API update flows.",
+      "typed-dnd-models": "Dragged item payloads and handlers stay typed."
     }
   },
   "internationalization": {
-    "description": "Multi-language support via i18next framework",
     "required_patterns": {
-      "i18next": "i18next 21.9.1 with react-i18next bindings",
-      "language-detection": "i18next-browser-languagedetector auto-detects user language",
-      "translation-files": "Translations in src/translations/translations.json",
-      "useTranslation-hook": "useTranslation() hook provides t() function for string translation"
+      "i18next-config": "i18n is configured in src/i18n.js using i18next and react-i18next.",
+      "translations-json": "Translation keys are stored in src/translations/translations.json.",
+      "hook-usage": "Components consume translated strings through i18n/t usage patterns."
     },
     "architectural_constraints": {
-      "no-hardcoded-strings": "Never hardcode user-facing strings; all must use i18n",
-      "translation-keys": "Translation keys use hierarchical dot notation",
-      "fallback-language": "English is default/fallback language"
+      "no-hardcoded-ui-copy": "User-facing text should map to translation keys.",
+      "consistent-keying": "New labels/messages extend the existing translation key namespace.",
+      "language-detection-flow": "Locale behavior should align with configured browser language detection."
     }
   },
   "analytics-and-monitoring": {
-    "description": "User tracking and error monitoring via Google Analytics and Sentry",
     "required_patterns": {
-      "google-analytics": "react-ga and react-ga4 for GA integration",
-      "google-tag-manager": "react-gtm-module for GTM event tracking",
-      "sentry": "@sentry/react for error tracking and monitoring",
-      "aws-rum": "aws-rum-web for Real User Monitoring",
-      "analytics-hook": "useAnalyticsBySCId() hook tracks events per service center"
+      "ga-gtm": "Google Analytics and GTM libraries are integrated for event capture.",
+      "sentry": "Sentry is used for runtime error tracking.",
+      "aws-rum": "AWS RUM is present for client performance telemetry."
     },
     "architectural_constraints": {
-      "event-tracking": "Key user actions tracked via analytics events",
-      "error-reporting": "Uncaught errors automatically reported to Sentry"
+      "track-critical-flows": "Booking/admin flows should keep instrumentation consistent with existing analytics hooks.",
+      "no-silent-failures": "Exceptions should remain observable through monitoring pathways.",
+      "service-center-context": "Where relevant, analytics events include service center context."
     }
   },
-  "error-handling": {
-    "description": "Global error boundary and exception handling",
+  "error-handling-and-boundaries": {
     "required_patterns": {
-      "error-boundary": "react-error-boundary for component-level error catching",
-      "useException-hook": "useException() hook centralizes error display via notifications",
-      "fallback-ui": "FallBack component shown when error occurs",
-      "error-logging": "Errors logged to Sentry for monitoring"
+      "error-boundary-component": "react-error-boundary and fallback components protect render trees.",
+      "use-exception-hook": "useException centralizes operational error messaging.",
+      "thunk-error-paths": "Thunk actions include failure branches for reducer error state updates."
     },
     "architectural_constraints": {
-      "async-errors": "API errors handled in Redux thunk actions",
-      "ui-errors": "Form/validation errors displayed inline with inputs"
+      "fallback-ui": "Unhandled UI errors should route to existing fallback component flows.",
+      "typed-error-states": "Reducer slices maintain explicit error/loading state fields.",
+      "user-visible-errors": "User-impacting failures are surfaced through established message/modal channels."
     }
   },
-  "virtualization-and-performance": {
-    "description": "Large list rendering optimization via virtualization",
+  "performance-and-virtualization": {
     "required_patterns": {
-      "react-window": "react-window 1.8.6 for virtual scrolling of large lists",
-      "react-virtualized-auto-sizer": "Auto-sizer wrapper for responsive virtual lists",
-      "debouncing": "useDebounce() hook debounces search inputs",
-      "pagination": "usePaginations() hook manages paginated data loading"
+      "react-window": "Large list rendering uses react-window and react-virtualized-auto-sizer.",
+      "debounce-hook": "useDebounce is used to reduce expensive reactive updates.",
+      "pagination-hook": "usePaginations is used in list-heavy UIs."
     },
     "architectural_constraints": {
-      "virtualization-required": "Tables with 100+ rows must use virtualization",
-      "debounce-searches": "Search inputs debounced (300ms typical)"
-    }
-  },
-  "responsive-design": {
-    "description": "Mobile-responsive UI built with MUI breakpoints",
-    "required_patterns": {
-      "mui-breakpoints": "useMediaQuery() hook detects screen size changes",
-      "mobile-first": "Design starts mobile and scales up",
-      "responsive-components": "Booking flow has separate mobile-optimized component versions"
-    },
-    "architectural_constraints": {
-      "responsive-required": "All pages must work on mobile (xs), tablet (md), and desktop (lg+)"
+      "virtualize-large-lists": "Large datasets should use existing virtualization patterns.",
+      "stabilize-input-updates": "Search/filter pipelines should follow existing debounce behavior.",
+      "reuse-performance-hooks": "Prefer shared hooks/utilities before introducing custom optimizers."
     }
   }
 }

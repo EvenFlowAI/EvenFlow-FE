@@ -86,7 +86,7 @@ export const SVAppointmentTimeSelector: React.FC<
                   onSelect={handleSelect}
                   selected={Boolean(
                     selectedAppointment &&
-                    dayjs(timeSlot?.date).isSame(selectedAppointment.date, 'minute')
+                      dayjs(timeSlot?.date).isSame(selectedAppointment.date, 'minute')
                   )}
                   timeSlot={timeSlot}
                   key={dayjs.utc(timeSlot.date).toISOString()}

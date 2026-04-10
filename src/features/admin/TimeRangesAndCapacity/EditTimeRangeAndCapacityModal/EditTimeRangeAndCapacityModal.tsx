@@ -35,8 +35,9 @@ const EditTimeRangeAndCapacityModal: React.FC<
   const [pickUpMax, setPickUpMax] = useState<TParsableDate>(null);
   const [dropOffMin, setDropOffMin] = useState<TParsableDate>(null);
   const [dropOffMax, setDropOffMax] = useState<TParsableDate>(null);
-  const [dailyCapacity, setDailyCapacity] = useState<number | string>('');
+  const [dailyCapacity, setDailyCapacity] = useState<number | null>(null);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const [errors, setErrors] = useState<string[]>([]);
   const { selectedSC } = useSCs();
   const showError = useException();
   const { classes } = useStyles();
@@ -56,81 +57,77 @@ const EditTimeRangeAndCapacityModal: React.FC<
     }
   }, [editingElement, open]);
 
+  const onError = (e: any) => {
+    showError(e);
+    if (e.response?.data?.errors) {
+      const data = [...e.response.data.errors];
+      setErrors(() => data.map((err: any): string => err.message).filter(el => el !== null));
+    }
+    if (e.response?.data?.message) {
+      setErrors(prevState => [...prevState, e.response.data.message]);
+    }
+  };
+
   const onCancel = () => {
     setFormIsChecked(false);
     setPickUpMin(null);
     setPickUpMax(null);
     setDropOffMax(null);
     setDropOffMin(null);
-    setDailyCapacity('');
+    setDailyCapacity(null);
+    setErrors([]);
     onClose();
   };
 
   const handleChangePickUpMin = (date: TParsableDate) => {
     setFormIsChecked(false);
-    setPickUpMin(dayjs(date));
+    setErrors([]);
+    setPickUpMin(date ? dayjs(date) : null);
   };
 
   const handleChangePickUpMax = (date: TParsableDate) => {
     setFormIsChecked(false);
-    if (dayjs(pickUpMin).diff(dayjs(date)) <= 0) {
-      setPickUpMax(dayjs(date));
-    } else {
-      showError('Pick Up Max Value must be more than Pick Up Min Value');
-    }
+    setErrors([]);
+    setPickUpMax(date ? dayjs(date) : null);
   };
 
   const handleChangeDropOffMin = (date: TParsableDate) => {
     setFormIsChecked(false);
-    setDropOffMin(dayjs(date));
+    setErrors([]);
+    setDropOffMin(date ? dayjs(date) : null);
   };
 
   const handleChangeDropOffMax = (date: TParsableDate) => {
     setFormIsChecked(false);
-    if (dayjs(dropOffMin).diff(dayjs(date)) <= 0) {
-      setDropOffMax(dayjs(date));
-    } else {
-      showError('Drop Off Max Value must be more than Drop Off Min Value');
-    }
+    setErrors([]);
+    setDropOffMax(date ? dayjs(date) : null);
   };
 
   const handleChangeDailyCapacity = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setFormIsChecked(false);
-    setDailyCapacity(value ? +value : '');
-  };
-
-  const checkIsValid = (): boolean => {
-    if (+dailyCapacity <= 0) {
-      showError('"Daily Capacity" must be more than 0');
-      return false;
-    }
-    return (
-      Boolean(pickUpMin) &&
-      Boolean(pickUpMax) &&
-      Boolean(dropOffMin) &&
-      Boolean(dropOffMax) &&
-      +dailyCapacity > 0
-    );
+    setErrors([]);
+    setDailyCapacity(value ? +value : null);
   };
 
   const onSave = () => {
     setFormIsChecked(true);
-    if (selectedSC && checkIsValid()) {
+    if (selectedSC) {
+      const tryFormat = (d: TParsableDate) => (d ? dayjs(d).format(timeWithSecond) : null);
       const data: ITimeRangeAndCapacity = {
         serviceCenterId: selectedSC.id,
-        pickUpMin: dayjs(pickUpMin).format(timeWithSecond),
-        pickUpMax: dayjs(pickUpMax).format(timeWithSecond),
-        dropOffMin: dayjs(dropOffMin).format(timeWithSecond),
-        dropOffMax: dayjs(dropOffMax).format(timeWithSecond),
-        capacity: +dailyCapacity,
+        pickUpMin: tryFormat(pickUpMin),
+        pickUpMax: tryFormat(pickUpMax),
+        dropOffMin: tryFormat(dropOffMin),
+        dropOffMax: tryFormat(dropOffMax),
+        capacity: dailyCapacity !== null ? +dailyCapacity : null,
       };
       if (editingElement.id) {
-        dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, showError, onCancel));
+        dispatch(updateTimeRange(selectedSC.id, editingElement.id, data, onError, onCancel));
       } else {
         data.dayOfWeek = editingElement.dayOfWeek;
-        dispatch(createTimeRange(selectedSC.id, data, showError, onCancel));
+        dispatch(createTimeRange(selectedSC.id, data, onError, onCancel));
       }
     }
   };
@@ -152,76 +149,104 @@ const EditTimeRangeAndCapacityModal: React.FC<
             <ClockTimePicker
               key="pickUpMin"
               value={pickUpMin}
-              slotProps={{
-                actionBar: {
-                  actions: ['clear'],
-                },
-              }}
+              withClear
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !pickUpMin,
+              }}
+              onError={(reason, value) => {
+                if (reason === 'invalidDate' || value === null) {
+                  setPickUpMin(null);
+                }
               }}
               name="pickUpMin"
               label="Pick Up Min"
               onChange={handleChangePickUpMin}
+              error={
+                errors.some(
+                  e =>
+                    e.toLowerCase().includes('pick up min') ||
+                    e.toLowerCase().includes('pick up and drop off')
+                ) && formIsChecked
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <ClockTimePicker
               key="pickUpMax"
               value={pickUpMax}
-              slotProps={{
-                actionBar: {
-                  actions: ['clear'],
-                },
-              }}
+              withClear
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !pickUpMax,
+              }}
+              onError={(reason, value) => {
+                if (reason === 'invalidDate' || value === null) {
+                  setPickUpMax(null);
+                }
               }}
               name="pickUpMax"
               label="Pick Up Max"
               onChange={handleChangePickUpMax}
+              error={
+                errors.some(
+                  e =>
+                    e.toLowerCase().includes('pick up max') ||
+                    e.toLowerCase().includes('pick up and drop off')
+                ) && formIsChecked
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <ClockTimePicker
               key="dropOffMin"
               value={dropOffMin}
-              slotProps={{
-                actionBar: {
-                  actions: ['clear'],
-                },
-              }}
+              withClear
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !dropOffMin,
+              }}
+              onError={(reason, value) => {
+                if (reason === 'invalidDate' || value === null) {
+                  setDropOffMin(null);
+                }
               }}
               name="dropOffMin"
               label="Drop Off Min"
               onChange={handleChangeDropOffMin}
+              error={
+                errors.some(
+                  e =>
+                    e.toLowerCase().includes('drop off min') ||
+                    e.toLowerCase().includes('pick up and drop off')
+                ) && formIsChecked
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <ClockTimePicker
               key="dropOffMax"
               value={dropOffMax}
-              slotProps={{
-                actionBar: {
-                  actions: ['clear'],
-                },
-              }}
+              withClear
               fullWidth
               InputProps={{
                 endAdornment: <AccessTime color="primary" cursor="pointer" />,
-                error: formIsChecked && !dropOffMax,
+              }}
+              onError={(reason, value) => {
+                if (reason === 'invalidDate' || value === null) {
+                  setDropOffMax(null);
+                }
               }}
               name="dropOffMax"
               label="Drop Off Max"
               onChange={handleChangeDropOffMax}
+              error={
+                errors.some(
+                  e =>
+                    e.toLowerCase().includes('drop off max') ||
+                    e.toLowerCase().includes('pick up and drop off')
+                ) && formIsChecked
+              }
             />
           </Grid>
           <Grid item xs={12}>
@@ -229,11 +254,11 @@ const EditTimeRangeAndCapacityModal: React.FC<
               label={'Daily Capacity'}
               name="dailyCapacity"
               type="number"
-              error={formIsChecked && (+dailyCapacity <= 0 || !dailyCapacity.toString().length)}
+              error={formIsChecked && errors.some(e => e.toLowerCase().includes('capacity'))}
               inputProps={{
                 min: 0,
               }}
-              value={dailyCapacity}
+              value={dailyCapacity ?? ''}
               onChange={handleChangeDailyCapacity}
               fullWidth
               id="dailyCapacity"

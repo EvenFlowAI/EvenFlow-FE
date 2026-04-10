@@ -7,6 +7,8 @@ import { GlobalRecallComponent } from '../../../../pages/admin/RecallDatabase/ty
 import { CircularProgress, Typography, Box, Button, Divider } from '@mui/material';
 import dayjs from 'dayjs';
 import { useViewGlobalRecallStyles } from './useViewGlobalRecallStyles';
+import { formatYears } from './helper';
+import { NHTSA_LINK } from '../../../../utils/constants';
 
 const ViewGlobalRecall: React.FC<
   React.PropsWithChildren<DialogProps & { recallId: number | null }>
@@ -22,15 +24,15 @@ const ViewGlobalRecall: React.FC<
   };
 
   useEffect(() => {
-    if (recallId) {
+    if (recallId && props.open) {
       setLoading(true);
       dispatch(getRecallComponent(recallId, handleSuccess));
     }
-  }, [recallId]);
+  }, [props.open, recallId]);
 
   const handleClick = () => {
     if (!recall) return;
-    const url = `https://www.nhtsa.gov/recalls?nhtsaId=${recall.nhtsaCampaign}`;
+    const url = NHTSA_LINK + recall.nhtsaCampaign;
     window.open(url, '_blank');
   };
 
@@ -47,14 +49,27 @@ const ViewGlobalRecall: React.FC<
           </Typography>
         ) : (
           <>
-            <DialogTitle onClose={props.onClose} style={{ padding: '0' }}>
+            <DialogTitle
+              onClose={props.onClose}
+              style={{
+                padding: '0',
+                position: 'sticky',
+                top: 0,
+                left: 0,
+                zIndex: 100,
+                background: 'white',
+                marginTop: 0,
+              }}
+            >
               <div className={classes.titleWrapper}>
                 <p className={classes.title}>Recall Component</p>
-                <p style={{ margin: '0', fontSize: '16px' }}>{recall.recallComponent}</p>
+                <p className={classes.subTitle}>{recall.recallComponent}</p>
               </div>
             </DialogTitle>
             <div style={{ display: 'flex', width: '100%', gap: '24px' }}>
-              <div style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px' }}>
+              <div
+                style={{ background: '#F2F4FB', padding: '24px 24px 24px 32px', width: '286px' }}
+              >
                 <Box className={classes.grid}>
                   <Box>
                     <Typography className={classes.label}>NHTSA Campaign</Typography>
@@ -66,24 +81,33 @@ const ViewGlobalRecall: React.FC<
                   </Box>
                   <Box className={classes.makesWrapper}>
                     <Typography className={classes.label}>Makes & Models</Typography>
-                    {recall.makes && recall.makes.length > 0 ? (
-                      recall.makes.map((make, idx) => (
-                        <Box key={make.name + idx}>
-                          <Typography className={classes.value} component="span">
-                            {make.name}
-                          </Typography>
-                          <span className={classes.models}>
-                            {make.models.map((model, idx) => (
-                              <div key={idx}>
-                                · {model.name} {model.year}
-                              </div>
-                            ))}
-                          </span>
-                        </Box>
-                      ))
-                    ) : (
-                      <Typography className={classes.value}>-</Typography>
-                    )}
+                    <div className={classes.makes}>
+                      {recall.makes && recall.makes.length > 0 ? (
+                        recall.makes.map((make, idx) => {
+                          // групуємо моделі за назвою
+                          const groupedModels: Record<string, number[]> = {};
+                          make.models.forEach(m => {
+                            if (!groupedModels[m.name]) {
+                              groupedModels[m.name] = [];
+                            }
+                            groupedModels[m.name].push(m.year);
+                          });
+
+                          return (
+                            <Box key={make.name + idx}>
+                              <Typography>{make.name}</Typography>
+                              {Object.entries(groupedModels).map(([modelName, years], i) => (
+                                <div key={modelName + i} className={classes.models}>
+                                  · {modelName} {formatYears(years)}
+                                </div>
+                              ))}
+                            </Box>
+                          );
+                        })
+                      ) : (
+                        <Typography className={classes.value}>-</Typography>
+                      )}
+                    </div>
                   </Box>
                   <Box>
                     <Typography className={classes.label}>Reported Date</Typography>
@@ -122,7 +146,7 @@ const ViewGlobalRecall: React.FC<
                   </Button>
                 </Box>
               </div>
-              <div>
+              <div className={classes.detailsWrapper}>
                 <Divider style={{ borderColor: '#EAEBEE' }} />
                 <Box className={classes.section}>
                   <Typography className={classes.bigLabel}>Summary</Typography>
