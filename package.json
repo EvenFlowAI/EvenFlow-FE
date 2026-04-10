@@ -1,6 +1,10 @@
 {
   "name": "even_flow_ai",
+<<<<<<< EF-7294-add-clear-button-to-reset-time-ranges-and-capacity
   "version": "1.2.4",
+=======
+  "version": "1.9.5",
+>>>>>>> master
   "private": true,
   "description": "EvenFlow AI frontend application. Run 'npm run setup-hooks' after cloning to enable automatic version incrementation.",
   "dependencies": {
@@ -65,10 +69,11 @@
     "start": "react-scripts --max_old_space_size=8128 start",
     "startDev": "cross-env REACT_APP_ENV=Dev react-scripts --max_old_space_size=8128 start",
     "startUat": "cross-env REACT_APP_ENV=uat react-scripts --max_old_space_size=8128 start",
+    "startProduction": "cross-env REACT_APP_ENV=production react-scripts --max_old_space_size=8128 start",
     "increment-version": "node scripts/increment-version.js",
     "generate-version-json": "node scripts/generate-version-json.js",
     "build": "react-scripts build && npm run generate-version-json",
-    "startpreprod": "REACT_APP_ENV=PreProd react-scripts start",
+    "startPreProd": "cross-env REACT_APP_ENV=PreProd react-scripts --max_old_space_size=8128 start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",

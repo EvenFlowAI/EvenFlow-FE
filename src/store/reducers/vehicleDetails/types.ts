@@ -1,9 +1,12 @@
 import { IMake, IMakeExtended } from '../../../api/types';
 import { IPagingResponse, IOrder, IPageRequest } from '../../../types/types';
-import { IGlobalMake, IGlobalModel } from '../globalVehicles/types';
+import { IGlobalMake, IGlobalModel, IMakeCode, IMakeModelCode } from '../globalVehicles/types';
 export interface ICreateMake {
   serviceCenterId: number;
   globalIds: number[];
+  makeCodes?: {
+    [key: string]: string;
+  } | null;
 }
 
 export interface IMileage {
@@ -41,4 +44,6 @@ export type TState = {
   pageData: IPageRequest;
   globalMakes: IGlobalMake[];
   globalModels: IGlobalModel[];
+  makeCodes: IMakeCode[];
+  makeModelCodes: IMakeModelCode[];
 };

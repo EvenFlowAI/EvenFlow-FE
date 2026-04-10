@@ -7,7 +7,10 @@ import { Toolbar } from '@mui/material';
 import { PrivateRoute } from '../../../routes/PrivateRoute/PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser } from '../../../store/reducers/users/actions';
-import { loadDealershipProfile } from '../../../store/reducers/dealershipGroups/actions';
+import {
+  getAccessibleDealerships,
+  loadDealershipProfile,
+} from '../../../store/reducers/dealershipGroups/actions';
 import { loadAllSCs } from '../../../store/reducers/serviceCenters/actions';
 import { getPodsShort, loadPodsShort } from '../../../store/reducers/pods/actions';
 import clsx from 'clsx';
@@ -17,10 +20,13 @@ import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { Routes } from '../../../routes/constants';
 import { setGlobalLoader } from '../../../store/reducers/adminPanel/actions';
 import { RootState } from '../../../store/rootReducer';
+import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
+import { Roles } from '../../../types/types';
 
 export const AdminPanel = () => {
   const [navBarHeight, setNavBarHeight] = useState<number>(0);
   const { globalLoader } = useSelector((state: RootState) => state.adminPanel);
+  const currentUser = useCurrentUser();
 
   const { selectedSC } = useSCs();
   const { isOpened, onOpen, onClose } = useSideBar();
@@ -44,15 +50,22 @@ export const AdminPanel = () => {
 
   useEffect(() => {
     dispatch(setGlobalLoader(true));
-
     dispatch(getCurrentUser());
-    dispatch(loadDealershipProfile(onSuccess));
-    dispatch(loadAllSCs());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentUser?.role && currentUser?.role !== Roles.EvenFlowAdmin) {
+      dispatch(loadDealershipProfile(onSuccess));
+    } else {
+      onSuccess();
+      dispatch(loadAllSCs());
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadPodsShort(selectedSC.id));
+      dispatch(getAccessibleDealerships());
     } else {
       dispatch(getPodsShort([]));
     }

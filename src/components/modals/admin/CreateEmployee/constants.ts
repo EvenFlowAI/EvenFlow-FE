@@ -17,7 +17,6 @@ export const initialEmployeeForm: TEmployeeForm = {
 
 export const superRoles = [
   Roles.EvenFlowAdmin,
-  Roles.EvenFlowAccountManager,
   Roles.EvenFlowSupport,
   Roles.EvenFlowAIAgent,
   Roles.DealerOwner,

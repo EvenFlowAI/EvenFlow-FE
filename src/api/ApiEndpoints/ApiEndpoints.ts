@@ -8,6 +8,7 @@ export type TOptions = {
   data?: any;
   params?: Record<string, any>;
   urlParams?: Record<string, any>;
+  paramsSerializer?: (params: any) => string;
 };
 
 export class Api {
@@ -22,6 +23,7 @@ export class Api {
       Verification: { route: '/accounts/verification', method: 'patch' },
       Profile: { route: '/accounts/profile', method: 'get' },
       Dealership: { route: '/accounts/dealership', method: 'get' },
+      AccessibleDealerships: { route: '/accounts/accessible-dealerships', method: 'get' },
       ResendEmail: { route: '/accounts/invitation-email', method: 'post' },
     },
     AncillaryPricing: {
@@ -224,6 +226,21 @@ export class Api {
       UpdateModels: { route: '/global-vehicle-models', method: 'put' },
       GetMakesStatistic: { route: '/global-vehicle-makes/statistics', method: 'get' },
       GetModelsStatistic: { route: '/global-vehicle-models/statistics', method: 'get' },
+    },
+    GlobalRecalls: {
+      GetGlobalRecalls: { route: '/global-recall-campaigns/by-query', method: 'get' },
+      GlobalRecallCampaign: {
+        route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
+        method: 'patch',
+      },
+      GetManufacturers: {
+        route: '/global-recall-campaigns/manufacturers',
+        method: 'get',
+      },
+      GetRecallComponent: {
+        route: 'global-recall-campaigns/{id}',
+        method: 'get',
+      },
     },
     IntervalUpsell: {
       GetUpsellByQuery: { route: '/interval-upsells/by-query', method: 'post' },
@@ -520,6 +537,7 @@ export class Api {
         route: '/service-requests/overrides/{id}/pricing-display-type',
         method: 'patch',
       },
+      DefaultLaborTypes: { route: '/labor-types', method: 'get' },
     },
     ServiceTypes: {
       Create: { route: '/service-type-options', method: 'post' },
@@ -575,11 +593,13 @@ export class Api {
     },
     Users: {
       GetAll: { route: '/users/by-query', method: 'post' },
+      Get: { route: '/users', method: 'get' },
       Create: { route: '/users', method: 'post' },
       Remove: { route: '/users/{id}', method: 'delete' },
       Retrieve: { route: '/users/{id}', method: 'get' },
       Update: { route: '/users/{id}', method: 'put' },
       Avatar: { route: '/users/{id}/avatar', method: 'patch' },
+      Restore: { route: '/users/{id}/restore', method: 'patch' },
       GetShort: { route: '/users/short-by-query', method: 'post' },
     },
     Holidays: {
@@ -618,6 +638,8 @@ export class Api {
       RemoveEngineType: { route: '/vehicles/engine-type/{id}', method: 'delete' },
       CreateEngineType: { route: '/vehicles/engine-type', method: 'post' },
       UpdateModel: { route: '/vehicles/models', method: 'put' },
+      GetMakeCodes: { route: '/vehicles/make-codes', method: 'get' },
+      GetMakeModelCodes: { route: '/vehicles/make-model-codes', method: 'get' },
     },
     WaitListSettings: {
       Get: { route: '/waitlist-settings', method: 'get' },
@@ -649,6 +671,7 @@ export class Api {
       } else {
         return await request[r.method]<RValue, AxiosResponse<RValue>>(path, {
           params: options?.params,
+          paramsSerializer: options?.paramsSerializer,
         });
       }
     } catch (err) {

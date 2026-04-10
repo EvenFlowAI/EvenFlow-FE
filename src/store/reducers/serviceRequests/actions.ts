@@ -118,6 +118,7 @@ export const setAssignedPageData = createAction<Partial<IPageRequest>>(
 export const setAssignedFilter = createAction<Partial<IServiceRequestNonAddedFilter>>(
   'ServiceRequestsScreen/SetAssignedFilter'
 );
+export const setLaborType = createAction<Partial<string>>('ServiceRequestsScreen/setLaborType');
 export const setAssignedOrdering = createAction<IOrder<IAssignedServiceRequest>>(
   'ServiceRequestsScreen/SetAssignedOrder'
 );
@@ -337,6 +338,9 @@ export const setUpsellPageData = createAction<Partial<IPageRequest>>(
 );
 export const setRules = createAction<TRuleState[]>('ServiceRequestsScreen/setRules');
 export const setFormIsChecked = createAction<boolean>('ServiceRequestsScreen/setFormIsChecked');
+export const setLaborTypeOption = createAction<string[]>(
+  'ServiceRequestsScreen/setLaborTypeOption'
+);
 export const setUpsellFilter = createAction<Partial<IServiceRequestNonAddedFilter>>(
   'ServiceRequestsScreen/SetUpsellFilter'
 );
@@ -406,4 +410,21 @@ export const addUpsellServiceRequests =
       .catch(err => {
         onError(err);
       });
+  };
+
+export const setDefaultLaborTypes =
+  (serviceCenterId?: number): AppThunk =>
+  async dispatch => {
+    try {
+      const params = new URLSearchParams();
+      params.append('serviceCenterId', `${serviceCenterId}`);
+
+      Api.call(Api.endpoints.ServiceRequests.DefaultLaborTypes, { params }).then(r => {
+        if (r.data.data.length) {
+          dispatch(setLaborTypeOption(r.data.data));
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };

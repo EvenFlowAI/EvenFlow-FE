@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import {
   IAssignedServiceRequest,
@@ -11,9 +11,9 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Autocomplete, Button, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateAssignedServiceRequest } from '../../../../store/reducers/serviceRequests/actions';
 import { TForm } from './types';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
@@ -22,8 +22,13 @@ import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import { TOption } from '../../../../utils/types';
 import { EmptyMenuItem } from '../../Appointments/AppointmentFilters/styles';
+import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { autocompleteRender } from '../../../../utils/autocompleteRenders';
+import { RootState } from '../../../../store/rootReducer';
 
 const initialForm: TForm = {
+  laborType: '',
   description: '',
   durationInHours: '',
   countOfTechnicians: '',
@@ -46,12 +51,18 @@ export const OverrideOPsCodeModal: React.FC<
   const [form, setForm] = useState<TForm>(initialForm);
   const [isLoading, setLoading] = useState<boolean>(false);
   const showMessage = useMessage();
+  const { selectedSC } = useSCs();
   const showError = useException();
   const dispatch = useDispatch();
+  const { defaultLaborTypesOptions } = useSelector(
+    ({ serviceRequests }: RootState) => serviceRequests
+  );
+
   useEffect(() => {
     if (props.open) {
       setForm(initialForm);
     }
+    return () => setForm(initialForm);
   }, [props.open]);
 
   useEffect(() => {
@@ -62,6 +73,7 @@ export const OverrideOPsCodeModal: React.FC<
       setForm({
         ...initialForm,
         description: override?.description || request?.description || '',
+        laborType: payload.laborType,
         countOfTechnicians: override?.countOfTechnicians?.toString() || '',
         durationInHours: override?.durationInHours?.toString() || '',
         invoiceAmount: override?.invoiceAmount?.toFixed(2) || '',
@@ -82,6 +94,11 @@ export const OverrideOPsCodeModal: React.FC<
   const handleLevelChange = (e: SelectChangeEvent<number>) => {
     setForm({ ...form, skillLevelOfTechnicians: +e.target.value });
   };
+
+  const handleLaborTypeChange = (e: SyntheticEvent, value: string | null) => {
+    setForm({ ...form, laborType: value });
+  };
+
   const handleSave = async () => {
     if (!payload) {
       showError('Data is not loaded');
@@ -89,7 +106,7 @@ export const OverrideOPsCodeModal: React.FC<
       setLoading(true);
 
       try {
-        const { description, ...f } = form;
+        const { description, laborType, ...f } = form;
 
         const data: IServiceRequestOverrideEditRequest = {
           serviceRequestInfo: {
@@ -99,7 +116,9 @@ export const OverrideOPsCodeModal: React.FC<
               {} as Partial<IServiceRequestOverride>
             ),
           },
+          laborType: laborType,
         };
+
         await dispatch(
           updateAssignedServiceRequest(
             data,
@@ -123,7 +142,7 @@ export const OverrideOPsCodeModal: React.FC<
       <DialogTitle onClose={props.onClose}>Edit Op Code</DialogTitle>
       <DialogContent>
         <Grid container spacing={3} alignItems="flex-end">
-          <Grid item xs={12}>
+          <Grid item xs={selectedSC?.integration === SystemIntegrationType.Fortellis ? 6 : 12}>
             <TextField
               label="Op Code"
               disabled
@@ -131,6 +150,21 @@ export const OverrideOPsCodeModal: React.FC<
               value={payload?.serviceRequest.code || ''}
             />
           </Grid>
+          {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
+            <Grid item xs={6}>
+              <Autocomplete
+                style={{ width: 170 }}
+                options={defaultLaborTypesOptions}
+                isOptionEqualToValue={(option, value) => option === value}
+                value={form.laborType}
+                onChange={handleLaborTypeChange}
+                renderInput={autocompleteRender({
+                  label: 'Labor Type',
+                  placeholder: 'Labor Type',
+                })}
+              />
+            </Grid>
+          ) : null}
           <Grid item xs={12}>
             <TextField
               fullWidth

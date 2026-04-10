@@ -43,6 +43,7 @@ export interface IServiceRequestOverride {
 }
 export interface IServiceRequestOverrideEditRequest {
   serviceRequestInfo: Partial<IServiceRequestOverride>;
+  laborType?: string | null;
 }
 
 export interface IRequiredSkill {
@@ -67,6 +68,7 @@ export enum EServiceStatus {
 
 export interface IAssignedServiceRequest {
   id: number;
+  laborType: string;
   serviceRequest: IServiceRequest;
   serviceRequestId: number;
   serviceCenterId: number;

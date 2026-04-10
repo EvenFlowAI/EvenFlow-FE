@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from '../store/rootReducer';
 import { Action } from 'redux';
@@ -11,6 +13,10 @@ import { Dayjs } from 'dayjs';
 import { TTimePeriod } from '../store/reducers/schedules/types';
 import { TDayType } from '../features/admin/AvailableStaffCalendar/types';
 import { EServiceType } from '../store/reducers/appointmentFrameReducer/types';
+import {
+  EDisplayOnBookingType,
+  EEmployeeType,
+} from '../components/modals/admin/CreateEmployee/types';
 
 export type LinkType = {
   to: string;
@@ -34,23 +40,14 @@ export type ValidationKeyPairs<U> = {
   message: string;
 };
 
-export interface ITimeSpan {
-  ticks: number;
-  days: number;
-  hours: number;
-  milliseconds: number;
-  minutes: number;
-  seconds: number;
-  totalDays: number;
-  totalHours: number;
-  totalMilliseconds: number;
-  totalMinutes: number;
-  totalSeconds: number;
-}
-
 export interface IPagingResponse {
   numberOfPages: number;
   numberOfRecords: number;
+}
+
+export interface IPagingUpdatedResponse {
+  numberOfPages: number;
+  total: number;
 }
 
 export interface IPageRequest {
@@ -85,6 +82,21 @@ export type TOption = {
   name: string;
   value: string;
 };
+
+export type TOptionForUserAccountServiceCenters = {
+  name: string;
+  value: number;
+  categoryName: string;
+  categoryId: number;
+  dmsId?: string | null;
+  position: string;
+  displayOnBookingTypes?: EDisplayOnBookingType[];
+  type?: EEmployeeType | null;
+  hourlyRate?: string | '';
+  overtimeRate?: string | '';
+  technicianLevel?: TTechnicianLevel;
+};
+
 export type TCallback = () => void;
 export type TArgCallback<T> = (arg: T) => void;
 
@@ -228,6 +240,19 @@ export enum Roles {
   AIBookingAgent = 'AI Booking Agent',
 }
 
+export enum CleanestRoles {
+  ServiceDirector = 'Service Director',
+  ServiceManager = 'Service Manager',
+  BDCManager = 'BDC Manager',
+  BDCAgent = 'BDC Agent',
+  Advisor = 'Advisor',
+  Technician = 'Technician',
+  Staff = 'Staff',
+  Vendor = 'Vendor',
+  AIBookingAgent = 'AI Booking Agent',
+  EvenFlowAccountManager = 'EvenFlow Account Manager',
+}
+
 export enum Titles {
   DealershipGroups = 'Dealership Groups',
   Employees = 'Employees',
@@ -239,6 +264,8 @@ export enum Titles {
   Reporting = 'Reporting',
   Vehicles = 'Vehicles',
   AiAgents = 'AI Agents (beta)',
+  RoleManagement = 'Role Management',
+  RecallDatabase = 'Recall Database',
 }
 
 export enum LocalItems {
@@ -289,9 +316,4 @@ export type TDashboardItem = {
   label: string;
   icon: JSX.Element;
   action: () => void;
-};
-export type TDashboardCountData = {
-  technicians: number;
-  pods: number;
-  appointments: number;
 };

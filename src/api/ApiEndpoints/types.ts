@@ -5,7 +5,14 @@ export type TApiEndpoint = {
 
 export interface IApiEndpoints {
   Accounts: Record<
-    'Recovery' | 'Reset' | 'Change' | 'Verification' | 'Profile' | 'Dealership' | 'ResendEmail',
+    | 'Recovery'
+    | 'Reset'
+    | 'Change'
+    | 'Verification'
+    | 'Profile'
+    | 'Dealership'
+    | 'AccessibleDealerships'
+    | 'ResendEmail',
     TApiEndpoint
   >;
   AncillaryPricing: Record<
@@ -127,6 +134,10 @@ export interface IApiEndpoints {
     | 'UpdateModels'
     | 'GetMakesStatistic'
     | 'GetModelsStatistic',
+    TApiEndpoint
+  >;
+  GlobalRecalls: Record<
+    'GetGlobalRecalls' | 'GlobalRecallCampaign' | 'GetManufacturers' | 'GetRecallComponent',
     TApiEndpoint
   >;
   Holidays: Record<'Create' | 'Update' | 'Remove' | 'Retrieve' | 'GetAll', TApiEndpoint>;
@@ -296,6 +307,7 @@ export interface IApiEndpoints {
     | 'GetShort'
     | 'Eligibility'
     | 'ChangePricingDisplayType'
+    | 'DefaultLaborTypes'
     | 'EditSkills'
     | 'Prioritize',
     TApiEndpoint
@@ -344,7 +356,15 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   Users: Record<
-    'GetAll' | 'Create' | 'Update' | 'Remove' | 'Retrieve' | 'Avatar' | 'GetShort',
+    | 'GetAll'
+    | 'Get'
+    | 'Create'
+    | 'Update'
+    | 'Remove'
+    | 'Retrieve'
+    | 'Avatar'
+    | 'Restore'
+    | 'GetShort',
     TApiEndpoint
   >;
   ValueSettings: Record<
@@ -366,7 +386,9 @@ export interface IApiEndpoints {
     | 'GetEngineType'
     | 'RemoveEngineType'
     | 'CreateEngineType'
-    | 'UpdateModel',
+    | 'UpdateModel'
+    | 'GetMakeModelCodes'
+    | 'GetMakeCodes',
     TApiEndpoint
   >;
   WaitListSettings: Record<'Get' | 'Update' | 'Toggle', TApiEndpoint>;

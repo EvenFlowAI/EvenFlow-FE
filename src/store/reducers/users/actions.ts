@@ -7,6 +7,8 @@ import {
   setWelcomeScreenView,
 } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { loadRoleUsers } from '../roleManagement/actions';
+import { INewUserAccount, IUserAccount } from '../../../pages/admin/RoleManagement/types';
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
   type: 'User/GetCurrentUser',
@@ -41,6 +43,7 @@ export const getCurrentUser =
       }
       // eslint-disable-next-line
     } catch (e) {
+      console.log('getCurrentUser err', e);
     } finally {
       dispatch(loading(false));
     }
@@ -116,6 +119,56 @@ export const updateUser =
     } catch (e) {
       dispatch(saving(false));
       onError(e);
+      console.log('updateUser', e);
+    }
+  };
+
+export const updateRoleManagementUser =
+  (
+    payload: IUserAccount,
+    onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (err: any) => void,
+    avatar?: File
+  ): AppThunk =>
+  async dispatch => {
+    const userId = payload.id;
+    try {
+      await Api.call(Api.endpoints.Users.Update, { urlParams: { id: userId }, data: payload });
+      if (avatar) {
+        await dispatch(saveEmployeeAvatar(avatar, userId, onError));
+      }
+      dispatch(loadRoleUsers(onSuccess));
+      // eslint-disable-next-line
+    } catch (e: any) {
+      const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
+      onError(errorCode);
+      console.log('updateUser', e);
+    }
+  };
+
+export const createRoleManagementUser =
+  (
+    payload: INewUserAccount,
+    onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (err: any) => void,
+    avatar?: File
+  ): AppThunk =>
+  async dispatch => {
+    try {
+      const { data } = await Api.call(Api.endpoints.Users.Create, { data: payload });
+      if (avatar) {
+        await dispatch(
+          saveEmployeeAvatar(avatar, typeof data.data === 'string' ? data.data : data.id, onError)
+        );
+      }
+      dispatch(loadRoleUsers(onSuccess));
+      // eslint-disable-next-line
+    } catch (e: any) {
+      const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
+      console.log(e);
+      onError(errorCode);
       console.log('updateUser', e);
     }
   };

@@ -119,4 +119,11 @@ export const useStyles = makeStyles()(() => ({
     fontWeight: 400,
     lineHeight: 'normal',
   },
+  codeTitle: {
+    textTransform: 'uppercase',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    marginBottom: '1px',
+    marginLeft: '40px',
+  },
 }));

@@ -3,6 +3,8 @@ import { getAuthenticationTokenForAdmin } from '../../../api/helper';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import Agent from '../../../features/admin/Agent/Agent';
 import { useStyles } from './styles';
+import { authService } from '../../../api/AuthService/AuthService';
+import { useException } from '../../../hooks/useException/useException';
 
 const CONFIGURATION_AGENT_URL =
   process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
@@ -15,12 +17,13 @@ const ConfigurationAgent = () => {
   const { classes } = useStyles();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const showError = useException();
 
-  const sendDataToAgent = () => {
+  const sendDataToAgent = (token?: string) => {
     const iframe = iframeRef.current;
     if (selectedSC) {
       iframe?.contentWindow?.postMessage(
-        { scID: selectedSC.id, accessToken: accessToken },
+        { scID: selectedSC.id, accessToken: token || accessToken },
         CONFIGURATION_AGENT_URL
       );
       console.log(`Message sent to iframe successfully with service center ID and access token.`);
@@ -35,9 +38,37 @@ const ConfigurationAgent = () => {
       setIframeLoaded(true);
     };
 
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== new URL(CONFIGURATION_AGENT_URL).origin) return;
+
+      if (event.data.shouldRefreshToken === true) {
+        console.log('Refreshing...');
+        // eslint-disable-next-line no-self-assign
+        authService
+          .refresh()
+          .then(token => {
+            console.log('Token refreshed successfully.');
+            if (token) {
+              console.log('Sending token to iframe.');
+              sendDataToAgent(token);
+              showError('Sorry, your message wasn’t sent. Please send it again!');
+            }
+          })
+          .catch(e => {
+            console.log('Error refreshing token: ', e);
+          });
+      } else {
+        console.log('Refresh token flag was not received.');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
     iframe.addEventListener('load', handleLoad);
-    return () => iframe.removeEventListener('load', handleLoad);
-  }, []);
+    return () => {
+      iframe.removeEventListener('load', handleLoad);
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [selectedSC?.id, iframeLoaded]);
 
   useEffect(() => {
     if (selectedSC && iframeRef.current && iframeLoaded) {

@@ -1,33 +1,32 @@
-import { IServiceCenter } from '../../../../store/reducers/serviceCenters/types';
-import { IEmployee } from '../../../../store/reducers/employees/types';
 import { EDisplayOnBookingType } from '../../../../components/modals/admin/CreateEmployee/types';
 import { Roles } from '../../../../types/types';
+import { IServiceCenter, IUserAccount } from '../../../../pages/admin/RoleManagement/types';
 
-export const getServiceCentersNames = (items: IServiceCenter[] | undefined): string => {
-  let string = '';
-  if (items?.length) {
-    const names = items.map(el => el.name);
+export const getDisplayData = (el: IUserAccount, filterServiceCenterId?: number): string => {
+  let sc: IServiceCenter | undefined;
 
-    names.forEach((name, index) => {
-      string += index < names.length - 1 ? `${name}, ` : name;
-    });
+  if (filterServiceCenterId) {
+    sc = el.dealerships[0].serviceCenters.find(s => s.id === filterServiceCenterId);
+  } else if (el.dealerships[0].serviceCenters.length === 1) {
+    sc = el.dealerships[0].serviceCenters[0];
   }
-  return string;
-};
 
-export const getDisplayData = (el: IEmployee): string => {
-  let str = '';
-  if (!el.displayOnBookingTypes?.length && el.role === Roles.Advisor) {
+  if (!sc) {
+    return '-';
+  }
+
+  if (!sc.displayOnBookingTypes?.length && el.role === Roles.Advisor) {
     return 'Not Displayed';
-  } else if (!el.displayOnBookingTypes?.length) {
-    str = '-';
+  } else if (!sc.displayOnBookingTypes?.length) {
+    return '-';
   } else {
-    if (el.displayOnBookingTypes.includes(EDisplayOnBookingType.Employee)) {
+    let str = '';
+    if (sc.displayOnBookingTypes.includes(EDisplayOnBookingType.Employee)) {
       str = 'Employee';
     }
-    if (el.displayOnBookingTypes.includes(EDisplayOnBookingType.SelfService)) {
+    if (sc.displayOnBookingTypes.includes(EDisplayOnBookingType.SelfService)) {
       str = str.length ? str.concat(', Self Service') : 'Self Service';
     }
+    return str;
   }
-  return str;
 };

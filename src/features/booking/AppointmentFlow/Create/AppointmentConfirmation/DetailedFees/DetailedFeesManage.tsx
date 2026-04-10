@@ -58,7 +58,7 @@ const DetailedFeesManage: React.FC<
           {appointmentRequestsPrices?.map(item => (
             <li className={classes.item} key={item.requestName}>
               <span>
-                {item.requestName.includes('Going')
+                {item.requestName?.includes('Going')
                   ? t('My Description of Needs')
                   : item.requestName}
               </span>

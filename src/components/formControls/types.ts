@@ -15,4 +15,6 @@ export type TextInputProps = {
   params?: AutocompleteRenderInputParams;
   isLowerCase?: boolean;
   labelFitContent?: boolean;
+  helperText?: string;
+  formIsChecked?: boolean;
 } & InputBaseProps;
