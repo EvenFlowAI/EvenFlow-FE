@@ -234,6 +234,10 @@ export const setFiltersVisibility = createAction<Partial<TFiltersVisibility>>(
 export const updateAppointmentDetails = createAction<ILoadSlotsRequestData>(
   'fAppointment/UpdateAppointmentDetails'
 );
+export const updateAppointmentAddress = createAction<{
+  address: string | null;
+  zip: string;
+}>('fAppointment/updateAppointmentAddress');
 
 export const setValueServicePartial =
   (data: Partial<IValueService>): AppThunk =>

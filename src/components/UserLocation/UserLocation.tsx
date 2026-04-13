@@ -31,9 +31,11 @@ type TProps = {
   setUserAddress: Dispatch<SetStateAction<any>>;
   // TODO: fix address type here
   // eslint-disable-next-line
-  loadAncillaryPrice: (zip: string | null, address: any) => void;
+  loadAncillaryPrice?: (zip: string | null, address: any) => void;
   disabled: boolean;
   setAddressValid: Dispatch<SetStateAction<boolean>>;
+  addressTitleName?: string;
+  zipTitleName?: string;
 };
 
 const UserLocation: React.FC<TProps> = ({
@@ -44,6 +46,8 @@ const UserLocation: React.FC<TProps> = ({
   loadAncillaryPrice,
   disabled,
   setAddressValid,
+  addressTitleName,
+  zipTitleName,
 }) => {
   const {
     serviceTypeOption,
@@ -96,7 +100,7 @@ const UserLocation: React.FC<TProps> = ({
           } else {
             setZip(value);
             dispatch(loadFilteredZip({ serviceCenterId: scProfile.id, search: value }));
-            if (value.length === 5) {
+            if (value.length === 5 && loadAncillaryPrice) {
               loadAncillaryPrice(value, userAddress);
             }
           }
@@ -113,7 +117,7 @@ const UserLocation: React.FC<TProps> = ({
 
   const onGetZipCodesList = (list: string[], postalCode: string, label?: string) => {
     if (list.includes(postalCode)) setZip(postalCode);
-    if (label && postalCode.length === 5) {
+    if (label && postalCode.length === 5 && loadAncillaryPrice) {
       loadAncillaryPrice(postalCode, label);
     } else {
       setAddressValid(false);
@@ -157,7 +161,7 @@ const UserLocation: React.FC<TProps> = ({
 
   const handleChangeZip = (e: React.SyntheticEvent, option: string | null) => {
     setFormChecked(false);
-    if (option?.length === 5 && e.type !== 'blur') {
+    if (option?.length === 5 && e.type !== 'blur' && loadAncillaryPrice) {
       loadAncillaryPrice(option, userAddress);
       setZip(option);
     }
@@ -166,7 +170,7 @@ const UserLocation: React.FC<TProps> = ({
   return (
     <SelectWrapper>
       <div style={{ width: '100%' }}>
-        <p className="label">{t('Your Address')}</p>
+        <p className="label">{t(addressTitleName || 'Your Address')}</p>
         <GooglePlaces
           userAddress={userAddress}
           isFormChecked={isFormChecked}
@@ -188,7 +192,7 @@ const UserLocation: React.FC<TProps> = ({
         disabled={disabled}
         popupIcon={<KeyboardArrowDown htmlColor="#CCCCCC" />}
         renderInput={autocompleteRender({
-          label: t('Your ZIP'),
+          label: t(zipTitleName || 'Your ZIP'),
           placeholder:
             isFormChecked && !zip
               ? t('zip code required')

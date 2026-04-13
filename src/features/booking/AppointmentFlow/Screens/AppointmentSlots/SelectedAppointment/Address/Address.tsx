@@ -4,11 +4,15 @@ import { RootState } from '../../../../../../../store/rootReducer';
 import { EServiceType } from '../../../../../../../store/reducers/appointmentFrameReducer/types';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { ReactComponent as PencilIcon } from '../../../../../../../assets/img/pencil.svg';
+import { useModal } from '../../../../../../../hooks/useModal/useModal';
+import EditAddressModal from '../../../../../EditAddressModal/EditAddressModal';
 
 const Address = () => {
   const { serviceTypeOption, address, zipCode } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  const { isOpen, onClose, onOpen } = useModal();
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
     [serviceTypeOption]
@@ -21,16 +25,36 @@ const Address = () => {
     <div className="service-list">
       <h4
         style={
-          isMobile ? { textTransform: 'capitalize', margin: 0 } : { textTransform: 'uppercase' }
+          isMobile
+            ? {
+                textTransform: 'capitalize',
+                margin: 0,
+                fontWeight: 'normal',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }
+            : {
+                textTransform: 'uppercase',
+                margin: 0,
+                fontWeight: 'normal',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }
         }
       >
         {' '}
-        {t('Your Address')}:
+        {t('Your Address')}:{' '}
+        <span style={{ cursor: 'pointer' }} onClick={onOpen}>
+          <PencilIcon />
+        </span>
       </h4>
-      <div style={isMobile ? { fontWeight: 400 } : {}}>
+      <div style={{ fontWeight: 400 }}>
         {`${typeof address === 'string' ? address : address?.label}` || ''}
         {zipCode ? `, ${zipCode}` : ''}
       </div>
+      <EditAddressModal open={isOpen} onClose={onClose} />
     </div>
   ) : null;
 };

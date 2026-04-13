@@ -77,6 +77,7 @@ import {
   setWelcomeScreenView,
   setZipCode,
   switchLanguage,
+  updateAppointmentAddress,
   updateAppointmentDetails,
   updateVehicle,
 } from './actions';
@@ -480,6 +481,13 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         transportation: payload.transportation,
         selectedTime: payload.date,
         serviceTypeOption: payload.serviceTypeOption,
+      };
+    })
+    .addCase(updateAppointmentAddress, (state, { payload }) => {
+      return {
+        ...state,
+        address: payload.address,
+        zipCode: payload.zip,
       };
     })
 );

@@ -166,8 +166,8 @@ const RecallAppointments: React.FC<
               placeholder: 'Select',
               error: Boolean(
                 currentEmployee &&
-                  !recallData?.employees?.includes(currentEmployee.id) &&
-                  formChecked
+                !recallData?.employees?.includes(currentEmployee.id) &&
+                formChecked
               ),
             })}
           />
