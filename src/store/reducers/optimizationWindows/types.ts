@@ -28,6 +28,7 @@ export type TOptContentData = {
   title: string;
   prefix?: string;
   suffix?: string;
+  mode?: string;
 };
 export type TOptContent = {
   [k in EOptimizationWindowType]: TOptContentData;

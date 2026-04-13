@@ -37,8 +37,20 @@ export const SwitcherLabel = styled('p')({
   fontWeight: 700,
 });
 
+export const SwitcherLabelWithoutPadding = styled('p')({
+  fontSize: 14,
+  fontWeight: 700,
+  margin: 0,
+});
+
 export const SwitcherWrapper = styled('div')({
   display: 'flex',
   alignItems: 'center',
   gap: 20,
+});
+
+export const SwitcherWrapperServiceValet = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 12,
 });

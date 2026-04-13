@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useCenterSettingsStyles = makeStyles()({
   paper: {
-    height: '100%',
+    height: '201px',
     borderRadius: 0,
     padding: 20,
     position: 'relative',
@@ -37,5 +37,11 @@ export const useCenterSettingsStyles = makeStyles()({
     top: 10,
     right: 6,
     fontSize: 16,
+  },
+  appointmentTime: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: '#252733',
+    marginTop: 28,
   },
 });
