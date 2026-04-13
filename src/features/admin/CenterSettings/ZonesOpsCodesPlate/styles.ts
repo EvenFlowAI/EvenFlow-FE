@@ -3,7 +3,7 @@ import { makeStyles } from 'tss-react/mui';
 //
 export const useStyles = makeStyles()({
   wrapper: {
-    maxHeight: 180,
+    maxHeight: 100,
     display: 'grid',
     gridTemplateColumns: '1fr 3fr',
     gap: 25,

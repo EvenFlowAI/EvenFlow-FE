@@ -1,7 +1,11 @@
 import React from 'react';
-import { Button, Grid, Paper } from '@mui/material';
+import { Button, Grid, Paper, Switch } from '@mui/material';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
 import { useCenterSettingsStyles } from '../../../../hooks/styling/useCenterSettingsStyles';
+import {
+  SwitcherLabelWithoutPadding,
+  SwitcherWrapperServiceValet,
+} from '../../EmployeeTimeScheduleSetUp/styles';
 
 type TCenterSettingsPlateProps = {
   onEdit: () => void;
@@ -18,6 +22,11 @@ export const CenterSettingsPlate: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TCenterSettingsPlateProps>>
 > = ({ onEdit, title, count, prefix, suffix, label, helperText, isLoading }) => {
   const { classes } = useCenterSettingsStyles();
+  const [checked, setChecked] = React.useState(false);
+
+  const handleSwitch = (e: React.SyntheticEvent, value: boolean) => {
+    setChecked(value);
+  };
 
   return (
     <Grid item xs={6} md={4}>
@@ -35,8 +44,18 @@ export const CenterSettingsPlate: React.FC<
             {suffix}
           </div>
         )}
-        <div className={classes.label}>{label}</div>
-        <div className={classes.helperText}>{helperText}</div>
+        {label && <div className={classes.label}>{label}</div>}
+        {helperText && <div className={classes.helperText}>{helperText}</div>}
+        {title === 'Dms Appointment Time' && (
+          <div className={classes.appointmentTime}>
+            <span>Appointment time to the DMS</span>
+            <SwitcherWrapperServiceValet>
+              <SwitcherLabelWithoutPadding>DMS</SwitcherLabelWithoutPadding>
+              <Switch onChange={handleSwitch} checked={checked} color="primary" />
+              <SwitcherLabelWithoutPadding>EVENFLOW</SwitcherLabelWithoutPadding>
+            </SwitcherWrapperServiceValet>
+          </div>
+        )}
       </Paper>
     </Grid>
   );
