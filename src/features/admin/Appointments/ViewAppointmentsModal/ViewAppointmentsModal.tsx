@@ -121,7 +121,7 @@ export const ViewAppointmentsModal: React.FC<
           Close
         </Button>
       </DialogActions>
-      = <Informing icon={<Warning />} open={isOpen} onClose={onClose} title={messageText} />
+      <Informing icon={<Warning />} open={isOpen} onClose={onClose} title={messageText} />
     </BaseModal>
   );
 };

@@ -209,3 +209,27 @@ export const calculateMaxVisibleTagsForDealershipGroupForm = (
 
   return Math.max(1, maxVisibleWithOthers);
 };
+
+export const calculateMaxVisibleTagsForWithoutOptionObject = (
+  selectedValues: string[],
+  containerWidth = 350
+): number => {
+  if (selectedValues.length === 0) return 0;
+
+  const avgChipWidth =
+    selectedValues.reduce((sum, item) => {
+      return sum + (55 + item.length * 5); // basic 55px + ~5px for 1 symbol
+    }, 0) / selectedValues.length;
+
+  const availableWidth = containerWidth - 40; // padding
+  const chipsPerRow = Math.floor(availableWidth / (avgChipWidth + 4)); // 4px margin
+
+  if (selectedValues.length <= chipsPerRow) {
+    return selectedValues.length;
+  }
+
+  const othersChipWidth = 100; // "+X others"
+  const maxVisibleWithOthers = Math.floor((availableWidth - othersChipWidth) / (avgChipWidth + 8));
+
+  return Math.max(1, maxVisibleWithOthers);
+};
