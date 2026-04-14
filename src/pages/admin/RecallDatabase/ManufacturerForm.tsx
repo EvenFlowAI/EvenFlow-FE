@@ -73,7 +73,6 @@ const ManufacturerForm = ({ selectedManufacturer, setManufacturer }: Manufacture
       options={mappedOptions}
       getOptionLabel={option => option}
       isOptionEqualToValue={(o, v) => o === v}
-      disableClearable
       disableCloseOnSelect
       inputValue={inputValue}
       onInputChange={(e, val) => {
