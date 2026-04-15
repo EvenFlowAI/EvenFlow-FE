@@ -51,7 +51,7 @@ export const ZonesOpsCodesPlate: React.FC<
           onClick={() => onEdit()}
           disabled={!zonesData.length}
         >
-          Edit
+          EDIT
         </Button>
         {isLoading ? (
           <Loading />

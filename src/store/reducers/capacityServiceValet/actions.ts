@@ -22,6 +22,9 @@ export const setLoading = createAction<boolean>('ServiceValetCapacity/SetLoading
 export const getCenterSettings = createAction<ICenterSettings | null>(
   'ServiceValetCapacity/GetCenterSettings'
 );
+export const setLeadDayCounter = createAction<number | null>(
+  'ServiceValetCapacity/setLeadDayCounter'
+);
 
 export const loadZonesRouting =
   (id: number, serviceType: string): AppThunk =>
@@ -223,3 +226,7 @@ export const updateServiceValetZonesOpsCodes =
       })
       .finally(() => dispatch(setLoading(false)));
   };
+
+export const updateLeadTime = (id: number) => () => {
+  console.log('id', id);
+};

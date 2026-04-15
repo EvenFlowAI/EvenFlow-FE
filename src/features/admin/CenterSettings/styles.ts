@@ -9,6 +9,15 @@ export const TopWrapper = styled('div')({
   textTransform: 'uppercase',
 });
 
+export const TopWrapperDouble = styled('div')({
+  display: 'flex',
+  justifyContent: 'space-between',
+  flexDirection: 'column',
+  alignItems: 'center',
+  fontSize: 19,
+  fontWeight: 700,
+});
+
 export const ButtonsWrapper = styled('div')({
   width: '40%',
   display: 'flex',
