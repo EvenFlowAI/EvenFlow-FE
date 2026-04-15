@@ -49,7 +49,6 @@ export interface IPod {
   serviceValetZones?: TPodZone[];
   appointmentType?: EAppointmentType;
   engineTypes?: IEngineType[];
-  isVisitCenter?: boolean;
   transportationOptions?: TPodTransportation[];
   mileageFrom?: number;
   mileageTo?: number;
@@ -73,7 +72,6 @@ export interface IPodForm {
   mobileZones?: number[];
   serviceValetZones?: number[];
   engineTypes?: number[];
-  isVisitCenter: boolean;
   transportationOptionIds?: number[];
   mileageFrom?: number;
   mileageTo?: number;
