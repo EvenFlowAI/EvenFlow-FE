@@ -74,6 +74,7 @@ export interface InitialState {
   isLoading: boolean;
   centerSettings: ICenterSettings | null;
   leadDayCounter: number | null;
+  appointmentTimeToDMS: boolean;
 }
 
 export type TZonesOpsCodesRequest = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Grid, Paper, Switch } from '@mui/material';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
 import { useCenterSettingsStyles } from '../../../../hooks/styling/useCenterSettingsStyles';
@@ -6,6 +6,10 @@ import {
   SwitcherLabelWithoutPadding,
   SwitcherWrapperServiceValet,
 } from '../../EmployeeTimeScheduleSetUp/styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../store/rootReducer';
+import { updateAppointmentTimeToDMS } from '../../../../store/reducers/capacityServiceValet/actions';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 type TCenterSettingsPlateProps = {
   onEdit: () => void;
@@ -23,9 +27,19 @@ export const CenterSettingsPlate: React.FC<
 > = ({ onEdit, title, count, prefix, suffix, label, helperText, isLoading }) => {
   const { classes } = useCenterSettingsStyles();
   const [checked, setChecked] = React.useState(false);
+  const { appointmentTimeToDMS } = useSelector((state: RootState) => state.capacityServiceValet);
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+
+  useEffect(() => {
+    setChecked(appointmentTimeToDMS);
+  }, [appointmentTimeToDMS]);
 
   const handleSwitch = (e: React.SyntheticEvent, value: boolean) => {
+    if (!selectedSC) return;
+
     setChecked(value);
+    dispatch(updateAppointmentTimeToDMS(selectedSC.id, value));
   };
 
   return (

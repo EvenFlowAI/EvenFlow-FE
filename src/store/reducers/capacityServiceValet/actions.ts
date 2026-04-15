@@ -23,7 +23,10 @@ export const getCenterSettings = createAction<ICenterSettings | null>(
   'ServiceValetCapacity/GetCenterSettings'
 );
 export const setLeadDayCounter = createAction<number | null>(
-  'ServiceValetCapacity/setLeadDayCounter'
+  'ServiceValetCapacity/SetLeadDayCounter'
+);
+export const setAppointmentTimeToDMS = createAction<boolean>(
+  'ServiceValetCapacity/SetAppointmentTimeToDMS'
 );
 
 export const loadZonesRouting =
@@ -227,6 +230,12 @@ export const updateServiceValetZonesOpsCodes =
       .finally(() => dispatch(setLoading(false)));
   };
 
-export const updateLeadTime = (id: number) => () => {
+export const updateLeadTime = (id: number, value: number) => () => {
   console.log('id', id);
+  console.log('value', value);
+};
+
+export const updateAppointmentTimeToDMS = (id: number, value: boolean) => () => {
+  console.log('id', id);
+  console.log('value', value);
 };

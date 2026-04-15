@@ -27,12 +27,12 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
   }, [leadDayCounter]);
 
   const onSave = () => {
-    if (!selectedSC) return;
-    dispatch(updateLeadTime(selectedSC.id));
+    if (!selectedSC || leadTime === null) return;
+    dispatch(updateLeadTime(selectedSC.id, leadTime));
   };
 
   return (
-    <BaseModal {...props} onClose={props.onClose} width={425}>
+    <BaseModal {...props} onClose={props.onClose} width={355}>
       <DialogTitle onClose={props.onClose}>
         <TopWrapperDouble>
           <span>Appointment Lead Time</span>
