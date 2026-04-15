@@ -46,8 +46,9 @@ export const List = styled('ul')(({ theme }) => ({
     '& .service-list': {
       display: 'block',
       maxHeight: 120,
+      fontWeight: 'normal',
       overflow: 'auto',
-      padding: '8px 8px 8px 0',
+      padding: '0',
       [theme.breakpoints.down('mdl')]: {
         padding: 0,
       },
