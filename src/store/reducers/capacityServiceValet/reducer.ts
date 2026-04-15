@@ -4,6 +4,7 @@ import {
   getCenterSettings,
   getTimeRangesAndCapacity,
   getZonesRouting,
+  setLeadDayCounter,
   setLoading,
 } from './actions';
 
@@ -12,6 +13,7 @@ const initialState: InitialState = {
   timeRangesAndCapacity: [],
   isLoading: false,
   centerSettings: null,
+  leadDayCounter: null,
 };
 
 export const capacityServiceValetReducer = createReducer(initialState, builder =>
@@ -27,5 +29,8 @@ export const capacityServiceValetReducer = createReducer(initialState, builder =
     })
     .addCase(getCenterSettings, (state, { payload }) => {
       return { ...state, centerSettings: payload };
+    })
+    .addCase(setLeadDayCounter, (state, { payload }) => {
+      return { ...state, leadDayCounter: payload };
     })
 );

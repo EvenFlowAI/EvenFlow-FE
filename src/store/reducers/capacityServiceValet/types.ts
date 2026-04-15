@@ -73,6 +73,7 @@ export interface InitialState {
   timeRangesAndCapacity: ITimeRangeAndCapacity[];
   isLoading: boolean;
   centerSettings: ICenterSettings | null;
+  leadDayCounter: number | null;
 }
 
 export type TZonesOpsCodesRequest = {
