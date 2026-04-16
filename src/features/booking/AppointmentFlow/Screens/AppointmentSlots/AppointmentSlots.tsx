@@ -21,7 +21,6 @@ import {
 } from '../../../../../store/reducers/appointment/actions';
 import { TGroupedAppointments } from '../../../../../utils/types';
 import ReactGA from 'react-ga4';
-import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import {
   EServiceType,
   EUserType,
@@ -121,8 +120,8 @@ export const AppointmentSlots: React.FC<
 
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
-  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
+  const [firstDayWithSlots, setFirstDayWithSlots] = useState<TParsableDate | null>(null);
   const [date, setDate] = useState<TParsableDate>(dayjs.utc().startOf('day'));
   const [month, setMonth] = useState<TParsableDate>(dayjs.utc());
   const [loading, setLoading] = useState<boolean>(false);
@@ -431,6 +430,7 @@ export const AppointmentSlots: React.FC<
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
+    setFirstDayWithSlots(apiStartDate);
     setCurrentApiStartDate(apiStartDate);
     setCurrentApiEndDate(apiEndDate);
   };
@@ -443,6 +443,9 @@ export const AppointmentSlots: React.FC<
     requestedEndDate?: string;
   }) => {
     if (id) {
+      if (!firstDayWithSlots && currentApiStartDate) {
+        setFirstDayWithSlots(currentApiStartDate);
+      }
       setCurrentApiStartDate(requestedStartDate ?? null);
       setCurrentApiEndDate(requestedEndDate ?? null);
       setLoading(true);
@@ -740,6 +743,7 @@ export const AppointmentSlots: React.FC<
           />
         ) : (
           <AppointmentDateSelector
+            firstDayWithSlots={firstDayWithSlots}
             dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             appointments={groupedAppointments}
             date={date}
