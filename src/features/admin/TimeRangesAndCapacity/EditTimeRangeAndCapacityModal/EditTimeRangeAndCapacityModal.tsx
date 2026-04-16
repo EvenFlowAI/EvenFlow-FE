@@ -258,7 +258,7 @@ const EditTimeRangeAndCapacityModal: React.FC<
               inputProps={{
                 min: 0,
               }}
-              value={dailyCapacity ?? ''}
+              value={dailyCapacity}
               onChange={handleChangeDailyCapacity}
               fullWidth
               id="dailyCapacity"
