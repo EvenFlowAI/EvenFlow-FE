@@ -19,6 +19,7 @@ interface DaySelectorProps {
   date: TParsableDate;
   onDateChange: TArgCallback<TParsableDate>;
   appointments: TGroupedAppointments;
+  firstDayWithSlots?: null | TParsableDate;
   daysPerScreen: number;
   onLoadNext: () => void;
   onLoadPrevious: () => void;
@@ -29,6 +30,7 @@ interface DaySelectorProps {
 
 export const DaySelector: React.FC<DaySelectorProps> = ({
   date,
+  firstDayWithSlots,
   onDateChange,
   appointments,
   daysPerScreen,
@@ -43,8 +45,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isAdminPanel = history.location.pathname.includes('admin');
   const [firstLoadAvailableSlots, setFirstLoadAvailableSlots] = useState<boolean>(true);
-
   const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
+  const isFirstAvailable = selectedTiming === EAppointmentTimingType.FirstAvailable;
 
   // Flag to prevent rerendering visible days when selecting a date
   const ignoreSelection = useRef(false);
@@ -74,6 +76,12 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     return generateDateRange(today.toISOString(), endDate.toISOString());
   }, [apiStartDate, apiEndDate, daysPerScreen, generateDateRange]);
 
+  // Get the first visible day
+  const firstVisibleDay =
+    visibleDays.length > 0
+      ? dayjs.utc(visibleDays[0]).startOf('day')
+      : dayjs.utc(date).startOf('day');
+
   // Notify parent component of visible date range changes
   useEffect(() => {
     if (onVisibleRangeChange && visibleDays.length > 0) {
@@ -93,14 +101,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     setFirstLoadAvailableSlots(false);
     const todayStart = dayjs.utc().startOf('day');
 
-    // Get the first visible day
-    const firstVisibleDay =
-      visibleDays.length > 0
-        ? dayjs.utc(visibleDays[0]).startOf('day')
-        : dayjs.utc(date).startOf('day');
-
     // Check if we can go back
-    const canGoBack = firstVisibleDay.isAfter(todayStart);
+    const canGoBack = firstVisibleDay.isAfter(isFirstAvailable ? firstDayWithSlots : todayStart);
 
     if (canGoBack) {
       onLoadPrevious();
@@ -130,10 +132,8 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const isFirstDayVisible =
     visibleDays.length > 0 && dayjs.utc(visibleDays[0]).isSame(dayjs.utc().startOf('day'));
 
-  const isFirstAvailable = selectedTiming === EAppointmentTimingType.FirstAvailable;
-
   const isDisabledPreviousSlots = isFirstAvailable
-    ? firstLoadAvailableSlots || isFirstDayVisible
+    ? firstLoadAvailableSlots || isFirstDayVisible || !firstVisibleDay.isAfter(firstDayWithSlots)
     : isFirstDayVisible;
 
   return (

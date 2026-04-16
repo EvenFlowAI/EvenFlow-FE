@@ -5,9 +5,11 @@ import { TGroupedAppointments } from '../../../utils/types';
 import { useTranslation } from 'react-i18next';
 import { MonthSelector } from '../MonthSelector/MonthSelector';
 import { TMonthProps } from '../../../features/booking/AppointmentFlow/Screens/AppointmentSlots/types';
+import { TParsableDate } from '../../../types/types';
 
 type TProps = {
   appointments: TGroupedAppointments;
+  firstDayWithSlots?: null | TParsableDate;
   dateChangeDisabled: boolean;
   daysPerScreen: number;
   onLoadNext: () => void;
@@ -20,6 +22,7 @@ export const AppointmentDateSelector: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TProps>>
 > = ({
   date,
+  firstDayWithSlots,
   onDateChange,
   appointments,
   dateChangeDisabled,
@@ -49,6 +52,7 @@ export const AppointmentDateSelector: React.FC<
         </div>
       ) : null}
       <DaySelector
+        firstDayWithSlots={firstDayWithSlots}
         date={date}
         appointments={appointments}
         onDateChange={onDateChange}
