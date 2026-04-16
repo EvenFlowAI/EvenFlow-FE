@@ -29,7 +29,6 @@ const Address = () => {
             ? {
                 textTransform: 'capitalize',
                 margin: 0,
-                fontWeight: 'normal',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
@@ -37,7 +36,6 @@ const Address = () => {
             : {
                 textTransform: 'uppercase',
                 margin: 0,
-                fontWeight: 'normal',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
@@ -50,7 +48,7 @@ const Address = () => {
           <PencilIcon />
         </span>
       </h4>
-      <div style={{ fontWeight: 400 }}>
+      <div style={{ fontWeight: 700 }}>
         {`${typeof address === 'string' ? address : address?.label}` || ''}
         {zipCode ? `, ${zipCode}` : ''}
       </div>

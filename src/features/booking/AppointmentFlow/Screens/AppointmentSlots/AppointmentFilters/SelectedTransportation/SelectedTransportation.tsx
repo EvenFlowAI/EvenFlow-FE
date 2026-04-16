@@ -15,19 +15,19 @@ import { ITransportation } from '../../../../../../../api/types';
 type TProps = {
   isVisible: boolean;
   setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption | null>>;
-  onChangeServiceOption: TCallback;
   onSwitchFlowOpen: TCallback;
 };
 
 const SelectedTransportation: React.FC<TProps> = ({
   isVisible,
   setSelectedOption,
-  onChangeServiceOption,
   onSwitchFlowOpen,
 }) => {
   const { transportation, transportations, isTransportationsLoading, serviceTypeOption } =
     useSelector((state: RootState) => state.appointmentFrame);
-  const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { isTransportationAvailable, config } = useSelector(
+    (state: RootState) => state.bookingFlowConfig
+  );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
   const { t } = useTranslation();
@@ -70,6 +70,13 @@ const SelectedTransportation: React.FC<TProps> = ({
     }
   };
 
+  const filteredTransportation = transportations.filter(item => {
+    if (item.type === ETransportationType.PickUpDelivery) {
+      return config.find(c => c.serviceType === EServiceType.PickUpDropOff)?.available;
+    }
+    return true;
+  });
+
   return isVisible ? (
     <div style={isSm ? { marginBottom: 4 } : {}}>
       <div>
@@ -86,7 +93,7 @@ const SelectedTransportation: React.FC<TProps> = ({
           onChange={handleChange}
         >
           `
-          {transportations.map(item => (
+          {filteredTransportation.map(item => (
             <MenuItem value={item.id} key={item.name}>
               {item.description}
             </MenuItem>
