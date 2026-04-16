@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { DaySelectCard } from '../DaySelectCard/DaySelectCard';
 import { TArgCallback, TParsableDate } from '../../../types/types';
@@ -11,6 +11,7 @@ import { DateSelectArrow } from '../../styled/DateSelectArrow';
 import dayjs from 'dayjs';
 import { useHistory } from 'react-router-dom';
 import utc from 'dayjs/plugin/utc';
+import { EAppointmentTimingType } from '../../../store/reducers/appointment/types';
 
 dayjs.extend(utc);
 
@@ -41,6 +42,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   const history = useHistory();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
   const isAdminPanel = history.location.pathname.includes('admin');
+  const [firstLoadAvailableSlots, setFirstLoadAvailableSlots] = useState<boolean>(true);
 
   const { selectedTiming } = useSelector((state: RootState) => state.appointmentFrame);
 
@@ -83,10 +85,12 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
 
   // Navigation handlers
   const handleNext = useCallback(() => {
+    setFirstLoadAvailableSlots(false);
     onLoadNext();
   }, [onLoadNext]);
 
   const handlePrev = useCallback(() => {
+    setFirstLoadAvailableSlots(false);
     const todayStart = dayjs.utc().startOf('day');
 
     // Get the first visible day
@@ -123,13 +127,20 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
     [handleDateChange]
   );
 
+  const isFirstDayVisible =
+    visibleDays.length > 0 && dayjs.utc(visibleDays[0]).isSame(dayjs.utc().startOf('day'));
+
+  const isFirstAvailable = selectedTiming === EAppointmentTimingType.FirstAvailable;
+
+  const isDisabledPreviousSlots = isFirstAvailable
+    ? firstLoadAvailableSlots || isFirstDayVisible
+    : isFirstDayVisible;
+
   return (
     <DaySelectorWrapper>
       <DateSelectArrow
-        onClick={handlePrev}
-        disabled={
-          visibleDays.length > 0 && dayjs.utc(visibleDays[0]).isSame(dayjs.utc().startOf('day'))
-        }
+        onClick={isDisabledPreviousSlots ? () => {} : handlePrev}
+        disabled={isDisabledPreviousSlots}
       >
         <ChevronLeft />
       </DateSelectArrow>
