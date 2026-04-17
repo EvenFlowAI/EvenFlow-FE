@@ -297,6 +297,7 @@ export interface IApiEndpoints {
     | 'Update'
     | 'Retrieve'
     | 'GetFiltered'
+    | 'GetAssignedOverridesCSV'
     | 'UpdateStatus'
     | 'CreateOverrides'
     | 'EditOverrides'
