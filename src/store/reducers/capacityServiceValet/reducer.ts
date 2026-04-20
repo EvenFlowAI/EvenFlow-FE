@@ -4,8 +4,6 @@ import {
   getCenterSettings,
   getTimeRangesAndCapacity,
   getZonesRouting,
-  setAppointmentTimeToDMS,
-  setLeadDayCounter,
   setLoading,
 } from './actions';
 
@@ -14,8 +12,6 @@ const initialState: InitialState = {
   timeRangesAndCapacity: [],
   isLoading: false,
   centerSettings: null,
-  leadDayCounter: null,
-  appointmentTimeToDMS: false,
 };
 
 export const capacityServiceValetReducer = createReducer(initialState, builder =>
@@ -31,11 +27,5 @@ export const capacityServiceValetReducer = createReducer(initialState, builder =
     })
     .addCase(getCenterSettings, (state, { payload }) => {
       return { ...state, centerSettings: payload };
-    })
-    .addCase(setLeadDayCounter, (state, { payload }) => {
-      return { ...state, leadDayCounter: payload };
-    })
-    .addCase(setAppointmentTimeToDMS, (state, { payload }) => {
-      return { ...state, appointmentTimeToDMS: payload };
     })
 );

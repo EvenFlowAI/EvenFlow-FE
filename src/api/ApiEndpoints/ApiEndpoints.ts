@@ -572,7 +572,8 @@ export class Api {
       ChangeShowDropOffTime: { route: 'service-valet/{id}/show-drop-off-time', method: 'put' },
       ChangeServiceRequest: { route: 'service-valet/{id}/service-request', method: 'put' },
       ChangeDmsTimeStamp: { route: 'service-valet/{id}/dms-time', method: 'put' },
-      GetServiceValetSettings: { route: 'service-valet/{id}/settings', method: 'get' },
+      GetServiceValetSettings: { route: 'service-valet/settings', method: 'get' },
+      UpdateServiceValetSettings: { route: 'service-valet/settings', method: 'put' },
       UpdateZonesServiceRequests: {
         route: 'geographical-zone-settings/service-requests/{id}',
         method: 'put',

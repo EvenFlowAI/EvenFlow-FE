@@ -22,12 +22,6 @@ export const setLoading = createAction<boolean>('ServiceValetCapacity/SetLoading
 export const getCenterSettings = createAction<ICenterSettings | null>(
   'ServiceValetCapacity/GetCenterSettings'
 );
-export const setLeadDayCounter = createAction<number | null>(
-  'ServiceValetCapacity/SetLeadDayCounter'
-);
-export const setAppointmentTimeToDMS = createAction<boolean>(
-  'ServiceValetCapacity/SetAppointmentTimeToDMS'
-);
 
 export const loadZonesRouting =
   (id: number, serviceType: string): AppThunk =>
@@ -66,9 +60,15 @@ export const loadCenterSettings =
   (id: number): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.ServiceValet.GetServiceValetSettings, { urlParams: { id } })
+    Api.call(Api.endpoints.ServiceValet.GetServiceValetSettings, {
+      params: {
+        serviceCenterId: id,
+      },
+    })
       .then(result => {
-        if (result) dispatch(getCenterSettings(result.data));
+        if (result.data?.data) {
+          dispatch(getCenterSettings(result.data.data));
+        }
       })
       .catch(err => {
         console.log('load service valet service center settings error', err);
@@ -230,12 +230,27 @@ export const updateServiceValetZonesOpsCodes =
       .finally(() => dispatch(setLoading(false)));
   };
 
-export const updateLeadTime = (id: number, value: number) => () => {
-  console.log('id', id);
-  console.log('value', value);
-};
+export const updateServiceValetSettings =
+  (id: number, changes: Partial<Record<string, unknown>>, onSuccess?: () => void): AppThunk =>
+  (dispatch, getState) => {
+    const { centerSettings } = getState().capacityServiceValet;
 
-export const updateAppointmentTimeToDMS = (id: number, value: boolean) => () => {
-  console.log('id', id);
-  console.log('value', value);
-};
+    const updatedSettings = {
+      ...centerSettings,
+      ...changes,
+    };
+
+    Api.call(Api.endpoints.ServiceValet.UpdateServiceValetSettings, {
+      params: { serviceCenterId: id },
+      data: updatedSettings,
+    })
+      .then(r => {
+        if (r) {
+          dispatch(loadCenterSettings(id));
+          if (onSuccess) onSuccess();
+        }
+      })
+      .catch(err => {
+        console.log('update service valet settings error', err);
+      });
+  };

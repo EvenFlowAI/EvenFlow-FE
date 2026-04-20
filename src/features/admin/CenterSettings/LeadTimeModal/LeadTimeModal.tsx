@@ -11,24 +11,29 @@ import { TextField } from '../../../../components/formControls/TextFieldStyled/T
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { Button } from '@mui/material';
-import { updateLeadTime } from '../../../../store/reducers/capacityServiceValet/actions';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { updateServiceValetSettings } from '../../../../store/reducers/capacityServiceValet/actions';
 
 const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({
   ...props
 }) => {
-  const { leadDayCounter } = useSelector((state: RootState) => state.capacityServiceValet);
+  const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
   const [leadTime, setLeadTime] = React.useState<number | null>(null);
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (leadDayCounter !== null) setLeadTime(leadDayCounter);
-  }, [leadDayCounter]);
+    if (centerSettings?.appointmentLeadDays && centerSettings?.appointmentLeadDays !== null)
+      setLeadTime(centerSettings?.appointmentLeadDays);
+  }, [centerSettings?.appointmentLeadDays]);
 
   const onSave = () => {
     if (!selectedSC || leadTime === null) return;
-    dispatch(updateLeadTime(selectedSC.id, leadTime));
+    dispatch(
+      updateServiceValetSettings(selectedSC?.id, { appointmentLeadDays: leadTime }, () =>
+        props.onClose()
+      )
+    );
   };
 
   return (

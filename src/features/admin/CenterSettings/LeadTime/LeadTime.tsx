@@ -10,7 +10,7 @@ interface LeadTimeProps {
 
 const LeadTime = ({ onEdit }: LeadTimeProps) => {
   const { classes: centerSettingsClasses } = useZonePlateStyles();
-  const { leadDayCounter } = useSelector((state: RootState) => state.capacityServiceValet);
+  const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
 
   return (
     <Grid item xs={6} md={4} style={{ height: 202 }}>
@@ -20,7 +20,9 @@ const LeadTime = ({ onEdit }: LeadTimeProps) => {
           EDIT
         </Button>
         <div style={{ marginTop: 24 }}>
-          <p style={{ margin: 0, fontWeight: 700, fontSize: 24 }}>{`[${leadDayCounter || '#'}]`}</p>
+          <p
+            style={{ margin: 0, fontWeight: 700, fontSize: 24 }}
+          >{`[${centerSettings?.appointmentLeadDays || '#'}]`}</p>
           <p style={{ margin: 0 }}>Days</p>
         </div>
       </Paper>

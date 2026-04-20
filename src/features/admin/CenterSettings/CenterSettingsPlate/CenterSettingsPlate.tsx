@@ -8,8 +8,8 @@ import {
 } from '../../EmployeeTimeScheduleSetUp/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { updateAppointmentTimeToDMS } from '../../../../store/reducers/capacityServiceValet/actions';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { updateServiceValetSettings } from '../../../../store/reducers/capacityServiceValet/actions';
 
 type TCenterSettingsPlateProps = {
   onEdit: () => void;
@@ -27,19 +27,21 @@ export const CenterSettingsPlate: React.FC<
 > = ({ onEdit, title, count, prefix, suffix, label, helperText, isLoading }) => {
   const { classes } = useCenterSettingsStyles();
   const [checked, setChecked] = React.useState(false);
-  const { appointmentTimeToDMS } = useSelector((state: RootState) => state.capacityServiceValet);
+  const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
 
   useEffect(() => {
-    setChecked(appointmentTimeToDMS);
-  }, [appointmentTimeToDMS]);
+    if (centerSettings?.syncAppointmentNativeTime) {
+      setChecked(centerSettings?.syncAppointmentNativeTime);
+    }
+  }, [centerSettings?.syncAppointmentNativeTime]);
 
   const handleSwitch = (e: React.SyntheticEvent, value: boolean) => {
     if (!selectedSC) return;
 
     setChecked(value);
-    dispatch(updateAppointmentTimeToDMS(selectedSC.id, value));
+    dispatch(updateServiceValetSettings(selectedSC?.id, { syncAppointmentNativeTime: value }));
   };
 
   return (
