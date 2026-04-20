@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import {
   assignServiceRequests,
+  downloadAssignedServiceRequestsCSV,
   loadAssignedServiceRequests,
   setAssignedFilter,
   setAssignedPageData,
@@ -29,6 +30,7 @@ import {
 } from '../../../store/reducers/generalSettings/actions';
 import { ESettingType } from '../../../store/reducers/generalSettings/types';
 import { SystemIntegrationType } from '../../../store/reducers/serviceCenters/types';
+import { ReactComponent as DownloadIcon } from '../../../assets/img/download.svg';
 
 export const ServiceRequests = () => {
   const {
@@ -112,7 +114,7 @@ export const ServiceRequests = () => {
     showError(e);
   };
 
-  const handleLaborTypeChange = (e: SyntheticEvent, value: string | null) => {
+  const handleLaborTypeChange = (_e: SyntheticEvent, value: string | null) => {
     if (value && selectedSC) {
       const updatedSettings = settings.map((s, idx) =>
         idx === 0
@@ -128,6 +130,29 @@ export const ServiceRequests = () => {
 
       dispatch(updateGeneralSettings(selectedSC?.id, null, updatedSettings, onError, onSuccess));
     }
+  };
+
+  const handleDownloadCSVError = (e: string) => {
+    showError(e);
+  };
+
+  const handleDownloadCSVSuccess = () => {
+    showMessage('Successfully downloaded CSV file');
+  };
+
+  const handleDownloadCSV = () => {
+    if (!selectedSC) {
+      showError('No service center selected');
+      return;
+    }
+
+    dispatch(
+      downloadAssignedServiceRequestsCSV(
+        selectedSC.id,
+        handleDownloadCSVError,
+        handleDownloadCSVSuccess
+      )
+    );
   };
 
   return (
@@ -164,6 +189,17 @@ export const ServiceRequests = () => {
                 onClick={handleAddOpsCode}
               >
                 Add Op Codes
+              </Button>
+              <Button
+                style={{ marginLeft: 8 }}
+                variant="outlined"
+                onClick={handleDownloadCSV}
+                disabled={!selectedSC}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span>Download</span>
+                  <DownloadIcon />
+                </div>
               </Button>
             </div>
           </div>

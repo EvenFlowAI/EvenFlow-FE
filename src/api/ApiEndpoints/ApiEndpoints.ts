@@ -522,6 +522,7 @@ export class Api {
       Update: { route: '/service-requests/{id}', method: 'put' },
       Retrieve: { route: '/service-requests/{id}', method: 'get' },
       GetFiltered: { route: '/service-requests/by-query', method: 'post' },
+      GetAssignedOverridesCSV: { route: '/service-requests/overrides/csv', method: 'get' },
       UpdateStatus: { route: '/service-requests/{id}/status', method: 'patch' },
       CreateOverrides: { route: '/service-requests/{id}/overrides', method: 'post' },
       EditOverrides: { route: '/service-requests/overrides/{id}', method: 'put' },

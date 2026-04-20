@@ -51,6 +51,12 @@ export interface IRequiredSkill {
   technicianLevel2: boolean;
   technicianLevel3: boolean;
 }
+
+export interface IServiceBookRef {
+  id?: number;
+  name?: string;
+}
+
 export interface IRequiredSkillData extends IRequiredSkill {
   serviceRequestId: number;
 }
@@ -77,6 +83,7 @@ export interface IAssignedServiceRequest {
   priority: IServiceRequestPriority;
   pricingDisplayType: EPricingDisplayType;
   requiredSkill?: IRequiredSkill;
+  serviceBooks?: IServiceBookRef[];
 }
 export interface IAssignedServiceRequestShort {
   id: number;

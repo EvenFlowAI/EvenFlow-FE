@@ -26,6 +26,7 @@ import {
 import { EPricingDisplayType } from '../pricingSettings/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { TRuleState } from '../../../features/admin/Transportations/EditTransportationModal/helper';
+import { getFileNameFromContentDisposition } from '../../../utils/headerUtils';
 
 export const getNonSelectedServiceRequests = createAction<IServiceRequest[]>(
   'ServiceRequestsScreen/getNonSelected'
@@ -122,6 +123,40 @@ export const setLaborType = createAction<Partial<string>>('ServiceRequestsScreen
 export const setAssignedOrdering = createAction<IOrder<IAssignedServiceRequest>>(
   'ServiceRequestsScreen/SetAssignedOrder'
 );
+
+export const downloadAssignedServiceRequestsCSV =
+  (
+    serviceCenterId: number,
+    onError: (errorText: string) => void,
+    onSuccess: () => void
+  ): AppThunk =>
+  () => {
+    Api.call(Api.endpoints.ServiceRequests.GetAssignedOverridesCSV, {
+      params: { serviceCenterId },
+    })
+      .then(r => {
+        const contentDisposition = r.headers['content-disposition'];
+        const contentType = r.headers['content-type'];
+        const fileName =
+          getFileNameFromContentDisposition(contentDisposition) ??
+          `service-requests-${serviceCenterId}.csv`;
+
+        const blob = new Blob([r.data], { type: contentType });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        onSuccess();
+      })
+      .catch(err => {
+        const message = err?.response?.data?.message || err.message || 'Unknown error';
+        onError(message);
+      });
+  };
 
 export const loadAssignedServiceRequests =
   (serviceCenterId: number, isEligible?: boolean): AppThunk =>

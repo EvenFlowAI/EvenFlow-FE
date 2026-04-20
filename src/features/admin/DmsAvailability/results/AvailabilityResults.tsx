@@ -11,7 +11,7 @@ import {
 } from '../../../../store/reducers/appointment/actions';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../hooks/useException/useException';
-import { ReactComponent as DownloadAvailability } from '../../../../assets/img/downloadAvailability.svg';
+import { ReactComponent as DownloadIcon } from '../../../../assets/img/download.svg';
 import { TFormTekion, TFormXTime } from '../types';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 
@@ -172,7 +172,7 @@ export const AvailabilityResults = ({
         <div className={classes.downloadCSVWrapper}>
           <span>Download CSV</span>
           <span className={classes.downloadCSVWrapper}>
-            <DownloadAvailability />
+            <DownloadIcon />
           </span>
         </div>
       </Button>

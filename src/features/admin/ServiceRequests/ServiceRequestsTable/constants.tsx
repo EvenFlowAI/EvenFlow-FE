@@ -2,9 +2,15 @@ import { TableRowDataType } from '../../../../types/types';
 import { IAssignedServiceRequest } from '../../../../store/reducers/serviceRequests/types';
 import { ServiceRequestCellData } from '../../../../components/wrappers/ServiceRequestCellData/ServiceRequestCellData';
 import React from 'react';
+import { ServiceRequestOpCodeCell } from './ServiceRequestOpCodeCell';
 
 export const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
-  { header: 'Op Code', val: el => el.serviceRequest.code, orderId: 'code', width: 130 },
+  {
+    header: 'Op Code',
+    val: el => <ServiceRequestOpCodeCell request={el} />,
+    orderId: 'code',
+    width: 130,
+  },
   {
     header: 'Description',
     val: el => (
@@ -64,7 +70,7 @@ export const RowData: TableRowDataType<IAssignedServiceRequest>[] = [
   },
   {
     header: 'Rollover Icon',
-    val: el => '-',
+    val: () => '-',
     width: 95,
   },
 ];
