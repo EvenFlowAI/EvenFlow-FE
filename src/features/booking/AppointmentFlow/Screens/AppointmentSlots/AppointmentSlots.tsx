@@ -14,6 +14,8 @@ import {
   MPOptionShort,
 } from '../../../../../store/reducers/appointment/types';
 import {
+  getServiceValetSlots,
+  loadAllServiceCenterSettings,
   loadAppointmentSlots,
   loadServiceValetSlots,
   selectAppointment,
@@ -52,7 +54,6 @@ import AppointmentFilters from './AppointmentFilters/AppointmentFilters';
 import { useMediaQuery, useTheme } from '@mui/material';
 import {
   getClearDate,
-  getClearSVDate,
   sortAppointments,
   sortSVAppointments,
 } from '../../../../../utils/svAppointments';
@@ -84,6 +85,7 @@ export const AppointmentSlots: React.FC<
     slotsSearchedDate,
     selectedSRComments,
     isCloneMode,
+    serviceValetCapacity,
   } = useSelector((state: RootState) => state.appointment);
 
   const {
@@ -100,6 +102,9 @@ export const AppointmentSlots: React.FC<
     hashKey,
     zipCode,
     address,
+    politicalState,
+    city,
+    streetName,
     selectedRecalls,
     serviceTypeOption,
     packagePricingType,
@@ -113,7 +118,6 @@ export const AppointmentSlots: React.FC<
     editingPosition,
     serviceOptionChangedFromSlotPage,
   } = useSelector((state: RootState) => state.appointmentFrame);
-
   const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
@@ -226,17 +230,26 @@ export const AppointmentSlots: React.FC<
         if (serviceOption?.type === EServiceType.PickUpDropOff) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
           firstAvailableSlot = sorted.find(slot => {
-            const formatted = getClearSVDate(slot?.date);
-            return (
-              dayjs(formatted).isSame(dayjs.utc(dateWithOffset), 'date') ||
-              dayjs(formatted).isAfter(dayjs.utc(dateWithOffset))
-            );
+            const formatted = dayjs(slot?.date).add(Math.abs(utcOffset), 'minutes');
+            return formatted.isAfter(getClearDate(newDate));
           });
           if (!firstAvailableSlot) {
             console.info('Can not assign first available slot for pickUpDropOff');
           } else {
-            dispatch(selectServiceValetAppointment(firstAvailableSlot));
-            setDate(firstAvailableSlot.date);
+            const dayName = dayjs(firstAvailableSlot.date).format('dddd');
+            if (serviceValetCapacity) {
+              const capacityForDay = serviceValetCapacity[dayName];
+              const firstASlotWithData = {
+                ...firstAvailableSlot,
+                pickUpMin: capacityForDay.pickUpMin || '',
+                pickUpMax: capacityForDay.pickUpMax || '',
+                dropOffMin: capacityForDay.dropOffMin || '',
+                dropOffMax: capacityForDay.dropOffMax || '',
+              };
+              dispatch(selectServiceValetAppointment(firstASlotWithData));
+
+              setDate(dayjs.utc(firstASlotWithData.date).startOf('day'));
+            }
           }
         } else {
           const sorted = [...appointmentSlots].sort(sortAppointments);
@@ -449,10 +462,6 @@ export const AppointmentSlots: React.FC<
       setCurrentApiStartDate(requestedStartDate ?? null);
       setCurrentApiEndDate(requestedEndDate ?? null);
       setLoading(true);
-      const utcOffset = dayjs().utcOffset();
-      const fromDate = selectedTime
-        ? dayjs(selectedTime).add(utcOffset, 'minute').toISOString()
-        : dayjs().startOf('day').add(utcOffset, 'minute').toISOString();
       try {
         const maintenancePackageOption: MPOptionShort | null = selectedPackage
           ? { id: selectedPackage?.id, priceType: packagePricingType }
@@ -474,11 +483,8 @@ export const AppointmentSlots: React.FC<
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
           advisorId: advisor?.id ?? null,
-          fromDate: serviceTypeOption?.type === EServiceType.PickUpDropOff ? fromDate : undefined,
-          startDate:
-            serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedStartDate : undefined,
-          endDate:
-            serviceTypeOption?.type !== EServiceType.PickUpDropOff ? requestedEndDate : undefined,
+          startDate: requestedStartDate,
+          endDate: requestedEndDate,
           maintenancePackageOption,
           serviceRequests: collectServiceRequestIds(
             service,
@@ -495,13 +501,13 @@ export const AppointmentSlots: React.FC<
           recalls: mapRecallsForRequest(selectedRecalls),
           transportationOptionId,
         };
-        if (zipCode?.length) data.zipCode = zipCode;
         if (address) {
-          if (address?.label) {
-            data.address = address.label;
-          } else if (typeof address === 'string') {
-            data.address = address;
-          }
+          data.address = {
+            state: politicalState,
+            city,
+            address: streetName,
+            zipCode: zipCode,
+          };
         }
         if (selectedVehicle) {
           data.vehicle = {
@@ -519,8 +525,10 @@ export const AppointmentSlots: React.FC<
         if (userType === EUserType.Existing && customerEnteredEmail)
           data.searchTerm = customerEnteredEmail;
         if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
-          if (data.address && data.zipCode)
-            await dispatch(loadServiceValetSlots(data, undefined, onLoadSlots, handleError));
+          if (data.address)
+            await dispatch(
+              loadServiceValetSlots(data, undefined, onLoadSlots, handleError, setApiDates)
+            );
         } else {
           await dispatch(
             loadAppointmentSlots(
@@ -581,6 +589,7 @@ export const AppointmentSlots: React.FC<
     ) {
       dispatch(loadActiveTransportations(decodeSCID(id)));
     }
+    dispatch(loadAllServiceCenterSettings(decodeSCID(id)));
   }, [id]);
 
   const handleGANext = useCallback(() => {
@@ -621,6 +630,7 @@ export const AppointmentSlots: React.FC<
     if (!isManaging) {
       dispatch(selectAppointment(null));
       dispatch(selectServiceValetAppointment(null));
+      dispatch(getServiceValetSlots([]));
     }
     if (
       prevLogicalScreen === 'appointmentSelection' ||
@@ -735,11 +745,17 @@ export const AppointmentSlots: React.FC<
         />
         {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
           <SVAppointmentDateSelector
+            firstDayWithSlots={firstDayWithSlots}
             onDateRangeSet={handleDateRangeSet}
             dateChangeDisabled={selectedTiming !== EAppointmentTimingType.SpecialOffers}
             date={date}
             onDateChange={updateDate}
             dateRangeUpdated={initRef.current}
+            daysPerScreen={daysPerScreen}
+            onLoadNext={loadNextSlots}
+            onLoadPrevious={loadPreviousSlots}
+            apiStartDate={currentApiStartDate || undefined}
+            apiEndDate={currentApiEndDate || undefined}
           />
         ) : (
           <AppointmentDateSelector

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { IServiceValetAppointment } from '../../../store/reducers/appointment/types';
 import { Loading } from '../../wrappers/Loading/Loading';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,6 +26,7 @@ export const SVAppointmentTimeSelector: React.FC<
     serviceValetAppointment: selectedAppointment,
     serviceValetSlots,
     isAppointmentSlotsLoading,
+    serviceValetCapacity,
   } = useSelector((state: RootState) => state.appointment);
   const { selectedTiming, sideBarSteps, trackerData } = useSelector(
     (state: RootState) => state.appointmentFrame
@@ -34,10 +35,31 @@ export const SVAppointmentTimeSelector: React.FC<
   const { classes } = useTimeSelectorStyles();
   const { t } = useTranslation();
 
+  const [SVSlotsWithTimes, setSVSlotsWithTimes] = React.useState<IServiceValetAppointment[]>([]);
+
+  useEffect(() => {
+    if (serviceValetSlots && serviceValetCapacity) {
+      const enriched = serviceValetSlots.map(slot => {
+        const dayName = dayjs(slot.date).format('dddd');
+        const capacityForDay = serviceValetCapacity[dayName];
+
+        return {
+          ...slot,
+          pickUpMin: capacityForDay?.pickUpMin || '',
+          pickUpMax: capacityForDay?.pickUpMax || '',
+          dropOffMin: capacityForDay?.dropOffMin || '',
+          dropOffMax: capacityForDay?.dropOffMax || '',
+        };
+      });
+
+      setSVSlotsWithTimes(enriched);
+    }
+  }, [serviceValetSlots, serviceValetCapacity]);
+
   const currentSlots = useMemo(() => {
     const dateWithOffset = dayjs(date);
-    return serviceValetSlots.filter(slot => dayjs.utc(slot.date).isSame(dateWithOffset, 'date'));
-  }, [serviceValetSlots, date]);
+    return SVSlotsWithTimes.filter(slot => dayjs.utc(slot.date).isSame(dateWithOffset, 'date'));
+  }, [SVSlotsWithTimes, date]);
 
   const handleGA = useCallback(
     (a: IServiceValetAppointment | null) => {
@@ -61,8 +83,21 @@ export const SVAppointmentTimeSelector: React.FC<
     (a: IServiceValetAppointment | null) => {
       const data = a && selectedTiming ? { ...a, timingType: selectedTiming } : a;
       handleGA(a);
-      dispatch(selectServiceValetAppointment(data));
-      handleSideBar();
+
+      const dayName = dayjs(data?.date).format('dddd');
+      if (serviceValetCapacity && data) {
+        const capacityForDay = serviceValetCapacity[dayName];
+        const firstASlotWithData = {
+          ...data,
+          pickUpMin: capacityForDay.pickUpMin || '',
+          pickUpMax: capacityForDay.pickUpMax || '',
+          dropOffMin: capacityForDay.dropOffMin || '',
+          dropOffMax: capacityForDay.dropOffMax || '',
+        };
+
+        dispatch(selectServiceValetAppointment(firstASlotWithData));
+        handleSideBar();
+      }
     },
     [selectedTiming]
   );

@@ -36,6 +36,7 @@ import {
   selectSRComment,
   setLoadedDateRange,
   setIsCloneMode,
+  setServiceValetCapacity,
 } from './actions';
 import { setPackage } from '../appointmentFrameReducer/actions';
 import dayjs from 'dayjs';
@@ -91,6 +92,7 @@ const initialState: TAppointmentState = {
   slotsTransportationId: null,
   slotsSearchedDate: null,
   isCloneMode: false,
+  serviceValetCapacity: null,
 };
 
 export const appointmentReducer = createReducer(initialState, builder =>
@@ -215,6 +217,9 @@ export const appointmentReducer = createReducer(initialState, builder =>
     })
     .addCase(getDropOffSettings, (state, { payload }) => {
       return { ...state, dropOffSettings: payload };
+    })
+    .addCase(setServiceValetCapacity, (state, { payload }) => {
+      return { ...state, serviceValetCapacity: payload };
     })
     .addCase(setAppointmentWasChanged, (state, { payload }) => {
       return { ...state, appointmentWasChanged: payload };

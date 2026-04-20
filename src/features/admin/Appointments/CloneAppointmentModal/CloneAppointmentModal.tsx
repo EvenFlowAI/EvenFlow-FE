@@ -147,11 +147,14 @@ const CloneAppointmentModal: React.FC<
           />
           {currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
             <SVAppointmentDateSelector
+              daysPerScreen={daysPerScreen}
               onDateRangeSet={handleDateRangeSet}
               dateRangeUpdated={initRef.current}
               dateChangeDisabled
               date={date}
               onDateChange={updateDate}
+              onLoadNext={loadNextSlots}
+              onLoadPrevious={loadPreviousSlots}
             />
           ) : (
             <AppointmentDateSelector

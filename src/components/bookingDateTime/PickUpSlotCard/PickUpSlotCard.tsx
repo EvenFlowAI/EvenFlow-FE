@@ -87,13 +87,13 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
       </div>
       <div className={classes.rightPart}>
         <div className={classes.availability}>
-          {timeSlot && timeSlot.available > 0 ? (
+          {timeSlot && timeSlot.availableQuantity > 0 ? (
             <div className={classes.availabilityItem} style={{ color: '#008331' }}>
               <div className={classes.textWithIcon}>
                 {t('Available')} <CheckCircleOutlined style={{ marginLeft: 8 }} />{' '}
               </div>
               <div>
-                {timeSlot?.available} {t('left')}
+                {timeSlot?.availableQuantity} {t('left')}
               </div>
             </div>
           ) : (

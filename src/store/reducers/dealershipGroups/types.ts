@@ -16,6 +16,13 @@ export interface IAddress {
   zipCode: string;
 }
 
+export interface UpdatedAddress {
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+}
+
 export interface IDealershipProfile extends IDealershipGroupShort {
   address?: IAddress;
   phoneNumber: string;

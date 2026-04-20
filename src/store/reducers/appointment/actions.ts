@@ -50,6 +50,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { DealershipsIds } from '../../../utils/constants';
 import { TFormTekion, TFormXTime } from '../../../features/admin/DmsAvailability/types';
 import { getAvailability } from '../demandManagement/actions';
+import { ServiceValetCapacity } from './add-types';
 
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const setTopAligning = createAction<boolean>('Appointment/SetTopAligning');
@@ -178,7 +179,7 @@ export const loadAppointmentSlots =
       const res = dispatch(
         getAppointmentSlots(
           items.map(item => {
-            const searchDate = data.fromDate || data.startDate;
+            const searchDate = data.startDate;
             return {
               ...item,
               searchDate: searchDate as TParsableDate,
@@ -224,7 +225,7 @@ export const loadAppointmentSlots =
       }
       dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
       dispatch(setSlotsTransportationId(data.transportationOptionId ?? null));
-      const searchDate = data.fromDate || data.startDate;
+      const searchDate = data.startDate;
       dispatch(setSlotsSearchDate(searchDate as TParsableDate));
       if (
         cb &&
@@ -331,25 +332,38 @@ export const getServiceValetSlots = createAction<IServiceValetAppointment[]>(
   'Appointment/GetServiceValetSlots'
 );
 export const getDropOffSettings = createAction<IDropOffSettings>('Appointment/GetDropOffSettings');
+export const setServiceValetCapacity = createAction<ServiceValetCapacity | null>(
+  'Appointment/SetServiceValetCapacity'
+);
+
 export const loadServiceValetSlots =
   (
     data: IAppointmentSlotsRequest,
     loadCB?: TCallback,
     onLoadedCb?: (isEmptyList: boolean) => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError?: TArgCallback<any>
+    onError?: TArgCallback<any>,
+    setApiDates?: (newStartDate: string) => void
   ): AppThunk =>
   dispatch => {
     dispatch(setSlotsLoading(true));
     Api.call<ISVAppointmentResponse>(Api.endpoints.AppointmentSlots.GetServiceValetSlots, { data })
       .then(result => {
-        const { items, dropOffSettings, searchedDateRange } = result.data;
+        const { items } = result.data;
         dispatch(getServiceValetSlots(items.map(el => ({ ...el, uniqueId: uuidv4() }))));
-        if (searchedDateRange) dispatch(setLoadedDateRange(searchedDateRange));
-        if (dropOffSettings) dispatch(getDropOffSettings(dropOffSettings));
         dispatch(setSlotsServiceTypeOptionId(data.serviceTypeOptionId ?? null));
-        const searchDate = data.fromDate || data.startDate;
+        const searchDate = data.startDate;
         dispatch(setSlotsSearchDate(searchDate as TParsableDate));
+
+        if (items.length > 0 && data.startDate && data.endDate && setApiDates) {
+          const firstSlotDate = dayjs(String(items[0].date));
+          const startDate = dayjs(String(data.startDate));
+          const endDate = dayjs(String(data.endDate));
+          if (firstSlotDate.isAfter(endDate) || firstSlotDate.isBefore(startDate)) {
+            setApiDates(String(items[0].date));
+          }
+        }
+
         if (loadCB) {
           loadCB();
         }
@@ -547,5 +561,24 @@ export const getAppointmentAvailabilityCSVXTime =
       .catch(err => {
         const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';
         showError(backendMessage);
+      });
+  };
+
+export const loadAllServiceCenterSettings =
+  (serviceCenterId: number): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.GetAllServiceCenterSettings, {
+      urlParams: { id: serviceCenterId },
+    })
+      .then(response => {
+        if (response?.data?.data) {
+          const data = response.data.data;
+          if (data.serviceValetSettings) dispatch(getDropOffSettings(data.serviceValetSettings));
+          if (data.serviceValetCapacities)
+            dispatch(setServiceValetCapacity(data.serviceValetCapacities));
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
   };

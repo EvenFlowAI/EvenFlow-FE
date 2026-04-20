@@ -88,7 +88,7 @@ export class Api {
     },
     AppointmentSlots: {
       GetSlots: { route: '/appointment-slots/by-query', method: 'post' },
-      GetServiceValetSlots: { route: '/service-valet-appointment-slots/by-query', method: 'post' },
+      GetServiceValetSlots: { route: '/appointment-slots/service-valet-slots', method: 'post' },
       GetDMSAvailability: { route: '/appointment-slots/dms-availability', method: 'get' },
       GetDMSAvailabilityCSV: { route: '/appointment-slots/dms-availability/csv', method: 'get' },
     },
@@ -451,6 +451,10 @@ export class Api {
         route: '/service-centers/{id}/update-appointments-advisor',
         method: 'patch',
       },
+      GetAllServiceCenterSettings: {
+        route: '/service-center-settings/{id}',
+        method: 'get',
+      },
       UpdatePredictionParams: {
         route: '/service-center-settings/{id}/prediction-parameters',
         method: 'put',
@@ -649,7 +653,7 @@ export class Api {
       Toggle: { route: '/waitlist-settings/toggle', method: 'put' },
     },
     ZipCodes: {
-      GetFiltered: { route: '/zip-codes/by-query/', method: 'post' },
+      GetFiltered: { route: '/zip-codes/by-query', method: 'post' },
     },
     DealerOperations: {
       CreateEvent: { route: '/outbound-events', method: 'post' },

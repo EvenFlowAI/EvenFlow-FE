@@ -284,6 +284,7 @@ export interface IApiEndpoints {
     | 'UpdateEngineTypeFieldName'
     | 'GetAssignedAdvisorMethod'
     | 'UpdateAssignedAdvisorMethod'
+    | 'GetAllServiceCenterSettings'
     | 'SetEmailRequired',
     TApiEndpoint
   >;
