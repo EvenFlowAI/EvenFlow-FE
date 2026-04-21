@@ -53,7 +53,7 @@ const EditTimeRangeAndCapacityModal: React.FC<
         setDropOffMin(dayjs(editingElement.dropOffMin, time24HourFormat));
       if (editingElement.dropOffMax !== '-')
         setDropOffMax(dayjs(editingElement.dropOffMax, time24HourFormat));
-      if (editingElement.capacity) setDailyCapacity(editingElement.capacity);
+      if (editingElement.capacity != null) setDailyCapacity(editingElement.capacity);
     }
   }, [editingElement, open]);
 
