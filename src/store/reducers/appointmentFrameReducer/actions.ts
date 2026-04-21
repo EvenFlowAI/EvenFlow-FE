@@ -237,6 +237,9 @@ export const updateAppointmentDetails = createAction<ILoadSlotsRequestData>(
 export const updateAppointmentAddress = createAction<{
   address: string | null;
   zip: string;
+  city: string;
+  state: string;
+  street: string;
 }>('fAppointment/updateAppointmentAddress');
 
 export const setValueServicePartial =

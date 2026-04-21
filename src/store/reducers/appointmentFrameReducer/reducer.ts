@@ -488,6 +488,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         ...state,
         address: payload.address,
         zipCode: payload.zip,
+        city: payload.city,
+        street: payload.street,
+        streetName: payload.street,
+        state: payload.state,
       };
     })
 );

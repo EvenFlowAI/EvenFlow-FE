@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import UserLocation from '../../../components/UserLocation/UserLocation';
 import {
+  loadAncillaryPriceByZip,
   setCity,
   setFilteredZipCodes,
   setPoliticalState,
@@ -20,6 +21,8 @@ import {
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import { geocodeByPlaceId } from 'react-google-places-autocomplete';
 import { parseGeoCode } from '../AppointmentFlow/Screens/YourLocation/utils';
+import { IAncillaryByZipRequest } from '../../../store/reducers/appointmentFrameReducer/types';
+import { useException } from '../../../hooks/useException/useException';
 
 type TProps = DialogProps & {};
 
@@ -27,6 +30,10 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
   const { address, zipCode: zipCodeValue } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  const { scProfile, slotsServiceTypeOptionId } = useSelector(
+    (state: RootState) => state.appointment
+  );
+  const showError = useException();
 
   const [zip, setZip] = useState<string | null>(null);
   const [userAddress, setUserAddress] = useState<any>(null);
@@ -41,7 +48,7 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
 
   useEffect(() => {
     if (open) {
-      if (zip?.length === 5) {
+      if (zip?.length === 5 && userAddress) {
         setAddressValid(true);
       } else {
         setAddressValid(false);
@@ -73,9 +80,9 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
     }, 100);
   };
 
-  const onClickNext = () => {
-    if (userAddress?.place_id && userAddress?.label) {
-      geocodeByPlaceId(userAddress.place_id).then(res => {
+  const onSuccess = () => {
+    if (userAddress?.value?.place_id && userAddress?.label) {
+      geocodeByPlaceId(userAddress.value.place_id).then(res => {
         const data = parseGeoCode(
           res[0].address_components,
           userAddress.label,
@@ -85,10 +92,36 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         if (data.city) dispatch(setCity(data.city));
         if (data.state) dispatch(setPoliticalState(data.state));
         if (data.address) dispatch(setStreetName(data.address));
+        console.log(data);
+        dispatch(
+          updateAppointmentAddress({
+            address: userAddress,
+            zip: zip || '',
+            city: data.city,
+            state: data.state,
+            street: data.address,
+          })
+        );
+        onCancel();
       });
     }
-    dispatch(updateAppointmentAddress({ address: userAddress, zip: zip || '' }));
-    onCancel();
+  };
+
+  const handleError = (err?: string) => {
+    showError(err);
+  };
+
+  const onClickNext = () => {
+    if (zip?.length && scProfile) {
+      const data: IAncillaryByZipRequest = {
+        address: typeof address === 'string' ? address : address.label,
+        zipCode: zip,
+        serviceCenterId: scProfile?.id,
+        serviceTypeOptionId: slotsServiceTypeOptionId,
+      };
+
+      dispatch(loadAncillaryPriceByZip(data, onSuccess, handleError, () => {}));
+    }
   };
 
   return (
