@@ -13,7 +13,6 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../hooks/useException/useException';
 import { ReactComponent as DownloadIcon } from '../../../../assets/img/download.svg';
 import { TFormTekion, TFormXTime } from '../types';
-import { useMessage } from '../../../../hooks/useMessage/useMessage';
 
 interface AvailabilityResultsProps {
   formTekion: TFormTekion;
@@ -30,7 +29,6 @@ export const AvailabilityResults = ({
   const { classes } = useStyles();
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const showMessage = useMessage();
   const showError = useException();
 
   if (!selectedSC) throw new Error('No service center selected');
@@ -38,10 +36,6 @@ export const AvailabilityResults = ({
   const handleError = (e: string) => {
     showError(e);
     setLoading(false);
-  };
-
-  const handleSuccess = () => {
-    showMessage('Successfully downloaded CSV file');
   };
 
   const allTimeSlots = Array.from(
@@ -59,18 +53,9 @@ export const AvailabilityResults = ({
   const handleLoadCSV = () => {
     if (availability.length) {
       if (selectedSC?.system === SystemType.Xtime) {
-        dispatch(
-          getAppointmentAvailabilityCSVXTime(selectedSC?.id, formXTime, handleError, handleSuccess)
-        );
+        dispatch(getAppointmentAvailabilityCSVXTime(selectedSC?.id, formXTime, handleError));
       } else {
-        dispatch(
-          getAppointmentAvailabilityCSVTekion(
-            selectedSC?.id,
-            formTekion,
-            handleError,
-            handleSuccess
-          )
-        );
+        dispatch(getAppointmentAvailabilityCSVTekion(selectedSC?.id, formTekion, handleError));
       }
     }
   };

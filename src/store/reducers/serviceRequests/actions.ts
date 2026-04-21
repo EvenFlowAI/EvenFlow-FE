@@ -125,18 +125,14 @@ export const setAssignedOrdering = createAction<IOrder<IAssignedServiceRequest>>
 );
 
 export const downloadAssignedServiceRequestsCSV =
-  (
-    serviceCenterId: number,
-    onError: (errorText: string) => void,
-    onSuccess: () => void
-  ): AppThunk =>
+  (serviceCenterId: number, onError: (errorText: string) => void): AppThunk =>
   () => {
     Api.call(Api.endpoints.ServiceRequests.GetAssignedOverridesCSV, {
       params: { serviceCenterId },
     })
       .then(r => {
         const contentDisposition = r.headers['content-disposition'];
-        const contentType = r.headers['content-type'];
+        const contentType = r.headers['content-type'] || 'text/csv';
         const fileName =
           getFileNameFromContentDisposition(contentDisposition) ??
           `service-requests-${serviceCenterId}.csv`;
@@ -150,7 +146,6 @@ export const downloadAssignedServiceRequestsCSV =
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        onSuccess();
       })
       .catch(err => {
         const message = err?.response?.data?.message || err.message || 'Unknown error';
