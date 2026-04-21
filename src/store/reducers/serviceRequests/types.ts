@@ -55,6 +55,7 @@ export interface IRequiredSkill {
 export interface IServiceBookRef {
   id?: number;
   name?: string;
+  isActive?: boolean;
 }
 
 export interface IRequiredSkillData extends IRequiredSkill {
