@@ -240,7 +240,8 @@ export const updateAppointmentAddress = createAction<{
   city: string;
   state: string;
   street: string;
-}>('fAppointment/updateAppointmentAddress');
+}>('fAppointment/UpdateAppointmentAddress');
+export const setIsSVWithoutConfig = createAction<boolean>('fAppointment/SetIsSVWithouConfig');
 
 export const setValueServicePartial =
   (data: Partial<IValueService>): AppThunk =>

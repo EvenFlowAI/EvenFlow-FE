@@ -35,6 +35,7 @@ import {
   clearAppointmentSteps,
   loadActiveTransportations,
   searchForCustomerConsents,
+  setIsSVWithoutConfig,
   setServiceTypeOption,
   setTime,
   setWelcomeScreenView,
@@ -629,6 +630,7 @@ export const AppointmentSlots: React.FC<
   const handleNext = useCallback((): void => {
     handleGANext();
     onNext();
+    dispatch(setIsSVWithoutConfig(false));
   }, [onNext, handleGANext]);
 
   const handleBack = useCallback((): void => {

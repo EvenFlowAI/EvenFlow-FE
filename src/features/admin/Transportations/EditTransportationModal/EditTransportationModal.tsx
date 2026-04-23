@@ -7,6 +7,7 @@ import {
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import {
   ETransportationDays,
+  ETransportationType,
   ITransportationOptionFull,
 } from '../../../../store/reducers/transportationNeeds/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -220,6 +221,7 @@ export const EditTransportationModal: React.FC<
 
                             <div className={classes.label}>Time Of Day</div>
                             <ClocksRender
+                              disabled={editingElement?.type === ETransportationType.PickUpDelivery}
                               errors={errors}
                               updateLocalRule={updateLocalRule}
                               index={index}

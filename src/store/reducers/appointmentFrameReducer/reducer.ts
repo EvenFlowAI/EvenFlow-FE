@@ -38,6 +38,7 @@ import {
   setHashKey,
   setHoursOfOperations,
   setInitialTiming,
+  setIsSVWithoutConfig,
   setLoadingPackages,
   setMaintenanceDetails,
   setMobileServiceAvailability,
@@ -170,6 +171,7 @@ const initialState: TState = {
     serviceType: true,
     advisor: true,
   },
+  isSVWithoutConfig: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -492,6 +494,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         street: payload.street,
         streetName: payload.street,
         state: payload.state,
+      };
+    })
+    .addCase(setIsSVWithoutConfig, (state, { payload }) => {
+      return {
+        ...state,
+        isSVWithoutConfig: payload,
       };
     })
 );

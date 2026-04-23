@@ -14,7 +14,9 @@ import {
   loadFilteredZip,
   setAddress,
   setCity,
+  setCurrentFrameScreen,
   setDefaultVisitCenterOption,
+  setIsSVWithoutConfig,
   setPoliticalState,
   setServiceTypeOption,
   setShowServiceCentersList,
@@ -22,6 +24,7 @@ import {
   setStreetName,
   setWelcomeScreenView,
   setZipCode,
+  updateAppointmentDetails,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import {
   EAncillaryType,
@@ -42,6 +45,11 @@ import { Routes } from '../../../../../routes/constants';
 import { SelectWrapper, useAutocompleteStyles } from './styles';
 import { useLocationStyles } from '../../../../../hooks/styling/useLocationStyles';
 import { TYourLocationProps } from './types';
+import {
+  selectAppointment,
+  selectServiceValetAppointment,
+} from '../../../../../store/reducers/appointment/actions';
+import { EAppointmentTimingType } from '../../../../../store/reducers/appointment/types';
 
 const YourLocation: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>
@@ -56,6 +64,7 @@ const YourLocation: React.FC<
     serviceOptionChangedFromSlotPage,
     prevSelectedOption,
     ancillaryPriceLoading,
+    isSVWithoutConfig,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const [zip, setZip] = useState<string>('');
   const [isFormChecked, setFormChecked] = useState<boolean>(false);
@@ -69,6 +78,8 @@ const YourLocation: React.FC<
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
@@ -128,7 +139,14 @@ const YourLocation: React.FC<
     }
   }, [customerLoadedData, address, zipCodeValue]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setIsSVWithoutConfig(false));
+    };
+  }, []);
+
   const clearSelectedData = () => {
+    console.log('8');
     dispatch(
       setSideBarSteps(serviceType === EServiceType.VisitCenter ? ['serviceNeeds'] : ['location'])
     );
@@ -192,8 +210,45 @@ const YourLocation: React.FC<
     history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
   };
 
+  const clearPrevAppointments = () => {
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+  };
+
   const handleBack = () => {
-    serviceOptionChangedFromSlotPage ? setPrevSelectedOption() : onBack();
+    if (isSVWithoutConfig) {
+      const visitCenterOptions = firstScreenOptions.find(
+        item => item.type === EServiceType.VisitCenter
+      );
+      dispatch(
+        updateAppointmentDetails({
+          address: null,
+          advisor: null,
+          date: null,
+          timing: EAppointmentTimingType.FirstAvailable,
+          transportation: visitCenterOptions?.transportationOption || null,
+          zip: '',
+          serviceTypeOption: visitCenterOptions || null,
+        })
+      );
+      clearPrevAppointments();
+
+      const prevConfig = config.find(el => el.serviceType === visitCenterOptions?.type);
+      const transportationStepNeeded = prevConfig?.transportationNeeds;
+      const advisorsStepNeeded = prevConfig?.advisorSelection;
+
+      dispatch(
+        setCurrentFrameScreen(
+          transportationStepNeeded
+            ? 'transportationNeeds'
+            : advisorsStepNeeded
+              ? 'consultantSelection'
+              : 'serviceNeeds'
+        )
+      );
+    } else {
+      serviceOptionChangedFromSlotPage ? setPrevSelectedOption() : onBack();
+    }
   };
 
   const onSuccess = (data: TAncillaryPriceByZip) => {
