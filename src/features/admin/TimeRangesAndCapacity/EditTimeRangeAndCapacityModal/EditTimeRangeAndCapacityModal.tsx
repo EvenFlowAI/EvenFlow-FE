@@ -108,7 +108,13 @@ const EditTimeRangeAndCapacityModal: React.FC<
   }: React.ChangeEvent<HTMLInputElement>) => {
     setFormIsChecked(false);
     setErrors([]);
-    setDailyCapacity(value ? +value : null);
+    setDailyCapacity(value === '' ? 0 : +value);
+  };
+
+  const handleDailyCapacityKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === '.' || e.key === ',' || e.key.toLowerCase() === 'e') {
+      e.preventDefault();
+    }
   };
 
   const onSave = () => {
@@ -257,8 +263,11 @@ const EditTimeRangeAndCapacityModal: React.FC<
               error={formIsChecked && errors.some(e => e.toLowerCase().includes('capacity'))}
               inputProps={{
                 min: 0,
+                max: 99,
+                step: 1,
               }}
               value={dailyCapacity}
+              onKeyDown={handleDailyCapacityKeyDown}
               onChange={handleChangeDailyCapacity}
               fullWidth
               id="dailyCapacity"
