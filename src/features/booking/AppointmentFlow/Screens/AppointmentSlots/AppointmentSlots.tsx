@@ -249,6 +249,8 @@ export const AppointmentSlots: React.FC<
               dispatch(selectServiceValetAppointment(firstASlotWithData));
 
               setDate(dayjs.utc(firstASlotWithData.date).startOf('day'));
+            } else {
+              showError('There was an error loading capacity data. Please try again later.');
             }
           }
         } else {
@@ -296,6 +298,7 @@ export const AppointmentSlots: React.FC<
               : selectFirstSlot();
           } else {
             setDate(dayjs.utc(currentAppointment.date).startOf('day'));
+            if (serviceTypeOption?.type === EServiceType.PickUpDropOff) selectFirstSlot();
           }
         } else {
           selectedTime
@@ -443,7 +446,7 @@ export const AppointmentSlots: React.FC<
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
-    setFirstDayWithSlots(apiStartDate);
+    if (!firstDayWithSlots) setFirstDayWithSlots(apiStartDate);
     setCurrentApiStartDate(apiStartDate);
     setCurrentApiEndDate(apiEndDate);
   };
@@ -458,6 +461,10 @@ export const AppointmentSlots: React.FC<
     if (id) {
       if (!firstDayWithSlots && currentApiStartDate) {
         setFirstDayWithSlots(currentApiStartDate);
+      } else {
+        if (!firstDayWithSlots && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+          setFirstDayWithSlots(requestedStartDate);
+        }
       }
       setCurrentApiStartDate(requestedStartDate ?? null);
       setCurrentApiEndDate(requestedEndDate ?? null);
