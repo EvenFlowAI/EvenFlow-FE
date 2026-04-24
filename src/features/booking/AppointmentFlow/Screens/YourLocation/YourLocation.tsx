@@ -33,7 +33,7 @@ import {
   TAncillaryPriceByZip,
 } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import { useTranslation } from 'react-i18next';
-import AncillaryPriceModal from '../../../../../components/modals/booking/AncillaryPriceModal/AncillaryPriceModal';
+import LocationPriceModal from '../../../../../components/modals/booking/AncillaryPriceModal/AncillaryPriceModal';
 import UnavailableServiceModal from '../../../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { useHistory, useParams } from 'react-router-dom';
@@ -392,7 +392,7 @@ const YourLocation: React.FC<
         nextLabel={t('Next')}
         loading={ancillaryPriceLoading}
       />
-      <AncillaryPriceModal
+      <LocationPriceModal
         backButtonText={
           customerLoadedData?.isUpdating && !serviceOptionChangedFromSlotPage
             ? t('Back')

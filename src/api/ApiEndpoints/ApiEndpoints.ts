@@ -452,7 +452,7 @@ export class Api {
         method: 'patch',
       },
       GetAllServiceCenterSettings: {
-        route: '/service-center-settings/{id}',
+        route: '/service-center-settings',
         method: 'get',
       },
       UpdatePredictionParams: {

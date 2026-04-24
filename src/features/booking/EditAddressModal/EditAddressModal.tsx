@@ -23,6 +23,8 @@ import { geocodeByPlaceId } from 'react-google-places-autocomplete';
 import { parseGeoCode } from '../AppointmentFlow/Screens/YourLocation/utils';
 import { IAncillaryByZipRequest } from '../../../store/reducers/appointmentFrameReducer/types';
 import { useException } from '../../../hooks/useException/useException';
+import AncillaryPriceModal from '../SwitchFlowModal/AncillaryPriceModal/AncillaryPriceModal';
+import { useModal } from '../../../hooks/useModal/useModal';
 
 type TProps = DialogProps & {};
 
@@ -38,6 +40,11 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
   const [zip, setZip] = useState<string | null>(null);
   const [userAddress, setUserAddress] = useState<any>(null);
   const [isAddressValid, setAddressValid] = useState<boolean>(false);
+  const {
+    isOpen: isAncillaryPriceOpen,
+    onOpen: onAncillaryPriceOpen,
+    onClose: onAncillaryPriceClose,
+  } = useModal();
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -120,7 +127,7 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         serviceTypeOptionId: slotsServiceTypeOptionId,
       };
 
-      dispatch(loadAncillaryPriceByZip(data, onSuccess, handleError, () => {}));
+      dispatch(loadAncillaryPriceByZip(data, onAncillaryPriceOpen, handleError, () => {}));
     }
   };
 
@@ -168,6 +175,12 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
           {t('Next')}
         </Button>
       </DialogActions>
+      <AncillaryPriceModal
+        onNext={onSuccess}
+        open={isAncillaryPriceOpen}
+        onClose={onAncillaryPriceClose}
+        serviceString={t('Pick Up / Drop Off')}
+      />
     </BaseModal>
   );
 };

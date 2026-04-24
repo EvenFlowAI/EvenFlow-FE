@@ -568,7 +568,9 @@ export const loadAllServiceCenterSettings =
   (serviceCenterId: number): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.ServiceCenters.GetAllServiceCenterSettings, {
-      urlParams: { id: serviceCenterId },
+      params: {
+        serviceCenterId,
+      },
     })
       .then(response => {
         if (response?.data?.data) {
