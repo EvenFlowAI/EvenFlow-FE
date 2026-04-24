@@ -132,27 +132,13 @@ export const ServiceRequests = () => {
     }
   };
 
-  const handleDownloadCSVError = (e: string) => {
-    showError(e);
-  };
-
-  const handleDownloadCSVSuccess = () => {
-    showMessage('Successfully downloaded CSV file');
-  };
-
   const handleDownloadCSV = () => {
     if (!selectedSC) {
       showError('No service center selected');
       return;
     }
 
-    dispatch(
-      downloadAssignedServiceRequestsCSV(
-        selectedSC.id,
-        handleDownloadCSVError,
-        handleDownloadCSVSuccess
-      )
-    );
+    dispatch(downloadAssignedServiceRequestsCSV(selectedSC.id, onError));
   };
 
   return (

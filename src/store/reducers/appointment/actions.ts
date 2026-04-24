@@ -482,8 +482,7 @@ export const getAppointmentAvailabilityCSVTekion =
   (
     serviceCenterId: number,
     formTekion: TFormTekion,
-    showError: (errorText: string) => void,
-    handleSuccess: () => void
+    showError: (errorText: string) => void
   ): AppThunk =>
   () => {
     Api.call(Api.endpoints.AppointmentSlots.GetDMSAvailabilityCSV, {
@@ -506,7 +505,6 @@ export const getAppointmentAvailabilityCSVTekion =
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        handleSuccess();
       })
       .catch(err => {
         const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';
@@ -518,8 +516,7 @@ export const getAppointmentAvailabilityCSVXTime =
   (
     serviceCenterId: number,
     formXTime: TFormXTime,
-    showError: (errorText: string) => void,
-    handleSuccess: () => void
+    showError: (errorText: string) => void
   ): AppThunk =>
   () => {
     let pickUpAddress: string | null = null;
@@ -556,7 +553,6 @@ export const getAppointmentAvailabilityCSVXTime =
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        handleSuccess();
       })
       .catch(err => {
         const backendMessage = err?.response?.data?.message || err.message || 'Unknown error';

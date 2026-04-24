@@ -48,7 +48,7 @@ const TimeRangesAndCapacity = () => {
             dropOffMax: timeRange?.dropOffMax
               ? dayjs(timeRange?.dropOffMax, timeWithSecond).format(time24HourFormat)
               : '-',
-            capacity: timeRange?.capacity ?? null,
+            capacity: timeRange?.capacity ?? 0,
             id: timeRange?.id ?? 0,
           };
         });
@@ -90,7 +90,7 @@ const TimeRangesAndCapacity = () => {
     {
       header: 'Daily Capacity',
       align: 'center',
-      val: el => (el.capacity != null ? el.capacity.toString() : '-'),
+      val: el => el.capacity?.toString(),
     },
     {
       header: '',

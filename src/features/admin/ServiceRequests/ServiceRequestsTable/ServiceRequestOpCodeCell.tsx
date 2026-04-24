@@ -6,20 +6,14 @@ type TProps = {
   request: IAssignedServiceRequest;
 };
 
-const getServiceBookNames = (request: IAssignedServiceRequest): string[] => {
-  if (!request.serviceBooks?.length) {
-    return [];
-  }
-
-  return request.serviceBooks
-    .map(serviceBook => serviceBook.name)
-    .filter((name): name is string => Boolean(name));
-};
-
 export const ServiceRequestOpCodeCell: React.FC<TProps> = ({ request }) => {
-  const serviceBookNames = getServiceBookNames(request);
+  const serviceBooks = request.serviceBooks ?? [];
+  const sortedServiceBooks = [...serviceBooks].sort((a, b) => {
+    if (a.isActive === b.isActive) return 0;
+    return a.isActive ? -1 : 1;
+  });
 
-  if (!serviceBookNames.length) {
+  if (!serviceBooks.length) {
     return <>{request.serviceRequest.code}</>;
   }
 
@@ -28,7 +22,9 @@ export const ServiceRequestOpCodeCell: React.FC<TProps> = ({ request }) => {
       title={
         <>
           <div>Service Books</div>
-          <div>{serviceBookNames.join(', ')}</div>
+          <div>
+            {sortedServiceBooks.map(b => (b.isActive ? b.name : `${b.name} (Inactive)`)).join(', ')}
+          </div>
         </>
       }
       placement="top"
