@@ -11,6 +11,9 @@ import { EServiceType } from '../../store/reducers/appointmentFrameReducer/types
 import {
   loadFilteredZip,
   setAddress,
+  setCity,
+  setPoliticalState,
+  setStreetName,
   setZipCode,
 } from '../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -137,6 +140,10 @@ const UserLocation: React.FC<TProps> = ({
           e.value?.structured_formatting?.main_text,
           e.value?.structured_formatting?.secondary_text
         );
+
+        if (data.city) dispatch(setCity(data.city));
+        if (data.state) dispatch(setPoliticalState(data.state));
+        if (data.address) dispatch(setStreetName(data.address));
 
         if (!data.postalCode) {
           setZip('');
