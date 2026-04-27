@@ -1165,6 +1165,7 @@ export const createOrUpdateAppointment =
           : null,
       isWaitlist: Boolean(isWaitlist),
       customerConsentIds: appointmentFrame.acceptedConsentIds,
+      isServiceValet: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff,
     };
 
     if (isAdmin) delete data.schedulerType;

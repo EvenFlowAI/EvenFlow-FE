@@ -271,6 +271,7 @@ export interface ICreateAppointmentRequest {
   isWaitlist: boolean;
   customerConsentIds: number[];
   isAppointmentClone?: boolean;
+  isServiceValet?: boolean;
 }
 
 export interface ISearchConsentsData {
