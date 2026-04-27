@@ -36,24 +36,11 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     if (timeSlot?.date) {
       if (timeSlot?.date) {
         const timeSlotDate = timeSlot.date.toString().split('T')[0];
-        const [h, m, s] = timeSlot?.pickUpMin?.split(':') ?? [];
-        const timeSlotTime = dayjs
-          .utc(timeSlotDate)
-          .set('hour', +h)
-          .set('minute', +m)
-          .set('second', +s);
         if (
           dayjs.utc(timeSlotDate).isSame(dayjs.utc(), 'day') &&
           dayjs.utc(date).isSame(dayjs.utc(), 'day')
         ) {
-          const differenceInMSeconds = dayjs(
-            dayjs.utc(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')
-          ).diff(dayjs());
-          if (differenceInMSeconds > 0) {
-            setTimeout(() => setTimePassed(true), differenceInMSeconds);
-          } else {
-            setTimePassed(true);
-          }
+          setTimePassed(false);
         } else {
           setTimePassed(false);
         }

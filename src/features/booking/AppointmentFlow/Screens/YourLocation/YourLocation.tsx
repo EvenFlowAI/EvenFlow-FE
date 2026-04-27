@@ -146,7 +146,6 @@ const YourLocation: React.FC<
   }, []);
 
   const clearSelectedData = () => {
-    console.log('8');
     dispatch(
       setSideBarSteps(serviceType === EServiceType.VisitCenter ? ['serviceNeeds'] : ['location'])
     );

@@ -232,7 +232,10 @@ export const AppointmentSlots: React.FC<
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
           firstAvailableSlot = sorted.find(slot => {
             const formatted = dayjs(slot?.date).add(Math.abs(utcOffset), 'minutes');
-            return formatted.isAfter(getClearDate(newDate));
+            return (
+              formatted.isAfter(getClearDate(newDate)) ||
+              formatted.isSame(getClearDate(newDate), 'day')
+            );
           });
           if (!firstAvailableSlot) {
             console.info('Can not assign first available slot for pickUpDropOff');

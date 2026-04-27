@@ -99,7 +99,6 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         if (data.city) dispatch(setCity(data.city));
         if (data.state) dispatch(setPoliticalState(data.state));
         if (data.address) dispatch(setStreetName(data.address));
-        console.log(data);
         dispatch(
           updateAppointmentAddress({
             address: userAddress,
