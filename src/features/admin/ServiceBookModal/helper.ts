@@ -115,18 +115,12 @@ export const validateZones = (
 ): boolean => {
   let valid = true;
 
-  if (state.mobileZones.length && state.selectedServiceValetZones.length && !form.isVisitCenter) {
+  if (state.mobileZones.length && state.selectedServiceValetZones.length) {
     showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
     valid = false;
   }
 
-  if (state.mobileZones.length && form.isVisitCenter && !state.selectedServiceValetZones.length) {
-    showError('Visit Center option can not be selected as Mobile Service zones were added');
-    valid = false;
-  }
-
-  if (state.mobileZones.length && state.selectedServiceValetZones.length && form.isVisitCenter) {
-    showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
+  if (state.mobileZones.length && !state.selectedServiceValetZones.length) {
     showError('Visit Center option can not be selected as Mobile Service zones were added');
     valid = false;
   }
@@ -137,4 +131,3 @@ export const validateZones = (
 export const hasMobileZones = (state: ServiceBookState): boolean => !!state.mobileZones.length;
 export const hasServiceValetZones = (state: ServiceBookState): boolean =>
   !!state.selectedServiceValetZones.length;
-export const isVisitCenterSelected = (form: TForm): boolean => form.isVisitCenter;

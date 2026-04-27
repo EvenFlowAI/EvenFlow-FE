@@ -16,7 +16,6 @@ export type TForm = {
   advisors: IAdvisorShort[];
   technicians: IAdvisorShort[];
   serviceRequests: IAssignedServiceRequestShort[];
-  isVisitCenter: boolean;
 };
 
 export const initialForm: TForm = {
@@ -25,7 +24,6 @@ export const initialForm: TForm = {
   advisors: [],
   technicians: [],
   serviceRequests: [],
-  isVisitCenter: true,
 };
 
 export type ServiceBookState = {

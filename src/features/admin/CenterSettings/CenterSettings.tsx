@@ -23,6 +23,8 @@ import {
   loadMobServiceZones,
   loadMobileServiceCenterSettings,
 } from '../../../store/reducers/mobileService/actions';
+import LeadTime from './LeadTime/LeadTime';
+import LeadTimeModal from './LeadTimeModal/LeadTimeModal';
 const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   const { centerSettings, isLoading } = useSelector(
     (state: RootState) => state.capacityServiceValet
@@ -35,6 +37,7 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
     isOpen: isServiceValetOpsCodeOpen,
     onClose: onServiceValetOpsCodeClose,
   } = useModal();
+  const { onOpen: onLeadTimeOpen, isOpen: isLeadTimeOpen, onClose: onLeadTimeClose } = useModal();
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
   const showError = useException();
@@ -127,6 +130,7 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
           isLoading={isLoading}
         />
       </>
+      <LeadTime onEdit={onLeadTimeOpen} />
       <div style={{ visibility: 'hidden' }}></div>
       <ClockTimePicker
         open={isOpen}
@@ -143,6 +147,7 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
         open={isServiceValetOpsCodeOpen}
         onClose={onServiceValetOpsCodeClose}
       />
+      <LeadTimeModal open={isLeadTimeOpen} onClose={onLeadTimeClose} />
     </Grid>
   );
 };

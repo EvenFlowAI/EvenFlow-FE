@@ -53,6 +53,8 @@ export interface ICenterSettings {
   dmsAppointmentTime?: string;
   serviceRequest?: ICenterSettingsSR;
   zoneServiceRequests: ISVZoneDefaultOpsCode[];
+  appointmentLeadDays: number;
+  syncAppointmentNativeTime: boolean;
 }
 
 export interface IShowDropOffTime {

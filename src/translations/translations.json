@@ -366,6 +366,7 @@
       "Book Another Vehicle": "Book Another Vehicle",
       "Transportation": "Transportation",
       "We need additional information to schedule your appointment": "We need additional information to schedule your {{serviceName}} appointment",
+      "Please confirm your pickup address to continue": "Please confirm your pickup address to continue",
       "Do you have a preferred Service Advisor?": "Do you have a preferred Service Advisor?",
       "First Available": "First Available",
       "Preferred Date": "Preferred Date",

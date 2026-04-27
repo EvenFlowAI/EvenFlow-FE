@@ -18,7 +18,7 @@ import { DialogProps } from '../../../../components/modals/BaseModal/types';
 type TDisplayAncillaryPriceProps = DialogProps & {
   onNext: TCallback;
   serviceString: string;
-  onBack: TCallback;
+  onBack?: TCallback;
 };
 
 const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
@@ -38,7 +38,7 @@ const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
       : `${ancillaryPrice?.feeAmount}%`;
 
   const handleBack = () => {
-    onBack();
+    if (onBack) onBack();
     onClose();
   };
 
@@ -68,7 +68,7 @@ const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
       </DialogContent>
       <CenteredButtonsWrapper>
         <Button onClick={handleBack} variant="outlined" style={{ backgroundColor: '#F7F8FB' }}>
-          {t('Visit Center Instead')}
+          {onBack ? t('Visit Center Instead') : t('Back')}
         </Button>
         <Button onClick={onSubmit} variant="contained">
           {`${t('Schedule')} ${serviceString}`}

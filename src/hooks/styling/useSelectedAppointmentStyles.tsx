@@ -29,7 +29,7 @@ export const useSelectedAppointmentStyles = makeStyles()(theme => ({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    margin: '0 0 10px 0',
+    margin: '0',
     textTransform: 'uppercase',
   },
 }));

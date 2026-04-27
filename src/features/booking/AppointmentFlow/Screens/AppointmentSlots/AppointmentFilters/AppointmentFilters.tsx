@@ -112,7 +112,6 @@ const AppointmentFilters: React.FC<TProps> = ({
           <SelectedTransportation
             isVisible={isVisibleTransportation()}
             setSelectedOption={setSelectedOption}
-            onChangeServiceOption={onChangeServiceOption}
             onSwitchFlowOpen={onSwitchFlowOpen}
           />
           <SelectedConsultant isVisible={isAdvisorVisible} />

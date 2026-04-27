@@ -11,14 +11,14 @@ import { useStyles } from './styles';
 import { CenteredButtonsWrapper } from '../../../styled/BfButtonsWrapper';
 import { Button } from '@mui/material';
 
-type TDisplayAncillaryPriceProps = DialogProps & {
+type TDisplayLocationPriceProps = DialogProps & {
   onNext: TCallback;
   serviceString: string;
   onBack: TCallback;
   backButtonText: string;
 };
 
-const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
+const LocationPriceModal: React.FC<TDisplayLocationPriceProps> = ({
   open,
   onClose,
   onNext,
@@ -77,4 +77,4 @@ const AncillaryPriceModal: React.FC<TDisplayAncillaryPriceProps> = ({
   );
 };
 
-export default AncillaryPriceModal;
+export default LocationPriceModal;

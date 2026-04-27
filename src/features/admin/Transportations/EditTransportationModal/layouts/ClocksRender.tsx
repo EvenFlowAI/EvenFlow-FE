@@ -12,9 +12,10 @@ interface IClocksRender {
   errors: string[];
   updateLocalRule: (index: number, rule: Partial<TRuleState>) => void;
   index: number;
+  disabled: boolean;
 }
 
-const ClocksRender = ({ rule, errors, updateLocalRule, index }: IClocksRender) => {
+const ClocksRender = ({ rule, errors, updateLocalRule, index, disabled }: IClocksRender) => {
   const { classes } = useStyles();
 
   const { formIsChecked } = useSelector((state: RootState) => state.serviceRequests);
@@ -23,6 +24,7 @@ const ClocksRender = ({ rule, errors, updateLocalRule, index }: IClocksRender) =
     <div className={classes.smallWrapper}>
       <ClockTimePicker
         withClear
+        disabled={disabled}
         error={
           errors.some(
             e => e.includes('time') || e.includes('Start') || e.includes('configuration')
@@ -49,13 +51,14 @@ const ClocksRender = ({ rule, errors, updateLocalRule, index }: IClocksRender) =
         }
         fullWidth
         InputProps={{
-          endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
+          endAdornment: disabled ? null : <QueryBuilder color={'disabled'} cursor="pointer" />,
           placeholder: 'Start Time',
         }}
       />
       <span>_</span>
       <ClockTimePicker
         withClear
+        disabled={disabled}
         error={
           errors.some(
             e => e.includes('time') || e.includes('End') || e.includes('configuration')
@@ -82,7 +85,7 @@ const ClocksRender = ({ rule, errors, updateLocalRule, index }: IClocksRender) =
         }
         fullWidth
         InputProps={{
-          endAdornment: <QueryBuilder color={'disabled'} cursor="pointer" />,
+          endAdornment: disabled ? null : <QueryBuilder color={'disabled'} cursor="pointer" />,
           placeholder: 'End Time',
         }}
       />

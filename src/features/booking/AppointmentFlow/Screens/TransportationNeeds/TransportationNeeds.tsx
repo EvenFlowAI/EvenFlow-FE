@@ -10,6 +10,7 @@ import {
   loadActiveTransportations,
   setCurrentFrameScreen,
   setInitialTiming,
+  setIsSVWithoutConfig,
   setSideBarSteps,
   setTiming,
   setTransportation,
@@ -41,7 +42,6 @@ export const TransportationNeeds: React.FC<TProps> = ({
   const {
     transportation,
     isConsentsLoading,
-    trackerData,
     transportations,
     isTransportationsLoading,
     sideBarSteps,
@@ -49,6 +49,8 @@ export const TransportationNeeds: React.FC<TProps> = ({
   const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector(({ serviceTypes }: RootState) => serviceTypes);
   const [selectedOption, setSelectedOption] = useState<IFirstScreenOption | null>(null);
+  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -99,21 +101,30 @@ export const TransportationNeeds: React.FC<TProps> = ({
       setSelectedOption(serviceValetOption);
       onSwitchFlowOpen();
       clearSteps();
+    } else {
+      const visitCenterOption = firstScreenOptions.find(el => el.type === EServiceType.VisitCenter);
+
+      if (visitCenterOption) {
+        const serviceValetOption = {
+          ...visitCenterOption,
+          type: EServiceType.PickUpDropOff,
+        };
+
+        dispatch(selectAppointment(null));
+        dispatch(setTransportation(null));
+        setSelectedOption(serviceValetOption);
+        onSwitchFlowOpen();
+        clearSteps();
+        dispatch(setIsSVWithoutConfig(true));
+      }
     }
   };
 
   const handleNext = (transportation: ITransportation | null): void => {
     handleGA(transportation);
-    const serviceValetOption = firstScreenOptions.find(
-      el => el.type === EServiceType.PickUpDropOff
-    );
 
     if (transportation?.type === ETransportationType.PickUpDelivery) {
-      if (serviceValetOption) {
-        switchToServiceValet();
-      } else {
-        onNext();
-      }
+      switchToServiceValet();
     } else {
       onNext();
     }
@@ -135,6 +146,19 @@ export const TransportationNeeds: React.FC<TProps> = ({
       ) : transportations.length ? (
         <CardsWrapper>
           {transportations.map(item => {
+            if (item.type === ETransportationType.PickUpDelivery) {
+              return (
+                config.find(c => c.serviceType === EServiceType.PickUpDropOff)?.available && (
+                  <TransportationOptionCard
+                    key={item.id}
+                    active={transportation?.id === item.id}
+                    onSelect={() => handleSelectOption(item)}
+                    card={item}
+                  />
+                )
+              );
+            }
+
             return (
               <TransportationOptionCard
                 key={item.id}

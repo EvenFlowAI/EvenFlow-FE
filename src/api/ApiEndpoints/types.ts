@@ -284,6 +284,7 @@ export interface IApiEndpoints {
     | 'UpdateEngineTypeFieldName'
     | 'GetAssignedAdvisorMethod'
     | 'UpdateAssignedAdvisorMethod'
+    | 'GetAllServiceCenterSettings'
     | 'SetEmailRequired',
     TApiEndpoint
   >;
@@ -338,6 +339,7 @@ export interface IApiEndpoints {
     | 'ChangeServiceRequest'
     | 'ChangeDmsTimeStamp'
     | 'GetServiceValetSettings'
+    | 'UpdateServiceValetSettings'
     | 'UpdateZonesServiceRequests'
     | 'GetMobileServiceSettings',
     TApiEndpoint

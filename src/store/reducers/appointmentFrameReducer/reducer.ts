@@ -38,6 +38,7 @@ import {
   setHashKey,
   setHoursOfOperations,
   setInitialTiming,
+  setIsSVWithoutConfig,
   setLoadingPackages,
   setMaintenanceDetails,
   setMobileServiceAvailability,
@@ -77,6 +78,7 @@ import {
   setWelcomeScreenView,
   setZipCode,
   switchLanguage,
+  updateAppointmentAddress,
   updateAppointmentDetails,
   updateVehicle,
 } from './actions';
@@ -169,6 +171,7 @@ const initialState: TState = {
     serviceType: true,
     advisor: true,
   },
+  isSVWithoutConfig: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -480,6 +483,23 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         transportation: payload.transportation,
         selectedTime: payload.date,
         serviceTypeOption: payload.serviceTypeOption,
+      };
+    })
+    .addCase(updateAppointmentAddress, (state, { payload }) => {
+      return {
+        ...state,
+        address: payload.address,
+        zipCode: payload.zip,
+        city: payload.city,
+        street: payload.street,
+        streetName: payload.street,
+        state: payload.state,
+      };
+    })
+    .addCase(setIsSVWithoutConfig, (state, { payload }) => {
+      return {
+        ...state,
+        isSVWithoutConfig: payload,
       };
     })
 );

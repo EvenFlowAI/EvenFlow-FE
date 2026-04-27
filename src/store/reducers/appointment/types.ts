@@ -1,4 +1,4 @@
-import { IAddress } from '../dealershipGroups/types';
+import { IAddress, UpdatedAddress } from '../dealershipGroups/types';
 import { EDemandCategory, EPricingDisplayType } from '../pricingSettings/types';
 import { EOfferType, IOffer } from '../offers/types';
 import {
@@ -14,6 +14,7 @@ import {
 import { EPackagePricingType } from '../appointmentFrameReducer/types';
 import { TEmailRequirement } from '../screenSettings/types';
 import { ParsableDate, TParsableDate } from '../../../types/types';
+import { ServiceValetCapacity } from './add-types';
 
 export interface IServiceCenterProfile {
   id: number;
@@ -164,7 +165,6 @@ export interface IAppointmentSlotsRequest {
   serviceCenterId: number;
   maintenancePackageOptionId?: number | null;
   maintenancePackageOption: MPOptionShort | null;
-  fromDate: ParsableDate;
   endDate: ParsableDate;
   startDate: ParsableDate;
   appointmentTimingType: EAppointmentTimingType;
@@ -182,8 +182,7 @@ export interface IAppointmentSlotsRequest {
   appointmentHashKey?: string;
   jobType?: number | null;
   serviceTypeOptionId: number | null;
-  zipCode?: string;
-  address?: string;
+  address?: string | UpdatedAddress;
   recalls: TRecallForRequest[];
   transportationOptionId: number | null;
 }
@@ -235,6 +234,7 @@ export type TAppointmentState = {
   slotsTransportationId: number | null;
   slotsSearchedDate: ParsableDate;
   isCloneMode: boolean;
+  serviceValetCapacity: ServiceValetCapacity | null;
 };
 
 export enum EContactMethodTypes {
@@ -278,7 +278,7 @@ export interface IServiceValetAppointment {
   pickUpMin: string;
   pickUpMax: string;
   dropOffDescription: string;
-  available: number;
+  availableQuantity: number;
   price: IServiceValetAppointmentPrice;
   serviceRequestPrices: IServiceValetRequestPrice[];
   dropOffMin?: string;

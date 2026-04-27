@@ -60,9 +60,15 @@ export const loadCenterSettings =
   (id: number): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
-    Api.call(Api.endpoints.ServiceValet.GetServiceValetSettings, { urlParams: { id } })
+    Api.call(Api.endpoints.ServiceValet.GetServiceValetSettings, {
+      params: {
+        serviceCenterId: id,
+      },
+    })
       .then(result => {
-        if (result) dispatch(getCenterSettings(result.data));
+        if (result.data?.data) {
+          dispatch(getCenterSettings(result.data.data));
+        }
       })
       .catch(err => {
         console.log('load service valet service center settings error', err);
@@ -222,4 +228,29 @@ export const updateServiceValetZonesOpsCodes =
         console.log('update service valet zones service requests error', err);
       })
       .finally(() => dispatch(setLoading(false)));
+  };
+
+export const updateServiceValetSettings =
+  (id: number, changes: Partial<Record<string, unknown>>, onSuccess?: () => void): AppThunk =>
+  (dispatch, getState) => {
+    const { centerSettings } = getState().capacityServiceValet;
+
+    const updatedSettings = {
+      ...centerSettings,
+      ...changes,
+    };
+
+    Api.call(Api.endpoints.ServiceValet.UpdateServiceValetSettings, {
+      params: { serviceCenterId: id },
+      data: updatedSettings,
+    })
+      .then(r => {
+        if (r) {
+          dispatch(loadCenterSettings(id));
+          if (onSuccess) onSuccess();
+        }
+      })
+      .catch(err => {
+        console.log('update service valet settings error', err);
+      });
   };

@@ -170,7 +170,6 @@ export const ServiceBookModal: React.FC<
             mobileZones: state.mobileZones.map(zone => zone.id),
             serviceValetZones: state.selectedServiceValetZones.map(zone => zone.id),
             engineTypes: state.selectedEngineTypes.map(type => type.id),
-            isVisitCenter: form.isVisitCenter,
           };
           if (state.jobType) data.jobType = state.jobType.value;
           if (state.appointmentType) data.appointmentType = state.appointmentType.value;
@@ -232,8 +231,6 @@ export const ServiceBookModal: React.FC<
               setState={setState}
             />
             <SettingAutocompleteGroup
-              form={form}
-              setForm={setForm}
               setFormIsChecked={setFormIsChecked}
               formIsChecked={formIsChecked}
               loading={loading}

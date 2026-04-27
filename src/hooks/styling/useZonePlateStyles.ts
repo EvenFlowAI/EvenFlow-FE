@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useZonePlateStyles = makeStyles()({
   paper: {
-    height: '100%',
+    height: '201px',
     borderRadius: 0,
     padding: 20,
     position: 'relative',

@@ -77,7 +77,7 @@ export const Transportations = () => {
         }
       } else {
         if (!pickUpConfig?.available)
-          showError('Pick Up / Drop Off booking flow configuration must be "ON"');
+          showError('"Pick Up Drop Off" booking configuration must be enabled first');
       }
     }
   };

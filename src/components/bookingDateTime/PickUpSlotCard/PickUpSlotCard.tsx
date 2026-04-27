@@ -36,24 +36,11 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
     if (timeSlot?.date) {
       if (timeSlot?.date) {
         const timeSlotDate = timeSlot.date.toString().split('T')[0];
-        const [h, m, s] = timeSlot?.pickUpMin?.split(':') ?? [];
-        const timeSlotTime = dayjs
-          .utc(timeSlotDate)
-          .set('hour', +h)
-          .set('minute', +m)
-          .set('second', +s);
         if (
           dayjs.utc(timeSlotDate).isSame(dayjs.utc(), 'day') &&
           dayjs.utc(date).isSame(dayjs.utc(), 'day')
         ) {
-          const differenceInMSeconds = dayjs(
-            dayjs.utc(timeSlotTime).format('YYYY-MM-DDTHH:mm:ss')
-          ).diff(dayjs());
-          if (differenceInMSeconds > 0) {
-            setTimeout(() => setTimePassed(true), differenceInMSeconds);
-          } else {
-            setTimePassed(true);
-          }
+          setTimePassed(false);
         } else {
           setTimePassed(false);
         }
@@ -87,13 +74,13 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
       </div>
       <div className={classes.rightPart}>
         <div className={classes.availability}>
-          {timeSlot && timeSlot.available > 0 ? (
+          {timeSlot && timeSlot.availableQuantity > 0 ? (
             <div className={classes.availabilityItem} style={{ color: '#008331' }}>
               <div className={classes.textWithIcon}>
                 {t('Available')} <CheckCircleOutlined style={{ marginLeft: 8 }} />{' '}
               </div>
               <div>
-                {timeSlot?.available} {t('left')}
+                {timeSlot?.availableQuantity} {t('left')}
               </div>
             </div>
           ) : (

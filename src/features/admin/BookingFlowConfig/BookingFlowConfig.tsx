@@ -18,12 +18,10 @@ import { LoadingButton } from '../../../components/buttons/LoadingButton/Loading
 import { useMessage } from '../../../hooks/useMessage/useMessage';
 import { useException } from '../../../hooks/useException/useException';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
-import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 import { loadTransportationOptions } from '../../../store/reducers/transportationNeeds/actions';
 
 export const BookingFlowConfig = () => {
   const { config, isLoading } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const { options } = useSelector((state: RootState) => state.transportation);
   const [configuration, setConfiguration] = useState<TServiceTypeSettings[]>([]);
   const { selectedSC } = useSCs();
   const showError = useException();
@@ -78,22 +76,10 @@ export const BookingFlowConfig = () => {
           if (optionType === 'valueService' && !checked) {
             updated.productPageForValueService = false;
           }
-          const pickUpTransportationIsOn = options.find(
-            el => el.type === ETransportationType.PickUpDelivery
-          )?.state;
-          if (
-            optionType === 'available' &&
-            serviceType === EServiceType.PickUpDropOff &&
-            pickUpTransportationIsOn &&
-            !checked
-          ) {
-            showError('Other Transportation Pick Up delivery must be "OFF"');
-          } else {
-            setConfiguration(prev => {
-              const filtered = prev.filter(el => el.serviceType !== serviceType);
-              return [...filtered, updated];
-            });
-          }
+          setConfiguration(prev => {
+            const filtered = prev.filter(el => el.serviceType !== serviceType);
+            return [...filtered, updated];
+          });
           if (optionType === 'valueService' || optionType === 'productPageForValueService') {
             if (currentServiceType?.serviceType === EServiceType.VisitCenter) {
               analogServiceType = configuration.find(
