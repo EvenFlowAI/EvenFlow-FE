@@ -110,18 +110,12 @@ export const validateMileage = (
 
 export const validateZones = (
   state: ServiceBookState,
-  form: TForm,
   showError: (error: string) => void
 ): boolean => {
   let valid = true;
 
   if (state.mobileZones.length && state.selectedServiceValetZones.length) {
     showError('"Mobile Zone" and "Service Valet Zone" cannot be selected at the same time');
-    valid = false;
-  }
-
-  if (state.mobileZones.length && !state.selectedServiceValetZones.length) {
-    showError('Visit Center option can not be selected as Mobile Service zones were added');
     valid = false;
   }
 

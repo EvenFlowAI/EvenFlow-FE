@@ -145,7 +145,7 @@ export const ServiceBookModal: React.FC<
       validateName(form, showError),
       validateTechnicians(form, showError),
       validateMileage(state, showError),
-      validateZones(state, form, showError),
+      validateZones(state, showError),
     ];
 
     return results.every(Boolean);
