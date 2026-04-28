@@ -9,6 +9,7 @@ import { checkPodChanged } from '../../../../../store/reducers/appointments/acti
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useException } from '../../../../../hooks/useException/useException';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TMaintenanceDetailsProps = {
   onBack: TArgCallback<TScreen>;
@@ -23,7 +24,7 @@ const MaintenanceDetailsManage: React.FC<TMaintenanceDetailsProps> = ({
 }) => {
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
-  const { service, serviceTypeOption, appointmentByKey, advisor } = useSelector(
+  const { service, serviceTypeOption, appointmentByKey, advisor, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);
@@ -38,13 +39,13 @@ const MaintenanceDetailsManage: React.FC<TMaintenanceDetailsProps> = ({
       const advisorNotSelected = !advisor && isAdvisorAvailable;
 
       const pickUpSelected =
-        serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+        transportation?.type === ETransportationType.PickUpDelivery &&
         appointmentByKey?.serviceTypeOption &&
         appointmentByKey?.serviceTypeOption?.type !== EServiceType.PickUpDropOff;
       const pickUpChanged =
         serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
         appointmentByKey?.serviceTypeOption &&
-        appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff;
+        transportation?.type === ETransportationType.PickUpDelivery;
       if (pickUpSelected || pickUpChanged) {
         onNext(
           advisorNotSelected

@@ -59,6 +59,7 @@ import {
   sortSVAppointments,
 } from '../../../../../utils/svAppointments';
 import { collectServiceRequestIds } from '../../../../../utils/collectServiceRequestIds';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 dayjs.extend(utc);
 
@@ -152,11 +153,19 @@ export const AppointmentSlots: React.FC<
     onOpen: onServiceOptionOpen,
   } = useModal();
   const theme = useTheme();
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const nextDisabled = useMemo(
-    () =>
-      serviceTypeOption?.type === EServiceType.PickUpDropOff
-        ? !serviceValetAppointment
-        : !appointment,
+    () => (serviceType === EServiceType.PickUpDropOff ? !serviceValetAppointment : !appointment),
     [appointment, serviceValetAppointment]
   );
 
@@ -172,15 +181,12 @@ export const AppointmentSlots: React.FC<
   }, [appointmentSlots]);
 
   const currentSlots = useMemo(
-    () =>
-      serviceTypeOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots,
+    () => (serviceType === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots),
     [serviceTypeOption, serviceValetSlots, appointmentSlots]
   );
 
   const currentAppointment = useMemo(() => {
-    return serviceTypeOption?.type === EServiceType.PickUpDropOff
-      ? serviceValetAppointment
-      : appointment;
+    return serviceType === EServiceType.PickUpDropOff ? serviceValetAppointment : appointment;
   }, [serviceTypeOption, serviceValetAppointment, appointment]);
 
   const handleGALandingOnPage = useCallback(() => {
@@ -215,7 +221,10 @@ export const AppointmentSlots: React.FC<
     ) => {
       const serviceOption = newServiceOption ?? serviceTypeOption;
       const currentSlots =
-        serviceOption?.type === EServiceType.PickUpDropOff ? serviceValetSlots : appointmentSlots;
+        transportation?.type === ETransportationType.PickUpDelivery ||
+        serviceOption?.type === EServiceType.PickUpDropOff
+          ? serviceValetSlots
+          : appointmentSlots;
       if (currentSlots?.length) {
         const utcOffset = dayjs().utcOffset();
         const newDate = date ?? dayjs();
@@ -228,7 +237,10 @@ export const AppointmentSlots: React.FC<
             : getClearDate(newDate);
 
         let firstAvailableSlot = null;
-        if (serviceOption?.type === EServiceType.PickUpDropOff) {
+        if (
+          transportation?.type === ETransportationType.PickUpDelivery ||
+          serviceOption?.type === EServiceType.PickUpDropOff
+        ) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
           firstAvailableSlot = sorted.find(slot => {
             const formatted = dayjs(slot?.date).add(Math.abs(utcOffset), 'minutes');
@@ -302,7 +314,7 @@ export const AppointmentSlots: React.FC<
               : selectFirstSlot();
           } else {
             setDate(dayjs.utc(currentAppointment.date).startOf('day'));
-            if (serviceTypeOption?.type === EServiceType.PickUpDropOff) selectFirstSlot();
+            if (serviceType === EServiceType.PickUpDropOff) selectFirstSlot();
           }
         } else {
           selectedTime
@@ -418,7 +430,7 @@ export const AppointmentSlots: React.FC<
   const onLoadSlots = (isEmptyList: boolean) => {
     // const isPossibleToChangeType =
     //   firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
-    // const isMobileServiceType = serviceTypeOption?.type === EServiceType.MobileService;
+    // const isMobileServiceType = serviceType === EServiceType.MobileService;
     // if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
     //   onServiceOptionOpen();
     // }
@@ -466,7 +478,7 @@ export const AppointmentSlots: React.FC<
       if (!firstDayWithSlots && currentApiStartDate) {
         setFirstDayWithSlots(currentApiStartDate);
       } else {
-        if (!firstDayWithSlots && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        if (!firstDayWithSlots && serviceType === EServiceType.PickUpDropOff) {
           setFirstDayWithSlots(requestedStartDate);
         }
       }
@@ -481,7 +493,7 @@ export const AppointmentSlots: React.FC<
             : null;
 
         const transportationOptionId: number | null =
-          (serviceTypeOption?.type === EServiceType.VisitCenter || !serviceTypeOption) &&
+          (serviceType === EServiceType.VisitCenter || !serviceTypeOption) &&
           !serviceTypeOption?.transportationOption &&
           transportation
             ? transportation.id
@@ -489,7 +501,7 @@ export const AppointmentSlots: React.FC<
 
         const data: IAppointmentSlotsRequest = {
           appointmentTimingType:
-            serviceTypeOption?.type === EServiceType.PickUpDropOff || !selectedTiming
+            serviceType === EServiceType.PickUpDropOff || !selectedTiming
               ? EAppointmentTimingType.FirstAvailable
               : selectedTiming,
           serviceCenterId: decodeSCID(id),
@@ -535,7 +547,7 @@ export const AppointmentSlots: React.FC<
         if (hashKey) data.appointmentHashKey = hashKey;
         if (userType === EUserType.Existing && customerEnteredEmail)
           data.searchTerm = customerEnteredEmail;
-        if (serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+        if (serviceType === EServiceType.PickUpDropOff) {
           if (data.address)
             await dispatch(
               loadServiceValetSlots(data, undefined, onLoadSlots, handleError, setApiDates)
@@ -595,7 +607,7 @@ export const AppointmentSlots: React.FC<
   useEffect(() => {
     if (
       ![EServiceType.PickUpDropOff, EServiceType.MobileService].includes(
-        serviceTypeOption?.type as EServiceType
+        serviceType as EServiceType
       )
     ) {
       dispatch(loadActiveTransportations(decodeSCID(id)));
@@ -607,7 +619,7 @@ export const AppointmentSlots: React.FC<
     if (appointment) {
       ReactGA.event('asc_form_engagement', {
         element_text:
-          serviceTypeOption?.type === EServiceType.PickUpDropOff
+          serviceType === EServiceType.PickUpDropOff
             ? 'Valet Date & Time Selected'
             : 'Date & Time Selected',
         appointment_datetime: dayjs.utc(appointment.date).format('MM-DD-YYYY hh:mm A'),
@@ -755,7 +767,7 @@ export const AppointmentSlots: React.FC<
           isServiceOptionOpen={isServiceOptionOpen}
           onServiceOptionClose={onServiceOptionClose}
         />
-        {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
+        {serviceType === EServiceType.PickUpDropOff ? (
           <SVAppointmentDateSelector
             firstDayWithSlots={firstDayWithSlots}
             onDateRangeSet={handleDateRangeSet}
@@ -783,7 +795,7 @@ export const AppointmentSlots: React.FC<
             apiEndDate={currentApiEndDate || undefined}
           />
         )}
-        {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
+        {serviceType === EServiceType.PickUpDropOff ? (
           <SVAppointmentTimeSelector date={date} loading={loading || isConsentsLoading} />
         ) : (
           <AppointmentTimeSelector

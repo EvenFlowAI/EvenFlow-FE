@@ -81,6 +81,7 @@ export const SVAppointmentTimeSelector: React.FC<
 
   const handleSelect = useCallback(
     (a: IServiceValetAppointment | null) => {
+      console.log(123);
       const data = a && selectedTiming ? { ...a, timingType: selectedTiming } : a;
       handleGA(a);
 

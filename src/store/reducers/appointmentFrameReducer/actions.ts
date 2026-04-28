@@ -1074,7 +1074,7 @@ export const createOrUpdateAppointment =
     };
 
     const date =
-      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery &&
       appointment.serviceValetAppointment
         ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split('T')[0] || ''
         : appointment.appointment
@@ -1082,7 +1082,7 @@ export const createOrUpdateAppointment =
           : appointmentFrame.appointmentByKey?.dateInUtc || '';
 
     const appointmentTimingType =
-      appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
+      appointmentFrame?.transportation?.type !== ETransportationType.PickUpDelivery &&
       appointmentFrame.selectedTiming
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
@@ -1113,7 +1113,7 @@ export const createOrUpdateAppointment =
         : null;
 
     const slot =
-      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
+      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery
         ? '00:00:00'
         : appointment.appointment?.id
           ? appointment.appointment?.id.split('|')[1]
@@ -1139,7 +1139,8 @@ export const createOrUpdateAppointment =
     };
 
     const isServiceValetExist = firstScreenOptions.some(s => s.type === EServiceType.PickUpDropOff);
-    const isPickDropOff = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff;
+    const isPickDropOff =
+      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery;
     const optionId: number | null = appointmentFrame.serviceTypeOption?.id ?? null;
 
     const pickUpDropOffTransportation =
@@ -1176,7 +1177,7 @@ export const createOrUpdateAppointment =
       schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
       notes: appointmentFrame.appointmentNotes,
       address:
-        appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery ||
         appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
           ? addressData
           : null,
@@ -1273,7 +1274,7 @@ export const loadAppointmentRequestsPrices =
       mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
     };
     const date =
-      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery &&
       appointment.serviceValetAppointment
         ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split('T')[0] || ''
         : appointment.appointment
@@ -1281,7 +1282,7 @@ export const loadAppointmentRequestsPrices =
           : appointmentFrame.appointmentByKey?.dateInUtc || '';
 
     const appointmentTimingType =
-      appointmentFrame.serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
+      appointmentFrame?.transportation?.type !== ETransportationType.PickUpDelivery &&
       appointmentFrame.selectedTiming
         ? appointmentFrame.selectedTiming
         : EAppointmentTimingType.FirstAvailable;
@@ -1296,7 +1297,7 @@ export const loadAppointmentRequestsPrices =
     );
 
     const time =
-      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff
+      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery
         ? '00:00:00'
         : appointment.appointment?.id
           ? appointment.appointment?.id.split('|')[1]
@@ -1409,7 +1410,10 @@ export const searchForCustomerConsents =
         ),
         modelYear: selectedVehicle.year,
         customerType: userType ?? EUserType.New,
-        serviceType: serviceTypeOption?.type ?? EServiceType.VisitCenter,
+        serviceType:
+          (serviceTypeOption?.type ?? transportation?.type === ETransportationType.PickUpDelivery)
+            ? EServiceType.PickUpDropOff
+            : EServiceType.VisitCenter,
         transportationOptionId:
           serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
         advisorId: advisor?.id ?? null,

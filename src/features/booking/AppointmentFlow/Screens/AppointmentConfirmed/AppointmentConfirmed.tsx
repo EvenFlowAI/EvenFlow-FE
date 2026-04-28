@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import { ESettingType } from '../../../../../store/reducers/generalSettings/types';
 import { EPricingDisplayType } from '../../../../../store/reducers/pricingSettings/types';
 import { getMaintenanceDescription } from '../../../../../utils/getMaintenanceDescription';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -209,7 +210,7 @@ export const AppointmentConfirmed: React.FC<
     } else if (appointment) {
       date = dayjs(appointment?.date).format(dateTimeString);
     } else if (appointmentByKey?.dateInUtc) {
-      if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+      if (appointmentByKey.transportationOption?.type === ETransportationType.PickUpDelivery) {
         date = dayjs(appointmentByKey.dateInUtc).utc().format(calendarDateFormat);
       } else {
         const [hh, mm] = appointmentByKey.timeSlot.split(':');

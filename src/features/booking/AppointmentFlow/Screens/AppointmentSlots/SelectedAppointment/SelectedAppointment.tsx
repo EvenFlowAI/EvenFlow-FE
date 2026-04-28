@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
@@ -14,9 +14,10 @@ import { DateWrapper } from '../../../../../../components/styled/DateWrapper';
 import { List, PriceWrapper, Wrapper } from './styles';
 import { WaitListLabel } from '../WaitListLabel/WaitListLabel';
 import dayjs from 'dayjs';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 export const SelectedAppointment = () => {
-  const { serviceTypeOption, selectedPackage, packageEMenuType } = useSelector(
+  const { serviceTypeOption, selectedPackage, packageEMenuType, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { appointment, serviceValetAppointment } = useSelector(
@@ -27,8 +28,18 @@ export const SelectedAppointment = () => {
   const { t } = useTranslation();
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
 
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const price =
-    serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+    serviceType === EServiceType.PickUpDropOff && serviceValetAppointment
       ? (serviceValetAppointment?.price.value ?? 0)
       : (appointment?.price.value ?? 0) === 0
         ? packageEMenuType != null
@@ -36,7 +47,7 @@ export const SelectedAppointment = () => {
           : 0
         : (appointment?.price.value ?? 0);
   const ancillaryPrice =
-    serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+    serviceType === EServiceType.PickUpDropOff && serviceValetAppointment
       ? (serviceValetAppointment?.price.ancillaryPrice ?? 0)
       : (appointment?.price.ancillaryPrice ?? 0);
 

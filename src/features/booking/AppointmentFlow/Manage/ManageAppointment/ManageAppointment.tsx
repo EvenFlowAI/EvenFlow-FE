@@ -28,7 +28,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useHistory, useParams } from 'react-router-dom';
-import { loadSRs, setCustomerLoadedData } from '../../../../../store/reducers/appointment/actions';
+import {
+  loadAllServiceCenterSettings,
+  loadSRs,
+  setCustomerLoadedData,
+} from '../../../../../store/reducers/appointment/actions';
 import AppointmentVehicleInfo from '../../Screens/components/AppointmentVehicleInfo/AppointmentVehicleInfo';
 import PaymentTypeModal from '../../../PaymentTypeModal/PaymentTypeModal';
 import { useTranslation } from 'react-i18next';
@@ -143,6 +147,7 @@ export const ManageAppointment: React.FC<
     if (scProfile) {
       dispatch(loadCategoriesByQuery(scProfile.id));
       dispatch(loadSRs(scProfile.id));
+      dispatch(loadAllServiceCenterSettings(scProfile.id));
     }
   }, [scProfile]);
 

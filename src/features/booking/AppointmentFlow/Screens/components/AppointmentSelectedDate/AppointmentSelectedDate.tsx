@@ -18,6 +18,7 @@ import { ConfirmationItemWrapper } from '../../../../../../components/styled/Con
 import { setSlotsWarningOpen } from '../../../../../../store/reducers/modals/actions';
 import { useParams } from 'react-router-dom';
 import { decodeSCID } from '../../../../../../utils/utils';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -44,8 +45,13 @@ export const AppointmentSelectedDate: React.FC<
   const dispatch = useDispatch();
 
   const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
+    () =>
+      serviceTypeOption
+        ? serviceTypeOption.type
+        : transportation?.type === ETransportationType.PickUpDelivery
+          ? EServiceType.PickUpDropOff
+          : EServiceType.VisitCenter,
+    [serviceTypeOption, transportation]
   );
 
   const isWaitList = appointment
@@ -79,7 +85,7 @@ export const AppointmentSelectedDate: React.FC<
 
   const getDateForUpdate = (): string => {
     if (customerLoadedData?.isUpdating && appointmentByKey) {
-      if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+      if (serviceType === EServiceType.PickUpDropOff) {
         return dayjs.utc(appointmentByKey.dateInUtc).format('ddd, MMMM D');
       } else {
         const [hh, mm] = appointmentByKey.timeSlot.split(':');
@@ -94,7 +100,7 @@ export const AppointmentSelectedDate: React.FC<
   };
 
   const date =
-    serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+    serviceType === EServiceType.PickUpDropOff && serviceValetAppointment
       ? dayjs.utc(serviceValetAppointment?.date).format('ddd, MMMM D')
       : customerLoadedData?.isUpdating && appointmentByKey
         ? appointment?.date
@@ -131,14 +137,14 @@ export const AppointmentSelectedDate: React.FC<
           style={{ cursor: 'pointer' }}
         />
       </TitleWrapper>
-      {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment ? (
+      {serviceType === EServiceType.PickUpDropOff && serviceValetAppointment ? (
         <div>
           <span style={{ fontWeight: 'bold' }}>{t('Date')}</span>: {date}
         </div>
       ) : (
         date
       )}
-      {serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+      {serviceType === EServiceType.PickUpDropOff &&
       (serviceValetAppointment || appointmentByKey?.serviceValetTime) ? (
         <div>
           <div>

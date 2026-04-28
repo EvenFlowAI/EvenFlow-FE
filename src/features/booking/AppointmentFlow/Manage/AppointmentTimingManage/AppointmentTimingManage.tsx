@@ -11,6 +11,7 @@ import {
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { Routes } from '../../../../../routes/constants';
 import { useHistory, useParams } from 'react-router-dom';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen> }> = ({
   handleSetScreen,
@@ -33,7 +34,7 @@ const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen>
   const fromServiceValetToVisitCenter = useMemo(() => {
     return (
       serviceTypeOption?.type === EServiceType.VisitCenter &&
-      appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+      appointmentByKey?.transportationOption?.type === ETransportationType.PickUpDelivery
     );
   }, [serviceTypeOption, appointmentByKey]);
 
