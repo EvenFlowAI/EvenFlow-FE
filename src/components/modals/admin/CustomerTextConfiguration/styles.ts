@@ -8,7 +8,7 @@ export const useStyles = makeStyles()(() => ({
     marginBottom: 6,
     borderRadius: '6px',
     padding: '3.4px 6px',
-    backgroundColor: 'rgba(242, 244, 251, 1)',
+    backgroundColor: '#F2F4FB',
   },
   insertTag: {
     cursor: 'pointer',
@@ -30,7 +30,7 @@ export const useStyles = makeStyles()(() => ({
     },
   },
   integrationBlock: {
-    width: '45%',
+    width: '31%',
     height: 'fit-content',
     '@media (max-width: 600px)': {
       width: '100%',
@@ -42,7 +42,7 @@ export const useStyles = makeStyles()(() => ({
     marginBottom: 32,
   },
   tagsWrapper: {
-    height: '456px',
+    height: '336px',
   },
   integrationText: {
     textTransform: 'uppercase',
@@ -58,7 +58,7 @@ export const useStyles = makeStyles()(() => ({
     gap: 8,
   },
   configuredColor: {
-    color: '#7898FF',
+    color: '#5FA077',
   },
   notConfiguredColor: {
     color: '#C71062',
@@ -71,7 +71,7 @@ export const useStyles = makeStyles()(() => ({
     marginBottom: 8,
   },
   textMessageWrapper: {
-    width: '51%',
+    width: '65%',
     '@media (max-width: 600px)': {
       width: '100%',
     },
@@ -79,15 +79,20 @@ export const useStyles = makeStyles()(() => ({
   scrollableTags: {
     overflowY: 'auto',
     height: '100%',
+    border: '1px solid #DADADA',
+    borderRadius: '4px',
+    padding: '4px',
   },
   charactersCounter: {
     textAlign: 'right',
-    color: '#858585',
-    fontWeight: 300,
+    color: '#252733',
+    fontSize: '12px',
   },
   testMessageWrapper: {
-    width: '44%',
+    width: '100%',
     marginTop: '18px',
+    border: '1px solid #DADADA',
+    padding: '18px 16px',
   },
   testMessageText: {
     display: 'flex',
@@ -100,19 +105,37 @@ export const useStyles = makeStyles()(() => ({
     margin: 0,
     marginBottom: '4px',
   },
-  testMessageButton: {
-    marginTop: '12px',
-    paddingLeft: 0,
-    justifyContent: 'flex-start',
-  },
   testMessage: {
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: ' space-between',
+    justifyContent: 'flex-end',
   },
   buttonsWrapper: {
     display: 'flex',
     gap: '12px',
+  },
+  copyWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '7.5px 0',
+    fontWeight: 'bold',
+  },
+  copyText: {
+    fontSize: '12px',
+    color: '#7898FF',
+    textTransform: 'uppercase',
+  },
+  infoIcon: {
+    display: 'flex',
+  },
+  numberForm: {
+    display: 'flex',
+    gap: 4,
+    alignItems: 'center',
+  },
+  sendButton: {
+    borderRadius: '4px',
+    border: '1px solid #DADADA',
   },
 }));

@@ -7,7 +7,7 @@ import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ReactComponent as CopyIcon } from '../../../../assets/img/copy.svg';
 import { customerTags } from '../../../../config/data';
 import { ReactComponent as Info } from '../../../../assets/img/info.svg';
-import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmall.svg';
+import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmallGreen.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
@@ -118,7 +118,10 @@ const CustomerTextConfiguration = ({
               showMessage('Tag copied to clipboard');
             }}
           >
-            <CopyIcon />
+            <p className={classes.copyWrapper}>
+              <CopyIcon />
+              <span className={classes.copyText}>Copy</span>
+            </p>
           </button>
         </LightTooltip>
       </li>
@@ -154,7 +157,7 @@ const CustomerTextConfiguration = ({
   if (!eventForTextConfiguration) return <></>;
 
   return (
-    <BaseModal open={open} width={602} onClose={handleClose}>
+    <BaseModal open={open} width={810} onClose={handleClose}>
       <DialogTitle onClose={handleClose}>
         Text Configuration for {eventForTextConfiguration.name}
       </DialogTitle>
@@ -197,60 +200,64 @@ const CustomerTextConfiguration = ({
                     if (e.target.value.length <= 1000) dispatch(setTextMessage(e.target.value));
                   }}
                   value={textMessage}
-                  rows={22}
+                  rows={11}
                 />
               </div>
 
               <div className={classes.charactersCounter}>
                 <span>Approximate Characters: {textMessage?.length || 0} / 1000</span>
               </div>
+
+              <div className={classes.testMessageWrapper}>
+                <p className={classes.testMessageText}>
+                  <span>Send Test Message</span>
+                  <LightTooltip
+                    title="Test messages will display the tag field name and not actual values"
+                    placement="top-start"
+                    slotProps={{
+                      tooltip: {
+                        sx: { maxWidth: 196 },
+                      },
+                    }}
+                  >
+                    <span className={classes.infoIcon}>
+                      <Info />
+                    </span>
+                  </LightTooltip>
+                </p>
+                <div className={classes.numberForm}>
+                  <TextField
+                    fullWidth
+                    value={phoneNumberForTest}
+                    placeholder="1xxxxxxxxxx"
+                    onChange={e => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 11) val = val.slice(0, 11);
+                      setPhoneNumberForTest(val);
+                    }}
+                    inputProps={{ maxLength: 11 }}
+                  />
+                  <div className={classes.sendButton}>
+                    <Button
+                      color="primary"
+                      disabled={
+                        phoneNumberForTest.length !== 11 ||
+                        !textIntegrationSettings?.fromPhoneNumber?.length ||
+                        textMessage.length < 3
+                      }
+                      onClick={sendTestMessage}
+                    >
+                      Send
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className={classes.testMessageWrapper}>
-            <p className={classes.testMessageText}>
-              <span>Send Test Message</span>
-              <LightTooltip
-                title="Test messages will display the tag field name and not actual values"
-                placement="top-start"
-                slotProps={{
-                  tooltip: {
-                    sx: { maxWidth: 160 },
-                  },
-                }}
-              >
-                <span style={{ display: 'flex' }}>
-                  <Info />
-                </span>
-              </LightTooltip>
-            </p>
-            <TextField
-              fullWidth
-              value={phoneNumberForTest}
-              placeholder="1xxxxxxxxxx"
-              onChange={e => {
-                let val = e.target.value.replace(/\D/g, '');
-                if (val.length > 11) val = val.slice(0, 11);
-                setPhoneNumberForTest(val);
-              }}
-              inputProps={{ maxLength: 11 }}
-            />
           </div>
         </DialogContent>
       )}
       <DialogActions>
         <div className={classes.testMessage}>
-          <Button
-            color="primary"
-            disabled={
-              phoneNumberForTest.length !== 11 ||
-              !textIntegrationSettings?.fromPhoneNumber?.length ||
-              textMessage.length < 3
-            }
-            className={classes.testMessageButton}
-            onClick={sendTestMessage}
-          >
-            Send
-          </Button>
           <div className={classes.buttonsWrapper}>
             <Button onClick={handleClose} color="primary" variant="outlined">
               Cancel
