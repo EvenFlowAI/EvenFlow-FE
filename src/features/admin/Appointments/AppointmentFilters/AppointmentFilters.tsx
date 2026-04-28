@@ -32,7 +32,6 @@ import { RadioBlock, RadioGroupLabel, useAutocompleteClasses } from './styles';
 import { statusOptions } from './constants';
 import { TAppointmentFilterProps } from './types';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
-import { useException } from '../../../../hooks/useException/useException';
 import { EDate } from '../types';
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
@@ -55,7 +54,6 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
   const { selectedSC } = useSCs();
   const currentUser = useCurrentUser();
   const dispatch = useDispatch();
-  const showError = useException();
   const { classes: autocompleteClasses } = useAutocompleteClasses();
   const rangeIsWrong = useMemo(() => {
     return (
@@ -344,7 +342,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         <Grid item xs={12} sm={6} key="status">
           <Autocomplete
             renderInput={autocompleteRender({
-              label: 'Status',
+              label: 'Appointment Status',
               placeholder: 'Not selected',
             })}
             multiple
