@@ -257,7 +257,7 @@ export interface ICreateAppointmentRequest {
   serviceCenterId: number;
   advisorId: string | null;
   transportationOptionId: number | null;
-  slot: string;
+  slot: string | null;
   serviceRequests: IServiceRequestIds[];
   date: ParsableDate;
   serviceCategories: IServiceRequestIds[];
@@ -271,7 +271,6 @@ export interface ICreateAppointmentRequest {
   isWaitlist: boolean;
   customerConsentIds: number[];
   isAppointmentClone?: boolean;
-  isServiceValet?: boolean;
 }
 
 export interface ISearchConsentsData {

@@ -104,6 +104,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { TTransportationData } from '../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
 import { collectServiceRequestsForConsents } from '../../../utils/collectServiceRequestsForConsents';
 import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
+import { ETransportationType } from '../transportationNeeds/types';
 
 export const selectService = createAction<IServiceCategory | null>('fAppointment/selectService');
 export const selectSubService = createAction<IServiceCategory | null>(
@@ -1043,6 +1044,7 @@ export const createOrUpdateAppointment =
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
     const categories = getState().categories;
+    const { firstScreenOptions } = getState().serviceTypes;
     const [make, model, year] = getVehicleData(
       appointmentFrame.selectedVehicle,
       appointmentFrame.valueService
@@ -1086,11 +1088,14 @@ export const createOrUpdateAppointment =
         : EAppointmentTimingType.FirstAvailable;
 
     const transportationOptionId =
-      serviceType === EServiceType.VisitCenter &&
-      !appointmentFrame.serviceTypeOption?.transportationOption &&
-      appointmentFrame.transportation
-        ? appointmentFrame.transportation?.id
-        : null;
+      serviceType === EServiceType.VisitCenter
+        ? !appointmentFrame.serviceTypeOption?.transportationOption &&
+          appointmentFrame.transportation
+          ? appointmentFrame.transportation?.id
+          : null
+        : serviceType === EServiceType.PickUpDropOff
+          ? (appointmentFrame.transportation?.id ?? null)
+          : null;
 
     const serviceRequests = collectServiceRequestIds(
       appointmentFrame.service,
@@ -1133,6 +1138,14 @@ export const createOrUpdateAppointment =
       zipCode: appointmentFrame.zipCode ?? null,
     };
 
+    const isServiceValetExist = firstScreenOptions.some(s => s.type === EServiceType.PickUpDropOff);
+    const isPickDropOff = appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff;
+    const optionId: number | null = appointmentFrame.serviceTypeOption?.id ?? null;
+
+    const pickUpDropOffTransportation =
+      appointmentFrame.transportations.find(t => t.type === ETransportationType.PickUpDelivery)
+        ?.id ?? null;
+
     const data: ICreateAppointmentRequest = {
       id: appointmentFrame.id,
       appointmentTimingType,
@@ -1144,8 +1157,12 @@ export const createOrUpdateAppointment =
       contactMethodTypes: appointmentFrame.reminders,
       serviceCenterId: id,
       advisorId: appointmentFrame.advisor?.id ?? null,
-      transportationOptionId,
-      slot,
+      transportationOptionId: isServiceValetExist
+        ? transportationOptionId
+        : isPickDropOff
+          ? pickUpDropOffTransportation
+          : transportationOptionId,
+      slot: isServiceValetExist ? slot : isPickDropOff ? null : slot,
       serviceRequests,
       date,
       serviceCategories: getCategories(
@@ -1154,7 +1171,7 @@ export const createOrUpdateAppointment =
       ),
       maintenancePackageOption,
       searchTerm: appointment.customerEnteredEmail,
-      serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
+      serviceTypeOptionId: isServiceValetExist ? optionId : isPickDropOff ? null : optionId,
       recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
       schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
       notes: appointmentFrame.appointmentNotes,
@@ -1165,7 +1182,6 @@ export const createOrUpdateAppointment =
           : null,
       isWaitlist: Boolean(isWaitlist),
       customerConsentIds: appointmentFrame.acceptedConsentIds,
-      isServiceValet: appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff,
     };
 
     if (isAdmin) delete data.schedulerType;
