@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()({
   wrapper: {
-    height: 240,
+    height: 265,
     display: 'flex',
     flexDirection: 'column',
     flexWrap: 'wrap',
