@@ -66,6 +66,7 @@ import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/Open
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
 import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -123,6 +124,16 @@ export const ManageAppointment: React.FC<
   const { wasWarningShowed } = useSelector((state: RootState) => state.modals);
 
   const { isCloneMode, customerLoadedData } = useSelector((state: RootState) => state.appointment);
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
@@ -225,7 +236,7 @@ export const ManageAppointment: React.FC<
       showError(t('"Phone Number" must not be empty'));
     }
     if (
-      serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+      serviceType === EServiceType.PickUpDropOff &&
       !serviceValetAppointment &&
       !appointmentByKey?.serviceValetTime
     ) {
@@ -233,7 +244,7 @@ export const ManageAppointment: React.FC<
       showError(t('Please select correct Appointment Date and Time'));
     }
     if (
-      serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
+      serviceType !== EServiceType.PickUpDropOff &&
       !appointment &&
       appointmentByKey?.serviceValetTime
     ) {

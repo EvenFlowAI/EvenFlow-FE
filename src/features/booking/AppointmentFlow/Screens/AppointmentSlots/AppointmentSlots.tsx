@@ -89,6 +89,7 @@ export const AppointmentSlots: React.FC<
     isCloneMode,
     serviceValetCapacity,
   } = useSelector((state: RootState) => state.appointment);
+  const { firstScreenOptions } = useSelector(({ serviceTypes }: RootState) => serviceTypes);
 
   const {
     selectedTiming,
@@ -119,6 +120,7 @@ export const AppointmentSlots: React.FC<
     transportation,
     editingPosition,
     serviceOptionChangedFromSlotPage,
+    transportations,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
@@ -492,12 +494,27 @@ export const AppointmentSlots: React.FC<
             ? { optionType: packageEMenuType }
             : null;
 
-        const transportationOptionId: number | null =
-          (serviceType === EServiceType.VisitCenter || !serviceTypeOption) &&
-          !serviceTypeOption?.transportationOption &&
-          transportation
-            ? transportation.id
-            : null;
+        const transportationOptionId =
+          serviceType === EServiceType.VisitCenter
+            ? !serviceTypeOption?.transportationOption && transportation
+              ? transportation?.id
+              : null
+            : serviceType === EServiceType.PickUpDropOff
+              ? (transportation?.id ?? null)
+              : null;
+
+        const isServiceValetExist = firstScreenOptions.some(
+          s => s.type === EServiceType.PickUpDropOff
+        );
+        const isPickDropOff =
+          serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+          transportation?.type === ETransportationType.PickUpDelivery;
+        const optionId: number | null = serviceTypeOption?.id ?? null;
+
+        const pickUpDropOffTransportation =
+          transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
+          transportation?.id ??
+          null;
 
         const data: IAppointmentSlotsRequest = {
           appointmentTimingType:
@@ -520,9 +537,13 @@ export const AppointmentSlots: React.FC<
           serviceCategories: getCategories(allCategories, serviceCategories),
           customerId: customerLoadedData?.id,
           warrantyExpiration: selectedVehicle?.warrantyExpiration,
-          serviceTypeOptionId: serviceTypeOption?.id ?? null,
+          serviceTypeOptionId: isServiceValetExist ? optionId : isPickDropOff ? null : optionId,
           recalls: mapRecallsForRequest(selectedRecalls),
-          transportationOptionId,
+          transportationOptionId: isServiceValetExist
+            ? transportationOptionId
+            : isPickDropOff
+              ? pickUpDropOffTransportation
+              : transportationOptionId,
         };
         if (address) {
           data.address = {
