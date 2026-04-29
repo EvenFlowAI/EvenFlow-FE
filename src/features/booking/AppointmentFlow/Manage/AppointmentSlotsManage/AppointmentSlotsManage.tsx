@@ -24,7 +24,8 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const fromServiceValetToVisitCenter = useMemo(() => {
     return (
       serviceTypeOption?.type === EServiceType.VisitCenter &&
-      appointmentByKey?.transportationOption?.type === ETransportationType.PickUpDelivery
+      (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentByKey?.transportationOption?.type === ETransportationType.PickUpDelivery)
     );
   }, [serviceTypeOption, appointmentByKey]);
 

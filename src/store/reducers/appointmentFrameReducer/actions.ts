@@ -1074,7 +1074,8 @@ export const createOrUpdateAppointment =
     };
 
     const date =
-      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery &&
+      (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery) &&
       appointment.serviceValetAppointment
         ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split('T')[0] || ''
         : appointment.appointment
@@ -1113,6 +1114,7 @@ export const createOrUpdateAppointment =
         : null;
 
     const slot =
+      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
       appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery
         ? '00:00:00'
         : appointment.appointment?.id
@@ -1140,6 +1142,7 @@ export const createOrUpdateAppointment =
 
     const isServiceValetExist = firstScreenOptions.some(s => s.type === EServiceType.PickUpDropOff);
     const isPickDropOff =
+      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
       appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery;
     const optionId: number | null = appointmentFrame.serviceTypeOption?.id ?? null;
 
@@ -1177,6 +1180,7 @@ export const createOrUpdateAppointment =
       schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
       notes: appointmentFrame.appointmentNotes,
       address:
+        appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
         appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery ||
         appointmentFrame.serviceTypeOption?.type === EServiceType.MobileService
           ? addressData
@@ -1274,7 +1278,8 @@ export const loadAppointmentRequestsPrices =
       mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
     };
     const date =
-      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery &&
+      (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery) &&
       appointment.serviceValetAppointment
         ? dayjs.utc(appointment.serviceValetAppointment.date).toISOString().split('T')[0] || ''
         : appointment.appointment
@@ -1297,6 +1302,7 @@ export const loadAppointmentRequestsPrices =
     );
 
     const time =
+      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
       appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery
         ? '00:00:00'
         : appointment.appointment?.id

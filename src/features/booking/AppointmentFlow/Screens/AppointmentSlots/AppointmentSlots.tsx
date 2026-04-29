@@ -221,8 +221,8 @@ export const AppointmentSlots: React.FC<
     ) => {
       const serviceOption = newServiceOption ?? serviceTypeOption;
       const currentSlots =
-        transportation?.type === ETransportationType.PickUpDelivery ||
-        serviceOption?.type === EServiceType.PickUpDropOff
+        serviceOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery
           ? serviceValetSlots
           : appointmentSlots;
       if (currentSlots?.length) {
@@ -238,8 +238,8 @@ export const AppointmentSlots: React.FC<
 
         let firstAvailableSlot = null;
         if (
-          transportation?.type === ETransportationType.PickUpDelivery ||
-          serviceOption?.type === EServiceType.PickUpDropOff
+          serviceOption?.type === EServiceType.PickUpDropOff ||
+          transportation?.type === ETransportationType.PickUpDelivery
         ) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
           firstAvailableSlot = sorted.find(slot => {

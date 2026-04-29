@@ -210,7 +210,10 @@ export const AppointmentConfirmed: React.FC<
     } else if (appointment) {
       date = dayjs(appointment?.date).format(dateTimeString);
     } else if (appointmentByKey?.dateInUtc) {
-      if (appointmentByKey.transportationOption?.type === ETransportationType.PickUpDelivery) {
+      if (
+        appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentByKey.transportationOption?.type === ETransportationType.PickUpDelivery
+      ) {
         date = dayjs(appointmentByKey.dateInUtc).utc().format(calendarDateFormat);
       } else {
         const [hh, mm] = appointmentByKey.timeSlot.split(':');
