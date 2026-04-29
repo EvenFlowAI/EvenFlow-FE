@@ -1148,7 +1148,9 @@ export const createOrUpdateAppointment =
 
     const pickUpDropOffTransportation =
       appointmentFrame.transportations.find(t => t.type === ETransportationType.PickUpDelivery)
-        ?.id ?? null;
+        ?.id ??
+      appointmentFrame.transportation?.id ??
+      null;
 
     const data: ICreateAppointmentRequest = {
       id: appointmentFrame.id,
