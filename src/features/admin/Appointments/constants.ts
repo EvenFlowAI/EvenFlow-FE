@@ -76,7 +76,7 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
   },
   {
     header: 'RO Status',
-    val: el => RepairOrderReportingStatus[el.repair_order_reporting_status] || '-',
+    val: el => RepairOrderReportingStatus[el.repairOrderReportingStatus] || '-',
   },
   {
     header: 'Created Date',

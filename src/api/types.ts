@@ -319,7 +319,7 @@ export interface IAppointment {
   totalValue: number;
   transportation?: string;
   vehicle?: IAppointmentVehicle;
-  repair_order_reporting_status: RepairOrderReportingStatus;
+  repairOrderReportingStatus: RepairOrderReportingStatus;
 }
 
 export interface IServiceCategoryShort {
