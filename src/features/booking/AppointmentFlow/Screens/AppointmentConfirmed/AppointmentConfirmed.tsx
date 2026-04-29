@@ -64,6 +64,7 @@ export const AppointmentConfirmed: React.FC<
     appointmentByKey,
     transactionValue,
     trackerData,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
@@ -131,9 +132,12 @@ export const AppointmentConfirmed: React.FC<
 
   const isServiceValetApp = useMemo(
     () =>
-      Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
-    [serviceValetAppointment, serviceTypeOption]
+      Boolean(serviceValetAppointment) &&
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery),
+    [serviceValetAppointment, serviceTypeOption, transportation]
   );
+
   const isServiceValetManage = useMemo(
     () =>
       !appointment && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
@@ -147,7 +151,11 @@ export const AppointmentConfirmed: React.FC<
         el => !el.priceValue || el.pricingDisplayType === EPricingDisplayType.Suppressed
       );
     } else {
-      if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+      if (
+        serviceValetAppointment &&
+        (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+          transportation?.type === ETransportationType.PickUpDelivery)
+      ) {
         return serviceValetAppointment?.serviceRequestPrices?.find(
           item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed
         );

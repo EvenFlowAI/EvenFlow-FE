@@ -13,6 +13,7 @@ import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { ISR } from '../../../../../../store/reducers/appointment/types';
 import { mergeArrayById } from '../../../../../../utils/utils';
 import i18n from '../../../../../../i18n';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const ServiceRequests = () => {
   const { appointment, serviceValetAppointment, selectedSR, selectedSRComments, serviceRequests } =
@@ -26,17 +27,18 @@ const ServiceRequests = () => {
     packagePricingType,
     selectedRecalls,
     packageEMenuType,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const [selectedRequest, setSelectedRequest] = useState<ISR | null>(null);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { t } = useTranslation();
-
   const currentAppointment = useMemo(() => {
-    return serviceTypeOption?.type === EServiceType.PickUpDropOff
+    return serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+      transportation?.type === ETransportationType.PickUpDelivery
       ? serviceValetAppointment
       : appointment;
-  }, [serviceTypeOption, serviceValetAppointment, appointment]);
+  }, [serviceTypeOption, serviceValetAppointment, appointment, transportation]);
 
   const serviceCategoriesWithComments = mergeArrayById(serviceCategories);
 
@@ -87,7 +89,8 @@ const ServiceRequests = () => {
           <AppointmentConfirmationTitle>{t('Service Requests')}</AppointmentConfirmationTitle>
         </TitleWrapper>
         <List>
-          {serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
+          {serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+          transportation?.type === ETransportationType.PickUpDelivery ? (
             currentAppointment?.serviceRequestPrices?.map(item => {
               const currentServiceRequest =
                 serviceCategoriesWithComments.find(

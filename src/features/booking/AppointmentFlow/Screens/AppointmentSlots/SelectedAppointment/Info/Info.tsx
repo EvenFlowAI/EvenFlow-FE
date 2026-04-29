@@ -5,16 +5,20 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import { useTranslation } from 'react-i18next';
 import { InfoWrapper } from './styles';
+import { ETransportationType } from '../../../../../../../store/reducers/transportationNeeds/types';
 
 const Info = () => {
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { appointmentSlots, appointment, serviceValetSlots } = useSelector(
     (state: RootState) => state.appointment
   );
   const { t } = useTranslation();
 
   const isDynamicPricing =
-    serviceTypeOption?.type === EServiceType.PickUpDropOff
+    serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+    transportation?.type === ETransportationType.PickUpDelivery
       ? serviceValetSlots.length
         ? serviceValetSlots[0]?.serviceRequestPrices?.find(
             item => item.pricingDisplayType === EPricingDisplayType.Dynamic

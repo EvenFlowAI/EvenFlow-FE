@@ -7,19 +7,24 @@ import { EServiceType } from '../../../../../../store/reducers/appointmentFrameR
 import { Price } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
 import { EPricingDisplayType } from '../../../../../../store/reducers/pricingSettings/types';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 export const SelectedPrice = () => {
   const { appointment, scProfile, serviceValetAppointment } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { serviceTypeOption, packageEMenuType, selectedPackage } = useSelector(
+  const { serviceTypeOption, packageEMenuType, selectedPackage, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
 
   const { t } = useTranslation();
 
   const noDefinedPriceExists = useMemo(() => {
-    if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+    if (
+      serviceValetAppointment &&
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery)
+    ) {
       return serviceValetAppointment?.serviceRequestPrices?.find(
         item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed
       );
@@ -30,7 +35,11 @@ export const SelectedPrice = () => {
   }, [appointment, serviceValetAppointment, serviceTypeOption]);
 
   const effectivePrice = useMemo(() => {
-    if (serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment) {
+    if (
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery) &&
+      serviceValetAppointment
+    ) {
       const base = serviceValetAppointment.price?.value ?? 0;
       const ancillary = serviceValetAppointment.price?.ancillaryPrice ?? 0;
       return base + ancillary;
@@ -48,8 +57,9 @@ export const SelectedPrice = () => {
   }, [appointment, serviceValetAppointment, serviceTypeOption, packageEMenuType, selectedPackage]);
 
   const formatPrice = (n: number) => (scProfile?.isRoundPrice ? n : n.toFixed(2));
-
-  const showValet = serviceTypeOption?.type === EServiceType.PickUpDropOff;
+  const showValet =
+    serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+    transportation?.type === ETransportationType.PickUpDelivery;
 
   return (
     <ConfirmationItemWrapper>
