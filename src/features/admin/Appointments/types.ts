@@ -47,11 +47,11 @@ export type TAppointmentsByDate = { [key: string]: IAppointment[] };
 
 export enum RepairOrderReportingStatus {
   Opened = 1,
-  InProcess = 2,
-  OnHold = 3,
-  WaitingOnParts = 4,
-  WaitingOnCustomer = 5,
-  ReadyToInvoice = 6,
+  'In Process' = 2,
+  'On Hold' = 3,
+  'Waiting on Parts' = 4,
+  'Waiting on Customer' = 5,
+  'Ready to Invoice' = 6,
   Invoiced = 7,
   Closed = 8,
   Voided = 9,
