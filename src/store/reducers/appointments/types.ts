@@ -12,6 +12,7 @@ import { EPackagePricingType } from '../appointmentFrameReducer/types';
 import { EAppointmentTimingType, TRecallForRequest } from '../appointment/types';
 import { IPageRequest, TParsableDate } from '../../../types/types';
 import { EDate } from '../../../features/admin/Appointments/types';
+import { UpdatedAddress } from '../dealershipGroups/types';
 
 export interface IAppointmentsRequest {
   pageIndex: number;
@@ -44,7 +45,7 @@ export interface ICheckPodRequest {
   maintenancePackageOption: TPackageOptionRequest | null;
   appointmentTimingType: EAppointmentTimingType;
   serviceCenterId: number;
-  address: string | null;
+  address: string | UpdatedAddress | null;
   zipCode: string | null;
   vehicle: IVehicle;
   serviceTypeOptionId: number | null;

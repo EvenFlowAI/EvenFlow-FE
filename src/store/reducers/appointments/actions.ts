@@ -160,7 +160,7 @@ export const checkPodChanged =
       serviceCenterId,
       serviceTypeOptionId: appointmentFrame.serviceTypeOption?.id ?? null,
       zipCode: appointmentFrame.zipCode ?? null,
-      address: appointmentFrame.address?.label ?? appointmentFrame.address ?? null,
+      address: null,
       advisorId: appointmentFrame.advisor?.id ?? null,
       vehicle,
       transportationOptionId:
@@ -171,6 +171,18 @@ export const checkPodChanged =
           ? appointmentFrame.transportation?.id
           : null,
     };
+    if (appointmentFrame?.address) {
+      if (appointmentFrame?.address?.label) {
+        data.address = appointmentFrame?.address.label;
+      } else if (typeof appointmentFrame?.address === 'string') {
+        data.address = {
+          address: appointmentFrame?.streetName.trim(),
+          city: appointmentFrame?.city.trim(),
+          state: appointmentFrame?.politicalState,
+          zipCode: appointmentFrame?.zipCode.trim(),
+        };
+      }
+    }
     if (appointmentFrame?.appointmentByKey?.hashKey) {
       dispatch(setAppointmentSaving(true));
       Api.call(Api.endpoints.Appointments.CheckPodChanged, {
