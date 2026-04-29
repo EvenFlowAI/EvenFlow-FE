@@ -16,18 +16,28 @@ import { useHistory, useParams } from 'react-router-dom';
 import { TitleWrapper } from './styles';
 import { Routes } from '../../../../../../routes/constants';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const ServiceTypeManaging = () => {
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const onlyNotVisitCenterExists =
     firstScreenOptions.length === 1 && firstScreenOptions[0].type !== EServiceType.VisitCenter;
 

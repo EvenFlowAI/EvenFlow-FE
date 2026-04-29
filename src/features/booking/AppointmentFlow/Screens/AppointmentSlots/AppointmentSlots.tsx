@@ -137,10 +137,6 @@ export const AppointmentSlots: React.FC<
   const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
   const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
   const apiDatesSetRef = useRef<boolean>(false);
-  // const serviceType = useMemo(
-  //   () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-  //   [serviceTypeOption]
-  // );
   const { id } = useParams<{ id: string }>();
   const initRef = useRef<boolean>(false);
   const isMount = useRef(true);

@@ -18,6 +18,7 @@ import { EServiceType } from '../../../../../store/reducers/appointmentFrameRedu
 import { ConsultantsWrapper } from './styles';
 import { ConsultantCard } from './ConsultantCard/ConsultantCard';
 import { TArgCallback } from '../../../../../types/types';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   isManagingFlow?: boolean;
@@ -39,6 +40,7 @@ export const Consultants: React.FC<TProps> = ({
     consultants,
     serviceTypeOption,
     isConsultantsLoading,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
@@ -47,10 +49,15 @@ export const Consultants: React.FC<TProps> = ({
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   useEffect(() => {
     if (!isCloneMode) dispatch(loadConsultants(id, serviceTypeOption?.id ?? null, onNext));

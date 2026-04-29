@@ -7,14 +7,23 @@ import { useTranslation } from 'react-i18next';
 import { IFirstScreenOption } from '../../../../../../store/reducers/serviceTypes/types';
 import { TitleWrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const ServiceType = () => {
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
-  const { t } = useTranslation();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
   );
+  const { t } = useTranslation();
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const getServiceName = (
     serviceTypeOption: IFirstScreenOption | null,

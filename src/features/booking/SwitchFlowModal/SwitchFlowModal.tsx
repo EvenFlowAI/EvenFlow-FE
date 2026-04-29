@@ -48,6 +48,8 @@ import {
 } from '../../../store/reducers/appointment/actions';
 import { decodeSCID } from '../../../utils/utils';
 import { useParams } from 'react-router-dom';
+import transportation from './Transportation/Transportation';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TProps = DialogProps & {
   selectedOption: IFirstScreenOption | null;
@@ -56,9 +58,11 @@ type TProps = DialogProps & {
 
 const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNext }) => {
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const { address, zipCode: zipCodeValue } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const {
+    address,
+    zipCode: zipCodeValue,
+    transportation,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { id } = useParams<{ id: string }>();
 
@@ -97,7 +101,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     newConfig?.appointmentSelection && selectedOption?.type !== EServiceType.PickUpDropOff;
   const isTransportationsVisible =
     Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
-  const isAddressVisible = selectedOption?.type === EServiceType.PickUpDropOff;
+  const isAddressVisible =
+    selectedOption?.type === EServiceType.PickUpDropOff ||
+    transportation?.id === ETransportationType.PickUpDelivery;
   const nextButtonIsDisabled = useMemo(() => {
     return !isAddressValid || (isTransportationsVisible && !transportationOption);
   }, [isAddressValid, isTransportationsVisible, transportationOption]);
@@ -277,12 +283,17 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
 
   const loadAncillaryPrice = (zipCode: string | null, address: any) => {
     if (scProfile) {
-      if (address && zipCode?.length === 5 && selectedOption?.type === EServiceType.PickUpDropOff) {
+      if (
+        address &&
+        zipCode?.length === 5 &&
+        (selectedOption?.type === EServiceType.PickUpDropOff ||
+          transportation?.id === ETransportationType.PickUpDelivery)
+      ) {
         const data: IAncillaryByZipRequest = {
           address: typeof address === 'string' ? address : address.label,
           zipCode,
           serviceCenterId: scProfile.id,
-          serviceTypeOptionId: selectedOption.id,
+          serviceTypeOptionId: selectedOption?.id,
         };
         dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onServiceIsUnavailable));
       }
@@ -345,7 +356,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
                   address={userAddress}
                   zipCode={zip}
                   disabled={
-                    selectedOption?.type === EServiceType.PickUpDropOff &&
+                    (selectedOption?.type === EServiceType.PickUpDropOff ||
+                      transportation?.id === ETransportationType.PickUpDelivery) &&
                     (!isAddressValid || isUnavailableServiceOpen || isAncillaryPriceOpen)
                   }
                 />
@@ -374,7 +386,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
               <Grid item xs={12} sm={6}>
                 <Timing
                   disabled={
-                    selectedOption?.type === EServiceType.PickUpDropOff &&
+                    (selectedOption?.type === EServiceType.PickUpDropOff ||
+                      transportation?.id === ETransportationType.PickUpDelivery) &&
                     (!userAddress || !zip || isUnavailableServiceOpen || isAncillaryPriceOpen)
                   }
                   timingType={timingType}

@@ -7,16 +7,24 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import { ReactComponent as PencilIcon } from '../../../../../../../assets/img/pencil.svg';
 import { useModal } from '../../../../../../../hooks/useModal/useModal';
 import EditAddressModal from '../../../../../EditAddressModal/EditAddressModal';
+import { ETransportationType } from '../../../../../../../store/reducers/transportationNeeds/types';
 
 const Address = () => {
-  const { serviceTypeOption, address, zipCode } = useSelector(
+  const { serviceTypeOption, address, zipCode, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { isOpen, onClose, onOpen } = useModal();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));

@@ -43,10 +43,15 @@ const YourLocationCreate: React.FC<TYourLocationProps> = ({
     [serviceOptionChangedFromSlotPage, serviceTypeOption, transportation]
   );
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const handleFirstScreenForAdmin = (prevScreen: TView) => {
     dispatch(setShowServiceCentersList(false));

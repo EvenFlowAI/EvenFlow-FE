@@ -16,6 +16,7 @@ import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/ty
 import { TScreen } from '../../../types/screens';
 import { MobileSteps } from './MobileSteps/MobileSteps';
 import { Index, Wrapper } from './styles';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   screen: TScreen;
@@ -35,6 +36,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     sideBarStepsList,
     serviceTypeOption,
     isAppointmentSaving,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
 
   const {
@@ -48,10 +50,15 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const { t } = useTranslation();
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   useEffect(() => {
     dispatch(

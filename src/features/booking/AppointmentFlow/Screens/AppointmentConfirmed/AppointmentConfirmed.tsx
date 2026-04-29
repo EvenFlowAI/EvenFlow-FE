@@ -76,10 +76,16 @@ export const AppointmentConfirmed: React.FC<
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const servicesList = useMemo(() => {
     return getMaintenanceDescription(
       serviceRequests,

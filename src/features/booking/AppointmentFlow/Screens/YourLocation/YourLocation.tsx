@@ -50,6 +50,7 @@ import {
   selectServiceValetAppointment,
 } from '../../../../../store/reducers/appointment/actions';
 import { EAppointmentTimingType } from '../../../../../store/reducers/appointment/types';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 const YourLocation: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TYourLocationProps>>
@@ -65,6 +66,7 @@ const YourLocation: React.FC<
     prevSelectedOption,
     ancillaryPriceLoading,
     isSVWithoutConfig,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const [zip, setZip] = useState<string>('');
   const [isFormChecked, setFormChecked] = useState<boolean>(false);
@@ -81,10 +83,15 @@ const YourLocation: React.FC<
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const placeholder = useMemo(
     () =>

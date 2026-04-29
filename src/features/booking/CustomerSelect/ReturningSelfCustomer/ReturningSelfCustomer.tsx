@@ -10,6 +10,7 @@ import { setUserType } from '../../../../store/reducers/appointmentFrameReducer/
 import { useLoadingStyles } from '../../../../hooks/styling/useLoadingStyles';
 import { useStyles } from '../styles';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
+import { ETransportationType } from '../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
@@ -21,7 +22,9 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   onComplete,
 }) => {
   const { customerEnteredEmail } = useSelector((state: RootState) => state.appointment);
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
 
   const { classes } = useStyles();
   const loadingClasses = useLoadingStyles();
@@ -31,10 +34,15 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   const isXs = useMediaQuery('xs');
   const dispatch = useDispatch();
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
     dispatch(setCustomerEnteredEmail(value));

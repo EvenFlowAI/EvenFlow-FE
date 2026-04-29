@@ -14,6 +14,7 @@ import {
 import { TCallback } from '../../../../types/types';
 import { useStyles } from './styles';
 import { setUnavailableServiceOpen } from '../../../../store/reducers/modals/actions';
+import { ETransportationType } from '../../../../store/reducers/transportationNeeds/types';
 
 type TUnavailableServiceProps = {
   setFormChecked: Dispatch<SetStateAction<boolean>>;
@@ -30,9 +31,8 @@ const UnavailableServiceModal: React.FC<
   onBackToServiceOption,
   onVisitCenter,
 }) => {
-  const { serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const { serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage, transportation } =
+    useSelector((state: RootState) => state.appointmentFrame);
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const { isUnavailableServiceOpen } = useSelector((state: RootState) => state.modals);
   const { classes: dialogClasses } = useDialogStyles();
@@ -40,10 +40,16 @@ const UnavailableServiceModal: React.FC<
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const isSameServiceTypeOption = useMemo(() => {
     return appointmentByKey?.serviceTypeOption?.id === serviceTypeOption?.id;
   }, [appointmentByKey, serviceTypeOption]);

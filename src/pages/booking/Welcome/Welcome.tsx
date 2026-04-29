@@ -49,12 +49,13 @@ import { useException } from '../../../hooks/useException/useException';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import usePopState from '../../../hooks/usePopState/usePopState';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { welcomeScreenView, serviceTypeOption } = useSelector(
+  const { welcomeScreenView, serviceTypeOption, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
@@ -71,10 +72,16 @@ export const Welcome = () => {
   const showError = useException();
   const isFrame = useLayout();
   const dispatch = useDispatch();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   useStorage();
 
