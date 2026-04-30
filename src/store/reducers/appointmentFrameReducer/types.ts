@@ -97,6 +97,7 @@ export interface IAncillaryByZipRequest {
   zipCode: string;
   serviceCenterId: number;
   serviceTypeOptionId?: number | null;
+  transportationOptionId?: number | null;
 }
 
 export enum EAncillaryType {

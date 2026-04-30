@@ -280,6 +280,8 @@ const YourLocation: React.FC<
         zipCode: zip,
         serviceCenterId: scProfile?.id,
         serviceTypeOptionId: serviceTypeOption?.id ?? null,
+        transportationOptionId:
+          serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
       };
       dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onUnavailableOpen));
     }

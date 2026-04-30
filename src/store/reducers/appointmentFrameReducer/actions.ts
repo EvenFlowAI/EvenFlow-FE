@@ -299,6 +299,7 @@ export const loadConsultantsForCloning =
       },
       address: address?.fullAddress ?? '',
       zipCode: address?.zipCode ?? '',
+      transportationOptionId: null,
     };
     if (hashKey) {
       data.appointmentHashKey = hashKey;
@@ -331,8 +332,14 @@ export const loadConsultantsForUpdating =
   (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
-    const { selectedVehicle, selectedRecalls, sideBarSteps, appointmentByKey } =
-      getState().appointmentFrame;
+    const {
+      selectedVehicle,
+      selectedRecalls,
+      sideBarSteps,
+      appointmentByKey,
+      serviceTypeOption,
+      transportation,
+    } = getState().appointmentFrame;
     const { isCloneMode } = getState().appointment;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
     const recalls = mapRecallsForRequest(selectedRecalls);
@@ -366,6 +373,8 @@ export const loadConsultantsForUpdating =
           },
           address: address?.fullAddress ?? '',
           zipCode: address?.zipCode ?? '',
+          transportationOptionId:
+            serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
         };
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
@@ -425,6 +434,8 @@ export const loadConsultants =
       sideBarSteps,
       advisor,
       appointmentByKey,
+      serviceTypeOption,
+      transportation,
     } = getState().appointmentFrame;
     const { selectedSR, selectedSRComments } = getState().appointment;
     const { allCategories } = getState().categories;
@@ -479,6 +490,8 @@ export const loadConsultants =
           },
           address: typeof address === 'string' ? address : (address?.label ?? ''),
           zipCode,
+          transportationOptionId:
+            serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
         };
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
