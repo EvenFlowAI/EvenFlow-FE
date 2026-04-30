@@ -376,6 +376,7 @@ export interface IConsultantsRequestData {
   vehicle: IVehicleForSlots;
   address?: string;
   zipCode?: string;
+  transportationOptionId: number | null;
   appointmentHashKey?: string;
 }
 

@@ -94,6 +94,7 @@ export const useServiceOption = (optionType: 'serviceType' | 'transportation') =
         zipCode: zipCode,
         serviceCenterId: decodeSCID(id),
         serviceTypeOptionId: option.id,
+        transportationOptionId: option?.transportationOption?.id ?? transportation?.id ?? null,
       };
       dispatch(
         loadAncillaryPriceByZip(

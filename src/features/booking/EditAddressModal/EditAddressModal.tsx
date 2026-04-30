@@ -29,9 +29,12 @@ import { useModal } from '../../../hooks/useModal/useModal';
 type TProps = DialogProps & {};
 
 const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
-  const { address, zipCode: zipCodeValue } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const {
+    address,
+    zipCode: zipCodeValue,
+    serviceTypeOption,
+    transportation,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile, slotsServiceTypeOptionId } = useSelector(
     (state: RootState) => state.appointment
   );
@@ -124,6 +127,8 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         zipCode: zip,
         serviceCenterId: scProfile?.id,
         serviceTypeOptionId: slotsServiceTypeOptionId,
+        transportationOptionId:
+          serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
       };
 
       dispatch(loadAncillaryPriceByZip(data, onAncillaryPriceOpen, handleError, () => {}));

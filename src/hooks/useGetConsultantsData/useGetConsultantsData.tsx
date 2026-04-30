@@ -24,6 +24,7 @@ const useGetConsultantsData = (
     subService,
     serviceCategories,
     appointmentByKey,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { selectedSR, selectedSRComments } = useSelector((state: RootState) => state.appointment);
   const { allCategories } = useSelector((state: RootState) => state.categories);
@@ -83,6 +84,8 @@ const useGetConsultantsData = (
           },
           address: typeof address === 'string' ? address : (address?.label ?? ''),
           zipCode,
+          transportationOptionId:
+            serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
         };
         if (appointmentByKey?.hashKey) {
           requestData.appointmentHashKey = appointmentByKey?.hashKey;

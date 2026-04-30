@@ -116,6 +116,13 @@ export const TransportationNeeds: React.FC<TProps> = ({
         onSwitchFlowOpen();
         clearSteps();
         dispatch(setIsSVWithoutConfig(true));
+      } else {
+        dispatch(selectAppointment(null));
+        // dispatch(setTransportation(null));
+        // setSelectedOption(serviceValetOption);
+        onSwitchFlowOpen();
+        clearSteps();
+        dispatch(setIsSVWithoutConfig(true));
       }
     }
   };
