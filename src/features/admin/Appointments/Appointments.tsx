@@ -100,6 +100,9 @@ export const Appointments = () => {
     const columns = localStorage.getItem(localStorageItemName);
     if (columns) {
       setSelectedColumns(JSON.parse(columns));
+    } else {
+      setSelectedColumns(requiredColumns);
+      localStorage.setItem(localStorageItemName, JSON.stringify(requiredColumns));
     }
   }, []);
 
