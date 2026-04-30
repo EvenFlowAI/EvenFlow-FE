@@ -11,9 +11,12 @@ import { useTranslation } from 'react-i18next';
 import { getCurrentAppointment } from '../../../../store/reducers/appointments/actions';
 import { BfButtonsWrapper } from '../../../styled/BfButtonsWrapper';
 
-const MileageModal: React.FC<
-  DialogProps & { onSave: TCallback; isAdminPanel?: boolean; blockClosing?: boolean }
-> = ({ open, onClose, isAdminPanel, onSave, blockClosing }) => {
+const MileageModal: React.FC<DialogProps & { onSave: TCallback; blockClosing?: boolean }> = ({
+  open,
+  onClose,
+  onSave,
+  blockClosing,
+}) => {
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
   const { selectedVehicle } = useSelector((state: RootState) => state.appointmentFrame);
   const { currentAppointment } = useSelector((state: RootState) => state.appointments);
@@ -35,17 +38,15 @@ const MileageModal: React.FC<
   };
 
   const updateData = async () => {
-    if (isAdminPanel) {
-      if (currentAppointment?.vehicle) {
-        await dispatch(
-          getCurrentAppointment({
-            ...currentAppointment,
-            vehicle: { ...currentAppointment.vehicle, mileage: +value },
-          })
-        );
-      } else {
-        await dispatch(updateVehicle({ mileage: +value }));
-      }
+    if (currentAppointment?.vehicle) {
+      await dispatch(
+        getCurrentAppointment({
+          ...currentAppointment,
+          vehicle: { ...currentAppointment.vehicle, mileage: +value },
+        })
+      );
+    } else {
+      await dispatch(updateVehicle({ mileage: +value }));
     }
   };
 
