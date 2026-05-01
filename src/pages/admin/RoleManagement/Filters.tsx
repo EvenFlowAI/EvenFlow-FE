@@ -50,6 +50,11 @@ const Filters = ({
 
   const applyFilters = (newFilters: IUserFilters) => {
     let filtered = [...users];
+
+    if (isAdminPanel) {
+      filtered = filtered.filter(u => u.status !== UserStatus.Removed);
+    }
+
     if (setFilterServiceCenterId) setFilterServiceCenterId(0);
 
     if (newFilters.dealershipId) {
