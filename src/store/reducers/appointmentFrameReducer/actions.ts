@@ -82,6 +82,7 @@ import {
   setAppointmentWasChanged,
   setCustomerLoadedData,
   setIsCloneMode,
+  setIsDemandSmoothMode,
   setSlotsSearchDate,
   setSlotsServiceTypeOptionId,
   setSlotsTransportationId,
@@ -1249,6 +1250,7 @@ export const createOrUpdateAppointment =
       onNext();
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
       dispatch(setIsCloneMode(false));
+      dispatch(setIsDemandSmoothMode(false));
     } catch (e) {
       onError(e);
     } finally {
@@ -1691,15 +1693,24 @@ export const handleAppointmentUpdate =
   ): AppThunk =>
   (dispatch, getState) => {
     const { firstScreenOptions } = getState().serviceTypes;
-    const key = car.appointmentHashKeys[car.appointmentHashKeys.length - 1];
+    const { isDemandSmoothMode, demandAppointmentId } = getState().appointment;
+    const key = isDemandSmoothMode
+      ? demandAppointmentId
+      : car.appointmentHashKeys[car.appointmentHashKeys.length - 1];
+
+    console.log(car);
+    console.log('isDemandSmoothMode', isDemandSmoothMode);
+    console.log('demandAppointmentId', demandAppointmentId);
+
+    const requestFunc = isDemandSmoothMode ? API.appointment.getBySource : API.appointment.getByKey;
 
     setLoadingCar(true);
     setServiceCategoryPage(EServiceCategoryPage.Page1);
     if (key) {
       dispatch(setAppointmentSaving(true));
-      API.appointment
-        .getByKey(key)
+      requestFunc(key)
         .then(({ data }) => {
+          console.log(data);
           if (data) {
             if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''));
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id);
