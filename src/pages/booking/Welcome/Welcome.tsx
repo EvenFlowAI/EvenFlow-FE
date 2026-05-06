@@ -54,6 +54,7 @@ import {
   VIN,
 } from '../../../types/URLQueryType';
 import { GetComponent } from './GetComponent';
+import { getAuthenticationTokenForAdmin } from '../../../api/helper';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
@@ -106,12 +107,14 @@ export const Welcome = () => {
   usePopState('select');
 
   const redirect = () => {
+    // Ignore redirect if we have query params and it is not a self-booking
     if (
-      serviceCenterIdFromParams?.length ||
-      firstNameFromParams?.length ||
-      lastNameFromParams ||
-      vinCodeFromParams?.length ||
-      contactFromParams?.length
+      (serviceCenterIdFromParams?.length ||
+        firstNameFromParams?.length ||
+        lastNameFromParams ||
+        vinCodeFromParams?.length ||
+        contactFromParams?.length) &&
+      getAuthenticationTokenForAdmin()
     )
       return;
     const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
