@@ -124,14 +124,14 @@ export const Welcome = () => {
     redirect();
   };
 
-  const getData = () => {
+  const getData = (emailFromQuery?: string) => {
     try {
       setLoading(true);
       dispatch(
         loadCustomersByPhoneOrEmail(
           scProfile?.id ?? 0,
           showError,
-          customerEnteredEmail,
+          emailFromQuery || customerEnteredEmail,
           onSuccessForCustomer,
           onOpen
         )
@@ -174,10 +174,17 @@ export const Welcome = () => {
     }
   };
 
-  const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
+  const onComplete = async (
+    serviceType: EServiceType,
+    selectedUserType?: EUserType,
+    emailFromQuery?: string
+  ) => {
     handleValueServiceConfig(serviceType);
-    if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-      getData();
+    if (
+      (customerEnteredEmail || emailFromQuery?.length) &&
+      selectedUserType === EUserType.Existing
+    ) {
+      getData(emailFromQuery);
     } else {
       handleFirstScreen();
     }
