@@ -73,18 +73,20 @@ const ReturningCustomerForAdmin: React.FC<
   const { classes: returningClasses } = useCustomerSelectStyles();
 
   const onClearURLParams = () => {
-    const params = new URLSearchParams(location.search);
+    setTimeout(() => {
+      const params = new URLSearchParams(location.search);
 
-    params.delete(CONTACT);
-    params.delete(SERVICE_CENTER_ID);
-    params.delete(FIRST_NAME);
-    params.delete(LAST_NAME);
-    params.delete(VIN);
+      params.delete(CONTACT);
+      params.delete(SERVICE_CENTER_ID);
+      params.delete(FIRST_NAME);
+      params.delete(LAST_NAME);
+      params.delete(VIN);
 
-    history.replace({
-      pathname: location.pathname,
-      search: params.toString(),
-    });
+      history.replace({
+        pathname: location.pathname,
+        search: params.toString(),
+      });
+    }, 1000);
   };
 
   useEffect(() => {
