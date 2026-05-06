@@ -329,8 +329,8 @@ const Transportations: React.FC<
                   placeholder: 'Select',
                   error: Boolean(
                     currentEmployee &&
-                    !currentTransportationData?.usersList?.includes(currentEmployee?.id) &&
-                    formChecked
+                      !currentTransportationData?.usersList?.includes(currentEmployee?.id) &&
+                      formChecked
                   ),
                 })}
               />
