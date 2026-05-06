@@ -122,7 +122,7 @@ const ReturningCustomerForAdmin: React.FC<
     } else {
       console.info('No params for automatically search found');
     }
-  }, [contactFromParams]);
+  }, [vinCodeFromParams, firstNameFromParams, contactFromParams, lastNameFromParams]);
 
   const formIsValid = useMemo(() => {
     return (
