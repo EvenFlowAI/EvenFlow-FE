@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { TextField } from '../../../../components/styled/EndUserInputs';
 import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -10,9 +10,10 @@ import { setUserType } from '../../../../store/reducers/appointmentFrameReducer/
 import { useLoadingStyles } from '../../../../hooks/styling/useLoadingStyles';
 import { useStyles } from '../styles';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
+import { CONTACT } from '../../../../types/URLQueryType';
 
 type TProps = {
-  onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
+  onComplete: (serviceType: EServiceType, userType?: EUserType, emailFromQuery?: string) => void;
   loading: boolean;
 };
 
@@ -30,6 +31,18 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isXs = useMediaQuery('xs');
   const dispatch = useDispatch();
+  const params = new URL(window.location.href).searchParams;
+  const contactFromParams = params.get(CONTACT);
+
+  useEffect(() => {
+    if (contactFromParams?.length) {
+      dispatch(setUserType(EUserType.Existing));
+      dispatch(setCustomerEnteredEmail(contactFromParams || ''));
+      onComplete(serviceType, EUserType.Existing, contactFromParams);
+    } else {
+      console.info('No params for automatically search found');
+    }
+  }, [contactFromParams]);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
