@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
-import { CustomerSelect } from '../../../features/booking/CustomerSelect/CustomerSelect';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
@@ -30,7 +28,6 @@ import {
   setWelcomeScreenView,
   setZipCode,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import ServiceTypeSelect from '../../../features/booking/ServiceTypeSelect/ServiceTypeSelect';
 import { EServiceType, EUserType } from '../../../store/reducers/appointmentFrameReducer/types';
 import ReactGA from 'react-ga4';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +37,6 @@ import {
   loadCustomersByPhoneOrEmail,
   setCustomerSearchData,
 } from '../../../store/reducers/enhancedCustomerSearch/actions';
-import ServiceCenterSelect from '../../../features/booking/ServiceCenterSelect/ServiceCenterSelect';
 import { TView } from '../../../types/types';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useStorage } from '../../../hooks/useStorage/useStorage';
@@ -57,6 +53,7 @@ import {
   SERVICE_CENTER_ID,
   VIN,
 } from '../../../types/URLQueryType';
+import { GetComponent } from './GetComponent';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
@@ -243,28 +240,17 @@ export const Welcome = () => {
   };
 
   const getComponent = () => {
-    switch (welcomeScreenView) {
-      case 'serviceCenterSelect':
-        return <ServiceCenterSelect />;
-      case 'search':
-      case 'serviceSelect':
-        return (
-          <ServiceTypeSelect
-            loading={loading}
-            handleValueServiceConfig={handleValueServiceConfig}
-          />
-        );
-      case 'select':
-      default:
-        return (
-          <CustomerSelect
-            loading={loading || isLoading}
-            onComplete={onComplete}
-            handleNew={handleNew}
-            redirect={redirect}
-          />
-        );
-    }
+    return (
+      <GetComponent
+        welcomeScreenView={welcomeScreenView}
+        handleValueServiceConfig={handleValueServiceConfig}
+        handleNew={handleNew}
+        redirect={redirect}
+        isLoading={isLoading}
+        loading={loading}
+        onComplete={onComplete}
+      />
+    );
   };
 
   const getTitle = (view: TView) => {
@@ -277,8 +263,6 @@ export const Welcome = () => {
   const getSubTitle = (view: TView) => {
     return view === 'serviceSelect' ? t('Or use our mobile service?') : t('schedule service');
   };
-
-  // todo uncomment language switcher
 
   return !scProfile || isProfileLoading || shortLoading ? (
     <Loading />
