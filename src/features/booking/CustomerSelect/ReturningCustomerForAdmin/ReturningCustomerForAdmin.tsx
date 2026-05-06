@@ -189,7 +189,7 @@ const ReturningCustomerForAdmin: React.FC<
               name="firstName"
               variant="standard"
               placeholder={t('Enter First Name')}
-              error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
+              error={formIsChecked && !formIsValid}
               onChange={onTextChange('firstName')}
               InputProps={{
                 disableUnderline: true,
@@ -205,7 +205,7 @@ const ReturningCustomerForAdmin: React.FC<
               name="lastName"
               variant="standard"
               placeholder={t('Enter Last Name')}
-              error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
+              error={formIsChecked && !formIsValid}
               onChange={onTextChange('lastName')}
               InputProps={{
                 disableUnderline: true,
