@@ -50,6 +50,13 @@ import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import usePopState from '../../../hooks/usePopState/usePopState';
 import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
+import {
+  CONTACT,
+  FIRST_NAME,
+  LAST_NAME,
+  SERVICE_CENTER_ID,
+  VIN,
+} from '../../../types/URLQueryType';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
@@ -58,6 +65,12 @@ export const Welcome = () => {
   const { welcomeScreenView, serviceTypeOption, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  const params = new URL(window.location.href).searchParams;
+  const serviceCenterIdFromParams = params.get(SERVICE_CENTER_ID);
+  const contactFromParams = params.get(CONTACT);
+  const firstNameFromParams = params.get(FIRST_NAME);
+  const lastNameFromParams = params.get(LAST_NAME);
+  const vinCodeFromParams = params.get(VIN);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { isLoading } = useSelector((state: RootState) => state.customers);
@@ -96,6 +109,14 @@ export const Welcome = () => {
   usePopState('select');
 
   const redirect = () => {
+    if (
+      serviceCenterIdFromParams?.length ||
+      firstNameFromParams?.length ||
+      lastNameFromParams ||
+      vinCodeFromParams?.length ||
+      contactFromParams?.length
+    )
+      return;
     const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
     if (id) {
       history.push(route.replace(':id', id));
