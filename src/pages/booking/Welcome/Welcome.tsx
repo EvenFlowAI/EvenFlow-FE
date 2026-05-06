@@ -41,7 +41,7 @@ import {
   setCustomerSearchData,
 } from '../../../store/reducers/enhancedCustomerSearch/actions';
 import ServiceCenterSelect from '../../../features/booking/ServiceCenterSelect/ServiceCenterSelect';
-import { TView } from '../../../types/types';
+import { Roles, TView } from '../../../types/types';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { useLayout } from '../../../hooks/useLayout/useLayout';
@@ -56,6 +56,8 @@ import {
   SERVICE_CENTER_ID,
   VIN,
 } from '../../../types/URLQueryType';
+import { getAuthenticationTokenForAdmin } from '../../../api/helper';
+import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
@@ -74,11 +76,10 @@ export const Welcome = () => {
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { isLoading } = useSelector((state: RootState) => state.customers);
   const { shortLoading } = useSelector((state: RootState) => state.serviceCenters);
-
+  const currentUser = useCurrentUser();
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useModal();
-
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const showError = useException();
@@ -103,12 +104,15 @@ export const Welcome = () => {
   usePopState('select');
 
   const redirect = () => {
+    // Ignore redirect if we have query params and it is not a self-booking
     if (
-      serviceCenterIdFromParams?.length ||
-      firstNameFromParams?.length ||
-      lastNameFromParams ||
-      vinCodeFromParams?.length ||
-      contactFromParams?.length
+      (serviceCenterIdFromParams?.length ||
+        firstNameFromParams?.length ||
+        lastNameFromParams ||
+        vinCodeFromParams?.length ||
+        contactFromParams?.length) &&
+      getAuthenticationTokenForAdmin() &&
+      currentUser?.role !== Roles.EvenFlowAdmin
     )
       return;
     const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
@@ -280,16 +284,12 @@ export const Welcome = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={frameTheme}>
         <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew} />
-        <FrameWelcomeLayout>
-          {/*<LanguageSwitcher/>*/}
-          {getComponent()}
-        </FrameWelcomeLayout>
+        <FrameWelcomeLayout>{getComponent()}</FrameWelcomeLayout>
       </ThemeProvider>
     </StyledEngineProvider>
   ) : (
     <React.Fragment>
       <WelcomeLayout title={getTitle(welcomeScreenView)} subtitle={getSubTitle(welcomeScreenView)}>
-        {/*<LanguageSwitcher/>*/}
         {getComponent()}
         <ExistingCustomerError open={isOpen} onClose={onClose} onNext={handleNew} />
       </WelcomeLayout>

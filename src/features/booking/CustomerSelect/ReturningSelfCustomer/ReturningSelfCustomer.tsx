@@ -40,9 +40,9 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
       dispatch(setCustomerEnteredEmail(contactFromParams || ''));
       onComplete(serviceType, EUserType.Existing, contactFromParams);
     } else {
-      console.info('No params for automatically search found');
+      console.info('[SELF]: No params for automatically search found');
     }
-  }, [contactFromParams]);
+  }, []);
 
   const serviceType = useMemo(
     () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
