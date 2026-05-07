@@ -173,11 +173,7 @@ const AppointmentAutocompleteGroup = ({
           onChange={handleSCChange}
           getOptionLabel={i => i.code}
           isOptionEqualToValue={(o, v) => o.id === v.id}
-          renderOption={(props, option) => (
-            <li {...props} key={option.id}>
-              {option.code}
-            </li>
-          )}
+          renderOption={autocompleteOptionsRender(e => e.code)}
           loading={false}
           value={form.serviceRequests}
           renderInput={autocompleteRender({
