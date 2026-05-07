@@ -11,6 +11,7 @@ import { updateVehicle } from '../../../../../../store/reducers/appointmentFrame
 
 const FormWithAutocompletes: React.FC<TFormProps> = ({
   orderMapStyles,
+  tabOrderMap,
   isExistingVehicle,
   requiredFields,
   loadedOptions,
@@ -85,6 +86,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
               : `${t('Select')} ${t('Year')}`,
             error: errors.includes('year'),
             required: requiredFields.includes('year'),
+            tabIndex: tabOrderMap.year,
           })}
           value={selectedVehicle?.year ? selectedVehicle.year.toString() : ''}
         />
@@ -108,6 +110,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
               : `${t('Select')} ${t('Estimated mileage')}`,
             error: errors.includes('mileage'),
             required: requiredFields.includes('mileage'),
+            tabIndex: tabOrderMap.mileage,
           })}
           value={selectedVehicle?.mileage ? selectedVehicle.mileage.toString() : ''}
         />
@@ -132,6 +135,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
               : `${t('Select')} ${t('Make')}`,
             error: errors.includes('make'),
             required: requiredFields.includes('make'),
+            tabIndex: tabOrderMap.make,
           })}
           value={selectedVehicle?.make ? selectedVehicle.make?.toString() : ''}
         />
@@ -156,6 +160,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
                 : `${t('Select')} ${scProfile?.engineTypeFieldName ?? t('Engine Type')}`,
               error: errors.includes('engineTypeId'),
               required: true,
+              tabIndex: tabOrderMap.engineType,
             })}
             value={selectedEngine}
           />
@@ -180,6 +185,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
               : `${t('Select')} ${t('Model')}`,
             error: errors.includes('model'),
             required: requiredFields.includes('model'),
+            tabIndex: tabOrderMap.model,
           })}
           value={selectedVehicle?.model ? selectedVehicle.model.toString() : ''}
         />

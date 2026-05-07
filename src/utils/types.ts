@@ -42,6 +42,7 @@ export type TTextParams = {
   error?: boolean;
   required?: boolean;
   key?: string;
+  tabIndex?: number;
 };
 
 export type TGAOptions = {

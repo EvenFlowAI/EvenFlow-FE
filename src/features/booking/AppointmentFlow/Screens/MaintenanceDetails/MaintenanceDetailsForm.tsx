@@ -25,7 +25,13 @@ import { IEngineType } from '../../../../../store/reducers/vehicleDetails/types'
 import RecallsByVinModal from '../../../RecallsByVinModal/RecallsByVinModal';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import NoRecallsModal from '../../../NoRecallsModal/NoRecallsModal';
-import { TKey, TMaintenanceDetailsProps, TOptionsState } from './types';
+import {
+  TKey,
+  TMaintenanceDetailsProps,
+  TOptionsState,
+  TTabOrderField,
+  TTabOrderMap,
+} from './types';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
@@ -78,7 +84,6 @@ export const MaintenanceDetailsForm: React.FC<
 
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
   const isSM = useMediaQuery(theme.breakpoints.down('md'));
-  const requiredFields: TKey[] = ['model', 'year', 'make', 'mileage'];
 
   const isBmWService = useMemo(
     () =>
@@ -136,6 +141,12 @@ export const MaintenanceDetailsForm: React.FC<
     return isServiceRecall || isSubServiceRecall;
   }, [service, subService]);
 
+  const requiredFields = useMemo<TKey[]>(() => {
+    const fields: TKey[] = ['model', 'year', 'make', 'mileage'];
+    if (isRecallsCategorySelected) fields.push('vin' as TKey);
+    return fields;
+  }, [isRecallsCategorySelected]);
+
   const onlyRecallsSelected = useMemo(() => {
     const selectedCategories = allCategories.filter(el =>
       serviceCategories.map(item => item.id).includes(el.id)
@@ -183,10 +194,6 @@ export const MaintenanceDetailsForm: React.FC<
       }
     }
   }, [dispatch, mileage, selectedVehicle]);
-
-  useEffect(() => {
-    if (isRecallsCategorySelected) requiredFields.push('vin');
-  }, [isRecallsCategorySelected]);
 
   useEffect(() => {
     if (selectedVehicle?.engineTypeId && engineTypes.length) {
@@ -421,6 +428,20 @@ export const MaintenanceDetailsForm: React.FC<
     engineType: { order: isSM ? 4 : 3 },
   };
 
+  const tabOrderMap = useMemo<TTabOrderMap>(() => {
+    const fields: TTabOrderField[] = ['make', 'year', 'model', 'mileage', 'engineType', 'vin'];
+    const orderedFields = [...fields].sort((a, b) => {
+      const orderDelta = orderMapStyles[a].order - orderMapStyles[b].order;
+      if (orderDelta !== 0) return orderDelta;
+      return fields.indexOf(a) - fields.indexOf(b);
+    });
+
+    return orderedFields.reduce((acc, field, index) => {
+      acc[field] = index + 1;
+      return acc;
+    }, {} as TTabOrderMap);
+  }, [orderMapStyles]);
+
   const onNextForRecalls = () => {
     if (onlyRecallsSelected && !selectedRecalls.length) {
       dispatch(clearAppointmentSteps('serviceNeeds'));
@@ -440,6 +461,7 @@ export const MaintenanceDetailsForm: React.FC<
             <FormWithSelectors
               loadedOptions={loadedOptions}
               setLoadedOptions={setLoadedOptions}
+              tabOrderMap={tabOrderMap}
               errors={errors}
               setErrors={setErrors}
               selectedEngine={selectedEngine}
@@ -453,6 +475,7 @@ export const MaintenanceDetailsForm: React.FC<
             <FormWithAutocompletes
               loadedOptions={loadedOptions}
               setLoadedOptions={setLoadedOptions}
+              tabOrderMap={tabOrderMap}
               errors={errors}
               setErrors={setErrors}
               selectedEngine={selectedEngine}
@@ -469,6 +492,7 @@ export const MaintenanceDetailsForm: React.FC<
             setErrors={setErrors}
             errors={errors}
             orderMapStyles={orderMapStyles}
+            tabOrderMap={tabOrderMap}
             requiredFields={requiredFields}
             isRecallsCategorySelected={isRecallsCategorySelected}
           />

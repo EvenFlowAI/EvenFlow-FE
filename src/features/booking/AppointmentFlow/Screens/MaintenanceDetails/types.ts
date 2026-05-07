@@ -10,8 +10,12 @@ export type TOptionsState = { [s: string]: string[] };
 export type TOrderStyles = {
   [s: string]: { order: number };
 };
+export type TTabOrderField = 'make' | 'mileage' | 'model' | 'engineType' | 'year' | 'vin';
+export type TTabOrderMap = Record<TTabOrderField, number>;
+
 export type TFormProps = {
   orderMapStyles: TOrderStyles;
+  tabOrderMap: TTabOrderMap;
   isExistingVehicle: boolean;
   requiredFields: TKey[];
   loadedOptions: TOptionsState;

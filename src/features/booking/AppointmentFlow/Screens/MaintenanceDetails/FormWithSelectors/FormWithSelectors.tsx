@@ -13,6 +13,7 @@ export const FormWithSelectors: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TFormProps>>
 > = ({
   orderMapStyles,
+  tabOrderMap,
   isExistingVehicle,
   requiredFields,
   loadedOptions,
@@ -115,6 +116,7 @@ export const FormWithSelectors: React.FC<
           required={requiredFields.includes('year')}
           disabled={isExistingVehicle}
           onChange={handleSelectChange('year', false)}
+          inputProps={{ tabIndex: tabOrderMap.year }}
         >
           <MenuItem disabled value="">
             {errors.includes('year')
@@ -146,6 +148,7 @@ export const FormWithSelectors: React.FC<
           error={errors.includes('mileage')}
           required={requiredFields.includes('mileage')}
           onChange={handleSelectChange('mileage', false)}
+          inputProps={{ tabIndex: tabOrderMap.mileage }}
         >
           <MenuItem disabled value="">
             {errors.includes('mileage')
@@ -185,6 +188,7 @@ export const FormWithSelectors: React.FC<
           }
           disabled={Boolean(isExistingSelectedVehicle?.make)}
           onChange={handleSelectChange('make', false)}
+          inputProps={{ tabIndex: tabOrderMap.make }}
         >
           <MenuItem disabled value="">
             {errors.includes('make')
@@ -220,6 +224,7 @@ export const FormWithSelectors: React.FC<
             style={{ color: selectedVehicle?.engineTypeId ? 'inherit' : '#858585' }}
             disabled={Boolean(selectedEngine) && Boolean(appointmentByKey?.vehicle?.engineTypeId)}
             onChange={handleEngineTypeChange}
+            inputProps={{ tabIndex: tabOrderMap.engineType }}
           >
             <MenuItem disabled value="">
               {errors.includes('engineTypeId')
@@ -252,6 +257,7 @@ export const FormWithSelectors: React.FC<
           style={{ color: selectedVehicle?.model ? 'inherit' : '#858585' }}
           disabled={Boolean(isExistingSelectedVehicle?.model)}
           onChange={handleSelectChange('model', false)}
+          inputProps={{ tabIndex: tabOrderMap.model }}
         >
           <MenuItem disabled value="">
             {errors.includes('model')
