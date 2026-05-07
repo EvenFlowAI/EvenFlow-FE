@@ -37,7 +37,7 @@ import {
   loadCustomersByPhoneOrEmail,
   setCustomerSearchData,
 } from '../../../store/reducers/enhancedCustomerSearch/actions';
-import { TView } from '../../../types/types';
+import { Roles, TView } from '../../../types/types';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { useLayout } from '../../../hooks/useLayout/useLayout';
@@ -55,6 +55,7 @@ import {
 } from '../../../types/URLQueryType';
 import { GetComponent } from './GetComponent';
 import { getAuthenticationTokenForAdmin } from '../../../api/helper';
+import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
@@ -83,6 +84,7 @@ export const Welcome = () => {
   const showError = useException();
   const isFrame = useLayout();
   const dispatch = useDispatch();
+  const currentUser = useCurrentUser();
 
   const serviceType = useMemo(() => {
     if (serviceTypeOption) {
@@ -114,7 +116,8 @@ export const Welcome = () => {
         lastNameFromParams ||
         vinCodeFromParams?.length ||
         contactFromParams?.length) &&
-      getAuthenticationTokenForAdmin()
+      getAuthenticationTokenForAdmin() &&
+      currentUser?.role !== Roles.EvenFlowAdmin
     )
       return;
     const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;

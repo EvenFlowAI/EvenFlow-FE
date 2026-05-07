@@ -61,6 +61,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     address,
     zipCode: zipCodeValue,
     transportation,
+    transportations,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { id } = useParams<{ id: string }>();
@@ -98,8 +99,6 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     item =>
       item.serviceType === selectedOption?.type || item.serviceType === EServiceType.PickUpDropOff
   );
-
-  console.log(transportation);
 
   const isDateSelectionOn =
     selectedOption &&
@@ -244,7 +243,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
         if (data.address) dispatch(setStreetName(data.address));
       });
     }
-    console.log(transportationOption);
+
     dispatch(
       updateAppointmentDetails({
         address: userAddress,
@@ -252,7 +251,10 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
         date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
         timing: timingType,
         transportation:
-          (selectedOption?.transportationOption ?? transportationOption) || transportation,
+          (selectedOption?.transportationOption ?? transportationOption) ||
+          selectedOption?.type === EServiceType.PickUpDropOff
+            ? (transportations.find(t => t.type === ETransportationType.PickUpDelivery) ?? null)
+            : transportations[0],
         zip: zip ? zip.substring(0, 5) : '',
         serviceTypeOption: selectedOption,
       })
