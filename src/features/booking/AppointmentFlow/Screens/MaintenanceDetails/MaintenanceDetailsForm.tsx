@@ -25,7 +25,14 @@ import { IEngineType } from '../../../../../store/reducers/vehicleDetails/types'
 import RecallsByVinModal from '../../../RecallsByVinModal/RecallsByVinModal';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import NoRecallsModal from '../../../NoRecallsModal/NoRecallsModal';
-import { TKey, TMaintenanceDetailsProps, TOptionsState } from './types';
+import {
+  TKey,
+  TMaintenanceDetailsProps,
+  TOptionsState,
+  TOrderStyles,
+  TTabOrderField,
+  TTabOrderMap,
+} from './types';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
@@ -78,7 +85,6 @@ export const MaintenanceDetailsForm: React.FC<
 
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
   const isSM = useMediaQuery(theme.breakpoints.down('md'));
-  const requiredFields: TKey[] = ['model', 'year', 'make', 'mileage'];
 
   const isBmWService = useMemo(
     () =>
@@ -87,23 +93,7 @@ export const MaintenanceDetailsForm: React.FC<
     [scProfile]
   );
 
-  const isExistingVehicle = useMemo(() => {
-    return Boolean(
-      customerLoadedData?.vehicles.find(v => {
-        return (
-          (v.vin &&
-            selectedVehicle?.vin &&
-            v.vin?.toUpperCase() === selectedVehicle?.vin?.toUpperCase()) ||
-          (v.make?.toLowerCase() === selectedVehicle?.make?.toLowerCase() &&
-            v.model?.toLowerCase() === selectedVehicle?.model?.toLowerCase() &&
-            v.year &&
-            v.year?.toString() === selectedVehicle?.year?.toString())
-        );
-      })
-    );
-  }, [selectedVehicle, customerLoadedData]);
-
-  const isExistingSelectedVehicle = useMemo(
+  const existingSelectedVehicleMatch = useMemo(
     () =>
       customerLoadedData?.vehicles.find(v => {
         return (
@@ -135,6 +125,12 @@ export const MaintenanceDetailsForm: React.FC<
       subService.page === EServiceCategoryPage.Page2;
     return isServiceRecall || isSubServiceRecall;
   }, [service, subService]);
+
+  const requiredFields = useMemo<TKey[]>(() => {
+    const fields: TKey[] = ['model', 'year', 'make', 'mileage'];
+    if (isRecallsCategorySelected) fields.push('vin' as TKey);
+    return fields;
+  }, [isRecallsCategorySelected]);
 
   const onlyRecallsSelected = useMemo(() => {
     const selectedCategories = allCategories.filter(el =>
@@ -183,10 +179,6 @@ export const MaintenanceDetailsForm: React.FC<
       }
     }
   }, [dispatch, mileage, selectedVehicle]);
-
-  useEffect(() => {
-    if (isRecallsCategorySelected) requiredFields.push('vin');
-  }, [isRecallsCategorySelected]);
 
   useEffect(() => {
     if (selectedVehicle?.engineTypeId && engineTypes.length) {
@@ -412,14 +404,31 @@ export const MaintenanceDetailsForm: React.FC<
     setLoading(false);
   };
 
-  const orderMapStyles = {
-    year: { order: isSM ? 2 : !currentConfig?.engineType && !recallsToggledOn ? 1 : 4 },
-    mileage: { order: (currentConfig?.engineType || recallsToggledOn) && !isSM ? 1 : 3 },
-    make: { order: 0 },
-    model: { order: isSM ? 1 : 2 },
-    vin: { order: isSM ? 5 : currentConfig?.engineType ? 5 : 3 },
-    engineType: { order: isSM ? 4 : 3 },
-  };
+  const orderMapStyles = useMemo<TOrderStyles>(
+    () => ({
+      year: { order: isSM ? 2 : !currentConfig?.engineType && !recallsToggledOn ? 1 : 4 },
+      mileage: { order: (currentConfig?.engineType || recallsToggledOn) && !isSM ? 1 : 3 },
+      make: { order: 0 },
+      model: { order: isSM ? 1 : 2 },
+      vin: { order: isSM ? 5 : currentConfig?.engineType ? 5 : 3 },
+      engineType: { order: isSM ? 4 : 3 },
+    }),
+    [isSM, currentConfig?.engineType, recallsToggledOn]
+  );
+
+  const tabOrderMap = useMemo<TTabOrderMap>(() => {
+    const fields: TTabOrderField[] = ['make', 'year', 'model', 'mileage', 'engineType', 'vin'];
+    const orderedFields = [...fields].sort((a, b) => {
+      const orderDelta = orderMapStyles[a].order - orderMapStyles[b].order;
+      if (orderDelta !== 0) return orderDelta;
+      return fields.indexOf(a) - fields.indexOf(b);
+    });
+
+    return orderedFields.reduce((acc, field, index) => {
+      acc[field] = index + 1;
+      return acc;
+    }, {} as TTabOrderMap);
+  }, [orderMapStyles]);
 
   const onNextForRecalls = () => {
     if (onlyRecallsSelected && !selectedRecalls.length) {
@@ -440,27 +449,29 @@ export const MaintenanceDetailsForm: React.FC<
             <FormWithSelectors
               loadedOptions={loadedOptions}
               setLoadedOptions={setLoadedOptions}
+              tabOrderMap={tabOrderMap}
               errors={errors}
               setErrors={setErrors}
               selectedEngine={selectedEngine}
               setSelectedEngine={setSelectedEngine}
-              isExistingVehicle={isExistingVehicle}
+              isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
               orderMapStyles={orderMapStyles}
               requiredFields={requiredFields}
-              isExistingSelectedVehicle={isExistingSelectedVehicle}
+              isExistingSelectedVehicle={existingSelectedVehicleMatch}
             />
           ) : (
             <FormWithAutocompletes
               loadedOptions={loadedOptions}
               setLoadedOptions={setLoadedOptions}
+              tabOrderMap={tabOrderMap}
               errors={errors}
               setErrors={setErrors}
               selectedEngine={selectedEngine}
               setSelectedEngine={setSelectedEngine}
-              isExistingVehicle={isExistingVehicle}
+              isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
               orderMapStyles={orderMapStyles}
               requiredFields={requiredFields}
-              isExistingSelectedVehicle={isExistingSelectedVehicle}
+              isExistingSelectedVehicle={existingSelectedVehicleMatch}
             />
           )}
 
@@ -469,6 +480,7 @@ export const MaintenanceDetailsForm: React.FC<
             setErrors={setErrors}
             errors={errors}
             orderMapStyles={orderMapStyles}
+            tabOrderMap={tabOrderMap}
             requiredFields={requiredFields}
             isRecallsCategorySelected={isRecallsCategorySelected}
           />

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
 import { useStyles } from '../styles';
 import { useTranslation } from 'react-i18next';
-import { TKey, TOrderStyles } from '../types';
+import { TKey, TOrderStyles, TTabOrderMap } from '../types';
 import {
   setRecallsAreShown,
   updateVehicle,
@@ -15,6 +15,7 @@ import {
 type TProps = {
   isRecallsCategorySelected: boolean;
   orderMapStyles: TOrderStyles;
+  tabOrderMap: TTabOrderMap;
   requiredFields: TKey[];
   errors: TKey[];
   setErrors: Dispatch<SetStateAction<TKey[]>>;
@@ -24,6 +25,7 @@ type TProps = {
 const VinCodeInput: React.FC<TProps> = ({
   isRecallsCategorySelected,
   orderMapStyles,
+  tabOrderMap,
   errors,
   setErrors,
   requiredFields,
@@ -85,6 +87,7 @@ const VinCodeInput: React.FC<TProps> = ({
             ? `${t('VIN')} ${t('required')}`
             : `${t('Type')} ${t('VIN')} ${isRecallsCategorySelected ? '' : `(${t('Optional')})`}`
         }
+        inputProps={{ tabIndex: tabOrderMap.vin }}
       />
       {/*<div className={recallsToggledOn && !isRecallsCategorySelected ? classes.vinWrapper : ""}>*/}
       {/*    */}

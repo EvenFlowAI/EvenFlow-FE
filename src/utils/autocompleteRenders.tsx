@@ -10,6 +10,11 @@ import {
 
 export const autocompleteRender =
   (props: TTextParams) => (params: AutocompleteRenderInputParams) => {
+    const inputProps = {
+      ...params.inputProps,
+      ...(typeof props.tabIndex === 'number' ? { tabIndex: props.tabIndex } : {}),
+    };
+
     return (
       <TextField
         sx={
@@ -23,7 +28,7 @@ export const autocompleteRender =
         }
         label={props.label}
         name={'undefined-name'}
-        params={params}
+        params={{ ...params, inputProps }}
         error={props.error}
         placeholder={props.placeholder}
         required={props.required}
