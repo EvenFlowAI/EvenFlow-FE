@@ -27,6 +27,7 @@ import { useAppInitialization } from './hooks/useAppInitialization/useAppInitial
 import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandler';
 import { LicenseInfo } from '@mui/x-license';
 import { MUI_PRO_LICENSE_KEY } from './config/tokens';
+import { ETransportationType } from './store/reducers/transportationNeeds/types';
 
 const App = () => {
   const { scProfile, isTopAligning, isCloneMode } = useSelector(
@@ -35,7 +36,9 @@ const App = () => {
   const { config, currentConfig, isAdvisorAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const [valueServiceNextScreen, setValueServiceNextScreen] =
     useState<TScreen>('consultantSelection');
   const [valueServicePreviousScreen, setValueServicePreviousScreen] =
@@ -135,7 +138,8 @@ const App = () => {
   useEffect(() => {
     if (
       serviceTypeOption?.type === EServiceType.MobileService ||
-      serviceTypeOption?.type === EServiceType.PickUpDropOff
+      serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+      transportation?.type === ETransportationType.PickUpDelivery
     ) {
       setValueServicePreviousScreen('location');
     } else {

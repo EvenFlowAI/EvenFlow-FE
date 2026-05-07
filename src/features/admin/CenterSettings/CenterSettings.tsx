@@ -130,7 +130,7 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
           isLoading={isLoading}
         />
       </>
-      <LeadTime onEdit={onLeadTimeOpen} />
+      {serviceType === 'PickUpDropOff' ? <LeadTime onEdit={onLeadTimeOpen} /> : null}
       <div style={{ visibility: 'hidden' }}></div>
       <ClockTimePicker
         open={isOpen}

@@ -99,7 +99,17 @@ export const Appointments = () => {
   useEffect(() => {
     const columns = localStorage.getItem(localStorageItemName);
     if (columns) {
-      setSelectedColumns(JSON.parse(columns));
+      const columnsParsed = JSON.parse(columns);
+      const customerNameColumnPresent = columnsParsed.find((el: string) => el === 'Customer Name');
+      if (customerNameColumnPresent) {
+        setSelectedColumns(requiredColumns);
+        localStorage.setItem(localStorageItemName, JSON.stringify(requiredColumns));
+      } else {
+        setSelectedColumns(columnsParsed);
+      }
+    } else {
+      setSelectedColumns(requiredColumns);
+      localStorage.setItem(localStorageItemName, JSON.stringify(requiredColumns));
     }
   }, []);
 

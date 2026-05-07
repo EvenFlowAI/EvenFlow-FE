@@ -6,6 +6,7 @@ import { setChangesCompletedOpen } from '../../../../../store/reducers/modals/ac
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TAppointmentSelectionProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -23,7 +24,8 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const fromServiceValetToVisitCenter = useMemo(() => {
     return (
       serviceTypeOption?.type === EServiceType.VisitCenter &&
-      appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff
+      (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentByKey?.transportationOption?.type === ETransportationType.PickUpDelivery)
     );
   }, [serviceTypeOption, appointmentByKey]);
 

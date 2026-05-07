@@ -14,6 +14,7 @@ import {
 import { Routes } from '../../../../../routes/constants';
 import { useHistory, useParams } from 'react-router-dom';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TYourLocationProps = TActionProps & {
   setNeedToShowServiceSelection: Dispatch<SetStateAction<boolean>>;
@@ -26,26 +27,31 @@ const YourLocationCreate: React.FC<TYourLocationProps> = ({
   setNeedToShowServiceSelection,
   onGoToFirstScreen,
 }) => {
-  const { serviceTypeOption, selectedVehicle, serviceOptionChangedFromSlotPage } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const { serviceTypeOption, selectedVehicle, serviceOptionChangedFromSlotPage, transportation } =
+    useSelector((state: RootState) => state.appointmentFrame);
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const currentUser = useCurrentUser();
   const dispatch = useDispatch();
   const history = useHistory();
   const { id } = useParams<{ id: string }>();
-
   const changedToPickUpFromSlots = useMemo(
     () =>
-      serviceOptionChangedFromSlotPage && serviceTypeOption?.type === EServiceType.PickUpDropOff,
-    [serviceOptionChangedFromSlotPage, serviceTypeOption]
+      serviceOptionChangedFromSlotPage &&
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery),
+    [serviceOptionChangedFromSlotPage, serviceTypeOption, transportation]
   );
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const handleFirstScreenForAdmin = (prevScreen: TView) => {
     dispatch(setShowServiceCentersList(false));

@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import { ESettingType } from '../../../../../store/reducers/generalSettings/types';
 import { EPricingDisplayType } from '../../../../../store/reducers/pricingSettings/types';
 import { getMaintenanceDescription } from '../../../../../utils/getMaintenanceDescription';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -63,6 +64,7 @@ export const AppointmentConfirmed: React.FC<
     appointmentByKey,
     transactionValue,
     trackerData,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
@@ -74,10 +76,16 @@ export const AppointmentConfirmed: React.FC<
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const servicesList = useMemo(() => {
     return getMaintenanceDescription(
       serviceRequests,
@@ -130,9 +138,12 @@ export const AppointmentConfirmed: React.FC<
 
   const isServiceValetApp = useMemo(
     () =>
-      Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
-    [serviceValetAppointment, serviceTypeOption]
+      Boolean(serviceValetAppointment) &&
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery),
+    [serviceValetAppointment, serviceTypeOption, transportation]
   );
+
   const isServiceValetManage = useMemo(
     () =>
       !appointment && serviceTypeOption?.type === EServiceType.PickUpDropOff && appointmentByKey,
@@ -146,7 +157,11 @@ export const AppointmentConfirmed: React.FC<
         el => !el.priceValue || el.pricingDisplayType === EPricingDisplayType.Suppressed
       );
     } else {
-      if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+      if (
+        serviceValetAppointment &&
+        (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+          transportation?.type === ETransportationType.PickUpDelivery)
+      ) {
         return serviceValetAppointment?.serviceRequestPrices?.find(
           item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed
         );
@@ -209,7 +224,10 @@ export const AppointmentConfirmed: React.FC<
     } else if (appointment) {
       date = dayjs(appointment?.date).format(dateTimeString);
     } else if (appointmentByKey?.dateInUtc) {
-      if (appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+      if (
+        appointmentByKey.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentByKey.transportationOption?.type === ETransportationType.PickUpDelivery
+      ) {
         date = dayjs(appointmentByKey.dateInUtc).utc().format(calendarDateFormat);
       } else {
         const [hh, mm] = appointmentByKey.timeSlot.split(':');

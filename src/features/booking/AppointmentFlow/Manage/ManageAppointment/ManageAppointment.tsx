@@ -28,7 +28,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useHistory, useParams } from 'react-router-dom';
-import { loadSRs, setCustomerLoadedData } from '../../../../../store/reducers/appointment/actions';
+import {
+  loadAllServiceCenterSettings,
+  loadSRs,
+  setCustomerLoadedData,
+} from '../../../../../store/reducers/appointment/actions';
 import AppointmentVehicleInfo from '../../Screens/components/AppointmentVehicleInfo/AppointmentVehicleInfo';
 import PaymentTypeModal from '../../../PaymentTypeModal/PaymentTypeModal';
 import { useTranslation } from 'react-i18next';
@@ -62,6 +66,7 @@ import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/Open
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
 import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -120,6 +125,16 @@ export const ManageAppointment: React.FC<
 
   const { isCloneMode, customerLoadedData } = useSelector((state: RootState) => state.appointment);
 
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
     [currentUser, scProfile]
@@ -143,6 +158,7 @@ export const ManageAppointment: React.FC<
     if (scProfile) {
       dispatch(loadCategoriesByQuery(scProfile.id));
       dispatch(loadSRs(scProfile.id));
+      dispatch(loadAllServiceCenterSettings(scProfile.id));
     }
   }, [scProfile]);
 
@@ -220,7 +236,7 @@ export const ManageAppointment: React.FC<
       showError(t('"Phone Number" must not be empty'));
     }
     if (
-      serviceTypeOption?.type === EServiceType.PickUpDropOff &&
+      serviceType === EServiceType.PickUpDropOff &&
       !serviceValetAppointment &&
       !appointmentByKey?.serviceValetTime
     ) {
@@ -228,7 +244,7 @@ export const ManageAppointment: React.FC<
       showError(t('Please select correct Appointment Date and Time'));
     }
     if (
-      serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
+      serviceType !== EServiceType.PickUpDropOff &&
       !appointment &&
       appointmentByKey?.serviceValetTime
     ) {

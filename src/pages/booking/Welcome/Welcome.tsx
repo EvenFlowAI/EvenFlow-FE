@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
-import { CustomerSelect } from '../../../features/booking/CustomerSelect/CustomerSelect';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
@@ -30,7 +28,6 @@ import {
   setWelcomeScreenView,
   setZipCode,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
-import ServiceTypeSelect from '../../../features/booking/ServiceTypeSelect/ServiceTypeSelect';
 import { EServiceType, EUserType } from '../../../store/reducers/appointmentFrameReducer/types';
 import ReactGA from 'react-ga4';
 import { useTranslation } from 'react-i18next';
@@ -40,8 +37,7 @@ import {
   loadCustomersByPhoneOrEmail,
   setCustomerSearchData,
 } from '../../../store/reducers/enhancedCustomerSearch/actions';
-import ServiceCenterSelect from '../../../features/booking/ServiceCenterSelect/ServiceCenterSelect';
-import { TView } from '../../../types/types';
+import { Roles, TView } from '../../../types/types';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { useLayout } from '../../../hooks/useLayout/useLayout';
@@ -49,14 +45,31 @@ import { useException } from '../../../hooks/useException/useException';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import usePopState from '../../../hooks/usePopState/usePopState';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
+import {
+  CONTACT,
+  FIRST_NAME,
+  LAST_NAME,
+  SERVICE_CENTER_ID,
+  VIN,
+} from '../../../types/URLQueryType';
+import { GetComponent } from './GetComponent';
+import { getAuthenticationTokenForAdmin } from '../../../api/helper';
+import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 
 export const Welcome = () => {
   const { scProfile, customerEnteredEmail, isProfileLoading } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { welcomeScreenView, serviceTypeOption } = useSelector(
+  const { welcomeScreenView, serviceTypeOption, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  const params = new URL(window.location.href).searchParams;
+  const serviceCenterIdFromParams = params.get(SERVICE_CENTER_ID);
+  const contactFromParams = params.get(CONTACT);
+  const firstNameFromParams = params.get(FIRST_NAME);
+  const lastNameFromParams = params.get(LAST_NAME);
+  const vinCodeFromParams = params.get(VIN);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { isLoading } = useSelector((state: RootState) => state.customers);
@@ -71,10 +84,17 @@ export const Welcome = () => {
   const showError = useException();
   const isFrame = useLayout();
   const dispatch = useDispatch();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const currentUser = useCurrentUser();
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   useStorage();
 
@@ -89,6 +109,17 @@ export const Welcome = () => {
   usePopState('select');
 
   const redirect = () => {
+    // Ignore redirect if we have query params and it is not a self-booking
+    if (
+      (serviceCenterIdFromParams?.length ||
+        firstNameFromParams?.length ||
+        lastNameFromParams ||
+        vinCodeFromParams?.length ||
+        contactFromParams?.length) &&
+      getAuthenticationTokenForAdmin() &&
+      currentUser?.role !== Roles.EvenFlowAdmin
+    )
+      return;
     const route = isFrame ? Routes.EndUser.AppointmentFrame : Routes.EndUser.Appointment;
     if (id) {
       history.push(route.replace(':id', id));
@@ -117,14 +148,14 @@ export const Welcome = () => {
     redirect();
   };
 
-  const getData = () => {
+  const getData = (emailFromQuery?: string) => {
     try {
       setLoading(true);
       dispatch(
         loadCustomersByPhoneOrEmail(
           scProfile?.id ?? 0,
           showError,
-          customerEnteredEmail,
+          emailFromQuery || customerEnteredEmail,
           onSuccessForCustomer,
           onOpen
         )
@@ -167,10 +198,17 @@ export const Welcome = () => {
     }
   };
 
-  const onComplete = async (serviceType: EServiceType, selectedUserType?: EUserType) => {
+  const onComplete = async (
+    serviceType: EServiceType,
+    selectedUserType?: EUserType,
+    emailFromQuery?: string
+  ) => {
     handleValueServiceConfig(serviceType);
-    if (customerEnteredEmail && selectedUserType === EUserType.Existing) {
-      getData();
+    if (
+      (customerEnteredEmail || emailFromQuery?.length) &&
+      selectedUserType === EUserType.Existing
+    ) {
+      getData(emailFromQuery);
     } else {
       handleFirstScreen();
     }
@@ -208,28 +246,17 @@ export const Welcome = () => {
   };
 
   const getComponent = () => {
-    switch (welcomeScreenView) {
-      case 'serviceCenterSelect':
-        return <ServiceCenterSelect />;
-      case 'search':
-      case 'serviceSelect':
-        return (
-          <ServiceTypeSelect
-            loading={loading}
-            handleValueServiceConfig={handleValueServiceConfig}
-          />
-        );
-      case 'select':
-      default:
-        return (
-          <CustomerSelect
-            loading={loading || isLoading}
-            onComplete={onComplete}
-            handleNew={handleNew}
-            redirect={redirect}
-          />
-        );
-    }
+    return (
+      <GetComponent
+        welcomeScreenView={welcomeScreenView}
+        handleValueServiceConfig={handleValueServiceConfig}
+        handleNew={handleNew}
+        redirect={redirect}
+        isLoading={isLoading}
+        loading={loading}
+        onComplete={onComplete}
+      />
+    );
   };
 
   const getTitle = (view: TView) => {
@@ -242,8 +269,6 @@ export const Welcome = () => {
   const getSubTitle = (view: TView) => {
     return view === 'serviceSelect' ? t('Or use our mobile service?') : t('schedule service');
   };
-
-  // todo uncomment language switcher
 
   return !scProfile || isProfileLoading || shortLoading ? (
     <Loading />

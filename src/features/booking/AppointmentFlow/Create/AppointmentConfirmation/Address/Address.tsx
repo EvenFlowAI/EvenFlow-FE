@@ -6,16 +6,24 @@ import { EServiceType } from '../../../../../../store/reducers/appointmentFrameR
 import { useTranslation } from 'react-i18next';
 import { List, TitleWrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const Address = () => {
-  const { address, zipCode, serviceTypeOption } = useSelector(
+  const { address, zipCode, serviceTypeOption, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { t } = useTranslation();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   return address &&
     (serviceType === EServiceType.MobileService || serviceType === EServiceType.PickUpDropOff) ? (
     <ConfirmationItemWrapper>

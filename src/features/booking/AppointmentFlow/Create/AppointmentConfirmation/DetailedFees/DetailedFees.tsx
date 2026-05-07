@@ -15,6 +15,7 @@ import { DetailedFeesInfo, DetailedFeesList, useStyles } from './styles';
 import { useDialogStyles } from '../../../../../../hooks/styling/useDialogStyles';
 import { getOfferString } from '../../../../../../utils/utils';
 import { EPricingDisplayType } from '../../../../../../store/reducers/pricingSettings/types';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<DialogProps>>> = ({
   open,
@@ -23,14 +24,21 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
   const { appointment, scProfile, serviceValetAppointment } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { classes: dialogClasses } = useDialogStyles();
   const { classes } = useStyles();
   const { t } = useTranslation();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
   const price = useMemo(() => {
     if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
       return serviceValetAppointment?.price?.value && serviceValetAppointment.price.value > 0
@@ -52,7 +60,11 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
       : '';
   }, [appointment, serviceValetAppointment, serviceTypeOption]);
   const noDefinedPriceExists = useMemo(() => {
-    if (serviceValetAppointment && serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+    if (
+      serviceValetAppointment &&
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery)
+    ) {
       return serviceValetAppointment?.serviceRequestPrices?.find(
         item => !item.priceValue || item.pricingDisplayType === EPricingDisplayType.Suppressed
       );
@@ -72,7 +84,6 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
         return t('Visit Center');
     }
   };
-
   return (
     <Dialog
       open={open}
@@ -89,7 +100,9 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
       </DialogTitle>
       <DialogContent>
         <DetailedFeesList>
-          {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment
+          {(serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+            transportation?.type === ETransportationType.PickUpDelivery) &&
+          serviceValetAppointment
             ? serviceValetAppointment?.serviceRequestPrices?.map(item => (
                 <li className={classes.item} key={item.requestName}>
                   <span>
@@ -139,7 +152,9 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
                   </div>
                 </li>
               ))}
-          {serviceTypeOption?.type === EServiceType.PickUpDropOff && serviceValetAppointment ? (
+          {(serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+            transportation?.type === ETransportationType.PickUpDelivery) &&
+          serviceValetAppointment ? (
             <li className={classes.item} key="serviceType">
               <span>{getServiceName()}</span>
               <div className={classes.pricesBlock}>

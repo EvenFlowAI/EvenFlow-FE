@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { TextField } from '../../../../components/styled/EndUserInputs';
 import { Button, Divider, Grid, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,14 @@ import { LoadingProcess } from '../LoadingProcess/LoadingProcess';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useException } from '../../../../hooks/useException/useException';
 import { ESettingType } from '../../../../store/reducers/generalSettings/types';
+import { useHistory } from 'react-router-dom';
+import {
+  FIRST_NAME,
+  LAST_NAME,
+  CONTACT,
+  SERVICE_CENTER_ID,
+  VIN,
+} from '../../../../types/URLQueryType';
 
 type TProps = {
   handleNew: () => void;
@@ -42,6 +50,11 @@ const ReturningCustomerForAdmin: React.FC<
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const [isExpanded, setExpanded] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const params = new URL(window.location.href).searchParams;
+  const contactFromParams = params.get(CONTACT);
+  const firstNameFromParams = params.get(FIRST_NAME);
+  const lastNameFromParams = params.get(LAST_NAME);
+  const vinCodeFromParams = params.get(VIN);
 
   const {
     onOpen: onOpenSearchResults,
@@ -54,9 +67,65 @@ const ReturningCustomerForAdmin: React.FC<
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch();
   const showError = useException();
+  const history = useHistory();
 
   const { classes } = useStyles();
   const { classes: returningClasses } = useCustomerSelectStyles();
+
+  const onClearURLParams = () => {
+    setTimeout(() => {
+      const params = new URLSearchParams(location.search);
+
+      params.delete(CONTACT);
+      params.delete(SERVICE_CENTER_ID);
+      params.delete(FIRST_NAME);
+      params.delete(LAST_NAME);
+      params.delete(VIN);
+
+      history.replace({
+        pathname: location.pathname,
+        search: params.toString(),
+      });
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (
+      vinCodeFromParams?.length ||
+      firstNameFromParams?.length ||
+      contactFromParams?.length ||
+      lastNameFromParams?.length
+    ) {
+      if (scProfile) {
+        dispatch(setCustomerEnteredEmail(contactFromParams || ''));
+        dispatch(setCustomerSearchData({ ['firstName']: firstNameFromParams || '' }));
+        dispatch(setCustomerSearchData({ ['lastName']: lastNameFromParams || '' }));
+        dispatch(setCustomerSearchData({ ['lastVINCharacters']: vinCodeFromParams || '' }));
+
+        dispatch(
+          loadCustomersBySearchTerm(
+            scProfile.id,
+            count => {
+              onSuccess(count);
+              onClearURLParams();
+            },
+            onError,
+            firstNameFromParams || '',
+            lastNameFromParams || '',
+            contactFromParams || '',
+            customerSearchData.address,
+            vinCodeFromParams || '',
+            customerSearchData.companyName
+          )
+        );
+      } else {
+        console.error('Service center profile is not loaded');
+      }
+    } else {
+      console.info('No params for automatically search found');
+    }
+  }, [vinCodeFromParams, firstNameFromParams, contactFromParams, lastNameFromParams]);
+
   const formIsValid = useMemo(() => {
     return (
       !!customerEnteredEmail.length ||
@@ -189,7 +258,7 @@ const ReturningCustomerForAdmin: React.FC<
               name="firstName"
               variant="standard"
               placeholder={t('Enter First Name')}
-              error={formIsChecked && (customerSearchData.firstName.length === 1 || !formIsValid)}
+              error={formIsChecked && !formIsValid}
               onChange={onTextChange('firstName')}
               InputProps={{
                 disableUnderline: true,
@@ -205,7 +274,7 @@ const ReturningCustomerForAdmin: React.FC<
               name="lastName"
               variant="standard"
               placeholder={t('Enter Last Name')}
-              error={formIsChecked && (customerSearchData.lastName.length === 1 || !formIsValid)}
+              error={formIsChecked && !formIsValid}
               onChange={onTextChange('lastName')}
               InputProps={{
                 disableUnderline: true,

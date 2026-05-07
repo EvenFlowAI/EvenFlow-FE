@@ -24,6 +24,7 @@ import AppointmentFlow from '../../../features/booking/AppointmentFlow/Appointme
 import { TFlowProps } from '../types';
 import { useHistory, useParams } from 'react-router-dom';
 import { clearAppointmentSlots } from '../../../store/reducers/appointment/actions';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   onUpdateAppointment,
@@ -39,7 +40,9 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   needToShowServiceTypes,
   setNeedToShowServiceTypes,
 }) => {
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
@@ -48,10 +51,15 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const dispatch = useDispatch();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const onBackFromServiceNeeds = () => {
     if (customerLoadedData?.isUpdating) history.push('/f/appointment-manage/' + id);

@@ -47,6 +47,7 @@ import { useException } from '../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   handleValueServiceConfig: (serviceType: EServiceType) => void;
@@ -65,6 +66,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     appointmentByKey,
     address,
     zipCode,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions, isLoading } = useSelector((state: RootState) => state.serviceTypes);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -125,11 +127,14 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
       dispatch(checkPodChanged(decodeSCID(id), showError, redirect, redirect));
     }
   };
-
   const changeToVisitCenter = (newServiceOption: IFirstScreenOption) => {
     if (serviceTypeOption?.type === EServiceType.MobileService && !wasWarningShowed) {
       dispatch(setServiceWarningOpen(true));
-    } else if (serviceTypeOption?.type === EServiceType.PickUpDropOff && !wasWarningShowed) {
+    } else if (
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery) &&
+      !wasWarningShowed
+    ) {
       dispatch(setSlotsWarningOpen(true));
     } else {
       handleVisitCenterSwitch(newServiceOption);

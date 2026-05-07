@@ -62,6 +62,7 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
       appointmentByKey?.serviceTypeOption?.type === EServiceType.MobileService,
     [serviceTypeOption, appointmentByKey]
   );
+
   const managedToPickUp = useMemo(
     () =>
       serviceTypeOption?.type === EServiceType.PickUpDropOff &&

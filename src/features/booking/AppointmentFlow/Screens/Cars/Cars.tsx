@@ -31,6 +31,7 @@ import usePopState from '../../../../../hooks/usePopState/usePopState';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
 import { BookNewVehicle, NewVehicleCard } from './CarCard/styles';
 import { ReactComponent as CarIcon } from '../../../../../assets/img/caricon.svg';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onBack: TCallback;
@@ -57,13 +58,21 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     consultants,
     makes,
     isUsualFlowNeeded,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('mdl'));
   const dispatch = useDispatch();

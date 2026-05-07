@@ -20,6 +20,7 @@ import { TScheduler, TServiceBook } from '../store/reducers/appointments/types';
 import { TEnumKeyLabel } from '../store/reducers/types';
 import { ParsableDate, TParsableDate } from '../types/types';
 import { EPricingDisplayType } from '../store/reducers/pricingSettings/types';
+import { RepairOrderReportingStatus } from '../features/admin/Appointments/types';
 
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 
@@ -318,6 +319,7 @@ export interface IAppointment {
   totalValue: number;
   transportation?: string;
   vehicle?: IAppointmentVehicle;
+  repairOrderReportingStatus: RepairOrderReportingStatus;
 }
 
 export interface IServiceCategoryShort {
@@ -374,6 +376,7 @@ export interface IConsultantsRequestData {
   vehicle: IVehicleForSlots;
   address?: string;
   zipCode?: string;
+  transportationOptionId: number | null;
   appointmentHashKey?: string;
 }
 

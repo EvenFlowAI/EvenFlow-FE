@@ -42,7 +42,7 @@ export const autocompleteOptionsRender =
       state: AutocompleteRenderOptionState
     ) => {
       return (
-        <li style={{ display: 'flex', alignItems: 'center' }} key={option.id} {...props}>
+        <li style={{ display: 'flex', alignItems: 'center' }} {...props} key={option.id}>
           <Checkbox
             size="small"
             icon={<CheckBoxOutlineBlank fontSize="small" />}

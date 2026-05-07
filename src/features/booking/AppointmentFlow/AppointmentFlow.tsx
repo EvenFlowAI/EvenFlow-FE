@@ -38,6 +38,7 @@ import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { loadGeneralSettings } from '../../../store/reducers/generalSettings/actions';
 import { ESettingType } from '../../../store/reducers/generalSettings/types';
 import { useParams } from 'react-router-dom';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   currentScreen: TScreen;
@@ -66,6 +67,7 @@ const AppointmentFlow: React.FC<TProps> = ({
     currentScreen: currentFrameScreen,
     serviceTypeOption,
     hashKey,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
@@ -74,10 +76,17 @@ const AppointmentFlow: React.FC<TProps> = ({
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const onlyVisitCenterOptionExists = useMemo(
     () =>
       firstScreenOptions.length === 1 && firstScreenOptions[0].type === EServiceType.VisitCenter,

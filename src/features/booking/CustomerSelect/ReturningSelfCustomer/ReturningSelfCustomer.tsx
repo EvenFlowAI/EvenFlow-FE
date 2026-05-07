@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { TextField } from '../../../../components/styled/EndUserInputs';
 import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -10,9 +10,11 @@ import { setUserType } from '../../../../store/reducers/appointmentFrameReducer/
 import { useLoadingStyles } from '../../../../hooks/styling/useLoadingStyles';
 import { useStyles } from '../styles';
 import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
+import { ETransportationType } from '../../../../store/reducers/transportationNeeds/types';
+import { CONTACT } from '../../../../types/URLQueryType';
 
 type TProps = {
-  onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
+  onComplete: (serviceType: EServiceType, userType?: EUserType, emailFromQuery?: string) => void;
   loading: boolean;
 };
 
@@ -21,7 +23,9 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   onComplete,
 }) => {
   const { customerEnteredEmail } = useSelector((state: RootState) => state.appointment);
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
 
   const { classes } = useStyles();
   const loadingClasses = useLoadingStyles();
@@ -30,11 +34,28 @@ const ReturningSelfCustomer: React.FC<React.PropsWithChildren<React.PropsWithChi
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const isXs = useMediaQuery('xs');
   const dispatch = useDispatch();
+  const params = new URL(window.location.href).searchParams;
+  const contactFromParams = params.get(CONTACT);
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  useEffect(() => {
+    if (contactFromParams?.length) {
+      dispatch(setUserType(EUserType.Existing));
+      dispatch(setCustomerEnteredEmail(contactFromParams || ''));
+      onComplete(serviceType, EUserType.Existing, contactFromParams);
+    } else {
+      console.info('[SELF]: No params for automatically search found');
+    }
+  }, []);
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
     dispatch(setCustomerEnteredEmail(value));

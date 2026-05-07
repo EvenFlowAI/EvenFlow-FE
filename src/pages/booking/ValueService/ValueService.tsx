@@ -17,6 +17,7 @@ import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/ty
 import { TScreen } from '../../../types/screens';
 import { TValueServiceScreen } from './types';
 import { Container } from './styles';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TValueServiceProps = {
   onBack: () => void;
@@ -27,15 +28,24 @@ const ValueService: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TValueServiceProps>>
 > = ({ onBack, nextScreen }) => {
   const [screen, setScreen] = useState<TValueServiceScreen>('vehicleDetails');
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const isServiceDetailsPageOn = useMemo(() => {
     return Boolean(
       config.find(item => item.serviceType.toString() === serviceType.toString())

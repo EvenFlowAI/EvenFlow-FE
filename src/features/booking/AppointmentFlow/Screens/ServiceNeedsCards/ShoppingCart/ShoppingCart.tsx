@@ -25,6 +25,7 @@ import { CartItem } from './ShoppingCartItem/ShoppingCartItem';
 import { IMaintenanceItem } from '../../../../../../types/types';
 import { useConfirm } from '../../../../../../hooks/useConfirm/useConfirm';
 import { getMaintenanceList } from '../../../helper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const ShoppingCart = () => {
   const {
@@ -35,6 +36,7 @@ const ShoppingCart = () => {
     serviceTypeOption,
     selectedRecalls,
     packageEMenuType,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile, selectedSR, serviceRequests, customerLoadedData, selectedSRComments } =
     useSelector((state: RootState) => state.appointment);
@@ -49,10 +51,16 @@ const ShoppingCart = () => {
   const { classes } = useStyles();
   const isSM = useMediaQuery(theme.breakpoints.down('md'));
 
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   const selectedServices = useMemo(() => {
     return getMaintenanceList(
       serviceRequests,

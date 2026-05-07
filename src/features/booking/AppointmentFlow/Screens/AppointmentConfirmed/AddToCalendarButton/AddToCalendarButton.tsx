@@ -16,6 +16,7 @@ import { TItem } from '../types';
 import { getCalendarUrl } from './utils';
 import dayjs from 'dayjs';
 import { TParsableDate } from '../../../../../../types/types';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   serviceName: string;
@@ -33,6 +34,7 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
     valueService,
     serviceTypeOption,
     appointmentByKey,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { serviceValetAppointment, appointment, scProfile, waitListSettings, customerLoadedData } =
     useSelector((state: RootState) => state.appointment);
@@ -43,10 +45,11 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
     () => engineTypes.find(item => item.id === Number(selectedVehicle?.engineTypeId)),
     [engineTypes, selectedVehicle]
   );
-
   const isServiceValetApp = useMemo(
     () =>
-      Boolean(serviceValetAppointment) && serviceTypeOption?.type === EServiceType.PickUpDropOff,
+      Boolean(serviceValetAppointment) &&
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery),
     [serviceValetAppointment, serviceTypeOption]
   );
 
@@ -64,10 +67,12 @@ const AddToCalendarButton: React.FC<React.PropsWithChildren<React.PropsWithChild
         ? `${valueService?.year?.year} BMW ${valueService?.series?.name} ${valueService?.model?.name}`
         : '';
   }, [selectedVehicle, engine, valueService]);
-
   const getDateForUpdate = (): TParsableDate => {
     if (customerLoadedData?.isUpdating && appointmentByKey) {
-      if (appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+      if (
+        appointmentByKey?.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery
+      ) {
         return dayjs.utc(appointmentByKey.dateInUtc);
       } else {
         const [hh, mm] = appointmentByKey.timeSlot.split(':');

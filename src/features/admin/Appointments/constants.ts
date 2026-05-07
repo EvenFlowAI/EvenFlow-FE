@@ -1,4 +1,4 @@
-import { EDate, TFilters } from './types';
+import { EDate, RepairOrderReportingStatus, TFilters } from './types';
 import { IAppointment, reportingStatuses } from '../../../api/types';
 import { TableRowDataType } from '../../../types/types';
 import dayjs from 'dayjs';
@@ -46,7 +46,7 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
     width: 100,
   },
   {
-    header: 'Customer Name',
+    header: 'Customer',
     required: true,
     val: el => el.customerInformation?.fullName ?? 'DMS missing customer information',
     orderId: 'fullName',
@@ -61,9 +61,9 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
         : 'DMS missing vehicle data';
     },
   },
+  { header: 'Service Book', val: el => el.serviceBook?.name ?? '' },
   { header: 'Service Advisor', val: el => el.advisor ?? '' },
   { header: 'Technician', val: el => el.technician ?? '' },
-  { header: 'Service Book', val: el => el.serviceBook?.name ?? '' },
   { header: 'Scheduler', val: el => `${el.scheduler?.fullName ?? ''}` },
   {
     header: 'Appointment Status',
@@ -73,6 +73,10 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
         ? reportingStatuses[el.reportingStatus]
         : '',
     orderId: 'reportingStatus',
+  },
+  {
+    header: 'RO Status',
+    val: el => RepairOrderReportingStatus[el.repairOrderReportingStatus] || '-',
   },
   {
     header: 'Created Date',

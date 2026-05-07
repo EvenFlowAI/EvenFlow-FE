@@ -227,7 +227,10 @@ export const getAppointmentDate = (
       return `${dayjs.utc(`${String(dateInUtc).split('T')[0]}`).format('dddd, MMM Do, ')} 
                 from ${dayjs.utc(serviceValetTime.pickUpMin, 'hh:mm:ss').format('h:mm a')} 
                 to ${dayjs.utc(serviceValetTime.pickUpMax, 'hh:mm:ss').format('h:mm a')}`;
-    } else if (appointment.serviceTypeOption?.type === EServiceType.PickUpDropOff) {
+    } else if (
+      appointment.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+      appointment.transportationOption?.type === ETransportationType.PickUpDelivery
+    ) {
       return dayjs.utc(`${String(appointment.dateInUtc).split('T')[0]}`).format('dddd, MMM Do');
     } else {
       const { dateInUtc, timeSlot } = appointment;

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ import { TScreen } from '../../../../../types/screens';
 import { TimingWrapper } from './styles';
 import dayjs from 'dayjs';
 import { cardsConfig, timingTypes } from './constants';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -28,17 +29,21 @@ type TProps = {
 
 export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack }) => {
   const { appointment, isCloneMode } = useSelector((state: RootState) => state.appointment);
-  const {
-    selectedInitialTiming,
-    selectedTime,
-    serviceTypeOption,
-    sideBarSteps,
-    trackerData,
-    selectedTiming,
-  } = useSelector((state: RootState) => state.appointmentFrame);
+  const { selectedInitialTiming, selectedTime, serviceTypeOption, sideBarSteps, transportation } =
+    useSelector((state: RootState) => state.appointmentFrame);
   const [isLoading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const onNext = () => {
     handleSetScreen('appointmentSelection');
@@ -109,7 +114,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
           if (!idx) {
             return null;
           }
-          if (serviceTypeOption?.type === EServiceType.PickUpDropOff && idx === 1) {
+          if (serviceType === EServiceType.PickUpDropOff && idx === 1) {
             // todo delete this when Preferred Date Search will be implemented
             return null;
           }

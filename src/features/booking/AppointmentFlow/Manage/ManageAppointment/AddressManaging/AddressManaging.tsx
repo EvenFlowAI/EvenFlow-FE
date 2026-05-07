@@ -12,17 +12,24 @@ import {
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { List, TitleWrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 const AddressManaging = () => {
-  const { address, zipCode, serviceTypeOption } = useSelector(
+  const { address, zipCode, serviceTypeOption, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const serviceType = useMemo(
-    () => (serviceTypeOption ? serviceTypeOption.type : EServiceType.VisitCenter),
-    [serviceTypeOption]
-  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const handleChangeAddress = () => {
     dispatch(setServiceOptionChanged(false));

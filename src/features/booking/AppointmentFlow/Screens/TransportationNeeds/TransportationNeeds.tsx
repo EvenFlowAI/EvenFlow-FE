@@ -102,21 +102,10 @@ export const TransportationNeeds: React.FC<TProps> = ({
       onSwitchFlowOpen();
       clearSteps();
     } else {
-      const visitCenterOption = firstScreenOptions.find(el => el.type === EServiceType.VisitCenter);
-
-      if (visitCenterOption) {
-        const serviceValetOption = {
-          ...visitCenterOption,
-          type: EServiceType.PickUpDropOff,
-        };
-
-        dispatch(selectAppointment(null));
-        dispatch(setTransportation(null));
-        setSelectedOption(serviceValetOption);
-        onSwitchFlowOpen();
-        clearSteps();
-        dispatch(setIsSVWithoutConfig(true));
-      }
+      dispatch(selectAppointment(null));
+      onSwitchFlowOpen();
+      clearSteps();
+      dispatch(setIsSVWithoutConfig(true));
     }
   };
 
