@@ -1432,9 +1432,10 @@ export const searchForCustomerConsents =
         modelYear: selectedVehicle.year,
         customerType: userType ?? EUserType.New,
         serviceType:
-          (serviceTypeOption?.type ?? transportation?.type === ETransportationType.PickUpDelivery)
+          serviceTypeOption?.type ??
+          (transportation?.type === ETransportationType.PickUpDelivery
             ? EServiceType.PickUpDropOff
-            : EServiceType.VisitCenter,
+            : EServiceType.VisitCenter),
         transportationOptionId:
           serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
         advisorId: advisor?.id ?? null,
