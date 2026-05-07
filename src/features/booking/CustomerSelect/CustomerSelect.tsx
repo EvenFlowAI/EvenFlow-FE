@@ -26,7 +26,7 @@ import { loadGeneralSettings } from '../../../store/reducers/generalSettings/act
 import { ESettingType } from '../../../store/reducers/generalSettings/types';
 
 type TProps = {
-  onComplete: (serviceType: EServiceType, userType?: EUserType, emailFromQuery?: string) => void;
+  onComplete: (serviceType: EServiceType, userType?: EUserType) => void;
   loading: boolean;
   handleNew: () => void;
   redirect: TCallback;
