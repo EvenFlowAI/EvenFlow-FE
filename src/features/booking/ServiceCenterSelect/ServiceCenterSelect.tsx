@@ -69,7 +69,7 @@ const ServiceCenterSelect = () => {
         ? shortSC.filter(item => item.id === decodeSCID(id))
         : shortSC;
       setCentersList(() => scList);
-      if (serviceCenterIdFromParams?.length) {
+      if (serviceCenterIdFromParams) {
         const selectedSc = scList.find(sc => sc.id === Number(serviceCenterIdFromParams));
         if (selectedSc) {
           selectSc(selectedSc);
@@ -80,7 +80,7 @@ const ServiceCenterSelect = () => {
         console.info('We do not have serviceCenterId from params (URL)');
       }
     }
-  }, [currentUser, shortSC, restrictedRoles, serviceCenterIdFromParams]);
+  }, [currentUser, shortSC, restrictedRoles]);
 
   useEffect(() => {
     if (currentUser && scProfile && scProfile?.dealershipId !== currentUser?.dealershipId) {
@@ -110,11 +110,11 @@ const ServiceCenterSelect = () => {
       frame: '1',
     });
 
-    if (serviceCenterIdFromParams?.length) params.set(SERVICE_CENTER_ID, serviceCenterIdFromParams);
-    if (contactFromParams?.length) params.set(CONTACT, contactFromParams);
-    if (firstNameFromParams?.length) params.set(FIRST_NAME, firstNameFromParams);
-    if (lastNameFromParams?.length) params.set(LAST_NAME, lastNameFromParams);
-    if (vinCodeFromParams?.length) params.set(VIN, vinCodeFromParams);
+    if (serviceCenterIdFromParams) params.set(SERVICE_CENTER_ID, serviceCenterIdFromParams);
+    if (contactFromParams) params.set(CONTACT, contactFromParams);
+    if (firstNameFromParams) params.set(FIRST_NAME, firstNameFromParams);
+    if (lastNameFromParams) params.set(LAST_NAME, lastNameFromParams);
+    if (vinCodeFromParams) params.set(VIN, vinCodeFromParams);
 
     history.push(`${Routes.EndUser.Welcome}/${encoded}?${params.toString()}`);
   };
