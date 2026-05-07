@@ -29,6 +29,7 @@ import {
   TKey,
   TMaintenanceDetailsProps,
   TOptionsState,
+  TOrderStyles,
   TTabOrderField,
   TTabOrderMap,
 } from './types';
@@ -92,23 +93,7 @@ export const MaintenanceDetailsForm: React.FC<
     [scProfile]
   );
 
-  const isExistingVehicle = useMemo(() => {
-    return Boolean(
-      customerLoadedData?.vehicles.find(v => {
-        return (
-          (v.vin &&
-            selectedVehicle?.vin &&
-            v.vin?.toUpperCase() === selectedVehicle?.vin?.toUpperCase()) ||
-          (v.make?.toLowerCase() === selectedVehicle?.make?.toLowerCase() &&
-            v.model?.toLowerCase() === selectedVehicle?.model?.toLowerCase() &&
-            v.year &&
-            v.year?.toString() === selectedVehicle?.year?.toString())
-        );
-      })
-    );
-  }, [selectedVehicle, customerLoadedData]);
-
-  const isExistingSelectedVehicle = useMemo(
+  const existingSelectedVehicleMatch = useMemo(
     () =>
       customerLoadedData?.vehicles.find(v => {
         return (
@@ -419,14 +404,17 @@ export const MaintenanceDetailsForm: React.FC<
     setLoading(false);
   };
 
-  const orderMapStyles = {
-    year: { order: isSM ? 2 : !currentConfig?.engineType && !recallsToggledOn ? 1 : 4 },
-    mileage: { order: (currentConfig?.engineType || recallsToggledOn) && !isSM ? 1 : 3 },
-    make: { order: 0 },
-    model: { order: isSM ? 1 : 2 },
-    vin: { order: isSM ? 5 : currentConfig?.engineType ? 5 : 3 },
-    engineType: { order: isSM ? 4 : 3 },
-  };
+  const orderMapStyles = useMemo<TOrderStyles>(
+    () => ({
+      year: { order: isSM ? 2 : !currentConfig?.engineType && !recallsToggledOn ? 1 : 4 },
+      mileage: { order: (currentConfig?.engineType || recallsToggledOn) && !isSM ? 1 : 3 },
+      make: { order: 0 },
+      model: { order: isSM ? 1 : 2 },
+      vin: { order: isSM ? 5 : currentConfig?.engineType ? 5 : 3 },
+      engineType: { order: isSM ? 4 : 3 },
+    }),
+    [isSM, currentConfig?.engineType, recallsToggledOn]
+  );
 
   const tabOrderMap = useMemo<TTabOrderMap>(() => {
     const fields: TTabOrderField[] = ['make', 'year', 'model', 'mileage', 'engineType', 'vin'];
@@ -466,10 +454,10 @@ export const MaintenanceDetailsForm: React.FC<
               setErrors={setErrors}
               selectedEngine={selectedEngine}
               setSelectedEngine={setSelectedEngine}
-              isExistingVehicle={isExistingVehicle}
+              isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
               orderMapStyles={orderMapStyles}
               requiredFields={requiredFields}
-              isExistingSelectedVehicle={isExistingSelectedVehicle}
+              isExistingSelectedVehicle={existingSelectedVehicleMatch}
             />
           ) : (
             <FormWithAutocompletes
@@ -480,10 +468,10 @@ export const MaintenanceDetailsForm: React.FC<
               setErrors={setErrors}
               selectedEngine={selectedEngine}
               setSelectedEngine={setSelectedEngine}
-              isExistingVehicle={isExistingVehicle}
+              isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
               orderMapStyles={orderMapStyles}
               requiredFields={requiredFields}
-              isExistingSelectedVehicle={isExistingSelectedVehicle}
+              isExistingSelectedVehicle={existingSelectedVehicleMatch}
             />
           )}
 
