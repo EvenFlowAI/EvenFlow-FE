@@ -496,7 +496,7 @@ export const AppointmentSlots: React.FC<
               ? transportation?.id
               : null
             : serviceType === EServiceType.PickUpDropOff
-              ? (transportation?.id ?? null)
+              ? (serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null)
               : null;
 
         const isServiceValetExist = firstScreenOptions.some(
@@ -507,10 +507,7 @@ export const AppointmentSlots: React.FC<
           transportation?.type === ETransportationType.PickUpDelivery;
         const optionId: number | null = serviceTypeOption?.id ?? null;
 
-        const pickUpDropOffTransportation =
-          transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
-          transportation?.id ??
-          null;
+        const pickUpDropOffTransportation = null;
 
         const data: IAppointmentSlotsRequest = {
           appointmentTimingType:

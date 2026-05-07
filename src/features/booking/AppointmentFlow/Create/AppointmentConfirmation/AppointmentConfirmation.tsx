@@ -31,6 +31,7 @@ import { useException } from '../../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -93,8 +94,13 @@ export const AppointmentConfirmation: React.FC<
       showError(t('"Phone Number" must not be empty'));
     }
     const invalidServiceValetSlot =
-      serviceTypeOption?.type === EServiceType.PickUpDropOff && !serviceValetAppointment;
-    const invalidSlot = serviceTypeOption?.type !== EServiceType.PickUpDropOff && !appointment;
+      (serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery) &&
+      !serviceValetAppointment;
+    const invalidSlot =
+      serviceTypeOption?.type !== EServiceType.PickUpDropOff &&
+      transportation?.type !== ETransportationType.PickUpDelivery &&
+      !appointment;
     if (invalidServiceValetSlot || invalidSlot) {
       isValid = false;
       showError(

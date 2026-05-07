@@ -251,10 +251,11 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
         date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
         timing: timingType,
         transportation:
-          (selectedOption?.transportationOption ?? transportationOption) ||
-          selectedOption?.type === EServiceType.PickUpDropOff
-            ? (transportations.find(t => t.type === ETransportationType.PickUpDelivery) ?? null)
-            : transportations[0],
+          (selectedOption?.transportationOption ?? transportationOption) || !selectedOption
+            ? transportation
+            : selectedOption?.type === EServiceType.PickUpDropOff
+              ? null
+              : transportations[0],
         zip: zip ? zip.substring(0, 5) : '',
         serviceTypeOption: selectedOption,
       })
