@@ -219,6 +219,8 @@ export type TActionProps = {
   prevLabel?: string;
   hideNext?: boolean;
   hidePrev?: boolean;
+  backTabIndex?: number;
+  nextTabIndex?: number;
   color?: 'inherit' | 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success';
   removeTopMargin?: boolean;
 };

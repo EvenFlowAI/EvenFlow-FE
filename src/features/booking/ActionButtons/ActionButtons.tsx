@@ -17,6 +17,8 @@ export const ActionButtons: React.FC<
   prevLabel,
   hideNext,
   hidePrev,
+  backTabIndex,
+  nextTabIndex,
   color,
   removeTopMargin,
 }) => {
@@ -28,6 +30,7 @@ export const ActionButtons: React.FC<
           {!hidePrev && (
             <Button
               onClick={onBack}
+              tabIndex={backTabIndex}
               color={color ?? 'primary'}
               variant="outlined"
               disabled={prevDisabled}
@@ -40,6 +43,7 @@ export const ActionButtons: React.FC<
             <Button
               disabled={nextDisabled}
               onClick={onNext}
+              tabIndex={nextTabIndex}
               color={color ?? 'primary'}
               variant="contained"
             >
