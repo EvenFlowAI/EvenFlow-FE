@@ -146,6 +146,10 @@ export const AppointmentConfirmation: React.FC<
     }
   };
 
+  const transportationSelected =
+    serviceTypeOption?.transportationOption ||
+    (transportation?.type === ETransportationType.PickUpDelivery ? false : transportation);
+
   return (
     <StepWrapper>
       <Wrapper>
@@ -157,9 +161,7 @@ export const AppointmentConfirmation: React.FC<
           <SelectedPrice />
           <OpenModalLink onClick={onFeesOpen} text={t('View itemized fees of services')} />
           <ServiceType />
-          {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable ? (
-            <Review />
-          ) : null}
+          {transportationSelected || isAdvisorAvailable ? <Review /> : null}
           {/* <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} /> */}
         </div>
         <div>

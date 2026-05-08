@@ -5,6 +5,7 @@ import { RootState } from '../../../../../../store/rootReducer';
 import { useTranslation } from 'react-i18next';
 import { Wrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 export const Review = () => {
   const { advisor, transportation, serviceTypeOption } = useSelector(
@@ -12,7 +13,9 @@ export const Review = () => {
   );
   const { currentConfig } = useSelector(({ bookingFlowConfig }: RootState) => bookingFlowConfig);
   const { t } = useTranslation();
-  const transportationSelected = serviceTypeOption?.transportationOption || transportation;
+  const transportationSelected =
+    serviceTypeOption?.transportationOption ||
+    (transportation?.type === ETransportationType.PickUpDelivery ? false : transportation);
 
   return (
     <ConfirmationItemWrapper>
