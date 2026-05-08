@@ -424,10 +424,19 @@ export const MaintenanceDetailsForm: React.FC<
       return fields.indexOf(a) - fields.indexOf(b);
     });
 
-    return orderedFields.reduce((acc, field, index) => {
-      acc[field] = index + 1;
-      return acc;
-    }, {} as TTabOrderMap);
+    const controlsTabOrder = orderedFields.reduce(
+      (acc, field, index) => {
+        acc[field] = index + 1;
+        return acc;
+      },
+      {} as Record<(typeof fields)[number], number>
+    );
+
+    return {
+      ...controlsTabOrder,
+      backButton: orderedFields.length + 1,
+      nextButton: orderedFields.length + 2,
+    };
   }, [orderMapStyles]);
 
   const onNextForRecalls = () => {
@@ -489,6 +498,8 @@ export const MaintenanceDetailsForm: React.FC<
       <ActionButtons
         onBack={handleBack}
         onNext={handleSubmit}
+        backTabIndex={tabOrderMap.backButton}
+        nextTabIndex={tabOrderMap.nextButton}
         prevDisabled={isLoading}
         nextDisabled={isNextDisabled || isLoading}
         nextLabel={

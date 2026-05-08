@@ -10,7 +10,15 @@ export type TOptionsState = { [s: string]: string[] };
 export type TOrderStyles = {
   [s: string]: { order: number };
 };
-export type TTabOrderField = 'make' | 'mileage' | 'model' | 'engineType' | 'year' | 'vin';
+export type TTabOrderField =
+  | 'make'
+  | 'mileage'
+  | 'model'
+  | 'engineType'
+  | 'year'
+  | 'vin'
+  | 'backButton'
+  | 'nextButton';
 export type TTabOrderMap = Record<TTabOrderField, number>;
 
 export type TFormProps = {
