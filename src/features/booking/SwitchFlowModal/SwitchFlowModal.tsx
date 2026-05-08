@@ -33,6 +33,7 @@ import {
   setPoliticalState,
   setServiceTypeOption,
   setStreetName,
+  setTransportation,
   updateAppointmentDetails,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import { geocodeByPlaceId } from 'react-google-places-autocomplete';
@@ -212,6 +213,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   };
 
   const onCancel = () => {
+    const lastTransportation = localStorage.getItem('lastTransportation');
+    localStorage.removeItem('lastTransportation');
+    if (lastTransportation) dispatch(setTransportation(JSON.parse(lastTransportation)));
     clearData();
     clearDate();
     onClose();
@@ -244,24 +248,33 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
       });
     }
 
+    const svTransportation = transportations.find(
+      t => t.type === ETransportationType.PickUpDelivery
+    );
+
+    const selectedTransportation =
+      selectedOption?.transportationOption ||
+      transportationOption ||
+      (selectedOption?.type === EServiceType.PickUpDropOff
+        ? svTransportation || null
+        : selectedOption?.type === EServiceType.VisitCenter
+          ? transportations[0]
+          : transportation);
+
     dispatch(
       updateAppointmentDetails({
         address: userAddress,
         advisor: consultant,
         date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
         timing: timingType,
-        transportation:
-          (selectedOption?.transportationOption ?? transportationOption) || !selectedOption
-            ? transportation
-            : selectedOption?.type === EServiceType.PickUpDropOff
-              ? null
-              : transportations[0],
+        transportation: selectedTransportation,
         zip: zip ? zip.substring(0, 5) : '',
         serviceTypeOption: selectedOption,
       })
     );
     clearPrevAppointments();
     handleClose();
+    localStorage.removeItem('lastTransportation');
     onNext && onNext();
   };
 

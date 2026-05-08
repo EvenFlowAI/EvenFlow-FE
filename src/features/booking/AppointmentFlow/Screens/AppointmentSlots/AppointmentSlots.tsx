@@ -492,9 +492,11 @@ export const AppointmentSlots: React.FC<
 
         const transportationOptionId =
           serviceType === EServiceType.VisitCenter
-            ? !serviceTypeOption?.transportationOption && transportation
-              ? transportation?.id
-              : null
+            ? serviceTypeOption?.transportationOption
+              ? serviceTypeOption?.transportationOption?.id
+              : !serviceTypeOption?.transportationOption && transportation
+                ? transportation?.id
+                : null
             : serviceType === EServiceType.PickUpDropOff
               ? (serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null)
               : null;
@@ -507,7 +509,10 @@ export const AppointmentSlots: React.FC<
           transportation?.type === ETransportationType.PickUpDelivery;
         const optionId: number | null = serviceTypeOption?.id ?? null;
 
-        const pickUpDropOffTransportation = null;
+        const pickUpDropOffTransportation =
+          transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
+          transportation?.id ??
+          null;
 
         const data: IAppointmentSlotsRequest = {
           appointmentTimingType:

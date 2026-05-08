@@ -57,7 +57,15 @@ const SelectedTransportation: React.FC<TProps> = ({
       setSelectedOption(serviceValetOption);
       onSwitchFlowOpen();
     } else {
-      dispatch(setTransportation(selected ?? null));
+      const SVTransportation = transportations.find(
+        t => t.type === ETransportationType.PickUpDelivery
+      );
+      if (SVTransportation) {
+        dispatch(setTransportation(SVTransportation));
+      } else {
+        dispatch(setTransportation(selected ?? null));
+      }
+      onSwitchFlowOpen();
     }
   };
 
