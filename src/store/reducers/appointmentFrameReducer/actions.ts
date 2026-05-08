@@ -436,10 +436,12 @@ export const loadConsultants =
       appointmentByKey,
       serviceTypeOption,
       transportation,
+      transportations,
     } = getState().appointmentFrame;
     const { selectedSR, selectedSRComments } = getState().appointment;
     const { allCategories } = getState().categories;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
+    const { firstScreenOptions } = getState().serviceTypes;
     const serviceCategoryIds = allCategories
       .filter(category => {
         return (
@@ -463,6 +465,30 @@ export const loadConsultants =
         undefined,
         selectedSRComments
       );
+
+      const transportationOptionId =
+        serviceTypeOption?.type === EServiceType.VisitCenter
+          ? serviceTypeOption?.transportationOption
+            ? serviceTypeOption?.transportationOption?.id
+            : !serviceTypeOption?.transportationOption && transportation
+              ? transportation?.id
+              : null
+          : serviceTypeOption?.type === EServiceType.PickUpDropOff
+            ? (serviceTypeOption?.transportationOption?.id ?? null)
+            : null;
+
+      const isServiceValetExist = firstScreenOptions.some(
+        s => s.type === EServiceType.PickUpDropOff
+      );
+      const isPickDropOff =
+        serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery;
+
+      const pickUpDropOffTransportation =
+        transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
+        transportation?.id ??
+        null;
+
       if (
         serviceRequestIds.length ||
         maintenancePackageOption ||
@@ -490,8 +516,11 @@ export const loadConsultants =
           },
           address: typeof address === 'string' ? address : (address?.label ?? ''),
           zipCode,
-          transportationOptionId:
-            serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
+          transportationOptionId: isServiceValetExist
+            ? transportationOptionId
+            : isPickDropOff
+              ? pickUpDropOffTransportation
+              : transportationOptionId,
         };
         if (appointmentByKey?.hashKey) {
           data.appointmentHashKey = appointmentByKey?.hashKey;
@@ -1108,7 +1137,7 @@ export const createOrUpdateAppointment =
           ? appointmentFrame.transportation?.id
           : null
         : serviceType === EServiceType.PickUpDropOff
-          ? (appointmentFrame.transportation?.id ?? null)
+          ? (appointmentFrame.serviceTypeOption?.transportationOption?.id ?? null)
           : null;
 
     const serviceRequests = collectServiceRequestIds(
@@ -1383,6 +1412,7 @@ export const searchForCustomerConsents =
       serviceValetAppointment,
       isCloneMode,
     } = getState().appointment;
+    const { firstScreenOptions } = getState().serviceTypes;
     const {
       selectedVehicle,
       service,
@@ -1397,8 +1427,10 @@ export const searchForCustomerConsents =
       zipCode,
       serviceCategories,
       acceptedConsentIds,
+      transportations,
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
+    const serviceType: EServiceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
     if (scProfile && selectedVehicle) {
       const settingsEnabled = Boolean(waitListSettings?.isEnabled);
       const isWaitListSlotSelected = appointment?.isOverbookingApplied && settingsEnabled;
@@ -1411,6 +1443,27 @@ export const searchForCustomerConsents =
       const isWaitlist = Boolean(
         isVisitCenterAppointment && (isWaitListSlotSelected || isWaitListManaging)
       );
+
+      const transportationOptionId =
+        serviceType === EServiceType.VisitCenter
+          ? !serviceTypeOption?.transportationOption && transportation
+            ? transportation?.id
+            : null
+          : serviceType === EServiceType.PickUpDropOff
+            ? (serviceTypeOption?.transportationOption?.id ?? null)
+            : null;
+
+      const isServiceValetExist = firstScreenOptions.some(
+        s => s.type === EServiceType.PickUpDropOff
+      );
+      const isPickDropOff =
+        serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        transportation?.type === ETransportationType.PickUpDelivery;
+
+      const pickUpDropOffTransportation =
+        transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
+        transportation?.id ??
+        null;
 
       const date =
         appointment?.appointmentDate ??
@@ -1436,8 +1489,11 @@ export const searchForCustomerConsents =
           (transportation?.type === ETransportationType.PickUpDelivery
             ? EServiceType.PickUpDropOff
             : EServiceType.VisitCenter),
-        transportationOptionId:
-          serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
+        transportationOptionId: isServiceValetExist
+          ? transportationOptionId
+          : isPickDropOff
+            ? pickUpDropOffTransportation
+            : transportationOptionId,
         advisorId: advisor?.id ?? null,
         appointmentTime: date,
         isWaitlistEnabled: isWaitlist,

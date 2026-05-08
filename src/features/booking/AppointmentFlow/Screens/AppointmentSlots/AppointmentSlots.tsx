@@ -498,7 +498,7 @@ export const AppointmentSlots: React.FC<
                 ? transportation?.id
                 : null
             : serviceType === EServiceType.PickUpDropOff
-              ? (serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null)
+              ? (serviceTypeOption?.transportationOption?.id ?? null)
               : null;
 
         const isServiceValetExist = firstScreenOptions.some(
