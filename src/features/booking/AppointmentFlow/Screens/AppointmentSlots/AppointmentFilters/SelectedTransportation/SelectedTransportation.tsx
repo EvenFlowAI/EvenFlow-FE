@@ -57,6 +57,8 @@ const SelectedTransportation: React.FC<TProps> = ({
       setSelectedOption(serviceValetOption);
       onSwitchFlowOpen();
     } else {
+      localStorage.setItem('lastTransportation', JSON.stringify(transportation));
+
       const SVTransportation = transportations.find(
         t => t.type === ETransportationType.PickUpDelivery
       );
