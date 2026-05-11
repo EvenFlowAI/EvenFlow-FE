@@ -80,7 +80,10 @@ const AppointmentFilters: React.FC<TProps> = ({
   };
 
   const isVisibleTransportation = () => {
-    if (transportation?.type === ETransportationType.PickUpDelivery) {
+    if (
+      serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+      transportation?.type === ETransportationType.PickUpDelivery
+    ) {
       return !!isTransportationsVisible && !!transportation && isTransportationAvailable;
     } else {
       return !!isTransportationsVisible;
