@@ -12,6 +12,7 @@ import {
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { Wrapper } from './styles';
 import { ConfirmationItemWrapper } from '../../../../../../components/styled/ConfirmationItemWrapper';
+import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
 
 export const ReviewManaging = () => {
   const { advisor, transportation, serviceTypeOption, consultants, appointmentByKey } = useSelector(
@@ -22,7 +23,13 @@ export const ReviewManaging = () => {
   );
 
   const { t } = useTranslation();
-  const transportationSelected = serviceTypeOption?.transportationOption || transportation;
+  const transportationSelected =
+    serviceTypeOption?.transportationOption ||
+    (!serviceTypeOption
+      ? transportation
+      : transportation?.type === ETransportationType.PickUpDelivery
+        ? false
+        : transportation);
   const dispatch = useDispatch();
   useEffect(() => {
     if (!advisor && appointmentByKey?.advisorId) {

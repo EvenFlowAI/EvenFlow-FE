@@ -483,6 +483,14 @@ export const ManageAppointment: React.FC<
     onClose();
   };
 
+  const transportationSelected =
+    serviceTypeOption?.transportationOption ||
+    (!serviceTypeOption
+      ? transportation
+      : transportation?.type === ETransportationType.PickUpDelivery
+        ? false
+        : transportation);
+
   return (
     <StepWrapper style={isXs ? { paddingBottom: 30 } : {}}>
       <ManageTitle>Manage Appointment</ManageTitle>
@@ -499,9 +507,7 @@ export const ManageAppointment: React.FC<
               <SelectedPriceManaging />
               <OpenModalLink onClick={onFeesOpen} text={t('View itemized fees of services')} />
               <ServiceTypeManaging />
-              {transportation || serviceTypeOption?.transportationOption || isAdvisorAvailable ? (
-                <ReviewManaging />
-              ) : null}
+              {transportationSelected || isAdvisorAvailable ? <ReviewManaging /> : null}
               {/* <OpenModalLink onClick={onCommentOpen} text={t('View Appointment Comments')} /> */}
             </div>
             <div>

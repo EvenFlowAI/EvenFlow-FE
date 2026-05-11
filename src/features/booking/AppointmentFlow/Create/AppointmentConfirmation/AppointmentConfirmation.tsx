@@ -148,7 +148,11 @@ export const AppointmentConfirmation: React.FC<
 
   const transportationSelected =
     serviceTypeOption?.transportationOption ||
-    (transportation?.type === ETransportationType.PickUpDelivery ? false : transportation);
+    (!serviceTypeOption
+      ? transportation
+      : transportation?.type === ETransportationType.PickUpDelivery
+        ? false
+        : transportation);
 
   return (
     <StepWrapper>
