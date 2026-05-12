@@ -22,14 +22,8 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
     return typeof reminder !== 'undefined';
   }, [reminders]);
 
-  const textChecked = useMemo(
-    () => scProfile?.isSendReminders && reminders.includes(EContactMethodTypes.Sms),
-    [scProfile, reminders]
-  );
-  const emailChecked = useMemo(
-    () => scProfile?.isSendReminders && reminders.includes(EContactMethodTypes.Email),
-    [scProfile, reminders]
-  );
+  const textChecked = useMemo(() => reminders.includes(EContactMethodTypes.Sms), [reminders]);
+  const emailChecked = useMemo(() => reminders.includes(EContactMethodTypes.Email), [reminders]);
 
   useEffect(() => {
     if (!isEmailRequired && emailReminder && !customer?.email) {
@@ -51,7 +45,6 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
     <div>
       <StyledLabel
         label={t('Text consent')}
-        disabled={!scProfile?.isSendReminders}
         control={
           <Checkbox
             icon={<CheckboxEmptyIcon />}
@@ -75,7 +68,7 @@ export const AppointmentReminders: React.FC<{ isEmailRequired: boolean }> = ({
         label={t('Email consent')}
         control={
           <Checkbox
-            disabled={!scProfile?.isSendReminders || (!isEmailRequired && !customer?.email)}
+            disabled={!isEmailRequired && !customer?.email}
             checked={emailChecked}
             icon={<CheckboxEmptyIcon />}
             checkedIcon={<CheckboxIcon />}
