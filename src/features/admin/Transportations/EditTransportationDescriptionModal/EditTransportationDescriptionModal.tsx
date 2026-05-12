@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -139,6 +139,10 @@ export const EditTransportationDescriptionModal: React.FC<
     setSelectedCode(option);
   };
 
+  const uniqueAssignedList = Array.from(
+    new Map(allAssignedList.map(o => [o.serviceRequest.id, o])).values()
+  );
+
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>Manage Option</DialogTitle>
@@ -186,7 +190,7 @@ export const EditTransportationDescriptionModal: React.FC<
               label: 'OP Code',
               placeholder: pickupAndDeliveryType ? 'See Service Valet page' : 'Select Op Code',
             })}
-            options={allAssignedList}
+            options={uniqueAssignedList}
           />
         </div>
       </DialogContent>
