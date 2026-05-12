@@ -107,9 +107,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     selectedOption?.type !== EServiceType.PickUpDropOff;
   const isTransportationsVisible =
     Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
-  const isAddressVisible =
-    selectedOption?.type === EServiceType.PickUpDropOff ||
-    transportation?.type === ETransportationType.PickUpDelivery;
+  const isAddressVisible = selectedOption
+    ? selectedOption?.type === EServiceType.PickUpDropOff
+    : transportation?.type === ETransportationType.PickUpDelivery;
   const nextButtonIsDisabled = useMemo(() => {
     return !isAddressValid || (isTransportationsVisible && !transportationOption);
   }, [isAddressValid, isTransportationsVisible, transportationOption]);
@@ -122,8 +122,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
         dispatch(setServiceTypeOption(selectedOption));
       }
       setAddressValid(
-        selectedOption?.type !== EServiceType.PickUpDropOff &&
-          transportation?.type !== ETransportationType.PickUpDelivery
+        selectedOption
+          ? selectedOption?.type !== EServiceType.PickUpDropOff
+          : transportation?.type !== ETransportationType.PickUpDelivery
       );
     }
   }, [
@@ -201,8 +202,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     dispatch(setFilteredZipCodes([]));
     setCalendarOpen(false);
     setAddressValid(
-      selectedOption?.type !== EServiceType.PickUpDropOff &&
-        transportation?.type !== ETransportationType.PickUpDelivery
+      selectedOption
+        ? selectedOption?.type !== EServiceType.PickUpDropOff
+        : transportation?.type !== ETransportationType.PickUpDelivery
     );
     setPendingAncillaryPrice(null);
   };
@@ -317,8 +319,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
       if (
         address &&
         zipCode?.length === 5 &&
-        (selectedOption?.type === EServiceType.PickUpDropOff ||
-          transportation?.type === ETransportationType.PickUpDelivery)
+        (selectedOption
+          ? selectedOption?.type === EServiceType.PickUpDropOff
+          : transportation?.type === ETransportationType.PickUpDelivery)
       ) {
         const data: IAncillaryByZipRequest = {
           address: typeof address === 'string' ? address : address.label,
@@ -389,8 +392,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
                   address={userAddress}
                   zipCode={zip}
                   disabled={
-                    (selectedOption?.type === EServiceType.PickUpDropOff ||
-                      transportation?.type === ETransportationType.PickUpDelivery) &&
+                    (selectedOption
+                      ? selectedOption?.type === EServiceType.PickUpDropOff
+                      : transportation?.type === ETransportationType.PickUpDelivery) &&
                     (!isAddressValid || isUnavailableServiceOpen || isAncillaryPriceOpen)
                   }
                 />
@@ -419,8 +423,9 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
               <Grid item xs={12} sm={6}>
                 <Timing
                   disabled={
-                    (selectedOption?.type === EServiceType.PickUpDropOff ||
-                      transportation?.type === ETransportationType.PickUpDelivery) &&
+                    (selectedOption
+                      ? selectedOption?.type === EServiceType.PickUpDropOff
+                      : transportation?.type === ETransportationType.PickUpDelivery) &&
                     (!userAddress || !zip || isUnavailableServiceOpen || isAncillaryPriceOpen)
                   }
                   timingType={timingType}
