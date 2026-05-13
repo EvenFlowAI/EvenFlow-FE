@@ -88,6 +88,7 @@ export const AppointmentSlots: React.FC<
     selectedSRComments,
     isCloneMode,
     serviceValetCapacity,
+    isDemandSmoothMode,
   } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector(({ serviceTypes }: RootState) => serviceTypes);
 
@@ -435,7 +436,9 @@ export const AppointmentSlots: React.FC<
   const getApiDates = () => {
     const utcOffset = dayjs().utcOffset();
     const anchorTime = selectedTime ? dayjs(selectedTime) : dayjs().startOf('day');
-    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const idealStartDay = isDemandSmoothMode
+      ? dayjs(appointmentByKey?.dateInUtc)
+      : anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
     const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
@@ -455,7 +458,9 @@ export const AppointmentSlots: React.FC<
     const anchorTime = dayjs(newStartDate);
     const idealStartDay = isPickUpDropOff
       ? anchorTime
-      : anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+      : isDemandSmoothMode
+        ? dayjs(appointmentByKey?.dateInUtc)
+        : anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
     const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
@@ -775,7 +780,7 @@ export const AppointmentSlots: React.FC<
           removeTopMargin
           onBack={handleBack}
           onNext={searchForConsents}
-          prevDisabled={!isAppointmentTimingAvailable && isCloneMode}
+          prevDisabled={(!isAppointmentTimingAvailable && isCloneMode) || isDemandSmoothMode}
           nextDisabled={nextDisabled}
           nextLabel={isCloneMode ? t('Confirm') : t('Next')}
           loading={isConsultantsLoading || isConsentsLoading}
