@@ -56,6 +56,10 @@ const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
     });
   };
 
+  const uniqueAssignedList = Array.from(
+    new Map(allAssignedList.map(o => [o.serviceRequest.id, o])).values()
+  );
+
   return (
     <InputWrapper>
       <div style={{ maxWidth: '50%' }}>{zone.name.toUpperCase()}</div>
@@ -73,7 +77,7 @@ const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
           placeholder: 'Unassigned',
           error: formChecked && !selectedCode,
         })}
-        options={allAssignedList}
+        options={uniqueAssignedList}
       />
     </InputWrapper>
   );
