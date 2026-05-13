@@ -74,7 +74,6 @@ export const EditAppointment = () => {
   useEffect(() => {
     if (!paramsId) {
       if (sourceId) {
-        console.log('test');
         setId(sourceId ?? '');
         dispatch(setIsDemandSmoothMode(true));
         dispatch(setDemandAppointmentId(sourceId || ''));
