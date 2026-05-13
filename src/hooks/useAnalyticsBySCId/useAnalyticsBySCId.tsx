@@ -1,6 +1,6 @@
 import ReactGA from 'react-ga4';
 import TagManager from 'react-gtm-module';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { options } from '../../utils/constants';
 import { TReactGATracker } from '../../utils/types';
 import { TArgCallback } from '../../types/types';
@@ -16,7 +16,14 @@ export const useAnalyticsForParentSite = (
 
     if (!trackerCreated) {
       const opt_clientId = sessionStorage.getItem('clientId');
+      const opt_measurementId = sessionStorage.getItem('measurementId');
       if (opt_clientId) options.clientId = opt_clientId;
+
+      if (opt_measurementId?.length && opt_measurementId !== TRACKERS[0].measurementId) {
+        TRACKERS.push({ measurementId: opt_measurementId });
+      }
+
+      console.log('TRACKERS FOR GA4:', TRACKERS);
 
       const trackersData: TReactGATracker[] = TRACKERS.map(el => ({
         trackingId: el.measurementId,
@@ -26,7 +33,7 @@ export const useAnalyticsForParentSite = (
         },
       }));
 
-      console.log('TEMP_LOG: initialization ga4', opt_clientId);
+      console.log('TEMP_LOG: initialization ga4', trackersData);
       ReactGA.initialize(trackersData);
 
       TRACKERS.forEach(item => {
@@ -43,11 +50,16 @@ export const useAnalyticsForParentSite = (
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      const clientId = typeof event.data === 'string' ? event.data : '';
+      const clientData =
+        typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string'
+          ? event.data
+          : '';
 
-      if (clientId) {
-        console.log('TEMP_LOG: client_id obtained from the dealer website:', clientId);
-        if (clientId?.length) sessionStorage.setItem('clientId', clientId);
+      if (clientData) {
+        console.log('TEMP_LOG: clientData obtained from the dealer website:', clientData);
+        if (clientData?.id?.length) sessionStorage.setItem('clientId', clientData?.id);
+        if (clientData?.measurementId?.length)
+          sessionStorage.setItem('measurementId', clientData?.measurementId);
 
         if (!trackerCreated && id) {
           createTracker(trackerCreated);

@@ -169,11 +169,16 @@ const App = () => {
   LicenseInfo.setLicenseKey(MUI_PRO_LICENSE_KEY);
 
   const handleMessage = (event: MessageEvent) => {
-    const clientId = typeof event.data === 'string' ? event.data : '';
+    const clientData =
+      typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string'
+        ? event.data
+        : '';
 
-    if (clientId) {
-      console.log('TEMP_LOG: App.tsx: client_id obtained from the dealer website:', clientId);
-      if (clientId?.length) sessionStorage.setItem('clientId', clientId);
+    if (clientData) {
+      console.log('TEMP_LOG: App.tsx: clientData obtained from the dealer website:', clientData);
+      if (clientData?.id?.length) sessionStorage.setItem('clientId', clientData?.id);
+      if (clientData?.measurementId?.length)
+        sessionStorage.setItem('measurementId', clientData?.measurementId);
     }
   };
 
