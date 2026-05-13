@@ -57,7 +57,7 @@ export const EditAppointment = () => {
   const dispatch = useDispatch();
   const { id: paramsId } = useParams<{ id: string }>();
   const params = new URL(window.location.href).searchParams;
-  const sourceId = params.get('source-id');
+  const sourceId = params.get('source');
   const { t } = useTranslation();
   const { search } = useLocation<TLParams>();
   const currentUser = useCurrentUser();
@@ -74,6 +74,7 @@ export const EditAppointment = () => {
   useEffect(() => {
     if (!paramsId) {
       if (sourceId) {
+        console.log('test');
         setId(sourceId ?? '');
         dispatch(setIsDemandSmoothMode(true));
         dispatch(setDemandAppointmentId(sourceId || ''));
