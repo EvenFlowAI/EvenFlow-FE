@@ -139,10 +139,6 @@ export const EditTransportationDescriptionModal: React.FC<
     setSelectedCode(option);
   };
 
-  const uniqueAssignedList = Array.from(
-    new Map(allAssignedList.map(o => [o.serviceRequest.id, o])).values()
-  );
-
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>Manage Option</DialogTitle>
@@ -183,14 +179,17 @@ export const EditTransportationDescriptionModal: React.FC<
             value={selectedCode}
             onChange={onOpsCodeChange}
             getOptionLabel={o => o.serviceRequest.code}
-            isOptionEqualToValue={(option, value) =>
-              option.serviceRequest.id === value.serviceRequest.id
-            }
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            renderOption={(props, option) => (
+              <li {...props} key={option.id}>
+                {option.serviceRequest.code}
+              </li>
+            )}
             renderInput={autocompleteRender({
               label: 'OP Code',
               placeholder: pickupAndDeliveryType ? 'See Service Valet page' : 'Select Op Code',
             })}
-            options={uniqueAssignedList}
+            options={allAssignedList}
           />
         </div>
       </DialogContent>

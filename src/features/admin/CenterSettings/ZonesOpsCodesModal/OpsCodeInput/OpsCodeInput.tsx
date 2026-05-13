@@ -56,10 +56,6 @@ const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
     });
   };
 
-  const uniqueAssignedList = Array.from(
-    new Map(allAssignedList.map(o => [o.serviceRequest.id, o])).values()
-  );
-
   return (
     <InputWrapper>
       <div style={{ maxWidth: '50%' }}>{zone.name.toUpperCase()}</div>
@@ -69,15 +65,18 @@ const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
         value={selectedCode}
         onChange={onOpsCodeChange}
         getOptionLabel={o => o.serviceRequest.code}
-        isOptionEqualToValue={(option, value) =>
-          option.serviceRequest.id === value.serviceRequest.id
-        }
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        renderOption={(props, option) => (
+          <li {...props} key={option.id}>
+            {option.serviceRequest.code}
+          </li>
+        )}
         renderInput={autocompleteRender({
           label: '',
           placeholder: 'Unassigned',
           error: formChecked && !selectedCode,
         })}
-        options={uniqueAssignedList}
+        options={allAssignedList}
       />
     </InputWrapper>
   );
