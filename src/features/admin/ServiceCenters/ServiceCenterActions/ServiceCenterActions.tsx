@@ -17,6 +17,7 @@ import { TSelectedGroup } from '../types';
 import { SearchDB } from '../../../../components/formControls/SearchDebounced/SearchDB';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
+import { defaultPageData } from '../../../../store/reducers/constants';
 
 export const ServiceCenterActions = () => {
   const search = useSelector((state: RootState) => state.serviceCenters.searchTerm);
@@ -29,7 +30,7 @@ export const ServiceCenterActions = () => {
 
   useEffect(() => {
     if (currentUser?.isSuperUser) {
-      dispatch(changePageData({ pageIndex: 0, pageSize: 0 }));
+      dispatch(changePageData(defaultPageData));
     }
   }, [currentUser]);
 
