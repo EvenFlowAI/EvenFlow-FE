@@ -47,6 +47,7 @@ export const useStyles = makeStyles<{ sidebarColor?: string }>()((theme, params)
     alignItems: 'center',
     justifyContent: 'space-between',
     scrollbarWidth: 'none',
+    transition: 'background-color 0.3s ease',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
