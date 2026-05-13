@@ -160,6 +160,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     const zipIsSelectedByUser = zip === zipCodeValue && zipCodeValue?.length === 5;
     if (open && zipIsSelectedByUser && addressIsSelectedByUser) {
       loadAncillaryPrice(zipCodeValue, address);
+    } else {
+      onAncillaryPriceClose();
     }
   }, [open, zipCodeValue, address, zip, userAddress]);
 
