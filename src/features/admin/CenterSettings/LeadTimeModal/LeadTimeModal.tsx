@@ -19,6 +19,7 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
 }) => {
   const { centerSettings } = useSelector((state: RootState) => state.capacityServiceValet);
   const [leadTime, setLeadTime] = React.useState<number | null>(null);
+  const [error, setError] = React.useState<boolean>(false);
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
 
@@ -29,6 +30,10 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
 
   const onSave = () => {
     if (!selectedSC || leadTime === null) return;
+    if (leadTime > 99 || leadTime < 1) {
+      setError(true);
+      return;
+    }
     dispatch(
       updateServiceValetSettings(selectedSC?.id, { appointmentLeadDays: leadTime }, () =>
         props.onClose()
@@ -47,13 +52,20 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
       <DialogContent>
         <TextField
           fullWidth
+          onFocus={() => setError(false)}
           type="number"
-          inputProps={{ min: 0 }}
+          inputProps={{ min: 1, max: 99 }}
           label="Days"
           placeholder=""
           onChange={e => setLeadTime(+e.target.value)}
           value={leadTime}
+          error={error}
         />
+        {error && (
+          <span style={{ color: 'red', fontSize: '12px' }}>
+            The number of days must be between 1 and 99 inclusive.
+          </span>
+        )}
       </DialogContent>
       <DialogActions>
         <div style={{ display: 'flex', gap: 12 }}>
