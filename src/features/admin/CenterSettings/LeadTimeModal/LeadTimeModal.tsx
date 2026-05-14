@@ -23,10 +23,15 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
 
+  const handleClose = () => {
+    props.onClose();
+    setError(false);
+  };
+
   useEffect(() => {
     if (centerSettings?.appointmentLeadDays && centerSettings?.appointmentLeadDays !== null)
       setLeadTime(centerSettings?.appointmentLeadDays);
-  }, [centerSettings?.appointmentLeadDays]);
+  }, [props.open, centerSettings?.appointmentLeadDays]);
 
   const onSave = () => {
     if (!selectedSC || leadTime === null) return;
@@ -36,14 +41,14 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
     }
     dispatch(
       updateServiceValetSettings(selectedSC?.id, { appointmentLeadDays: leadTime }, () =>
-        props.onClose()
+        handleClose()
       )
     );
   };
 
   return (
-    <BaseModal {...props} onClose={props.onClose} width={355}>
-      <DialogTitle onClose={props.onClose}>
+    <BaseModal {...props} onClose={handleClose} width={355}>
+      <DialogTitle onClose={handleClose}>
         <TopWrapperDouble>
           <span>Appointment Lead Time</span>
           <span>From Current Date</span>
@@ -69,7 +74,7 @@ const LeadTimeModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<Di
       </DialogContent>
       <DialogActions>
         <div style={{ display: 'flex', gap: 12 }}>
-          <Button onClick={props.onClose} color="info">
+          <Button onClick={handleClose} color="info">
             Cancel
           </Button>
           <Button onClick={onSave} variant="contained" color="primary">
