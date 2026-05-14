@@ -172,9 +172,7 @@ export const checkPodChanged =
           : null,
     };
     if (appointmentFrame?.address) {
-      if (appointmentFrame?.address?.label) {
-        data.address = appointmentFrame?.address.label;
-      } else if (typeof appointmentFrame?.address === 'string') {
+      if (typeof appointmentFrame?.address === 'string') {
         data.address = {
           address: appointmentFrame?.streetName.trim(),
           city: appointmentFrame?.city.trim(),
