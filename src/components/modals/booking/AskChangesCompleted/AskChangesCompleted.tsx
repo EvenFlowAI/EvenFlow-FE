@@ -23,6 +23,10 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import CustomerConsents from '../CustomerConsents/CustomerConsents';
 
+enum ERROR_CODES {
+  TIME_SLOT_NOT_AVAILABLE = 5,
+}
+
 const AskChangesCompleted = () => {
   const {
     isAppointmentSaving,
@@ -74,7 +78,8 @@ const AskChangesCompleted = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (e: any) => {
-    const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes('time slot');
+    const timeSlotNotAvailable =
+      e.response?.data?.errorCode === ERROR_CODES.TIME_SLOT_NOT_AVAILABLE;
     const transportationUnavailable = e.response?.data?.message
       ?.toLowerCase()
       .includes('transportation option');
@@ -82,8 +87,11 @@ const AskChangesCompleted = () => {
       ?.toLowerCase()
       .includes('is not available for this geographic zone or for the date');
     const internalError = e.response?.data?.message?.toLowerCase().includes('internal server');
-    if (timeSlotUnavailable || dateForZoneUnavailable) {
+    if (timeSlotNotAvailable || dateForZoneUnavailable) {
       dispatch(setChangesCompletedOpen(false));
+      if (timeSlotNotAvailable) {
+        showError(e.response?.data?.message);
+      }
       if (currentScreen !== 'appointmentSelection') dispatch(setSlotsWarningOpen(true));
     } else if (transportationUnavailable) {
       dispatch(setChangesCompletedOpen(false));
