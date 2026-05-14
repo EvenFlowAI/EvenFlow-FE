@@ -9,7 +9,6 @@ import {
   setSCSearch,
   setSelectedDealershipGroupId,
 } from '../../../../store/reducers/serviceCenters/actions';
-import { changePageData } from '../../../../store/reducers/dealershipGroups/actions';
 import { Autocomplete } from '@mui/material';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { useStyles } from './styles';
@@ -17,7 +16,6 @@ import { TSelectedGroup } from '../types';
 import { SearchDB } from '../../../../components/formControls/SearchDebounced/SearchDB';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
-import { defaultPageData } from '../../../../store/reducers/constants';
 
 export const ServiceCenterActions = () => {
   const search = useSelector((state: RootState) => state.serviceCenters.searchTerm);
@@ -27,12 +25,6 @@ export const ServiceCenterActions = () => {
   const { isOpen, onClose, onOpen } = useModal();
   const dispatch = useDispatch();
   const { classes } = useStyles();
-
-  useEffect(() => {
-    if (currentUser?.isSuperUser) {
-      dispatch(changePageData(defaultPageData));
-    }
-  }, [currentUser]);
 
   // clear the search term when navigating to another page
   useEffect(() => {
