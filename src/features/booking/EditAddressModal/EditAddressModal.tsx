@@ -32,6 +32,9 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
   const {
     address,
     zipCode: zipCodeValue,
+    city,
+    streetName,
+    politicalState,
     serviceTypeOption,
     transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
@@ -113,6 +116,17 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         );
         onCancel();
       });
+    } else if (typeof userAddress === 'string') {
+      dispatch(
+        updateAppointmentAddress({
+          address: userAddress,
+          zip: zip || '',
+          city: city || '',
+          state: politicalState || '',
+          street: streetName || '',
+        })
+      );
+      onCancel();
     }
   };
 
