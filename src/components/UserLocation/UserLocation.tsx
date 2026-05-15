@@ -168,8 +168,8 @@ const UserLocation: React.FC<TProps> = ({
 
   const handleChangeZip = (e: React.SyntheticEvent, option: string | null) => {
     setFormChecked(false);
-    if (option?.length === 5 && e.type !== 'blur' && loadAncillaryPrice) {
-      loadAncillaryPrice(option, userAddress);
+    if (option?.length === 5 && e.type !== 'blur') {
+      if (loadAncillaryPrice) loadAncillaryPrice(option, userAddress);
       setZip(option);
     }
   };
