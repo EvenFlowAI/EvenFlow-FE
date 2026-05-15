@@ -96,9 +96,12 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   } = useModal();
   const showError = useException();
 
-  const newConfig = config.find(
-    item =>
-      item.serviceType === selectedOption?.type || item.serviceType === EServiceType.PickUpDropOff
+  const newConfig = config.find(item =>
+    selectedOption
+      ? item.serviceType === selectedOption?.type
+      : transportation?.type === ETransportationType.PickUpDelivery
+        ? item.serviceType === EServiceType.PickUpDropOff
+        : item.serviceType === EServiceType.VisitCenter
   );
 
   const isDateSelectionOn =

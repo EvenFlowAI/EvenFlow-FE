@@ -37,6 +37,8 @@ const ServiceOption: React.FC<TProps> = ({
     if (newOption) {
       setSelectedOption(newOption);
       onSwitchFlowOpen();
+    } else {
+      setSelectedOption(null);
     }
   };
 
