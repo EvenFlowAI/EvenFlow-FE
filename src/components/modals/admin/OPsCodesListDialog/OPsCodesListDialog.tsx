@@ -91,7 +91,7 @@ export const OPsCodesListDialog: React.FC<
       dispatch(setNonSelectedPageData({ pageIndex: 0 }));
       dispatch(loadNonSelectedServiceRequests(selectedSC.id, Boolean(selectedPreviously)));
     }
-  }, [dispatch, selectedSC, selectedPreviously]);
+  }, [dispatch, selectedSC]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setNonSelectedFilter({ searchTerm: e.target.value }));
