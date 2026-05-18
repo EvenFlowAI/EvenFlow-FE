@@ -234,7 +234,7 @@ export const AppointmentSlots: React.FC<
             ? dayjs(newDate)
             : getClearDate(newDate);
 
-        let firstAvailableSlot = null;
+        let firstAvailableSlot;
         if (
           serviceOption?.type === EServiceType.PickUpDropOff ||
           transportation?.type === ETransportationType.PickUpDelivery
@@ -426,12 +426,12 @@ export const AppointmentSlots: React.FC<
   };
 
   const onLoadSlots = (isEmptyList: boolean) => {
-    // const isPossibleToChangeType =
-    //   firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
-    // const isMobileServiceType = serviceType === EServiceType.MobileService;
-    // if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
-    //   onServiceOptionOpen();
-    // }
+    const isPossibleToChangeType =
+      firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
+    const isMobileServiceType = serviceType === EServiceType.MobileService;
+    if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
+      onServiceOptionOpen();
+    }
   };
 
   const getApiDates = () => {
@@ -577,7 +577,7 @@ export const AppointmentSlots: React.FC<
               data,
               currentAppointment ? () => {} : setDateCallback,
               () => handleDateRangeSet(false),
-              onLoadSlots,
+              () => {},
               handleError,
               setApiDates
             )
