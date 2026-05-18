@@ -66,7 +66,7 @@ const Transportation: React.FC<TProps> = ({
           value={selectedTransportation?.id ?? ''}
           className={classes.select}
           variant="standard"
-          style={{ color: selectedTransportation ? 'inherit' : '#858585' }}
+          style={{ color: selectedTransportation ? 'inherit' : '#858585', width: '402px' }}
           disableUnderline
           displayEmpty
           fullWidth={isSm}

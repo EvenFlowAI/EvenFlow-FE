@@ -39,10 +39,14 @@ type TProps = {
   setAddressValid: Dispatch<SetStateAction<boolean>>;
   addressTitleName?: string;
   zipTitleName?: string;
+  zipWidth?: number;
+  templateColumnsData?: string;
 };
 
 const UserLocation: React.FC<TProps> = ({
   zip,
+  zipWidth,
+  templateColumnsData,
   setZip,
   userAddress,
   setUserAddress,
@@ -175,7 +179,7 @@ const UserLocation: React.FC<TProps> = ({
   };
 
   return (
-    <SelectWrapper>
+    <SelectWrapper templateColumnsData={templateColumnsData}>
       <div style={{ width: '100%' }}>
         <p className="label">{t(addressTitleName || 'Your Address')}</p>
         <GooglePlaces
@@ -189,6 +193,7 @@ const UserLocation: React.FC<TProps> = ({
       <Autocomplete
         options={filteredZipCodes}
         freeSolo
+        style={{ width: zipWidth || '100%' }}
         autoSelect
         isOptionEqualToValue={(o, v) => o === v}
         onChange={handleChangeZip}
