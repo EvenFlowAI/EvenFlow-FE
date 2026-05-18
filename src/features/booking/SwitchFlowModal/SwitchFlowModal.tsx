@@ -369,6 +369,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
               </Grid>
               <Grid item xs={12}>
                 <UserLocation
+                  zipWidth={194}
+                  templateColumnsData="64% 31%"
                   loadAncillaryPrice={loadAncillaryPrice}
                   zip={zip}
                   setZip={setZip}

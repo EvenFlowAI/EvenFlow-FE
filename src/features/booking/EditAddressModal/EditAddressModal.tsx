@@ -150,7 +150,7 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
   };
 
   return (
-    <BaseModal open={open} onClose={onCancel} width={700}>
+    <BaseModal open={open} onClose={onCancel} width={640}>
       <DialogTitle
         onClose={onCancel}
         style={{
@@ -168,6 +168,8 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         <Grid container>
           <Grid item xs={12}>
             <UserLocation
+              zipWidth={144}
+              templateColumnsData="71.5% 25.5%"
               zipTitleName="ZIP"
               addressTitleName="Address"
               zip={zip}
@@ -190,7 +192,7 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
           style={{ width: 145, marginLeft: 16 }}
           disabled={nextButtonIsDisabled}
         >
-          {t('Next')}
+          {t('Save')}
         </Button>
       </DialogActions>
       <AncillaryPriceModal

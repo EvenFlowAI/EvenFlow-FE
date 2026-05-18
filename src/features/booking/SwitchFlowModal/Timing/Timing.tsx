@@ -22,7 +22,7 @@ const Timing: React.FC<TProps> = ({ timingType, setTimingType, disabled }) => {
     <>
       <div className={classes.label}>{t('Appointment Search')}</div>
       <Select
-        fullWidth
+        style={{ width: '402px' }}
         className={classes.select}
         disabled={disabled}
         variant="standard"

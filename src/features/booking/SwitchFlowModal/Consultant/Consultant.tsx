@@ -90,6 +90,7 @@ const Consultant: React.FC<TProps> = ({
             fullWidth={isSm}
             disabled={disabled || !advisors.length}
             onChange={handleConsultantChange}
+            style={{ width: '402px' }}
           >
             <MenuItem value="Any" key="any">
               {t('Any Available')}
