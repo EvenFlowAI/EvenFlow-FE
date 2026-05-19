@@ -5,9 +5,8 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Button } from '@mui/material';
+import { Autocomplete, Button } from '@mui/material';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { Autocomplete } from '@mui/material';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { FileInput } from '../../../../components/formControls/FileInput/FileInput';
 import { setAssignedFilter } from '../../../../store/reducers/serviceRequests/actions';
@@ -26,7 +25,10 @@ import {
   updateFirstScreenOption,
   updateFirstScreenOptionIcon,
 } from '../../../../store/reducers/serviceTypes/actions';
-import { ITransportationOptionFull } from '../../../../store/reducers/transportationNeeds/types';
+import {
+  ETransportationType,
+  ITransportationOptionFull,
+} from '../../../../store/reducers/transportationNeeds/types';
 import { RootState } from '../../../../store/rootReducer';
 import { loadTransportationOptions } from '../../../../store/reducers/transportationNeeds/actions';
 import { useStyles } from './styles';
@@ -34,6 +36,7 @@ import { getTransportationOptionString } from '../../../../utils/utils';
 import { serviceTypeNames } from '../constants';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useMessage } from '../../../../hooks/useMessage/useMessage';
 
 const initialFileState = { file: null, dataUrl: undefined };
 
@@ -64,6 +67,7 @@ export const AddFirstScreenOptionModal: React.FC<
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
   const showError = useException();
+  const showMessage = useMessage();
   const { classes } = useStyles();
 
   const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
@@ -126,7 +130,21 @@ export const AddFirstScreenOptionModal: React.FC<
   };
 
   const onSuccessCreate = useCallback(
-    (serviceTypeId: number) => {
+    (
+      serviceTypeId: number,
+      serviceType: string,
+      defaultTransportationType?: ETransportationType
+    ) => {
+      if (
+        serviceType === String(EServiceType.PickUpDropOff) &&
+        defaultTransportationType &&
+        defaultTransportationType !== ETransportationType.PickUpDelivery
+      ) {
+        showMessage(
+          '“Time of Day” transportation constraint does not apply to Service Valet slots',
+          'warning'
+        );
+      }
       if (fileState.file && selectedSC) {
         dispatch(
           updateFirstScreenOptionIcon(serviceTypeId, selectedSC.id, fileState.file, showError)
@@ -189,14 +207,29 @@ export const AddFirstScreenOptionModal: React.FC<
         if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
         if (editingItem) {
           dispatch(
-            updateFirstScreenOption(editingItem.id, selectedSC.id, data, onSuccessCreate, showError)
+            updateFirstScreenOption(
+              editingItem.id,
+              selectedSC.id,
+              data,
+              onSuccessCreate,
+              showError,
+              defaultTransportation?.type
+            )
           );
         } else {
           const newData: TNewFirstScreenOption = {
             ...data,
             serviceCenterId: selectedSC.id,
           };
-          dispatch(createFirstScreenOption(newData, selectedSC.id, onSuccessCreate, showError));
+          dispatch(
+            createFirstScreenOption(
+              newData,
+              selectedSC.id,
+              onSuccessCreate,
+              showError,
+              defaultTransportation?.type
+            )
+          );
         }
       }
     }

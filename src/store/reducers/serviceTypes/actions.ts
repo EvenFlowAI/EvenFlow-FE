@@ -3,6 +3,7 @@ import { AppThunk, PaginatedAPIResponse, TArgCallback } from '../../../types/typ
 import { IFirstScreenOption, TNewFirstScreenOption, TUpdateFirstScreenOption } from './types';
 import { EServiceType } from '../appointmentFrameReducer/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { ETransportationType } from '../transportationNeeds/types';
 
 export const setFirstScreenOptionsLoading = createAction<boolean>('ServiceTypes/SetLoading');
 export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>(
@@ -78,8 +79,13 @@ export const updateFirstScreenOption =
     id: number,
     serviceCenterId: number,
     data: TUpdateFirstScreenOption,
-    onSuccess: (id: number) => void,
-    onError: (err: string) => void
+    onSuccess: (
+      id: number,
+      serviceType: string,
+      defaultTransportationType?: ETransportationType
+    ) => void,
+    onError: (err: string) => void,
+    defaultTransportationType?: ETransportationType
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Update, {
@@ -89,7 +95,7 @@ export const updateFirstScreenOption =
       .then(result => {
         if (result) {
           dispatch(loadFirstScreenOptionsList(serviceCenterId));
-          onSuccess(id);
+          onSuccess(id, String(data.type), defaultTransportationType);
         }
       })
       .catch(err => {
@@ -102,15 +108,17 @@ export const createFirstScreenOption =
   (
     data: TNewFirstScreenOption,
     serviceCenterId: number,
-    onSuccess: (id: number) => void,
-    onError: (err: string) => void
+    onSuccess: (id: number, serviceType: string, transportationType?: ETransportationType) => void,
+    onError: (err: string) => void,
+    defaultTransportationType?: ETransportationType
   ): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.ServiceTypes.Create, { data })
       .then(result => {
         if (result) {
           dispatch(loadFirstScreenOptionsList(serviceCenterId));
-          if (result.data?.id) onSuccess(result.data.id);
+          if (result.data?.id)
+            onSuccess(result.data.id, String(result.data.type), defaultTransportationType);
         }
       })
       .catch(err => {
