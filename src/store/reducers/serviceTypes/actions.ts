@@ -78,7 +78,7 @@ export const updateFirstScreenOption =
     id: number,
     serviceCenterId: number,
     data: TUpdateFirstScreenOption,
-    onSuccess: (id: number) => void,
+    onSuccess: (id: number, data: TUpdateFirstScreenOption) => void,
     onError: (err: string) => void
   ): AppThunk =>
   dispatch => {
@@ -89,7 +89,7 @@ export const updateFirstScreenOption =
       .then(result => {
         if (result) {
           dispatch(loadFirstScreenOptionsList(serviceCenterId));
-          onSuccess(id);
+          onSuccess(id, data);
         }
       })
       .catch(err => {
@@ -102,7 +102,7 @@ export const createFirstScreenOption =
   (
     data: TNewFirstScreenOption,
     serviceCenterId: number,
-    onSuccess: (id: number) => void,
+    onSuccess: (id: number, data: TUpdateFirstScreenOption) => void,
     onError: (err: string) => void
   ): AppThunk =>
   dispatch => {
@@ -110,7 +110,7 @@ export const createFirstScreenOption =
       .then(result => {
         if (result) {
           dispatch(loadFirstScreenOptionsList(serviceCenterId));
-          if (result.data?.id) onSuccess(result.data.id);
+          if (result.data?.id) onSuccess(result.data.id, data);
         }
       })
       .catch(err => {
