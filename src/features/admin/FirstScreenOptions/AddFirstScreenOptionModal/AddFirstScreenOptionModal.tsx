@@ -130,11 +130,15 @@ export const AddFirstScreenOptionModal: React.FC<
   };
 
   const onSuccessCreate = useCallback(
-    (serviceTypeId: number, data: TUpdateFirstScreenOption) => {
+    (
+      serviceTypeId: number,
+      serviceType: string,
+      defaultTransportationType?: ETransportationType
+    ) => {
       if (
-        data.type === String(EServiceType.PickUpDropOff) &&
-        data.transportationOptionId &&
-        data.transportationOptionId !== ETransportationType.PickUpDelivery
+        serviceType === String(EServiceType.PickUpDropOff) &&
+        defaultTransportationType &&
+        defaultTransportationType !== ETransportationType.PickUpDelivery
       ) {
         showMessage(
           '“Time of Day” transportation constraint does not apply to Service Valet slots',
@@ -203,14 +207,29 @@ export const AddFirstScreenOptionModal: React.FC<
         if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
         if (editingItem) {
           dispatch(
-            updateFirstScreenOption(editingItem.id, selectedSC.id, data, onSuccessCreate, showError)
+            updateFirstScreenOption(
+              editingItem.id,
+              selectedSC.id,
+              data,
+              onSuccessCreate,
+              showError,
+              defaultTransportation?.type
+            )
           );
         } else {
           const newData: TNewFirstScreenOption = {
             ...data,
             serviceCenterId: selectedSC.id,
           };
-          dispatch(createFirstScreenOption(newData, selectedSC.id, onSuccessCreate, showError));
+          dispatch(
+            createFirstScreenOption(
+              newData,
+              selectedSC.id,
+              onSuccessCreate,
+              showError,
+              defaultTransportation?.type
+            )
+          );
         }
       }
     }
