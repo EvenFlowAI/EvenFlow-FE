@@ -142,8 +142,7 @@ const AppointmentFlow: React.FC<TProps> = ({
   useEffect(() => {
     if (currentFrameScreen === currentScreen) {
       window.onbeforeunload = () => {
-        ReactGA.event('asc_form_engagement', {
-          element_text: 'Abandoned Page',
+        ReactGA.event('abandoned_page', {
           page_context: SCREENS[currentScreen],
         });
       };

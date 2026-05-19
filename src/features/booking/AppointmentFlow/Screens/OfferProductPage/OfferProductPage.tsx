@@ -48,8 +48,7 @@ const OfferProductPage: React.FC<
       const requestsString = service.serviceRequests
         .map(item => `${item.code} (${item.description})`)
         .join(', ');
-      ReactGA.event('asc_form_engagement', {
-        element_text: 'Services Selected',
+      ReactGA.event('services_selected', {
         service_name: service.name,
         service_requests: requestsString,
       });
@@ -64,8 +63,7 @@ const OfferProductPage: React.FC<
         const requestsString = subService.serviceRequests
           .map(item => `${item.code} (${item.description})`)
           .join(', ');
-        ReactGA.event('asc_form_engagement', {
-          element_text: 'Services Sub Page Selected',
+        ReactGA.event('services_sub_page_selected', {
           sub_service_name: subService.name,
           service_requests: subService.serviceRequests?.length ? requestsString : undefined,
         });
