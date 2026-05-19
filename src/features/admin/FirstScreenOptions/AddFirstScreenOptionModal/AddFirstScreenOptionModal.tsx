@@ -137,7 +137,7 @@ export const AddFirstScreenOptionModal: React.FC<
     ) => {
       if (
         serviceType === String(EServiceType.PickUpDropOff) &&
-        defaultTransportationType &&
+        defaultTransportationType != null &&
         defaultTransportationType !== ETransportationType.PickUpDelivery
       ) {
         showMessage(
