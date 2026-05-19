@@ -136,9 +136,9 @@ export const AddFirstScreenOptionModal: React.FC<
       defaultTransportationType?: ETransportationType
     ) => {
       if (
-        serviceType !== String(EServiceType.PickUpDropOff) &&
+        serviceType === String(EServiceType.PickUpDropOff) &&
         defaultTransportationType &&
-        defaultTransportationType === ETransportationType.PickUpDelivery
+        defaultTransportationType !== ETransportationType.PickUpDelivery
       ) {
         showMessage(
           '“Time of Day” transportation constraint does not apply to Service Valet slots',
