@@ -189,14 +189,12 @@ export const AppointmentSlots: React.FC<
 
   const handleGALandingOnPage = useCallback(() => {
     if (consultants?.length && currentConfig?.advisorSelection) {
-      ReactGA.event('asc_form_engagement', {
-        element_text: 'Advisor Selected',
+      ReactGA.event('advisor_selected', {
         advisor_name: advisor ? advisor.name : 'Any available',
       });
     }
     if (appointment) {
-      ReactGA.event('asc_form_engagement', {
-        element_text: 'Services Selected',
+      ReactGA.event('services_selected', {
         request_codes: appointment?.serviceRequestPrices?.map(item => item.requestName).join(', '),
         total_price: !isNaN(appointment?.price?.value) ? `$${+appointment.price.value}` : undefined,
       });
@@ -636,19 +634,19 @@ export const AppointmentSlots: React.FC<
 
   const handleGANext = useCallback(() => {
     if (appointment) {
-      ReactGA.event('asc_form_engagement', {
-        element_text:
-          serviceType === EServiceType.PickUpDropOff
-            ? 'Valet Date & Time Selected'
-            : 'Date & Time Selected',
+      const eventName =
+        serviceType === EServiceType.PickUpDropOff
+          ? 'valet_date_time_selected'
+          : 'date_time_selected';
+
+      ReactGA.event(eventName, {
         appointment_datetime: dayjs.utc(appointment.date).format('MM-DD-YYYY hh:mm A'),
       });
     }
   }, [appointment, serviceTypeOption, trackerData]);
 
   const handleGABack = useCallback(() => {
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'Went Backwards',
+    ReactGA.event('went_backwards', {
       page_context: 'Selection Date & Time Page',
     });
   }, [trackerData]);
