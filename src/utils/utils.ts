@@ -290,6 +290,6 @@ export const getModelCode = (
   return (
     makes
       .find(item => item.name == selectedVehicle?.make)
-      ?.models?.find(model => model.name == selectedVehicle?.model)?.code ?? '0'
+      ?.models?.find(model => model.name == selectedVehicle?.model)?.modelCode?.modelCode ?? '0'
   );
 };
