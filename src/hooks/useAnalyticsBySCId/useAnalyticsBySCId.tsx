@@ -70,8 +70,8 @@ export const useAnalyticsForParentSite = (
           );
           sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientIdFromOldDealers);
         }
-        if (clientData?.id?.length)
-          sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData?.id);
+        if (clientData?.clientId?.length)
+          sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData?.clientId);
         if (clientData?.measurementId?.length)
           sessionStorage.setItem(GA_MEASUREMENT_ID_FROM_DEALER, clientData?.measurementId);
 
