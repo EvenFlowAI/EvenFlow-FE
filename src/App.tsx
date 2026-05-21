@@ -28,6 +28,7 @@ import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandle
 import { LicenseInfo } from '@mui/x-license';
 import { MUI_PRO_LICENSE_KEY } from './config/tokens';
 import { ETransportationType } from './store/reducers/transportationNeeds/types';
+import { GA_CLIENT_ID_FROM_DEALER, GA_MEASUREMENT_ID_FROM_DEALER } from './utils/constants';
 
 const App = () => {
   const { scProfile, isTopAligning, isCloneMode } = useSelector(
@@ -99,7 +100,7 @@ const App = () => {
       checkVersion();
     }, TWO_HOURS); // 60 seconds
 
-    // Cleanup interval on component unmount
+    // Cleanup interval on component unmounted
     return () => clearInterval(intervalId);
   }, [checkVersion]);
 
@@ -169,11 +170,25 @@ const App = () => {
   LicenseInfo.setLicenseKey(MUI_PRO_LICENSE_KEY);
 
   const handleMessage = (event: MessageEvent) => {
-    const clientId = typeof event.data === 'string' ? event.data : '';
+    const clientIdFromOldDealers = typeof event.data === 'string' ? event.data : '';
+    const clientData =
+      typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string'
+        ? event.data
+        : '';
 
-    if (clientId) {
-      console.log('TEMP_LOG: App.tsx: client_id obtained from the dealer website:', clientId);
-      if (clientId?.length) sessionStorage.setItem('clientId', clientId);
+    if (clientData || clientIdFromOldDealers.length) {
+      if (clientData)
+        console.log('TEMP_LOG: App.tsx: clientData obtained from the dealer website:', clientData);
+      if (clientIdFromOldDealers?.length) {
+        console.log(
+          'TEMP_LOG: App.tsx: clientId obtained from the dealer website:',
+          clientIdFromOldDealers
+        );
+        sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientIdFromOldDealers);
+      }
+      if (clientData?.id?.length) sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData?.id);
+      if (clientData?.measurementId?.length)
+        sessionStorage.setItem(GA_MEASUREMENT_ID_FROM_DEALER, clientData?.measurementId);
     }
   };
 
