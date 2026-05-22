@@ -137,8 +137,7 @@ export const Welcome = () => {
   };
 
   const handleGA = () => {
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'Enters Scheduler',
+    ReactGA.event('enters_scheduler', {
       user_type: 'Returning Customer',
     });
   };
@@ -222,8 +221,7 @@ export const Welcome = () => {
   };
 
   const handleReactGA = (userType: string) => {
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'Enters Scheduler',
+    ReactGA.event('enters_scheduler', {
       user_type: `${userType} Customer`,
     });
   };
