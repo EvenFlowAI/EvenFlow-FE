@@ -78,8 +78,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
   }, [transportation]);
 
   const handleGA = (transportation: ITransportation | null) => {
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'Transportation Selected',
+    ReactGA.event('transportation_selected', {
       transportation_type: transportation ? transportation.name : 'I Will Be Waiting',
     });
   };

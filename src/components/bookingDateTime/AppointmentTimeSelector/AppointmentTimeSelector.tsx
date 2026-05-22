@@ -118,8 +118,7 @@ export const AppointmentTimeSelector: React.FC<
 
   const handleGA = useCallback(
     (a: IRemappedAppointmentSlot | null) => {
-      ReactGA.event('asc_form_engagement', {
-        element_text: 'Date & Time Clicked',
+      ReactGA.event('date_time_clicked', {
         slot_price: a?.price?.value ? `$${a.price.value}` : undefined,
       });
     },

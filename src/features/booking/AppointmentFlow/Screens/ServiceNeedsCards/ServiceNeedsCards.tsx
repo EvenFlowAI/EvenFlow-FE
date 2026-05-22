@@ -143,9 +143,11 @@ export const ServiceNeedsCards: React.FC<
     const requestsString = selectedCategory.serviceRequests
       .map(item => `${item.code} (${item.description})`)
       .join(', ');
-    ReactGA.event('asc_form_engagement', {
-      element_text:
-        page === EServiceCategoryPage.Page1 ? 'Service Selected' : 'Services Sub Page Selected',
+
+    const eventName =
+      page === EServiceCategoryPage.Page1 ? 'service_selected' : 'services_sub_page_selected';
+
+    ReactGA.event(eventName, {
       selected_service_name: selectedCategory.name,
       request_codes: requestsString,
     });
