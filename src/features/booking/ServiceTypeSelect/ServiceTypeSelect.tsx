@@ -172,8 +172,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
     dispatch(setVehicle(getBlankVehicle()));
     saveCustomerCache(c);
 
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'Enters Scheduler',
+    ReactGA.event('enters_scheduler', {
       user_type: 'New User',
     });
   };

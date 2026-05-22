@@ -68,7 +68,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
 
   const isTimingValid = Boolean(
     selectedInitialTiming !== null &&
-      (selectedInitialTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
+    (selectedInitialTiming !== EAppointmentTimingType.PreferredDate || selectedTime)
   );
 
   const handleSideBar = () => {
@@ -81,8 +81,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
 
   const handleGA = () => {
     if (selectedInitialTiming) {
-      ReactGA.event('asc_form_engagement', {
-        element_text: 'Search Request Selected',
+      ReactGA.event('search_request_selected', {
         timing_type: timingTypes[selectedInitialTiming],
       });
     }

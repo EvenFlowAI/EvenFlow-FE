@@ -41,8 +41,7 @@ export const SVAppointmentTimeSelector: React.FC<
 
   const handleGA = useCallback(
     (a: IServiceValetAppointment | null) => {
-      ReactGA.event('asc_form_engagement', {
-        element_text: 'Valet Date & Time Clicked',
+      ReactGA.event('valet_date_time_clicked', {
         slot_price: a?.price?.value ? `$${a.price.value}` : undefined,
       });
     },
@@ -86,7 +85,7 @@ export const SVAppointmentTimeSelector: React.FC<
                   onSelect={handleSelect}
                   selected={Boolean(
                     selectedAppointment &&
-                      dayjs(timeSlot?.date).isSame(selectedAppointment.date, 'minute')
+                    dayjs(timeSlot?.date).isSame(selectedAppointment.date, 'minute')
                   )}
                   timeSlot={timeSlot}
                   key={dayjs.utc(timeSlot.date).toISOString()}

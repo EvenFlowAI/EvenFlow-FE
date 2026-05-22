@@ -170,11 +170,9 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
   };
 
   const handleBack = (localSelectedPackage: IPackageOptions | null): void => {
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'Went Backwards',
+    ReactGA.event('went_backwards', {
       page_context: 'Selection Package Page',
     });
-
     if (isManagingFlow) {
       selectPackage(localSelectedPackage, false);
     }
@@ -216,16 +214,14 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
 
   const handleGA = (selectedPackage: IPackageOptions): void => {
     const packageOptions = ['Good', 'Better', 'Best'];
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'EvenFlow Package Selected',
+    ReactGA.event('package_selected', {
       package_option: packageOptions[selectedPackage.type],
     });
   };
 
   const handleEMenuGA = () => {
     const firstOption = scProfile?.maintenancePackageOptionTypes[0];
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'External Package Selected',
+    ReactGA.event('external_package_selected', {
       emenu_package_type: packageEMenuType === firstOption ? 'Factory' : 'Dealer',
     });
   };

@@ -200,8 +200,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const onCarIsValid = () => scProfile && dispatch(checkPodChanged(scProfile.id, showError));
 
   const handleGA = () => {
-    ReactGA.event('asc_form_engagement', {
-      element_text: 'A La Carte Service Selected',
+    ReactGA.event('a_la_carte_service_selected', {
       selected_codes: serviceRequests
         .filter(item => selectedOpsCodes.includes(item.id))
         .map(sr => `${sr.code} (${sr.description})`)
