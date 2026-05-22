@@ -44,12 +44,12 @@ const EmployeeScheduleFilters: React.FC<TProps> = ({ isLoading, filters, setFilt
     value: {
       label: string | null;
       value: number | null;
-    }
+    } | null
   ) => {
     setFilters(prev => ({
       ...prev,
-      serviceBook: value.label ?? '',
-      serviceBookId: value.value ?? 0,
+      serviceBook: value?.label ?? '',
+      serviceBookId: value?.value ?? 0,
     }));
   };
 
