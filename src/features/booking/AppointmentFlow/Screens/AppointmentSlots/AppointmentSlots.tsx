@@ -443,7 +443,7 @@ export const AppointmentSlots: React.FC<
     return { apiStartDate, apiEndDate };
   };
 
-  const setApiDates = (newStartDate: string) => {
+  const setApiDates = (newStartDate: string, isPickUpDropOff: boolean) => {
     // Only run once per session/component mount
     if (apiDatesSetRef.current) {
       return;
@@ -453,7 +453,9 @@ export const AppointmentSlots: React.FC<
 
     const utcOffset = dayjs().utcOffset();
     const anchorTime = dayjs(newStartDate);
-    const idealStartDay = anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
+    const idealStartDay = isPickUpDropOff
+      ? anchorTime
+      : anchorTime.subtract(Math.floor(daysPerScreen / 3), 'day').startOf('day');
     const desiredStartDate = dayjs.max(dayjs().startOf('day'), idealStartDay);
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();

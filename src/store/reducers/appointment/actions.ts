@@ -168,7 +168,7 @@ export const loadAppointmentSlots =
     onLoadedCb?: (isEmptyList: boolean) => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: TArgCallback<any>,
-    setApiDates?: (newStartDate: string) => void
+    setApiDates?: (newStartDate: string, isPickUpDropOff: boolean) => void
   ): AppThunk =>
   async dispatch => {
     dispatch(setSlotsLoading(true));
@@ -208,7 +208,7 @@ export const loadAppointmentSlots =
         const startDate = dayjs(String(data.startDate));
         const endDate = dayjs(String(data.endDate));
         if (firstSlotDate.isAfter(endDate) || firstSlotDate.isBefore(startDate)) {
-          setApiDates(String(items[0].date));
+          setApiDates(String(items[0].date), false);
         }
       }
       if (slotGapMinutes) dispatch(getSlotsGap(slotGapMinutes));
@@ -343,7 +343,7 @@ export const loadServiceValetSlots =
     onLoadedCb?: (isEmptyList: boolean) => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError?: TArgCallback<any>,
-    setApiDates?: (newStartDate: string) => void
+    setApiDates?: (newStartDate: string, isPickUpDropOff: boolean) => void
   ): AppThunk =>
   dispatch => {
     dispatch(setSlotsLoading(true));
@@ -360,7 +360,7 @@ export const loadServiceValetSlots =
           const startDate = dayjs(String(data.startDate));
           const endDate = dayjs(String(data.endDate));
           if (firstSlotDate.isAfter(endDate) || firstSlotDate.isBefore(startDate)) {
-            setApiDates(String(items[0].date));
+            setApiDates(String(items[0].date), true);
           }
         }
 
