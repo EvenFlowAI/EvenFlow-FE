@@ -4,7 +4,6 @@ import {
   IShowDropOffTime,
   ITimeRangeAndCapacity,
   IZonesRoutingByDay,
-  TDmsAppointmentTime,
   TServiceValetRequestId,
   TZonesOpsCodesRequest,
 } from './types';
@@ -156,29 +155,6 @@ export const updateShowDropOffTime =
       .catch(err => {
         onError(err);
         console.log('update show drop off time error', err);
-      })
-      .finally(() => dispatch(setLoading(false)));
-  };
-
-export const updateDmsAppointmentTime =
-  (
-    id: number,
-    data: TDmsAppointmentTime,
-    onSuccess: () => void,
-    onError: (err: string) => void
-  ): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
-    Api.call(Api.endpoints.ServiceValet.ChangeDmsTimeStamp, { urlParams: { id }, data })
-      .then(result => {
-        if (result) {
-          dispatch(loadCenterSettings(id));
-          onSuccess();
-        }
-      })
-      .catch(err => {
-        onError(err);
-        console.log('update dms appointment time error', err);
       })
       .finally(() => dispatch(setLoading(false)));
   };

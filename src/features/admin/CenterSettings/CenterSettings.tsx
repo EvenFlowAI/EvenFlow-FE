@@ -6,13 +6,12 @@ import ShowDropOffTimeModal from './ShowDropOffTimeModal/ShowDropOffTimeModal';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loadCenterSettings,
-  updateDmsAppointmentTime,
+  updateServiceValetSettings,
 } from '../../../store/reducers/capacityServiceValet/actions';
 import { RootState } from '../../../store/rootReducer';
 import { TDmsAppointmentTime } from '../../../store/reducers/capacityServiceValet/types';
 import { loadServiceValetZones } from '../../../store/reducers/serviceValet/actions';
 import { useModal } from '../../../hooks/useModal/useModal';
-import { useException } from '../../../hooks/useException/useException';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { ZonesOpsCodesPlate } from './ZonesOpsCodesPlate/ZonesOpsCodesPlate';
 import ZonesOpsCodeModal from './ZonesOpsCodesModal/ZonesOpsCodeModal';
@@ -25,6 +24,7 @@ import {
 } from '../../../store/reducers/mobileService/actions';
 import LeadTime from './LeadTime/LeadTime';
 import LeadTimeModal from './LeadTimeModal/LeadTimeModal';
+
 const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   const { centerSettings, isLoading } = useSelector(
     (state: RootState) => state.capacityServiceValet
@@ -40,7 +40,6 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   const { onOpen: onLeadTimeOpen, isOpen: isLeadTimeOpen, onClose: onLeadTimeClose } = useModal();
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const showError = useException();
 
   useEffect(() => {
     if (centerSettings?.dmsAppointmentTime) {
@@ -100,7 +99,7 @@ const CenterSettings = ({ serviceType }: { serviceType: string }) => {
   const onChange = (date: TParsableDate) => {
     if (selectedSC) {
       const data: TDmsAppointmentTime = { dmsAppointmentTime: dayjs(date).format('HH:mm:ss') };
-      dispatch(updateDmsAppointmentTime(selectedSC.id, data, onClose, showError));
+      dispatch(updateServiceValetSettings(selectedSC?.id, data, onClose));
     }
   };
   return (
