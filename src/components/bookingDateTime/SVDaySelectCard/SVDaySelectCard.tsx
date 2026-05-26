@@ -25,7 +25,11 @@ export const SVDaySelectCard: React.FC<
   return (
     <DayCard available={Boolean(appointment)} isCurrent={isCurrent} isOffPeak={false}>
       <Date>{dayjs.utc(day).format(monthDayFormat)}</Date>
-      <Day available={Boolean(appointment)} isCurrent={isCurrent} onClick={onClick}>
+      <Day
+        available={Boolean(appointment)}
+        isCurrent={isCurrent}
+        onClick={appointment ? onClick : () => {}}
+      >
         {isCurrent ? <CalendarIconWhite /> : <CalendarIcon />}
         {getLabel()}
         {isXs ? <div className="padding" /> : null}
