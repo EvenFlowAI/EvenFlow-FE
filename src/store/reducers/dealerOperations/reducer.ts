@@ -11,6 +11,7 @@ import {
   setEventForTextConfiguration,
   setEventIdForRulesConfiguration,
   setUpdatedEventsName,
+  setCredits,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -28,6 +29,7 @@ const initialState: TState = {
   eventForTextConfiguration: null,
   eventIdForRulesConfiguration: null,
   updatedEventsName: [],
+  credits: null,
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -64,5 +66,8 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(setUpdatedEventsName, (state, { payload }) => {
       return { ...state, updatedEventsName: payload };
+    })
+    .addCase(setCredits, (state, { payload }) => {
+      return { ...state, credits: payload };
     })
 );

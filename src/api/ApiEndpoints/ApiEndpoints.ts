@@ -510,6 +510,7 @@ export class Api {
         method: 'put',
       },
       SetEmailRequired: { route: '/service-center-settings/{id}/email-required', method: 'patch' },
+      GetAvailableCredits: { route: '/service-centers/{id}/available-credits', method: 'get' },
     },
     ServiceConsultants: {
       Create: { route: '/service-consultants', method: 'post' },

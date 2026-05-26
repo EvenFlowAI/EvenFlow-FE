@@ -14,7 +14,14 @@ export type TState = {
     id: number;
     name: string;
   }[];
+  credits: Credits | null;
 };
+
+export interface Credits {
+  availableCredits: number;
+  recallCredits: number;
+  recallMonthlyUsageCredits: number;
+}
 
 export interface DashboardItemI {
   id: number;

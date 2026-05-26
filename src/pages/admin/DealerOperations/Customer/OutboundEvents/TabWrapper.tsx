@@ -10,7 +10,7 @@ const TabWrapper = ({ setActiveTab }: { setActiveTab: (activeTab: string) => voi
       variant="scrollable"
       scrollButtons="auto"
     >
-      <Tab label="Communication Dashboard" value="0" />
+      <Tab label="Outbound Events" value="0" />
       <Tab label="Recall Alerts" value="2" />
       <Tab label="Text Integration" value="1" />
     </TabList>

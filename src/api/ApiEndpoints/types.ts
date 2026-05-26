@@ -285,7 +285,8 @@ export interface IApiEndpoints {
     | 'GetAssignedAdvisorMethod'
     | 'UpdateAssignedAdvisorMethod'
     | 'GetAllServiceCenterSettings'
-    | 'SetEmailRequired',
+    | 'SetEmailRequired'
+    | 'GetAvailableCredits',
     TApiEndpoint
   >;
   ServiceConsultants: Record<

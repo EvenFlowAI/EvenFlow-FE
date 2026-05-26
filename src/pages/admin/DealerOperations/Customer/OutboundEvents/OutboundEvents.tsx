@@ -24,7 +24,7 @@ import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import AddCustomerEventModal from '../../../../../components/modals/admin/AddCustomerEvent/AddCustomerEvent';
 import CustomerTextConfiguration from '../../../../../components/modals/admin/CustomerTextConfiguration/CustomerTextConfiguration';
 
-const CommunicationDashboard = () => {
+const OutboundEvents = () => {
   const { selectedSC } = useSCs();
   const { classes } = useStyles();
   const dispatch = useDispatch();
@@ -273,4 +273,4 @@ const CommunicationDashboard = () => {
   );
 };
 
-export default CommunicationDashboard;
+export default OutboundEvents;

@@ -194,4 +194,41 @@ export const useStyles = makeStyles()(() => ({
       width: '107px',
     },
   },
+  availableCreditCounter: {
+    fontWeight: 'bold',
+  },
+  tableSwitcher: {
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: '4px',
+    marginTop: '12px',
+  },
+  tableMode: {
+    fontSize: '14px',
+    textTransform: 'uppercase',
+    padding: '12px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    cursor: 'pointer',
+    margin: 0,
+    border: '1px solid #7898FF',
+    fontWeight: 700,
+  },
+  active: {
+    backgroundColor: '#7898FF',
+    color: 'white',
+  },
+  inactive: {
+    backgroundColor: 'white',
+    color: '#7898FF',
+  },
+  leftRounded: {
+    borderTopLeftRadius: '4px',
+    borderBottomLeftRadius: '4px',
+  },
+  rightRounded: {
+    borderTopRightRadius: '4px',
+    borderBottomRightRadius: '4px',
+  },
 }));
