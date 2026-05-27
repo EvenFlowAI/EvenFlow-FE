@@ -15,6 +15,7 @@ import {
   IRecallByVin,
   TArgCallback,
   TCallback,
+  TOption,
 } from '../../../types/types';
 import { setSelectedRecalls } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -200,6 +201,7 @@ export const updatePartsAvailability =
 export const getRecallEvents =
   (
     serviceCenterId: number,
+    selectedStatus: TOption,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
@@ -211,6 +213,7 @@ export const getRecallEvents =
       serviceCenterId,
       pageSize,
       pageIndex,
+      status: selectedStatus.value,
     };
     if (recallAlertsOrder) {
       data.orderBy = recallAlertsOrder.orderBy;
@@ -251,6 +254,7 @@ export const getRecallEvents =
             onSuccess();
           }
         } else {
+          dispatch(setRecallAlerts([]));
           onSuccess();
         }
       })

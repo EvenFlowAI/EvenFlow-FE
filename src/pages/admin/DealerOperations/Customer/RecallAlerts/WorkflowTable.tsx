@@ -11,7 +11,7 @@ import { useException } from '../../../../../hooks/useException/useException';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { usePagination } from '../../../../../hooks/usePaginations/usePaginations';
-import { IOrder, TableRowDataType } from '../../../../../types/types';
+import { IOrder, TableRowDataType, TOption } from '../../../../../types/types';
 import { IconButton, Menu, MenuItem, Switch, Tooltip } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { Table } from '../../../../../components/tables/Table/Table';
@@ -23,18 +23,16 @@ type TRecallTableProps = {
   onOpenModal: () => void;
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
+  selectedStatus: TOption;
 };
 
 const WorkflowTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ onOpenModal, currentItem, setCurrentItem }) => {
+> = ({ onOpenModal, currentItem, setCurrentItem, selectedStatus }) => {
   const { recallAlerts, recallAlertsCount, recallAlertsOrder } = useSelector(
     (state: RootState) => state.recalls
   );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  console.log(recallAlertsCount);
-
   const dispatch = useDispatch();
   const showError = useException();
   const { askConfirm } = useConfirm();
@@ -49,12 +47,13 @@ const WorkflowTable: React.FC<
       dispatch(
         getRecallEvents(
           selectedSC.id,
+          selectedStatus,
           () => {},
           () => {}
         )
       );
     }
-  }, [selectedSC, pageIndex, pageSize, recallAlertsOrder]);
+  }, [selectedSC, pageIndex, pageSize, recallAlertsOrder, selectedStatus]);
 
   const rowData: TableRowDataType<IRecallAlert>[] = [
     {

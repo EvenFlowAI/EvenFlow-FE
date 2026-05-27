@@ -95,6 +95,7 @@ export type TRecallRequest = {
   orderBy?: string;
   isAscending?: boolean;
   searchTerm?: string;
+  status?: string;
 };
 
 export type TUpdateRecall = {

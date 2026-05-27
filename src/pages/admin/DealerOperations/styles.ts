@@ -201,7 +201,6 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center',
     borderRadius: '4px',
-    marginTop: '12px',
   },
   tableMode: {
     fontSize: '14px',

@@ -61,4 +61,15 @@ export const useStyles = makeStyles()(() => ({
       width: '135px',
     },
   },
+  recallAlertHeader: {
+    width: '100%',
+    display: 'flex',
+    marginBottom: '24px',
+  },
+  filtersWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+    marginTop: '12px',
+  },
 }));
