@@ -2,25 +2,29 @@ import React, { useEffect, useState } from 'react';
 import RecallCredits from './layouts/RecallCredits';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import { loadAvailableCredits } from '../../../../../store/reducers/dealerOperations/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import TableModeSwitcher from './layouts/TableModeSwitcher';
 import WorkflowTable from './WorkflowTable';
 import { IRecallAlert } from '../../../../../store/reducers/recall/types';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Button } from '@mui/material';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-import { TOption } from '../../../../../types/types';
 import { RECALL_ALERTS_STATUSES } from '../../helper';
 import { useStyles } from '../styles';
+import { useModal } from '../../../../../hooks/useModal/useModal';
+import AddRecallAlertModal from './layouts/AddRecallAlertModal';
+import { RootState } from '../../../../../store/rootReducer';
+import { setSelectedStatus } from '../../../../../store/reducers/recall/actions';
 
 const RecallAlerts = () => {
   const [loading, setLoading] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<TOption>(RECALL_ALERTS_STATUSES[0]);
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
   const [currentItem, setCurrentItem] = useState<IRecallAlert | null>(null);
   const { classes } = useStyles();
+  const { selectedStatus } = useSelector((state: RootState) => state.recalls);
+  const { isOpen, onClose, onOpen } = useModal();
 
   const onSuccess = () => {
     setLoading(false);
@@ -47,7 +51,7 @@ const RecallAlerts = () => {
               isOptionEqualToValue={(option, value) => option.name === value.name}
               value={selectedStatus}
               onChange={(event, newStatus) => {
-                setSelectedStatus(newStatus);
+                dispatch(setSelectedStatus(newStatus));
               }}
               renderInput={autocompleteRender({
                 label: '',
@@ -57,7 +61,14 @@ const RecallAlerts = () => {
             />
           </div>
         </div>
-        <div></div>
+        <div className={classes.buttonsWrapper}>
+          <Button variant="text" onClick={() => {}}>
+            Edit Alert Name
+          </Button>
+          <Button variant="contained" onClick={onOpen} color="primary">
+            Add Alert
+          </Button>
+        </div>
       </div>
       {tableMode === 'workflow' ? (
         <div>
@@ -69,6 +80,7 @@ const RecallAlerts = () => {
           />
         </div>
       ) : null}
+      <AddRecallAlertModal open={isOpen} onClose={onClose} />
     </div>
   );
 };

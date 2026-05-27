@@ -1,4 +1,4 @@
-import { IOrder, IPageRequest, IPagingResponse, IRecallByVin } from '../../../types/types';
+import { IOrder, IPageRequest, IPagingResponse, IRecallByVin, TOption } from '../../../types/types';
 
 export type TIdName = {
   id: number;
@@ -86,6 +86,7 @@ export type TState = {
   recallAlertsOrder: IOrder<IRecallAlert>;
   searchTerm: string;
   recallCampaignInfo: IRecallCampaign[];
+  selectedStatus: TOption;
 };
 
 export type TRecallRequest = {

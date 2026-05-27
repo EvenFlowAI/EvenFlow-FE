@@ -39,6 +39,7 @@ export const setRecallSearch = createAction<string>('Recall/SetSearch');
 export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
   'Recall/SetRecallCampaignInfo'
 );
+export const setSelectedStatus = createAction<TOption>('Recall/SetSelectedStatus');
 
 export const loadRecalls =
   (serviceCenterId: number): AppThunk =>
@@ -201,13 +202,12 @@ export const updatePartsAvailability =
 export const getRecallEvents =
   (
     serviceCenterId: number,
-    selectedStatus: TOption,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>
   (dispatch, getState) => {
-    const { recallAlertsPageData, recallAlertsOrder } = getState().recalls;
+    const { recallAlertsPageData, recallAlertsOrder, selectedStatus } = getState().recalls;
     const { pageSize, pageIndex } = recallAlertsPageData;
     const data: TRecallRequest = {
       serviceCenterId,
@@ -260,5 +260,31 @@ export const getRecallEvents =
       })
       .catch(err => {
         onError(err);
+      });
+  };
+
+export const createRecallAlert =
+  (
+    data: { serviceCenterId: number; name: string },
+    onClose: () => void,
+    onError?: () => void
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Recalls.CreateRecallEvent, {
+      data,
+    })
+      .then(() => {
+        dispatch(
+          getRecallEvents(
+            data.serviceCenterId,
+            () => {},
+            () => {}
+          )
+        );
+        onClose();
+      })
+      .catch(e => {
+        if (onError) onError();
+        console.log('Creating Recall Alert error', e);
       });
   };

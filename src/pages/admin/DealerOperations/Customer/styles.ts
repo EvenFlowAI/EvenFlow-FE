@@ -64,12 +64,18 @@ export const useStyles = makeStyles()(() => ({
   recallAlertHeader: {
     width: '100%',
     display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: '24px',
   },
   filtersWrapper: {
     display: 'flex',
     alignItems: 'center',
     gap: '16px',
-    marginTop: '12px',
+  },
+  buttonsWrapper: {
+    display: 'flex',
+    gap: 12,
+    alignItems: 'center',
   },
 }));

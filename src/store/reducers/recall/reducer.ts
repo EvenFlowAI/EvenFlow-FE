@@ -13,7 +13,9 @@ import {
   setRecallPageData,
   setRecallsCount,
   setRecallSearch,
+  setSelectedStatus,
 } from './actions';
+import { RECALL_ALERTS_STATUSES } from '../../../pages/admin/DealerOperations/helper';
 
 export const initialOrder = {
   orderBy: 'CampaignNumber',
@@ -44,6 +46,7 @@ const initialState: TState = {
   recallAlertsOrder: initialOrderForRecallAlerts,
   searchTerm: '',
   recallCampaignInfo: [],
+  selectedStatus: RECALL_ALERTS_STATUSES[0],
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -83,5 +86,8 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setRecallCampaignInfo, (state, { payload }) => {
       return { ...state, recallCampaignInfo: payload };
+    })
+    .addCase(setSelectedStatus, (state, { payload }) => {
+      return { ...state, selectedStatus: payload };
     })
 );

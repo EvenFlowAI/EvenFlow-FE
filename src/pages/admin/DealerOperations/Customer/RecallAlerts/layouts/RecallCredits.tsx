@@ -8,7 +8,7 @@ const RecallCredits = () => {
   const { classes } = useStyles();
 
   return (
-    <div>
+    <div style={{ marginBottom: '12px' }}>
       <span>
         Available Recall Credits{' '}
         <span className={classes.availableCreditCounter}>{credits?.availableCredits}</span>

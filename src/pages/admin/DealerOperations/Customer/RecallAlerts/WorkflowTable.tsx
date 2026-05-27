@@ -47,7 +47,6 @@ const WorkflowTable: React.FC<
       dispatch(
         getRecallEvents(
           selectedSC.id,
-          selectedStatus,
           () => {},
           () => {}
         )
