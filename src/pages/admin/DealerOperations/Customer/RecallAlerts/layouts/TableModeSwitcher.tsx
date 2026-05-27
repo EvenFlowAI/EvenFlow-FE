@@ -1,9 +1,9 @@
 import React from 'react';
-import { ReactComponent as Workflow } from '../../../../../assets/img/workflow.svg';
-import { ReactComponent as WorkflowBlue } from '../../../../../assets/img/workflow-blue.svg';
-import { ReactComponent as Stats } from '../../../../../assets/img/stats.svg';
-import { ReactComponent as StatsWhite } from '../../../../../assets/img/stats-white.svg';
-import { useStyles } from '../../styles';
+import { ReactComponent as Workflow } from '../../../../../../assets/img/workflow.svg';
+import { ReactComponent as WorkflowBlue } from '../../../../../../assets/img/workflow-blue.svg';
+import { ReactComponent as Stats } from '../../../../../../assets/img/stats.svg';
+import { ReactComponent as StatsWhite } from '../../../../../../assets/img/stats-white.svg';
+import { useStyles } from '../../../styles';
 import clsx from 'clsx';
 
 interface TableModeSwitcherProps {

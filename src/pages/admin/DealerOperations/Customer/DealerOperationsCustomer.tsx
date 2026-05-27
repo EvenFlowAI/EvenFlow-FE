@@ -6,8 +6,8 @@ import { RootState } from '../../../../store/rootReducer';
 import { TabContext, TabPanel } from '@mui/lab';
 import TextIntegration from './TextIntegration/TextIntegration';
 import DealerCustomerSettings from './Configuration/DealerCustomerSettings';
-import { useStyles } from './OutboundEvents/styles';
-import TabWrapper from './OutboundEvents/TabWrapper';
+import { useStyles } from './styles';
+import TabWrapper from './TabWrapper';
 import OutboundEvents from './OutboundEvents/OutboundEvents';
 import RecallAlerts from './RecallAlerts/RecallAlerts';
 

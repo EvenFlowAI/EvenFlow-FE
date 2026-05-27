@@ -408,6 +408,8 @@ export class Api {
       Update: { route: '/recall/{id}', method: 'put' },
       Remove: { route: '/recall/{id}', method: 'delete' },
       UpdateRecallParts: { route: '/recall', method: 'put' },
+      GetRecallEvents: { route: '/recall-events/by-query', method: 'get' },
+      CreateRecallEvent: { route: '/recall-events', method: 'post' },
     },
     ServiceCategories: {
       Create: { route: '/service-categories', method: 'post' },

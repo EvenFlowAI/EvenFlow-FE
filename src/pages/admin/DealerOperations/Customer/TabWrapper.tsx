@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabList } from '../../../../../components/styled/Tabs';
+import { TabList } from '../../../../components/styled/Tabs';
 import { Tab } from '@mui/material';
 
 const TabWrapper = ({ setActiveTab }: { setActiveTab: (activeTab: string) => void }) => {

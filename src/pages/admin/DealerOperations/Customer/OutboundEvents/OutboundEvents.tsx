@@ -11,9 +11,9 @@ import {
   updateCustomerEventName,
 } from '../../../../../store/reducers/dealerOperations/actions';
 import { DenseTable } from '../../../../../components/styled/DemandTable';
-import TableHeadLayout from './TableHeadLayout';
-import TableRowLayout from './TableRowLayout';
-import { useStyles } from './styles';
+import TableHeadLayout from '../TableHeadLayout';
+import TableRowLayout from '../TableRowLayout';
+import { useStyles } from '../styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';

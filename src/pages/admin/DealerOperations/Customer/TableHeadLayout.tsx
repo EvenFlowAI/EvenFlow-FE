@@ -1,6 +1,6 @@
 import React from 'react';
-import { TableRow } from '../../../../../components/styled/TableRow';
-import { StyledTableCell } from '../../../../../features/admin/DemandPredictionTable/styles';
+import { TableRow } from '../../../../components/styled/TableRow';
+import { StyledTableCell } from '../../../../features/admin/DemandPredictionTable/styles';
 import { TableHead } from '@mui/material';
 import { useStyles } from './styles';
 

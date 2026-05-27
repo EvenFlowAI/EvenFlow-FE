@@ -229,7 +229,15 @@ export interface IApiEndpoints {
   >;
   Qrvey: Record<'GetToken', TApiEndpoint>;
   Recalls: Record<
-    'GetAll' | 'GetById' | 'GetByVin' | 'Create' | 'Update' | 'Remove' | 'UpdateRecallParts',
+    | 'GetAll'
+    | 'GetById'
+    | 'GetByVin'
+    | 'Create'
+    | 'Update'
+    | 'Remove'
+    | 'UpdateRecallParts'
+    | 'GetRecallEvents'
+    | 'CreateRecallEvent',
     TApiEndpoint
   >;
   ServiceCategories: Record<

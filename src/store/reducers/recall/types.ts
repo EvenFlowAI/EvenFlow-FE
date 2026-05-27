@@ -27,6 +27,23 @@ export interface IRecall {
   localIndex: number;
 }
 
+export interface IRecallAlert {
+  actualRecipients: number;
+  nhtsaCampaign: string;
+  recallComponent: string;
+  id: number;
+  name: string;
+  campaignRecallGroupBatchId: string;
+  recallCampaignId: number;
+  status: number;
+  listType: number;
+  communicationDetails: {
+    textMessage: string;
+    textMessageTrimmed: string;
+  };
+  triggers: [];
+}
+
 export interface ICreateUpdateRecall {
   id?: number;
   recallCampaignNumber?: string;
@@ -46,14 +63,29 @@ export interface IRecallResponse {
   paging: IPagingResponse;
 }
 
+export interface IRecallCampaign {
+  id: number;
+  impactedVehicles: number;
+  manufacturer: string;
+  nhtsaCampaign: string;
+  oemProgram: string;
+  recallComponent: string;
+  reportedDate: string;
+}
+
 export type TState = {
   recalls: IRecall[];
+  recallAlerts: IRecallAlert[];
   isLoading: boolean;
   recallPageData: IPageRequest;
+  recallAlertsPageData: IPageRequest;
   recallsCount: number;
+  recallAlertsCount: number;
   recallsByVin: IRecallByVin[];
   order: IOrder<IRecall>;
+  recallAlertsOrder: IOrder<IRecallAlert>;
   searchTerm: string;
+  recallCampaignInfo: IRecallCampaign[];
 };
 
 export type TRecallRequest = {

@@ -2,6 +2,8 @@ import { createAction } from '@reduxjs/toolkit';
 import {
   ICreateUpdateRecall,
   IRecall,
+  IRecallAlert,
+  IRecallCampaign,
   IRecallResponse,
   TRecallRequest,
   TUpdateRecall,
@@ -16,14 +18,26 @@ import {
 } from '../../../types/types';
 import { setSelectedRecalls } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import queryString from 'query-string';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
+export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
 export const setLoading = createAction<boolean>('Recall/SetLoading');
 export const setRecallPageData = createAction<Partial<IPageRequest>>('Recall/SetRecallPageData');
+export const setRecallAlertsPageData = createAction<Partial<IPageRequest>>(
+  'Recall/SetRecallAlertsPageData'
+);
 export const setRecallsCount = createAction<number>('Recall/SetRecallsCount');
+export const setRecallAlertsCount = createAction<number>('Recall/SetRecallAlertsCount');
 export const getRecallsByVin = createAction<IRecallByVin[]>('Recall/GetRecallsByVin');
 export const setRecallOrder = createAction<IOrder<IRecall>>('Recall/SetOrder');
+export const setRecallAlertsOrder = createAction<IOrder<IRecallAlert>>(
+  'Recall/SetRecallAlertOrder'
+);
 export const setRecallSearch = createAction<string>('Recall/SetSearch');
+export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
+  'Recall/SetRecallCampaignInfo'
+);
 
 export const loadRecalls =
   (serviceCenterId: number): AppThunk =>
@@ -181,4 +195,66 @@ export const updatePartsAvailability =
         onError(err);
       })
       .finally(() => dispatch(setLoading(false)));
+  };
+
+export const getRecallEvents =
+  (
+    serviceCenterId: number,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: TArgCallback<any>,
+    onSuccess: TCallback
+  ): AppThunk =>
+  (dispatch, getState) => {
+    const { recallAlertsPageData, recallAlertsOrder } = getState().recalls;
+    const { pageSize, pageIndex } = recallAlertsPageData;
+    const data: TRecallRequest = {
+      serviceCenterId,
+      pageSize,
+      pageIndex,
+    };
+    if (recallAlertsOrder) {
+      data.orderBy = recallAlertsOrder.orderBy;
+      data.isAscending = recallAlertsOrder.isAscending;
+    }
+    Api.call(Api.endpoints.Recalls.GetRecallEvents, { params: { ...data } })
+      .then(response => {
+        const recallEvents = response?.data?.data;
+        const paging = response?.data?.meta?.paging;
+        if (recallEvents?.length && paging) {
+          const ids = (recallEvents || [])
+            .map((item: IRecallAlert) => item.recallCampaignId)
+            .filter((id: number | undefined | null) => id !== undefined && id !== null);
+
+          if (ids.length > 0) {
+            Api.call(Api.endpoints.GlobalRecalls.GetGlobalRecalls, {
+              params: { recallCampaignIds: ids },
+              paramsSerializer: params => queryString.stringify(params, { arrayFormat: 'none' }),
+            }).then(res => {
+              const enriched = recallEvents.map((alert: IRecallAlert) => {
+                const extra = res.data.data.find(
+                  (item: IRecallCampaign) => item.id === alert.recallCampaignId
+                );
+                return {
+                  ...alert,
+                  nhtsaCampaign: extra?.nhtsaCampaign,
+                  recallComponent: extra?.recallComponent,
+                };
+              });
+
+              dispatch(setRecallAlerts(enriched));
+              dispatch(setRecallAlertsCount(paging.total));
+              onSuccess();
+            });
+          } else {
+            dispatch(setRecallAlerts(recallEvents));
+            dispatch(setRecallAlertsCount(paging.total));
+            onSuccess();
+          }
+        } else {
+          onSuccess();
+        }
+      })
+      .catch(err => {
+        onError(err);
+      });
   };

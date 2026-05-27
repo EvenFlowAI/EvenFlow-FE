@@ -1,8 +1,8 @@
 import React from 'react';
-import { TableRow } from '../../../../../components/styled/TableRow';
-import { StyledTableCell } from '../../../../../features/admin/DemandPredictionTable/styles';
-import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
-import LabelLink from '../../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
+import { TableRow } from '../../../../components/styled/TableRow';
+import { StyledTableCell } from '../../../../features/admin/DemandPredictionTable/styles';
+import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import LabelLink from '../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteCustomerEvent,
@@ -11,14 +11,14 @@ import {
   setTextMessage,
   setUpdatedEventsName,
   updateCustomerEvent,
-} from '../../../../../store/reducers/dealerOperations/actions';
+} from '../../../../store/reducers/dealerOperations/actions';
 import { Switch } from '@mui/material';
-import { RootState } from '../../../../../store/rootReducer';
-import { DashboardItemI } from '../../../../../store/reducers/dealerOperations/types';
-import { useSCs } from '../../../../../hooks/useSCs/useSCs';
-import { ReactComponent as CheckIcon } from '../../../../../assets/img/checkboxSmallGreen.svg';
-import { ReactComponent as RedCross } from '../../../../../assets/img/redCross.svg';
-import { ReactComponent as GreyCross } from '../../../../../assets/img/greyCross.svg';
+import { RootState } from '../../../../store/rootReducer';
+import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmallGreen.svg';
+import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
+import { ReactComponent as GreyCross } from '../../../../assets/img/greyCross.svg';
 import { useStyles } from './styles';
 
 interface TableRowLayoutI {
