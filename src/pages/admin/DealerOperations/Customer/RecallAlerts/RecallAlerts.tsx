@@ -14,26 +14,96 @@ import { useStyles } from '../styles';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import AddRecallAlertModal from './layouts/AddRecallAlertModal';
 import { RootState } from '../../../../../store/rootReducer';
-import { setSelectedStatus } from '../../../../../store/reducers/recall/actions';
+import {
+  setIsEditName,
+  setSelectedStatus,
+  setUpdatedAlerts,
+  updateRecallAlertName,
+} from '../../../../../store/reducers/recall/actions';
+import { useException } from '../../../../../hooks/useException/useException';
 
 const RecallAlerts = () => {
   const [loading, setLoading] = useState(false);
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');
+  const [currentItem, setCurrentItem] = useState<IRecallAlert | null>(null);
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const [currentItem, setCurrentItem] = useState<IRecallAlert | null>(null);
   const { classes } = useStyles();
-  const { selectedStatus } = useSelector((state: RootState) => state.recalls);
+  const { recallAlerts, selectedStatus, updatedAlerts, isEditName } = useSelector(
+    (state: RootState) => state.recalls
+  );
   const { isOpen, onClose, onOpen } = useModal();
+  const showError = useException();
 
-  const onSuccess = () => {
-    setLoading(false);
-  };
+  useEffect(() => {
+    // effect on a first page load to store current names
+    if (recallAlerts.length) {
+      setStartedNames();
+    }
+  }, [recallAlerts]);
+
   useEffect(() => {
     if (!selectedSC) return;
+
     setLoading(true);
     dispatch(loadAvailableCredits(selectedSC.id, onSuccess));
   }, [selectedSC]);
+
+  const setStartedNames = () => {
+    dispatch(
+      setUpdatedAlerts(
+        recallAlerts.map(item => {
+          return {
+            id: item.id,
+            name: item.name,
+          };
+        })
+      )
+    );
+  };
+
+  const onSuccess = () => {
+    dispatch(setIsEditName(false));
+    setLoading(false);
+  };
+
+  const onError = (eventName: string) => {
+    showError(`Recall alert name "${eventName}" is already used. Please enter a unique name.`);
+    dispatch(setIsEditName(true));
+    setLoading(false);
+  };
+
+  const handleUpdateRecallAlertName = () => {
+    if (selectedSC?.id) {
+      let counter = 0;
+      recallAlerts.forEach(event => {
+        updatedAlerts.forEach(updatedEvent => {
+          if (event.id === updatedEvent.id) {
+            if (event.name !== updatedEvent.name) {
+              setLoading(true);
+              dispatch(
+                updateRecallAlertName(
+                  {
+                    id: updatedEvent.id,
+                    name: updatedEvent.name.trim(),
+                    serviceCenterId: selectedSC?.id,
+                  },
+                  onSuccess,
+
+                  onError
+                )
+              );
+              counter += 1;
+            }
+          }
+        });
+      });
+
+      if (counter === 0) {
+        dispatch(setIsEditName(false));
+      }
+    }
+  };
 
   if (loading) return <Loading />;
 
@@ -62,9 +132,31 @@ const RecallAlerts = () => {
           </div>
         </div>
         <div className={classes.buttonsWrapper}>
-          <Button variant="text" onClick={() => {}}>
-            Edit Alert Name
-          </Button>
+          {isEditName ? (
+            <>
+              <Button
+                variant="text"
+                onClick={() => {
+                  setStartedNames();
+                  dispatch(setIsEditName(false));
+                }}
+                color="secondary"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="text"
+                disabled={!!updatedAlerts.find(event => event.name.trim().length < 3)}
+                onClick={handleUpdateRecallAlertName}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button variant="text" onClick={() => dispatch(setIsEditName(true))}>
+              Edit Alert Name
+            </Button>
+          )}
           <Button variant="contained" onClick={onOpen} color="primary">
             Add Alert
           </Button>
@@ -73,7 +165,6 @@ const RecallAlerts = () => {
       {tableMode === 'workflow' ? (
         <div>
           <WorkflowTable
-            selectedStatus={selectedStatus}
             currentItem={currentItem}
             setCurrentItem={setCurrentItem}
             onOpenModal={() => {}}

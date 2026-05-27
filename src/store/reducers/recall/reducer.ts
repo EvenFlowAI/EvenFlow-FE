@@ -3,6 +3,7 @@ import { TState } from './types';
 import {
   getRecalls,
   getRecallsByVin,
+  setIsEditName,
   setLoading,
   setRecallAlerts,
   setRecallAlertsCount,
@@ -14,6 +15,7 @@ import {
   setRecallsCount,
   setRecallSearch,
   setSelectedStatus,
+  setUpdatedAlerts,
 } from './actions';
 import { RECALL_ALERTS_STATUSES } from '../../../pages/admin/DealerOperations/helper';
 
@@ -47,6 +49,8 @@ const initialState: TState = {
   searchTerm: '',
   recallCampaignInfo: [],
   selectedStatus: RECALL_ALERTS_STATUSES[0],
+  updatedAlerts: [],
+  isEditName: false,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -89,5 +93,11 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setSelectedStatus, (state, { payload }) => {
       return { ...state, selectedStatus: payload };
+    })
+    .addCase(setUpdatedAlerts, (state, { payload }) => {
+      return { ...state, updatedAlerts: payload };
+    })
+    .addCase(setIsEditName, (state, { payload }) => {
+      return { ...state, isEditName: payload };
     })
 );

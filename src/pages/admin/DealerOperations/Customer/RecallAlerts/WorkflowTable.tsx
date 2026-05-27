@@ -3,6 +3,7 @@ import {
   getRecallEvents,
   setRecallAlertsOrder,
   setRecallAlertsPageData,
+  setUpdatedAlerts,
 } from '../../../../../store/reducers/recall/actions';
 import { IRecallAlert } from '../../../../../store/reducers/recall/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,27 +12,32 @@ import { useException } from '../../../../../hooks/useException/useException';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { usePagination } from '../../../../../hooks/usePaginations/usePaginations';
-import { IOrder, TableRowDataType, TOption } from '../../../../../types/types';
+import { IOrder, TableRowDataType } from '../../../../../types/types';
 import { IconButton, Menu, MenuItem, Switch, Tooltip } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { Table } from '../../../../../components/tables/Table/Table';
 import Status from './layouts/Status';
 import ConfirmationBadge from './layouts/ConfirmationBadge';
 import { RecallEventStatus } from '../types';
+import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 
 type TRecallTableProps = {
   onOpenModal: () => void;
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
-  selectedStatus: TOption;
 };
 
 const WorkflowTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ onOpenModal, currentItem, setCurrentItem, selectedStatus }) => {
-  const { recallAlerts, recallAlertsCount, recallAlertsOrder } = useSelector(
-    (state: RootState) => state.recalls
-  );
+> = ({ onOpenModal, currentItem, setCurrentItem }) => {
+  const {
+    recallAlerts,
+    recallAlertsCount,
+    recallAlertsOrder,
+    updatedAlerts,
+    isEditName,
+    selectedStatus,
+  } = useSelector((state: RootState) => state.recalls);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const dispatch = useDispatch();
   const showError = useException();
@@ -43,7 +49,7 @@ const WorkflowTable: React.FC<
   );
 
   useEffect(() => {
-    if (selectedSC) {
+    if (selectedSC && !isEditName) {
       dispatch(
         getRecallEvents(
           selectedSC.id,
@@ -54,20 +60,59 @@ const WorkflowTable: React.FC<
     }
   }, [selectedSC, pageIndex, pageSize, recallAlertsOrder, selectedStatus]);
 
+  const handleNameChange = (value: string, id: number) => {
+    dispatch(
+      setUpdatedAlerts(
+        updatedAlerts.map(ev => {
+          if (ev.id === id && value.length < 51) {
+            return { ...ev, name: value };
+          }
+          return ev;
+        })
+      )
+    );
+  };
+
   const rowData: TableRowDataType<IRecallAlert>[] = [
     {
       header: 'Alert Name',
-      val: el => el.name,
+      val: el => {
+        if (isEditName) {
+          return (
+            <TextField
+              fullWidth
+              value={updatedAlerts.find(e => el.id === e.id)?.name}
+              onChange={e => handleNameChange(e.target.value, el.id)}
+              id={`recall-alert-name-${el.id}`}
+              multiline
+              rows={2}
+              placeholder="Type recall name"
+              sx={{ '& .MuiInputBase-input': { padding: '4px 8px' } }}
+            />
+          );
+        }
+
+        const text = el.name ?? '';
+        return text.length > 20 ? (
+          <Tooltip placement="top" title={text}>
+            <p style={{ cursor: 'pointer', userSelect: 'none' }}>{text.slice(0, 20) + '...'}</p>
+          </Tooltip>
+        ) : (
+          text
+        );
+      },
       orderId: 'Name',
+      width: 200,
     },
     {
       header: 'NHTSA Campaign',
+      width: 143,
       val: el => el.nhtsaCampaign,
       orderId: 'NhtsaCampaign',
     },
     {
       header: 'Recall Component',
-      width: '240px',
+      width: 209,
       val: el => {
         const text = el.recallComponent ?? '';
         return text.length > 20 ? (

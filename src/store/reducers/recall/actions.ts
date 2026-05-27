@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { createAction } from '@reduxjs/toolkit';
 import {
   ICreateUpdateRecall,
@@ -40,6 +42,13 @@ export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
   'Recall/SetRecallCampaignInfo'
 );
 export const setSelectedStatus = createAction<TOption>('Recall/SetSelectedStatus');
+export const setUpdatedAlerts = createAction<
+  {
+    id: number;
+    name: string;
+  }[]
+>('Recall/SetUpdatedAlerts');
+export const setIsEditName = createAction<boolean>('Recall/SetIsEditName');
 
 export const loadRecalls =
   (serviceCenterId: number): AppThunk =>
@@ -286,5 +295,29 @@ export const createRecallAlert =
       .catch(e => {
         if (onError) onError();
         console.log('Creating Recall Alert error', e);
+      });
+  };
+
+export const updateRecallAlertName =
+  (
+    data: {
+      id: number;
+      name: string;
+      serviceCenterId: number;
+    },
+    onSuccess: () => void,
+    onError?: (eventName: string) => void
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
+      urlParams: { id: data.id },
+      data: { ...data },
+    })
+      .then(() => {
+        dispatch(getRecallEvents(data.serviceCenterId, () => {}, onSuccess));
+      })
+      .catch(e => {
+        if (onError) onError(data.name);
+        console.log('Update Customer Event error', e);
       });
   };

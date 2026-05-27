@@ -410,6 +410,7 @@ export class Api {
       UpdateRecallParts: { route: '/recall', method: 'put' },
       GetRecallEvents: { route: '/recall-events/by-query', method: 'get' },
       CreateRecallEvent: { route: '/recall-events', method: 'post' },
+      UpdateRecallEvent: { route: '/recall-events', method: 'put' },
     },
     ServiceCategories: {
       Create: { route: '/service-categories', method: 'post' },

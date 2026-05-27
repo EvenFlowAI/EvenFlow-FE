@@ -237,7 +237,8 @@ export interface IApiEndpoints {
     | 'Remove'
     | 'UpdateRecallParts'
     | 'GetRecallEvents'
-    | 'CreateRecallEvent',
+    | 'CreateRecallEvent'
+    | 'UpdateRecallEvent',
     TApiEndpoint
   >;
   ServiceCategories: Record<

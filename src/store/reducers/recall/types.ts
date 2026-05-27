@@ -87,6 +87,11 @@ export type TState = {
   searchTerm: string;
   recallCampaignInfo: IRecallCampaign[];
   selectedStatus: TOption;
+  updatedAlerts: {
+    id: number;
+    name: string;
+  }[];
+  isEditName: boolean;
 };
 
 export type TRecallRequest = {
