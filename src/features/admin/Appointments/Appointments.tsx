@@ -42,9 +42,7 @@ export const Appointments = () => {
 
   const getAppointments = useCallback(() => {
     // for case if user has not selected service center yet and appointments are loading - stop loading
-    console.log(selectedSC);
     if (!selectedSC?.id && isLoading) {
-      console.log('test');
       // dispatch(setAppointmentsLoading(false));
       return;
     }
