@@ -10,14 +10,12 @@ import { ReactComponent as BreaksIcon } from '../../../assets/img/Icon 4 Breaks.
 import { ReactComponent as LockOutlined } from '../../../assets/img/Icon 5 Holidays.svg';
 import LaborRateModal from '../../../features/admin/LaborRateModal/LaborRateModal';
 import { useModal } from '../../../hooks/useModal/useModal';
-import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { centerProfileRoot } from '../../../utils/constants';
 import { useDashboardStyles } from '../../../hooks/styling/useDashboardStyles';
 import { TDashboardItem } from '../../../types/types';
 
 export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChildren>> = () => {
-  const { selectedSC } = useSCs();
   const currentUser = useCurrentUser();
   const { classes } = useDashboardStyles();
 
@@ -49,9 +47,7 @@ export const FacilitySetUp: React.FC<React.PropsWithChildren<React.PropsWithChil
 
   return (
     <div className={classes.container}>
-      {selectedSC ? (
-        <TitleContainer pad title="Facility Set Up" parent={centerProfileRoot} />
-      ) : null}
+      <TitleContainer pad title="Facility Set Up" parent={centerProfileRoot} />
       <Grid container spacing={2}>
         {items.map(item => (
           <Grid item xs={12} sm={4} md={3} key={item.label}>
