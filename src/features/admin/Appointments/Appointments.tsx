@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
-import { loadAppointments } from '../../../store/reducers/appointments/actions';
+import {
+  loadAppointments,
+  setAppointmentsLoading,
+} from '../../../store/reducers/appointments/actions';
 import { AppointmentActions } from './AppointmentActions/AppointmentActions';
 import { AppointmentFilters } from './AppointmentFilters/AppointmentFilters';
 import { AppointmentsCalendar } from './AppointmentsCalendar/AppointmentsCalendar';
@@ -41,6 +44,8 @@ export const Appointments = () => {
   const showError = useException();
 
   const getAppointments = useCallback(() => {
+    // for case if user has not selected service center yet and appointments are loading - stop loading
+    if (!selectedSC?.id && isLoading) dispatch(setAppointmentsLoading(false));
     if (!filters.dateTo && !filters.dateFrom) {
       showError(
         'Please select either a “Date From” or a “Date To” value in the appointment filters'
