@@ -4,10 +4,12 @@ import {
   getRecalls,
   getRecallsByVin,
   setIsEditName,
+  setIsRecallAlertsTableLoading,
   setLoading,
   setRecallAlerts,
   setRecallAlertsCount,
-  setRecallAlertsOrder,
+  setRecallAlertsOrderStats,
+  setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
   setRecallCampaignInfo,
   setRecallOrder,
@@ -45,12 +47,14 @@ const initialState: TState = {
   },
   recallsByVin: [],
   order: initialOrder,
-  recallAlertsOrder: initialOrderForRecallAlerts,
+  recallAlertsOrderStats: initialOrderForRecallAlerts,
+  recallAlertsOrderWorkflow: initialOrderForRecallAlerts,
   searchTerm: '',
   recallCampaignInfo: [],
   selectedStatus: RECALL_ALERTS_STATUSES[0],
   updatedAlerts: [],
   isEditName: false,
+  isRecallAlertsTableLoading: false,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -82,8 +86,11 @@ export const recallsReducer = createReducer(initialState, builder =>
     .addCase(setRecallOrder, (state, { payload }) => {
       return { ...state, order: payload };
     })
-    .addCase(setRecallAlertsOrder, (state, { payload }) => {
-      return { ...state, recallAlertsOrder: payload };
+    .addCase(setRecallAlertsOrderStats, (state, { payload }) => {
+      return { ...state, recallAlertsOrderStats: payload };
+    })
+    .addCase(setRecallAlertsOrderWorkflow, (state, { payload }) => {
+      return { ...state, recallAlertsOrderWorkflow: payload };
     })
     .addCase(setRecallSearch, (state, { payload }) => {
       return { ...state, searchTerm: payload };
@@ -99,5 +106,8 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setIsEditName, (state, { payload }) => {
       return { ...state, isEditName: payload };
+    })
+    .addCase(setIsRecallAlertsTableLoading, (state, { payload }) => {
+      return { ...state, isRecallAlertsTableLoading: payload };
     })
 );

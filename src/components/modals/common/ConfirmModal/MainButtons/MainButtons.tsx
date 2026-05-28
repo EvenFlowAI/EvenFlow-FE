@@ -27,7 +27,7 @@ export const MainButtons: React.FC<TProps> = ({
   isBooking,
 }) => {
   return (
-    <>
+    <div style={{ display: 'flex', gap: 12 }}>
       {cancelContent && onCancel ? (
         <LoadingButton
           loading={loading}
@@ -57,6 +57,6 @@ export const MainButtons: React.FC<TProps> = ({
       >
         {confirmContent ? confirmContent : isRemove ? 'Remove' : 'Confirm'}
       </LoadingButton>
-    </>
+    </div>
   );
 };

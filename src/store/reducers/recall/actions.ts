@@ -34,8 +34,11 @@ export const setRecallsCount = createAction<number>('Recall/SetRecallsCount');
 export const setRecallAlertsCount = createAction<number>('Recall/SetRecallAlertsCount');
 export const getRecallsByVin = createAction<IRecallByVin[]>('Recall/GetRecallsByVin');
 export const setRecallOrder = createAction<IOrder<IRecall>>('Recall/SetOrder');
-export const setRecallAlertsOrder = createAction<IOrder<IRecallAlert>>(
-  'Recall/SetRecallAlertOrder'
+export const setRecallAlertsOrderStats = createAction<IOrder<IRecallAlert>>(
+  'Recall/SetRecallAlertOrderStats'
+);
+export const setRecallAlertsOrderWorkflow = createAction<IOrder<IRecallAlert>>(
+  'Recall/SetRecallAlertsOrderWorkflow'
 );
 export const setRecallSearch = createAction<string>('Recall/SetSearch');
 export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
@@ -49,6 +52,9 @@ export const setUpdatedAlerts = createAction<
   }[]
 >('Recall/SetUpdatedAlerts');
 export const setIsEditName = createAction<boolean>('Recall/SetIsEditName');
+export const setIsRecallAlertsTableLoading = createAction<boolean>(
+  'Recall/SetIsRecallAlertsTableLoading'
+);
 
 export const loadRecalls =
   (serviceCenterId: number): AppThunk =>
@@ -211,12 +217,18 @@ export const updatePartsAvailability =
 export const getRecallEvents =
   (
     serviceCenterId: number,
+    tableType: 'workflow' | 'stats',
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: TArgCallback<any>,
     onSuccess: TCallback
   ): AppThunk =>
   (dispatch, getState) => {
-    const { recallAlertsPageData, recallAlertsOrder, selectedStatus } = getState().recalls;
+    const {
+      recallAlertsPageData,
+      recallAlertsOrderStats,
+      recallAlertsOrderWorkflow,
+      selectedStatus,
+    } = getState().recalls;
     const { pageSize, pageIndex } = recallAlertsPageData;
     const data: TRecallRequest = {
       serviceCenterId,
@@ -224,10 +236,15 @@ export const getRecallEvents =
       pageIndex,
       status: selectedStatus.value,
     };
-    if (recallAlertsOrder) {
-      data.orderBy = recallAlertsOrder.orderBy;
-      data.isAscending = recallAlertsOrder.isAscending;
+    if (tableType == 'workflow') {
+      data.orderBy = recallAlertsOrderWorkflow.orderBy;
+      data.isAscending = recallAlertsOrderWorkflow.isAscending;
     }
+    if (tableType == 'stats') {
+      data.orderBy = recallAlertsOrderStats.orderBy;
+      data.isAscending = recallAlertsOrderStats.isAscending;
+    }
+    dispatch(setIsRecallAlertsTableLoading(true));
     Api.call(Api.endpoints.Recalls.GetRecallEvents, { params: { ...data } })
       .then(response => {
         const recallEvents = response?.data?.data;
@@ -255,15 +272,18 @@ export const getRecallEvents =
 
               dispatch(setRecallAlerts(enriched));
               dispatch(setRecallAlertsCount(paging.total));
+              dispatch(setIsRecallAlertsTableLoading(false));
               onSuccess();
             });
           } else {
             dispatch(setRecallAlerts(recallEvents));
             dispatch(setRecallAlertsCount(paging.total));
+            dispatch(setIsRecallAlertsTableLoading(false));
             onSuccess();
           }
         } else {
           dispatch(setRecallAlerts([]));
+          dispatch(setIsRecallAlertsTableLoading(false));
           onSuccess();
         }
       })
@@ -275,6 +295,7 @@ export const getRecallEvents =
 export const createRecallAlert =
   (
     data: { serviceCenterId: number; name: string },
+    tableType: 'workflow' | 'stats',
     onClose: () => void,
     onError?: () => void
   ): AppThunk =>
@@ -286,6 +307,7 @@ export const createRecallAlert =
         dispatch(
           getRecallEvents(
             data.serviceCenterId,
+            tableType,
             () => {},
             () => {}
           )
@@ -305,6 +327,7 @@ export const updateRecallAlertName =
       name: string;
       serviceCenterId: number;
     },
+    tableType: 'workflow' | 'stats',
     onSuccess: () => void,
     onError?: (eventName: string) => void
   ): AppThunk =>
@@ -314,7 +337,7 @@ export const updateRecallAlertName =
       data: { ...data },
     })
       .then(() => {
-        dispatch(getRecallEvents(data.serviceCenterId, () => {}, onSuccess));
+        dispatch(getRecallEvents(data.serviceCenterId, tableType, () => {}, onSuccess));
       })
       .catch(e => {
         if (onError) onError(data.name);

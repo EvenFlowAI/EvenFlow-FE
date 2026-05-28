@@ -15,9 +15,11 @@ import { LoadingButton } from '../../../../../../components/buttons/LoadingButto
 import { DialogProps } from '../../../../../../components/modals/BaseModal/types';
 import { createRecallAlert } from '../../../../../../store/reducers/recall/actions';
 
-type TAddCustomerEventModalProps = DialogProps & {};
+type TAddCustomerEventModalProps = DialogProps & {
+  tableType: 'workflow' | 'stats';
+};
 
-const AddRecallAlertModal = ({ onClose, open }: TAddCustomerEventModalProps) => {
+const AddRecallAlertModal = ({ onClose, open, tableType }: TAddCustomerEventModalProps) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { selectedSC } = useSCs();
@@ -36,7 +38,7 @@ const AddRecallAlertModal = ({ onClose, open }: TAddCustomerEventModalProps) => 
   };
 
   const onError = () => {
-    showError('Event name is already used. Please enter a unique name.');
+    showError(`Recall alert name "${newEventName}" is already used. Please enter a unique name.`);
     setIsLoading(false);
   };
 
@@ -50,6 +52,7 @@ const AddRecallAlertModal = ({ onClose, open }: TAddCustomerEventModalProps) => 
       dispatch(
         createRecallAlert(
           { serviceCenterId: selectedSC?.id, name: newEventName.trim() },
+          tableType,
           () => {
             onClose();
             setIsLoading(false);

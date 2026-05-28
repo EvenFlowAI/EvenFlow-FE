@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import RecallCredits from './layouts/RecallCredits';
-import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import { loadAvailableCredits } from '../../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
@@ -16,14 +15,15 @@ import AddRecallAlertModal from './layouts/AddRecallAlertModal';
 import { RootState } from '../../../../../store/rootReducer';
 import {
   setIsEditName,
+  setIsRecallAlertsTableLoading,
   setSelectedStatus,
   setUpdatedAlerts,
   updateRecallAlertName,
 } from '../../../../../store/reducers/recall/actions';
 import { useException } from '../../../../../hooks/useException/useException';
+import StatsTable from './StatsTable';
 
 const RecallAlerts = () => {
-  const [loading, setLoading] = useState(false);
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');
   const [currentItem, setCurrentItem] = useState<IRecallAlert | null>(null);
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const RecallAlerts = () => {
   useEffect(() => {
     if (!selectedSC) return;
 
-    setLoading(true);
+    dispatch(setIsRecallAlertsTableLoading(true));
     dispatch(loadAvailableCredits(selectedSC.id, onSuccess));
   }, [selectedSC]);
 
@@ -64,13 +64,13 @@ const RecallAlerts = () => {
 
   const onSuccess = () => {
     dispatch(setIsEditName(false));
-    setLoading(false);
+    dispatch(setIsRecallAlertsTableLoading(false));
   };
 
   const onError = (eventName: string) => {
     showError(`Recall alert name "${eventName}" is already used. Please enter a unique name.`);
     dispatch(setIsEditName(true));
-    setLoading(false);
+    dispatch(setIsRecallAlertsTableLoading(false));
   };
 
   const handleUpdateRecallAlertName = () => {
@@ -80,7 +80,7 @@ const RecallAlerts = () => {
         updatedAlerts.forEach(updatedEvent => {
           if (event.id === updatedEvent.id) {
             if (event.name !== updatedEvent.name) {
-              setLoading(true);
+              dispatch(setIsRecallAlertsTableLoading(true));
               dispatch(
                 updateRecallAlertName(
                   {
@@ -88,8 +88,8 @@ const RecallAlerts = () => {
                     name: updatedEvent.name.trim(),
                     serviceCenterId: selectedSC?.id,
                   },
+                  tableMode,
                   onSuccess,
-
                   onError
                 )
               );
@@ -104,8 +104,6 @@ const RecallAlerts = () => {
       }
     }
   };
-
-  if (loading) return <Loading />;
 
   return (
     <div>
@@ -170,8 +168,14 @@ const RecallAlerts = () => {
             onOpenModal={() => {}}
           />
         </div>
-      ) : null}
-      <AddRecallAlertModal open={isOpen} onClose={onClose} />
+      ) : (
+        <StatsTable
+          currentItem={currentItem}
+          setCurrentItem={setCurrentItem}
+          onOpenModal={() => {}}
+        />
+      )}
+      <AddRecallAlertModal open={isOpen} onClose={onClose} tableType={tableMode} />
     </div>
   );
 };

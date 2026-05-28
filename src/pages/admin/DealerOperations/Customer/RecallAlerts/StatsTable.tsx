@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
   getRecallEvents,
-  setRecallAlertsOrderWorkflow,
+  setRecallAlertsOrderStats,
   setRecallAlertsPageData,
   setUpdatedAlerts,
 } from '../../../../../store/reducers/recall/actions';
@@ -13,12 +13,9 @@ import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { usePagination } from '../../../../../hooks/usePaginations/usePaginations';
 import { IOrder, TableRowDataType } from '../../../../../types/types';
-import { IconButton, Menu, MenuItem, Switch, Tooltip } from '@mui/material';
+import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { Table } from '../../../../../components/tables/Table/Table';
-import Status from './layouts/Status';
-import ConfirmationBadge from './layouts/ConfirmationBadge';
-import { RecallEventStatus } from '../types';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 
 type TRecallTableProps = {
@@ -27,13 +24,15 @@ type TRecallTableProps = {
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
 };
 
-const WorkflowTable: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ onOpenModal, currentItem, setCurrentItem }) => {
+const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({
+  onOpenModal,
+  currentItem,
+  setCurrentItem,
+}) => {
   const {
     recallAlerts,
     recallAlertsCount,
-    recallAlertsOrderWorkflow,
+    recallAlertsOrderStats,
     updatedAlerts,
     isEditName,
     selectedStatus,
@@ -54,13 +53,13 @@ const WorkflowTable: React.FC<
       dispatch(
         getRecallEvents(
           selectedSC.id,
-          'workflow',
+          'stats',
           () => {},
           () => {}
         )
       );
     }
-  }, [selectedSC, pageIndex, pageSize, recallAlertsOrderWorkflow, selectedStatus]);
+  }, [selectedSC, pageIndex, pageSize, recallAlertsOrderStats, selectedStatus]);
 
   const handleNameChange = (value: string, id: number) => {
     dispatch(
@@ -128,34 +127,25 @@ const WorkflowTable: React.FC<
       orderId: 'RecallComponent',
     },
     {
-      header: 'Audience',
-      val: el => <ConfirmationBadge isConfirmed={el.status !== RecallEventStatus.NotConfigured} />,
+      header: 'Vehicles In DMS',
+      val: el => (el.vehiclesInDms >= 0 ? String(el.vehiclesInDms) : ''),
+      orderId: 'VehiclesNumber',
     },
     {
-      header: 'Generate List',
-      val: el => (el.listType === 0 ? 'VIN Check (API)' : el.listType === 1 ? 'CSV Uploaded' : ''),
+      header: 'Credits Used',
+      val: el => (el.creditsUsed >= 0 ? String(el.creditsUsed) : ''),
+      width: 151,
+      orderId: 'CreditsUsed',
     },
     {
-      header: 'Text',
-      val: el => (
-        <ConfirmationBadge isConfirmed={el.communicationDetails?.textMessage.length > 0} />
-      ),
+      header: 'Est. Recipients',
+      val: el => (el.estimatedRecipients >= 0 ? String(el.estimatedRecipients) : ''),
+      orderId: 'EstimatedRecipientsNumber',
     },
     {
-      header: 'Active',
-      val: el => (
-        <Switch
-          disabled={true}
-          onClick={() => () => {}}
-          checked={el.communicationDetails?.textMessage?.length > 0}
-          color="primary"
-        />
-      ),
-    },
-    {
-      header: 'Status',
-      val: el => <Status status={el.status} />,
-      orderId: 'Status',
+      header: 'Actual Recipients',
+      val: el => (el.actualRecipients >= 0 ? String(el.actualRecipients) : ''),
+      orderId: 'EstimatedRecipientsNumber',
     },
   ];
 
@@ -207,7 +197,7 @@ const WorkflowTable: React.FC<
   };
 
   const onSort = (o: IOrder<IRecallAlert>) => () => {
-    dispatch(setRecallAlertsOrderWorkflow(o));
+    dispatch(setRecallAlertsOrderStats(o));
   };
 
   const onMenuClose = () => {
@@ -220,8 +210,8 @@ const WorkflowTable: React.FC<
       <Table<IRecallAlert>
         data={recallAlerts}
         index={'id'}
-        isAscending={recallAlertsOrderWorkflow.isAscending}
-        order={recallAlertsOrderWorkflow?.orderBy}
+        isAscending={recallAlertsOrderStats.isAscending}
+        order={recallAlertsOrderStats?.orderBy}
         onSort={onSort}
         rowData={rowData}
         actions={tableActions}
@@ -242,4 +232,4 @@ const WorkflowTable: React.FC<
   );
 };
 
-export default WorkflowTable;
+export default StatsTable;

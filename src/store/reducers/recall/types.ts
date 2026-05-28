@@ -41,6 +41,9 @@ export interface IRecallAlert {
     textMessage: string;
     textMessageTrimmed: string;
   };
+  vehiclesInDms: number;
+  creditsUsed: number;
+  estimatedRecipients: number;
   triggers: [];
 }
 
@@ -83,7 +86,8 @@ export type TState = {
   recallAlertsCount: number;
   recallsByVin: IRecallByVin[];
   order: IOrder<IRecall>;
-  recallAlertsOrder: IOrder<IRecallAlert>;
+  recallAlertsOrderWorkflow: IOrder<IRecallAlert>;
+  recallAlertsOrderStats: IOrder<IRecallAlert>;
   searchTerm: string;
   recallCampaignInfo: IRecallCampaign[];
   selectedStatus: TOption;
@@ -92,6 +96,7 @@ export type TState = {
     name: string;
   }[];
   isEditName: boolean;
+  isRecallAlertsTableLoading: boolean;
 };
 
 export type TRecallRequest = {
