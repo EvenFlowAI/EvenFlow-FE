@@ -341,6 +341,27 @@ export const updateRecallAlertName =
       })
       .catch(e => {
         if (onError) onError(data.name);
-        console.log('Update Customer Event error', e);
+        console.log('Update Recall Alert error', e);
+      });
+  };
+
+export const deleteRecallAlert =
+  (
+    serviceCenterId: number,
+    recallId: number,
+    tableType: 'workflow' | 'stats',
+    onSuccess: () => void,
+    onError?: (message: string) => void
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Recalls.DeleteRecallEvent, {
+      urlParams: { id: recallId },
+    })
+      .then(() => {
+        dispatch(getRecallEvents(serviceCenterId, tableType, () => {}, onSuccess));
+      })
+      .catch(e => {
+        if (onError) onError('Delete Recall Alert error');
+        console.log('Delete Recall Alert error', e);
       });
   };

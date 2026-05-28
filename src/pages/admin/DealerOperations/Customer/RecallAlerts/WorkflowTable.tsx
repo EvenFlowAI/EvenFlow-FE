@@ -1,6 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
+  deleteRecallAlert,
   getRecallEvents,
+  setIsRecallAlertsTableLoading,
   setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
   setUpdatedAlerts,
@@ -179,11 +181,21 @@ const WorkflowTable: React.FC<
 
   const handleRemove = async () => {
     if (!currentItem) {
-      showError('Make is not chosen');
+      showError('Recall Alert is not chosen');
     } else {
       if (selectedSC) {
         try {
-          // dispatch(deleteRecall(currentItem.id, selectedSC.id, showError));
+          dispatch(
+            deleteRecallAlert(
+              selectedSC.id,
+              currentItem.id,
+              'workflow',
+              () => {
+                dispatch(setIsRecallAlertsTableLoading(false));
+              },
+              showError
+            )
+          );
           setCurrentItem(null);
         } catch (e) {
           showError(e);
@@ -195,12 +207,12 @@ const WorkflowTable: React.FC<
   const askRemove = () => {
     setAnchorEl(null);
     if (!currentItem) {
-      showError('Recall is not chosen');
+      showError('Recall alert is not chosen');
     } else {
-      const itemName = '';
+      const itemName = currentItem.name;
       askConfirm({
         isRemove: true,
-        title: `Please confirm you want to remove Recall ${itemName}?`,
+        title: `Please confirm you want to remove ${itemName}?`,
         onConfirm: handleRemove,
       });
     }

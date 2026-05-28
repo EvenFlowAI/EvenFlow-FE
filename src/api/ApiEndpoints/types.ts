@@ -238,7 +238,8 @@ export interface IApiEndpoints {
     | 'UpdateRecallParts'
     | 'GetRecallEvents'
     | 'CreateRecallEvent'
-    | 'UpdateRecallEvent',
+    | 'UpdateRecallEvent'
+    | 'DeleteRecallEvent',
     TApiEndpoint
   >;
   ServiceCategories: Record<

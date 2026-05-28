@@ -1,6 +1,8 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
+  deleteRecallAlert,
   getRecallEvents,
+  setIsRecallAlertsTableLoading,
   setRecallAlertsOrderStats,
   setRecallAlertsPageData,
   setUpdatedAlerts,
@@ -173,7 +175,17 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     } else {
       if (selectedSC) {
         try {
-          // dispatch(deleteRecall(currentItem.id, selectedSC.id, showError));
+          dispatch(
+            deleteRecallAlert(
+              selectedSC.id,
+              currentItem.id,
+              'stats',
+              () => {
+                dispatch(setIsRecallAlertsTableLoading(false));
+              },
+              showError
+            )
+          );
           setCurrentItem(null);
         } catch (e) {
           showError(e);
@@ -185,12 +197,12 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
   const askRemove = () => {
     setAnchorEl(null);
     if (!currentItem) {
-      showError('Recall is not chosen');
+      showError('Recall alert is not chosen');
     } else {
-      const itemName = '';
+      const itemName = currentItem.name;
       askConfirm({
         isRemove: true,
-        title: `Please confirm you want to remove Recall ${itemName}?`,
+        title: `Please confirm you want to remove ${itemName}?`,
         onConfirm: handleRemove,
       });
     }
