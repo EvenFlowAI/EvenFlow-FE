@@ -153,7 +153,11 @@ export const MaintenanceDetailsForm: React.FC<
       selectedVehicle?.model &&
       selectedVehicle?.year &&
       selectedVehicle?.mileage &&
-      (currentConfig?.engineType ? selectedVehicle?.engineTypeId : true) &&
+      (currentConfig?.engineType
+        ? selectedVehicle?.engineTypeId
+          ? !!engineTypes?.find(engineType => engineType.id === selectedVehicle.engineTypeId)
+          : false
+        : true) &&
       (isRecallsCategorySelected ? selectedVehicle?.vin : true)
     );
   }, [selectedVehicle, currentConfig, isRecallsCategorySelected]);
