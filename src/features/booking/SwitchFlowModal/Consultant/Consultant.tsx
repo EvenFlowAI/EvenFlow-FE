@@ -67,7 +67,7 @@ const Consultant: React.FC<TProps> = ({
     } else {
       setConsultant(null);
     }
-  }, [data, advisor, open]);
+  }, [data, advisor, open, zipCode]);
 
   const handleConsultantChange = (e: SelectChangeEvent<unknown>) => {
     const selected = advisors.find(item => item.id === e.target?.value);
