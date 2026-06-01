@@ -70,7 +70,7 @@ const RecallForm = ({
   return (
     <div>
       <div className={classes.recallFormSection}>
-        <div className={classes.recallFormRow}>
+        <div style={{ marginBottom: '16px' }} className={classes.recallFormRow}>
           <Autocomplete
             disabled={!isEditTable}
             className={classes.recallFormField}

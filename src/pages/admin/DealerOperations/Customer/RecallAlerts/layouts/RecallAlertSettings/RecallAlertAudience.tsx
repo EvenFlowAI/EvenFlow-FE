@@ -46,7 +46,7 @@ const RecallAlertAudience = ({
 
   if (!updatedRecallAlert) return <></>;
   return (
-    <div>
+    <div style={{ marginRight: '25px' }}>
       <span className={classes.audienceTitle}>Audience</span>
 
       <RecallForm

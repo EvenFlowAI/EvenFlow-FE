@@ -73,7 +73,8 @@ export const useStyles = makeStyles()(() => ({
   },
   audienceWrapper: {
     display: 'flex',
-    width: '67%',
+    borderRight: '1px solid #EAEBEE',
+    width: '53%',
     flexDirection: 'column',
     gap: '10px',
     '@media (max-width: 900px)': {

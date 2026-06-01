@@ -22,6 +22,7 @@ import RecallAlertAudience from './RecallAlertAudience';
 import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
+import StatisticData from './StatisticData';
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
@@ -154,6 +155,16 @@ const RecallAlertSettings: React.FC = () => {
                 setUpdatedRecallAlert={setUpdatedRecallAlert}
                 onFileChange={setFile}
                 file={file}
+              />
+              <StatisticData updatedRecallAlert={updatedRecallAlert} />
+              <hr
+                style={{
+                  color: '#EAEBEE',
+                  height: '1px',
+                  width: '100%',
+                  opacity: '0.3',
+                  margin: 0,
+                }}
               />
             </div>
           </div>
