@@ -9,6 +9,7 @@ import { RootState } from '../../../../../../../store/rootReducer';
 import {
   setSelectedRecallAlert,
   updateRecallAlert,
+  uploadCSV,
 } from '../../../../../../../store/reducers/recall/actions';
 import { useStyles } from '../../../../styles';
 import { Button } from '@mui/material';
@@ -17,8 +18,9 @@ import { useModal } from '../../../../../../../hooks/useModal/useModal';
 import LeaveWithoutSaving from '../../../../../../../components/modals/admin/LeaveWithoutSaving/LeaveWithoutSaving';
 import { Loading } from '../../../../../../../components/wrappers/Loading/Loading';
 import RecallAlertAudience from './RecallAlertAudience';
-import { IRecallAlert } from '../../../../../../../store/reducers/recall/types';
+import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
+import { useException } from '../../../../../../../hooks/useException/useException';
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
@@ -27,7 +29,9 @@ const RecallAlertSettings: React.FC = () => {
   const [isEditTable, setIsEditTable] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [updatedRecallAlert, setUpdatedRecallAlert] = React.useState<IRecallAlert | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const { selectedSC } = useSCs();
+  const showError = useException();
 
   const {
     onOpen: onOpenLeaveWithoutSavingModal,
@@ -41,22 +45,39 @@ const RecallAlertSettings: React.FC = () => {
     setUpdatedRecallAlert(selectedRecallAlert);
   };
 
+  const saveRecallAlert = () => {
+    if (!updatedRecallAlert || !selectedSC) return;
+    dispatch(
+      updateRecallAlert(
+        {
+          serviceCenterId: selectedSC.id,
+          recallCampaignId: updatedRecallAlert.recallCampaignId,
+          id: updatedRecallAlert.id,
+          listType: updatedRecallAlert.listType,
+        },
+        () => {
+          setIsEditTable(false);
+          setFile(null);
+        },
+        () => {}
+      )
+    );
+  };
+
   const validateChangesBeforeSave = () => {
-    if (updatedRecallAlert && selectedSC) {
-      dispatch(
-        updateRecallAlert(
-          {
-            serviceCenterId: selectedSC.id,
-            recallCampaignId: updatedRecallAlert.recallCampaignId,
-            id: updatedRecallAlert.id,
-            listType: updatedRecallAlert.listType,
-          },
-          () => {
-            setIsEditTable(false);
-          },
-          () => {}
-        )
-      );
+    if (!updatedRecallAlert || !selectedSC) return;
+    if (updatedRecallAlert.listType === RecallListType.UPLOAD_CSV) {
+      if (file) {
+        dispatch(
+          uploadCSV(updatedRecallAlert.id, file, saveRecallAlert, e => {
+            showError(e);
+          })
+        );
+      } else {
+        showError('Please select a CSV file.');
+      }
+    } else {
+      saveRecallAlert();
     }
   };
 
@@ -112,6 +133,8 @@ const RecallAlertSettings: React.FC = () => {
                 isEditTable={isEditTable}
                 updatedRecallAlert={updatedRecallAlert}
                 setUpdatedRecallAlert={setUpdatedRecallAlert}
+                onFileChange={setFile}
+                file={file}
               />
             </div>
           </div>

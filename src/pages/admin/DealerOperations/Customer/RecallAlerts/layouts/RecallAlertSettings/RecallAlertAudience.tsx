@@ -2,20 +2,26 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import { VIN_CHECK_API } from '../../../../helper';
-import { IRecallAlert } from '../../../../../../../store/reducers/recall/types';
+import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import RecallForm from './RecallForm';
+import { useStyles } from '../../../styles';
 
 interface RecallAlertAudienceI {
   isEditTable: boolean;
   updatedRecallAlert: IRecallAlert | null;
   setUpdatedRecallAlert: React.Dispatch<React.SetStateAction<IRecallAlert | null>>;
+  onFileChange: (file: File | null) => void;
+  file: File | null;
 }
 
 const RecallAlertAudience = ({
   isEditTable,
   updatedRecallAlert,
   setUpdatedRecallAlert,
+  onFileChange,
+  file,
 }: RecallAlertAudienceI) => {
+  const { classes } = useStyles();
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
 
   useEffect(() => {
@@ -28,7 +34,8 @@ const RecallAlertAudience = ({
 
       return {
         ...prev,
-        listType: newValue === VIN_CHECK_API ? 0 : 1,
+        listType:
+          newValue === VIN_CHECK_API ? RecallListType.VIN_CHECK_API : RecallListType.UPLOAD_CSV,
       };
     });
   };
@@ -47,23 +54,15 @@ const RecallAlertAudience = ({
   if (!updatedRecallAlert) return <></>;
   return (
     <div>
-      <span
-        style={{
-          display: 'block',
-          textTransform: 'uppercase',
-          fontSize: '18px',
-          fontWeight: 700,
-          marginBottom: '24px',
-        }}
-      >
-        Audience
-      </span>
+      <span className={classes.audienceTitle}>Audience</span>
 
       <RecallForm
         updatedRecallAlert={updatedRecallAlert}
         handleListMethodChange={handleListMethodChange}
         handleRecallCampaignChange={handleRecallCampaignChange}
         isEditTable={isEditTable}
+        onFileChange={onFileChange}
+        file={file}
       />
     </div>
   );

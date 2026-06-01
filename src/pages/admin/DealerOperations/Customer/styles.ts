@@ -78,4 +78,50 @@ export const useStyles = makeStyles()(() => ({
     gap: 12,
     alignItems: 'center',
   },
+  recallFormSection: {
+    marginBottom: '16px',
+  },
+  audienceTitle: {
+    display: 'block',
+    textTransform: 'uppercase',
+    fontSize: '18px',
+    fontWeight: 700,
+    marginBottom: '24px',
+  },
+  recallFormRow: {
+    display: 'flex',
+    gap: '16px',
+    alignItems: 'flex-end',
+  },
+  recallFormField: {
+    width: '300px',
+  },
+  checkVinsButton: {
+    height: '42px',
+  },
+  uploadLabel: {
+    width: '100%',
+  },
+  uploadButton: {
+    height: '42px',
+    textTransform: 'none' as const,
+    display: 'flex',
+    gap: '4px',
+    alignItems: 'center',
+    padding: 0,
+  },
+  uploadButtonContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+  },
+  hiddenInput: {
+    width: '100%',
+    display: 'none',
+  },
+  uploadIconDisabled: {
+    '& path': {
+      fill: '#BDBDBD',
+    },
+  },
 }));

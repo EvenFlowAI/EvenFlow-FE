@@ -8,7 +8,7 @@ import {
   setSelectedRecallAlert,
   setUpdatedAlerts,
 } from '../../../../../store/reducers/recall/actions';
-import { IRecallAlert } from '../../../../../store/reducers/recall/types';
+import { IRecallAlert, RecallListType } from '../../../../../store/reducers/recall/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useException } from '../../../../../hooks/useException/useException';
@@ -136,7 +136,12 @@ const WorkflowTable: React.FC<
     },
     {
       header: 'Generate List',
-      val: el => (el.listType === 0 ? VIN_CHECK_API : el.listType === 1 ? CSV_UPLOADED : ''),
+      val: el =>
+        el.listType === RecallListType.VIN_CHECK_API
+          ? VIN_CHECK_API
+          : el.listType === RecallListType.UPLOAD_CSV
+            ? CSV_UPLOADED
+            : '',
     },
     {
       header: 'Text',

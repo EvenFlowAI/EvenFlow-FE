@@ -393,3 +393,24 @@ export const updateRecallAlert =
         console.log('Update Recall Alert error', e);
       });
   };
+
+export const uploadCSV =
+  (id: number, file: File, onSuccess: () => void, onError?: (text: string) => void): AppThunk =>
+  async () => {
+    console.log(file);
+    const fd = new FormData();
+    fd.append('file', file, file.name);
+    console.log(fd);
+    Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
+      urlParams: { id },
+      data: fd,
+    })
+      .then(() => {
+        onSuccess();
+      })
+      .catch(err => {
+        const backendMessage = err?.response?.data?.title || err.message || 'Unknown error';
+        if (onError) onError(backendMessage);
+        console.log('Update Recall Alert error', err);
+      });
+  };

@@ -27,6 +27,11 @@ export interface IRecall {
   localIndex: number;
 }
 
+export enum RecallListType {
+  VIN_CHECK_API,
+  UPLOAD_CSV,
+}
+
 export interface IRecallAlert {
   actualRecipients: number;
   nhtsaCampaign: string;
