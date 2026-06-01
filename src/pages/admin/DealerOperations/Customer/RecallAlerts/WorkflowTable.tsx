@@ -5,6 +5,7 @@ import {
   setIsRecallAlertsTableLoading,
   setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
+  setSelectedRecallAlert,
   setUpdatedAlerts,
 } from '../../../../../store/reducers/recall/actions';
 import { IRecallAlert } from '../../../../../store/reducers/recall/types';
@@ -22,16 +23,16 @@ import Status from './layouts/Status';
 import ConfirmationBadge from './layouts/ConfirmationBadge';
 import { RecallEventStatus } from '../types';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
+import { CSV_UPLOADED, VIN_CHECK_API } from '../../helper';
 
 type TRecallTableProps = {
-  onOpenModal: () => void;
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
 };
 
 const WorkflowTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ onOpenModal, currentItem, setCurrentItem }) => {
+> = ({ currentItem, setCurrentItem }) => {
   const {
     recallAlerts,
     recallAlertsCount,
@@ -135,7 +136,7 @@ const WorkflowTable: React.FC<
     },
     {
       header: 'Generate List',
-      val: el => (el.listType === 0 ? 'VIN Check (API)' : el.listType === 1 ? 'CSV Uploaded' : ''),
+      val: el => (el.listType === 0 ? VIN_CHECK_API : el.listType === 1 ? CSV_UPLOADED : ''),
     },
     {
       header: 'Text',
@@ -176,7 +177,7 @@ const WorkflowTable: React.FC<
 
   const openEdit = () => {
     setAnchorEl(null);
-    onOpenModal();
+    dispatch(setSelectedRecallAlert(currentItem));
   };
 
   const handleRemove = async () => {

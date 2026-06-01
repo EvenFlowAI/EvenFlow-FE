@@ -10,6 +10,7 @@ import { useStyles } from './styles';
 import TabWrapper from './TabWrapper';
 import OutboundEvents from './OutboundEvents/OutboundEvents';
 import RecallAlerts from './RecallAlerts/RecallAlerts';
+import RecallAlertSettings from './RecallAlerts/layouts/RecallAlertSettings/RecallAlertSettings';
 
 const DealerOperationsCustomer = () => {
   const { classes } = useStyles();
@@ -18,7 +19,13 @@ const DealerOperationsCustomer = () => {
     (state: RootState) => state.dealerOperations
   );
 
+  const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
+
   const [activeTab, setActiveTab] = useState<string>('0');
+
+  if (selectedRecallAlert) {
+    return <RecallAlertSettings />;
+  }
 
   if (eventIdForRulesConfiguration) {
     return <DealerCustomerSettings />;

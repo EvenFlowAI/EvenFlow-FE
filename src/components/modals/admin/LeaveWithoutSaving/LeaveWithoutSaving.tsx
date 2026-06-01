@@ -14,12 +14,13 @@ const LeaveWithoutSaving = ({ onClose, open, handleLeave }: LeaveWithoutSavingI)
   const { classes } = useStyles();
 
   return (
-    <BaseModal open={open} width={520} onClose={onClose}>
-      <DialogTitle>
+    <BaseModal open={open} width={404} onClose={onClose}>
+      <DialogTitle style={{ padding: '10px 0' }}>
         <div className={classes.title}>
           <ReportProblemOutlined fontSize="large" color={'error'} />
           <span>Do you want to continue leaving without saving?</span>
         </div>
+        <hr style={{ margin: '0', height: '1px', color: '#EAEBEE', opacity: 0.3 }} />
       </DialogTitle>
       <DialogActions>
         <Button onClick={onClose} color="info">

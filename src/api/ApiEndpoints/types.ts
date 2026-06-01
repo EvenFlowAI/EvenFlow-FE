@@ -137,7 +137,11 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   GlobalRecalls: Record<
-    'GetGlobalRecalls' | 'GlobalRecallCampaign' | 'GetManufacturers' | 'GetRecallComponent',
+    | 'GetGlobalRecalls'
+    | 'GlobalRecallCampaign'
+    | 'GetManufacturers'
+    | 'GetRecallComponent'
+    | 'GetAllGlobalRecalls',
     TApiEndpoint
   >;
   Holidays: Record<'Create' | 'Update' | 'Remove' | 'Retrieve' | 'GetAll', TApiEndpoint>;

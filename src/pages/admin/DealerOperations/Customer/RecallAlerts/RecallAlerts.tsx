@@ -22,6 +22,7 @@ import {
 } from '../../../../../store/reducers/recall/actions';
 import { useException } from '../../../../../hooks/useException/useException';
 import StatsTable from './StatsTable';
+import { getAllGlobalRecall } from '../../../../../store/reducers/recallDatabase/actions';
 
 const RecallAlerts = () => {
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');
@@ -47,6 +48,7 @@ const RecallAlerts = () => {
 
     dispatch(setIsRecallAlertsTableLoading(true));
     dispatch(loadAvailableCredits(selectedSC.id, onSuccess));
+    dispatch(getAllGlobalRecall());
   }, [selectedSC]);
 
   const setStartedNames = () => {
@@ -64,7 +66,6 @@ const RecallAlerts = () => {
 
   const onSuccess = () => {
     dispatch(setIsEditName(false));
-    dispatch(setIsRecallAlertsTableLoading(false));
   };
 
   const onError = (eventName: string) => {
@@ -89,7 +90,10 @@ const RecallAlerts = () => {
                     serviceCenterId: selectedSC?.id,
                   },
                   tableMode,
-                  onSuccess,
+                  () => {
+                    dispatch(setIsRecallAlertsTableLoading(false));
+                    onSuccess();
+                  },
                   onError
                 )
               );
@@ -162,18 +166,10 @@ const RecallAlerts = () => {
       </div>
       {tableMode === 'workflow' ? (
         <div>
-          <WorkflowTable
-            currentItem={currentItem}
-            setCurrentItem={setCurrentItem}
-            onOpenModal={() => {}}
-          />
+          <WorkflowTable currentItem={currentItem} setCurrentItem={setCurrentItem} />
         </div>
       ) : (
-        <StatsTable
-          currentItem={currentItem}
-          setCurrentItem={setCurrentItem}
-          onOpenModal={() => {}}
-        />
+        <StatsTable currentItem={currentItem} setCurrentItem={setCurrentItem} />
       )}
       <AddRecallAlertModal open={isOpen} onClose={onClose} tableType={tableMode} />
     </div>

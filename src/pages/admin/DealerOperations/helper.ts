@@ -270,3 +270,6 @@ export const RECALL_ALERTS_STATUSES = [
   { name: 'Alert Completed', value: '5' },
   { name: 'Alert Failed', value: '6' },
 ];
+
+export const VIN_CHECK_API = 'VIN Check (API)';
+export const CSV_UPLOADED = 'CSV Uploaded';

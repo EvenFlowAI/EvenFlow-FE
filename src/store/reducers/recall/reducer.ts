@@ -16,6 +16,7 @@ import {
   setRecallPageData,
   setRecallsCount,
   setRecallSearch,
+  setSelectedRecallAlert,
   setSelectedStatus,
   setUpdatedAlerts,
 } from './actions';
@@ -55,6 +56,7 @@ const initialState: TState = {
   updatedAlerts: [],
   isEditName: false,
   isRecallAlertsTableLoading: false,
+  selectedRecallAlert: null,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -109,5 +111,8 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setIsRecallAlertsTableLoading, (state, { payload }) => {
       return { ...state, isRecallAlertsTableLoading: payload };
+    })
+    .addCase(setSelectedRecallAlert, (state, { payload }) => {
+      return { ...state, selectedRecallAlert: payload };
     })
 );

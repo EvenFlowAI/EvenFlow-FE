@@ -55,6 +55,9 @@ export const setIsEditName = createAction<boolean>('Recall/SetIsEditName');
 export const setIsRecallAlertsTableLoading = createAction<boolean>(
   'Recall/SetIsRecallAlertsTableLoading'
 );
+export const setSelectedRecallAlert = createAction<IRecallAlert | null>(
+  'Recall/SetSelectedRecallAlert'
+);
 
 export const loadRecalls =
   (serviceCenterId: number): AppThunk =>
@@ -363,5 +366,30 @@ export const deleteRecallAlert =
       .catch(e => {
         if (onError) onError('Delete Recall Alert error');
         console.log('Delete Recall Alert error', e);
+      });
+  };
+
+export const updateRecallAlert =
+  (
+    data: {
+      id: number;
+      listType?: number;
+      recallCampaignId?: number;
+      serviceCenterId: number;
+    },
+    onSuccess: () => void,
+    onError?: () => void
+  ): AppThunk =>
+  async () => {
+    Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
+      urlParams: { id: data.id },
+      data: { ...data },
+    })
+      .then(() => {
+        onSuccess();
+      })
+      .catch(e => {
+        if (onError) onError();
+        console.log('Update Recall Alert error', e);
       });
   };

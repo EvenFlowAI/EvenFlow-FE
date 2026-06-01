@@ -229,6 +229,7 @@ export class Api {
     },
     GlobalRecalls: {
       GetGlobalRecalls: { route: '/global-recall-campaigns/by-query', method: 'get' },
+      GetAllGlobalRecalls: { route: '/global-recall-campaigns/all', method: 'get' },
       GlobalRecallCampaign: {
         route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
         method: 'patch',

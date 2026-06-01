@@ -97,6 +97,7 @@ export type TState = {
   }[];
   isEditName: boolean;
   isRecallAlertsTableLoading: boolean;
+  selectedRecallAlert: IRecallAlert | null;
 };
 
 export type TRecallRequest = {

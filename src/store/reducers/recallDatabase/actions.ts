@@ -17,6 +17,9 @@ export const setRecallsDatabase = createAction<IGlobalRecall[]>(
   'RecallDatabase/setRecallsDatabase'
 );
 export const setManufacturers = createAction<string[]>('RecallDatabase/setManufcaturers');
+export const setAllGlobalRecalls = createAction<IGlobalRecall[]>(
+  'RecallDatabase/SetAllGlobalRecalls'
+);
 
 export const loadRecallsDatabase =
   (
@@ -110,3 +113,16 @@ export const getRecallComponent =
       })
       .finally(() => dispatch(setLoading(false)));
   };
+
+export const getAllGlobalRecall = (): AppThunk => dispatch => {
+  Api.call(Api.endpoints.GlobalRecalls.GetAllGlobalRecalls)
+    .then(response => {
+      if (response.data.data) {
+        dispatch(setAllGlobalRecalls(response.data.data));
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .finally(() => dispatch(setLoading(false)));
+};

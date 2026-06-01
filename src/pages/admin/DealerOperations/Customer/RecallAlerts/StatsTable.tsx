@@ -5,6 +5,7 @@ import {
   setIsRecallAlertsTableLoading,
   setRecallAlertsOrderStats,
   setRecallAlertsPageData,
+  setSelectedRecallAlert,
   setUpdatedAlerts,
 } from '../../../../../store/reducers/recall/actions';
 import { IRecallAlert } from '../../../../../store/reducers/recall/types';
@@ -21,13 +22,11 @@ import { Table } from '../../../../../components/tables/Table/Table';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 
 type TRecallTableProps = {
-  onOpenModal: () => void;
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
 };
 
 const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({
-  onOpenModal,
   currentItem,
   setCurrentItem,
 }) => {
@@ -166,7 +165,8 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
 
   const openEdit = () => {
     setAnchorEl(null);
-    onOpenModal();
+    console.log(currentItem);
+    dispatch(setSelectedRecallAlert(currentItem));
   };
 
   const handleRemove = async () => {
