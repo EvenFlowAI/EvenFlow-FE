@@ -435,3 +435,38 @@ export const getAffectedModels =
         console.log('Update Recall Alert error', e);
       });
   };
+
+export const updateRecallAlertText =
+  (
+    data: {
+      id: number;
+      communicationDetails: {
+        textMessage: string;
+      };
+      serviceCenterId: number;
+    },
+    tableType: 'workflow' | 'stats',
+    onSuccess: () => void,
+    onError?: (eventName: string) => void
+  ): AppThunk =>
+  async dispatch => {
+    Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
+      urlParams: { id: data.id },
+      data: { ...data },
+    })
+      .then(() => {
+        onSuccess();
+        dispatch(
+          getRecallEvents(
+            data.serviceCenterId,
+            tableType,
+            () => {},
+            () => {}
+          )
+        );
+      })
+      .catch(e => {
+        if (onError) onError('');
+        console.log('Update Recall Alert error', e);
+      });
+  };

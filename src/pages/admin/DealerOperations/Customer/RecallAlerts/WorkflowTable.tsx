@@ -28,11 +28,12 @@ import { CSV_UPLOADED, VIN_CHECK_API } from '../../helper';
 type TRecallTableProps = {
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
+  onOpenText: () => void;
 };
 
 const WorkflowTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ currentItem, setCurrentItem }) => {
+> = ({ currentItem, setCurrentItem, onOpenText }) => {
   const {
     recallAlerts,
     recallAlertsCount,
@@ -146,7 +147,15 @@ const WorkflowTable: React.FC<
     {
       header: 'Text',
       val: el => (
-        <ConfirmationBadge isConfirmed={el.communicationDetails?.textMessage.length > 0} />
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setCurrentItem(el);
+            onOpenText();
+          }}
+        >
+          <ConfirmationBadge isConfirmed={el.communicationDetails?.textMessage.length > 0} />
+        </div>
       ),
     },
     {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmallGreen.svg';
+import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmall.svg';
 import { ReactComponent as RedCross } from '../../../../../../assets/img/redCross.svg';
 
 const ConfirmationBadge = ({ isConfirmed }: { isConfirmed: boolean }) => {
