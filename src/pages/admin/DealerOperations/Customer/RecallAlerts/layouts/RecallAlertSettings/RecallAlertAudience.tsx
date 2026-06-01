@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../../../../store/rootReducer';
+import React from 'react';
 import { VIN_CHECK_API } from '../../../../helper';
 import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import RecallForm from './RecallForm';
@@ -22,11 +20,6 @@ const RecallAlertAudience = ({
   file,
 }: RecallAlertAudienceI) => {
   const { classes } = useStyles();
-  const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
-
-  useEffect(() => {
-    setUpdatedRecallAlert(selectedRecallAlert);
-  }, [selectedRecallAlert]);
 
   const handleListMethodChange = (newValue: string) => {
     setUpdatedRecallAlert(prev => {

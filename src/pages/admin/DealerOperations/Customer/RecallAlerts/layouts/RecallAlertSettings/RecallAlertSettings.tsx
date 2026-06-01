@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   dealerOperationsCustomer,
   dealerOperationsRoot,
@@ -7,6 +7,7 @@ import { TitleContainerForDealerOperation } from '../../../../../../../component
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import {
+  getAffectedModels,
   setSelectedRecallAlert,
   updateRecallAlert,
   uploadCSV,
@@ -32,6 +33,24 @@ const RecallAlertSettings: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const { selectedSC } = useSCs();
   const showError = useException();
+
+  useEffect(() => {
+    setUpdatedRecallAlert(selectedRecallAlert);
+  }, [selectedRecallAlert]);
+
+  useEffect(() => {
+    if (!selectedSC) return;
+    if (updatedRecallAlert?.recallCampaignId) {
+      dispatch(
+        getAffectedModels(
+          updatedRecallAlert?.recallCampaignId,
+          selectedSC.id,
+          () => {},
+          () => {}
+        )
+      );
+    }
+  }, [updatedRecallAlert?.recallCampaignId]);
 
   const {
     onOpen: onOpenLeaveWithoutSavingModal,

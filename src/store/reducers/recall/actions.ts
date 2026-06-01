@@ -414,3 +414,24 @@ export const uploadCSV =
         console.log('Update Recall Alert error', err);
       });
   };
+
+export const getAffectedModels =
+  (
+    campaignId: number,
+    serviceCenterId: number,
+    onSuccess: () => void,
+    onError?: () => void
+  ): AppThunk =>
+  async () => {
+    Api.call(Api.endpoints.GlobalRecalls.GetAffectedModels, {
+      urlParams: { campaignId },
+      params: { serviceCenterId },
+    })
+      .then(r => {
+        console.log(r?.data?.data);
+      })
+      .catch(e => {
+        if (onError) onError();
+        console.log('Update Recall Alert error', e);
+      });
+  };

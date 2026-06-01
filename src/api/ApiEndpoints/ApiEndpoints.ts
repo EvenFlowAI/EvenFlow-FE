@@ -234,6 +234,10 @@ export class Api {
         route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
         method: 'patch',
       },
+      GetAffectedModels: {
+        route: '/global-recall-campaigns/{campaignId}/affected-models',
+        method: 'get',
+      },
       GetManufacturers: {
         route: '/global-recall-campaigns/manufacturers',
         method: 'get',
