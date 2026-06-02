@@ -32,6 +32,11 @@ export enum RecallListType {
   UPLOAD_CSV,
 }
 
+export interface IGlobalModelYear {
+  globalVehicleModelId: number;
+  year: number;
+}
+
 export interface IRecallAlert {
   actualRecipients: number;
   nhtsaCampaign: string;
@@ -39,6 +44,7 @@ export interface IRecallAlert {
   id: number;
   name: string;
   listGeneratedDate: string;
+  globalModelIds: number[];
   campaignRecallGroupBatchId: string;
   recallCampaignId: number;
   status: number;
@@ -89,6 +95,14 @@ export interface IRecallCampaign {
   reportedDate: string;
 }
 
+export interface IRecallAffectedModel {
+  globalVehicleModelId: number;
+  make: string;
+  model: string;
+  vehicleCount: number;
+  year: number;
+}
+
 export type TState = {
   recalls: IRecall[];
   recallAlerts: IRecallAlert[];
@@ -111,6 +125,7 @@ export type TState = {
   isEditName: boolean;
   isRecallAlertsTableLoading: boolean;
   selectedRecallAlert: IRecallAlert | null;
+  affectedModels: IRecallAffectedModel[];
 };
 
 export type TRecallRequest = {

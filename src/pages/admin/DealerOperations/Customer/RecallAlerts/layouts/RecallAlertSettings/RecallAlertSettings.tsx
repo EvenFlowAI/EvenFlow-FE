@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import React, { useEffect, useState } from 'react';
 import {
   dealerOperationsCustomer,
@@ -19,7 +21,11 @@ import { useModal } from '../../../../../../../hooks/useModal/useModal';
 import LeaveWithoutSaving from '../../../../../../../components/modals/admin/LeaveWithoutSaving/LeaveWithoutSaving';
 import { Loading } from '../../../../../../../components/wrappers/Loading/Loading';
 import RecallAlertAudience from './RecallAlertAudience';
-import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
+import {
+  IGlobalModelYear,
+  IRecallAlert,
+  RecallListType,
+} from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import StatisticData from './StatisticData';
@@ -30,6 +36,7 @@ import {
   EventRulesFilterTypeE,
 } from '../../../../../../../store/reducers/dealerOperations/actions';
 import {
+  mapModelIdsToGlobalModels,
   toEnumLabel,
   validateCriteriaOperator,
   validateCriteriaType,
@@ -37,9 +44,12 @@ import {
 } from '../../../../helper';
 import Triggers from '../../../Configuration/Forms/Triggers';
 import { useRecallAlertSettingsStyles } from './styles';
+import AffectedModels from './AffectedModels';
+
+type TSelectedModelKey = IGlobalModelYear;
 
 const RecallAlertSettings: React.FC = () => {
-  const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
+  const { selectedRecallAlert, affectedModels } = useSelector((state: RootState) => state.recalls);
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const { classes: recallAlertSettingsClasses } = useRecallAlertSettingsStyles();
@@ -57,6 +67,7 @@ const RecallAlertSettings: React.FC = () => {
   const [criteriaTypeErrors, setCriteriaTypeErrors] = useState<{ [index: number]: boolean }>({});
   const [triggerDateErrors, setTriggerDateErrors] = useState<{ [index: number]: boolean }>({});
   const [firstTriggerDateError, setFirstTriggerDateError] = useState<boolean>(false);
+  const [selectedModelKeys, setSelectedModelKeys] = useState<TSelectedModelKey[]>([]);
 
   const setDefaultData = () => {
     setUpdatedRecallAlert(selectedRecallAlert);
@@ -72,6 +83,9 @@ const RecallAlertSettings: React.FC = () => {
 
     setCriteria(updatedFilterRules || []);
     setTriggers(selectedRecallAlert?.triggers || []);
+    setSelectedModelKeys(
+      mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
+    );
   };
 
   useEffect(() => {
@@ -79,12 +93,30 @@ const RecallAlertSettings: React.FC = () => {
   }, [selectedRecallAlert]);
 
   useEffect(() => {
+    if (isEditTable || !selectedRecallAlert?.globalModelIds?.length || !affectedModels.length) {
+      return;
+    }
+
+    setSelectedModelKeys(
+      mapModelIdsToGlobalModels(selectedRecallAlert.globalModelIds, affectedModels)
+    );
+  }, [affectedModels, selectedRecallAlert, isEditTable]);
+
+  useEffect(() => {
     if (!selectedSC) return;
     if (updatedRecallAlert?.recallCampaignId) {
+      // dispatch(
+      //   getAffectedModels(
+      //     updatedRecallAlert?.recallCampaignId,
+      //     selectedSC.id,
+      //     () => {},
+      //     () => {}
+      //   )
+      // );
       dispatch(
         getAffectedModels(
-          updatedRecallAlert?.recallCampaignId,
-          selectedSC.id,
+          11634,
+          123,
           () => {},
           () => {}
         )
@@ -136,7 +168,7 @@ const RecallAlertSettings: React.FC = () => {
 
     if (!haveErrors) {
       const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
-
+      setIsLoading(true);
       dispatch(
         updateRecallAlert(
           {
@@ -146,10 +178,12 @@ const RecallAlertSettings: React.FC = () => {
             listType: updatedRecallAlert.listType,
             filterRules: criterias,
             triggers: triggersWithPause,
+            globalModels: selectedModelKeys,
           },
           () => {
             setIsEditTable(false);
             setFile(null);
+            setIsLoading(false);
           },
           () => {}
         )
@@ -229,6 +263,11 @@ const RecallAlertSettings: React.FC = () => {
                 onFileChange={setFile}
                 file={file}
               />
+              <AffectedModels
+                isEditTable={isEditTable}
+                setSelectedModelKeys={setSelectedModelKeys}
+                selectedModelKeys={selectedModelKeys}
+              />
               <StatisticData updatedRecallAlert={updatedRecallAlert} />
               <hr className={recallAlertSettingsClasses.divider} />
               <div className={recallAlertSettingsClasses.audienceForm}>
@@ -258,7 +297,6 @@ const RecallAlertSettings: React.FC = () => {
           </div>
         </div>
       )}
-
       <LeaveWithoutSaving
         open={isOpenLeaveWithoutSavingModal}
         onClose={onCloseLeaveWithoutSavingModal}

@@ -418,6 +418,7 @@ export class Api {
       UpdateRecallEvent: { route: '/recall-events', method: 'put' },
       DeleteRecallEvent: { route: '/recall-events/{id}', method: 'delete' },
       UploadCSV: { route: '/recall-events/{id}/upload-csv', method: 'patch' },
+      RecallTrigger: { route: '/recall-events/{id}/trigger', method: 'patch' },
     },
     ServiceCategories: {
       Create: { route: '/service-categories', method: 'post' },

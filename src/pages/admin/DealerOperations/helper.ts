@@ -1,5 +1,8 @@
+/* eslint-disable max-lines */
+
 import { CriteriaI, TriggerI } from './Customer/types';
 import React, { Dispatch, SetStateAction } from 'react';
+import { IGlobalModelYear, IRecallAffectedModel } from '../../../store/reducers/recall/types';
 
 export function numberToOrdinalWord(num: number): string {
   switch (num) {
@@ -194,7 +197,7 @@ export const validateDaysToFutureAppointment = (
     }>
   >
 ) => {
-  if (criterias[0].type === 'Days To Future Appointment' && triggers.length) {
+  if (criterias[0]?.type === 'Days To Future Appointment' && triggers.length) {
     const errors: { [index: number]: boolean } = {};
 
     triggers.forEach((trigger, index) => {
@@ -285,4 +288,22 @@ export const toEnumLabel = <T extends Record<number, string>>(
   }
 
   return value;
+};
+
+type TSelectedModelKey = IGlobalModelYear;
+
+export const mapModelIdsToGlobalModels = (
+  modelIds: number[],
+  models: IRecallAffectedModel[]
+): TSelectedModelKey[] => {
+  const mapped = models
+    .filter(item => modelIds.includes(item.globalVehicleModelId))
+    .map(item => ({ globalVehicleModelId: item.globalVehicleModelId, year: item.year }));
+
+  const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
+  mapped.forEach(item => {
+    uniqueByModelAndYear.set(`${item.globalVehicleModelId}-${item.year}`, item);
+  });
+
+  return Array.from(uniqueByModelAndYear.values());
 };

@@ -3,7 +3,9 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   ICreateUpdateRecall,
+  IGlobalModelYear,
   IRecall,
+  IRecallAffectedModel,
   IRecallAlert,
   IRecallCampaign,
   IRecallResponse,
@@ -60,6 +62,7 @@ export const setIsRecallAlertsTableLoading = createAction<boolean>(
 export const setSelectedRecallAlert = createAction<IRecallAlert | null>(
   'Recall/SetSelectedRecallAlert'
 );
+export const setAffectedModels = createAction<IRecallAffectedModel[]>('Recall/SetAffectedModels');
 
 export const loadRecalls =
   (serviceCenterId: number): AppThunk =>
@@ -395,6 +398,7 @@ export const updateRecallAlert =
         isCriteria?: boolean;
       }[];
       triggers: TriggerI[];
+      globalModels: IGlobalModelYear[];
     },
     onSuccess: () => void,
     onError?: () => void
@@ -414,15 +418,7 @@ export const updateRecallAlert =
       data: { ...data, filterRules },
     })
       .then(() => {
-        onSuccess();
-        dispatch(
-          getRecallEvents(
-            data.serviceCenterId,
-            'workflow',
-            () => {},
-            () => {}
-          )
-        );
+        dispatch(getRecallEvents(data.serviceCenterId, 'workflow', () => {}, onSuccess));
       })
       .catch(e => {
         if (onError) onError();
@@ -458,13 +454,17 @@ export const getAffectedModels =
     onSuccess: () => void,
     onError?: () => void
   ): AppThunk =>
-  async () => {
+  async dispatch => {
     Api.call(Api.endpoints.GlobalRecalls.GetAffectedModels, {
       urlParams: { campaignId },
       params: { serviceCenterId },
     })
       .then(r => {
-        console.log(r?.data?.data);
+        if (r?.data?.data?.affectedModels?.length) {
+          dispatch(setAffectedModels(r.data.data.affectedModels));
+        } else {
+          dispatch(setAffectedModels([]));
+        }
       })
       .catch(e => {
         if (onError) onError();

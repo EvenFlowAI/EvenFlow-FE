@@ -160,13 +160,8 @@ const WorkflowTable: React.FC<
     },
     {
       header: 'Active',
-      val: el => (
-        <Switch
-          disabled={true}
-          onClick={() => () => {}}
-          checked={el.communicationDetails?.textMessage?.length > 0}
-          color="primary"
-        />
+      val: () => (
+        <Switch disabled={true} onClick={() => () => {}} checked={false} color="primary" />
       ),
     },
     {

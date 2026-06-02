@@ -3,6 +3,7 @@ import { TState } from './types';
 import {
   getRecalls,
   getRecallsByVin,
+  setAffectedModels,
   setIsEditName,
   setIsRecallAlertsTableLoading,
   setLoading,
@@ -57,6 +58,7 @@ const initialState: TState = {
   isEditName: false,
   isRecallAlertsTableLoading: false,
   selectedRecallAlert: null,
+  affectedModels: [],
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -114,5 +116,8 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setSelectedRecallAlert, (state, { payload }) => {
       return { ...state, selectedRecallAlert: payload };
+    })
+    .addCase(setAffectedModels, (state, { payload }) => {
+      return { ...state, affectedModels: payload };
     })
 );
