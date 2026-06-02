@@ -111,8 +111,6 @@ export const useStyles = makeStyles()(() => ({
     textTransform: 'uppercase',
     fontSize: '14px',
     fontWeight: 700,
-    lineHeight: 1,
-    letterSpacing: '-1px',
     color: '#5E5F66',
     marginBottom: '3px',
   },

@@ -22,6 +22,7 @@ import {
 import { setSelectedRecalls } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import queryString from 'query-string';
+import { ComparisonOperatorE, EventRulesFilterTypeE } from '../dealerOperations/actions';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
@@ -231,6 +232,7 @@ export const getRecallEvents =
       recallAlertsOrderStats,
       recallAlertsOrderWorkflow,
       selectedStatus,
+      selectedRecallAlert,
     } = getState().recalls;
     const { pageSize, pageIndex } = recallAlertsPageData;
     const data: TRecallRequest = {
@@ -276,6 +278,14 @@ export const getRecallEvents =
               dispatch(setRecallAlerts(enriched));
               dispatch(setRecallAlertsCount(paging.total));
               dispatch(setIsRecallAlertsTableLoading(false));
+              console.log('test');
+              if (selectedRecallAlert) {
+                dispatch(
+                  setSelectedRecallAlert(
+                    enriched.find((el: IRecallAlert) => el.id === selectedRecallAlert.id) || null
+                  )
+                );
+              }
               onSuccess();
             });
           } else {
@@ -376,17 +386,41 @@ export const updateRecallAlert =
       listType?: number;
       recallCampaignId?: number;
       serviceCenterId: number;
+      filterRules?: {
+        id?: number;
+        type: string;
+        operator: string;
+        value: string;
+        isCriteria?: boolean;
+      }[];
     },
     onSuccess: () => void,
     onError?: () => void
   ): AppThunk =>
-  async () => {
+  async dispatch => {
+    const filterRules = data.filterRules?.map(el => {
+      return {
+        ...el,
+        type: EventRulesFilterTypeE[el.type as keyof typeof EventRulesFilterTypeE],
+        operator: ComparisonOperatorE[el.operator as keyof typeof ComparisonOperatorE],
+        value: el.value || '0',
+      };
+    });
+
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
       urlParams: { id: data.id },
-      data: { ...data },
+      data: { ...data, filterRules },
     })
       .then(() => {
         onSuccess();
+        dispatch(
+          getRecallEvents(
+            data.serviceCenterId,
+            'workflow',
+            () => {},
+            () => {}
+          )
+        );
       })
       .catch(e => {
         if (onError) onError();

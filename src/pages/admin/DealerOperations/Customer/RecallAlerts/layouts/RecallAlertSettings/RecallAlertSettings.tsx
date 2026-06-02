@@ -23,6 +23,23 @@ import { IRecallAlert, RecallListType } from '../../../../../../../store/reducer
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import StatisticData from './StatisticData';
+import AudienceForm from '../../../Configuration/Forms/AudienceForm';
+import { CriteriaI } from '../../../types';
+import {
+  ComparisonOperatorE,
+  EventRulesFilterTypeE,
+} from '../../../../../../../store/reducers/dealerOperations/actions';
+import { validateCriteriaOperator, validateCriteriaType } from '../../../../helper';
+
+const toEnumLabel = <T extends Record<number, string>>(value: string, enumMap: T): string => {
+  const enumIndex = Number(value);
+
+  if (!Number.isNaN(enumIndex) && enumMap[enumIndex] !== undefined) {
+    return enumMap[enumIndex];
+  }
+
+  return value;
+};
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
@@ -34,9 +51,25 @@ const RecallAlertSettings: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const { selectedSC } = useSCs();
   const showError = useException();
+  const [criterias, setCriteria] = useState<CriteriaI[]>([]);
+  const [criteriaOperatorErrors, setCriteriaOperatorErrors] = useState<{
+    [index: number]: boolean;
+  }>({});
+  const [criteriaTypeErrors, setCriteriaTypeErrors] = useState<{ [index: number]: boolean }>({});
 
   useEffect(() => {
     setUpdatedRecallAlert(selectedRecallAlert);
+
+    const updatedFilterRules = selectedRecallAlert?.filterRules.map(rule => {
+      return {
+        ...rule,
+        value: rule.value ? rule.value : '',
+        type: toEnumLabel(rule.type, EventRulesFilterTypeE),
+        operator: toEnumLabel(rule.operator, ComparisonOperatorE),
+      };
+    });
+
+    setCriteria(updatedFilterRules || []);
   }, [selectedRecallAlert]);
 
   useEffect(() => {
@@ -62,26 +95,56 @@ const RecallAlertSettings: React.FC = () => {
   const handleCancelChanges = () => {
     setIsLoading(false);
     setIsEditTable(false);
+    console.log(selectedRecallAlert);
     setUpdatedRecallAlert(selectedRecallAlert);
+    const updatedFilterRules = selectedRecallAlert?.filterRules.map(rule => {
+      return {
+        ...rule,
+        value: rule.value ? rule.value : '',
+        type: toEnumLabel(rule.type, EventRulesFilterTypeE),
+        operator: toEnumLabel(rule.operator, ComparisonOperatorE),
+      };
+    });
+
+    setCriteria(updatedFilterRules || []);
+    setCriteriaTypeErrors({});
+    setCriteriaOperatorErrors({});
   };
 
   const saveRecallAlert = () => {
     if (!updatedRecallAlert || !selectedSC) return;
-    dispatch(
-      updateRecallAlert(
-        {
-          serviceCenterId: selectedSC.id,
-          recallCampaignId: updatedRecallAlert.recallCampaignId,
-          id: updatedRecallAlert.id,
-          listType: updatedRecallAlert.listType,
-        },
-        () => {
-          setIsEditTable(false);
-          setFile(null);
-        },
-        () => {}
-      )
-    );
+    let haveErrors = false;
+
+    const errorsCriteriaOperator = validateCriteriaOperator(criterias, setCriteriaOperatorErrors);
+    const errorsCriteriaType = validateCriteriaType(criterias, setCriteriaTypeErrors);
+
+    if (Object.keys(errorsCriteriaOperator).length) {
+      showError('The operator selection is required.');
+      haveErrors = true;
+    }
+
+    if (Object.keys(errorsCriteriaType).length) {
+      showError("The ‘Audience Criteria' selection is required.");
+      haveErrors = true;
+    }
+
+    if (!haveErrors)
+      dispatch(
+        updateRecallAlert(
+          {
+            serviceCenterId: selectedSC.id,
+            recallCampaignId: updatedRecallAlert.recallCampaignId,
+            id: updatedRecallAlert.id,
+            listType: updatedRecallAlert.listType,
+            filterRules: criterias,
+          },
+          () => {
+            setIsEditTable(false);
+            setFile(null);
+          },
+          () => {}
+        )
+      );
   };
 
   const validateChangesBeforeSave = () => {
@@ -166,6 +229,17 @@ const RecallAlertSettings: React.FC = () => {
                   margin: 0,
                 }}
               />
+              <div style={{ marginRight: '25px' }}>
+                <AudienceForm
+                  criterias={criterias}
+                  setCriteria={setCriteria}
+                  isEditTable={isEditTable}
+                  criteriaOperatorErrors={criteriaOperatorErrors}
+                  setCriteriaOperatorErrors={setCriteriaOperatorErrors}
+                  criteriaTypeErrors={criteriaTypeErrors}
+                  setCriteriaTypeErrors={setCriteriaTypeErrors}
+                />
+              </div>
             </div>
           </div>
         </div>

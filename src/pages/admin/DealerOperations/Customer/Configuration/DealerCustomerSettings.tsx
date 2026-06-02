@@ -288,6 +288,7 @@ const DealerCustomerSettings = () => {
             <div className={classes.settingsBlock}>
               <div className={classes.rulesWrapper}>
                 <AudienceForm
+                  isDisabled
                   criteriaOperatorErrors={criteriaOperatorErrors}
                   setCriteriaOperatorErrors={setCriteriaOperatorErrors}
                   criteriaTypeErrors={criteriaTypeErrors}

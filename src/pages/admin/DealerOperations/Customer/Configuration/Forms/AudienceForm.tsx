@@ -9,6 +9,7 @@ import { CriteriaI } from '../../types';
 
 interface AudienceFormI {
   criterias: CriteriaI[];
+  isDisabled?: boolean;
   isEditTable: boolean;
   setCriteria: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
   criteriaOperatorErrors: {
@@ -30,6 +31,7 @@ interface AudienceFormI {
 }
 
 const AudienceForm = ({
+  isDisabled,
   criterias,
   isEditTable,
   setCriteria,
@@ -41,11 +43,15 @@ const AudienceForm = ({
   const { classes } = useStyles();
 
   const handleAddCriteria = () => {
-    setCriteria(prev => [...prev, { type: '', operator: '', value: '', isCriteria: true }]);
+    setCriteria(prev => [...prev, { type: '', operator: '', value: '', isCriteria: !!isDisabled }]);
   };
 
   const handleRemoveCriteria = (index: number) => {
-    if (criterias.length > 1) {
+    if (isDisabled) {
+      if (criterias.length > 1) {
+        setCriteria(prev => prev.filter((criteria, i) => i !== index));
+      }
+    } else {
       setCriteria(prev => prev.filter((criteria, i) => i !== index));
     }
   };
@@ -74,7 +80,20 @@ const AudienceForm = ({
 
   return (
     <>
-      <span className={classes.audienceParagraph}>Audience</span>
+      {!isDisabled ? (
+        <span
+          style={{
+            display: 'block',
+            marginBottom: criterias.length ? '24px' : '4px',
+            marginTop: '14px',
+          }}
+          className={classes.audienceParagraph}
+        >
+          Audience Filters
+        </span>
+      ) : (
+        <span className={classes.audienceParagraph}>Audience</span>
+      )}
 
       {criterias.length ? (
         <div className={classes.criteriaWrapper}>
@@ -100,7 +119,7 @@ const AudienceForm = ({
                   renderInput={autocompleteRender({
                     isCustomFontSize: true,
                     error: criteriaTypeErrors[index],
-                    label: 'Audience Criteria',
+                    label: isDisabled ? 'Audience Criteria' : '',
                     placeholder: 'Not selected',
                   })}
                 />
@@ -108,13 +127,13 @@ const AudienceForm = ({
                   style={{ width: '25%' }}
                   disabled={!isEditTable}
                   value={criteria.operator}
-                  options={['Equal']}
+                  options={['Less than', 'Equal', 'Greater than']}
                   disableClearable
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'operator', v || '')}
                   renderInput={autocompleteRender({
-                    label: 'Operator',
+                    label: isDisabled ? 'Operator' : '',
                     placeholder: '',
                     error: criteriaOperatorErrors[index],
                   })}
@@ -126,7 +145,7 @@ const AudienceForm = ({
                     type="number"
                     error={!Number.isInteger(Number(criteria.value))}
                     inputProps={{ min: 0 }}
-                    label="Value"
+                    label={isDisabled ? 'Value' : ''}
                     placeholder=""
                     onChange={e => handleCriteriaChange(index, 'value', e.target.value || '')}
                     value={+criteria.value}
@@ -134,6 +153,7 @@ const AudienceForm = ({
                 </div>
                 {isEditTable ? (
                   <div
+                    style={!isDisabled ? { marginTop: 0 } : {}}
                     className={classes.removeCriteriaIcon}
                     onClick={() => handleRemoveCriteria(index)}
                   >
@@ -149,13 +169,13 @@ const AudienceForm = ({
       {isEditTable ? (
         <IconButton
           onClick={handleAddCriteria}
-          disabled={!!criterias.length}
+          disabled={isDisabled ? !!criterias.length : false}
           className={classes.iconPlus}
           size="large"
         >
-          <AddCircleOutline className={criterias.length ? 'isDisabled' : ''} />
+          <AddCircleOutline className={isDisabled ? (criterias.length ? 'isDisabled' : '') : ''} />
           <span
-            style={criterias.length ? { color: 'grey' } : {}}
+            style={isDisabled ? (criterias.length ? { color: 'grey' } : {}) : {}}
             className={classes.addCriteriaButton}
           >
             Audience Criteria

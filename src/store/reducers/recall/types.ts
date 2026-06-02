@@ -50,6 +50,13 @@ export interface IRecallAlert {
   creditsUsed: number;
   estimatedRecipients: number;
   triggers: [];
+  filterRules: {
+    id?: number;
+    type: string;
+    operator: string;
+    value: string;
+    isCriteria?: boolean;
+  }[];
 }
 
 export interface ICreateUpdateRecall {
