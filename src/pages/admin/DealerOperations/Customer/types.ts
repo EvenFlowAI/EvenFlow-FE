@@ -8,7 +8,11 @@ export interface CriteriaI {
 export interface TriggerI {
   id?: string;
   daysFromListGeneration: number;
+  date?: string;
   scheduledTime: string;
+  estimatedRecipients?: number;
+  actualRecipients?: number;
+  isPaused?: boolean;
 }
 
 export enum RecallEventStatus {

@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete, IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
@@ -6,10 +7,11 @@ import { autocompleteRender } from '../../../../../../utils/autocompleteRenders'
 import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
 import { useStyles } from '../../../styles';
 import { CriteriaI } from '../../types';
+import { useFormStyles } from './styles';
 
 interface AudienceFormI {
   criterias: CriteriaI[];
-  isDisabled?: boolean;
+  isOutbondMode?: boolean;
   isEditTable: boolean;
   setCriteria: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
   criteriaOperatorErrors: {
@@ -31,7 +33,7 @@ interface AudienceFormI {
 }
 
 const AudienceForm = ({
-  isDisabled,
+  isOutbondMode,
   criterias,
   isEditTable,
   setCriteria,
@@ -41,13 +43,17 @@ const AudienceForm = ({
   setCriteriaTypeErrors,
 }: AudienceFormI) => {
   const { classes } = useStyles();
+  const { classes: formClasses } = useFormStyles();
 
   const handleAddCriteria = () => {
-    setCriteria(prev => [...prev, { type: '', operator: '', value: '', isCriteria: !!isDisabled }]);
+    setCriteria(prev => [
+      ...prev,
+      { type: '', operator: '', value: '', isCriteria: !!isOutbondMode },
+    ]);
   };
 
   const handleRemoveCriteria = (index: number) => {
-    if (isDisabled) {
+    if (isOutbondMode) {
       if (criterias.length > 1) {
         setCriteria(prev => prev.filter((criteria, i) => i !== index));
       }
@@ -80,14 +86,11 @@ const AudienceForm = ({
 
   return (
     <>
-      {!isDisabled ? (
+      {!isOutbondMode ? (
         <span
-          style={{
-            display: 'block',
-            marginBottom: criterias.length ? '24px' : '4px',
-            marginTop: '14px',
-          }}
-          className={classes.audienceParagraph}
+          className={clsx(classes.audienceParagraph, formClasses.audienceFiltersTitle, {
+            [formClasses.audienceFiltersTitleEmpty]: !criterias.length,
+          })}
         >
           Audience Filters
         </span>
@@ -102,7 +105,7 @@ const AudienceForm = ({
               <div key={index} className={classes.criteriaFormWrapper}>
                 <Autocomplete
                   disabled={!isEditTable}
-                  style={{ width: '52%' }}
+                  className={formClasses.criteriaTypeAutocomplete}
                   value={criteria.type}
                   disableClearable
                   options={[
@@ -119,12 +122,12 @@ const AudienceForm = ({
                   renderInput={autocompleteRender({
                     isCustomFontSize: true,
                     error: criteriaTypeErrors[index],
-                    label: isDisabled ? 'Audience Criteria' : '',
+                    label: isOutbondMode ? 'Audience Criteria' : '',
                     placeholder: 'Not selected',
                   })}
                 />
                 <Autocomplete
-                  style={{ width: '25%' }}
+                  className={formClasses.criteriaOperatorAutocomplete}
                   disabled={!isEditTable}
                   value={criteria.operator}
                   options={['Less than', 'Equal', 'Greater than']}
@@ -133,7 +136,7 @@ const AudienceForm = ({
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'operator', v || '')}
                   renderInput={autocompleteRender({
-                    label: isDisabled ? 'Operator' : '',
+                    label: isOutbondMode ? 'Operator' : '',
                     placeholder: '',
                     error: criteriaOperatorErrors[index],
                   })}
@@ -145,7 +148,7 @@ const AudienceForm = ({
                     type="number"
                     error={!Number.isInteger(Number(criteria.value))}
                     inputProps={{ min: 0 }}
-                    label={isDisabled ? 'Value' : ''}
+                    label={isOutbondMode ? 'Value' : ''}
                     placeholder=""
                     onChange={e => handleCriteriaChange(index, 'value', e.target.value || '')}
                     value={+criteria.value}
@@ -153,8 +156,9 @@ const AudienceForm = ({
                 </div>
                 {isEditTable ? (
                   <div
-                    style={!isDisabled ? { marginTop: 0 } : {}}
-                    className={classes.removeCriteriaIcon}
+                    className={clsx(classes.removeCriteriaIcon, {
+                      [formClasses.removeCriteriaIconCompact]: !isOutbondMode,
+                    })}
                     onClick={() => handleRemoveCriteria(index)}
                   >
                     <CloseNew />
@@ -169,14 +173,17 @@ const AudienceForm = ({
       {isEditTable ? (
         <IconButton
           onClick={handleAddCriteria}
-          disabled={isDisabled ? !!criterias.length : false}
+          disabled={isOutbondMode ? !!criterias.length : false}
           className={classes.iconPlus}
           size="large"
         >
-          <AddCircleOutline className={isDisabled ? (criterias.length ? 'isDisabled' : '') : ''} />
+          <AddCircleOutline
+            className={isOutbondMode ? (criterias.length ? 'isDisabled' : '') : ''}
+          />
           <span
-            style={isDisabled ? (criterias.length ? { color: 'grey' } : {}) : {}}
-            className={classes.addCriteriaButton}
+            className={clsx(classes.addCriteriaButton, {
+              [formClasses.disabledAddButtonText]: isOutbondMode && criterias.length,
+            })}
           >
             Audience Criteria
           </span>

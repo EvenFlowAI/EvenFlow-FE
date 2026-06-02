@@ -23,6 +23,7 @@ import { setSelectedRecalls } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import queryString from 'query-string';
 import { ComparisonOperatorE, EventRulesFilterTypeE } from '../dealerOperations/actions';
+import { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
@@ -393,6 +394,7 @@ export const updateRecallAlert =
         value: string;
         isCriteria?: boolean;
       }[];
+      triggers: TriggerI[];
     },
     onSuccess: () => void,
     onError?: () => void

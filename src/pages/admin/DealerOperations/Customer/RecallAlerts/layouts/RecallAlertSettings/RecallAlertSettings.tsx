@@ -24,27 +24,25 @@ import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import StatisticData from './StatisticData';
 import AudienceForm from '../../../Configuration/Forms/AudienceForm';
-import { CriteriaI } from '../../../types';
+import { CriteriaI, TriggerI } from '../../../types';
 import {
   ComparisonOperatorE,
   EventRulesFilterTypeE,
 } from '../../../../../../../store/reducers/dealerOperations/actions';
-import { validateCriteriaOperator, validateCriteriaType } from '../../../../helper';
-
-const toEnumLabel = <T extends Record<number, string>>(value: string, enumMap: T): string => {
-  const enumIndex = Number(value);
-
-  if (!Number.isNaN(enumIndex) && enumMap[enumIndex] !== undefined) {
-    return enumMap[enumIndex];
-  }
-
-  return value;
-};
+import {
+  toEnumLabel,
+  validateCriteriaOperator,
+  validateCriteriaType,
+  validateTriggers,
+} from '../../../../helper';
+import Triggers from '../../../Configuration/Forms/Triggers';
+import { useRecallAlertSettingsStyles } from './styles';
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
   const dispatch = useDispatch();
   const { classes } = useStyles();
+  const { classes: recallAlertSettingsClasses } = useRecallAlertSettingsStyles();
   const [isEditTable, setIsEditTable] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [updatedRecallAlert, setUpdatedRecallAlert] = React.useState<IRecallAlert | null>(null);
@@ -52,12 +50,15 @@ const RecallAlertSettings: React.FC = () => {
   const { selectedSC } = useSCs();
   const showError = useException();
   const [criterias, setCriteria] = useState<CriteriaI[]>([]);
+  const [triggers, setTriggers] = useState<TriggerI[]>([]);
   const [criteriaOperatorErrors, setCriteriaOperatorErrors] = useState<{
     [index: number]: boolean;
   }>({});
   const [criteriaTypeErrors, setCriteriaTypeErrors] = useState<{ [index: number]: boolean }>({});
+  const [triggerDateErrors, setTriggerDateErrors] = useState<{ [index: number]: boolean }>({});
+  const [firstTriggerDateError, setFirstTriggerDateError] = useState<boolean>(false);
 
-  useEffect(() => {
+  const setDefaultData = () => {
     setUpdatedRecallAlert(selectedRecallAlert);
 
     const updatedFilterRules = selectedRecallAlert?.filterRules.map(rule => {
@@ -70,6 +71,11 @@ const RecallAlertSettings: React.FC = () => {
     });
 
     setCriteria(updatedFilterRules || []);
+    setTriggers(selectedRecallAlert?.triggers || []);
+  };
+
+  useEffect(() => {
+    setDefaultData();
   }, [selectedRecallAlert]);
 
   useEffect(() => {
@@ -95,20 +101,11 @@ const RecallAlertSettings: React.FC = () => {
   const handleCancelChanges = () => {
     setIsLoading(false);
     setIsEditTable(false);
-    console.log(selectedRecallAlert);
-    setUpdatedRecallAlert(selectedRecallAlert);
-    const updatedFilterRules = selectedRecallAlert?.filterRules.map(rule => {
-      return {
-        ...rule,
-        value: rule.value ? rule.value : '',
-        type: toEnumLabel(rule.type, EventRulesFilterTypeE),
-        operator: toEnumLabel(rule.operator, ComparisonOperatorE),
-      };
-    });
-
-    setCriteria(updatedFilterRules || []);
+    setDefaultData();
     setCriteriaTypeErrors({});
     setCriteriaOperatorErrors({});
+    setFirstTriggerDateError(false);
+    setTriggerDateErrors({});
   };
 
   const saveRecallAlert = () => {
@@ -117,6 +114,13 @@ const RecallAlertSettings: React.FC = () => {
 
     const errorsCriteriaOperator = validateCriteriaOperator(criterias, setCriteriaOperatorErrors);
     const errorsCriteriaType = validateCriteriaType(criterias, setCriteriaTypeErrors);
+    const triggersError = validateTriggers(
+      criterias,
+      triggers,
+      setFirstTriggerDateError,
+      showError,
+      setTriggerDateErrors
+    );
 
     if (Object.keys(errorsCriteriaOperator).length) {
       showError('The operator selection is required.');
@@ -128,7 +132,11 @@ const RecallAlertSettings: React.FC = () => {
       haveErrors = true;
     }
 
-    if (!haveErrors)
+    if (triggersError) haveErrors = true;
+
+    if (!haveErrors) {
+      const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
+
       dispatch(
         updateRecallAlert(
           {
@@ -137,6 +145,7 @@ const RecallAlertSettings: React.FC = () => {
             id: updatedRecallAlert.id,
             listType: updatedRecallAlert.listType,
             filterRules: criterias,
+            triggers: triggersWithPause,
           },
           () => {
             setIsEditTable(false);
@@ -145,6 +154,7 @@ const RecallAlertSettings: React.FC = () => {
           () => {}
         )
       );
+    }
   };
 
   const validateChangesBeforeSave = () => {
@@ -220,16 +230,8 @@ const RecallAlertSettings: React.FC = () => {
                 file={file}
               />
               <StatisticData updatedRecallAlert={updatedRecallAlert} />
-              <hr
-                style={{
-                  color: '#EAEBEE',
-                  height: '1px',
-                  width: '100%',
-                  opacity: '0.3',
-                  margin: 0,
-                }}
-              />
-              <div style={{ marginRight: '25px' }}>
+              <hr className={recallAlertSettingsClasses.divider} />
+              <div className={recallAlertSettingsClasses.audienceForm}>
                 <AudienceForm
                   criterias={criterias}
                   setCriteria={setCriteria}
@@ -240,6 +242,18 @@ const RecallAlertSettings: React.FC = () => {
                   setCriteriaTypeErrors={setCriteriaTypeErrors}
                 />
               </div>
+            </div>
+            <div className={recallAlertSettingsClasses.triggers}>
+              <Triggers
+                setTriggerDateErrors={setTriggerDateErrors}
+                triggerDateErrors={triggerDateErrors}
+                firstTriggerDateError={firstTriggerDateError}
+                setFirstTriggerDateError={setFirstTriggerDateError}
+                triggers={triggers}
+                setTriggers={setTriggers}
+                isEditTable={isEditTable}
+                disableAdd={criterias.length === 0 || triggers.length === 5}
+              />
             </div>
           </div>
         </div>

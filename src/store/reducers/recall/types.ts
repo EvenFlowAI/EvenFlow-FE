@@ -38,6 +38,7 @@ export interface IRecallAlert {
   recallComponent: string;
   id: number;
   name: string;
+  listGeneratedDate: string;
   campaignRecallGroupBatchId: string;
   recallCampaignId: number;
   status: number;

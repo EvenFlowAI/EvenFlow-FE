@@ -74,7 +74,7 @@ export const useStyles = makeStyles()(() => ({
   audienceWrapper: {
     display: 'flex',
     borderRight: '1px solid #EAEBEE',
-    width: '53%',
+    width: '58%',
     flexDirection: 'column',
     gap: '10px',
     '@media (max-width: 900px)': {
@@ -181,9 +181,10 @@ export const useStyles = makeStyles()(() => ({
     color: '#546AB3',
   },
   triggersFormWrapper: {
+    flexDirection: 'column',
     display: 'flex',
     width: '100%',
-    gap: '20px',
+    gap: '4px',
   },
   triggersForm: {
     display: 'flex',

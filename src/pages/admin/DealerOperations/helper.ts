@@ -273,3 +273,16 @@ export const RECALL_ALERTS_STATUSES = [
 
 export const VIN_CHECK_API = 'VIN Check (API)';
 export const CSV_UPLOADED = 'CSV Uploaded';
+
+export const toEnumLabel = <T extends Record<number, string>>(
+  value: string,
+  enumMap: T
+): string => {
+  const enumIndex = Number(value);
+
+  if (!Number.isNaN(enumIndex) && enumMap[enumIndex] !== undefined) {
+    return enumMap[enumIndex];
+  }
+
+  return value;
+};
