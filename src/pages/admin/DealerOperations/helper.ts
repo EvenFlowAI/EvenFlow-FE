@@ -290,7 +290,7 @@ export const toEnumLabel = <T extends Record<number, string>>(
   return value;
 };
 
-type TSelectedModelKey = IGlobalModelYear;
+export type TSelectedModelKey = IGlobalModelYear;
 
 export const mapModelIdsToGlobalModels = (
   modelIds: number[],

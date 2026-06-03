@@ -133,7 +133,17 @@ const WorkflowTable: React.FC<
     },
     {
       header: 'Audience',
-      val: el => <ConfirmationBadge isConfirmed={el.status !== RecallEventStatus.NotConfigured} />,
+      val: el => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            setCurrentItem(el);
+            dispatch(setSelectedRecallAlert(el));
+          }}
+        >
+          <ConfirmationBadge isConfirmed={el.status !== RecallEventStatus.NotConfigured} />
+        </div>
+      ),
     },
     {
       header: 'Generate List',

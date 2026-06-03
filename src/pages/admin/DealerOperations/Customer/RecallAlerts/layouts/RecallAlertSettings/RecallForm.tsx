@@ -1,15 +1,17 @@
 import React, { ChangeEventHandler, createRef, useCallback } from 'react';
-import { Autocomplete, Button } from '@mui/material';
+import { Autocomplete, Button, Tooltip } from '@mui/material';
 import { CSV_UPLOADED, VIN_CHECK_API } from '../../../../helper';
 import { autocompleteRender } from '../../../../../../../utils/autocompleteRenders';
 import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import { TextField } from '../../../../../../../components/formControls/TextFieldStyled/TextField';
 import { ReactComponent as Upload } from '../../../../../../../assets/img/upload.svg';
 import { ReactComponent as Reupload } from '../../../../../../../assets/img/Reupload.svg';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import { useStyles } from '../../../styles';
+import { checkVins } from '../../../../../../../store/reducers/recall/actions';
+import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 
 interface RecallFormI {
   isEditTable: boolean;
@@ -30,6 +32,102 @@ const formatFileSize = (bytes: number): string => {
   return `${fmt(bytes / (1000 * 1000 * 1000))} GB`;
 };
 
+const getListMethodValue = (listType: RecallListType): string => {
+  if (listType === RecallListType.VIN_CHECK_API) {
+    return VIN_CHECK_API;
+  }
+
+  if (listType === RecallListType.UPLOAD_CSV) {
+    return CSV_UPLOADED;
+  }
+
+  return '';
+};
+
+interface IListMethodActionProps {
+  listType: RecallListType;
+  isEditTable: boolean;
+  hasSelectedModels: boolean;
+  hasAvailableCredits: boolean;
+  classes: ReturnType<typeof useStyles>['classes'];
+  file: File | null;
+  inputRef: React.RefObject<HTMLInputElement>;
+  handleFileChange: ChangeEventHandler<HTMLInputElement>;
+  callRecallTrigger: () => void;
+}
+
+const ListMethodAction: React.FC<IListMethodActionProps> = ({
+  listType,
+  isEditTable,
+  hasSelectedModels,
+  hasAvailableCredits,
+  classes,
+  file,
+  inputRef,
+  handleFileChange,
+  callRecallTrigger,
+}) => {
+  if (listType === RecallListType.VIN_CHECK_API) {
+    const isCheckVinsDisabled = !isEditTable || !hasSelectedModels || !hasAvailableCredits;
+
+    const button = (
+      <Button
+        disabled={isCheckVinsDisabled}
+        className={classes.checkVinsButton}
+        variant="outlined"
+        onClick={callRecallTrigger}
+      >
+        Check Vins
+      </Button>
+    );
+
+    if (!hasAvailableCredits) {
+      return (
+        <Tooltip placement="top" title="No available recall credits">
+          <span>{button}</span>
+        </Tooltip>
+      );
+    }
+
+    return button;
+  }
+
+  if (listType === RecallListType.UPLOAD_CSV) {
+    return (
+      <label htmlFor="uploadCSV" className={classes.uploadLabel}>
+        <Button
+          disabled={!isEditTable}
+          className={classes.uploadButton}
+          variant="text"
+          onClick={() => inputRef.current?.click()}
+        >
+          {file ? (
+            <div className={classes.uploadButtonContent}>
+              <Reupload className={!isEditTable ? classes.uploadIconDisabled : ''} />
+              <span>Reupload csv file</span>
+            </div>
+          ) : (
+            <div className={classes.uploadButtonContent}>
+              <Upload className={!isEditTable ? classes.uploadIconDisabled : ''} />
+              <span>Upload csv file</span>
+            </div>
+          )}
+        </Button>
+        <input
+          disabled={!isEditTable}
+          onChange={handleFileChange}
+          className={classes.hiddenInput}
+          type="file"
+          id="uploadCSV"
+          ref={inputRef}
+        />
+      </label>
+    );
+  }
+
+  return null;
+};
+
 const RecallForm = ({
   isEditTable,
   updatedRecallAlert,
@@ -39,9 +137,14 @@ const RecallForm = ({
   file,
 }: RecallFormI) => {
   const { classes } = useStyles();
+  const { credits } = useSelector((state: RootState) => state.dealerOperations);
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
   const { allGlobalsRecalls } = useSelector((state: RootState) => state.recallDatabase);
   const showError = useException();
   const ref = createRef<HTMLInputElement>();
+  const hasSelectedModels = (updatedRecallAlert.globalModelIds?.length ?? 0) > 0;
+  const hasAvailableCredits = (credits?.availableCredits ?? 0) > 0;
 
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
@@ -67,6 +170,19 @@ const RecallForm = ({
     [ref]
   );
 
+  const callRecallTrigger = () => {
+    if (!selectedSC) return;
+    dispatch(
+      checkVins(
+        selectedSC.id,
+        () => {},
+        () => {
+          showError('Something went wrong. Please try again later.');
+        }
+      )
+    );
+  };
+
   return (
     <div>
       <div className={classes.recallFormSection}>
@@ -74,13 +190,7 @@ const RecallForm = ({
           <Autocomplete
             disabled={!isEditTable}
             className={classes.recallFormField}
-            value={
-              updatedRecallAlert.listType === RecallListType.VIN_CHECK_API
-                ? VIN_CHECK_API
-                : updatedRecallAlert.listType === RecallListType.UPLOAD_CSV
-                  ? CSV_UPLOADED
-                  : ''
-            }
+            value={getListMethodValue(updatedRecallAlert.listType)}
             disableClearable
             options={[VIN_CHECK_API, CSV_UPLOADED]}
             isOptionEqualToValue={(o, v) => String(o) === String(v)}
@@ -92,47 +202,17 @@ const RecallForm = ({
               placeholder: 'Select method',
             })}
           />
-          {updatedRecallAlert.listType === RecallListType.VIN_CHECK_API ? (
-            <Button
-              disabled={!isEditTable}
-              className={classes.checkVinsButton}
-              variant="outlined"
-              onClick={() => {}}
-            >
-              Check Vins
-            </Button>
-          ) : updatedRecallAlert.listType === RecallListType.UPLOAD_CSV ? (
-            <>
-              <label htmlFor="uploadCSV" className={classes.uploadLabel}>
-                <Button
-                  disabled={!isEditTable}
-                  className={classes.uploadButton}
-                  variant="text"
-                  onClick={() => ref.current?.click()}
-                >
-                  {file ? (
-                    <div className={classes.uploadButtonContent}>
-                      <Reupload className={!isEditTable ? classes.uploadIconDisabled : ''} />
-                      <span>Reupload csv file</span>
-                    </div>
-                  ) : (
-                    <div className={classes.uploadButtonContent}>
-                      <Upload className={!isEditTable ? classes.uploadIconDisabled : ''} />
-                      <span>Upload csv file</span>
-                    </div>
-                  )}
-                </Button>
-                <input
-                  disabled={!isEditTable}
-                  onChange={handleFileChange}
-                  className={classes.hiddenInput}
-                  type="file"
-                  id="uploadCSV"
-                  ref={ref}
-                />
-              </label>
-            </>
-          ) : null}
+          <ListMethodAction
+            listType={updatedRecallAlert.listType}
+            isEditTable={isEditTable}
+            hasSelectedModels={hasSelectedModels}
+            hasAvailableCredits={hasAvailableCredits}
+            classes={classes}
+            file={file}
+            inputRef={ref}
+            handleFileChange={handleFileChange}
+            callRecallTrigger={callRecallTrigger}
+          />
         </div>
         {updatedRecallAlert.listType === RecallListType.UPLOAD_CSV && file ? (
           <span>

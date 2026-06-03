@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../../../components/modals/BaseModal/BaseModal';
-import { customerTags } from '../../../../../../config/data';
+import { customerRecallTags } from '../../../../../../config/data';
 import { Textarea } from '../../../../../../components/modals/admin/MapIframeLink/styles';
 import { ReactComponent as CopyIcon } from '../../../../../../assets/img/copy.svg';
 import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmall.svg';
@@ -192,7 +192,7 @@ const TextConfigurationRecall = ({
             <div className={classes.tagsWrapper}>
               <span className={classes.insertTagText}>Insert tag</span>
               <div className={classes.scrollableTags}>
-                {customerTags.map(tag => renderTagItem(tag))}
+                {customerRecallTags.map(tag => renderTagItem(tag))}
               </div>
             </div>
           </div>

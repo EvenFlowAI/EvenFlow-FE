@@ -282,7 +282,6 @@ export const getRecallEvents =
               dispatch(setRecallAlerts(enriched));
               dispatch(setRecallAlertsCount(paging.total));
               dispatch(setIsRecallAlertsTableLoading(false));
-              console.log('test');
               if (selectedRecallAlert) {
                 dispatch(
                   setSelectedRecallAlert(
@@ -465,6 +464,7 @@ export const getAffectedModels =
         } else {
           dispatch(setAffectedModels([]));
         }
+        onSuccess();
       })
       .catch(e => {
         if (onError) onError();
@@ -504,5 +504,20 @@ export const updateRecallAlertText =
       .catch(e => {
         if (onError) onError('');
         console.log('Update Recall Alert error', e);
+      });
+  };
+
+export const checkVins =
+  (id: number, onSuccess: () => void, onError?: (eventName: string) => void): AppThunk =>
+  async () => {
+    Api.call(Api.endpoints.Recalls.RecallTrigger, {
+      urlParams: { id },
+    })
+      .then(() => {
+        onSuccess();
+      })
+      .catch(e => {
+        if (onError) onError('');
+        console.log('checkVins error', e);
       });
   };

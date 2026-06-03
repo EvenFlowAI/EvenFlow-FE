@@ -133,6 +133,20 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
     return years.every(year => isYearSelected(modelId, year));
   };
 
+  const isModelSelectedInState = (
+    state: IGlobalModelYear[],
+    modelId: number,
+    years: number[]
+  ): boolean => {
+    if (!years.length) {
+      return state.some(item => item.globalVehicleModelId === modelId);
+    }
+
+    return years.every(year =>
+      state.some(item => item.globalVehicleModelId === modelId && item.year === year)
+    );
+  };
+
   const selectedModelsCount = useMemo(
     () =>
       groupedByMake
@@ -152,6 +166,20 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
         years.length > 0 && years.every(year => selectedYearsByModel.includes(year));
 
       if (allYearsSelected) {
+        const selectedModelsInState = groupedByMake
+          .flatMap(({ models }) => models)
+          .filter(({ globalVehicleModelId, years: modelYears }) =>
+            isModelSelectedInState(prev, globalVehicleModelId, modelYears)
+          );
+
+        const isTryingToUnselectLastModel =
+          selectedModelsInState.length === 1 &&
+          selectedModelsInState[0].globalVehicleModelId === modelId;
+
+        if (isTryingToUnselectLastModel) {
+          return prev;
+        }
+
         return prev.filter(
           item => !years.some(year => item.globalVehicleModelId === modelId && item.year === year)
         );
@@ -201,7 +229,7 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
                         )
                       }
                       checked={isChecked}
-                      disabled={!isEditTable}
+                      disabled={!isEditTable || (isChecked && selectedModelsCount === 1)}
                       onChange={() => toggleModel(modelKey, years)}
                     />
                     {model}

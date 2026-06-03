@@ -165,7 +165,6 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
 
   const openEdit = () => {
     setAnchorEl(null);
-    console.log(currentItem);
     dispatch(setSelectedRecallAlert(currentItem));
   };
 

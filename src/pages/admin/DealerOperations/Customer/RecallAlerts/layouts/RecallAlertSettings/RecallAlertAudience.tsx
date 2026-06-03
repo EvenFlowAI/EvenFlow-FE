@@ -22,6 +22,9 @@ const RecallAlertAudience = ({
   const { classes } = useStyles();
 
   const handleListMethodChange = (newValue: string) => {
+    if (newValue === VIN_CHECK_API) {
+      onFileChange(null);
+    }
     setUpdatedRecallAlert(prev => {
       if (!prev) return prev;
 

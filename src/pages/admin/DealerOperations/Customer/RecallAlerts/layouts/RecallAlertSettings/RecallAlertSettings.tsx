@@ -21,11 +21,7 @@ import { useModal } from '../../../../../../../hooks/useModal/useModal';
 import LeaveWithoutSaving from '../../../../../../../components/modals/admin/LeaveWithoutSaving/LeaveWithoutSaving';
 import { Loading } from '../../../../../../../components/wrappers/Loading/Loading';
 import RecallAlertAudience from './RecallAlertAudience';
-import {
-  IGlobalModelYear,
-  IRecallAlert,
-  RecallListType,
-} from '../../../../../../../store/reducers/recall/types';
+import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import StatisticData from './StatisticData';
@@ -38,6 +34,7 @@ import {
 import {
   mapModelIdsToGlobalModels,
   toEnumLabel,
+  TSelectedModelKey,
   validateCriteriaOperator,
   validateCriteriaType,
   validateTriggers,
@@ -45,8 +42,6 @@ import {
 import Triggers from '../../../Configuration/Forms/Triggers';
 import { useRecallAlertSettingsStyles } from './styles';
 import AffectedModels from './AffectedModels';
-
-type TSelectedModelKey = IGlobalModelYear;
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert, affectedModels } = useSelector((state: RootState) => state.recalls);
@@ -105,6 +100,8 @@ const RecallAlertSettings: React.FC = () => {
   useEffect(() => {
     if (!selectedSC) return;
     if (updatedRecallAlert?.recallCampaignId) {
+      setIsLoading(true);
+      // TODO: replace hardcoded values with real ones after BE changes for affected models will be done
       // dispatch(
       //   getAffectedModels(
       //     updatedRecallAlert?.recallCampaignId,
@@ -117,8 +114,12 @@ const RecallAlertSettings: React.FC = () => {
         getAffectedModels(
           11634,
           123,
-          () => {},
-          () => {}
+          () => {
+            setIsLoading(false);
+          },
+          () => {
+            setIsLoading(false);
+          }
         )
       );
     }
@@ -263,11 +264,13 @@ const RecallAlertSettings: React.FC = () => {
                 onFileChange={setFile}
                 file={file}
               />
-              <AffectedModels
-                isEditTable={isEditTable}
-                setSelectedModelKeys={setSelectedModelKeys}
-                selectedModelKeys={selectedModelKeys}
-              />
+              {updatedRecallAlert?.recallCampaignId ? (
+                <AffectedModels
+                  isEditTable={isEditTable}
+                  setSelectedModelKeys={setSelectedModelKeys}
+                  selectedModelKeys={selectedModelKeys}
+                />
+              ) : null}
               <StatisticData updatedRecallAlert={updatedRecallAlert} />
               <hr className={recallAlertSettingsClasses.divider} />
               <div className={recallAlertSettingsClasses.audienceForm}>
