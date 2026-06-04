@@ -26,6 +26,8 @@ const appointment = {
   cancel: (id: number): TApiResponse => request.put(`/appointments/${id}/cancel`),
   getByKey: (key: string): TApiResponse<IAppointmentByKey> =>
     request.get(`/appointments/${key}/by-key`),
+  getBySource: (key: string): TApiResponse<IAppointmentByKey> =>
+    request.get(`/appointments/?source=${key}`),
   getFromEmail: (key: string): TApiResponse<IAppointmentByKey> =>
     request.get(`/appointments/${key}`),
   cancelFromEmail: (key: string): TApiResponse<IAppointmentByKey> =>

@@ -234,6 +234,8 @@ export type TAppointmentState = {
   slotsTransportationId: number | null;
   slotsSearchedDate: ParsableDate;
   isCloneMode: boolean;
+  isDemandSmoothMode: boolean;
+  demandAppointmentId: string;
   serviceValetCapacity: ServiceValetCapacity | null;
 };
 

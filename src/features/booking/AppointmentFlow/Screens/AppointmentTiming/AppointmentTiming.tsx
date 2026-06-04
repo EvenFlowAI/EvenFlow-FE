@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +28,9 @@ type TProps = {
 };
 
 export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack }) => {
-  const { appointment, isCloneMode } = useSelector((state: RootState) => state.appointment);
+  const { appointment, isCloneMode, isDemandSmoothMode } = useSelector(
+    (state: RootState) => state.appointment
+  );
   const { selectedInitialTiming, selectedTime, serviceTypeOption, sideBarSteps, transportation } =
     useSelector((state: RootState) => state.appointmentFrame);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -48,6 +50,13 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
   const onNext = () => {
     handleSetScreen('appointmentSelection');
   };
+
+  useEffect(() => {
+    if (isDemandSmoothMode) {
+      handleSelectTiming(EAppointmentTimingType.FirstAvailable);
+      onSubmit();
+    }
+  }, [isDemandSmoothMode]);
 
   const handleSelectTiming = useCallback(
     (t: EAppointmentTimingType) => () => {
