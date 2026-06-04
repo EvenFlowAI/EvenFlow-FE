@@ -26,6 +26,7 @@ import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import queryString from 'query-string';
 import { ComparisonOperatorE, EventRulesFilterTypeE } from '../dealerOperations/actions';
 import { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
+import { HistoryRecallData } from '../../../pages/admin/DealerOperations/Customer/RecallAlerts/layouts/HistoryRecall';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
@@ -519,5 +520,32 @@ export const checkVins =
       .catch(e => {
         if (onError) onError('');
         console.log('checkVins error', e);
+      });
+  };
+
+export const viewHistoryData =
+  (
+    entityId: number,
+    onSuccess: (data: HistoryRecallData[]) => void,
+    onError?: () => void
+  ): AppThunk =>
+  async () => {
+    const params = {
+      entityType: 'recallEvent',
+      propertyNames: 'status',
+      entityId,
+    };
+
+    Api.call(Api.endpoints.Audit.History, { params })
+      .then(response => {
+        if (response?.data?.data?.history.length) {
+          onSuccess(response?.data?.data?.history);
+        } else {
+          onSuccess([]);
+        }
+      })
+      .catch(e => {
+        if (onError) onError();
+        console.log('viewHistoryData error', e);
       });
   };

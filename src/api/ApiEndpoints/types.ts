@@ -205,6 +205,7 @@ export interface IApiEndpoints {
     | 'Activate',
     TApiEndpoint
   >;
+  Audit: Record<'History', TApiEndpoint>;
   PricingSettings: Record<
     | 'GetList'
     | 'Edit'

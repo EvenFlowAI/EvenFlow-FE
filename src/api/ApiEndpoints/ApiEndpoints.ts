@@ -420,6 +420,9 @@ export class Api {
       UploadCSV: { route: '/recall-events/{id}/upload-csv', method: 'patch' },
       RecallTrigger: { route: '/recall/groups/{id}/trigger', method: 'patch' },
     },
+    Audit: {
+      History: { route: '/audit/history', method: 'get' },
+    },
     ServiceCategories: {
       Create: { route: '/service-categories', method: 'post' },
       UpdateIcon: { route: '/service-categories/{id}/icon', method: 'patch' },

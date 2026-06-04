@@ -29,11 +29,12 @@ type TRecallTableProps = {
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
   onOpenText: () => void;
+  onOpenHistory: () => void;
 };
 
 const WorkflowTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ currentItem, setCurrentItem, onOpenText }) => {
+> = ({ currentItem, setCurrentItem, onOpenText, onOpenHistory }) => {
   const {
     recallAlerts,
     recallAlertsCount,
@@ -199,6 +200,11 @@ const WorkflowTable: React.FC<
     dispatch(setSelectedRecallAlert(currentItem));
   };
 
+  const viewHistory = () => {
+    setAnchorEl(null);
+    onOpenHistory();
+  };
+
   const handleRemove = async () => {
     if (!currentItem) {
       showError('Recall Alert is not chosen');
@@ -267,7 +273,7 @@ const WorkflowTable: React.FC<
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
-        <MenuItem onClick={() => {}}>View History</MenuItem>
+        <MenuItem onClick={viewHistory}>View History</MenuItem>
         <MenuItem onClick={askRemove}>Remove</MenuItem>
       </Menu>
     </div>

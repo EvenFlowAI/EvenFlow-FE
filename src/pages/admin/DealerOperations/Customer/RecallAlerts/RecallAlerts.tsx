@@ -24,6 +24,7 @@ import { useException } from '../../../../../hooks/useException/useException';
 import StatsTable from './StatsTable';
 import { getAllGlobalRecall } from '../../../../../store/reducers/recallDatabase/actions';
 import TextConfigurationRecall from './layouts/TextConfigurationRecall';
+import HistoryRecall from './layouts/HistoryRecall';
 
 const RecallAlerts = () => {
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');
@@ -36,6 +37,7 @@ const RecallAlerts = () => {
   );
   const { isOpen, onClose, onOpen } = useModal();
   const { isOpen: isOpenText, onClose: onCloseText, onOpen: onOpenText } = useModal();
+  const { isOpen: isOpenHistory, onClose: onCloseHistory, onOpen: onOpenHistory } = useModal();
   const showError = useException();
 
   useEffect(() => {
@@ -172,10 +174,15 @@ const RecallAlerts = () => {
             currentItem={currentItem}
             setCurrentItem={setCurrentItem}
             onOpenText={onOpenText}
+            onOpenHistory={onOpenHistory}
           />
         </div>
       ) : (
-        <StatsTable currentItem={currentItem} setCurrentItem={setCurrentItem} />
+        <StatsTable
+          currentItem={currentItem}
+          setCurrentItem={setCurrentItem}
+          onOpenHistory={onOpenHistory}
+        />
       )}
       <AddRecallAlertModal open={isOpen} onClose={onClose} tableType={tableMode} />
       <TextConfigurationRecall
@@ -184,6 +191,7 @@ const RecallAlerts = () => {
         updatedRecallAlert={currentItem}
         tableType={tableMode}
       />
+      <HistoryRecall open={isOpenHistory} onClose={onCloseHistory} currentItem={currentItem} />
     </div>
   );
 };

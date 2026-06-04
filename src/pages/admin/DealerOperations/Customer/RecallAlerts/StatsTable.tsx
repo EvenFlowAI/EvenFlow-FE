@@ -24,11 +24,13 @@ import { TextField } from '../../../../../components/formControls/TextFieldStyle
 type TRecallTableProps = {
   currentItem: IRecallAlert | null;
   setCurrentItem: Dispatch<SetStateAction<IRecallAlert | null>>;
+  onOpenHistory: () => void;
 };
 
 const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>> = ({
   currentItem,
   setCurrentItem,
+  onOpenHistory,
 }) => {
   const {
     recallAlerts,
@@ -216,6 +218,11 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     setCurrentItem(null);
   };
 
+  const viewHistory = () => {
+    setAnchorEl(null);
+    onOpenHistory();
+  };
+
   return (
     <div>
       <Table<IRecallAlert>
@@ -236,7 +243,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
-        <MenuItem onClick={() => {}}>View History</MenuItem>
+        <MenuItem onClick={viewHistory}>View History</MenuItem>
         <MenuItem onClick={askRemove}>Remove</MenuItem>
       </Menu>
     </div>
