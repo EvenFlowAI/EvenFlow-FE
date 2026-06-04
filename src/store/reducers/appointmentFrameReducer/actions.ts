@@ -1698,10 +1698,6 @@ export const handleAppointmentUpdate =
       ? demandAppointmentId
       : car.appointmentHashKeys[car.appointmentHashKeys.length - 1];
 
-    console.log(car);
-    console.log('isDemandSmoothMode', isDemandSmoothMode);
-    console.log('demandAppointmentId', demandAppointmentId);
-
     const requestFunc = isDemandSmoothMode ? API.appointment.getBySource : API.appointment.getByKey;
 
     setLoadingCar(true);
@@ -1710,7 +1706,6 @@ export const handleAppointmentUpdate =
       dispatch(setAppointmentSaving(true));
       requestFunc(key)
         .then(({ data }) => {
-          console.log(data);
           if (data) {
             if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''));
             const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id);
