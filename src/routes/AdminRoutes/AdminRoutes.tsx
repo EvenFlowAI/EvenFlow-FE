@@ -18,11 +18,11 @@ import CenterProfileRoutes from '../CenterProfileRoutes/CenterProfileRoutes';
 import { ServiceCenters } from '../../pages/admin/ServiceCenters/ServiceCenters';
 import ApplicationRoutes from '../ApplicationRoutes/ApplicationRoutes';
 import { DealerOperationsRoutes } from '../DealerOperationsRoutes/DealerOperationsRoutes';
-import AiAgents from '../../pages/admin/AiAgents/AiAgents';
 import ConfigurationAgent from '../../pages/admin/ConfigurationAgent/ConfigurationAgent';
 import InsightsAgent from '../../pages/admin/InsightsAgent/InsightsAgent';
 import AnomalyAgent from '../../pages/admin/AnomalyAgent/AnomalyAgent';
 import { Roles } from '../../types/types';
+import AiRoutes from '../AIRoutes/AiRoutes';
 
 export const AdminRoutes = () => {
   const currentUser = useCurrentUser();
@@ -45,11 +45,7 @@ export const AdminRoutes = () => {
     { path: Routes.Employees.Base, component: EmployeesRoutes, condition: !isRestrictedRole },
     { path: Routes.CenterProfile.Base, component: CenterProfileRoutes },
     { path: Routes.Admin.Appointments, component: AppointmentsPage },
-    {
-      path: Routes.Admin.AiAgents,
-      component: AiAgents,
-      condition: isDealerOwnerSuperAdmin,
-    },
+    { path: Routes.AiAgent.Base, component: AiRoutes, condition: isDealerOwnerSuperAdmin },
     {
       path: Routes.Admin.ConfigurationAgent,
       component: ConfigurationAgent,

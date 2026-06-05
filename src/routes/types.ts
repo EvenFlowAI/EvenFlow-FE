@@ -2,7 +2,6 @@ export enum AdminRoutes {
   Base = '/admin',
   DealershipGroups = '/admin/dealership-groups',
   Appointments = '/admin/appointments',
-  AiAgents = '/admin/ai-agents',
   ConfigurationAgent = '/admin/configuration-agent',
   InsightsAgent = '/admin/insights-agent',
   AnomalyAgent = '/admin/anomaly-agent',
@@ -132,6 +131,12 @@ export enum CenterProfileRoutes {
   FacilitySetUp = '/admin/center-profile/facility-set-up',
   Vehicles = '/admin/center-profile/vehicles',
   Integrations = '/admin/center-profile/integrations',
+}
+
+export enum AiAgentRoutes {
+  Base = '/admin/ai',
+  AiAgents = '/admin/ai/agents',
+  AlertDashboard = '/admin/ai/alert-dashboard',
 }
 
 export enum QueryTypes {

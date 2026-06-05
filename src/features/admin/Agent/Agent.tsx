@@ -11,7 +11,7 @@ const Agent = ({ agentName }: AgentI) => {
   const history = useHistory();
 
   const redirect = () => {
-    history.push('/admin/ai-agents');
+    history.push('/admin/ai/agents');
   };
 
   return (
