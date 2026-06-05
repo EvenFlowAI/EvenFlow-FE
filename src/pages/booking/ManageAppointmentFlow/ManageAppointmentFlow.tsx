@@ -46,7 +46,9 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     appointmentByKey,
     transportations,
   } = useSelector((state: RootState) => state.appointmentFrame);
-  const { customerLoadedData, isCloneMode } = useSelector((state: RootState) => state.appointment);
+  const { customerLoadedData, isCloneMode, isDemandSmoothMode } = useSelector(
+    (state: RootState) => state.appointment
+  );
   const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
 
@@ -67,6 +69,11 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
   }, [customerLoadedData, selectedVehicle?.make, welcomeScreenView]);
 
   const onChangeSlot = () => {
+    if (isDemandSmoothMode) {
+      handleSetScreen('appointmentSelection');
+      return;
+    }
+
     const nextScreen: TScreen =
       isAdvisorAvailable && !advisor
         ? 'consultantSelection'
