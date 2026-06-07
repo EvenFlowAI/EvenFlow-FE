@@ -12,6 +12,7 @@ import {
   DealerRoutes,
   ServicesRoutes,
   CenterProfileRoutes,
+  AiAgentRoutes,
 } from './types';
 
 export const Routes = {
@@ -28,4 +29,5 @@ export const Routes = {
   Dealer: DealerRoutes,
   Services: ServicesRoutes,
   CenterProfile: CenterProfileRoutes,
+  AiAgent: AiAgentRoutes,
 };

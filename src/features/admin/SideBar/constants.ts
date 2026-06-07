@@ -56,9 +56,23 @@ export const SULinks: LinkTypeWithSub[] = [
 
 export const MainLinksWithSub: LinkTypeWithSub[] = [
   {
-    to: Routes.Admin.AiAgents,
+    to: Routes.AiAgent.Base,
     name: 'AI Agents (BETA)',
     roles: [Roles.DealerOwner],
+    subLinks: [
+      {
+        to: Routes.AiAgent.AiAgents,
+        name: 'Overview',
+        roles: [Roles.DealerOwner],
+        sub: true,
+      },
+      {
+        to: Routes.AiAgent.AlertDashboard,
+        name: 'Alert Dashboard',
+        roles: [Roles.DealerOwner],
+        sub: true,
+      },
+    ],
   },
 
   {
