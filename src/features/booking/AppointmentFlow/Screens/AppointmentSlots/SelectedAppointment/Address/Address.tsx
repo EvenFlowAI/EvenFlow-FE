@@ -8,12 +8,19 @@ import { ReactComponent as PencilIcon } from '../../../../../../../assets/img/pe
 import { useModal } from '../../../../../../../hooks/useModal/useModal';
 import EditAddressModal from '../../../../../EditAddressModal/EditAddressModal';
 import { ETransportationType } from '../../../../../../../store/reducers/transportationNeeds/types';
+import SwitchFlowModal from '../../../../../SwitchFlowModal/SwitchFlowModal';
 
 const Address = () => {
   const { serviceTypeOption, address, zipCode, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
+  const { firstScreenOptions } = useSelector(({ serviceTypes }: RootState) => serviceTypes);
   const { isOpen, onClose, onOpen } = useModal();
+  const {
+    isOpen: isSwitchFlowOpen,
+    onClose: onSwitchFlowClose,
+    onOpen: onSwitchFlowOpen,
+  } = useModal();
 
   const serviceType = useMemo(() => {
     if (serviceTypeOption) {
@@ -28,6 +35,13 @@ const Address = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
+
+  const selectedOption = firstScreenOptions.find(item => item.type === EServiceType.VisitCenter);
+
+  const openSwitchFlow = () => {
+    onClose();
+    onSwitchFlowOpen();
+  };
 
   return serviceType !== EServiceType.VisitCenter && address ? (
     <div className="service-list">
@@ -60,7 +74,13 @@ const Address = () => {
         {`${typeof address === 'string' ? address : address?.label}` || ''}
         {zipCode ? `, ${zipCode}` : ''}
       </div>
-      <EditAddressModal open={isOpen} onClose={onClose} />
+      <EditAddressModal open={isOpen} onClose={onClose} openSwitchFlow={openSwitchFlow} />
+      <SwitchFlowModal
+        open={isSwitchFlowOpen}
+        onClose={onSwitchFlowClose}
+        selectedOption={selectedOption || serviceTypeOption}
+        onNext={onSwitchFlowClose}
+      />
     </div>
   ) : null;
 };
