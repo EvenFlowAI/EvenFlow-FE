@@ -42,7 +42,6 @@ import { useException } from '../../../hooks/useException/useException';
 import AncillaryPriceModal from './AncillaryPriceModal/AncillaryPriceModal';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
-import UnavailableServiceModal from './UnavailableServiceModal/UnavailableServiceModal';
 import {
   selectAppointment,
   selectServiceValetAppointment,
@@ -50,6 +49,8 @@ import {
 import { decodeSCID } from '../../../utils/utils';
 import { useParams } from 'react-router-dom';
 import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
+import UnavailableServiceModal from '../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal';
+import { setUnavailableServiceOpen } from '../../../store/reducers/modals/actions';
 
 type TProps = DialogProps & {
   selectedOption: IFirstScreenOption | null;
@@ -72,6 +73,8 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   const [timingType, setTimingType] = useState<EAppointmentTimingType>(
     EAppointmentTimingType.FirstAvailable
   );
+  const { isUnavailableServiceOpen } = useSelector((state: RootState) => state.modals);
+
   const [zip, setZip] = useState<string | null>(null);
   const [userAddress, setUserAddress] = useState<any>(null);
   const [selectedTime, setSelectedTime] = useState<TParsableDate>(null);
@@ -88,11 +91,6 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     isOpen: isAncillaryPriceOpen,
     onOpen: onAncillaryPriceOpen,
     onClose: onAncillaryPriceClose,
-  } = useModal();
-  const {
-    isOpen: isUnavailableServiceOpen,
-    onOpen: onUnavailableServiceOpen,
-    onClose: onUnavailableServiceClose,
   } = useModal();
   const showError = useException();
 
@@ -226,7 +224,6 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     clearData();
     clearDate();
     onClose();
-    onUnavailableServiceClose();
     onAncillaryPriceClose();
   };
 
@@ -312,12 +309,14 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     [isUnavailableServiceOpen, onAncillaryPriceOpen]
   );
 
+  const onUnavailableOpen = () => dispatch(setUnavailableServiceOpen(true));
+
   const onServiceIsUnavailable = useCallback(() => {
     onAncillaryPriceClose();
     setPendingAncillaryPrice(null);
     setAddressValid(false);
-    onUnavailableServiceOpen();
-  }, [onAncillaryPriceClose, onUnavailableServiceOpen]);
+    onUnavailableOpen();
+  }, [onAncillaryPriceClose]);
 
   const loadAncillaryPrice = (zipCode: string | null, address: any) => {
     if (scProfile) {
@@ -350,7 +349,6 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     setUserAddress(null);
     setZip(null);
     setAddressValid(false);
-    onUnavailableServiceClose();
   };
 
   return (
@@ -471,11 +469,11 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
         onBack={onCancel}
       />
       <UnavailableServiceModal
-        onTryAnotherLocation={onTryAnotherLocation}
-        open={isUnavailableServiceOpen}
-        onClose={onTryAnotherLocation}
+        clearAnotherLocation={onTryAnotherLocation}
+        setFormChecked={() => {}}
+        onBackToServiceOption={() => {}}
+        onBackToSelectSlotsForVisitCenter={() => {}}
         onVisitCenter={onCancel}
-        serviceString={t('Pick Up / Drop Off')}
       />
     </BaseModal>
   );

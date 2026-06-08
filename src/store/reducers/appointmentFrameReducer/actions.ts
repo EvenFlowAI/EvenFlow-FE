@@ -658,7 +658,7 @@ export const loadAncillaryPriceByZip =
         dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
-        if (err.response?.data?.errorCode === 12) {
+        if (err.response?.data?.errorCode === 7) {
           onUnavailableOpen();
         } else {
           onError(err);
