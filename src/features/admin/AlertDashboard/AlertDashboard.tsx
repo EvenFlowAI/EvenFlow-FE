@@ -3,7 +3,6 @@ import Agent from '../Agent/Agent';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { getAuthenticationTokenForAdmin } from '../../../api/helper';
 import { useStyles } from '../../../pages/admin/ConfigurationAgent/styles';
-import { useException } from '../../../hooks/useException/useException';
 import { authService } from '../../../api/AuthService/AuthService';
 
 const ALERT_DASHBOARD_URL =
@@ -17,7 +16,6 @@ const AlertDashboard = () => {
   const { classes } = useStyles();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
-  const showError = useException();
 
   const sendDataToAgent = (token?: string) => {
     const iframe = iframeRef.current;
@@ -51,7 +49,6 @@ const AlertDashboard = () => {
             if (token) {
               console.log('Sending token to iframe.');
               sendDataToAgent(token);
-              showError('Sorry, your message wasn’t sent. Please send it again!');
             }
           })
           .catch(e => {
