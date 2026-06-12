@@ -206,13 +206,18 @@ const Triggers = ({
         <IconButton
           onClick={handleAddTrigger}
           className={classes.iconPlus}
-          disabled={triggers.length === 5 || disableAdd}
+          disabled={triggers.length === 5 || (isOutbondMode ? disableAdd : false)}
           size="large"
         >
-          <AddCircleOutline className={triggers.length === 5 || disableAdd ? 'isDisabled' : ''} />
+          <AddCircleOutline
+            className={
+              triggers.length === 5 || (isOutbondMode ? disableAdd : false) ? 'isDisabled' : ''
+            }
+          />
           <span
             className={clsx(classes.addCriteriaButton, {
-              [formClasses.disabledAddButtonText]: triggers.length === 5 || disableAdd,
+              [formClasses.disabledAddButtonText]:
+                triggers.length === 5 || (isOutbondMode ? disableAdd : false),
             })}
           >
             Add {isOutbondMode ? 'Contact' : 'Trigger'}

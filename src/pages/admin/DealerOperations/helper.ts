@@ -3,6 +3,7 @@
 import { CriteriaI, TriggerI } from './Customer/types';
 import React, { Dispatch, SetStateAction } from 'react';
 import { IGlobalModelYear, IRecallAffectedModel } from '../../../store/reducers/recall/types';
+import { RootState } from '../../../store/rootReducer';
 
 export function numberToOrdinalWord(num: number): string {
   switch (num) {
@@ -303,6 +304,18 @@ export const mapModelIdsToGlobalModels = (
   const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
   mapped.forEach(item => {
     uniqueByModelAndYear.set(`${item.globalVehicleModelId}-${item.year}`, item);
+  });
+
+  return Array.from(uniqueByModelAndYear.values());
+};
+
+export const mapAllAffectedModelsToSelectedKeys = (
+  models: RootState['recalls']['affectedModels']
+) => {
+  const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
+
+  models.forEach(({ globalVehicleModelId, year }) => {
+    uniqueByModelAndYear.set(`${globalVehicleModelId}-${year}`, { globalVehicleModelId, year });
   });
 
   return Array.from(uniqueByModelAndYear.values());

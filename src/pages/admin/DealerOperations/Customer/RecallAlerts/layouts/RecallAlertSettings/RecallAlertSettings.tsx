@@ -32,6 +32,7 @@ import {
   EventRulesFilterTypeE,
 } from '../../../../../../../store/reducers/dealerOperations/actions';
 import {
+  mapAllAffectedModelsToSelectedKeys,
   mapModelIdsToGlobalModels,
   toEnumLabel,
   TSelectedModelKey,
@@ -42,6 +43,7 @@ import {
 import Triggers from '../../../Configuration/Forms/Triggers';
 import { useRecallAlertSettingsStyles } from './styles';
 import AffectedModels from './AffectedModels';
+import { TCallback } from '../../../../../../../types/types';
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert, affectedModels } = useSelector((state: RootState) => state.recalls);
@@ -98,6 +100,28 @@ const RecallAlertSettings: React.FC = () => {
   }, [affectedModels, selectedRecallAlert, isEditTable]);
 
   useEffect(() => {
+    if (!isEditTable || !updatedRecallAlert?.recallCampaignId || !affectedModels.length) {
+      return;
+    }
+
+    const isKeyPresentInAffectedModels = ({ globalVehicleModelId, year }: TSelectedModelKey) =>
+      affectedModels.some(
+        model => model.globalVehicleModelId === globalVehicleModelId && model.year === year
+      );
+
+    const hasSelectionForCurrentCampaign = selectedModelKeys.some(isKeyPresentInAffectedModels);
+    const hasOutdatedSelection = selectedModelKeys.some(
+      selectedModel => !isKeyPresentInAffectedModels(selectedModel)
+    );
+
+    if (!hasOutdatedSelection && hasSelectionForCurrentCampaign) {
+      return;
+    }
+
+    setSelectedModelKeys(mapAllAffectedModelsToSelectedKeys(affectedModels));
+  }, [affectedModels, isEditTable, selectedModelKeys, updatedRecallAlert?.recallCampaignId]);
+
+  useEffect(() => {
     if (!selectedSC) return;
     if (updatedRecallAlert?.recallCampaignId) {
       setIsLoading(true);
@@ -141,7 +165,7 @@ const RecallAlertSettings: React.FC = () => {
     setTriggerDateErrors({});
   };
 
-  const saveRecallAlert = () => {
+  const saveRecallAlert = (shouldHandleFile?: boolean) => {
     if (!updatedRecallAlert || !selectedSC) return;
     let haveErrors = false;
 
@@ -179,30 +203,48 @@ const RecallAlertSettings: React.FC = () => {
             listType: updatedRecallAlert.listType,
             filterRules: criterias,
             triggers: triggersWithPause,
-            globalModels: selectedModelKeys,
+            globalModels:
+              updatedRecallAlert.listType === RecallListType.UPLOAD_CSV ? null : selectedModelKeys,
           },
           () => {
             setIsEditTable(false);
             setFile(null);
             setIsLoading(false);
           },
-          () => {}
+          shouldHandleFile
+            ? (callback: TCallback) => {
+                if (shouldHandleFile) handleFile(callback);
+              }
+            : undefined,
+          (error: string) => {
+            showError(error);
+            setIsEditTable(false);
+            setFile(null);
+            setIsLoading(false);
+          }
         )
       );
     }
   };
 
+  const handleFile = (callback: TCallback) => {
+    if (!updatedRecallAlert || !selectedSC || !file) return;
+    dispatch(
+      uploadCSV(updatedRecallAlert.id, file, callback, e => {
+        showError(e);
+        setIsLoading(false);
+      })
+    );
+  };
+
   const validateChangesBeforeSave = () => {
     if (!updatedRecallAlert || !selectedSC) return;
+    setIsLoading(true);
     if (updatedRecallAlert.listType === RecallListType.UPLOAD_CSV) {
       if (file) {
-        dispatch(
-          uploadCSV(updatedRecallAlert.id, file, saveRecallAlert, e => {
-            showError(e);
-          })
-        );
+        saveRecallAlert(true);
       } else {
-        showError('Please select a CSV file.');
+        saveRecallAlert();
       }
     } else {
       saveRecallAlert();
@@ -265,11 +307,18 @@ const RecallAlertSettings: React.FC = () => {
                 file={file}
               />
               {updatedRecallAlert?.recallCampaignId ? (
-                <AffectedModels
-                  isEditTable={isEditTable}
-                  setSelectedModelKeys={setSelectedModelKeys}
-                  selectedModelKeys={selectedModelKeys}
-                />
+                <div className={recallAlertSettingsClasses.affectedModelsWrapper}>
+                  <AffectedModels
+                    isEditTable={isEditTable}
+                    setSelectedModelKeys={setSelectedModelKeys}
+                    selectedModelKeys={selectedModelKeys}
+                  />
+                  {updatedRecallAlert.listType === RecallListType.UPLOAD_CSV && (
+                    <div className={recallAlertSettingsClasses.uploadCsvHintText}>
+                      Model selection does not affect VIN processing when using CSV upload.
+                    </div>
+                  )}
+                </div>
               ) : null}
               <StatisticData updatedRecallAlert={updatedRecallAlert} />
               <hr className={recallAlertSettingsClasses.divider} />

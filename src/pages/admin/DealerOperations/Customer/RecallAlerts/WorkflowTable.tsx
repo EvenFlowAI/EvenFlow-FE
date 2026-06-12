@@ -270,11 +270,20 @@ const WorkflowTable: React.FC<
         count={recallAlertsCount}
         hidePagination={recallAlertsCount < 11}
         isLoading={isRecallAlertsTableLoading}
+        customPaginationData
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
-        <MenuItem onClick={askRemove}>Remove</MenuItem>
+        <MenuItem
+          disabled={
+            currentItem?.status === RecallEventStatus.Running ||
+            currentItem?.status === RecallEventStatus.CheckRequested
+          }
+          onClick={askRemove}
+        >
+          Remove
+        </MenuItem>
       </Menu>
     </div>
   );

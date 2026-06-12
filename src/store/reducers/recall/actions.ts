@@ -398,10 +398,11 @@ export const updateRecallAlert =
         isCriteria?: boolean;
       }[];
       triggers: TriggerI[];
-      globalModels: IGlobalModelYear[];
+      globalModels: IGlobalModelYear[] | null;
     },
     onSuccess: () => void,
-    onError?: () => void
+    handleUploadFile?: (callback: TCallback) => void,
+    onError?: (error: string) => void
   ): AppThunk =>
   async dispatch => {
     const filterRules = data.filterRules?.map(el => {
@@ -418,10 +419,23 @@ export const updateRecallAlert =
       data: { ...data, filterRules },
     })
       .then(() => {
-        dispatch(getRecallEvents(data.serviceCenterId, 'workflow', () => {}, onSuccess));
+        if (handleUploadFile) {
+          handleUploadFile(() => {
+            dispatch(getRecallEvents(data.serviceCenterId, 'workflow', () => {}, onSuccess));
+          });
+        } else {
+          console.log('test');
+          dispatch(getRecallEvents(data.serviceCenterId, 'workflow', () => {}, onSuccess));
+        }
       })
       .catch(e => {
-        if (onError) onError();
+        console.log(e?.response);
+        const backendMessage =
+          e?.response?.data?.error?.message ||
+          e.message ||
+          'Something went wrong. Please try again later.';
+
+        if (onError) onError(backendMessage);
         console.log('Update Recall Alert error', e);
       });
   };
@@ -433,7 +447,7 @@ export const uploadCSV =
     const fd = new FormData();
     fd.append('file', file, file.name);
     console.log(fd);
-    Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
+    Api.call(Api.endpoints.Recalls.UploadCSV, {
       urlParams: { id },
       data: fd,
     })
@@ -441,7 +455,8 @@ export const uploadCSV =
         onSuccess();
       })
       .catch(err => {
-        const backendMessage = err?.response?.data?.title || err.message || 'Unknown error';
+        const backendMessage =
+          err?.response?.data?.error?.message || err.message || 'Unknown error';
         if (onError) onError(backendMessage);
         console.log('Update Recall Alert error', err);
       });
@@ -513,13 +528,14 @@ export const checkVins =
   async () => {
     Api.call(Api.endpoints.Recalls.RecallTrigger, {
       urlParams: { id },
+      data: {},
     })
       .then(() => {
         onSuccess();
       })
       .catch(e => {
-        if (onError) onError('');
-        console.log('checkVins error', e);
+        const backendMessage = e?.response?.data?.message || e.message || 'Unknown error';
+        if (onError) onError(backendMessage);
       });
   };
 

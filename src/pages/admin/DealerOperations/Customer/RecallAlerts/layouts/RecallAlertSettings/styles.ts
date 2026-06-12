@@ -19,9 +19,18 @@ export const useRecallAlertSettingsStyles = makeStyles()(() => ({
     marginRight: '25px',
     border: '1px solid #DADADA',
     borderRadius: '4px',
-    marginBottom: '24px',
+    marginBottom: 0,
     maxHeight: '320px',
     overflow: 'hidden',
+  },
+  affectedModelsWrapper: {
+    marginBottom: '24px',
+  },
+  uploadCsvHintText: {
+    marginTop: '4px',
+    fontSize: '14px',
+    fontWeight: 300,
+    color: '#000000',
   },
   affectedModelsHeader: {
     padding: '16px',
@@ -45,12 +54,12 @@ export const useRecallAlertSettingsStyles = makeStyles()(() => ({
   },
   emptyAffectedModels: {
     padding: '12px 16px',
-    color: '#6B6F7B',
+    color: '#252733',
   },
   makeRow: {
     padding: '9px 16px',
     fontSize: '14px',
-    color: '#52586B',
+    color: '#252733',
     background: '#F3F5FA',
     borderBottom: '1px solid #DADADA',
   },
@@ -66,6 +75,7 @@ export const useRecallAlertSettingsStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
+    color: '#252733',
     fontWeight: 600,
   },
   modelYearCell: {

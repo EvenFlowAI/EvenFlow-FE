@@ -54,6 +54,7 @@ interface IListMethodActionProps {
   inputRef: React.RefObject<HTMLInputElement>;
   handleFileChange: ChangeEventHandler<HTMLInputElement>;
   callRecallTrigger: () => void;
+  campaignRecallGroupBatchId?: number;
 }
 
 const ListMethodAction: React.FC<IListMethodActionProps> = ({
@@ -66,9 +67,11 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
   inputRef,
   handleFileChange,
   callRecallTrigger,
+  campaignRecallGroupBatchId,
 }) => {
   if (listType === RecallListType.VIN_CHECK_API) {
-    const isCheckVinsDisabled = !isEditTable || !hasSelectedModels || !hasAvailableCredits;
+    const isCheckVinsDisabled =
+      !isEditTable || !hasSelectedModels || !hasAvailableCredits || !campaignRecallGroupBatchId;
 
     const button = (
       <Button
@@ -174,10 +177,10 @@ const RecallForm = ({
     if (!selectedSC) return;
     dispatch(
       checkVins(
-        selectedSC.id,
+        updatedRecallAlert?.campaignRecallGroupBatchId,
         () => {},
-        () => {
-          showError('Something went wrong. Please try again later.');
+        (e: string) => {
+          showError(e);
         }
       )
     );
@@ -186,7 +189,7 @@ const RecallForm = ({
   return (
     <div>
       <div className={classes.recallFormSection}>
-        <div style={{ marginBottom: '16px' }} className={classes.recallFormRow}>
+        <div style={{ marginBottom: file ? '4px' : '16px' }} className={classes.recallFormRow}>
           <Autocomplete
             disabled={!isEditTable}
             className={classes.recallFormField}
@@ -212,6 +215,7 @@ const RecallForm = ({
             inputRef={ref}
             handleFileChange={handleFileChange}
             callRecallTrigger={callRecallTrigger}
+            campaignRecallGroupBatchId={updatedRecallAlert?.campaignRecallGroupBatchId}
           />
         </div>
         {updatedRecallAlert.listType === RecallListType.UPLOAD_CSV && file ? (

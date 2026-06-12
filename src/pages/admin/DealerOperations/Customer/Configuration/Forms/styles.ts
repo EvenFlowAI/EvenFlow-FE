@@ -29,6 +29,7 @@ export const useFormStyles = makeStyles()(() => ({
     padding: '8px 16px',
     border: '1px solid #DADADA',
     marginBottom: '16px',
+    marginTop: '12px',
     display: 'flex',
     gap: '12px',
     flexDirection: 'column',

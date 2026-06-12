@@ -20,6 +20,7 @@ import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import { Table } from '../../../../../components/tables/Table/Table';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
+import { RecallEventStatus } from '../types';
 
 type TRecallTableProps = {
   currentItem: IRecallAlert | null;
@@ -148,7 +149,6 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     {
       header: 'Actual Recipients',
       val: el => (el.actualRecipients >= 0 ? String(el.actualRecipients) : ''),
-      orderId: 'EstimatedRecipientsNumber',
     },
   ];
 
@@ -244,7 +244,15 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
-        <MenuItem onClick={askRemove}>Remove</MenuItem>
+        <MenuItem
+          disabled={
+            currentItem?.status === RecallEventStatus.Running ||
+            currentItem?.status === RecallEventStatus.CheckRequested
+          }
+          onClick={askRemove}
+        >
+          Remove
+        </MenuItem>
       </Menu>
     </div>
   );
