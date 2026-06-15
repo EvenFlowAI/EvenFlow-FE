@@ -121,6 +121,7 @@ const useRecallAlertSettingsSave = ({
           : undefined,
         (error: string) => {
           showError(error);
+          setIsEditTable(false);
           setFile(null);
           setIsLoading(false);
         }
