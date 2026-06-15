@@ -7,7 +7,7 @@ import { authService } from '../../../api/AuthService/AuthService';
 
 const ALERT_DASHBOARD_URL =
   process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
-    ? 'https://development.d3uqsgv7ado4jb.amplifyapp.com/alert-dashboard/'
+    ? 'https://master.d3uqsgv7ado4jb.amplifyapp.com/alert-dashboard'
     : 'https://development.d3uqsgv7ado4jb.amplifyapp.com/alert-dashboard/';
 
 const AlertDashboard = () => {
