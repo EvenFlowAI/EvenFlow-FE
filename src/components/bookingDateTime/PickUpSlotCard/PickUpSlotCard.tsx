@@ -32,6 +32,8 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
   const { classes } = useStyles();
   const { t } = useTranslation();
 
+  console.log(dropOffSettings);
+
   useEffect(() => {
     if (timeSlot?.date) {
       if (timeSlot?.date) {
@@ -109,7 +111,7 @@ export const PickUpSlotCard: React.FC<React.PropsWithChildren<React.PropsWithChi
           </div>
         ) : (
           <div className={classes.dropOff} style={{ textAlign: 'justify', paddingBottom: 16 }}>
-            {dropOffSettings?.description}
+            {dropOffSettings?.dropOffTimeDescription}
           </div>
         )}
       </div>
