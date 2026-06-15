@@ -48,10 +48,7 @@ const useRecallAlertSettingsState = ({
 
     setCriteria(updatedFilterRules || []);
     setTriggers(selectedRecallAlert?.triggers || []);
-    setSelectedModelKeys(
-      mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
-    );
-  }, [affectedModels, selectedRecallAlert]);
+  }, [selectedRecallAlert]);
 
   useEffect(() => {
     setDefaultData();
@@ -100,6 +97,9 @@ const useRecallAlertSettingsState = ({
     setIsLoading(false);
     setIsEditTable(false);
     setDefaultData();
+    setSelectedModelKeys(
+      mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
+    );
     resetValidationErrors();
   };
 

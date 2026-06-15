@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import Checkbox from '../../../../../../../components/formControls/Checkbox/Checkbox';
 import { RootState } from '../../../../../../../store/rootReducer';
-import { IGlobalModelYear } from '../../../../../../../store/reducers/recall/types';
+import { IGlobalModelYear, IRecallAlert } from '../../../../../../../store/reducers/recall/types';
 import { useRecallAlertSettingsStyles } from './styles';
+import { RecallEventStatus } from '../../../types';
 
 type TGroupedModel = {
   globalVehicleModelId: number;
@@ -46,12 +47,14 @@ const formatYearRanges = (years: number[]): string => {
 };
 
 interface AffectedModelsProps {
+  updatedRecallAlert: IRecallAlert;
   selectedModelKeys: IGlobalModelYear[];
   setSelectedModelKeys: React.Dispatch<React.SetStateAction<IGlobalModelYear[]>>;
   isEditTable: boolean;
 }
 
 const AffectedModels: React.FC<AffectedModelsProps> = ({
+  updatedRecallAlert,
   selectedModelKeys,
   setSelectedModelKeys,
   isEditTable,
@@ -229,7 +232,11 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
                         )
                       }
                       checked={isChecked}
-                      disabled={!isEditTable || (isChecked && selectedModelsCount === 1)}
+                      disabled={
+                        !isEditTable ||
+                        (isChecked && selectedModelsCount === 1) ||
+                        updatedRecallAlert.status === RecallEventStatus.Running
+                      }
                       onChange={() => toggleModel(modelKey, years)}
                     />
                     {model}

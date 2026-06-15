@@ -6,10 +6,12 @@ import { AddCircleOutline } from '@mui/icons-material';
 import { autocompleteRender } from '../../../../../../utils/autocompleteRenders';
 import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
 import { useStyles } from '../../../styles';
-import { CriteriaI } from '../../types';
+import { CriteriaI, RecallEventStatus } from '../../types';
 import { useFormStyles } from './styles';
+import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
 
 interface AudienceFormI {
+  updatedRecallAlert?: IRecallAlert | null;
   criterias: CriteriaI[];
   isOutbondMode?: boolean;
   isEditTable: boolean;
@@ -33,6 +35,7 @@ interface AudienceFormI {
 }
 
 const AudienceForm = ({
+  updatedRecallAlert,
   isOutbondMode,
   criterias,
   isEditTable,
@@ -53,6 +56,9 @@ const AudienceForm = ({
   };
 
   const handleRemoveCriteria = (index: number) => {
+    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
+
+    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
     if (isOutbondMode) {
       if (criterias.length > 1) {
         setCriteria(prev => prev.filter((criteria, i) => i !== index));
@@ -104,7 +110,9 @@ const AudienceForm = ({
             return (
               <div key={index} className={classes.criteriaFormWrapper}>
                 <Autocomplete
-                  disabled={!isEditTable}
+                  disabled={
+                    !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                  }
                   className={formClasses.criteriaTypeAutocomplete}
                   value={criteria.type}
                   disableClearable
@@ -128,7 +136,9 @@ const AudienceForm = ({
                 />
                 <Autocomplete
                   className={formClasses.criteriaOperatorAutocomplete}
-                  disabled={!isEditTable}
+                  disabled={
+                    !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                  }
                   value={criteria.operator}
                   options={['Less than', 'Equal', 'Greater than']}
                   disableClearable
@@ -144,7 +154,9 @@ const AudienceForm = ({
                 <div className={classes.criteriaValue}>
                   <TextField
                     fullWidth
-                    disabled={!isEditTable}
+                    disabled={
+                      !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                    }
                     type="number"
                     error={!Number.isInteger(Number(criteria.value))}
                     inputProps={{ min: 0 }}
@@ -173,7 +185,10 @@ const AudienceForm = ({
       {isEditTable ? (
         <IconButton
           onClick={handleAddCriteria}
-          disabled={isOutbondMode ? !!criterias.length : false}
+          disabled={
+            (isOutbondMode ? !!criterias.length : false) ||
+            updatedRecallAlert?.status === RecallEventStatus.Running
+          }
           className={classes.iconPlus}
           size="large"
         >

@@ -169,6 +169,7 @@ const RecallAlertSettings: React.FC = () => {
               {updatedRecallAlert?.recallCampaignId ? (
                 <div className={recallAlertSettingsClasses.affectedModelsWrapper}>
                   <AffectedModels
+                    updatedRecallAlert={updatedRecallAlert}
                     isEditTable={isEditTable}
                     setSelectedModelKeys={setSelectedModelKeys}
                     selectedModelKeys={selectedModelKeys}
@@ -191,11 +192,13 @@ const RecallAlertSettings: React.FC = () => {
                   setCriteriaOperatorErrors={setCriteriaOperatorErrors}
                   criteriaTypeErrors={criteriaTypeErrors}
                   setCriteriaTypeErrors={setCriteriaTypeErrors}
+                  updatedRecallAlert={updatedRecallAlert}
                 />
               </div>
             </div>
             <div className={recallAlertSettingsClasses.triggers}>
               <Triggers
+                updatedRecallAlert={updatedRecallAlert}
                 setTriggerDateErrors={setTriggerDateErrors}
                 triggerDateErrors={triggerDateErrors}
                 firstTriggerDateError={firstTriggerDateError}

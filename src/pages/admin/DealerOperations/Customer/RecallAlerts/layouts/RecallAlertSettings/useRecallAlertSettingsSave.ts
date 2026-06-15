@@ -95,7 +95,7 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
-    const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
+    const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: false }));
 
     dispatch(
       updateRecallAlert(
@@ -121,7 +121,6 @@ const useRecallAlertSettingsSave = ({
           : undefined,
         (error: string) => {
           showError(error);
-          setIsEditTable(false);
           setFile(null);
           setIsLoading(false);
         }

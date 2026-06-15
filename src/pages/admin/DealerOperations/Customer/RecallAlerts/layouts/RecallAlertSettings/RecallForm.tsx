@@ -12,6 +12,7 @@ import { useException } from '../../../../../../../hooks/useException/useExcepti
 import { useStyles } from '../../../styles';
 import { checkVins } from '../../../../../../../store/reducers/recall/actions';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
+import { RecallEventStatus } from '../../../types';
 
 interface RecallFormI {
   isEditTable: boolean;
@@ -191,7 +192,7 @@ const RecallForm = ({
       <div className={classes.recallFormSection}>
         <div style={{ marginBottom: file ? '4px' : '16px' }} className={classes.recallFormRow}>
           <Autocomplete
-            disabled={!isEditTable}
+            disabled={!isEditTable || updatedRecallAlert.status === RecallEventStatus.Running}
             className={classes.recallFormField}
             value={getListMethodValue(updatedRecallAlert.listType)}
             disableClearable
@@ -226,7 +227,7 @@ const RecallForm = ({
       </div>
       <div className={classes.recallFormRow}>
         <Autocomplete
-          disabled={!isEditTable}
+          disabled={!isEditTable || updatedRecallAlert.status === RecallEventStatus.Running}
           className={classes.recallFormField}
           value={
             allGlobalsRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId)

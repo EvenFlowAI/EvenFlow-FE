@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { numberToOrdinalWord } from '../../../helper';
 import { IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
-import { TriggerI } from '../../types';
+import { RecallEventStatus, TriggerI } from '../../types';
 import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
 import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
@@ -13,6 +13,7 @@ import { useStyles } from '../../../styles';
 import { useFormStyles } from './styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
+import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
 
 interface TriggersI {
   triggers: TriggerI[];
@@ -30,9 +31,60 @@ interface TriggersI {
   setFirstTriggerDateError: React.Dispatch<React.SetStateAction<boolean>>;
   disableAdd: boolean;
   isOutbondMode?: boolean;
+  updatedRecallAlert?: IRecallAlert | null;
 }
 
+interface IAddTriggerAction {
+  isEditTable: boolean;
+  triggersLength: number;
+  disableAdd: boolean;
+  isOutbondMode?: boolean;
+  updatedRecallAlert?: IRecallAlert | null;
+  onAddTrigger: () => void;
+  classes: ReturnType<typeof useStyles>['classes'];
+  formClasses: ReturnType<typeof useFormStyles>['classes'];
+}
+
+const AddTriggerAction: React.FC<IAddTriggerAction> = ({
+  isEditTable,
+  triggersLength,
+  disableAdd,
+  isOutbondMode,
+  updatedRecallAlert,
+  onAddTrigger,
+  classes,
+  formClasses,
+}) => {
+  if (!isEditTable) {
+    return null;
+  }
+
+  const isDisabledByLimit = triggersLength === 5;
+  const isDisabledByMode = isOutbondMode ? disableAdd : false;
+  const isDisabledByStatus = updatedRecallAlert?.status === RecallEventStatus.Running;
+  const isDisabled = isDisabledByLimit || isDisabledByMode || isDisabledByStatus;
+
+  return (
+    <IconButton
+      onClick={onAddTrigger}
+      className={classes.iconPlus}
+      disabled={isDisabled}
+      size="large"
+    >
+      <AddCircleOutline className={isDisabledByLimit || isDisabledByMode ? 'isDisabled' : ''} />
+      <span
+        className={clsx(classes.addCriteriaButton, {
+          [formClasses.disabledAddButtonText]: isDisabledByLimit || isDisabledByMode,
+        })}
+      >
+        Add {isOutbondMode ? 'Contact' : 'Trigger'}
+      </span>
+    </IconButton>
+  );
+};
+
 const Triggers = ({
+  updatedRecallAlert,
   triggers,
   triggerDateErrors,
   setTriggerDateErrors,
@@ -62,6 +114,8 @@ const Triggers = ({
   };
 
   const handleRemoveTrigger = (index: number) => {
+    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
+
     setFirstTriggerDateError(false);
     setTriggerDateErrors(prev => ({
       ...prev,
@@ -142,7 +196,9 @@ const Triggers = ({
                       <TextField
                         fullWidth
                         labelFitContent={true}
-                        disabled={!isEditTable}
+                        disabled={
+                          !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                        }
                         type="number"
                         inputProps={{ min: 0 }}
                         error={
@@ -166,7 +222,9 @@ const Triggers = ({
                         value={
                           trigger.scheduledTime ? dayjs(trigger.scheduledTime, 'HH:mm:ss') : null
                         }
-                        disabled={!isEditTable}
+                        disabled={
+                          !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                        }
                         onChange={e =>
                           handleTriggerChange(index, 'scheduledTime', dayjs(e).format('HH:mm:ss'))
                         }
@@ -202,28 +260,16 @@ const Triggers = ({
           })}
         </div>
       ) : null}
-      {isEditTable ? (
-        <IconButton
-          onClick={handleAddTrigger}
-          className={classes.iconPlus}
-          disabled={triggers.length === 5 || (isOutbondMode ? disableAdd : false)}
-          size="large"
-        >
-          <AddCircleOutline
-            className={
-              triggers.length === 5 || (isOutbondMode ? disableAdd : false) ? 'isDisabled' : ''
-            }
-          />
-          <span
-            className={clsx(classes.addCriteriaButton, {
-              [formClasses.disabledAddButtonText]:
-                triggers.length === 5 || (isOutbondMode ? disableAdd : false),
-            })}
-          >
-            Add {isOutbondMode ? 'Contact' : 'Trigger'}
-          </span>
-        </IconButton>
-      ) : null}
+      <AddTriggerAction
+        isEditTable={isEditTable}
+        triggersLength={triggers.length}
+        disableAdd={disableAdd}
+        isOutbondMode={isOutbondMode}
+        updatedRecallAlert={updatedRecallAlert}
+        onAddTrigger={handleAddTrigger}
+        classes={classes}
+        formClasses={formClasses}
+      />
     </>
   );
 };
