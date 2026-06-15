@@ -1,6 +1,4 @@
-/* eslint-disable max-lines */
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   dealerOperationsCustomer,
   dealerOperationsRoot,
@@ -11,8 +9,6 @@ import { RootState } from '../../../../../../../store/rootReducer';
 import {
   getAffectedModels,
   setSelectedRecallAlert,
-  updateRecallAlert,
-  uploadCSV,
 } from '../../../../../../../store/reducers/recall/actions';
 import { useStyles } from '../../../../styles';
 import { Button } from '@mui/material';
@@ -21,105 +17,65 @@ import { useModal } from '../../../../../../../hooks/useModal/useModal';
 import LeaveWithoutSaving from '../../../../../../../components/modals/admin/LeaveWithoutSaving/LeaveWithoutSaving';
 import { Loading } from '../../../../../../../components/wrappers/Loading/Loading';
 import RecallAlertAudience from './RecallAlertAudience';
-import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
+import { RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
-import { useException } from '../../../../../../../hooks/useException/useException';
 import StatisticData from './StatisticData';
 import AudienceForm from '../../../Configuration/Forms/AudienceForm';
-import { CriteriaI, TriggerI } from '../../../types';
-import {
-  ComparisonOperatorE,
-  EventRulesFilterTypeE,
-} from '../../../../../../../store/reducers/dealerOperations/actions';
-import {
-  mapAllAffectedModelsToSelectedKeys,
-  mapModelIdsToGlobalModels,
-  toEnumLabel,
-  TSelectedModelKey,
-  validateCriteriaOperator,
-  validateCriteriaType,
-  validateTriggers,
-} from '../../../../helper';
 import Triggers from '../../../Configuration/Forms/Triggers';
 import { useRecallAlertSettingsStyles } from './styles';
 import AffectedModels from './AffectedModels';
-import { TCallback } from '../../../../../../../types/types';
+import useRecallAlertSettingsState from './useRecallAlertSettingsState';
+import useRecallAlertSettingsSave from './useRecallAlertSettingsSave';
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert, affectedModels } = useSelector((state: RootState) => state.recalls);
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const { classes: recallAlertSettingsClasses } = useRecallAlertSettingsStyles();
-  const [isEditTable, setIsEditTable] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [updatedRecallAlert, setUpdatedRecallAlert] = React.useState<IRecallAlert | null>(null);
-  const [file, setFile] = useState<File | null>(null);
   const { selectedSC } = useSCs();
-  const showError = useException();
-  const [criterias, setCriteria] = useState<CriteriaI[]>([]);
-  const [triggers, setTriggers] = useState<TriggerI[]>([]);
-  const [criteriaOperatorErrors, setCriteriaOperatorErrors] = useState<{
-    [index: number]: boolean;
-  }>({});
-  const [criteriaTypeErrors, setCriteriaTypeErrors] = useState<{ [index: number]: boolean }>({});
-  const [triggerDateErrors, setTriggerDateErrors] = useState<{ [index: number]: boolean }>({});
-  const [firstTriggerDateError, setFirstTriggerDateError] = useState<boolean>(false);
-  const [selectedModelKeys, setSelectedModelKeys] = useState<TSelectedModelKey[]>([]);
+  const {
+    isEditTable,
+    setIsEditTable,
+    isLoading,
+    setIsLoading,
+    updatedRecallAlert,
+    setUpdatedRecallAlert,
+    file,
+    setFile,
+    criterias,
+    setCriteria,
+    triggers,
+    setTriggers,
+    criteriaOperatorErrors,
+    setCriteriaOperatorErrors,
+    criteriaTypeErrors,
+    setCriteriaTypeErrors,
+    triggerDateErrors,
+    setTriggerDateErrors,
+    firstTriggerDateError,
+    setFirstTriggerDateError,
+    selectedModelKeys,
+    setSelectedModelKeys,
+    handleCancelChanges,
+  } = useRecallAlertSettingsState({
+    selectedRecallAlert,
+    affectedModels,
+  });
 
-  const setDefaultData = () => {
-    setUpdatedRecallAlert(selectedRecallAlert);
-
-    const updatedFilterRules = selectedRecallAlert?.filterRules.map(rule => {
-      return {
-        ...rule,
-        value: rule.value ? rule.value : '',
-        type: toEnumLabel(rule.type, EventRulesFilterTypeE),
-        operator: toEnumLabel(rule.operator, ComparisonOperatorE),
-      };
-    });
-
-    setCriteria(updatedFilterRules || []);
-    setTriggers(selectedRecallAlert?.triggers || []);
-    setSelectedModelKeys(
-      mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
-    );
-  };
-
-  useEffect(() => {
-    setDefaultData();
-  }, [selectedRecallAlert]);
-
-  useEffect(() => {
-    if (isEditTable || !selectedRecallAlert?.globalModelIds?.length || !affectedModels.length) {
-      return;
-    }
-
-    setSelectedModelKeys(
-      mapModelIdsToGlobalModels(selectedRecallAlert.globalModelIds, affectedModels)
-    );
-  }, [affectedModels, selectedRecallAlert, isEditTable]);
-
-  useEffect(() => {
-    if (!isEditTable || !updatedRecallAlert?.recallCampaignId || !affectedModels.length) {
-      return;
-    }
-
-    const isKeyPresentInAffectedModels = ({ globalVehicleModelId, year }: TSelectedModelKey) =>
-      affectedModels.some(
-        model => model.globalVehicleModelId === globalVehicleModelId && model.year === year
-      );
-
-    const hasSelectionForCurrentCampaign = selectedModelKeys.some(isKeyPresentInAffectedModels);
-    const hasOutdatedSelection = selectedModelKeys.some(
-      selectedModel => !isKeyPresentInAffectedModels(selectedModel)
-    );
-
-    if (!hasOutdatedSelection && hasSelectionForCurrentCampaign) {
-      return;
-    }
-
-    setSelectedModelKeys(mapAllAffectedModelsToSelectedKeys(affectedModels));
-  }, [affectedModels, isEditTable, selectedModelKeys, updatedRecallAlert?.recallCampaignId]);
+  const { validateChangesBeforeSave } = useRecallAlertSettingsSave({
+    updatedRecallAlert,
+    criterias,
+    triggers,
+    selectedModelKeys,
+    file,
+    setIsLoading,
+    setIsEditTable,
+    setFile,
+    setCriteriaOperatorErrors,
+    setCriteriaTypeErrors,
+    setFirstTriggerDateError,
+    setTriggerDateErrors,
+  });
 
   useEffect(() => {
     if (!selectedSC) return;
@@ -154,102 +110,6 @@ const RecallAlertSettings: React.FC = () => {
     onClose: onCloseLeaveWithoutSavingModal,
     isOpen: isOpenLeaveWithoutSavingModal,
   } = useModal();
-
-  const handleCancelChanges = () => {
-    setIsLoading(false);
-    setIsEditTable(false);
-    setDefaultData();
-    setCriteriaTypeErrors({});
-    setCriteriaOperatorErrors({});
-    setFirstTriggerDateError(false);
-    setTriggerDateErrors({});
-  };
-
-  const saveRecallAlert = (shouldHandleFile?: boolean) => {
-    if (!updatedRecallAlert || !selectedSC) return;
-    let haveErrors = false;
-
-    const errorsCriteriaOperator = validateCriteriaOperator(criterias, setCriteriaOperatorErrors);
-    const errorsCriteriaType = validateCriteriaType(criterias, setCriteriaTypeErrors);
-    const triggersError = validateTriggers(
-      criterias,
-      triggers,
-      setFirstTriggerDateError,
-      showError,
-      setTriggerDateErrors
-    );
-
-    if (Object.keys(errorsCriteriaOperator).length) {
-      showError('The operator selection is required.');
-      haveErrors = true;
-    }
-
-    if (Object.keys(errorsCriteriaType).length) {
-      showError("The ‘Audience Criteria' selection is required.");
-      haveErrors = true;
-    }
-
-    if (triggersError) haveErrors = true;
-
-    if (!haveErrors) {
-      const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
-      setIsLoading(true);
-      dispatch(
-        updateRecallAlert(
-          {
-            serviceCenterId: selectedSC.id,
-            recallCampaignId: updatedRecallAlert.recallCampaignId,
-            id: updatedRecallAlert.id,
-            listType: updatedRecallAlert.listType,
-            filterRules: criterias,
-            triggers: triggersWithPause,
-            globalModels:
-              updatedRecallAlert.listType === RecallListType.UPLOAD_CSV ? null : selectedModelKeys,
-          },
-          () => {
-            setIsEditTable(false);
-            setFile(null);
-            setIsLoading(false);
-          },
-          shouldHandleFile
-            ? (callback: TCallback) => {
-                if (shouldHandleFile) handleFile(callback);
-              }
-            : undefined,
-          (error: string) => {
-            showError(error);
-            setIsEditTable(false);
-            setFile(null);
-            setIsLoading(false);
-          }
-        )
-      );
-    }
-  };
-
-  const handleFile = (callback: TCallback) => {
-    if (!updatedRecallAlert || !selectedSC || !file) return;
-    dispatch(
-      uploadCSV(updatedRecallAlert.id, file, callback, e => {
-        showError(e);
-        setIsLoading(false);
-      })
-    );
-  };
-
-  const validateChangesBeforeSave = () => {
-    if (!updatedRecallAlert || !selectedSC) return;
-    setIsLoading(true);
-    if (updatedRecallAlert.listType === RecallListType.UPLOAD_CSV) {
-      if (file) {
-        saveRecallAlert(true);
-      } else {
-        saveRecallAlert();
-      }
-    } else {
-      saveRecallAlert();
-    }
-  };
 
   if (!selectedRecallAlert) return null;
 
