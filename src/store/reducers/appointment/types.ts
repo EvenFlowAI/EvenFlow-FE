@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { IAddress, UpdatedAddress } from '../dealershipGroups/types';
 import { EDemandCategory, EPricingDisplayType } from '../pricingSettings/types';
 import { EOfferType, IOffer } from '../offers/types';
@@ -290,7 +292,7 @@ export interface IServiceValetAppointment {
 
 export interface IDropOffSettings {
   showDropOffTime: boolean;
-  description: string;
+  dropOffTimeDescription: string;
 }
 
 export interface ISVAppointmentResponse {
