@@ -35,3 +35,15 @@ export interface GlobalRecallComponent {
   safetyRisk: string;
   remedy: string;
 }
+
+export interface ServiceCenterCredit {
+  serviceCenterId: number;
+  recallCredits: number;
+  recallMonthlyUsageCredits: number;
+  availableCredits: number;
+  serviceCenterName?: string;
+  dealershipId?: number;
+  dealershipName?: string;
+  name?: string;
+  avatarPath?: string;
+}

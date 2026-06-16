@@ -50,6 +50,12 @@ export const SULinks: LinkTypeWithSub[] = [
         roles: [Roles.EvenFlowAdmin],
         sub: true,
       },
+      {
+        to: Routes.Admin.RecallCredits,
+        name: 'Recall Credits',
+        roles: [Roles.EvenFlowAdmin],
+        sub: true,
+      },
     ],
   },
 ];
