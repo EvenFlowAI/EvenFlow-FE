@@ -8,8 +8,8 @@ import { useException } from '../../../hooks/useException/useException';
 
 const CONFIGURATION_AGENT_URL =
   process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
-    ? 'https://main.d3v088l5chpnmg.amplifyapp.com/'
-    : 'https://develop.d3v088l5chpnmg.amplifyapp.com/';
+    ? 'https://change-api.d1efez2luv2lh1.amplifyapp.com/'
+    : 'https://change-api.d1efez2luv2lh1.amplifyapp.com/';
 
 const ConfigurationAgent = () => {
   const { selectedSC } = useSCs();
