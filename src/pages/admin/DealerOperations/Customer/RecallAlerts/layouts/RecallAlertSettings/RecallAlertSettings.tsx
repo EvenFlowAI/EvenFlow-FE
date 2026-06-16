@@ -81,25 +81,12 @@ const RecallAlertSettings: React.FC = () => {
     if (!selectedSC) return;
     if (updatedRecallAlert?.recallCampaignId) {
       setIsLoading(true);
-      // TODO: replace hardcoded values with real ones after BE changes for affected models will be done
-      // dispatch(
-      //   getAffectedModels(
-      //     updatedRecallAlert?.recallCampaignId,
-      //     selectedSC.id,
-      //     () => {},
-      //     () => {}
-      //   )
-      // );
       dispatch(
         getAffectedModels(
-          11634,
-          123,
-          () => {
-            setIsLoading(false);
-          },
-          () => {
-            setIsLoading(false);
-          }
+          updatedRecallAlert?.recallCampaignId,
+          selectedSC.id,
+          () => {},
+          () => {}
         )
       );
     }

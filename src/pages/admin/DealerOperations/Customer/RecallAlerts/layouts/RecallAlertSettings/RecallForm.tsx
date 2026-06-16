@@ -157,7 +157,6 @@ const RecallForm = ({
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = e => {
-          console.log(file);
           if (!allowedFileTypes.includes(file.type)) {
             return showError('Please upload only CSV file');
           }

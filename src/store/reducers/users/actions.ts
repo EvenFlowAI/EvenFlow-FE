@@ -53,10 +53,8 @@ export const saveEmployeeAvatar =
   (avatar: File, id: string, onError?: TArgCallback<any>, onSuccess?: TCallback): AppThunk =>
     async dispatch => {
       try {
-        console.log(avatar);
         const fd = new FormData();
         fd.append('file', avatar, avatar.name);
-        console.log(fd);
         await Api.call(Api.endpoints.Users.Avatar, { urlParams: { id }, data: fd });
         dispatch(getCurrentUser());
         if (onSuccess) {
