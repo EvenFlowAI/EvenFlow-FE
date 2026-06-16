@@ -6,9 +6,13 @@ import { useStyles } from '../../../pages/admin/ConfigurationAgent/styles';
 import { authService } from '../../../api/AuthService/AuthService';
 
 const ALERT_DASHBOARD_URL =
-  process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
-    ? 'https://master.d3uqsgv7ado4jb.amplifyapp.com/alert-dashboard'
-    : 'https://development.d3uqsgv7ado4jb.amplifyapp.com/alert-dashboard/';
+  process.env.REACT_APP_ENV === 'production'
+    ? 'https://master.d3uqsgv7ado4jb.amplifyapp.com/'
+    : process.env.REACT_APP_ENV === 'PreProd'
+      ? 'https://preprod.d3uqsgv7ado4jb.amplifyapp.com/'
+      : process.env.REACT_APP_ENV === 'uat'
+        ? 'https://uat.d3uqsgv7ado4jb.amplifyapp.com/'
+        : 'https://qa.d3uqsgv7ado4jb.amplifyapp.com/';
 
 const AlertDashboard = () => {
   const { selectedSC } = useSCs();
