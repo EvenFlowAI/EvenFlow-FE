@@ -7,9 +7,13 @@ import { authService } from '../../../api/AuthService/AuthService';
 import { useException } from '../../../hooks/useException/useException';
 
 const CONFIGURATION_AGENT_URL =
-  process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
+  process.env.REACT_APP_ENV === 'production'
     ? 'https://change-api.d1efez2luv2lh1.amplifyapp.com/'
-    : 'https://change-api.d1efez2luv2lh1.amplifyapp.com/';
+    : process.env.REACT_APP_ENV === 'PreProd'
+      ? 'https://preprod.d1efez2luv2lh1.amplifyapp.com/'
+      : process.env.REACT_APP_ENV === 'uat'
+        ? 'https://uat.d1efez2luv2lh1.amplifyapp.com/'
+        : 'https://qa.d1efez2luv2lh1.amplifyapp.com/';
 
 const ConfigurationAgent = () => {
   const { selectedSC } = useSCs();
