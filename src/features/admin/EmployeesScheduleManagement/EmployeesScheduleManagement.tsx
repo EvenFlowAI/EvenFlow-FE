@@ -19,6 +19,7 @@ import { TitleContainer } from '../../../components/wrappers/TitleContainer/Titl
 import { EDay } from '../../../store/reducers/demandSegments/types';
 import { loadWorkingDays } from '../../../store/reducers/serviceCenters/actions';
 import { loadAllHolidays } from '../../../store/reducers/holidays/actions';
+import { loadPodsSummary } from '../../../store/reducers/pods/actions';
 
 const EmployeesScheduleManagement = () => {
   const { calendarData, employeesLoading } = useSelector(
@@ -51,6 +52,7 @@ const EmployeesScheduleManagement = () => {
     if (selectedSC) {
       dispatch(loadWorkingDays(selectedSC.id));
       dispatch(loadAllHolidays(selectedSC.id));
+      dispatch(loadPodsSummary(selectedSC.id, true));
     }
   }, [selectedSC]);
 

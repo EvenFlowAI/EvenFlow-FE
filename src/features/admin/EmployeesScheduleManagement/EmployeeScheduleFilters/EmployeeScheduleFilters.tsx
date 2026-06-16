@@ -15,17 +15,16 @@ type TProps = {
 const EmployeeScheduleFilters: React.FC<TProps> = ({ isLoading, filters, setFilters }) => {
   const { scheduleByDate } = useSelector((state: RootState) => state.employeesSchedule);
   const [search, setSearch] = useState<string>('');
+  const { summary } = useSelector((state: RootState) => state.pods);
 
   const serviceBooksList = useMemo(() => {
-    const list = scheduleByDate.flatMap(el => el.serviceBooks);
-
     const unique = new Map();
 
-    list.forEach(book => {
-      const key = book.serviceBookId ?? book.serviceBook;
+    summary.forEach(book => {
+      const key = book.serviceBookId ?? book.serviceBookName;
       if (!unique.has(key)) {
         unique.set(key, {
-          label: book.serviceBook,
+          label: book.serviceBookName,
           value: key,
         });
       }
