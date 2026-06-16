@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { IAddress, UpdatedAddress } from '../dealershipGroups/types';
 import { EDemandCategory, EPricingDisplayType } from '../pricingSettings/types';
 import { EOfferType, IOffer } from '../offers/types';
@@ -234,6 +236,8 @@ export type TAppointmentState = {
   slotsTransportationId: number | null;
   slotsSearchedDate: ParsableDate;
   isCloneMode: boolean;
+  isDemandSmoothMode: boolean;
+  demandAppointmentId: string;
   serviceValetCapacity: ServiceValetCapacity | null;
 };
 
@@ -288,7 +292,7 @@ export interface IServiceValetAppointment {
 
 export interface IDropOffSettings {
   showDropOffTime: boolean;
-  description: string;
+  dropOffTimeDescription: string;
 }
 
 export interface ISVAppointmentResponse {

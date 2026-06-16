@@ -21,6 +21,7 @@ type TUnavailableServiceProps = {
   onBackToServiceOption: TCallback;
   onVisitCenter: TCallback;
   onBackToSelectSlotsForVisitCenter: TCallback;
+  clearAnotherLocation?: () => void;
 };
 
 const UnavailableServiceModal: React.FC<
@@ -30,6 +31,7 @@ const UnavailableServiceModal: React.FC<
   onBackToSelectSlotsForVisitCenter,
   onBackToServiceOption,
   onVisitCenter,
+  clearAnotherLocation,
 }) => {
   const { serviceTypeOption, appointmentByKey, serviceOptionChangedFromSlotPage, transportation } =
     useSelector((state: RootState) => state.appointmentFrame);
@@ -69,6 +71,11 @@ const UnavailableServiceModal: React.FC<
   const onClose = () => dispatch(setUnavailableServiceOpen(false));
 
   const clearLocation = () => {
+    if (clearAnotherLocation) {
+      clearAnotherLocation();
+      onClose();
+      return;
+    }
     setFormChecked(false);
     dispatch(setAddress(null));
     dispatch(setZipCode(''));
@@ -109,20 +116,28 @@ const UnavailableServiceModal: React.FC<
     >
       <DialogTitle onClose={onClose} />
       <DialogContent>
-        <div className={classes.info}>
+        <div style={{ marginBottom: 0 }} className={classes.info}>
           {serviceOptionChangedFromSlotPage
-            ? `${t('We are sorry but we do not offer')} ${serviceString} ${t('to your area')}`
-            : `${t('We are sorry but we do not offer')} ${serviceString} ${t('to your area')}. ${t('Would you like to book an appointment to visit our service center?')}`}
+            ? `${t('We’re sorry but we do not offer')} ${serviceString} ${t('for your area')}`
+            : `${t('We’re sorry but we do not offer')} ${serviceString} ${t('for your area')}. ${t('Would you like to try another address or visit our service center?')}`}
         </div>
       </DialogContent>
-      <div className={classes.buttonWrapper}>
-        <Button onClick={onVisitCenterClick} color={'primary'} variant="contained">
-          {backLabel}
+      <div style={{ gap: '14px' }} className={classes.buttonWrapper}>
+        <Button
+          style={{ width: '166px' }}
+          onClick={clearLocation}
+          color={'primary'}
+          variant="outlined"
+        >
+          {'Another Address'}
         </Button>
-      </div>
-      <div className={classes.buttonWrapper}>
-        <Button className={classes.linkButton} onClick={clearLocation} variant="text">
-          {t('Try another location')}
+        <Button
+          style={{ width: '166px' }}
+          onClick={onVisitCenterClick}
+          color={'primary'}
+          variant="contained"
+        >
+          {backLabel}
         </Button>
       </div>
     </Dialog>

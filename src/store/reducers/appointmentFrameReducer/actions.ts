@@ -82,6 +82,7 @@ import {
   setAppointmentWasChanged,
   setCustomerLoadedData,
   setIsCloneMode,
+  setIsDemandSmoothMode,
   setSlotsSearchDate,
   setSlotsServiceTypeOptionId,
   setSlotsTransportationId,
@@ -658,7 +659,7 @@ export const loadAncillaryPriceByZip =
         dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
-        if (err.response?.data?.errorCode === 12) {
+        if (err.response?.data?.errorCode === 7) {
           onUnavailableOpen();
         } else {
           onError(err);
@@ -1249,6 +1250,7 @@ export const createOrUpdateAppointment =
       onNext();
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
       dispatch(setIsCloneMode(false));
+      dispatch(setIsDemandSmoothMode(false));
     } catch (e) {
       onError(e);
     } finally {
@@ -1691,14 +1693,18 @@ export const handleAppointmentUpdate =
   ): AppThunk =>
   (dispatch, getState) => {
     const { firstScreenOptions } = getState().serviceTypes;
-    const key = car.appointmentHashKeys[car.appointmentHashKeys.length - 1];
+    const { isDemandSmoothMode, demandAppointmentId } = getState().appointment;
+    const key = isDemandSmoothMode
+      ? demandAppointmentId
+      : car.appointmentHashKeys[car.appointmentHashKeys.length - 1];
+
+    const requestFunc = isDemandSmoothMode ? API.appointment.getBySource : API.appointment.getByKey;
 
     setLoadingCar(true);
     setServiceCategoryPage(EServiceCategoryPage.Page1);
     if (key) {
       dispatch(setAppointmentSaving(true));
-      API.appointment
-        .getByKey(key)
+      requestFunc(key)
         .then(({ data }) => {
           if (data) {
             if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''));

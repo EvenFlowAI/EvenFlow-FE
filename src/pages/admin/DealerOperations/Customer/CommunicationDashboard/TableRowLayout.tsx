@@ -16,7 +16,7 @@ import { Switch } from '@mui/material';
 import { RootState } from '../../../../../store/rootReducer';
 import { DashboardItemI } from '../../../../../store/reducers/dealerOperations/types';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
-import { ReactComponent as CheckIcon } from '../../../../../assets/img/checkboxSmall.svg';
+import { ReactComponent as CheckIcon } from '../../../../../assets/img/checkboxSmallGreen.svg';
 import { ReactComponent as RedCross } from '../../../../../assets/img/redCross.svg';
 import { ReactComponent as GreyCross } from '../../../../../assets/img/greyCross.svg';
 import { useStyles } from './styles';
@@ -111,7 +111,7 @@ const TableRowLayout = ({
             fontWeight: '700',
           }}
           subText={configured ? 'Configured' : 'Not Configured'}
-          color={configured ? '#7898FF' : '#C71062'}
+          color={configured ? '#5FA077' : '#C71062'}
           icon={configured ? <CheckIcon /> : <RedCross />}
           onClick={() => dispatch(setEventIdForRulesConfiguration(event.id))}
         />
@@ -129,7 +129,7 @@ const TableRowLayout = ({
         <div className={classes.textRow}>
           <LabelLink
             subText={isConfigured ? 'Configured' : 'Not Configured'}
-            color={isConfigured ? '#7898FF' : '#C71062'}
+            color={isConfigured ? '#5FA077' : '#C71062'}
             icon={isConfigured ? <CheckIcon /> : <RedCross />}
             onClick={() => handleClickTextConfiguration(event)}
           />

@@ -68,9 +68,9 @@ const DealerOperationsCustomer = () => {
   const [isLoadingConfigurationText, setIsLoadingConfigurationText] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
-
     if (selectedSC?.id) {
+      setIsLoading(true);
+
       dispatch(loadDashboardItems(selectedSC.id, () => setIsLoading(false)));
 
       // load text integration settings to check if textIntegration is configured

@@ -1,6 +1,6 @@
 # EvenFlow-FE Copilot Instructions
 
-**Last Updated:** 2026-04-03  
+**Last Updated:** 2026-06-16  
 **AI Assistant Target:** GitHub Copilot and other AI coding assistants  
 **Purpose:** Help assistants generate features that match EvenFlow-FE architecture and conventions.
 

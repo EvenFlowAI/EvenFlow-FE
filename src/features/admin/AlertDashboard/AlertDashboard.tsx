@@ -1,34 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getAuthenticationTokenForAdmin } from '../../../api/helper';
+import Agent from '../Agent/Agent';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
-import Agent from '../../../features/admin/Agent/Agent';
-import { useStyles } from './styles';
+import { getAuthenticationTokenForAdmin } from '../../../api/helper';
+import { useStyles } from '../../../pages/admin/ConfigurationAgent/styles';
 import { authService } from '../../../api/AuthService/AuthService';
-import { useException } from '../../../hooks/useException/useException';
 
-const CONFIGURATION_AGENT_URL =
+const ALERT_DASHBOARD_URL =
   process.env.REACT_APP_ENV === 'production'
-    ? 'https://change-api.d1efez2luv2lh1.amplifyapp.com/'
+    ? 'https://master.d3uqsgv7ado4jb.amplifyapp.com/'
     : process.env.REACT_APP_ENV === 'PreProd'
-      ? 'https://preprod.d1efez2luv2lh1.amplifyapp.com/'
+      ? 'https://preprod.d3uqsgv7ado4jb.amplifyapp.com/'
       : process.env.REACT_APP_ENV === 'uat'
-        ? 'https://uat.d1efez2luv2lh1.amplifyapp.com/'
-        : 'https://qa.d1efez2luv2lh1.amplifyapp.com/';
+        ? 'https://uat.d3uqsgv7ado4jb.amplifyapp.com/'
+        : 'https://qa.d3uqsgv7ado4jb.amplifyapp.com/';
 
-const ConfigurationAgent = () => {
+const AlertDashboard = () => {
   const { selectedSC } = useSCs();
   const accessToken = getAuthenticationTokenForAdmin();
   const { classes } = useStyles();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
-  const showError = useException();
 
   const sendDataToAgent = (token?: string) => {
     const iframe = iframeRef.current;
     if (selectedSC) {
       iframe?.contentWindow?.postMessage(
         { scID: selectedSC.id, accessToken: token || accessToken },
-        CONFIGURATION_AGENT_URL
+        ALERT_DASHBOARD_URL
       );
       console.log(`Message sent to iframe successfully with service center ID and access token.`);
     }
@@ -43,7 +41,7 @@ const ConfigurationAgent = () => {
     };
 
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== new URL(CONFIGURATION_AGENT_URL).origin) return;
+      if (event.origin !== new URL(ALERT_DASHBOARD_URL).origin) return;
 
       if (event.data.shouldRefreshToken === true) {
         console.log('Refreshing...');
@@ -55,7 +53,6 @@ const ConfigurationAgent = () => {
             if (token) {
               console.log('Sending token to iframe.');
               sendDataToAgent(token);
-              showError('Sorry, your message wasn’t sent. Please send it again!');
             }
           })
           .catch(e => {
@@ -82,12 +79,12 @@ const ConfigurationAgent = () => {
 
   return (
     <>
-      <Agent agentName={'Configuration Agent'} />
+      <Agent agentName={'Alert Dashboard'} />
       <div className={classes.wrapper}>
         <iframe
           ref={iframeRef}
-          id="configuration-agent"
-          src={CONFIGURATION_AGENT_URL}
+          id="alert-dashboard"
+          src={ALERT_DASHBOARD_URL}
           width="100%"
           height="100%"
           style={{ border: 'none' }}
@@ -98,4 +95,4 @@ const ConfigurationAgent = () => {
   );
 };
 
-export default ConfigurationAgent;
+export default AlertDashboard;

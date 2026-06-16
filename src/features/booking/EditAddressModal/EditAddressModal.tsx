@@ -25,10 +25,15 @@ import { IAncillaryByZipRequest } from '../../../store/reducers/appointmentFrame
 import { useException } from '../../../hooks/useException/useException';
 import AncillaryPriceModal from '../SwitchFlowModal/AncillaryPriceModal/AncillaryPriceModal';
 import { useModal } from '../../../hooks/useModal/useModal';
+import UnavailableServiceModal from '../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal';
+import { setUnavailableServiceOpen } from '../../../store/reducers/modals/actions';
+import { TCallback } from '../../../types/types';
 
-type TProps = DialogProps & {};
+type TProps = DialogProps & {
+  openSwitchFlow: TCallback;
+};
 
-const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
+const EditAddressModal: React.FC<TProps> = ({ open, onClose, openSwitchFlow }) => {
   const {
     address,
     zipCode: zipCodeValue,
@@ -134,6 +139,8 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
     showError(err);
   };
 
+  const onUnavailableOpen = () => dispatch(setUnavailableServiceOpen(true));
+
   const onClickNext = () => {
     if (zip?.length && scProfile) {
       const data: IAncillaryByZipRequest = {
@@ -145,8 +152,18 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
           serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
       };
 
-      dispatch(loadAncillaryPriceByZip(data, onAncillaryPriceOpen, handleError, () => {}));
+      dispatch(loadAncillaryPriceByZip(data, onAncillaryPriceOpen, handleError, onUnavailableOpen));
     }
+  };
+
+  const clearAnotherLocation = () => {
+    setUserAddress('');
+    setZip('');
+  };
+
+  const handleSwitchToVisitCenter = () => {
+    dispatch(setUnavailableServiceOpen(false));
+    openSwitchFlow();
   };
 
   return (
@@ -200,6 +217,13 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose }) => {
         open={isAncillaryPriceOpen}
         onClose={onAncillaryPriceClose}
         serviceString={t('Pick Up / Drop Off')}
+      />
+      <UnavailableServiceModal
+        clearAnotherLocation={clearAnotherLocation}
+        setFormChecked={() => {}}
+        onBackToServiceOption={() => {}}
+        onBackToSelectSlotsForVisitCenter={() => {}}
+        onVisitCenter={handleSwitchToVisitCenter}
       />
     </BaseModal>
   );

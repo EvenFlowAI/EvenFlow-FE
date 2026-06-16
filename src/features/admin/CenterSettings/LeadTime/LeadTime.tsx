@@ -20,9 +20,9 @@ const LeadTime = ({ onEdit }: LeadTimeProps) => {
           EDIT
         </Button>
         <div style={{ marginTop: 24 }}>
-          <p
-            style={{ margin: 0, fontWeight: 700, fontSize: 24 }}
-          >{`[${centerSettings?.appointmentLeadDays || '#'}]`}</p>
+          <p style={{ margin: 0, fontWeight: 700, fontSize: 24 }}>
+            {centerSettings?.appointmentLeadDays || '#'}
+          </p>
           <p style={{ margin: 0 }}>Days</p>
         </div>
       </Paper>

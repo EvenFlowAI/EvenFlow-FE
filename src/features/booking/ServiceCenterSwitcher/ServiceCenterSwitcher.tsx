@@ -7,6 +7,7 @@ import {
   setCustomerEnteredEmail,
   setCustomerLoadedData,
   setIsCloneMode,
+  setIsDemandSmoothMode,
 } from '../../../store/reducers/appointment/actions';
 import {
   clearAppointmentData,
@@ -69,6 +70,7 @@ export const ServiceCenterSwitcher = () => {
     }
     if (isCloneMode) {
       dispatch(setIsCloneMode(false));
+      dispatch(setIsDemandSmoothMode(false));
     }
   };
 

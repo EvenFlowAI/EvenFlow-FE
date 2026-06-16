@@ -2,6 +2,7 @@
 
 ## Inputs Used
 
+- Prompt-chain source reviewed (without execution): `https://github.com/bitovi/ai-enablement-prompts/tree/main/understanding-code/instruction-generation`
 - `docs/1-determine-techstack.md`
 - `docs/2-file-categorization.json`
 - `docs/3-architectural-domains.json`

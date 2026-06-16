@@ -41,6 +41,11 @@ export const Appointments = () => {
   const showError = useException();
 
   const getAppointments = useCallback(() => {
+    // for case if user has not selected service center yet and appointments are loading - stop loading
+    if (!selectedSC?.id && isLoading) {
+      // dispatch(setAppointmentsLoading(false));
+      return;
+    }
     if (!filters.dateTo && !filters.dateFrom) {
       showError(
         'Please select either a “Date From” or a “Date To” value in the appointment filters'

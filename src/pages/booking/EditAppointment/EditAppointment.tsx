@@ -10,6 +10,8 @@ import {
   loadSCProfile,
   saveCustomerCache,
   setCustomerLoadedData,
+  setDemandAppointmentId,
+  setIsDemandSmoothMode,
 } from '../../../store/reducers/appointment/actions';
 import { AppointmentStatus, ICustomerLoadedData, ILoadedVehicle } from '../../../api/types';
 import { Edit } from '@mui/icons-material';
@@ -42,15 +44,20 @@ type TLParams = {
 
 export const EditAppointment = () => {
   const [state, setState] = useState<TState>('loading');
+  const [id, setId] = useState<string>('');
   const selectedScId: number | undefined = useSelector((state: RootState) => {
     return state.appointment.scProfile?.id;
   });
-  const { customerLoadedData, scProfile } = useSelector((state: RootState) => state.appointment);
+  const { customerLoadedData, scProfile, isDemandSmoothMode } = useSelector(
+    (state: RootState) => state.appointment
+  );
   const { allCategories } = useSelector((state: RootState) => state.categories);
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const { id } = useParams<{ id: string }>();
+  const { id: paramsId } = useParams<{ id: string }>();
+  const params = new URL(window.location.href).searchParams;
+  const sourceId = params.get('source');
   const { t } = useTranslation();
   const { search } = useLocation<TLParams>();
   const currentUser = useCurrentUser();
@@ -64,6 +71,18 @@ export const EditAppointment = () => {
     [currentUser, scProfile]
   );
 
+  useEffect(() => {
+    if (!paramsId) {
+      if (sourceId) {
+        setId(sourceId ?? '');
+        dispatch(setIsDemandSmoothMode(true));
+        dispatch(setDemandAppointmentId(sourceId || ''));
+      }
+    } else {
+      setId(paramsId);
+    }
+  }, [paramsId, sourceId]);
+
   useStorage();
 
   useEffect(() => {
@@ -73,70 +92,76 @@ export const EditAppointment = () => {
   }, [selectedScId]);
 
   useEffect(() => {
-    const requestFunc =
-      isFromAdmin || !id.includes('by-key')
-        ? API.appointment.getByKey
-        : API.appointment.getFromEmail;
-    requestFunc(id)
-      .then(async ({ data }) => {
-        if (data) {
-          dispatch(loadSCProfile(data.serviceCenterId));
-          dispatch(setUserType(EUserType.Existing));
-          dispatch(setUpdateAppointment(data));
-          const vehicle: ILoadedVehicle = {
-            ...data.vehicle,
-            appointmentHashKeys: [data.hashKey],
-          };
+    if (id) {
+      const requestFunc = isDemandSmoothMode
+        ? API.appointment.getBySource
+        : isFromAdmin || !id.includes('by-key')
+          ? API.appointment.getByKey
+          : API.appointment.getFromEmail;
+      requestFunc(id)
+        .then(async ({ data }) => {
+          if (data) {
+            dispatch(loadSCProfile(data.serviceCenterId));
+            dispatch(setUserType(EUserType.Existing));
+            dispatch(setUpdateAppointment(data));
+            const vehicle: ILoadedVehicle = {
+              ...data.vehicle,
+              appointmentHashKeys: [data.hashKey],
+            };
 
-          const rawId = data.driver?.id ?? data.customerId;
+            const rawId = data.driver?.id ?? data.customerId;
 
-          const customer: ICustomerLoadedData = {
-            ...data.driver,
-            id: String(rawId),
-            vehicles: [vehicle],
-            phoneNumbers: [data.driver.phoneNumber],
-            emails: [data.driver.email],
-            fullName: data.driver.fullName,
-            fromSearchByName: isFromAdmin,
-            companyName: data.driver.companyName,
-            isUpdating: isAuth,
-          };
-          if (data.address) customer.address = data.address;
-          dispatch(setCustomerLoadedData({ ...customer, isUpdating: true }));
-          dispatch(setVehicle({ ...vehicle }));
-          saveCustomerCache(customer);
-          dispatch(setCurrentFrameScreen('manageAppointment'));
-          if (data.appointmentStatus === AppointmentStatus.Cancelled) {
-            const hasAppointmentClone = window.location.href.includes('appointment-clone');
-            if (!hasAppointmentClone) {
-              setState('canceled');
-              return;
+            const customer: ICustomerLoadedData = {
+              ...data.driver,
+              id: String(rawId),
+              vehicles: [vehicle],
+              phoneNumbers: [data.driver.phoneNumber],
+              emails: [data.driver.email],
+              fullName: data.driver.fullName,
+              fromSearchByName: isFromAdmin,
+              companyName: data.driver.companyName,
+              isUpdating: isAuth,
+            };
+            if (data.address) customer.address = data.address;
+            dispatch(setCustomerLoadedData({ ...customer, isUpdating: true }));
+            dispatch(setVehicle({ ...vehicle }));
+            saveCustomerCache(customer);
+            dispatch(setCurrentFrameScreen('manageAppointment'));
+            if (data.appointmentStatus === AppointmentStatus.Cancelled) {
+              const hasAppointmentClone = window.location.href.includes('appointment-clone');
+              const isDemandSmoothing = window.location.href.includes('appointment-load');
+              if (!hasAppointmentClone && !isDemandSmoothing) {
+                setState('canceled');
+                return;
+              }
+            }
+            const [hours, minutes] = data.timeSlot.split(':');
+            const formattedDate = dayjs(data.dateInUtc).format();
+            const dateTime = dayjs
+              .utc(formattedDate)
+              .hour(+hours)
+              .minute(+minutes)
+              .format(dateTimeFormat);
+            if (dayjs.utc().diff(dateTime) >= 0) {
+              const hasAppointmentClone = window.location.href.includes('appointment-clone');
+              const isDemandSmoothing = window.location.href.includes('appointment-load');
+
+              if (!hasAppointmentClone && !isDemandSmoothing) {
+                setState('passed');
+                return;
+              }
+            }
+            if (selectedScId) {
+              history.push('/f/appointment-manage/' + encodeSCID(selectedScId));
             }
           }
-          const [hours, minutes] = data.timeSlot.split(':');
-          const formattedDate = dayjs(data.dateInUtc).format();
-          const dateTime = dayjs
-            .utc(formattedDate)
-            .hour(+hours)
-            .minute(+minutes)
-            .format(dateTimeFormat);
-          if (dayjs.utc().diff(dateTime) >= 0) {
-            const hasAppointmentClone = window.location.href.includes('appointment-clone');
-
-            if (!hasAppointmentClone) {
-              setState('passed');
-              return;
-            }
-          }
-          if (selectedScId) {
-            history.push('/f/appointment-manage/' + encodeSCID(selectedScId));
-          }
-        }
-      })
-      .catch(() => {
-        setState('error');
-      });
-  }, [id, allCategories, isAuth]);
+        })
+        .catch(e => {
+          setState('error');
+          console.log(e);
+        });
+    }
+  }, [isDemandSmoothMode, id, allCategories, isAuth]);
 
   const handleCreateNew = () => {
     if (selectedScId) {

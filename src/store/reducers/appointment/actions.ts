@@ -144,7 +144,7 @@ export const setWaitListSettings = createAction<IWaitListData | null>(
   'Appointment/SetWaitListSettings'
 );
 export const setSlotPodId = createAction<number | null>('Appointment/SetSlotPodId');
-export const setSlotsLoading = createAction<boolean>('Appointment/setSlotsLoading');
+export const setSlotsLoading = createAction<boolean>('Appointment/SetSlotsLoading');
 export const setSlotsServiceTypeOptionId = createAction<number | null>(
   'Appointment/SetSlotsServiceTypeOptionId'
 );
@@ -154,7 +154,9 @@ export const setSlotsTransportationId = createAction<number | null>(
 export const setSlotsSearchDate = createAction<ParsableDate>(
   'Appointment/SetSlotsServiceSearchDate'
 );
-export const setIsCloneMode = createAction<boolean>('Appointment/setIsCloneMode');
+export const setIsCloneMode = createAction<boolean>('Appointment/SetIsCloneMode');
+export const setIsDemandSmoothMode = createAction<boolean>('Appointment/SetIsDemandSmoothMode');
+export const setDemandAppointmentId = createAction<string>('Appointment/SetDemandAppointmentId');
 
 export const setLoadedDateRange = createAction<ISearchedDateRange>(
   'Appointment/SetLoadedDateRange'
