@@ -13,8 +13,8 @@ export const useStyles = makeStyles()({
   },
   tableWrapper: {
     display: 'flex',
-    alignItems: 'end',
-    justifyContent: 'end',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
     position: 'relative',
     top: 4,
   },

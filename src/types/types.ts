@@ -178,7 +178,6 @@ export interface ITableProps<Data> {
   getKey?: (el: Data) => string;
   verticalPadding?: number;
   customRowsPerPage?: number;
-  customRowsPerPageOptions?: number[];
   customPaginationData?: boolean;
   customRowsPerPageOptions?: number[];
 }

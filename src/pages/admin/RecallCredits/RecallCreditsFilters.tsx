@@ -15,14 +15,15 @@ interface IRecallCreditsFilters {
 }
 
 interface RecallCreditsFiltersI {
+  sourceData: ServiceCenterCredit[];
   setData: React.Dispatch<React.SetStateAction<ServiceCenterCredit[]>>;
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
 }
 
-const RecallCreditsFilters = ({ setData, setPageData }: RecallCreditsFiltersI) => {
-  const { recallCredits } = useSelector((state: RootState) => state.recallDatabase);
+const RecallCreditsFilters = ({ sourceData, setData, setPageData }: RecallCreditsFiltersI) => {
   const [filters, setFilters] = useState<IRecallCreditsFilters>({
     dealershipId: ALL_DEALERSHIP_GROUPS_ID,
+    searchTerm: '',
   });
   const { dealershipList } = useSelector((state: RootState) => state.dealershipGroups);
   const dealershipOptions = [
@@ -31,13 +32,13 @@ const RecallCreditsFilters = ({ setData, setPageData }: RecallCreditsFiltersI) =
   ];
 
   useEffect(() => {
-    if (recallCredits) {
-      applyFilters(filters);
+    if (sourceData) {
+      applyFilters(filters, false);
     }
-  }, [recallCredits]);
+  }, [sourceData]);
 
-  const applyFilters = (newFilters: IRecallCreditsFilters) => {
-    let filtered = [...recallCredits];
+  const applyFilters = (newFilters: IRecallCreditsFilters, resetPage = true) => {
+    let filtered = [...sourceData];
 
     if (
       newFilters.dealershipId !== undefined &&
@@ -48,13 +49,13 @@ const RecallCreditsFilters = ({ setData, setPageData }: RecallCreditsFiltersI) =
 
     if (newFilters.searchTerm && newFilters.searchTerm.trim() !== '') {
       const term = newFilters.searchTerm.toLowerCase();
-      filtered = filtered.filter(u =>
-        u.serviceCenterName?.toLowerCase().includes(term.toLowerCase())
-      );
+      filtered = filtered.filter(u => u.serviceCenterName?.toLowerCase().includes(term));
     }
 
     setData(filtered);
-    setPageData({ pageIndex: 0, pageSize: 15 });
+    if (resetPage) {
+      setPageData(prev => ({ ...prev, pageIndex: 0 }));
+    }
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -76,7 +77,7 @@ const RecallCreditsFilters = ({ setData, setPageData }: RecallCreditsFiltersI) =
   };
 
   return (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'end' }}>
+    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
       <TextField
         style={{ width: 310 }}
         placeholder="Search Service Centers..."

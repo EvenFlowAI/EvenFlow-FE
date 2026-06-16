@@ -22,9 +22,6 @@ export const setRecallsDatabase = createAction<IGlobalRecall[]>(
   'RecallDatabase/setRecallsDatabase'
 );
 export const setManufacturers = createAction<string[]>('RecallDatabase/setManufcaturers');
-export const setRecallCreditsPagination = createAction<IPagingResponse[]>(
-  'RecallDatabase/SetRecallCreditsPagination'
-);
 export const setRecallCredits = createAction<ServiceCenterCredit[]>(
   'RecallDatabase/SetRecallCredits'
 );
@@ -126,7 +123,7 @@ export const getRecallComponent =
   };
 
 export const getServiceCenterCredits =
-  (onSuccess: () => void): AppThunk =>
+  (onSuccess: () => void, onError: () => void): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.ServiceCenterCredits.GetServiceCenterCredits)
       .then(response => {
@@ -135,34 +132,40 @@ export const getServiceCenterCredits =
             data: {
               searchTerm: '',
             },
-          }).then(r => {
-            if (r?.data?.result) {
-              const creditsWithSCData = response.data.data.map((credit: ServiceCenterCredit) => {
-                const matchedServiceCenter = (r.data.result as IServiceCenterExtended[]).find(
-                  (sc: IServiceCenterExtended) => credit.serviceCenterId === sc.id
-                );
+          })
+            .then(r => {
+              if (r?.data?.result) {
+                const creditsWithSCData = response.data.data.map((credit: ServiceCenterCredit) => {
+                  const matchedServiceCenter = (r.data.result as IServiceCenterExtended[]).find(
+                    (sc: IServiceCenterExtended) => credit.serviceCenterId === sc.id
+                  );
 
-                if (!matchedServiceCenter) {
-                  return credit;
-                }
+                  if (!matchedServiceCenter) {
+                    return credit;
+                  }
 
-                return {
-                  ...credit,
-                  dealershipId: matchedServiceCenter.dealershipId,
-                  dealershipName: matchedServiceCenter.dealership?.name,
-                  name: matchedServiceCenter.name,
-                  serviceCenterName: matchedServiceCenter.name,
-                  avatarPath: matchedServiceCenter.avatarPath,
-                };
-              });
+                  return {
+                    ...credit,
+                    dealershipId: matchedServiceCenter.dealershipId,
+                    dealershipName: matchedServiceCenter.dealership?.name,
+                    name: matchedServiceCenter.name,
+                    serviceCenterName: matchedServiceCenter.name,
+                    avatarPath: matchedServiceCenter.avatarPath,
+                  };
+                });
 
-              onSuccess();
-              dispatch(setRecallCredits(creditsWithSCData));
-            } else {
-              onSuccess();
+                onSuccess();
+                dispatch(setRecallCredits(creditsWithSCData));
+              } else {
+                onSuccess();
+                dispatch(setRecallCredits([]));
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              onError();
               dispatch(setRecallCredits([]));
-            }
-          });
+            });
         } else {
           onSuccess();
           dispatch(setRecallCredits([]));
@@ -170,19 +173,21 @@ export const getServiceCenterCredits =
       })
       .catch(err => {
         console.log(err);
+        onError();
+        dispatch(setRecallCredits([]));
       });
   };
 
-export const updateAvailableRecallCredit =
+export const updateServiceCenterRecallCredits =
   (
     items: {
       serviceCenterId: number;
       recallCredits: number;
     }[],
-    onSuccess: () => void
+    onSuccess: () => void,
+    onError: () => void
   ): AppThunk =>
-  dispatch => {
-    dispatch(setLoading(true));
+  () => {
     Api.call(Api.endpoints.ServiceCenterCredits.UpdateServiceCenterCredits, {
       data: {
         items,
@@ -193,6 +198,7 @@ export const updateAvailableRecallCredit =
       })
       .catch(err => {
         console.log(err);
+        onError();
       });
   };
 

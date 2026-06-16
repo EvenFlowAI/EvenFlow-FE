@@ -4,7 +4,7 @@ import { IOrder, Titles } from '../../../types/types';
 import { applicationRoot } from '../../../utils/constants';
 import {
   getServiceCenterCredits,
-  updateAvailableRecallCredit,
+  updateServiceCenterRecallCredits,
 } from '../../../store/reducers/recallDatabase/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useStyles } from './styles';
@@ -22,6 +22,7 @@ const RecallCredits = () => {
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const [data, setData] = useState<ServiceCenterCredit[]>([]);
+  const [displayData, setDisplayData] = useState<ServiceCenterCredit[]>([]);
   const { recallCredits } = useSelector((state: RootState) => state.recallDatabase);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [order, setOrder] = useState<IOrder<ServiceCenterCredit>>(initialOrder);
@@ -41,10 +42,15 @@ const RecallCredits = () => {
   useEffect(() => {
     setIsLoading(true);
     dispatch(
-      getServiceCenterCredits(() => {
-        setIsLoading(false);
-        dispatch(loadAll());
-      })
+      getServiceCenterCredits(
+        () => {
+          setIsLoading(false);
+          dispatch(loadAll());
+        },
+        () => {
+          setIsLoading(false);
+        }
+      )
     );
   }, []);
 
@@ -55,9 +61,7 @@ const RecallCredits = () => {
   const onSave = () => {
     const hasInvalidCredits = data.some(
       item =>
-        !Number.isFinite(item.availableCredits) ||
-        item.availableCredits < 0 ||
-        item.availableCredits > 99999
+        !Number.isFinite(item.recallCredits) || item.recallCredits < 0 || item.recallCredits > 99999
     );
 
     if (hasInvalidCredits) {
@@ -71,20 +75,39 @@ const RecallCredits = () => {
           credit => credit.serviceCenterId === item.serviceCenterId
         );
 
-        return !!originalCredit && originalCredit.availableCredits !== item.availableCredits;
+        return !!originalCredit && originalCredit.recallCredits !== item.recallCredits;
       })
       .map(item => ({
         serviceCenterId: item.serviceCenterId,
-        recallCredits: item.availableCredits,
+        recallCredits: item.recallCredits,
       }));
 
     if (items.length) {
+      setIsLoading(true);
       dispatch(
-        updateAvailableRecallCredit(items, () => {
-          showMessage('Recall Credits successfully updated');
-          setIsEdit(false);
-        })
+        updateServiceCenterRecallCredits(
+          items,
+          () => {
+            showMessage('Recall Credits successfully updated');
+            dispatch(
+              getServiceCenterCredits(
+                () => {
+                  setIsEdit(false);
+                  setIsLoading(false);
+                },
+                () => {
+                  setIsLoading(false);
+                }
+              )
+            );
+          },
+          () => {
+            setIsLoading(false);
+          }
+        )
       );
+    } else {
+      setIsEdit(false);
     }
   };
 
@@ -96,18 +119,17 @@ const RecallCredits = () => {
   return (
     <div className={classes.root}>
       <TitleContainer title={Titles.RecallCredits} parent={applicationRoot} pad />
-      <RecallCreditsFilters setData={setData} setPageData={setPageData} />
+      <RecallCreditsFilters sourceData={data} setData={setDisplayData} setPageData={setPageData} />
       <div className={classes.tableWrapper}>
         <SaveEditBlock
           onSave={onSave}
           onEdit={() => setIsEdit(true)}
           onCancel={onCancel}
           isEdit={isEdit}
-          isSaving={isLoading}
         />
       </div>
       <RecallCreditsTable
-        data={data}
+        data={displayData}
         setData={setData}
         order={order}
         setOrder={setOrder}

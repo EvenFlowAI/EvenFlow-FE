@@ -44,7 +44,7 @@ const RecallCreditsTable: React.FC<TProps> = ({
   const onChangeMonthlyRecallCredits = (el: ServiceCenterCredit, credits: number) => {
     setData(prev =>
       prev.map(item =>
-        item.serviceCenterId === el.serviceCenterId ? { ...item, availableCredits: credits } : item
+        item.serviceCenterId === el.serviceCenterId ? { ...item, recallCredits: credits } : item
       )
     );
   };
@@ -81,15 +81,15 @@ const RecallCreditsTable: React.FC<TProps> = ({
         isEdit ? (
           <TextField
             name={String(el.serviceCenterId)}
-            value={el.availableCredits}
+            value={el.recallCredits}
             type="number"
-            inputProps={{ maxLength: 4 }}
+            inputProps={{ min: 0, max: 99999, step: 1 }}
             onChange={e => onChangeMonthlyRecallCredits(el, +e.target.value)}
             id={String(el.serviceCenterId)}
             sx={{ '& .MuiInputBase-input': { padding: '4px 8px', height: '32px' } }}
           />
         ) : (
-          '' + el.availableCredits
+          '' + el.recallCredits
         ),
       align: 'left',
     },
@@ -124,7 +124,7 @@ const RecallCreditsTable: React.FC<TProps> = ({
         onChangeRowsPerPage={onChangeRowsPerPage}
         onChangePage={onChangePage}
         onSort={handleSort}
-        hidePagination={data.length < 10}
+        hidePagination={data.length <= pageData.pageSize}
         isLoading={isLoading}
         customRowsPerPageOptions={[15, 50, 100]}
         customRowsPerPage={15}
