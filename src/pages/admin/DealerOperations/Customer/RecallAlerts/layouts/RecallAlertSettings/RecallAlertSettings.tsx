@@ -85,8 +85,12 @@ const RecallAlertSettings: React.FC = () => {
         getAffectedModels(
           updatedRecallAlert?.recallCampaignId,
           selectedSC.id,
-          () => {},
-          () => {}
+          () => {
+            setIsLoading(false);
+          },
+          () => {
+            setIsLoading(false);
+          }
         )
       );
     }
@@ -152,6 +156,7 @@ const RecallAlertSettings: React.FC = () => {
                 setUpdatedRecallAlert={setUpdatedRecallAlert}
                 onFileChange={setFile}
                 file={file}
+                setIsLoading={setIsLoading}
               />
               {updatedRecallAlert?.recallCampaignId ? (
                 <div className={recallAlertSettingsClasses.affectedModelsWrapper}>

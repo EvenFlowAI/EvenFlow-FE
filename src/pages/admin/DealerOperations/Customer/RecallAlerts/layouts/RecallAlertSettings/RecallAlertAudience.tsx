@@ -6,6 +6,7 @@ import { useStyles } from '../../../styles';
 
 interface RecallAlertAudienceI {
   isEditTable: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   updatedRecallAlert: IRecallAlert | null;
   setUpdatedRecallAlert: React.Dispatch<React.SetStateAction<IRecallAlert | null>>;
   onFileChange: (file: File | null) => void;
@@ -18,6 +19,7 @@ const RecallAlertAudience = ({
   setUpdatedRecallAlert,
   onFileChange,
   file,
+  setIsLoading,
 }: RecallAlertAudienceI) => {
   const { classes } = useStyles();
 
@@ -59,6 +61,7 @@ const RecallAlertAudience = ({
         isEditTable={isEditTable}
         onFileChange={onFileChange}
         file={file}
+        setIsLoading={setIsLoading}
       />
     </div>
   );

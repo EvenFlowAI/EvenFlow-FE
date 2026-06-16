@@ -178,6 +178,7 @@ const WorkflowTable: React.FC<
     {
       header: 'Status',
       val: el => <Status status={el.status} />,
+      width: '142px',
       orderId: 'Status',
     },
   ];

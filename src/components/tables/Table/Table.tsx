@@ -176,7 +176,9 @@ export function Table<U>({
           onRowsPerPageChange={handleChangeRowsPerPage}
           rowsPerPage={nRowsPerPage}
           rowsPerPageOptions={
-            props.customPaginationData ? secondOptionRowsPerPageOptions : defaultRowsPerPageOptions
+            props.customPaginationData
+              ? secondOptionRowsPerPageOptions
+              : props.customRowsPerPageOptions || defaultRowsPerPageOptions
           }
         />
       ) : null}

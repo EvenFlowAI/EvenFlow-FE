@@ -21,6 +21,7 @@ interface RecallFormI {
   handleRecallCampaignChange: (newValue: number) => void;
   onFileChange: (file: File | null) => void;
   file: File | null;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const allowedFileTypes = ['text/csv'];
@@ -139,6 +140,7 @@ const RecallForm = ({
   handleRecallCampaignChange,
   onFileChange,
   file,
+  setIsLoading,
 }: RecallFormI) => {
   const { classes } = useStyles();
   const { credits } = useSelector((state: RootState) => state.dealerOperations);
@@ -175,12 +177,16 @@ const RecallForm = ({
 
   const callRecallTrigger = () => {
     if (!selectedSC) return;
+    setIsLoading(true);
     dispatch(
       checkVins(
         updatedRecallAlert?.campaignRecallGroupBatchId,
-        () => {},
+        () => {
+          setIsLoading(false);
+        },
         (e: string) => {
           showError(e);
+          setIsLoading(false);
         }
       )
     );

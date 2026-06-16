@@ -95,7 +95,7 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
-    const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: false }));
+    const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
 
     dispatch(
       updateRecallAlert(
