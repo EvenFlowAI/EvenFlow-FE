@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import {
   deleteRecallAlert,
@@ -7,6 +9,7 @@ import {
   setRecallAlertsPageData,
   setSelectedRecallAlert,
   setUpdatedAlerts,
+  updateRecallAlert,
 } from '../../../../../store/reducers/recall/actions';
 import { IRecallAlert, RecallListType } from '../../../../../store/reducers/recall/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,6 +79,36 @@ const WorkflowTable: React.FC<
           }
           return ev;
         })
+      )
+    );
+  };
+
+  const isRecallAlertActive = (el: IRecallAlert): boolean => {
+    if (!el.triggers?.length) {
+      return false;
+    }
+
+    return el.triggers.every(trigger => trigger.isPaused === false);
+  };
+
+  const handleActiveChange = (recallAlert: IRecallAlert, nextChecked: boolean) => {
+    if (!selectedSC || !recallAlert) {
+      return;
+    }
+
+    dispatch(
+      updateRecallAlert(
+        {
+          id: recallAlert.id,
+          serviceCenterId: selectedSC.id,
+          triggers: (recallAlert.triggers || []).map(trigger => ({
+            ...trigger,
+            isPaused: !nextChecked,
+          })),
+        },
+        () => {},
+        undefined,
+        showError
       )
     );
   };
@@ -171,7 +204,14 @@ const WorkflowTable: React.FC<
     },
     {
       header: 'Active',
-      val: () => <Switch disabled checked={false} color="primary" />,
+      val: el => (
+        <Switch
+          disabled={el.status !== RecallEventStatus.ResultsAvailable || !el.triggers?.length}
+          checked={isRecallAlertActive(el)}
+          onChange={(_, checked) => handleActiveChange(el, checked)}
+          color="primary"
+        />
+      ),
     },
     {
       header: 'Status',

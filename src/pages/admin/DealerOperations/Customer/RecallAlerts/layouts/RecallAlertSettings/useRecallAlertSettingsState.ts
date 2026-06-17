@@ -55,13 +55,23 @@ const useRecallAlertSettingsState = ({
   }, [setDefaultData]);
 
   useEffect(() => {
-    if (isEditTable || !selectedRecallAlert?.globalModelIds?.length || !affectedModels.length) {
+    if (isEditTable) {
       return;
     }
 
-    setSelectedModelKeys(
-      mapModelIdsToGlobalModels(selectedRecallAlert.globalModelIds, affectedModels)
-    );
+    if (!affectedModels.length) {
+      setSelectedModelKeys(prev => (prev.length ? [] : prev));
+      return;
+    }
+
+    if (selectedRecallAlert?.globalModelIds?.length) {
+      setSelectedModelKeys(
+        mapModelIdsToGlobalModels(selectedRecallAlert.globalModelIds, affectedModels)
+      );
+      return;
+    }
+
+    setSelectedModelKeys(mapAllAffectedModelsToSelectedKeys(affectedModels));
   }, [affectedModels, isEditTable, selectedRecallAlert]);
 
   useEffect(() => {

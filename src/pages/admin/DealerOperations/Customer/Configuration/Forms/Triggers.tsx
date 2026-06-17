@@ -115,8 +115,6 @@ const Triggers = ({
   };
 
   const handleRemoveTrigger = (index: number) => {
-    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
-
     setFirstTriggerDateError(false);
     setTriggerDateErrors(prev => ({
       ...prev,

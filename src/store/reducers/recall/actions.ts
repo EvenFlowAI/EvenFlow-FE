@@ -401,22 +401,27 @@ export const updateRecallAlert =
         value: string;
         isCriteria?: boolean;
       }[];
-      triggers: TriggerI[];
-      globalModels: IGlobalModelYear[] | null;
+      triggers?: TriggerI[];
+      globalModels?: IGlobalModelYear[] | null;
     },
     onSuccess: () => void,
     handleUploadFile?: (callback: TCallback) => void,
     onError?: (error: string) => void
   ): AppThunk =>
   async dispatch => {
-    const filterRules = data.filterRules?.map(el => {
-      return {
-        ...el,
-        type: EventRulesFilterTypeE[el.type as keyof typeof EventRulesFilterTypeE],
-        operator: ComparisonOperatorE[el.operator as keyof typeof ComparisonOperatorE],
-        value: el.value || '0',
-      };
-    });
+    let filterRules;
+    if (data.filterRules?.length) {
+      filterRules = data.filterRules?.map(el => {
+        return {
+          ...el,
+          type: EventRulesFilterTypeE[el.type as keyof typeof EventRulesFilterTypeE],
+          operator: ComparisonOperatorE[el.operator as keyof typeof ComparisonOperatorE],
+          value: el.value || '0',
+        };
+      });
+    } else {
+      filterRules = null;
+    }
 
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
       urlParams: { id: data.id },
@@ -437,7 +442,9 @@ export const updateRecallAlert =
           e.message ||
           'Something went wrong. Please try again later.';
 
-        if (onError) onError(backendMessage);
+        const backendMessage2 = e?.response?.data?.errors?.[0]?.message;
+
+        if (onError) onError(backendMessage2 || backendMessage);
         console.log('Update Recall Alert error', e);
       });
   };

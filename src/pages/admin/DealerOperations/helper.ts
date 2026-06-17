@@ -277,7 +277,9 @@ export const toEnumLabel = <T extends Record<number, string>>(
   return value;
 };
 
-export type TSelectedModelKey = IGlobalModelYear;
+export type TSelectedModelKey = IGlobalModelYear & {
+  vehicleCount: number;
+};
 
 export const mapModelIdsToGlobalModels = (
   modelIds: number[],
@@ -285,7 +287,11 @@ export const mapModelIdsToGlobalModels = (
 ): TSelectedModelKey[] => {
   const mapped = models
     .filter(item => modelIds.includes(item.globalVehicleModelId))
-    .map(item => ({ globalVehicleModelId: item.globalVehicleModelId, year: item.year }));
+    .map(item => ({
+      globalVehicleModelId: item.globalVehicleModelId,
+      year: item.year,
+      vehicleCount: item.vehicleCount || 0,
+    }));
 
   const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
   mapped.forEach(item => {
@@ -300,8 +306,12 @@ export const mapAllAffectedModelsToSelectedKeys = (
 ) => {
   const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
 
-  models.forEach(({ globalVehicleModelId, year }) => {
-    uniqueByModelAndYear.set(`${globalVehicleModelId}-${year}`, { globalVehicleModelId, year });
+  models.forEach(({ globalVehicleModelId, year, vehicleCount }) => {
+    uniqueByModelAndYear.set(`${globalVehicleModelId}-${year}`, {
+      globalVehicleModelId,
+      year,
+      vehicleCount,
+    });
   });
 
   return Array.from(uniqueByModelAndYear.values());

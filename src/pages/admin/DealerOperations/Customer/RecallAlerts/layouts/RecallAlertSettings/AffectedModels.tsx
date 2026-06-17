@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import Checkbox from '../../../../../../../components/formControls/Checkbox/Checkbox';
 import { RootState } from '../../../../../../../store/rootReducer';
-import { IGlobalModelYear, IRecallAlert } from '../../../../../../../store/reducers/recall/types';
+import { IRecallAlert } from '../../../../../../../store/reducers/recall/types';
 import { useRecallAlertSettingsStyles } from './styles';
 import { RecallEventStatus } from '../../../types';
+import { TSelectedModelKey } from '../../../../helper';
 
 type TGroupedModel = {
   globalVehicleModelId: number;
@@ -48,8 +49,8 @@ const formatYearRanges = (years: number[]): string => {
 
 interface AffectedModelsProps {
   updatedRecallAlert: IRecallAlert;
-  selectedModelKeys: IGlobalModelYear[];
-  setSelectedModelKeys: React.Dispatch<React.SetStateAction<IGlobalModelYear[]>>;
+  selectedModelKeys: TSelectedModelKey[];
+  setSelectedModelKeys: React.Dispatch<React.SetStateAction<TSelectedModelKey[]>>;
   isEditTable: boolean;
 }
 
@@ -137,7 +138,7 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
   };
 
   const isModelSelectedInState = (
-    state: IGlobalModelYear[],
+    state: TSelectedModelKey[],
     modelId: number,
     years: number[]
   ): boolean => {
@@ -190,7 +191,14 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
 
       const missingYears = years
         .filter(year => !selectedYearsByModel.includes(year))
-        .map(year => ({ globalVehicleModelId: modelId, year }));
+        .map(year => ({
+          globalVehicleModelId: modelId,
+          year,
+          vehicleCount:
+            affectedModels.find(
+              model => model.globalVehicleModelId === modelId && model.year === year
+            )?.vehicleCount || 0,
+        }));
 
       return [...prev, ...missingYears];
     });
