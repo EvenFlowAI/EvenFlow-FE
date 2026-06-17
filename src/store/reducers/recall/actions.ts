@@ -25,8 +25,10 @@ import { setSelectedRecalls } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import queryString from 'query-string';
 import { ComparisonOperatorE, EventRulesFilterTypeE } from '../dealerOperations/actions';
-import { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
-import { HistoryRecallData } from '../../../pages/admin/DealerOperations/Customer/RecallAlerts/layouts/HistoryRecall';
+import type {
+  HistoryRecallData,
+  TriggerI,
+} from '../../../pages/admin/DealerOperations/Customer/types';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');

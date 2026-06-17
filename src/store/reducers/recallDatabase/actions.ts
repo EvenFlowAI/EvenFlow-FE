@@ -114,7 +114,7 @@ export const getRecallComponent =
       .finally(() => dispatch(setLoading(false)));
   };
 
-export const getAllGlobalRecall = (): AppThunk => dispatch => {
+export const getAllGlobalRecalls = (): AppThunk => dispatch => {
   Api.call(Api.endpoints.GlobalRecalls.GetAllGlobalRecalls)
     .then(response => {
       if (response.data.data) {

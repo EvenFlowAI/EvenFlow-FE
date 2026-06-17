@@ -19,20 +19,11 @@ import { ReactComponent as Requested } from '../../../../../../assets/img/alerts
 import { ReactComponent as Started } from '../../../../../../assets/img/alerts-status/started.svg';
 import { useException } from '../../../../../../hooks/useException/useException';
 import { useHistoryRecallStyles } from './styles';
+import type { HistoryRecallData, HistoryRecallStatus } from '../../types';
 
 type HistoryRecallI = DialogProps & {
   currentItem: IRecallAlert | null;
 };
-
-type HistoryRecallStatus =
-  | 'not_configured'
-  | 'configured'
-  | 'check_requested'
-  | 'results_available'
-  | 'running'
-  | 'completed'
-  | 'csv_uploaded'
-  | 'failed';
 
 const historyRecallStatusLabels: Record<HistoryRecallStatus, string> = {
   not_configured: 'Alert not configured (Alert created)',
@@ -55,15 +46,6 @@ const historyRecallStatusIcons: Record<HistoryRecallStatus, JSX.Element> = {
   csv_uploaded: <Received />,
   failed: <Failed />,
 };
-
-export interface HistoryRecallData {
-  updatedAt: string;
-  operation: string;
-  changes: {
-    propertyName: string;
-    value: HistoryRecallStatus;
-  }[];
-}
 
 const HistoryRecall = ({ onClose, open, currentItem }: HistoryRecallI) => {
   const { classes } = useHistoryRecallStyles();

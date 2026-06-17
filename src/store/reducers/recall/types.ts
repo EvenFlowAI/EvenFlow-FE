@@ -1,5 +1,5 @@
 import { IOrder, IPageRequest, IPagingResponse, IRecallByVin, TOption } from '../../../types/types';
-import { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
+import type { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export type TIdName = {
   id: number;

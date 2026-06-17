@@ -24,3 +24,22 @@ export enum RecallEventStatus {
   Completed = 5,
   Failed = 6,
 }
+
+export type HistoryRecallStatus =
+  | 'not_configured'
+  | 'configured'
+  | 'check_requested'
+  | 'results_available'
+  | 'running'
+  | 'completed'
+  | 'csv_uploaded'
+  | 'failed';
+
+export interface HistoryRecallData {
+  updatedAt: string;
+  operation: string;
+  changes: {
+    propertyName: string;
+    value: HistoryRecallStatus;
+  }[];
+}

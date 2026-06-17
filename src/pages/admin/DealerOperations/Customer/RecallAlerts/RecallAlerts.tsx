@@ -21,7 +21,7 @@ import {
 } from '../../../../../store/reducers/recall/actions';
 import { useException } from '../../../../../hooks/useException/useException';
 import StatsTable from './StatsTable';
-import { getAllGlobalRecall } from '../../../../../store/reducers/recallDatabase/actions';
+import { getAllGlobalRecalls } from '../../../../../store/reducers/recallDatabase/actions';
 import TextConfigurationRecall from './layouts/TextConfigurationRecall';
 import HistoryRecall from './layouts/HistoryRecall';
 import { RECALL_ALERTS_STATUSES } from '../../../../../utils/constants';
@@ -52,7 +52,7 @@ const RecallAlerts = () => {
 
     dispatch(setIsRecallAlertsTableLoading(true));
     dispatch(loadAvailableCredits(selectedSC.id, onSuccess));
-    dispatch(getAllGlobalRecall());
+    dispatch(getAllGlobalRecalls());
   }, [selectedSC]);
 
   const setStartedNames = () => {
