@@ -13,7 +13,7 @@ const initialState: TState = {
   pagination: defaultPaging,
   isLoading: false,
   recallsDatabase: [],
-  allGlobalsRecalls: [],
+  allGlobalRecalls: [],
   manufacturers: [],
 };
 
@@ -29,7 +29,7 @@ export const recallDatabaseReducer = createReducer(initialState, builder =>
       return { ...state, recallsDatabase: payload };
     })
     .addCase(setAllGlobalRecalls, (state, { payload }) => {
-      return { ...state, allGlobalsRecalls: payload };
+      return { ...state, allGlobalRecalls: payload };
     })
     .addCase(setManufacturers, (state, { payload }) => {
       return { ...state, manufacturers: payload };

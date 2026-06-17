@@ -20,7 +20,9 @@ const TableModeSwitcher = ({ setTableMode, tableMode }: TableModeSwitcherProps) 
 
   return (
     <div className={classes.tableSwitcher}>
-      <p
+      <button
+        type="button"
+        aria-pressed={tableMode === 'workflow'}
         className={clsx(
           classes.tableMode,
           tableMode === 'workflow' ? classes.active : classes.inactive,
@@ -29,9 +31,11 @@ const TableModeSwitcher = ({ setTableMode, tableMode }: TableModeSwitcherProps) 
         onClick={() => handleSetTableMode('workflow')}
       >
         {tableMode === 'workflow' ? <Workflow /> : <WorkflowBlue />} <span>Workflow</span>
-      </p>
+      </button>
 
-      <p
+      <button
+        type="button"
+        aria-pressed={tableMode === 'stats'}
         className={clsx(
           classes.tableMode,
           tableMode === 'stats' ? classes.active : classes.inactive,
@@ -40,7 +44,7 @@ const TableModeSwitcher = ({ setTableMode, tableMode }: TableModeSwitcherProps) 
         onClick={() => handleSetTableMode('stats')}
       >
         {tableMode === 'stats' ? <StatsWhite /> : <Stats />} <span>Stats</span>
-      </p>
+      </button>
     </div>
   );
 };

@@ -44,7 +44,8 @@ const AddRecallAlertModal = ({ onClose, open, tableType }: TAddCustomerEventModa
 
   const handleSaveNewEvent = () => {
     if (!selectedSC?.id) {
-      throw new Error('Selected SC is not defined');
+      showError('Service center is not selected.');
+      return;
     }
 
     if (newEventName?.length > 2 && newEventName?.length < 51) {

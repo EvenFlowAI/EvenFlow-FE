@@ -146,7 +146,7 @@ const RecallForm = ({
   const { credits } = useSelector((state: RootState) => state.dealerOperations);
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
-  const { allGlobalsRecalls } = useSelector((state: RootState) => state.recallDatabase);
+  const { allGlobalRecalls } = useSelector((state: RootState) => state.recallDatabase);
   const showError = useException();
   const ref = React.useRef<HTMLInputElement>(null);
   const hasSelectedModels = (updatedRecallAlert.globalModelIds?.length ?? 0) > 0;
@@ -234,14 +234,14 @@ const RecallForm = ({
           disabled={!isEditTable || updatedRecallAlert.status === RecallEventStatus.Running}
           className={classes.recallFormField}
           value={
-            allGlobalsRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId)
+            allGlobalRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId)
               ?.nhtsaCampaign || ''
           }
-          options={allGlobalsRecalls.map(c => c.nhtsaCampaign)}
+          options={allGlobalRecalls.map(c => c.nhtsaCampaign)}
           isOptionEqualToValue={(o, v) => String(o) === String(v)}
           getOptionLabel={o => o}
           onChange={(e, v) =>
-            handleRecallCampaignChange(allGlobalsRecalls.find(c => c.nhtsaCampaign === v)?.id || 0)
+            handleRecallCampaignChange(allGlobalRecalls.find(c => c.nhtsaCampaign === v)?.id || 0)
           }
           renderInput={autocompleteRender({
             isCustomFontSize: true,
@@ -255,7 +255,7 @@ const RecallForm = ({
             id="lastName"
             fullWidth
             value={
-              allGlobalsRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId)
+              allGlobalRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId)
                 ?.recallComponent || '-'
             }
             onChange={() => {}}

@@ -5,6 +5,6 @@ export type TState = {
   pagination: IPagingResponse;
   isLoading: boolean;
   recallsDatabase: IGlobalRecall[];
-  allGlobalsRecalls: IGlobalRecall[];
+  allGlobalRecalls: IGlobalRecall[];
   manufacturers: string[];
 };

@@ -57,8 +57,6 @@ const AudienceForm = ({
 
   const handleRemoveCriteria = (index: number) => {
     if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
-
-    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
     if (isOutboundMode) {
       if (criterias.length > 1) {
         setCriteria(prev => prev.filter((criteria, i) => i !== index));

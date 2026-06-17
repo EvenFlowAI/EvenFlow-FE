@@ -1,4 +1,5 @@
 import { IOrder, IPageRequest, IPagingResponse, IRecallByVin, TOption } from '../../../types/types';
+import { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export type TIdName = {
   id: number;
@@ -56,7 +57,7 @@ export interface IRecallAlert {
   vehiclesInDms: number;
   creditsUsed: number;
   estimatedRecipients: number;
-  triggers: [];
+  triggers: TriggerI[];
   filterRules: {
     id?: number;
     type: string;

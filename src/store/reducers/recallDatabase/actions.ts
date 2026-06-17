@@ -123,6 +123,5 @@ export const getAllGlobalRecall = (): AppThunk => dispatch => {
     })
     .catch(err => {
       console.log(err);
-    })
-    .finally(() => dispatch(setLoading(false)));
+    });
 };

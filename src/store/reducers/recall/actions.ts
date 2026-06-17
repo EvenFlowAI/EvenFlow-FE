@@ -265,7 +265,7 @@ export const getRecallEvents =
             .filter((id: number | undefined | null) => id !== undefined && id !== null);
 
           if (ids.length > 0) {
-            Api.call(Api.endpoints.GlobalRecalls.GetGlobalRecalls, {
+            return Api.call(Api.endpoints.GlobalRecalls.GetGlobalRecalls, {
               params: { recallCampaignIds: ids },
               paramsSerializer: params => queryString.stringify(params, { arrayFormat: 'none' }),
             }).then(res => {
@@ -426,12 +426,10 @@ export const updateRecallAlert =
             dispatch(getRecallEvents(data.serviceCenterId, 'workflow', () => {}, onSuccess));
           });
         } else {
-          console.log('test');
           dispatch(getRecallEvents(data.serviceCenterId, 'workflow', () => {}, onSuccess));
         }
       })
       .catch(e => {
-        console.log(e?.response);
         const backendMessage =
           e?.response?.data?.error?.message ||
           e.message ||
@@ -445,10 +443,8 @@ export const updateRecallAlert =
 export const uploadCSV =
   (id: number, file: File, onSuccess: () => void, onError?: (text: string) => void): AppThunk =>
   async () => {
-    console.log(file);
     const fd = new FormData();
     fd.append('file', file, file.name);
-    console.log(fd);
     Api.call(Api.endpoints.Recalls.UploadCSV, {
       urlParams: { id },
       data: fd,
