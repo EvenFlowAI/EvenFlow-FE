@@ -46,7 +46,7 @@ const RoleManagement = () => {
     <div className={classes.root}>
       <TitleContainer title={Titles.RoleManagement} parent={applicationRoot} pad />
       <AddUserButtonWrapper handleAddUserAccount={handleAddUserAccount} isAdminPanel={false} />
-      {!isLoading ? <Filters setData={setVisibleDate} setPageData={setPageData} /> : null}
+      <Filters setData={setVisibleDate} setPageData={setPageData} isLoading={isLoading} />
       <UsersTableWrapper
         setPageData={setPageData}
         pageData={pageData}
