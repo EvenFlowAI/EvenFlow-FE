@@ -169,10 +169,7 @@ export const validateTriggers = (
     showError("The 'Scheduled time' selection is required.");
     return true;
   }
-  if (!validateDaysToFutureAppointment(criterias, triggers, showError, setTriggerDateErrors)) {
-    return true;
-  }
-  return false;
+  return !validateDaysToFutureAppointment(criterias, triggers, showError, setTriggerDateErrors);
 };
 
 export const checkAudienceCriteria = (
@@ -263,17 +260,6 @@ export const filterValidRulesAndTriggers = (
   filterRules: [...criterias, ...rules].filter(rule => rule.operator && rule.type),
   triggers: triggers.filter(trigger => trigger.scheduledTime),
 });
-
-export const RECALL_ALERTS_STATUSES = [
-  { name: 'All Statuses', value: '' },
-  { name: 'Not Configured', value: '0' },
-  { name: 'Alert Configured', value: '1' },
-  { name: 'Check Requested', value: '2' },
-  { name: 'Results Available', value: '3' },
-  { name: 'Alert Running', value: '4' },
-  { name: 'Alert Completed', value: '5' },
-  { name: 'Alert Failed', value: '6' },
-];
 
 export const VIN_CHECK_API = 'VIN Check (API)';
 export const CSV_UPLOADED = 'CSV Uploaded';

@@ -21,7 +21,7 @@ import {
   setSelectedStatus,
   setUpdatedAlerts,
 } from './actions';
-import { RECALL_ALERTS_STATUSES } from '../../../pages/admin/DealerOperations/helper';
+import { RECALL_ALERTS_STATUSES } from '../../../utils/constants';
 
 export const initialOrder = {
   orderBy: 'CampaignNumber',

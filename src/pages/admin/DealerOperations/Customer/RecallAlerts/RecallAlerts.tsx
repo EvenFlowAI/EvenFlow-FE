@@ -8,7 +8,6 @@ import WorkflowTable from './WorkflowTable';
 import { IRecallAlert } from '../../../../../store/reducers/recall/types';
 import { Autocomplete, Button } from '@mui/material';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
-import { RECALL_ALERTS_STATUSES } from '../../helper';
 import { useStyles } from '../styles';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import AddRecallAlertModal from './layouts/AddRecallAlertModal';
@@ -25,6 +24,7 @@ import StatsTable from './StatsTable';
 import { getAllGlobalRecall } from '../../../../../store/reducers/recallDatabase/actions';
 import TextConfigurationRecall from './layouts/TextConfigurationRecall';
 import HistoryRecall from './layouts/HistoryRecall';
+import { RECALL_ALERTS_STATUSES } from '../../../../../utils/constants';
 
 const RecallAlerts = () => {
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');

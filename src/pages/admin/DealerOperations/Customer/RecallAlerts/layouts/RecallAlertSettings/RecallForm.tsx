@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, createRef, useCallback } from 'react';
+import React, { ChangeEventHandler, useCallback } from 'react';
 import { Autocomplete, Button, Tooltip } from '@mui/material';
 import { CSV_UPLOADED, VIN_CHECK_API } from '../../../../helper';
 import { autocompleteRender } from '../../../../../../../utils/autocompleteRenders';
@@ -148,7 +148,7 @@ const RecallForm = ({
   const { selectedSC } = useSCs();
   const { allGlobalsRecalls } = useSelector((state: RootState) => state.recallDatabase);
   const showError = useException();
-  const ref = createRef<HTMLInputElement>();
+  const ref = React.useRef<HTMLInputElement>(null);
   const hasSelectedModels = (updatedRecallAlert.globalModelIds?.length ?? 0) > 0;
   const hasAvailableCredits = (credits?.availableCredits ?? 0) > 0;
 
@@ -167,7 +167,6 @@ const RecallForm = ({
           }
         };
         if (ref.current) {
-          ref.current.files = null;
           ref.current.value = '';
         }
       }

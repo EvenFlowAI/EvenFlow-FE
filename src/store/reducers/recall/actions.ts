@@ -246,11 +246,11 @@ export const getRecallEvents =
       pageIndex,
       status: selectedStatus.value,
     };
-    if (tableType == 'workflow') {
+    if (tableType === 'workflow') {
       data.orderBy = recallAlertsOrderWorkflow.orderBy;
       data.isAscending = recallAlertsOrderWorkflow.isAscending;
     }
-    if (tableType == 'stats') {
+    if (tableType === 'stats') {
       data.orderBy = recallAlertsOrderStats.orderBy;
       data.isAscending = recallAlertsOrderStats.isAscending;
     }
@@ -300,11 +300,13 @@ export const getRecallEvents =
           }
         } else {
           dispatch(setRecallAlerts([]));
+          dispatch(setRecallAlertsCount(0));
           dispatch(setIsRecallAlertsTableLoading(false));
           onSuccess();
         }
       })
       .catch(err => {
+        dispatch(setIsRecallAlertsTableLoading(false));
         onError(err);
       });
   };

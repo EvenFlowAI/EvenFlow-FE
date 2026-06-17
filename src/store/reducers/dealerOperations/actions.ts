@@ -361,7 +361,6 @@ export const loadAvailableCredits =
           const data = response.data.data;
           dispatch(setCredits(data));
         }
-        onSuccess();
       })
       .catch(err => {
         console.log(err);

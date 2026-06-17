@@ -13,7 +13,7 @@ import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
 interface AudienceFormI {
   updatedRecallAlert?: IRecallAlert | null;
   criterias: CriteriaI[];
-  isOutbondMode?: boolean;
+  isOutboundMode?: boolean;
   isEditTable: boolean;
   setCriteria: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
   criteriaOperatorErrors: {
@@ -36,7 +36,7 @@ interface AudienceFormI {
 
 const AudienceForm = ({
   updatedRecallAlert,
-  isOutbondMode,
+  isOutboundMode,
   criterias,
   isEditTable,
   setCriteria,
@@ -51,7 +51,7 @@ const AudienceForm = ({
   const handleAddCriteria = () => {
     setCriteria(prev => [
       ...prev,
-      { type: '', operator: '', value: '', isCriteria: !!isOutbondMode },
+      { type: '', operator: '', value: '', isCriteria: !!isOutboundMode },
     ]);
   };
 
@@ -59,7 +59,7 @@ const AudienceForm = ({
     if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
 
     if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
-    if (isOutbondMode) {
+    if (isOutboundMode) {
       if (criterias.length > 1) {
         setCriteria(prev => prev.filter((criteria, i) => i !== index));
       }
@@ -92,7 +92,7 @@ const AudienceForm = ({
 
   return (
     <>
-      {!isOutbondMode ? (
+      {!isOutboundMode ? (
         <span
           className={clsx(classes.audienceParagraph, formClasses.audienceFiltersTitle, {
             [formClasses.audienceFiltersTitleEmpty]: !criterias.length,
@@ -130,7 +130,7 @@ const AudienceForm = ({
                   renderInput={autocompleteRender({
                     isCustomFontSize: true,
                     error: criteriaTypeErrors[index],
-                    label: isOutbondMode ? 'Audience Criteria' : '',
+                    label: isOutboundMode ? 'Audience Criteria' : '',
                     placeholder: 'Not selected',
                   })}
                 />
@@ -146,7 +146,7 @@ const AudienceForm = ({
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'operator', v || '')}
                   renderInput={autocompleteRender({
-                    label: isOutbondMode ? 'Operator' : '',
+                    label: isOutboundMode ? 'Operator' : '',
                     placeholder: '',
                     error: criteriaOperatorErrors[index],
                   })}
@@ -160,7 +160,7 @@ const AudienceForm = ({
                     type="number"
                     error={!Number.isInteger(Number(criteria.value))}
                     inputProps={{ min: 0 }}
-                    label={isOutbondMode ? 'Value' : ''}
+                    label={isOutboundMode ? 'Value' : ''}
                     placeholder=""
                     onChange={e => handleCriteriaChange(index, 'value', e.target.value || '')}
                     value={+criteria.value}
@@ -169,7 +169,7 @@ const AudienceForm = ({
                 {isEditTable ? (
                   <div
                     className={clsx(classes.removeCriteriaIcon, {
-                      [formClasses.removeCriteriaIconCompact]: !isOutbondMode,
+                      [formClasses.removeCriteriaIconCompact]: !isOutboundMode,
                     })}
                     onClick={() => handleRemoveCriteria(index)}
                   >
@@ -186,18 +186,18 @@ const AudienceForm = ({
         <IconButton
           onClick={handleAddCriteria}
           disabled={
-            (isOutbondMode ? !!criterias.length : false) ||
+            (isOutboundMode ? !!criterias.length : false) ||
             updatedRecallAlert?.status === RecallEventStatus.Running
           }
           className={classes.iconPlus}
           size="large"
         >
           <AddCircleOutline
-            className={isOutbondMode ? (criterias.length ? 'isDisabled' : '') : ''}
+            className={isOutboundMode ? (criterias.length ? 'isDisabled' : '') : ''}
           />
           <span
             className={clsx(classes.addCriteriaButton, {
-              [formClasses.disabledAddButtonText]: isOutbondMode && criterias.length,
+              [formClasses.disabledAddButtonText]: isOutboundMode && criterias.length,
             })}
           >
             Audience Criteria

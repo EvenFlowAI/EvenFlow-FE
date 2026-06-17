@@ -30,7 +30,7 @@ interface TriggersI {
   firstTriggerDateError: boolean;
   setFirstTriggerDateError: React.Dispatch<React.SetStateAction<boolean>>;
   disableAdd: boolean;
-  isOutbondMode?: boolean;
+  isOutboundMode?: boolean;
   updatedRecallAlert?: IRecallAlert | null;
 }
 
@@ -38,7 +38,7 @@ interface IAddTriggerAction {
   isEditTable: boolean;
   triggersLength: number;
   disableAdd: boolean;
-  isOutbondMode?: boolean;
+  isOutboundMode?: boolean;
   updatedRecallAlert?: IRecallAlert | null;
   onAddTrigger: () => void;
   classes: ReturnType<typeof useStyles>['classes'];
@@ -49,7 +49,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
   isEditTable,
   triggersLength,
   disableAdd,
-  isOutbondMode,
+  isOutboundMode,
   updatedRecallAlert,
   onAddTrigger,
   classes,
@@ -60,7 +60,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
   }
 
   const isDisabledByLimit = triggersLength === 5;
-  const isDisabledByMode = isOutbondMode ? disableAdd : false;
+  const isDisabledByMode = isOutboundMode ? disableAdd : false;
   const isDisabledByStatus = updatedRecallAlert?.status === RecallEventStatus.Running;
   const isDisabled = isDisabledByLimit || isDisabledByMode || isDisabledByStatus;
 
@@ -77,7 +77,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
           [formClasses.disabledAddButtonText]: isDisabledByLimit || isDisabledByMode,
         })}
       >
-        Add {isOutbondMode ? 'Contact' : 'Trigger'}
+        Add {isOutboundMode ? 'Contact' : 'Trigger'}
       </span>
     </IconButton>
   );
@@ -93,7 +93,7 @@ const Triggers = ({
   firstTriggerDateError,
   setFirstTriggerDateError,
   disableAdd,
-  isOutbondMode,
+  isOutboundMode,
 }: TriggersI) => {
   const { classes } = useStyles();
   const { classes: formClasses } = useFormStyles();
@@ -103,7 +103,7 @@ const Triggers = ({
     : '';
 
   const handleAddTrigger = () => {
-    if (isOutbondMode) {
+    if (isOutboundMode) {
       setTriggers(prev => [...prev, { daysFromListGeneration: 0, scheduledTime: '' }]);
     } else {
       setTriggers(prev => [
@@ -147,12 +147,12 @@ const Triggers = ({
     <>
       <span
         className={clsx(classes.audienceParagraph, {
-          [formClasses.triggersTitleWithItems]: !isOutbondMode && triggers.length,
+          [formClasses.triggersTitleWithItems]: !isOutboundMode && triggers.length,
         })}
       >
         Triggers
       </span>
-      {!isOutbondMode && selectedRecallAlert?.listGeneratedDate?.length ? (
+      {!isOutboundMode && selectedRecallAlert?.listGeneratedDate?.length ? (
         <>
           <div className={formClasses.listGeneratedInfo}>
             <p className={formClasses.listGeneratedLabel}>List Generated On</p>
@@ -169,7 +169,7 @@ const Triggers = ({
               <div
                 key={index}
                 className={clsx(classes.triggerItemWrapper, {
-                  [formClasses.triggerItemWrapperWithPadding]: !isOutbondMode,
+                  [formClasses.triggerItemWrapperWithPadding]: !isOutboundMode,
                 })}
               >
                 <div className={classes.triggerItem}>
@@ -190,7 +190,7 @@ const Triggers = ({
                   <div className={formClasses.triggerControlsRow}>
                     <div
                       className={clsx(classes.triggersForm, {
-                        [formClasses.triggerDaysFieldRecall]: !isOutbondMode,
+                        [formClasses.triggerDaysFieldRecall]: !isOutboundMode,
                       })}
                     >
                       <TextField
@@ -215,7 +215,7 @@ const Triggers = ({
                     </div>
                     <div
                       className={clsx(classes.triggerClockWrapper, {
-                        [formClasses.triggerClockFieldRecall]: !isOutbondMode,
+                        [formClasses.triggerClockFieldRecall]: !isOutboundMode,
                       })}
                     >
                       <ClockTimePicker
@@ -231,15 +231,15 @@ const Triggers = ({
                         label={'Scheduled time'}
                         InputProps={{
                           id: 'Scheduled time',
-                          className: !isOutbondMode ? formClasses.scheduledTimeInput : undefined,
+                          className: !isOutboundMode ? formClasses.scheduledTimeInput : undefined,
                           placeholder: '',
                           error: index === 0 && firstTriggerDateError,
-                          endAdornment: !isOutbondMode && isEditTable ? <Time width={26} /> : null,
+                          endAdornment: !isOutboundMode && isEditTable ? <Time width={26} /> : null,
                         }}
                       />
                     </div>
                   </div>
-                  {!isOutbondMode && formattedListGeneratedDate ? (
+                  {!isOutboundMode && formattedListGeneratedDate ? (
                     <div className={formClasses.recallTriggerStats}>
                       <span className={formClasses.recallTriggerStatsDate}>
                         {formattedListGeneratedDate}
@@ -264,7 +264,7 @@ const Triggers = ({
         isEditTable={isEditTable}
         triggersLength={triggers.length}
         disableAdd={disableAdd}
-        isOutbondMode={isOutbondMode}
+        isOutboundMode={isOutboundMode}
         updatedRecallAlert={updatedRecallAlert}
         onAddTrigger={handleAddTrigger}
         classes={classes}
