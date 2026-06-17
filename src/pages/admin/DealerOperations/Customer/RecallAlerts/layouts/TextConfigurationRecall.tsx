@@ -105,7 +105,7 @@ const TextConfigurationRecall = ({
     if (!canRender) return null;
 
     return (
-      <li className={classes.tagItem}>
+      <li key={tag} className={classes.tagItem}>
         <span className={classes.insertTag} onClick={() => handleInsertTag(tag)}>
           {tag}
         </span>

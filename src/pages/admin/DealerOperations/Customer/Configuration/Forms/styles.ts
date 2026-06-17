@@ -25,6 +25,16 @@ export const useFormStyles = makeStyles()(() => ({
     display: 'block',
     marginBottom: '24px',
   },
+  emptyTriggersState: {
+    marginTop: '16px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  emptyTriggersStateText: {
+    fontSize: '16px',
+    color: '#252733',
+  },
   listGeneratedInfo: {
     padding: '8px 16px',
     border: '1px solid #DADADA',

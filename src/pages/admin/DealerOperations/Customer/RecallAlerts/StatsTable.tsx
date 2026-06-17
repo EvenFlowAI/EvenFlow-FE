@@ -172,7 +172,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
 
   const handleRemove = async () => {
     if (!currentItem) {
-      showError('Make is not chosen');
+      showError('Recall alert is not chosen');
     } else {
       if (selectedSC) {
         try {

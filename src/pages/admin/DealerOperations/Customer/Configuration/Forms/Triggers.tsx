@@ -7,6 +7,7 @@ import { RecallEventStatus, TriggerI } from '../../types';
 import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
 import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
+import { ReactComponent as EmptyCalendar } from '../../../../../../assets/img/empthyCalendar.svg';
 import { ReactComponent as Time } from '../../../../../../assets/img/time.svg';
 import dayjs from 'dayjs';
 import { useStyles } from '../../../styles';
@@ -259,7 +260,12 @@ const Triggers = ({
             );
           })}
         </div>
-      ) : null}
+      ) : isOutboundMode ? null : (
+        <div className={formClasses.emptyTriggersState}>
+          <EmptyCalendar />
+          <span className={formClasses.emptyTriggersStateText}>No triggers configured yet</span>
+        </div>
+      )}
       <AddTriggerAction
         isEditTable={isEditTable}
         triggersLength={triggers.length}
