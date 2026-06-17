@@ -49,7 +49,7 @@ export interface IRecallAlert {
   campaignRecallGroupBatchId: number;
   recallCampaignId: number;
   status: number;
-  listType: number;
+  listType: RecallListType;
   communicationDetails: {
     textMessage: string;
     textMessageTrimmed: string;

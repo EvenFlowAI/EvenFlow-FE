@@ -302,7 +302,7 @@ export const getRecallEvents =
           }
         } else {
           dispatch(setRecallAlerts([]));
-          dispatch(setRecallAlertsCount(0));
+          dispatch(setRecallAlertsCount(paging?.total ?? 0));
           dispatch(setIsRecallAlertsTableLoading(false));
           onSuccess();
         }
@@ -382,8 +382,8 @@ export const deleteRecallAlert =
         dispatch(getRecallEvents(serviceCenterId, tableType, () => {}, onSuccess));
       })
       .catch(e => {
-        if (onError) onError('Delete Recall Alert error');
-        console.log('Delete Recall Alert error', e);
+        const backendMessage = e?.response?.data?.error?.message || e.message || 'Unknown error';
+        if (onError) onError(backendMessage);
       });
   };
 
@@ -554,8 +554,9 @@ export const viewHistoryData =
 
     Api.call(Api.endpoints.Audit.History, { params })
       .then(response => {
-        if (response?.data?.data?.history.length) {
-          onSuccess(response?.data?.data?.history);
+        const history = response?.data?.data?.history;
+        if (history?.length) {
+          onSuccess(history);
         } else {
           onSuccess([]);
         }
