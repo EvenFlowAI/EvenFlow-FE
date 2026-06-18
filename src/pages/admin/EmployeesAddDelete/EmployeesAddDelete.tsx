@@ -50,15 +50,14 @@ export const EmployeesAddDelete = () => {
     <div className={classes.root}>
       <TitleContainer title={'Add & Delete'} pad={!isMobile} parent={employeesRoot} />
 
-      {!isLoading ? (
-        <Filters
-          setFilterServiceCenterId={setFilterServiceCenterId}
-          setData={setVisibleDate}
-          isAdminPanel={true}
-          handleAddUserAccount={handleAddUserAccount}
-          setPageData={setPageData}
-        />
-      ) : null}
+      <Filters
+        setFilterServiceCenterId={setFilterServiceCenterId}
+        setData={setVisibleDate}
+        isAdminPanel={true}
+        handleAddUserAccount={handleAddUserAccount}
+        setPageData={setPageData}
+        isLoading={isLoading}
+      />
       <UsersTableWrapper
         filterServiceCenterId={filterServiceCenterId}
         pageData={pageData}
