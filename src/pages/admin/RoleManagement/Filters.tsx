@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
 import { IUserAccount, statusLabels, UserStatus } from './types';
@@ -18,6 +18,7 @@ interface FiltersProps {
   handleAddUserAccount?: (isEdit: boolean) => void;
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
   setFilterServiceCenterId?: React.Dispatch<React.SetStateAction<number>>;
+  isLoading?: boolean;
 }
 
 export interface IUserFilters {
@@ -34,6 +35,7 @@ const Filters = ({
   handleAddUserAccount,
   setPageData,
   setFilterServiceCenterId,
+  isLoading,
 }: FiltersProps) => {
   const { dealershipList } = useSelector((state: RootState) => state.dealershipGroups);
   const { serviceCenters } = useSelector(({ serviceCenters }: RootState) => serviceCenters);
@@ -47,6 +49,12 @@ const Filters = ({
       applyFilters(filters);
     }
   }, [users]);
+
+  const serviceCenterOptions = useMemo(() => {
+    if (isAdminPanel || !filters.dealershipId) return serviceCenters;
+
+    return serviceCenters.filter(sc => String(sc.dealershipId) === filters.dealershipId);
+  }, [isAdminPanel, serviceCenters, filters.dealershipId]);
 
   const applyFilters = (newFilters: IUserFilters) => {
     let filtered = [...users];
@@ -94,10 +102,17 @@ const Filters = ({
 
   const handleSelectDealership = (e: React.SyntheticEvent, value: string) => {
     const selectedId = value;
+    const keepCurrentServiceCenter = serviceCenters.some(
+      sc => String(sc.id) === filters.serviceCenterId && String(sc.dealershipId) === selectedId
+    );
+
     const newFilters = {
       ...filters,
       dealershipId: selectedId === '' ? undefined : selectedId,
+      serviceCenterId:
+        selectedId && !keepCurrentServiceCenter ? undefined : filters.serviceCenterId,
     };
+
     setFilters(newFilters);
     applyFilters(newFilters);
   };
@@ -152,6 +167,7 @@ const Filters = ({
           <div className={classes.label}>Dealership Group</div>
           <Autocomplete
             options={dealershipList}
+            disabled={isLoading}
             getOptionLabel={option => option.name}
             isOptionEqualToValue={(option, value) => option.id === value.id}
             value={dealershipList.find(d => String(d.id) === filters.dealershipId) ?? null}
@@ -170,10 +186,13 @@ const Filters = ({
       <div className={componentClasses.filter} style={{ width: 240 }}>
         <div className={classes.label}>Service Center</div>
         <Autocomplete
-          options={isAdminPanel ? serviceCenters : normalizeServiceCenters(serviceCenters)}
+          options={
+            isAdminPanel ? serviceCenterOptions : normalizeServiceCenters(serviceCenterOptions)
+          }
+          disabled={isLoading}
           getOptionLabel={option => option.name}
           isOptionEqualToValue={(option, value) => option.id === value.id}
-          value={serviceCenters.find(sc => String(sc.id) === filters.serviceCenterId) ?? null}
+          value={serviceCenterOptions.find(sc => String(sc.id) === filters.serviceCenterId) ?? null}
           onChange={(event, newValue) => {
             handleSelectServiceCenter(event, newValue ? String(newValue.id) : '');
           }}
@@ -189,6 +208,7 @@ const Filters = ({
         <div className={classes.label}>Role</div>
         <Autocomplete
           options={Object.values(CleanestRoles)}
+          disabled={isLoading}
           getOptionLabel={option => option}
           isOptionEqualToValue={(option, value) => option === value}
           value={filters.role}
@@ -208,6 +228,7 @@ const Filters = ({
           <div className={classes.label}>Status</div>
           <Autocomplete
             options={Object.values(UserStatus).filter(v => typeof v === 'number') as UserStatus[]}
+            disabled={isLoading}
             getOptionLabel={option => statusLabels[option]}
             isOptionEqualToValue={(option, value) => option === value}
             value={filters.status ?? null}
@@ -223,6 +244,7 @@ const Filters = ({
 
       <TextField
         style={{ height: 43, flexGrow: 1 }}
+        disabled={isLoading}
         placeholder="Search..."
         endAdornment={<Search />}
         value={filters.searchTerm}
