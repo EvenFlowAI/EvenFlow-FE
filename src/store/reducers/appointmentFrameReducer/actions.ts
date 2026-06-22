@@ -1098,6 +1098,9 @@ export const createOrUpdateAppointment =
       appointmentFrame?.serviceTypeOption?.type ?? EServiceType.VisitCenter;
 
     const vehicle: TVehicleForRequest = {
+      id: appointmentFrame?.selectedVehicle?.id
+        ? Number(appointmentFrame.selectedVehicle?.id)
+        : null,
       dmsId: appointmentFrame?.selectedVehicle?.dmsId ?? null,
       engineTypeId: appointmentFrame.selectedVehicle?.engineTypeId
         ? Number(appointmentFrame.selectedVehicle?.engineTypeId)
@@ -1536,6 +1539,7 @@ export const cloneAppointment =
         dispatch(setAppointmentSaving(true));
 
         const vehicle: TVehicleForRequest = {
+          id: currentAppointment?.vehicle?.id ? Number(currentAppointment?.vehicle?.id) : null,
           dmsId: currentAppointment?.vehicle?.dmsId ?? null,
           engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
           model: currentAppointment?.vehicle?.model ?? null,
