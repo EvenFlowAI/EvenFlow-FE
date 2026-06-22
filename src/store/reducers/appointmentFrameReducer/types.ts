@@ -235,6 +235,7 @@ export type TDriverForRequest = {
 };
 
 export type TVehicleForRequest = {
+  id: number | null;
   dmsId: string | null;
   engineTypeId: number | null;
   model: string | null;
