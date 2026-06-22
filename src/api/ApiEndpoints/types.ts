@@ -426,4 +426,8 @@ export interface IApiEndpoints {
     | 'SendSMSMessage',
     TApiEndpoint
   >;
+  ServiceCenterCredits: Record<
+    'GetServiceCenterCredits' | 'UpdateServiceCenterCredits',
+    TApiEndpoint
+  >;
 }

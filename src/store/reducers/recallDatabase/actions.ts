@@ -6,7 +6,12 @@ import {
   IPagingResponse,
   IPagingUpdatedResponse,
 } from '../../../types/types';
-import { GlobalRecallComponent, IGlobalRecall } from '../../../pages/admin/RecallDatabase/types';
+import {
+  GlobalRecallComponent,
+  IGlobalRecall,
+  ServiceCenterCredit,
+} from '../../../pages/admin/RecallDatabase/types';
+import { IServiceCenterExtended } from '../serviceCenters/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import dayjs from 'dayjs';
 import queryString from 'query-string';
@@ -17,6 +22,9 @@ export const setRecallsDatabase = createAction<IGlobalRecall[]>(
   'RecallDatabase/setRecallsDatabase'
 );
 export const setManufacturers = createAction<string[]>('RecallDatabase/setManufcaturers');
+export const setRecallCredits = createAction<ServiceCenterCredit[]>(
+  'RecallDatabase/SetRecallCredits'
+);
 export const setAllGlobalRecalls = createAction<IGlobalRecall[]>(
   'RecallDatabase/SetAllGlobalRecalls'
 );
@@ -104,14 +112,94 @@ export const getRecallComponent =
       urlParams: { id },
     })
       .then(response => {
-        if (response.data.data) {
-          onSuccess(response?.data?.data);
+        if (response?.data?.data) {
+          onSuccess(response.data.data);
         }
       })
       .catch(err => {
         console.log(err);
       })
       .finally(() => dispatch(setLoading(false)));
+  };
+
+export const getServiceCenterCredits =
+  (onSuccess: () => void, onError: () => void): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.ServiceCenterCredits.GetServiceCenterCredits)
+      .then(response => {
+        if (response?.data?.data) {
+          Api.call(Api.endpoints.ServiceCenters.GetAll, {
+            data: {
+              searchTerm: '',
+            },
+          })
+            .then(r => {
+              if (r?.data?.result) {
+                const creditsWithSCData = response.data.data.map((credit: ServiceCenterCredit) => {
+                  const matchedServiceCenter = (r.data.result as IServiceCenterExtended[]).find(
+                    (sc: IServiceCenterExtended) => credit.serviceCenterId === sc.id
+                  );
+
+                  if (!matchedServiceCenter) {
+                    return credit;
+                  }
+
+                  return {
+                    ...credit,
+                    dealershipId: matchedServiceCenter.dealershipId,
+                    dealershipName: matchedServiceCenter.dealership?.name,
+                    name: matchedServiceCenter.name,
+                    serviceCenterName: matchedServiceCenter.name,
+                    avatarPath: matchedServiceCenter.avatarPath,
+                  };
+                });
+
+                onSuccess();
+                dispatch(setRecallCredits(creditsWithSCData));
+              } else {
+                onSuccess();
+                dispatch(setRecallCredits([]));
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              onError();
+              dispatch(setRecallCredits([]));
+            });
+        } else {
+          onSuccess();
+          dispatch(setRecallCredits([]));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        onError();
+        dispatch(setRecallCredits([]));
+      });
+  };
+
+export const updateServiceCenterRecallCredits =
+  (
+    items: {
+      serviceCenterId: number;
+      recallCredits: number;
+    }[],
+    onSuccess: () => void,
+    onError: () => void
+  ): AppThunk =>
+  () => {
+    Api.call(Api.endpoints.ServiceCenterCredits.UpdateServiceCenterCredits, {
+      data: {
+        items,
+      },
+    })
+      .then(() => {
+        onSuccess();
+      })
+      .catch(err => {
+        console.log(err);
+        onError();
+      });
   };
 
 export const getAllGlobalRecalls = (): AppThunk => dispatch => {

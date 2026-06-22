@@ -680,6 +680,10 @@ export class Api {
       GetPhoneNumbers: { route: '/text-integration/phone-numbers', method: 'post' },
       SendSMSMessage: { route: '/text-integration/sms-message', method: 'post' },
     },
+    ServiceCenterCredits: {
+      GetServiceCenterCredits: { route: '/service-center-credits', method: 'get' },
+      UpdateServiceCenterCredits: { route: '/service-center-credits', method: 'patch' },
+    },
   };
 
   static async call<RValue = any>(r: TApiEndpoint, options?: TOptions) {

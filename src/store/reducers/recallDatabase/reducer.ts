@@ -7,6 +7,7 @@ import {
   setManufacturers,
   setPaging,
   setRecallsDatabase,
+  setRecallCredits,
 } from './actions';
 
 const initialState: TState = {
@@ -15,6 +16,7 @@ const initialState: TState = {
   recallsDatabase: [],
   allGlobalRecalls: [],
   manufacturers: [],
+  recallCredits: [],
 };
 
 export const recallDatabaseReducer = createReducer(initialState, builder =>
@@ -33,5 +35,8 @@ export const recallDatabaseReducer = createReducer(initialState, builder =>
     })
     .addCase(setManufacturers, (state, { payload }) => {
       return { ...state, manufacturers: payload };
+    })
+    .addCase(setRecallCredits, (state, { payload }) => {
+      return { ...state, recallCredits: payload };
     })
 );
