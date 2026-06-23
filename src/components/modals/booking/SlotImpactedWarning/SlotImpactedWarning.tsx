@@ -15,9 +15,8 @@ import { TScreen } from '../../../../types/screens';
 
 const SlotImpactedWarning = () => {
   const { isSlotsWarningOpen } = useSelector((state: RootState) => state.modals);
-  const { isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
-    (state: RootState) => state.bookingFlowConfig
-  );
+  const { isAppointmentTimingAvailable, isTransportationAvailable, isAdvisorAvailable } =
+    useSelector((state: RootState) => state.bookingFlowConfig);
   const { customerLoadedData, isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { currentScreen, appointmentByKey, transportations, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
@@ -48,8 +47,9 @@ const SlotImpactedWarning = () => {
       }
     }
 
-    const nextScreen: TScreen =
-      isTransportationAvailable && currentScreen !== 'transportationNeeds'
+    const nextScreen: TScreen = isAdvisorAvailable
+      ? 'consultantSelection'
+      : isTransportationAvailable && currentScreen !== 'transportationNeeds'
         ? 'transportationNeeds'
         : isAppointmentTimingAvailable
           ? 'appointmentTiming'
