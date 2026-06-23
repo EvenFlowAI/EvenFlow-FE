@@ -138,6 +138,10 @@ export const AppointmentSlots: React.FC<
   const [currentApiStartDate, setCurrentApiStartDate] = useState<string | null>(null);
   const [currentApiEndDate, setCurrentApiEndDate] = useState<string | null>(null);
   const apiDatesSetRef = useRef<boolean>(false);
+  const initialSlotsRangeRef = useRef<{ start: string | null; end: string | null }>({
+    start: null,
+    end: null,
+  });
   const { id } = useParams<{ id: string }>();
   const initRef = useRef<boolean>(false);
   const isMount = useRef(true);
@@ -424,11 +428,20 @@ export const AppointmentSlots: React.FC<
     }
   };
 
-  const onLoadSlots = (isEmptyList: boolean) => {
+  const onLoadSlots = (
+    isEmptyList: boolean,
+    requestedStartDate?: string,
+    requestedEndDate?: string
+  ) => {
+    const isInitialRange =
+      !!requestedStartDate &&
+      !!requestedEndDate &&
+      initialSlotsRangeRef.current.start === requestedStartDate &&
+      initialSlotsRangeRef.current.end === requestedEndDate;
     const isPossibleToChangeType =
       firstScreenOptions.filter(item => item.type !== EServiceType.MobileService)?.length > 1;
     const isMobileServiceType = serviceType === EServiceType.MobileService;
-    if (isEmptyList && isPossibleToChangeType && !isMobileServiceType) {
+    if (isEmptyList && isPossibleToChangeType && !isMobileServiceType && isInitialRange) {
       onServiceOptionOpen();
     }
   };
@@ -477,6 +490,13 @@ export const AppointmentSlots: React.FC<
     requestedStartDate?: string;
     requestedEndDate?: string;
   }) => {
+    if (!initialSlotsRangeRef.current.start && requestedStartDate && requestedEndDate) {
+      initialSlotsRangeRef.current = {
+        start: requestedStartDate,
+        end: requestedEndDate,
+      };
+    }
+
     if (id) {
       if (!firstDayWithSlots && currentApiStartDate) {
         setFirstDayWithSlots(currentApiStartDate);
@@ -574,7 +594,13 @@ export const AppointmentSlots: React.FC<
         if (serviceType === EServiceType.PickUpDropOff) {
           if (data.address)
             await dispatch(
-              loadServiceValetSlots(data, undefined, onLoadSlots, handleError, setApiDates)
+              loadServiceValetSlots(
+                data,
+                undefined,
+                isEmptyList => onLoadSlots(isEmptyList, requestedStartDate, requestedEndDate),
+                handleError,
+                setApiDates
+              )
             );
         } else {
           await dispatch(
@@ -582,7 +608,7 @@ export const AppointmentSlots: React.FC<
               data,
               currentAppointment ? () => {} : setDateCallback,
               () => handleDateRangeSet(false),
-              () => {},
+              isEmptyList => onLoadSlots(isEmptyList, requestedStartDate, requestedEndDate),
               handleError,
               setApiDates
             )
