@@ -209,8 +209,8 @@ const PodAppointments: React.FC<
                   placeholder: 'Select',
                   error: Boolean(
                     currentEmployee &&
-                    !currentPodData?.usersList?.includes(currentEmployee?.id) &&
-                    formChecked
+                      !currentPodData?.usersList?.includes(currentEmployee?.id) &&
+                      formChecked
                   ),
                 })}
               />
