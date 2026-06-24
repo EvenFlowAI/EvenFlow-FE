@@ -118,11 +118,11 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   function mapUserBase(user: TUserAccountForm) {
     return {
       status: user.status || 0,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      fullName: `${user.firstName} ${user.lastName}`,
-      userName: user.email,
-      email: user.email,
+      firstName: user.firstName?.trim(),
+      lastName: user.lastName?.trim(),
+      fullName: `${user.firstName?.trim()} ${user.lastName?.trim()}`.trim(),
+      userName: user.email?.trim(),
+      email: user.email?.trim(),
       role: user.role || Roles.EvenFlowAdmin,
       avatarPath: user.avatarPath ?? '',
       dealerships: user.dealerships
@@ -163,6 +163,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
     setLoading(true);
 
     const mappedUser = mapUser(userForm);
+
     if (userForm.id) {
       dispatch(updateRoleManagementUser(mappedUser as IUserAccount, onClose, handleError, avatar));
     } else {
