@@ -101,7 +101,7 @@ export const checkPodChanged =
   (dispatch, getState) => {
     const appointmentFrame = getState().appointmentFrame;
     const appointment = getState().appointment;
-    const { isTransportationAvailable, isAppointmentTimingAvailable } =
+    const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
       getState().bookingFlowConfig;
     const { wasWarningShowed } = getState().modals;
 
@@ -190,9 +190,10 @@ export const checkPodChanged =
         .then(result => {
           if (result?.data) {
             if (wasWarningShowed) {
-              const nextScreen: TScreen =
-                isTransportationAvailable &&
-                appointmentFrame.currentScreen !== 'transportationNeeds'
+              const nextScreen: TScreen = isAdvisorAvailable
+                ? 'consultantSelection'
+                : isTransportationAvailable &&
+                    appointmentFrame.currentScreen !== 'transportationNeeds'
                   ? 'transportationNeeds'
                   : isAppointmentTimingAvailable
                     ? 'appointmentTiming'
