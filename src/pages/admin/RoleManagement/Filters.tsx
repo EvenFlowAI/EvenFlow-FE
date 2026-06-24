@@ -66,7 +66,7 @@ const Filters = ({
 
     setFilters(newFilters);
     applyFilters(newFilters);
-  }, [isAdminPanel, selectedServiceCenterId, users]);
+  }, [isAdminPanel, selectedServiceCenterId]);
 
   const serviceCenterOptions = useMemo(() => {
     if (isAdminPanel || !filters.dealershipId) return serviceCenters;
