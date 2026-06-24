@@ -57,6 +57,7 @@ export const EmployeesAddDelete = () => {
         handleAddUserAccount={handleAddUserAccount}
         setPageData={setPageData}
         isLoading={isLoading}
+        selectedServiceCenterId={selectedSC?.id ?? null}
       />
       <UsersTableWrapper
         filterServiceCenterId={filterServiceCenterId}

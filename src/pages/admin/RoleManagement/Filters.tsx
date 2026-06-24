@@ -19,6 +19,7 @@ interface FiltersProps {
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
   setFilterServiceCenterId?: React.Dispatch<React.SetStateAction<number>>;
   isLoading?: boolean;
+  selectedServiceCenterId?: number | null;
 }
 
 export interface IUserFilters {
@@ -36,6 +37,7 @@ const Filters = ({
   setPageData,
   setFilterServiceCenterId,
   isLoading,
+  selectedServiceCenterId,
 }: FiltersProps) => {
   const { dealershipList } = useSelector((state: RootState) => state.dealershipGroups);
   const { serviceCenters } = useSelector(({ serviceCenters }: RootState) => serviceCenters);
@@ -49,6 +51,22 @@ const Filters = ({
       applyFilters(filters);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (!isAdminPanel || selectedServiceCenterId == null) return;
+
+    const selectedId = String(selectedServiceCenterId);
+
+    if (filters.serviceCenterId === selectedId) return;
+
+    const newFilters = {
+      ...filters,
+      serviceCenterId: selectedId,
+    };
+
+    setFilters(newFilters);
+    applyFilters(newFilters);
+  }, [isAdminPanel, selectedServiceCenterId, users]);
 
   const serviceCenterOptions = useMemo(() => {
     if (isAdminPanel || !filters.dealershipId) return serviceCenters;
