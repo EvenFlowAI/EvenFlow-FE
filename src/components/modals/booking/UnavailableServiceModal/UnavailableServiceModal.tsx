@@ -132,7 +132,7 @@ const UnavailableServiceModal: React.FC<
           {'Another Address'}
         </Button>
         <Button
-          style={{ width: '166px' }}
+          style={{ width: 'fit-content' }}
           onClick={onVisitCenterClick}
           color={'primary'}
           variant="contained"
