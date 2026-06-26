@@ -14,14 +14,18 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, isSVWithoutConfig } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const dispatch = useDispatch();
 
   const previousLogicalScreen: TScreen = useMemo(
     () =>
       currentConfig?.appointmentSelection
         ? 'appointmentTiming'
-        : !serviceTypeOption?.transportationOption && isTransportationAvailable
+        : !serviceTypeOption?.transportationOption &&
+            isTransportationAvailable &&
+            !isSVWithoutConfig
           ? 'transportationNeeds'
           : isAdvisorAvailable
             ? 'consultantSelection'

@@ -3,18 +3,27 @@ import { TServiceTypeSettings } from '../../../store/reducers/bookingFlowConfig/
 import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
 import { TScreen } from '../../../types/screens';
 import { ICurrentMenu, TData } from './types';
+import { ITransportation } from '../../../api/types';
 
 const resolveAdvisorAvailability = (
   serviceType: EServiceType,
   isAdvisorAvailable: boolean,
   firstScreenOptions: IFirstScreenOption[],
-  config: TServiceTypeSettings[]
+  config: TServiceTypeSettings[],
+  selectedTransportation?: ITransportation | null
 ): boolean => {
   const serviceValetOption = firstScreenOptions.find(
     option => option.type === EServiceType.PickUpDropOff
   );
 
-  if (serviceType === EServiceType.PickUpDropOff && !serviceValetOption) {
+  console.log(serviceType);
+  console.log(selectedTransportation);
+
+  if (
+    (serviceType === EServiceType.PickUpDropOff ||
+      selectedTransportation?.type === EServiceType.PickUpDropOff) &&
+    !serviceValetOption
+  ) {
     return (
       config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
       isAdvisorAvailable
@@ -30,13 +39,16 @@ export const getCurrentMenu = (
   transportation: boolean,
   isManaging: boolean,
   firstScreenOptions: IFirstScreenOption[] = [],
-  config: TServiceTypeSettings[] = []
+  config: TServiceTypeSettings[] = [],
+  selectedTransportation: ITransportation | null,
+  isSVWithoutConfig?: boolean
 ): string[] => {
   const resolvedAdvisorAvailability = resolveAdvisorAvailability(
     serviceType,
     advisor,
     firstScreenOptions,
-    config
+    config,
+    selectedTransportation
   );
   const menu: ICurrentMenu = {
     yourLocation: 'Your Location',
@@ -48,13 +60,18 @@ export const getCurrentMenu = (
     manageAppointment: 'Manage Appointment',
   };
   if (!resolvedAdvisorAvailability) delete menu.advisorSelection;
-  if (!transportation) delete menu.transportationNeeds;
+  console.log('isSVWithoutConfig', isSVWithoutConfig);
+  console.log('transportation', transportation);
+  if (!transportation || isSVWithoutConfig) delete menu.transportationNeeds;
   if (!isManaging) {
     delete menu.manageAppointment;
   } else {
     delete menu.appointmentConfirmation;
   }
+  console.log(serviceType);
+  console.log(isSVWithoutConfig);
   if (serviceType === EServiceType.VisitCenter) delete menu.yourLocation;
+  if (serviceType !== EServiceType.PickUpDropOff && !isSVWithoutConfig) delete menu.yourLocation;
   return Object.values(menu);
 };
 
@@ -65,13 +82,16 @@ export const getStepsScreen = (
   transportationNeeds: boolean,
   isManaging: boolean,
   firstScreenOptions: IFirstScreenOption[] = [],
-  config: TServiceTypeSettings[] = []
+  config: TServiceTypeSettings[] = [],
+  selectedTransportation: ITransportation | null,
+  isSVWithoutConfig?: boolean
 ): TScreen[] => {
   const resolvedAdvisorAvailability = resolveAdvisorAvailability(
     serviceType,
     advisorSelection,
     firstScreenOptions,
-    config
+    config,
+    selectedTransportation
   );
   const screens: { [key: string]: TScreen } = {
     location: 'location',
@@ -83,13 +103,14 @@ export const getStepsScreen = (
     manageAppointment: 'manageAppointment',
   };
   if (!resolvedAdvisorAvailability) delete screens.consultantSelection;
-  if (!transportationNeeds) delete screens.transportationNeeds;
+  if (!transportationNeeds || isSVWithoutConfig) delete screens.transportationNeeds;
   if (!isManaging) {
     delete screens.manageAppointment;
   } else {
     delete screens.appointmentConfirmation;
   }
   if (serviceType === EServiceType.VisitCenter) delete screens.location;
+  if (serviceType !== EServiceType.PickUpDropOff && !isSVWithoutConfig) delete screens.location;
   return Object.values(screens);
 };
 

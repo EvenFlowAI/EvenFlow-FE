@@ -148,7 +148,7 @@ const YourLocation: React.FC<
 
   useEffect(() => {
     return () => {
-      dispatch(setIsSVWithoutConfig(false));
+      // dispatch(setIsSVWithoutConfig(false));
     };
   }, []);
 
@@ -222,6 +222,7 @@ const YourLocation: React.FC<
   };
 
   const handleBack = () => {
+    console.log('isSVWithoutConfig', isSVWithoutConfig);
     if (isSVWithoutConfig) {
       const visitCenterOptions = firstScreenOptions.find(
         item => item.type === EServiceType.VisitCenter
@@ -239,8 +240,12 @@ const YourLocation: React.FC<
       );
       clearPrevAppointments();
 
+      console.log(config);
+
       const prevConfig = config.find(el => el.serviceType === visitCenterOptions?.type);
-      const transportationStepNeeded = prevConfig?.transportationNeeds;
+      const transportationStepNeeded = firstScreenOptions?.length
+        ? prevConfig?.transportationNeeds
+        : true;
       const advisorsStepNeeded = prevConfig?.advisorSelection;
 
       dispatch(
@@ -255,6 +260,7 @@ const YourLocation: React.FC<
     } else {
       serviceOptionChangedFromSlotPage ? setPrevSelectedOption() : onBack();
     }
+    dispatch(setIsSVWithoutConfig(false));
   };
 
   const onSuccess = (data: TAncillaryPriceByZip) => {

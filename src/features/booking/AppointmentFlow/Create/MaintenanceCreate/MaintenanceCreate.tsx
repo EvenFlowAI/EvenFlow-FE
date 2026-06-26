@@ -6,6 +6,8 @@ import { EServiceCategoryPage } from '../../../../../api/types';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
+import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
 
 type TMaintenanceDetailsProps = {
   onBack: TArgCallback<TScreen>;
@@ -18,21 +20,47 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
   onNext,
   serviceCategoryPage,
 }) => {
-  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
+  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, config } =
     useSelector((state: RootState) => state.bookingFlowConfig);
-  const { service, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { service, serviceTypeOption, transportation, isSVWithoutConfig } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const nextLogicalScreen = useMemo(() => {
     let nextScreen: TScreen = 'appointmentSelection';
-    if (isAdvisorAvailable) {
+    if (
+      config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
+      isAdvisorAvailable
+    ) {
       nextScreen = 'consultantSelection';
-    } else if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
+    } else if (
+      isTransportationAvailable &&
+      !serviceTypeOption?.transportationOption &&
+      !isSVWithoutConfig
+    ) {
       nextScreen = 'transportationNeeds';
     } else if (isAppointmentTimingAvailable) {
       nextScreen = 'appointmentTiming';
     }
     return nextScreen;
-  }, [isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable]);
+  }, [
+    isAdvisorAvailable,
+    isAppointmentTimingAvailable,
+    isTransportationAvailable,
+    config,
+    serviceType,
+    serviceTypeOption,
+  ]);
 
   const goToNextScreen = () => {
     onNext(

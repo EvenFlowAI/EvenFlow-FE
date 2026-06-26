@@ -1,7 +1,10 @@
 import React, { Dispatch, SetStateAction, useMemo } from 'react';
 import { MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { setTransportation } from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
+import {
+  setIsSVWithoutConfig,
+  setTransportation,
+} from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import clsx from 'clsx';
@@ -58,6 +61,7 @@ const SelectedTransportation: React.FC<TProps> = ({
       onSwitchFlowOpen();
     } else {
       setSelectedOption(null);
+      console.log('transportation', transportation);
       localStorage.setItem('lastTransportation', JSON.stringify(transportation));
 
       const SVTransportation = transportations.find(
@@ -77,6 +81,7 @@ const SelectedTransportation: React.FC<TProps> = ({
     if (selected?.type === ETransportationType.PickUpDelivery) {
       switchToServiceValet(selected);
     } else {
+      dispatch(setIsSVWithoutConfig(false));
       dispatch(setTransportation(selected ?? null));
     }
   };

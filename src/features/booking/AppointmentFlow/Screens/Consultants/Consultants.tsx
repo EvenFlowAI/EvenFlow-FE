@@ -41,6 +41,7 @@ export const Consultants: React.FC<TProps> = ({
     serviceTypeOption,
     isConsultantsLoading,
     transportation,
+    isSVWithoutConfig,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
@@ -73,7 +74,9 @@ export const Consultants: React.FC<TProps> = ({
           isTransportationAvailable,
           Boolean(isManagingFlow),
           firstScreenOptions,
-          config
+          config,
+          transportation,
+          isSVWithoutConfig
         )
       )
     );
@@ -83,6 +86,7 @@ export const Consultants: React.FC<TProps> = ({
     isTransportationAvailable,
     firstScreenOptions,
     config,
+    isSVWithoutConfig,
     getCurrentMenu,
   ]);
 
@@ -108,7 +112,9 @@ export const Consultants: React.FC<TProps> = ({
           isTransportationAvailable,
           Boolean(isManagingFlow),
           firstScreenOptions,
-          config
+          config,
+          transportation,
+          isSVWithoutConfig
         )
       )
     );
@@ -120,6 +126,7 @@ export const Consultants: React.FC<TProps> = ({
     firstScreenOptions,
     config,
     getStepsMap,
+    isSVWithoutConfig,
     getStepsScreen,
   ]);
 

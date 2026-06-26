@@ -61,7 +61,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-  const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { isAdvisorAvailable, config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
   const serviceType = useMemo(() => {
     if (serviceTypeOption) {
@@ -97,7 +97,11 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     let nextScreen: TScreen =
       serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
     if (valueService?.selectedService) {
-      nextScreen = isAdvisorAvailable ? 'consultantSelection' : 'appointmentTiming';
+      nextScreen =
+        (config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
+        isAdvisorAvailable)
+          ? 'consultantSelection'
+          : 'appointmentTiming';
     }
     return nextScreen;
   }, [serviceType, valueService, isAdvisorAvailable, consultants]);

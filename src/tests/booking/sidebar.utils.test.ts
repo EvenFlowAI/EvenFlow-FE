@@ -38,7 +38,8 @@ describe('booking sidebar utils advisor fallback', () => {
       false,
       false,
       buildOptions(false),
-      buildConfig(false)
+      buildConfig(false),
+      null
     );
 
     expect(menu).not.toContain('Advisor Selection');
@@ -51,7 +52,8 @@ describe('booking sidebar utils advisor fallback', () => {
       false,
       false,
       buildOptions(false),
-      buildConfig(true)
+      buildConfig(true),
+      null
     );
 
     expect(menu).toContain('Advisor Selection');
@@ -64,7 +66,8 @@ describe('booking sidebar utils advisor fallback', () => {
       false,
       false,
       buildOptions(true),
-      buildConfig(true)
+      buildConfig(true),
+      null
     );
 
     expect(menu).not.toContain('Advisor Selection');
@@ -78,7 +81,8 @@ describe('booking sidebar utils advisor fallback', () => {
       false,
       false,
       buildOptions(false),
-      buildConfig(false)
+      buildConfig(false),
+      null
     );
 
     expect(steps).not.toContain('consultantSelection');

@@ -94,6 +94,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
     const serviceValetOption = firstScreenOptions.find(
       el => el.type === EServiceType.PickUpDropOff
     );
+    console.log('serviceValetOption', serviceValetOption);
     if (serviceValetOption) {
       dispatch(selectAppointment(null));
       dispatch(setTransportation(null));
@@ -101,6 +102,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
       onSwitchFlowOpen();
       clearSteps();
     } else {
+      console.log('test 3');
       dispatch(selectAppointment(null));
       onSwitchFlowOpen();
       clearSteps();
@@ -114,6 +116,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
     if (transportation?.type === ETransportationType.PickUpDelivery) {
       switchToServiceValet();
     } else {
+      dispatch(setIsSVWithoutConfig(false));
       onNext();
     }
   };

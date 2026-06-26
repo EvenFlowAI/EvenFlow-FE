@@ -40,10 +40,10 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   needToShowServiceTypes,
   setNeedToShowServiceTypes,
 }) => {
-  const { serviceTypeOption, transportation } = useSelector(
+  const { serviceTypeOption, transportation, isSVWithoutConfig } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
-  const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
+  const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable, config } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory | null>(null);
@@ -128,7 +128,9 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
           onBack={() => handleSetScreen('serviceNeeds')}
           onNext={() =>
             handleSetScreen(
-              isTransportationAvailable && !serviceTypeOption?.transportationOption
+              isTransportationAvailable &&
+                !serviceTypeOption?.transportationOption &&
+                !isSVWithoutConfig
                 ? 'transportationNeeds'
                 : isAppointmentTimingAvailable
                   ? 'appointmentTiming'
@@ -142,7 +144,12 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
       transportationNeeds: (
         <TransportationsCreate
           onBack={() =>
-            handleSetScreen(isAdvisorAvailable ? 'consultantSelection' : 'serviceNeeds')
+            handleSetScreen(
+              (config.find(configItem => configItem.serviceType === serviceType)
+                ?.advisorSelection ?? isAdvisorAvailable)
+                ? 'consultantSelection'
+                : 'serviceNeeds'
+            )
           }
           onNext={() =>
             handleSetScreen(
