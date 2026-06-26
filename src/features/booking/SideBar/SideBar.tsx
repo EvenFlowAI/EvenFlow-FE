@@ -38,12 +38,14 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isAppointmentSaving,
     transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
   const {
     currentConfig,
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
+    config,
   } = useSelector((state: RootState) => state.bookingFlowConfig);
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -61,17 +63,37 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   }, [serviceTypeOption, transportation]);
 
   useEffect(() => {
+    const serviceValetOption = firstScreenOptions.find(
+      el => el.type === EServiceType.PickUpDropOff
+    );
+
+    const updatedIsTransportationAvailable =
+      serviceType === EServiceType.PickUpDropOff
+        ? serviceValetOption
+          ? isTransportationAvailable
+          : false
+        : isTransportationAvailable;
+
     dispatch(
       setSideBarMenu(
         getCurrentMenu(
           serviceType,
           isAdvisorAvailable,
-          isTransportationAvailable,
-          Boolean(isManagingFlow)
+          updatedIsTransportationAvailable,
+          Boolean(isManagingFlow),
+          firstScreenOptions,
+          config
         )
       )
     );
-  }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu]);
+  }, [
+    serviceType,
+    isAdvisorAvailable,
+    isTransportationAvailable,
+    firstScreenOptions,
+    config,
+    getCurrentMenu,
+  ]);
 
   useEffect(() => {
     dispatch(
@@ -80,7 +102,9 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           serviceType,
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
-          isTransportationAvailable
+          isTransportationAvailable,
+          firstScreenOptions,
+          config
         )
       )
     );
@@ -91,7 +115,9 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
           isTransportationAvailable,
-          Boolean(isManagingFlow)
+          Boolean(isManagingFlow),
+          firstScreenOptions,
+          config
         )
       )
     );
@@ -100,6 +126,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
+    firstScreenOptions,
+    config,
     getStepsMap,
   ]);
 

@@ -43,7 +43,8 @@ export const Consultants: React.FC<TProps> = ({
     transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { isCloneMode } = useSelector((state: RootState) => state.appointment);
-  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
+  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, config } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
@@ -70,11 +71,20 @@ export const Consultants: React.FC<TProps> = ({
           serviceType,
           isAdvisorAvailable,
           isTransportationAvailable,
-          Boolean(isManagingFlow)
+          Boolean(isManagingFlow),
+          firstScreenOptions,
+          config
         )
       )
     );
-  }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu]);
+  }, [
+    serviceType,
+    isAdvisorAvailable,
+    isTransportationAvailable,
+    firstScreenOptions,
+    config,
+    getCurrentMenu,
+  ]);
 
   useEffect(() => {
     dispatch(
@@ -83,7 +93,9 @@ export const Consultants: React.FC<TProps> = ({
           serviceType,
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
-          isTransportationAvailable
+          isTransportationAvailable,
+          firstScreenOptions,
+          config
         )
       )
     );
@@ -94,7 +106,9 @@ export const Consultants: React.FC<TProps> = ({
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
           isTransportationAvailable,
-          Boolean(isManagingFlow)
+          Boolean(isManagingFlow),
+          firstScreenOptions,
+          config
         )
       )
     );
@@ -103,6 +117,8 @@ export const Consultants: React.FC<TProps> = ({
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
+    firstScreenOptions,
+    config,
     getStepsMap,
     getStepsScreen,
   ]);
