@@ -16,9 +16,6 @@ const resolveAdvisorAvailability = (
     option => option.type === EServiceType.PickUpDropOff
   );
 
-  console.log(serviceType);
-  console.log(selectedTransportation);
-
   if (
     (serviceType === EServiceType.PickUpDropOff ||
       selectedTransportation?.type === EServiceType.PickUpDropOff) &&
@@ -41,7 +38,7 @@ export const getCurrentMenu = (
   firstScreenOptions: IFirstScreenOption[] = [],
   config: TServiceTypeSettings[] = [],
   selectedTransportation: ITransportation | null,
-  isSVWithoutConfig?: boolean
+  isPickupDropoffWithoutFirstScreenOption?: boolean
 ): string[] => {
   const resolvedAdvisorAvailability = resolveAdvisorAvailability(
     serviceType,
@@ -60,18 +57,15 @@ export const getCurrentMenu = (
     manageAppointment: 'Manage Appointment',
   };
   if (!resolvedAdvisorAvailability) delete menu.advisorSelection;
-  console.log('isSVWithoutConfig', isSVWithoutConfig);
-  console.log('transportation', transportation);
-  if (!transportation || isSVWithoutConfig) delete menu.transportationNeeds;
+  if (!transportation || isPickupDropoffWithoutFirstScreenOption) delete menu.transportationNeeds;
   if (!isManaging) {
     delete menu.manageAppointment;
   } else {
     delete menu.appointmentConfirmation;
   }
-  console.log(serviceType);
-  console.log(isSVWithoutConfig);
   if (serviceType === EServiceType.VisitCenter) delete menu.yourLocation;
-  if (serviceType !== EServiceType.PickUpDropOff && !isSVWithoutConfig) delete menu.yourLocation;
+  if (serviceType !== EServiceType.PickUpDropOff && !isPickupDropoffWithoutFirstScreenOption)
+    delete menu.yourLocation;
   return Object.values(menu);
 };
 
@@ -84,7 +78,7 @@ export const getStepsScreen = (
   firstScreenOptions: IFirstScreenOption[] = [],
   config: TServiceTypeSettings[] = [],
   selectedTransportation: ITransportation | null,
-  isSVWithoutConfig?: boolean
+  isPickupDropoffWithoutFirstScreenOption?: boolean
 ): TScreen[] => {
   const resolvedAdvisorAvailability = resolveAdvisorAvailability(
     serviceType,
@@ -103,14 +97,16 @@ export const getStepsScreen = (
     manageAppointment: 'manageAppointment',
   };
   if (!resolvedAdvisorAvailability) delete screens.consultantSelection;
-  if (!transportationNeeds || isSVWithoutConfig) delete screens.transportationNeeds;
+  if (!transportationNeeds || isPickupDropoffWithoutFirstScreenOption)
+    delete screens.transportationNeeds;
   if (!isManaging) {
     delete screens.manageAppointment;
   } else {
     delete screens.appointmentConfirmation;
   }
   if (serviceType === EServiceType.VisitCenter) delete screens.location;
-  if (serviceType !== EServiceType.PickUpDropOff && !isSVWithoutConfig) delete screens.location;
+  if (serviceType !== EServiceType.PickUpDropOff && !isPickupDropoffWithoutFirstScreenOption)
+    delete screens.location;
   return Object.values(screens);
 };
 

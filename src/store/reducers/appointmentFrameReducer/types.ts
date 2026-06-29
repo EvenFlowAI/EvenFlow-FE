@@ -214,7 +214,7 @@ export type TState = {
   acceptedConsentIds: number[];
   isConsentsLoading: boolean;
   filtersVisibility: TFiltersVisibility;
-  isSVWithoutConfig: boolean;
+  isPickupDropoffWithoutFirstScreenOption: boolean;
 };
 
 type TPackageOptionRequestData = {

@@ -243,7 +243,9 @@ export const updateAppointmentAddress = createAction<{
   state: string;
   street: string;
 }>('fAppointment/UpdateAppointmentAddress');
-export const setIsSVWithoutConfig = createAction<boolean>('fAppointment/SetIsSVWithouConfig');
+export const setIsPickupDropoffWithoutFirstScreenOption = createAction<boolean>(
+  'fAppointment/SetIsPickupDropoffWithoutFirstScreenOption'
+);
 
 export const setValueServicePartial =
   (data: Partial<IValueService>): AppThunk =>
@@ -755,7 +757,6 @@ export const handleAppointmentResponse =
     if (data.maintenancePackageOption?.priceType) {
       dispatch(setPackagePricingType(data.maintenancePackageOption.priceType));
     }
-    console.log('data', data);
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList));
     dispatch(getTransactionValue(data.transactionValue ?? 0));
 

@@ -30,7 +30,7 @@ import {
   loadAncillaryPriceByZip,
   setCity,
   setFilteredZipCodes,
-  setIsSVWithoutConfig,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setPoliticalState,
   setServiceTypeOption,
   setStreetName,
@@ -228,8 +228,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     }
     clearData();
     clearDate();
-    dispatch(setIsSVWithoutConfig(false));
-    console.log('close');
+    dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
     onClose();
     onAncillaryPriceClose();
   };

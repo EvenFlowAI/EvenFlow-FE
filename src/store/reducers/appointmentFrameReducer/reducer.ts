@@ -38,7 +38,7 @@ import {
   setHashKey,
   setHoursOfOperations,
   setInitialTiming,
-  setIsSVWithoutConfig,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setLoadingPackages,
   setMaintenanceDetails,
   setMobileServiceAvailability,
@@ -171,7 +171,7 @@ const initialState: TState = {
     serviceType: true,
     advisor: true,
   },
-  isSVWithoutConfig: false,
+  isPickupDropoffWithoutFirstScreenOption: false,
 };
 
 export const appointmentFrameReducer = createReducer(initialState, builder =>
@@ -496,10 +496,10 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         state: payload.state,
       };
     })
-    .addCase(setIsSVWithoutConfig, (state, { payload }) => {
+    .addCase(setIsPickupDropoffWithoutFirstScreenOption, (state, { payload }) => {
       return {
         ...state,
-        isSVWithoutConfig: payload,
+        isPickupDropoffWithoutFirstScreenOption: payload,
       };
     })
 );

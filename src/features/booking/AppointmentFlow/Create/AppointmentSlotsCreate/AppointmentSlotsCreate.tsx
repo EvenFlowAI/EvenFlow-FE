@@ -14,7 +14,7 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { serviceTypeOption, isSVWithoutConfig } = useSelector(
+  const { serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({ handleSe
         ? 'appointmentTiming'
         : !serviceTypeOption?.transportationOption &&
             isTransportationAvailable &&
-            !isSVWithoutConfig
+            !isPickupDropoffWithoutFirstScreenOption
           ? 'transportationNeeds'
           : isAdvisorAvailable
             ? 'consultantSelection'

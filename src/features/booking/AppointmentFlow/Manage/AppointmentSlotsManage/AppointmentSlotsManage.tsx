@@ -16,8 +16,13 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { serviceTypeOption, prevScreen, isUsualFlowNeeded, appointmentByKey, isSVWithoutConfig } =
-    useSelector((state: RootState) => state.appointmentFrame);
+  const {
+    serviceTypeOption,
+    prevScreen,
+    isUsualFlowNeeded,
+    appointmentByKey,
+    isPickupDropoffWithoutFirstScreenOption,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const dispatch = useDispatch();
 
   const fromServiceValetToVisitCenter = useMemo(() => {
@@ -41,7 +46,7 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
         ? 'appointmentTiming'
         : !serviceTypeOption?.transportationOption &&
             isTransportationAvailable &&
-            !isSVWithoutConfig
+            !isPickupDropoffWithoutFirstScreenOption
           ? 'transportationNeeds'
           : isAdvisorAvailable
             ? 'consultantSelection'

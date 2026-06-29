@@ -10,7 +10,7 @@ import { TActionProps, TCallback, TError } from '../../../../../types/types';
 import { decodeSCID } from '../../../../../utils/utils';
 import {
   createOrUpdateAppointment,
-  setIsSVWithoutConfig,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setReminders,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -140,7 +140,7 @@ export const AppointmentConfirmation: React.FC<
           decodeSCID(id),
           () => {
             onNext();
-            dispatch(setIsSVWithoutConfig(false));
+            dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
           },
           handleError,
           isMobile,

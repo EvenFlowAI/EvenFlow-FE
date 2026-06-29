@@ -22,9 +22,8 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
 }) => {
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, config } =
     useSelector((state: RootState) => state.bookingFlowConfig);
-  const { service, serviceTypeOption, transportation, isSVWithoutConfig } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const { service, serviceTypeOption, transportation, isPickupDropoffWithoutFirstScreenOption } =
+    useSelector((state: RootState) => state.appointmentFrame);
 
   const serviceType = useMemo(() => {
     if (serviceTypeOption) {
@@ -46,7 +45,7 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
     } else if (
       isTransportationAvailable &&
       !serviceTypeOption?.transportationOption &&
-      !isSVWithoutConfig
+      !isPickupDropoffWithoutFirstScreenOption
     ) {
       nextScreen = 'transportationNeeds';
     } else if (isAppointmentTimingAvailable) {

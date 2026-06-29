@@ -32,7 +32,7 @@ export const ServiceNeedsCreate: React.FC<
   page,
   setPage,
 }) => {
-  const { userType, serviceTypeOption, isSVWithoutConfig } = useSelector(
+  const { userType, serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
@@ -58,10 +58,9 @@ export const ServiceNeedsCreate: React.FC<
     if (notVisitCenterSelected || needsToShowCarsSelection) {
       onBack();
     } else {
-      console.log(isSVWithoutConfig, isSVWithoutConfig);
       if (
         !firstScreenOptions.some(option => option.type === EServiceType.PickUpDropOff) &&
-        isSVWithoutConfig
+        isPickupDropoffWithoutFirstScreenOption
       ) {
         onBack();
       } else {

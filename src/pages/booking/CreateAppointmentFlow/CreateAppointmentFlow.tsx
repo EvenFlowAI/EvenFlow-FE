@@ -40,9 +40,8 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
   needToShowServiceTypes,
   setNeedToShowServiceTypes,
 }) => {
-  const { serviceTypeOption, transportation, isSVWithoutConfig } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const { serviceTypeOption, transportation, isPickupDropoffWithoutFirstScreenOption } =
+    useSelector((state: RootState) => state.appointmentFrame);
   const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable, config } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
@@ -130,7 +129,7 @@ export const CreateAppointmentFlow: React.FC<TFlowProps> = ({
             handleSetScreen(
               isTransportationAvailable &&
                 !serviceTypeOption?.transportationOption &&
-                !isSVWithoutConfig
+                !isPickupDropoffWithoutFirstScreenOption
                 ? 'transportationNeeds'
                 : isAppointmentTimingAvailable
                   ? 'appointmentTiming'

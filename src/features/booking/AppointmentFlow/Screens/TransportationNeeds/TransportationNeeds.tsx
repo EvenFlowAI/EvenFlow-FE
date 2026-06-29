@@ -10,7 +10,8 @@ import {
   loadActiveTransportations,
   setCurrentFrameScreen,
   setInitialTiming,
-  setIsSVWithoutConfig,
+  setIsPickupDropoffWithoutFirstScreenOption,
+  setServiceTypeOption,
   setSideBarSteps,
   setTiming,
   setTransportation,
@@ -94,7 +95,6 @@ export const TransportationNeeds: React.FC<TProps> = ({
     const serviceValetOption = firstScreenOptions.find(
       el => el.type === EServiceType.PickUpDropOff
     );
-    console.log('serviceValetOption', serviceValetOption);
     if (serviceValetOption) {
       dispatch(selectAppointment(null));
       dispatch(setTransportation(null));
@@ -102,11 +102,11 @@ export const TransportationNeeds: React.FC<TProps> = ({
       onSwitchFlowOpen();
       clearSteps();
     } else {
-      console.log('test 3');
+      dispatch(setServiceTypeOption(null));
       dispatch(selectAppointment(null));
       onSwitchFlowOpen();
       clearSteps();
-      dispatch(setIsSVWithoutConfig(true));
+      dispatch(setIsPickupDropoffWithoutFirstScreenOption(true));
     }
   };
 
@@ -116,7 +116,7 @@ export const TransportationNeeds: React.FC<TProps> = ({
     if (transportation?.type === ETransportationType.PickUpDelivery) {
       switchToServiceValet();
     } else {
-      dispatch(setIsSVWithoutConfig(false));
+      dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
       onNext();
     }
   };

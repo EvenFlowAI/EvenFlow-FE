@@ -37,7 +37,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     serviceTypeOption,
     isAppointmentSaving,
     transportation,
-    isSVWithoutConfig,
+    isPickupDropoffWithoutFirstScreenOption,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
@@ -85,7 +85,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           firstScreenOptions,
           config,
           transportation,
-          isSVWithoutConfig
+          isPickupDropoffWithoutFirstScreenOption
         )
       )
     );
@@ -96,7 +96,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     firstScreenOptions,
     config,
     getCurrentMenu,
-    isSVWithoutConfig,
+    isPickupDropoffWithoutFirstScreenOption,
   ]);
 
   useEffect(() => {
@@ -123,7 +123,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           firstScreenOptions,
           config,
           transportation,
-          isSVWithoutConfig
+          isPickupDropoffWithoutFirstScreenOption
         )
       )
     );
@@ -135,7 +135,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     firstScreenOptions,
     config,
     getStepsMap,
-    isSVWithoutConfig,
+    isPickupDropoffWithoutFirstScreenOption,
   ]);
 
   useEffect(() => {

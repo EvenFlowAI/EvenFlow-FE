@@ -16,7 +16,7 @@ import {
   setCity,
   setCurrentFrameScreen,
   setDefaultVisitCenterOption,
-  setIsSVWithoutConfig,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setPoliticalState,
   setServiceTypeOption,
   setShowServiceCentersList,
@@ -65,7 +65,7 @@ const YourLocation: React.FC<
     serviceOptionChangedFromSlotPage,
     prevSelectedOption,
     ancillaryPriceLoading,
-    isSVWithoutConfig,
+    isPickupDropoffWithoutFirstScreenOption,
     transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const [zip, setZip] = useState<string>('');
@@ -146,12 +146,6 @@ const YourLocation: React.FC<
     }
   }, [customerLoadedData, address, zipCodeValue]);
 
-  useEffect(() => {
-    return () => {
-      // dispatch(setIsSVWithoutConfig(false));
-    };
-  }, []);
-
   const clearSelectedData = () => {
     dispatch(
       setSideBarSteps(serviceType === EServiceType.VisitCenter ? ['serviceNeeds'] : ['location'])
@@ -222,8 +216,7 @@ const YourLocation: React.FC<
   };
 
   const handleBack = () => {
-    console.log('isSVWithoutConfig', isSVWithoutConfig);
-    if (isSVWithoutConfig) {
+    if (isPickupDropoffWithoutFirstScreenOption) {
       const visitCenterOptions = firstScreenOptions.find(
         item => item.type === EServiceType.VisitCenter
       );
@@ -239,8 +232,6 @@ const YourLocation: React.FC<
         })
       );
       clearPrevAppointments();
-
-      console.log(config);
 
       const prevConfig = config.find(el => el.serviceType === visitCenterOptions?.type);
       const transportationStepNeeded = firstScreenOptions?.length
@@ -260,7 +251,7 @@ const YourLocation: React.FC<
     } else {
       serviceOptionChangedFromSlotPage ? setPrevSelectedOption() : onBack();
     }
-    dispatch(setIsSVWithoutConfig(false));
+    dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
   };
 
   const onSuccess = (data: TAncillaryPriceByZip) => {
@@ -302,7 +293,12 @@ const YourLocation: React.FC<
   const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
     if (scProfile) {
       if (value.length && filteredZipCodes.includes(value)) {
-        if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
+        if (
+          !serviceOptionChangedFromSlotPage &&
+          !isManagingFlow &&
+          !isPickupDropoffWithoutFirstScreenOption
+        )
+          clearSelectedData();
         setFormChecked(false);
         setZip(value);
       }

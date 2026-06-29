@@ -13,6 +13,7 @@ import {
   clearAppointmentData,
   getActiveTransportations,
   setCurrentFrameScreen,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -60,6 +61,7 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setWelcomeScreenView('serviceCenterSelect'));
         dispatch(setServiceTypeOption(null));
         dispatch(getActiveTransportations([]));
+        dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);
