@@ -4,6 +4,7 @@ import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
 import { TScreen } from '../../../types/screens';
 import { ICurrentMenu, TData } from './types';
 import { ITransportation } from '../../../api/types';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 const resolveAdvisorAvailability = (
   serviceType: EServiceType,
@@ -18,7 +19,7 @@ const resolveAdvisorAvailability = (
 
   if (
     (serviceType === EServiceType.PickUpDropOff ||
-      selectedTransportation?.type === EServiceType.PickUpDropOff) &&
+      selectedTransportation?.type === ETransportationType.PickUpDelivery) &&
     !serviceValetOption
   ) {
     return (

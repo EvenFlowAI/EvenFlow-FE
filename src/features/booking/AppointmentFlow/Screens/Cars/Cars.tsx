@@ -104,7 +104,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
           : 'appointmentTiming';
     }
     return nextScreen;
-  }, [serviceType, valueService, isAdvisorAvailable, consultants]);
+  }, [serviceType, valueService, isAdvisorAvailable, consultants, config]);
 
   const redirectToManageFlow = () => history.push('/f/appointment-manage/' + id);
   const redirectToCreateFlow = () => history.push('/f/appointment/' + id);

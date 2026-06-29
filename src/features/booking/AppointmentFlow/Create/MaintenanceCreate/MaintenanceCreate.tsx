@@ -56,6 +56,7 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
+    isPickupDropoffWithoutFirstScreenOption,
     config,
     serviceType,
     serviceTypeOption,

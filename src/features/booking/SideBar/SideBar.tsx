@@ -95,6 +95,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isTransportationAvailable,
     firstScreenOptions,
     config,
+    transportation,
+    isManagingFlow,
     getCurrentMenu,
     isPickupDropoffWithoutFirstScreenOption,
   ]);
@@ -134,6 +136,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isTransportationAvailable,
     firstScreenOptions,
     config,
+    transportation,
+    isManagingFlow,
     getStepsMap,
     isPickupDropoffWithoutFirstScreenOption,
   ]);

@@ -86,6 +86,8 @@ export const Consultants: React.FC<TProps> = ({
     isTransportationAvailable,
     firstScreenOptions,
     config,
+    transportation,
+    isManagingFlow,
     isPickupDropoffWithoutFirstScreenOption,
     getCurrentMenu,
   ]);
@@ -126,6 +128,8 @@ export const Consultants: React.FC<TProps> = ({
     firstScreenOptions,
     config,
     getStepsMap,
+    transportation,
+    isManagingFlow,
     isPickupDropoffWithoutFirstScreenOption,
     getStepsScreen,
   ]);
