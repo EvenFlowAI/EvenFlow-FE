@@ -18,7 +18,7 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
   onNext,
   serviceCategoryPage,
 }) => {
-  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, config } =
+  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const { service, serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
     (state: RootState) => state.appointmentFrame
@@ -43,7 +43,6 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
     isAppointmentTimingAvailable,
     isTransportationAvailable,
     isPickupDropoffWithoutFirstScreenOption,
-    config,
     serviceTypeOption,
   ]);
 
