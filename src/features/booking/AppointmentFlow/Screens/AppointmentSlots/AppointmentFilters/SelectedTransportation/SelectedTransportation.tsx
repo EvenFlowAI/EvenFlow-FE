@@ -3,6 +3,7 @@ import { MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme } from '@m
 import { useTranslation } from 'react-i18next';
 import {
   setIsPickupDropoffWithoutFirstScreenOption,
+  setServiceTypeOption,
   setTransportation,
 } from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +15,7 @@ import { EServiceType } from '../../../../../../../store/reducers/appointmentFra
 import { IFirstScreenOption } from '../../../../../../../store/reducers/serviceTypes/types';
 import { TCallback } from '../../../../../../../types/types';
 import { ITransportation } from '../../../../../../../api/types';
+import { selectAppointment } from '../../../../../../../store/reducers/appointment/actions';
 
 type TProps = {
   isVisible: boolean;
@@ -71,6 +73,9 @@ const SelectedTransportation: React.FC<TProps> = ({
       } else {
         dispatch(setTransportation(selected ?? null));
       }
+      dispatch(setServiceTypeOption(null));
+      dispatch(selectAppointment(null));
+      dispatch(setIsPickupDropoffWithoutFirstScreenOption(true));
       onSwitchFlowOpen();
     }
   };

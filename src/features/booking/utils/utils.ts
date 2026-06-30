@@ -25,9 +25,9 @@ export const getCurrentMenu = (
   } else {
     delete menu.appointmentConfirmation;
   }
-  if (serviceType === EServiceType.VisitCenter) delete menu.yourLocation;
-  if (serviceType !== EServiceType.PickUpDropOff && !isPickupDropoffWithoutFirstScreenOption)
+  if (serviceType === EServiceType.VisitCenter && !isPickupDropoffWithoutFirstScreenOption) {
     delete menu.yourLocation;
+  }
   return Object.values(menu);
 };
 
@@ -56,9 +56,9 @@ export const getStepsScreen = (
   } else {
     delete screens.appointmentConfirmation;
   }
-  if (serviceType === EServiceType.VisitCenter) delete screens.location;
-  if (serviceType !== EServiceType.PickUpDropOff && !isPickupDropoffWithoutFirstScreenOption)
+  if (serviceType === EServiceType.VisitCenter && !isPickupDropoffWithoutFirstScreenOption) {
     delete screens.location;
+  }
   return Object.values(screens);
 };
 

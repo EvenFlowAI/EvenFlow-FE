@@ -44,7 +44,6 @@ export const Consultants: React.FC<TProps> = ({
     isPickupDropoffWithoutFirstScreenOption,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { isCloneMode } = useSelector((state: RootState) => state.appointment);
-  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const dispatch = useDispatch();
@@ -81,7 +80,6 @@ export const Consultants: React.FC<TProps> = ({
     serviceType,
     isAdvisorAvailable,
     isTransportationAvailable,
-    firstScreenOptions,
     isManagingFlow,
     isPickupDropoffWithoutFirstScreenOption,
     getCurrentMenu,
@@ -115,7 +113,6 @@ export const Consultants: React.FC<TProps> = ({
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
-    firstScreenOptions,
     getStepsMap,
     isManagingFlow,
     isPickupDropoffWithoutFirstScreenOption,
