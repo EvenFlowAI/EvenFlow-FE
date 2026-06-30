@@ -46,7 +46,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
-    config,
   } = useSelector((state: RootState) => state.bookingFlowConfig);
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -91,8 +90,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isAdvisorAvailable,
     isTransportationAvailable,
     firstScreenOptions,
-    config,
-    transportation,
     isManagingFlow,
     getCurrentMenu,
     isPickupDropoffWithoutFirstScreenOption,
@@ -127,8 +124,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isAppointmentTimingAvailable,
     isTransportationAvailable,
     firstScreenOptions,
-    config,
-    transportation,
     isManagingFlow,
     getStepsMap,
     isPickupDropoffWithoutFirstScreenOption,

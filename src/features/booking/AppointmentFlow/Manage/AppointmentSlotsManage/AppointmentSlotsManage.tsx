@@ -22,19 +22,8 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
     isUsualFlowNeeded,
     appointmentByKey,
     isPickupDropoffWithoutFirstScreenOption,
-    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const dispatch = useDispatch();
-
-  const serviceType = useMemo(() => {
-    if (serviceTypeOption) {
-      return serviceTypeOption.type;
-    }
-
-    return transportation?.type === ETransportationType.PickUpDelivery
-      ? EServiceType.PickUpDropOff
-      : EServiceType.VisitCenter;
-  }, [serviceTypeOption, transportation]);
 
   const fromServiceValetToVisitCenter = useMemo(() => {
     return (
@@ -62,14 +51,7 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
           : isAdvisorAvailable
             ? 'consultantSelection'
             : 'serviceNeeds';
-  }, [
-    currentConfig,
-    isAdvisorAvailable,
-    isTransportationAvailable,
-    serviceTypeOption,
-    prevScreen,
-    serviceType,
-  ]);
+  }, [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption, prevScreen]);
 
   const askChangesCompleted = useCallback(() => {
     dispatch(setChangesCompletedOpen(true));

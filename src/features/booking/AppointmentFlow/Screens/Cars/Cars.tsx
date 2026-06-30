@@ -61,7 +61,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-  const { isAdvisorAvailable, config } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
 
   const serviceType = useMemo(() => {
     if (serviceTypeOption) {
@@ -100,7 +100,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
       nextScreen = isAdvisorAvailable ? 'consultantSelection' : 'appointmentTiming';
     }
     return nextScreen;
-  }, [serviceType, valueService, isAdvisorAvailable, consultants, config]);
+  }, [serviceType, valueService, isAdvisorAvailable, consultants]);
 
   const redirectToManageFlow = () => history.push('/f/appointment-manage/' + id);
   const redirectToCreateFlow = () => history.push('/f/appointment/' + id);

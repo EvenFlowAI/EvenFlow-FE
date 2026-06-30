@@ -5,8 +5,6 @@ import { AppointmentSlots } from '../../Screens/AppointmentSlots/AppointmentSlot
 import { searchForCustomerConsents } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
-import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TAppointmentSelectionProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -16,19 +14,10 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { serviceTypeOption, isPickupDropoffWithoutFirstScreenOption, transportation } =
-    useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const dispatch = useDispatch();
-
-  const serviceType = useMemo(() => {
-    if (serviceTypeOption) {
-      return serviceTypeOption.type;
-    }
-
-    return transportation?.type === ETransportationType.PickUpDelivery
-      ? EServiceType.PickUpDropOff
-      : EServiceType.VisitCenter;
-  }, [serviceTypeOption, transportation]);
 
   const previousLogicalScreen: TScreen = useMemo(
     () =>
@@ -47,7 +36,6 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({ handleSe
       isTransportationAvailable,
       serviceTypeOption,
       isPickupDropoffWithoutFirstScreenOption,
-      serviceType,
     ]
   );
 

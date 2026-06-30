@@ -8,7 +8,7 @@ import { RootState } from '../../../../../store/rootReducer';
 const AppointmentTimingCreate: React.FC<{ handleSetScreen: TArgCallback<TScreen> }> = ({
   handleSetScreen,
 }) => {
-  const { serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
+  const { consultants, serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { isAdvisorAvailable, isTransportationAvailable } = useSelector(
@@ -21,7 +21,7 @@ const AppointmentTimingCreate: React.FC<{ handleSetScreen: TArgCallback<TScreen>
       !serviceTypeOption?.transportationOption &&
       !isPickupDropoffWithoutFirstScreenOption
         ? 'transportationNeeds'
-        : isAdvisorAvailable
+        : isAdvisorAvailable && consultants?.length
           ? 'consultantSelection'
           : 'serviceNeeds';
     handleSetScreen(prev);

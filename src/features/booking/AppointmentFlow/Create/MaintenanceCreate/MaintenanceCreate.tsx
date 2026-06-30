@@ -6,8 +6,6 @@ import { EServiceCategoryPage } from '../../../../../api/types';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
-import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
 
 type TMaintenanceDetailsProps = {
   onBack: TArgCallback<TScreen>;
@@ -22,18 +20,9 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
 }) => {
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, config } =
     useSelector((state: RootState) => state.bookingFlowConfig);
-  const { service, serviceTypeOption, transportation, isPickupDropoffWithoutFirstScreenOption } =
-    useSelector((state: RootState) => state.appointmentFrame);
-
-  const serviceType = useMemo(() => {
-    if (serviceTypeOption) {
-      return serviceTypeOption.type;
-    }
-
-    return transportation?.type === ETransportationType.PickUpDelivery
-      ? EServiceType.PickUpDropOff
-      : EServiceType.VisitCenter;
-  }, [serviceTypeOption, transportation]);
+  const { service, serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
 
   const nextLogicalScreen = useMemo(() => {
     let nextScreen: TScreen = 'appointmentSelection';
@@ -55,7 +44,6 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
     isTransportationAvailable,
     isPickupDropoffWithoutFirstScreenOption,
     config,
-    serviceType,
     serviceTypeOption,
   ]);
 

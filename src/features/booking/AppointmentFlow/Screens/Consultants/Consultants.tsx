@@ -45,7 +45,7 @@ export const Consultants: React.FC<TProps> = ({
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { isCloneMode } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable, config } =
+  const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
@@ -82,8 +82,6 @@ export const Consultants: React.FC<TProps> = ({
     isAdvisorAvailable,
     isTransportationAvailable,
     firstScreenOptions,
-    config,
-    transportation,
     isManagingFlow,
     isPickupDropoffWithoutFirstScreenOption,
     getCurrentMenu,
@@ -118,9 +116,7 @@ export const Consultants: React.FC<TProps> = ({
     isAppointmentTimingAvailable,
     isTransportationAvailable,
     firstScreenOptions,
-    config,
     getStepsMap,
-    transportation,
     isManagingFlow,
     isPickupDropoffWithoutFirstScreenOption,
     getStepsScreen,

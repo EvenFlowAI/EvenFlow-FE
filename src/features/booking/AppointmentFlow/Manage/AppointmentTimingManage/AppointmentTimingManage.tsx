@@ -16,8 +16,13 @@ import { ETransportationType } from '../../../../../store/reducers/transportatio
 const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen> }> = ({
   handleSetScreen,
 }) => {
-  const { serviceTypeOption, appointmentByKey, editingPosition, serviceOptionChangedFromSlotPage } =
-    useSelector((state: RootState) => state.appointmentFrame);
+  const {
+    consultants,
+    serviceTypeOption,
+    appointmentByKey,
+    editingPosition,
+    serviceOptionChangedFromSlotPage,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const { isAdvisorAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
@@ -57,7 +62,7 @@ const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen>
     const prev: TScreen =
       isTransportationAvailable && !serviceTypeOption?.transportationOption
         ? 'transportationNeeds'
-        : isAdvisorAvailable
+        : isAdvisorAvailable && consultants?.length
           ? 'consultantSelection'
           : 'serviceNeeds';
     handleSetScreen(prev);
