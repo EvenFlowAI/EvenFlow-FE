@@ -140,7 +140,11 @@ export const Consultants: React.FC<TProps> = ({
 
   return (
     <StepWrapper>
-      {isConsultantsLoading || !isAdvisorAvailable ? (
+      {isConsultantsLoading ||
+      !(
+        config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
+        isAdvisorAvailable
+      ) ? (
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Loading />
         </div>

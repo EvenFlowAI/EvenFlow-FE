@@ -13,7 +13,7 @@ type TAppointmentSelectionProps = {
 };
 
 const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSetScreen }) => {
-  const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
+  const { isTransportationAvailable, isAdvisorAvailable, currentConfig, config } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
   const {
@@ -22,8 +22,19 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
     isUsualFlowNeeded,
     appointmentByKey,
     isPickupDropoffWithoutFirstScreenOption,
+    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const dispatch = useDispatch();
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
 
   const fromServiceValetToVisitCenter = useMemo(() => {
     return (
@@ -48,10 +59,18 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
             isTransportationAvailable &&
             !isPickupDropoffWithoutFirstScreenOption
           ? 'transportationNeeds'
-          : isAdvisorAvailable
+          : (config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
+              isAdvisorAvailable)
             ? 'consultantSelection'
             : 'serviceNeeds';
-  }, [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption, prevScreen]);
+  }, [
+    currentConfig,
+    isAdvisorAvailable,
+    isTransportationAvailable,
+    serviceTypeOption,
+    prevScreen,
+    serviceType,
+  ]);
 
   const askChangesCompleted = useCallback(() => {
     dispatch(setChangesCompletedOpen(true));
