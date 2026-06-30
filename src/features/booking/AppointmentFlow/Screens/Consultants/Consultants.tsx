@@ -73,9 +73,6 @@ export const Consultants: React.FC<TProps> = ({
           isAdvisorAvailable,
           isTransportationAvailable,
           Boolean(isManagingFlow),
-          firstScreenOptions,
-          config,
-          transportation,
           isPickupDropoffWithoutFirstScreenOption
         )
       )
@@ -99,9 +96,7 @@ export const Consultants: React.FC<TProps> = ({
           serviceType,
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
-          isTransportationAvailable,
-          firstScreenOptions,
-          config
+          isTransportationAvailable
         )
       )
     );
@@ -113,9 +108,6 @@ export const Consultants: React.FC<TProps> = ({
           isAppointmentTimingAvailable,
           isTransportationAvailable,
           Boolean(isManagingFlow),
-          firstScreenOptions,
-          config,
-          transportation,
           isPickupDropoffWithoutFirstScreenOption
         )
       )
@@ -140,11 +132,7 @@ export const Consultants: React.FC<TProps> = ({
 
   return (
     <StepWrapper>
-      {isConsultantsLoading ||
-      !(
-        config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-        isAdvisorAvailable
-      ) ? (
+      {isConsultantsLoading || !isAdvisorAvailable ? (
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Loading />
         </div>

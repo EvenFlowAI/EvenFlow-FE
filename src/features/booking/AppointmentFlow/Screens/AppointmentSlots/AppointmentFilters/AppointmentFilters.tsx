@@ -33,8 +33,9 @@ const AppointmentFilters: React.FC<TProps> = ({
     (state: RootState) => state.appointmentFrame
   );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-  const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const { isTransportationAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { isAdvisorAvailable, isTransportationAvailable } = useSelector(
+    (state: RootState) => state.bookingFlowConfig
+  );
 
   const [selectedOption, setSelectedOption] = useState<IFirstScreenOption | null>(null);
   const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm);

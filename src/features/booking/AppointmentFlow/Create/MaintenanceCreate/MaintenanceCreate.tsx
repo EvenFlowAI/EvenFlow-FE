@@ -37,10 +37,7 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
 
   const nextLogicalScreen = useMemo(() => {
     let nextScreen: TScreen = 'appointmentSelection';
-    if (
-      config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-      isAdvisorAvailable
-    ) {
+    if (isAdvisorAvailable) {
       nextScreen = 'consultantSelection';
     } else if (
       isTransportationAvailable &&

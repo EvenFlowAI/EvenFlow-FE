@@ -42,7 +42,6 @@ To set up Husky and ensure your code is automatically linted and formatted befor
 
     ```
     npm run all-fix
-    npm run test:sidebar
     npm run increment-version
     git add .
     ```

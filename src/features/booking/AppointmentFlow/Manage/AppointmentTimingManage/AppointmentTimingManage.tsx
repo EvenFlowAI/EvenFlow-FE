@@ -16,14 +16,9 @@ import { ETransportationType } from '../../../../../store/reducers/transportatio
 const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen> }> = ({
   handleSetScreen,
 }) => {
-  const {
-    serviceTypeOption,
-    transportation,
-    appointmentByKey,
-    editingPosition,
-    serviceOptionChangedFromSlotPage,
-  } = useSelector((state: RootState) => state.appointmentFrame);
-  const { isAdvisorAvailable, isTransportationAvailable, config } = useSelector(
+  const { serviceTypeOption, appointmentByKey, editingPosition, serviceOptionChangedFromSlotPage } =
+    useSelector((state: RootState) => state.appointmentFrame);
+  const { isAdvisorAvailable, isTransportationAvailable } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
 
@@ -38,16 +33,6 @@ const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen>
         appointmentByKey?.transportationOption?.type === ETransportationType.PickUpDelivery)
     );
   }, [serviceTypeOption, appointmentByKey]);
-
-  const serviceType = useMemo(() => {
-    if (serviceTypeOption) {
-      return serviceTypeOption.type;
-    }
-
-    return transportation?.type === ETransportationType.PickUpDelivery
-      ? EServiceType.PickUpDropOff
-      : EServiceType.VisitCenter;
-  }, [serviceTypeOption, transportation]);
 
   const redirectToServiceTypeOptions = () => {
     dispatch(setServiceTypeOption(appointmentByKey?.serviceTypeOption ?? null));
@@ -72,8 +57,7 @@ const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen>
     const prev: TScreen =
       isTransportationAvailable && !serviceTypeOption?.transportationOption
         ? 'transportationNeeds'
-        : (config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-            isAdvisorAvailable)
+        : isAdvisorAvailable
           ? 'consultantSelection'
           : 'serviceNeeds';
     handleSetScreen(prev);

@@ -1,53 +1,14 @@
 import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
-import { TServiceTypeSettings } from '../../../store/reducers/bookingFlowConfig/types';
-import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
 import { TScreen } from '../../../types/screens';
 import { ICurrentMenu, TData } from './types';
-import { ITransportation } from '../../../api/types';
-import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
-
-const resolveAdvisorAvailability = (
-  serviceType: EServiceType,
-  isAdvisorAvailable: boolean,
-  firstScreenOptions: IFirstScreenOption[],
-  config: TServiceTypeSettings[],
-  selectedTransportation?: ITransportation | null
-): boolean => {
-  const serviceValetOption = firstScreenOptions.find(
-    option => option.type === EServiceType.PickUpDropOff
-  );
-
-  if (
-    (serviceType === EServiceType.PickUpDropOff ||
-      selectedTransportation?.type === ETransportationType.PickUpDelivery) &&
-    !serviceValetOption
-  ) {
-    return (
-      config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-      isAdvisorAvailable
-    );
-  }
-
-  return isAdvisorAvailable;
-};
 
 export const getCurrentMenu = (
   serviceType: EServiceType,
   advisor: boolean,
   transportation: boolean,
   isManaging: boolean,
-  firstScreenOptions: IFirstScreenOption[] = [],
-  config: TServiceTypeSettings[] = [],
-  selectedTransportation: ITransportation | null,
   isPickupDropoffWithoutFirstScreenOption?: boolean
 ): string[] => {
-  const resolvedAdvisorAvailability = resolveAdvisorAvailability(
-    serviceType,
-    advisor,
-    firstScreenOptions,
-    config,
-    selectedTransportation
-  );
   const menu: ICurrentMenu = {
     yourLocation: 'Your Location',
     serviceNeeds: 'Service Needs',
@@ -57,7 +18,7 @@ export const getCurrentMenu = (
     appointmentConfirmation: 'Appointment Confirmation',
     manageAppointment: 'Manage Appointment',
   };
-  if (!resolvedAdvisorAvailability) delete menu.advisorSelection;
+  if (!advisor) delete menu.advisorSelection;
   if (!transportation || isPickupDropoffWithoutFirstScreenOption) delete menu.transportationNeeds;
   if (!isManaging) {
     delete menu.manageAppointment;
@@ -76,18 +37,8 @@ export const getStepsScreen = (
   appointmentSelection: boolean,
   transportationNeeds: boolean,
   isManaging: boolean,
-  firstScreenOptions: IFirstScreenOption[] = [],
-  config: TServiceTypeSettings[] = [],
-  selectedTransportation: ITransportation | null,
   isPickupDropoffWithoutFirstScreenOption?: boolean
 ): TScreen[] => {
-  const resolvedAdvisorAvailability = resolveAdvisorAvailability(
-    serviceType,
-    advisorSelection,
-    firstScreenOptions,
-    config,
-    selectedTransportation
-  );
   const screens: { [key: string]: TScreen } = {
     location: 'location',
     serviceNeeds: 'serviceNeeds',
@@ -97,7 +48,7 @@ export const getStepsScreen = (
     appointmentConfirmation: 'appointmentConfirmation',
     manageAppointment: 'manageAppointment',
   };
-  if (!resolvedAdvisorAvailability) delete screens.consultantSelection;
+  if (!advisorSelection) delete screens.consultantSelection;
   if (!transportationNeeds || isPickupDropoffWithoutFirstScreenOption)
     delete screens.transportationNeeds;
   if (!isManaging) {
@@ -115,16 +66,8 @@ export const getStepsMap = (
   serviceType: EServiceType,
   isAdvisorAvailable: boolean,
   isAppointmentSelection: boolean,
-  isTransportationNeeds: boolean,
-  firstScreenOptions: IFirstScreenOption[] = [],
-  config: TServiceTypeSettings[] = []
+  isTransportationNeeds: boolean
 ): { [K in TScreen]: number } => {
-  const resolvedAdvisorAvailability = resolveAdvisorAvailability(
-    serviceType,
-    isAdvisorAvailable,
-    firstScreenOptions,
-    config
-  );
   const data: { [K in TScreen]: number } = {
     carSelection: 0,
     location: 1,
@@ -149,7 +92,7 @@ export const getStepsMap = (
     appointmentConfirmed: serviceType === EServiceType.MobileService ? 4 : 5,
     payment: 6,
   };
-  if (!resolvedAdvisorAvailability && data.consultantSelection > -1) {
+  if (!isAdvisorAvailable && data.consultantSelection > -1) {
     for (const key in data) {
       if (data[key as keyof TData] > data.consultantSelection) {
         data[key as keyof TData] = data[key as keyof TData] - 1;

@@ -13,7 +13,7 @@ type TAppointmentSelectionProps = {
 };
 
 const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSetScreen }) => {
-  const { isTransportationAvailable, isAdvisorAvailable, currentConfig, config } = useSelector(
+  const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
   const {
@@ -59,8 +59,7 @@ const AppointmentSlotsManage: React.FC<TAppointmentSelectionProps> = ({ handleSe
             isTransportationAvailable &&
             !isPickupDropoffWithoutFirstScreenOption
           ? 'transportationNeeds'
-          : (config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-              isAdvisorAvailable)
+          : isAdvisorAvailable
             ? 'consultantSelection'
             : 'serviceNeeds';
   }, [

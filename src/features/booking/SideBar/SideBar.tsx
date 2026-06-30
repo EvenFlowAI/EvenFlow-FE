@@ -82,9 +82,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           isAdvisorAvailable,
           updatedIsTransportationAvailable,
           Boolean(isManagingFlow),
-          firstScreenOptions,
-          config,
-          transportation,
           isPickupDropoffWithoutFirstScreenOption
         )
       )
@@ -108,9 +105,7 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           serviceType,
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
-          isTransportationAvailable,
-          firstScreenOptions,
-          config
+          isTransportationAvailable
         )
       )
     );
@@ -122,9 +117,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           isAppointmentTimingAvailable,
           isTransportationAvailable,
           Boolean(isManagingFlow),
-          firstScreenOptions,
-          config,
-          transportation,
           isPickupDropoffWithoutFirstScreenOption
         )
       )

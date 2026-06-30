@@ -97,11 +97,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     let nextScreen: TScreen =
       serviceType === EServiceType.VisitCenter ? 'serviceNeeds' : 'location';
     if (valueService?.selectedService) {
-      nextScreen =
-        (config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-        isAdvisorAvailable)
-          ? 'consultantSelection'
-          : 'appointmentTiming';
+      nextScreen = isAdvisorAvailable ? 'consultantSelection' : 'appointmentTiming';
     }
     return nextScreen;
   }, [serviceType, valueService, isAdvisorAvailable, consultants, config]);

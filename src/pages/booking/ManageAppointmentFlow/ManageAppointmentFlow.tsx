@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Cars } from '../../../features/booking/AppointmentFlow/Screens/Cars/Cars';
 import { AppointmentConfirmation } from '../../../features/booking/AppointmentFlow/Create/AppointmentConfirmation/AppointmentConfirmation';
 import { AppointmentComment } from '../../../features/booking/AppointmentFlow/Screens/AppointmentComment/AppointmentComment';
@@ -22,8 +22,6 @@ import { ServiceNeedsManage } from '../../../features/booking/AppointmentFlow/Ma
 import AppointmentFlow from '../../../features/booking/AppointmentFlow/AppointmentFlow';
 import { ManageAppointment } from '../../../features/booking/AppointmentFlow/Manage/ManageAppointment/ManageAppointment';
 import { TFlowProps } from '../types';
-import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
-import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
 
 export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
   onUpdateAppointment,
@@ -47,12 +45,11 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     welcomeScreenView,
     appointmentByKey,
     transportations,
-    transportation,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { customerLoadedData, isCloneMode, isDemandSmoothMode } = useSelector(
     (state: RootState) => state.appointment
   );
-  const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable, config } =
+  const { isTransportationAvailable, isAppointmentTimingAvailable, isAdvisorAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
 
   const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory | null>(null);
@@ -126,16 +123,6 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     return handleSetScreen(nextScreen);
   };
 
-  const serviceType = useMemo(() => {
-    if (serviceTypeOption) {
-      return serviceTypeOption.type;
-    }
-
-    return transportation?.type === ETransportationType.PickUpDelivery
-      ? EServiceType.PickUpDropOff
-      : EServiceType.VisitCenter;
-  }, [serviceTypeOption, transportation]);
-
   const carSelections: { [k in TScreen]?: JSX.Element } = {
     carSelection: (
       <Cars
@@ -190,14 +177,7 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     appointmentSelection: <AppointmentSlotsManage handleSetScreen={handleSetScreen} />,
     transportationNeeds: (
       <TransportationsManage
-        onBack={() =>
-          handleSetScreen(
-            (config.find(configItem => configItem.serviceType === serviceType)?.advisorSelection ??
-              isAdvisorAvailable)
-              ? 'consultantSelection'
-              : 'serviceNeeds'
-          )
-        }
+        onBack={() => handleSetScreen(isAdvisorAvailable ? 'consultantSelection' : 'serviceNeeds')}
         onNext={() =>
           handleSetScreen(
             isAppointmentTimingAvailable ? 'appointmentTiming' : 'appointmentSelection'

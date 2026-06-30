@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import {
   Box,
@@ -128,13 +128,22 @@ const App = () => {
     }
   }, [process.env.REACT_APP_ENV]);
 
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   useEffect(() => {
-    const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
     const currentConfiguration = config.find(
       item => item.serviceType?.toString() === serviceType.toString()
     );
     if (currentConfiguration) dispatch(setConfiguration(currentConfiguration, serviceTypeOption));
-  }, [serviceTypeOption, config]);
+  }, [serviceTypeOption, config, serviceType]);
 
   useEffect(() => {
     if (
@@ -146,11 +155,10 @@ const App = () => {
     } else {
       setValueServicePreviousScreen('serviceNeeds');
     }
-    const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
     if ((currentConfig && !isAdvisorAvailable) || serviceType === EServiceType.MobileService) {
       setValueServiceNextScreen('appointmentTiming');
     }
-  }, [serviceTypeOption, currentConfig, isAdvisorAvailable]);
+  }, [serviceTypeOption, currentConfig, isAdvisorAvailable, serviceType]);
 
   useEffect(() => {
     if (scProfile) {
