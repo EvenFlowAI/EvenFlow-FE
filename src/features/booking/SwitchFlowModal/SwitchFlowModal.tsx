@@ -30,6 +30,7 @@ import {
   loadAncillaryPriceByZip,
   setCity,
   setFilteredZipCodes,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setPoliticalState,
   setServiceTypeOption,
   setStreetName,
@@ -220,9 +221,14 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   const onCancel = () => {
     const lastTransportation = localStorage.getItem('lastTransportation');
     localStorage.removeItem('lastTransportation');
-    if (lastTransportation) dispatch(setTransportation(JSON.parse(lastTransportation)));
+    if (lastTransportation) {
+      dispatch(setTransportation(JSON.parse(lastTransportation)));
+    } else {
+      dispatch(setTransportation(null));
+    }
     clearData();
     clearDate();
+    dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
     onClose();
     onAncillaryPriceClose();
   };

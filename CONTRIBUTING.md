@@ -1,44 +1,33 @@
-# Contributing to EvenFlowAI
+## EvenFlowAI Project
+### Requirements
+- Node.js
+- NPM
+- YARN
 
-This document provides guidelines and information for contributors to the EvenFlowAI project.
+### Deployment
+Build a project from source
+```bash
+  yarn build or npm run build
+```
+and push into environment through FTP or SFTP
 
-## Development Workflow
+### Local development environment
+Clone project from git
 
-### Setup
-
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   yarn install
-   ```
-3. Install cross-env globally:
-   ```bash
-   yarn global add cross-env
-   ```
-   or
-
-   ```bash
-   npm install -g cross-env
-   ```
-4. Start the development server:
-   ```bash
-   yarn start
-   ```
+```
+cd <project_directory>
+npm install --legacy-peer-deps or yarn install
+npm install -g cross-env or yarn global add cross-env
+npm start or yarn start
+```
 
 ### Husky Pre-Commit Hook Setup
 
 To set up Husky and ensure your code is automatically linted and formatted before every commit, follow these steps after installing dependencies:
 
 1. **Install Husky and lint-staged globally:**
-
-    ```bash
-    yarn global add husky lint-staged
-    ```
-   
-   or
-
    ```bash
-    npm install -g husky lint-staged 
+    npm install -g husky lint-staged or yarn global add husky lint-staged
     ```
 
 2. **Initialize Husky in your project:**
@@ -61,7 +50,7 @@ These steps set up Husky on your local machine and install a Git pre-commit hook
 
 **Important:** Do not skip this setup, or the pre-commit hooks will not function correctly.
 
-## Version System
+### Version System
 
 The project includes an automatic version management system with the following features:
 

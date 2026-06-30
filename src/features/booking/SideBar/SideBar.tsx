@@ -37,7 +37,9 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     serviceTypeOption,
     isAppointmentSaving,
     transportation,
+    isPickupDropoffWithoutFirstScreenOption,
   } = useSelector((state: RootState) => state.appointmentFrame);
+  const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
   const {
     currentConfig,
@@ -61,17 +63,37 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   }, [serviceTypeOption, transportation]);
 
   useEffect(() => {
+    const serviceValetOption = firstScreenOptions.find(
+      el => el.type === EServiceType.PickUpDropOff
+    );
+
+    const updatedIsTransportationAvailable =
+      serviceType === EServiceType.PickUpDropOff
+        ? serviceValetOption
+          ? isTransportationAvailable
+          : false
+        : isTransportationAvailable;
+
     dispatch(
       setSideBarMenu(
         getCurrentMenu(
           serviceType,
           isAdvisorAvailable,
-          isTransportationAvailable,
-          Boolean(isManagingFlow)
+          updatedIsTransportationAvailable,
+          Boolean(isManagingFlow),
+          isPickupDropoffWithoutFirstScreenOption
         )
       )
     );
-  }, [serviceType, isAdvisorAvailable, isTransportationAvailable, getCurrentMenu]);
+  }, [
+    serviceType,
+    isAdvisorAvailable,
+    isTransportationAvailable,
+    firstScreenOptions,
+    isManagingFlow,
+    getCurrentMenu,
+    isPickupDropoffWithoutFirstScreenOption,
+  ]);
 
   useEffect(() => {
     dispatch(
@@ -91,7 +113,8 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
           isAdvisorAvailable,
           isAppointmentTimingAvailable,
           isTransportationAvailable,
-          Boolean(isManagingFlow)
+          Boolean(isManagingFlow),
+          isPickupDropoffWithoutFirstScreenOption
         )
       )
     );
@@ -100,7 +123,10 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     isAdvisorAvailable,
     isAppointmentTimingAvailable,
     isTransportationAvailable,
+    firstScreenOptions,
+    isManagingFlow,
     getStepsMap,
+    isPickupDropoffWithoutFirstScreenOption,
   ]);
 
   useEffect(() => {

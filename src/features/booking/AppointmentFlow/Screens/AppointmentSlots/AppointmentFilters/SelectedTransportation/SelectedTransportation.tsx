@@ -1,7 +1,11 @@
 import React, { Dispatch, SetStateAction, useMemo } from 'react';
 import { MenuItem, Select, SelectChangeEvent, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { setTransportation } from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
+import {
+  setIsPickupDropoffWithoutFirstScreenOption,
+  setServiceTypeOption,
+  setTransportation,
+} from '../../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import clsx from 'clsx';
@@ -11,6 +15,7 @@ import { EServiceType } from '../../../../../../../store/reducers/appointmentFra
 import { IFirstScreenOption } from '../../../../../../../store/reducers/serviceTypes/types';
 import { TCallback } from '../../../../../../../types/types';
 import { ITransportation } from '../../../../../../../api/types';
+import { selectAppointment } from '../../../../../../../store/reducers/appointment/actions';
 
 type TProps = {
   isVisible: boolean;
@@ -68,6 +73,9 @@ const SelectedTransportation: React.FC<TProps> = ({
       } else {
         dispatch(setTransportation(selected ?? null));
       }
+      dispatch(setServiceTypeOption(null));
+      dispatch(selectAppointment(null));
+      dispatch(setIsPickupDropoffWithoutFirstScreenOption(true));
       onSwitchFlowOpen();
     }
   };
@@ -77,6 +85,7 @@ const SelectedTransportation: React.FC<TProps> = ({
     if (selected?.type === ETransportationType.PickUpDelivery) {
       switchToServiceValet(selected);
     } else {
+      dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
       dispatch(setTransportation(selected ?? null));
     }
   };

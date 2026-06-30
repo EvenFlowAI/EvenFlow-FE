@@ -11,8 +11,8 @@ import {
   EUserType,
 } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUser';
-import { Routes } from '../../../../../routes/constants';
 import { ServiceNeedsCards } from '../../Screens/ServiceNeedsCards/ServiceNeedsCards';
+import { Routes } from '../../../../../routes/constants';
 
 type TProps = {
   onSelect: TArgCallback<TScreen>;
@@ -32,7 +32,9 @@ export const ServiceNeedsCreate: React.FC<
   page,
   setPage,
 }) => {
-  const { userType, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { userType, serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
@@ -56,7 +58,14 @@ export const ServiceNeedsCreate: React.FC<
     if (notVisitCenterSelected || needsToShowCarsSelection) {
       onBack();
     } else {
-      history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);
+      if (
+        !firstScreenOptions.some(option => option.type === EServiceType.PickUpDropOff) &&
+        isPickupDropoffWithoutFirstScreenOption
+      ) {
+        onBack();
+      } else {
+        history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);
+      }
     }
   };
 

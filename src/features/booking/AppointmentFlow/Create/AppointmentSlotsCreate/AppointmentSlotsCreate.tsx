@@ -14,19 +14,29 @@ const AppointmentSlotsCreate: React.FC<TAppointmentSelectionProps> = ({ handleSe
   const { isTransportationAvailable, isAdvisorAvailable, currentConfig } = useSelector(
     (state: RootState) => state.bookingFlowConfig
   );
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const dispatch = useDispatch();
 
   const previousLogicalScreen: TScreen = useMemo(
     () =>
       currentConfig?.appointmentSelection
         ? 'appointmentTiming'
-        : !serviceTypeOption?.transportationOption && isTransportationAvailable
+        : !serviceTypeOption?.transportationOption &&
+            isTransportationAvailable &&
+            !isPickupDropoffWithoutFirstScreenOption
           ? 'transportationNeeds'
           : isAdvisorAvailable
             ? 'consultantSelection'
             : 'serviceNeeds',
-    [currentConfig, isAdvisorAvailable, isTransportationAvailable, serviceTypeOption]
+    [
+      currentConfig,
+      isAdvisorAvailable,
+      isTransportationAvailable,
+      serviceTypeOption,
+      isPickupDropoffWithoutFirstScreenOption,
+    ]
   );
 
   const onEmptyConsents = () => handleSetScreen('appointmentConfirmation');
