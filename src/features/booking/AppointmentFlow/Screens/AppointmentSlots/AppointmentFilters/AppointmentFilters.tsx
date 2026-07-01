@@ -91,52 +91,56 @@ const AppointmentFilters: React.FC<TProps> = ({
     }
   };
 
-  return isVisible ? (
-    <Wrapper>
-      <TitleWrapper onClick={isSm ? onArrowClick : undefined}>
-        <div>Appointment Options</div>
-        {isSm ? (
-          <Arrow
-            style={{
-              transform: !isFiltersOpen ? 'rotate(180deg) translate(0px, 3px)' : 'none',
-              transition: '0.6s ease',
-            }}
-          />
-        ) : null}
-      </TitleWrapper>
-      {isFiltersOpen ? (
-        <FiltersWrapper>
-          <ServiceOption
-            onChangeServiceOption={onChangeServiceOption}
-            isVisible={isServiceOptionVisible}
+  return (
+    <>
+      {isVisible ? (
+        <Wrapper>
+          <TitleWrapper onClick={isSm ? onArrowClick : undefined}>
+            <div>Appointment Options</div>
+            {isSm ? (
+              <Arrow
+                style={{
+                  transform: !isFiltersOpen ? 'rotate(180deg) translate(0px, 3px)' : 'none',
+                  transition: '0.6s ease',
+                }}
+              />
+            ) : null}
+          </TitleWrapper>
+          {isFiltersOpen ? (
+            <FiltersWrapper>
+              <ServiceOption
+                onChangeServiceOption={onChangeServiceOption}
+                isVisible={isServiceOptionVisible}
+                options={serviceOptions}
+                setSelectedOption={setSelectedOption}
+                onSwitchFlowOpen={onSwitchFlowOpen}
+              />
+              <SelectedTransportation
+                isVisible={isVisibleTransportation()}
+                setSelectedOption={setSelectedOption}
+                onSwitchFlowOpen={onSwitchFlowOpen}
+              />
+              <SelectedConsultant isVisible={isAdvisorVisible} />
+            </FiltersWrapper>
+          ) : null}
+          <ChangeServiceTypeModal
+            open={isServiceOptionOpen}
+            onClose={onServiceOptionClose}
             options={serviceOptions}
-            setSelectedOption={setSelectedOption}
             onSwitchFlowOpen={onSwitchFlowOpen}
-          />
-          <SelectedTransportation
-            isVisible={isVisibleTransportation()}
             setSelectedOption={setSelectedOption}
-            onSwitchFlowOpen={onSwitchFlowOpen}
+            onChangeServiceOption={onChangeServiceOptionInPopup}
           />
-          <SelectedConsultant isVisible={isAdvisorVisible} />
-        </FiltersWrapper>
+        </Wrapper>
       ) : null}
-      <ChangeServiceTypeModal
-        open={isServiceOptionOpen}
-        onClose={onServiceOptionClose}
-        options={serviceOptions}
-        onSwitchFlowOpen={onSwitchFlowOpen}
-        setSelectedOption={setSelectedOption}
-        onChangeServiceOption={onChangeServiceOptionInPopup}
-      />
       <SwitchFlowModal
         open={isSwitchFlowOpen}
         onClose={onSwitchFlowClose}
         selectedOption={selectedOption}
         onNext={onServiceOptionClose}
       />
-    </Wrapper>
-  ) : null;
+    </>
+  );
 };
 
 export default AppointmentFilters;
