@@ -21,6 +21,7 @@ import {
   setSelectedRecallAlert,
   setSelectedStatus,
   setUpdatedAlerts,
+  setHasManufacturerRecallTimeout,
 } from './actions';
 import { RECALL_ALERTS_STATUSES } from '../../../utils/constants';
 
@@ -61,6 +62,7 @@ const initialState: TState = {
   selectedRecallAlert: null,
   affectedModels: [],
   recallByVinLoading: false,
+  hasManufacturerRecallTimeout: false,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -124,5 +126,8 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setRecallByVinLoading, (state, { payload }) => {
       return { ...state, recallByVinLoading: payload };
+    })
+    .addCase(setHasManufacturerRecallTimeout, (state, { payload }) => {
+      return { ...state, hasManufacturerRecallTimeout: payload };
     })
 );

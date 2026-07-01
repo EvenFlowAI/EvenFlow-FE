@@ -128,6 +128,7 @@ export type TState = {
   isRecallAlertsTableLoading: boolean;
   selectedRecallAlert: IRecallAlert | null;
   affectedModels: IRecallAffectedModel[];
+  hasManufacturerRecallTimeout: boolean;
 };
 
 export type TRecallRequest = {

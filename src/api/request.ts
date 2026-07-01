@@ -13,6 +13,7 @@ import {
 
 export enum ErrorCode {
   ServiceCenterAccessDenied = 2,
+  ManufacturerDidNotReturnAnyRecalls = 17,
 }
 
 const setSelfCustomerToken = () => {

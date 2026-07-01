@@ -41,8 +41,13 @@ import VinCodeInput from './VinCodeInput/VinCodeInput';
 import { checkVin } from '../../../../../utils/svAppointments';
 import { decodeSCID } from '../../../../../utils/utils';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
-import { enqueueSnackbar } from 'notistack';
 import { useParams } from 'react-router-dom';
+import { ErrorCode } from '../../../../../api/request';
+import ManufacturerDidNotReturnRecalls from '../../../ManufacturerDidNotReturnRecalls/ManufacturerDidNotReturnRecalls';
+import {
+  getRecallsByVin,
+  setHasManufacturerRecallTimeout,
+} from '../../../../../store/reducers/recall/actions';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -65,7 +70,9 @@ export const MaintenanceDetailsForm: React.FC<
   );
   const { id } = useParams<{ id: string }>();
   const { mileage, engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
-  const { recallByVinLoading, recallsByVin } = useSelector((state: RootState) => state.recalls);
+  const { recallByVinLoading, recallsByVin, hasManufacturerRecallTimeout } = useSelector(
+    (state: RootState) => state.recalls
+  );
   const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
   const [errors, setErrors] = useState<TKey[]>([]);
   const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
@@ -83,6 +90,11 @@ export const MaintenanceDetailsForm: React.FC<
     isOpen: isNoRecallsOpen,
     onOpen: onNoRecallsOpen,
     onClose: onNoRecallsClose,
+  } = useModal();
+  const {
+    isOpen: isManufacturerRecallsOpen,
+    onOpen: onManufacturerRecallsOpen,
+    onClose: onManufacturerRecallsClose,
   } = useModal();
 
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
@@ -318,12 +330,17 @@ export const MaintenanceDetailsForm: React.FC<
     setLoadingWhenNextClicked(false);
     setLoading(false);
     dispatch(setRecallsAreShown(true));
+    if (hasManufacturerRecallTimeout) {
+      dispatch(setHasManufacturerRecallTimeout(false));
+      onManufacturerRecallsOpen();
+      return;
+    }
     if (recallsByVin.length) {
       onOpen();
     } else {
       onEmptyRecalls();
     }
-  }, [loadingWhenNextClicked, recallByVinLoading, recallsByVin]);
+  }, [loadingWhenNextClicked, recallByVinLoading, recallsByVin, hasManufacturerRecallTimeout]);
 
   const isValid = () => {
     const errorsArray: string[] = [];
@@ -384,6 +401,13 @@ export const MaintenanceDetailsForm: React.FC<
             }
 
             dispatch(setRecallsAreShown(true));
+
+            if (hasManufacturerRecallTimeout) {
+              dispatch(setHasManufacturerRecallTimeout(false));
+              onManufacturerRecallsOpen();
+              return;
+            }
+
             if (recallsByVin.length) {
               onOpen();
             } else {
@@ -403,23 +427,19 @@ export const MaintenanceDetailsForm: React.FC<
               });
               dispatch(setRecallsAreShown(true));
               if (resData.length) {
+                dispatch(getRecallsByVin(resData));
                 onOpen();
               } else {
                 onEmptyRecalls();
               }
+              setLoading(false);
             } catch (err) {
-              enqueueSnackbar(
-                (err as any).response?.data?.message ||
-                  t('An error occurred while processing your request'),
-                {
-                  variant: 'error',
-                  autoHideDuration: 3000,
-                  anchorOrigin: {
-                    vertical: 'top',
-                    horizontal: 'right',
-                  },
-                }
-              );
+              if (
+                (err as any).response?.data?.errorCode ===
+                ErrorCode.ManufacturerDidNotReturnAnyRecalls
+              ) {
+                onManufacturerRecallsOpen();
+              }
               setLoading(false);
               return;
             }
@@ -554,6 +574,11 @@ export const MaintenanceDetailsForm: React.FC<
       <NoRecallsModal
         open={isNoRecallsOpen}
         onClose={onNoRecallsClose}
+        handleNext={handleDeclineRecalls}
+      />
+      <ManufacturerDidNotReturnRecalls
+        open={isManufacturerRecallsOpen}
+        onClose={onManufacturerRecallsClose}
         handleNext={handleDeclineRecalls}
       />
       <RecallsLoadingModal open={isLoading} />

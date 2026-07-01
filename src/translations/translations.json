@@ -398,7 +398,8 @@
       "Any search field must contain 2 or more characters": "Any search field must contain 2 or more characters",
       "There are not Service Centers list of the current Dealership": "There are not Service Centers list of the current Dealership",
       "Checking for Open Recalls": "Checking for Open Recalls",
-      "One moment please as this may take a few seconds": "One moment please as this may take a few seconds"
+      "One moment please as this may take a few seconds": "One moment please as this may take a few seconds",
+      "Manufacturer did not return any recalls for your vehicle.": "Manufacturer did not return any recalls for your vehicle."
     }
   },
   "es": {

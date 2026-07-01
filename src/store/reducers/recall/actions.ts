@@ -29,6 +29,7 @@ import type {
   HistoryRecallData,
   TriggerI,
 } from '../../../pages/admin/DealerOperations/Customer/types';
+import { ErrorCode } from '../../../api/request';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
@@ -49,6 +50,9 @@ export const setRecallAlertsOrderWorkflow = createAction<IOrder<IRecallAlert>>(
 );
 export const setRecallSearch = createAction<string>('Recall/SetSearch');
 export const setRecallByVinLoading = createAction<boolean>('Recall/SetRecallByVinLoading');
+export const setHasManufacturerRecallTimeout = createAction<boolean>(
+  'Recall/SetHasManufacturerRecallTimeout'
+);
 export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
   'Recall/SetRecallCampaignInfo'
 );
@@ -172,6 +176,9 @@ export const loadRecallsByVin =
       })
       .catch(err => {
         console.log('get recalls by vin err', err);
+        const backendError = err?.response?.data?.errorCode;
+        if (backendError === ErrorCode.ManufacturerDidNotReturnAnyRecalls)
+          dispatch(setHasManufacturerRecallTimeout(true));
       })
       .finally(() => {
         dispatch(setLoading(false));
