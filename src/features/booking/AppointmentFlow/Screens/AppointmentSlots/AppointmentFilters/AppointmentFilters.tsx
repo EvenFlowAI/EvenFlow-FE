@@ -15,17 +15,16 @@ import SwitchFlowModal from '../../../../SwitchFlowModal/SwitchFlowModal';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { IFirstScreenOption } from '../../../../../../store/reducers/serviceTypes/types';
 import { ETransportationType } from '../../../../../../store/reducers/transportationNeeds/types';
+import { ITransportation } from '../../../../../../api/types';
 
 type TProps = {
   isSm: boolean;
-  onChangeServiceOption: TCallback;
   isServiceOptionOpen: boolean;
   onServiceOptionClose: TCallback;
 };
 
 const AppointmentFilters: React.FC<TProps> = ({
   isSm,
-  onChangeServiceOption,
   isServiceOptionOpen,
   onServiceOptionClose,
 }) => {
@@ -38,6 +37,9 @@ const AppointmentFilters: React.FC<TProps> = ({
   );
 
   const [selectedOption, setSelectedOption] = useState<IFirstScreenOption | null>(null);
+  const [lastTransportation, setLastTransportation] = useState<ITransportation | null | undefined>(
+    undefined
+  );
   const [isFiltersOpen, setFiltersOpen] = useState<boolean>(!isSm);
   const { isTransportationsVisible } = useTransportationVisibility();
   const {
@@ -75,10 +77,7 @@ const AppointmentFilters: React.FC<TProps> = ({
 
   const onArrowClick = () => setFiltersOpen(prev => !prev);
 
-  const onChangeServiceOptionInPopup = () => {
-    onChangeServiceOption();
-    onServiceOptionClose();
-  };
+  const resetLastTransportation = () => setLastTransportation(undefined);
 
   const isVisibleTransportation = () => {
     if (
@@ -109,15 +108,16 @@ const AppointmentFilters: React.FC<TProps> = ({
           {isFiltersOpen ? (
             <FiltersWrapper>
               <ServiceOption
-                onChangeServiceOption={onChangeServiceOption}
                 isVisible={isServiceOptionVisible}
                 options={serviceOptions}
                 setSelectedOption={setSelectedOption}
+                setLastTransportation={setLastTransportation}
                 onSwitchFlowOpen={onSwitchFlowOpen}
               />
               <SelectedTransportation
                 isVisible={isVisibleTransportation()}
                 setSelectedOption={setSelectedOption}
+                setLastTransportation={setLastTransportation}
                 onSwitchFlowOpen={onSwitchFlowOpen}
               />
               <SelectedConsultant isVisible={isAdvisorVisible} />
@@ -129,7 +129,6 @@ const AppointmentFilters: React.FC<TProps> = ({
             options={serviceOptions}
             onSwitchFlowOpen={onSwitchFlowOpen}
             setSelectedOption={setSelectedOption}
-            onChangeServiceOption={onChangeServiceOptionInPopup}
           />
         </Wrapper>
       ) : null}
@@ -137,6 +136,8 @@ const AppointmentFilters: React.FC<TProps> = ({
         open={isSwitchFlowOpen}
         onClose={onSwitchFlowClose}
         selectedOption={selectedOption}
+        lastTransportation={lastTransportation}
+        resetLastTransportation={resetLastTransportation}
         onNext={onServiceOptionClose}
       />
     </>

@@ -20,12 +20,14 @@ import { selectAppointment } from '../../../../../../../store/reducers/appointme
 type TProps = {
   isVisible: boolean;
   setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption | null>>;
+  setLastTransportation: Dispatch<SetStateAction<ITransportation | null | undefined>>;
   onSwitchFlowOpen: TCallback;
 };
 
 const SelectedTransportation: React.FC<TProps> = ({
   isVisible,
   setSelectedOption,
+  setLastTransportation,
   onSwitchFlowOpen,
 }) => {
   const { transportation, transportations, isTransportationsLoading, serviceTypeOption } =
@@ -59,11 +61,12 @@ const SelectedTransportation: React.FC<TProps> = ({
       el => el.type === EServiceType.PickUpDropOff
     );
     if (serviceValetOption) {
+      setLastTransportation(transportation ?? null);
       setSelectedOption(serviceValetOption);
       onSwitchFlowOpen();
     } else {
       setSelectedOption(null);
-      localStorage.setItem('lastTransportation', JSON.stringify(transportation));
+      setLastTransportation(transportation ?? null);
 
       const SVTransportation = transportations.find(
         t => t.type === ETransportationType.PickUpDelivery

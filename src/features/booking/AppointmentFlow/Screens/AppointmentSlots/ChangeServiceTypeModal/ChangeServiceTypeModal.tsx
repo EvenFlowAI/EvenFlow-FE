@@ -17,7 +17,6 @@ import { IFirstScreenOption } from '../../../../../../store/reducers/serviceType
 
 type TProps = DialogProps & {
   options: React.JSX.Element[];
-  onChangeServiceOption: TCallback;
   setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption | null>>;
   onSwitchFlowOpen: TCallback;
 };
@@ -28,7 +27,6 @@ const ChangeServiceTypeModal: React.FC<TProps> = ({
   open,
   onClose,
   options,
-  onChangeServiceOption,
 }) => {
   const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
   const { t } = useTranslation();
@@ -48,7 +46,6 @@ const ChangeServiceTypeModal: React.FC<TProps> = ({
             hideLabel
             options={options}
             isVisible
-            onChangeServiceOption={onChangeServiceOption}
             setSelectedOption={setSelectedOption}
             onSwitchFlowOpen={onSwitchFlowOpen}
           />

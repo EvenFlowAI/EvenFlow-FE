@@ -55,10 +55,19 @@ import { setUnavailableServiceOpen } from '../../../store/reducers/modals/action
 
 type TProps = DialogProps & {
   selectedOption: IFirstScreenOption | null;
+  lastTransportation?: ITransportation | null;
+  resetLastTransportation?: TCallback;
   onNext?: TCallback;
 };
 
-const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNext }) => {
+const SwitchFlowModal: React.FC<TProps> = ({
+  open,
+  onClose,
+  selectedOption,
+  lastTransportation,
+  resetLastTransportation,
+  onNext,
+}) => {
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const {
     address,
@@ -219,13 +228,10 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   };
 
   const onCancel = () => {
-    const lastTransportation = localStorage.getItem('lastTransportation');
-    localStorage.removeItem('lastTransportation');
-    if (lastTransportation) {
-      dispatch(setTransportation(JSON.parse(lastTransportation)));
-    } else {
-      dispatch(setTransportation(null));
+    if (lastTransportation !== undefined) {
+      dispatch(setTransportation(lastTransportation));
     }
+    resetLastTransportation && resetLastTransportation();
     clearData();
     clearDate();
     dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
@@ -235,6 +241,7 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
 
   const handleClose = () => {
     clearData();
+    resetLastTransportation && resetLastTransportation();
     onClose();
   };
 
@@ -284,7 +291,6 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     );
     clearPrevAppointments();
     handleClose();
-    localStorage.removeItem('lastTransportation');
     onNext && onNext();
   };
 

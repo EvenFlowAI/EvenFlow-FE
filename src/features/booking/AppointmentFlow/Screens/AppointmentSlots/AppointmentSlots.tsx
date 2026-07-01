@@ -396,10 +396,6 @@ export const AppointmentSlots: React.FC<
     [month, selectedTiming, selectFirstSlot]
   );
 
-  const onChangeServiceOption = () => {
-    updateDate(dayjs(), true);
-  };
-
   const setDateCallback = useCallback(
     (d: TParsableDate) => {
       if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
@@ -810,7 +806,6 @@ export const AppointmentSlots: React.FC<
           loading={isConsultantsLoading || isConsentsLoading}
         />
         <AppointmentFilters
-          onChangeServiceOption={onChangeServiceOption}
           isSm={isMd}
           isServiceOptionOpen={isServiceOptionOpen}
           onServiceOptionClose={onServiceOptionClose}
