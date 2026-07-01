@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
 import { useSCs } from '../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../hooks/useException/useException';
@@ -15,7 +15,7 @@ import {
 import { customerRecallTags } from '../../../../../../config/data';
 import { Textarea } from '../../../../../../components/modals/admin/MapIframeLink/styles';
 import { ReactComponent as CopyIcon } from '../../../../../../assets/img/copy.svg';
-import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmall.svg';
+import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmallGreen.svg';
 import { ReactComponent as RedCross } from '../../../../../../assets/img/redCross.svg';
 import { ReactComponent as Info } from '../../../../../../assets/img/info.svg';
 import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
@@ -24,6 +24,7 @@ import { DialogProps } from '../../../../../../components/modals/BaseModal/types
 import { sendTestSMSMessage } from '../../../../../../store/reducers/dealerOperations/actions';
 import { updateRecallAlertText } from '../../../../../../store/reducers/recall/actions';
 import { LightTooltip } from './LightTooltip';
+import { RootState } from '../../../../../../store/rootReducer';
 
 type TextConfigurationRecallProps = DialogProps & {
   updatedRecallAlert: IRecallAlert | null;
@@ -43,7 +44,7 @@ const TextConfigurationRecall = ({
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const [phoneNumberForTest, setPhoneNumberForTest] = React.useState<string>('');
-
+  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
 
@@ -176,10 +177,10 @@ const TextConfigurationRecall = ({
           <div className={classes.integrationBlock}>
             <div className={classes.integrationWrapper}>
               <p className={classes.integrationText}>Integration</p>
-              {updatedRecallAlert.communicationDetails?.textMessage ? (
+              {textIntegrationSettings?.fromPhoneNumber ? (
                 <p className={classes.configuredComponent}>
                   <CheckIcon />{' '}
-                  <span style={{ color: '#7898FF' }} className={classes.configuredColor}>
+                  <span style={{ color: '#5FA077' }} className={classes.configuredColor}>
                     Configured
                   </span>
                 </p>
