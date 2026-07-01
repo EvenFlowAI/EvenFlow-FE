@@ -71,6 +71,16 @@ export const useStyles = makeStyles()(() => ({
       width: '84%',
     },
   },
+  audienceWrapper: {
+    display: 'flex',
+    borderRight: '1px solid #EAEBEE',
+    width: '58%',
+    flexDirection: 'column',
+    gap: '10px',
+    '@media (max-width: 900px)': {
+      width: '84%',
+    },
+  },
   line: {
     color: '#EAEBEE',
     backgroundColor: '#EAEBEE',
@@ -171,9 +181,10 @@ export const useStyles = makeStyles()(() => ({
     color: '#546AB3',
   },
   triggersFormWrapper: {
+    flexDirection: 'column',
     display: 'flex',
     width: '100%',
-    gap: '20px',
+    gap: '4px',
   },
   triggersForm: {
     display: 'flex',
@@ -193,5 +204,41 @@ export const useStyles = makeStyles()(() => ({
     '& .MuiFormControl-root': {
       width: '107px',
     },
+  },
+  availableCreditCounter: {
+    fontWeight: 'bold',
+  },
+  tableSwitcher: {
+    display: 'flex',
+    alignItems: 'center',
+    borderRadius: '4px',
+  },
+  tableMode: {
+    fontSize: '14px',
+    textTransform: 'uppercase',
+    padding: '12px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    cursor: 'pointer',
+    margin: 0,
+    border: '1px solid #7898FF',
+    fontWeight: 700,
+  },
+  active: {
+    backgroundColor: '#7898FF',
+    color: 'white',
+  },
+  inactive: {
+    backgroundColor: 'white',
+    color: '#7898FF',
+  },
+  leftRounded: {
+    borderTopLeftRadius: '4px',
+    borderBottomLeftRadius: '4px',
+  },
+  rightRounded: {
+    borderTopRightRadius: '4px',
+    borderBottomRightRadius: '4px',
   },
 }));

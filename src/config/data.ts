@@ -16,3 +16,20 @@ export const customerTags = [
   '{{Service Option}}',
   '{{Service Advisor}}',
 ];
+
+export const customerRecallTags = [
+  '{{First Name}}',
+  '{{Last Name}}',
+  '{{Make}}',
+  '{{Model}}',
+  '{{Year}}',
+  '{{Vin}}',
+  '{{Planned Date}}',
+  '{{Service Center Name}}',
+  '{{Clone}}',
+  '{{Shortlink}}',
+  '{{Phone}}',
+  '{{NHTSA Campaign}}',
+  '{{Recall Component}}',
+  '{{Recall Link}}',
+];

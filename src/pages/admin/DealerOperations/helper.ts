@@ -1,5 +1,9 @@
+/* eslint-disable max-lines */
+
 import { CriteriaI, TriggerI } from './Customer/types';
 import React, { Dispatch, SetStateAction } from 'react';
+import { IGlobalModelYear, IRecallAffectedModel } from '../../../store/reducers/recall/types';
+import { RootState } from '../../../store/rootReducer';
 
 export function numberToOrdinalWord(num: number): string {
   switch (num) {
@@ -165,10 +169,7 @@ export const validateTriggers = (
     showError("The 'Scheduled time' selection is required.");
     return true;
   }
-  if (!validateDaysToFutureAppointment(criterias, triggers, showError, setTriggerDateErrors)) {
-    return true;
-  }
-  return false;
+  return !validateDaysToFutureAppointment(criterias, triggers, showError, setTriggerDateErrors);
 };
 
 export const checkAudienceCriteria = (
@@ -194,7 +195,7 @@ export const validateDaysToFutureAppointment = (
     }>
   >
 ) => {
-  if (criterias[0].type === 'Days To Future Appointment' && triggers.length) {
+  if (criterias[0]?.type === 'Days To Future Appointment' && triggers.length) {
     const errors: { [index: number]: boolean } = {};
 
     triggers.forEach((trigger, index) => {
@@ -259,3 +260,59 @@ export const filterValidRulesAndTriggers = (
   filterRules: [...criterias, ...rules].filter(rule => rule.operator && rule.type),
   triggers: triggers.filter(trigger => trigger.scheduledTime),
 });
+
+export const VIN_CHECK_API = 'VIN Check (API)';
+export const CSV_UPLOADED = 'CSV Uploaded';
+
+export const toEnumLabel = <T extends Record<number, string>>(
+  value: string,
+  enumMap: T
+): string => {
+  const enumIndex = Number(value);
+
+  if (!Number.isNaN(enumIndex) && enumMap[enumIndex] !== undefined) {
+    return enumMap[enumIndex];
+  }
+
+  return value;
+};
+
+export type TSelectedModelKey = IGlobalModelYear & {
+  vehicleCount: number;
+};
+
+export const mapModelIdsToGlobalModels = (
+  modelIds: number[],
+  models: IRecallAffectedModel[]
+): TSelectedModelKey[] => {
+  const mapped = models
+    .filter(item => modelIds.includes(item.globalVehicleModelId))
+    .map(item => ({
+      globalVehicleModelId: item.globalVehicleModelId,
+      year: item.year,
+      vehicleCount: item.vehicleCount || 0,
+    }));
+
+  const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
+  mapped.forEach(item => {
+    uniqueByModelAndYear.set(`${item.globalVehicleModelId}-${item.year}`, item);
+  });
+
+  return Array.from(uniqueByModelAndYear.values());
+};
+
+export const mapAllAffectedModelsToSelectedKeys = (
+  models: RootState['recalls']['affectedModels']
+) => {
+  const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
+
+  models.forEach(({ globalVehicleModelId, year, vehicleCount }) => {
+    uniqueByModelAndYear.set(`${globalVehicleModelId}-${year}`, {
+      globalVehicleModelId,
+      year,
+      vehicleCount,
+    });
+  });
+
+  return Array.from(uniqueByModelAndYear.values());
+};

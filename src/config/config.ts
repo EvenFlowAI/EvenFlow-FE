@@ -31,6 +31,7 @@ export const APIHost = apiHost;
 export const APIUrl = `${APIHost}/api/v0`;
 
 export const defaultRowsPerPageOptions = [10, 50, 100];
+export const secondOptionRowsPerPageOptions = [10, 25, 50];
 export const usersRowsPerPageOptions = [25, 50, 100];
 export const defaultRowsPerPage = 10;
 export const usersRowsPerPage = 25;

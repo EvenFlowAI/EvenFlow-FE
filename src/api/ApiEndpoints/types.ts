@@ -137,7 +137,12 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   GlobalRecalls: Record<
-    'GetGlobalRecalls' | 'GlobalRecallCampaign' | 'GetManufacturers' | 'GetRecallComponent',
+    | 'GetGlobalRecalls'
+    | 'GlobalRecallCampaign'
+    | 'GetManufacturers'
+    | 'GetRecallComponent'
+    | 'GetAllGlobalRecalls'
+    | 'GetAffectedModels',
     TApiEndpoint
   >;
   Holidays: Record<'Create' | 'Update' | 'Remove' | 'Retrieve' | 'GetAll', TApiEndpoint>;
@@ -200,6 +205,7 @@ export interface IApiEndpoints {
     | 'Activate',
     TApiEndpoint
   >;
+  Audit: Record<'History', TApiEndpoint>;
   PricingSettings: Record<
     | 'GetList'
     | 'Edit'
@@ -229,7 +235,19 @@ export interface IApiEndpoints {
   >;
   Qrvey: Record<'GetToken', TApiEndpoint>;
   Recalls: Record<
-    'GetAll' | 'GetById' | 'GetByVin' | 'Create' | 'Update' | 'Remove' | 'UpdateRecallParts',
+    | 'GetAll'
+    | 'GetById'
+    | 'GetByVin'
+    | 'Create'
+    | 'Update'
+    | 'Remove'
+    | 'UpdateRecallParts'
+    | 'GetRecallEvents'
+    | 'CreateRecallEvent'
+    | 'UpdateRecallEvent'
+    | 'DeleteRecallEvent'
+    | 'UploadCSV'
+    | 'RecallTrigger',
     TApiEndpoint
   >;
   ServiceCategories: Record<
@@ -285,7 +303,8 @@ export interface IApiEndpoints {
     | 'GetAssignedAdvisorMethod'
     | 'UpdateAssignedAdvisorMethod'
     | 'GetAllServiceCenterSettings'
-    | 'SetEmailRequired',
+    | 'SetEmailRequired'
+    | 'GetAvailableCredits',
     TApiEndpoint
   >;
   ServiceConsultants: Record<
@@ -405,6 +424,10 @@ export interface IApiEndpoints {
     | 'SetTextIntegration'
     | 'GetPhoneNumbers'
     | 'SendSMSMessage',
+    TApiEndpoint
+  >;
+  ServiceCenterCredits: Record<
+    'GetServiceCenterCredits' | 'UpdateServiceCenterCredits',
     TApiEndpoint
   >;
 }

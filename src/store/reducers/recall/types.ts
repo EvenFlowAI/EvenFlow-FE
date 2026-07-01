@@ -1,4 +1,5 @@
-import { IOrder, IPageRequest, IPagingResponse, IRecallByVin } from '../../../types/types';
+import { IOrder, IPageRequest, IPagingResponse, IRecallByVin, TOption } from '../../../types/types';
+import type { TriggerI } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export type TIdName = {
   id: number;
@@ -27,6 +28,45 @@ export interface IRecall {
   localIndex: number;
 }
 
+export enum RecallListType {
+  VIN_CHECK_API,
+  UPLOAD_CSV,
+}
+
+export interface IGlobalModelYear {
+  globalVehicleModelId: number;
+  year: number;
+}
+
+export interface IRecallAlert {
+  actualRecipients: number;
+  nhtsaCampaign: string;
+  recallComponent: string;
+  id: number;
+  name: string;
+  listGeneratedDate: string;
+  globalModelIds: number[];
+  campaignRecallGroupBatchId: number;
+  recallCampaignId: number;
+  status: number;
+  listType: RecallListType;
+  communicationDetails: {
+    textMessage: string;
+    textMessageTrimmed: string;
+  };
+  vehiclesInDms: number;
+  creditsUsed: number;
+  estimatedRecipients: number;
+  triggers: TriggerI[];
+  filterRules: {
+    id?: number;
+    type: string;
+    operator: string;
+    value: string;
+    isCriteria?: boolean;
+  }[];
+}
+
 export interface ICreateUpdateRecall {
   id?: number;
   recallCampaignNumber?: string;
@@ -46,14 +86,47 @@ export interface IRecallResponse {
   paging: IPagingResponse;
 }
 
+export interface IRecallCampaign {
+  id: number;
+  impactedVehicles: number;
+  manufacturer: string;
+  nhtsaCampaign: string;
+  oemProgram: string;
+  recallComponent: string;
+  reportedDate: string;
+}
+
+export interface IRecallAffectedModel {
+  globalVehicleModelId: number;
+  make: string;
+  model: string;
+  vehicleCount: number;
+  year: number;
+}
+
 export type TState = {
   recalls: IRecall[];
+  recallAlerts: IRecallAlert[];
   isLoading: boolean;
   recallPageData: IPageRequest;
+  recallAlertsPageData: IPageRequest;
   recallsCount: number;
+  recallAlertsCount: number;
   recallsByVin: IRecallByVin[];
   order: IOrder<IRecall>;
+  recallAlertsOrderWorkflow: IOrder<IRecallAlert>;
+  recallAlertsOrderStats: IOrder<IRecallAlert>;
   searchTerm: string;
+  recallCampaignInfo: IRecallCampaign[];
+  selectedStatus: TOption;
+  updatedAlerts: {
+    id: number;
+    name: string;
+  }[];
+  isEditName: boolean;
+  isRecallAlertsTableLoading: boolean;
+  selectedRecallAlert: IRecallAlert | null;
+  affectedModels: IRecallAffectedModel[];
 };
 
 export type TRecallRequest = {
@@ -63,6 +136,7 @@ export type TRecallRequest = {
   orderBy?: string;
   isAscending?: boolean;
   searchTerm?: string;
+  status?: string;
 };
 
 export type TUpdateRecall = {

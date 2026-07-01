@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 
 import { createAction } from '@reduxjs/toolkit';
-import { DashboardItemI, IntegrationSettingsI } from './types';
+import { Credits, DashboardItemI, IntegrationSettingsI } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
 import { ActionCreator } from 'redux';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -44,6 +44,8 @@ export const setUpdatedEventsName = createAction<
     name: string;
   }[]
 >('Optimizer/setUpdatedEventsName');
+
+export const setCredits = createAction<Credits>('Optimizer/SetCredits');
 
 export const setTextIntegrationSettings = createAction<IntegrationSettingsI>(
   'Optimizer/setTextIntegrationSettings'
@@ -347,3 +349,23 @@ export const changeDealerOperationsPageData: ActionCreator<AppThunk> = (
     await dispatch(setCustomerCommunicationDashboardPageData(payload));
   };
 };
+
+export const loadAvailableCredits =
+  (id: number, onSuccess: () => void): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.ServiceCenters.GetAvailableCredits, {
+      urlParams: { id },
+    })
+      .then(response => {
+        if (response?.data?.data) {
+          const data = response.data.data;
+          dispatch(setCredits(data));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        onSuccess();
+      });
+  };
