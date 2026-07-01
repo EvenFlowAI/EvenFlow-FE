@@ -16,15 +16,13 @@ import {
   updateVehicle,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { RootState } from '../../../../../store/rootReducer';
-import { useParams } from 'react-router-dom';
 import { EServiceCategoryPage, EServiceCenterName, ILoadedVehicle } from '../../../../../api/types';
-import { decodeSCID } from '../../../../../utils/utils';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import { useTranslation } from 'react-i18next';
 import { IEngineType } from '../../../../../store/reducers/vehicleDetails/types';
 import RecallsByVinModal from '../../../RecallsByVinModal/RecallsByVinModal';
-import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import NoRecallsModal from '../../../NoRecallsModal/NoRecallsModal';
+import RecallsLoadingModal from '../../../RecallsLoadingModal/RecallsLoadingModal';
 import {
   TKey,
   TMaintenanceDetailsProps,
@@ -35,14 +33,16 @@ import {
 } from './types';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
-import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { isAndroid } from 'react-device-detect';
 import { FormWithSelectors } from './FormWithSelectors/FormWithSelectors';
 import FormWithAutocompletes from './FormWithAutocompletes/FormWithAutocompletes';
 import { blankOptions } from './constants';
 import VinCodeInput from './VinCodeInput/VinCodeInput';
-import { enqueueSnackbar } from 'notistack';
 import { checkVin } from '../../../../../utils/svAppointments';
+import { decodeSCID } from '../../../../../utils/utils';
+import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
+import { enqueueSnackbar } from 'notistack';
+import { useParams } from 'react-router-dom';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -63,18 +63,20 @@ export const MaintenanceDetailsForm: React.FC<
   const { customerLoadedData, scProfile, selectedSR } = useSelector(
     (state: RootState) => state.appointment
   );
+  const { id } = useParams<{ id: string }>();
   const { mileage, engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
+  const { recallByVinLoading, recallsByVin } = useSelector((state: RootState) => state.recalls);
   const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
   const [errors, setErrors] = useState<TKey[]>([]);
   const [loadedOptions, setLoadedOptions] = useState<TOptionsState>(blankOptions);
   const [currentModels, setCurrentModels] = useState<string[] | []>([]);
   const [selectedEngine, setSelectedEngine] = useState<IEngineType | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [loadingWhenNextClicked, setLoadingWhenNextClicked] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const showError = useException();
   const theme = useTheme();
-  const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useModal();
   const {
@@ -310,6 +312,19 @@ export const MaintenanceDetailsForm: React.FC<
     }
   };
 
+  useEffect(() => {
+    if (!loadingWhenNextClicked || recallByVinLoading) return;
+
+    setLoadingWhenNextClicked(false);
+    setLoading(false);
+    dispatch(setRecallsAreShown(true));
+    if (recallsByVin.length) {
+      onOpen();
+    } else {
+      onEmptyRecalls();
+    }
+  }, [loadingWhenNextClicked, recallByVinLoading, recallsByVin]);
+
   const isValid = () => {
     const errorsArray: string[] = [];
     for (const f of requiredFields) {
@@ -354,42 +369,60 @@ export const MaintenanceDetailsForm: React.FC<
       makeInTheList &&
       (!customerLoadedData?.isUpdating || isRecallsCategorySelected)
     ) {
-      const { vin, make, model, year } = selectedVehicle;
+      const { vin, make, year, model } = selectedVehicle;
       if (checkVin(vin)) {
         if (vin && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
-          setLoading(true);
-          try {
-            const { data: resData } = await Api.call(Api.endpoints.Recalls.GetByVin, {
-              data: {
-                serviceCenterId: decodeSCID(id),
-                vin: vin.toUpperCase(),
-                make,
-                year: +year,
-                model,
-              },
-            });
+          const previousVin = customerLoadedData?.vehicles?.find(v => v.vin === vin)?.vin;
+          if (
+            (customerLoadedData?.fromSearchByName || userType === EUserType.Existing) &&
+            previousVin?.length
+          ) {
+            if (recallByVinLoading) {
+              setLoading(true);
+              setLoadingWhenNextClicked(true);
+              return;
+            }
+
             dispatch(setRecallsAreShown(true));
-            if (resData.length) {
+            if (recallsByVin.length) {
               onOpen();
             } else {
               onEmptyRecalls();
             }
-          } catch (err) {
-            enqueueSnackbar(
-              (err as any).response?.data?.message ||
-                t('An error occurred while processing your request'),
-              {
-                variant: 'error',
-                autoHideDuration: 3000,
-                anchorOrigin: {
-                  vertical: 'top',
-                  horizontal: 'right',
+          } else {
+            setLoading(true);
+            try {
+              const { data: resData } = await Api.call(Api.endpoints.Recalls.GetByVin, {
+                data: {
+                  serviceCenterId: decodeSCID(id),
+                  vin: vin.toUpperCase(),
+                  make,
+                  year: +year,
+                  model,
                 },
+              });
+              dispatch(setRecallsAreShown(true));
+              if (resData.length) {
+                onOpen();
+              } else {
+                onEmptyRecalls();
               }
-            );
-            setLoading(false);
-            return;
-            // onEmptyRecalls();
+            } catch (err) {
+              enqueueSnackbar(
+                (err as any).response?.data?.message ||
+                  t('An error occurred while processing your request'),
+                {
+                  variant: 'error',
+                  autoHideDuration: 3000,
+                  anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                  },
+                }
+              );
+              setLoading(false);
+              return;
+            }
           }
         } else {
           handleNoRecalls();
@@ -405,7 +438,7 @@ export const MaintenanceDetailsForm: React.FC<
     } else {
       handleNoRecalls();
     }
-    setLoading(false);
+    if (!recallByVinLoading) setLoading(false);
   };
 
   const orderMapStyles = useMemo<TOrderStyles>(
@@ -454,51 +487,47 @@ export const MaintenanceDetailsForm: React.FC<
 
   return (
     <StepWrapper>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Grid container spacing={2}>
-          {isAndroid ? (
-            <FormWithSelectors
-              loadedOptions={loadedOptions}
-              setLoadedOptions={setLoadedOptions}
-              tabOrderMap={tabOrderMap}
-              errors={errors}
-              setErrors={setErrors}
-              selectedEngine={selectedEngine}
-              setSelectedEngine={setSelectedEngine}
-              isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
-              orderMapStyles={orderMapStyles}
-              requiredFields={requiredFields}
-              isExistingSelectedVehicle={existingSelectedVehicleMatch}
-            />
-          ) : (
-            <FormWithAutocompletes
-              loadedOptions={loadedOptions}
-              setLoadedOptions={setLoadedOptions}
-              tabOrderMap={tabOrderMap}
-              errors={errors}
-              setErrors={setErrors}
-              selectedEngine={selectedEngine}
-              setSelectedEngine={setSelectedEngine}
-              isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
-              orderMapStyles={orderMapStyles}
-              requiredFields={requiredFields}
-              isExistingSelectedVehicle={existingSelectedVehicleMatch}
-            />
-          )}
-
-          <VinCodeInput
-            recallsToggledOn={!!recallsToggledOn}
-            setErrors={setErrors}
-            errors={errors}
-            orderMapStyles={orderMapStyles}
+      <Grid container spacing={2}>
+        {isAndroid ? (
+          <FormWithSelectors
+            loadedOptions={loadedOptions}
+            setLoadedOptions={setLoadedOptions}
             tabOrderMap={tabOrderMap}
+            errors={errors}
+            setErrors={setErrors}
+            selectedEngine={selectedEngine}
+            setSelectedEngine={setSelectedEngine}
+            isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
+            orderMapStyles={orderMapStyles}
             requiredFields={requiredFields}
-            isRecallsCategorySelected={isRecallsCategorySelected}
+            isExistingSelectedVehicle={existingSelectedVehicleMatch}
           />
-        </Grid>
-      )}
+        ) : (
+          <FormWithAutocompletes
+            loadedOptions={loadedOptions}
+            setLoadedOptions={setLoadedOptions}
+            tabOrderMap={tabOrderMap}
+            errors={errors}
+            setErrors={setErrors}
+            selectedEngine={selectedEngine}
+            setSelectedEngine={setSelectedEngine}
+            isExistingVehicle={Boolean(existingSelectedVehicleMatch)}
+            orderMapStyles={orderMapStyles}
+            requiredFields={requiredFields}
+            isExistingSelectedVehicle={existingSelectedVehicleMatch}
+          />
+        )}
+
+        <VinCodeInput
+          recallsToggledOn={!!recallsToggledOn}
+          setErrors={setErrors}
+          errors={errors}
+          orderMapStyles={orderMapStyles}
+          tabOrderMap={tabOrderMap}
+          requiredFields={requiredFields}
+          isRecallsCategorySelected={isRecallsCategorySelected}
+        />
+      </Grid>
       <ActionButtons
         onBack={handleBack}
         onNext={handleSubmit}
@@ -527,6 +556,7 @@ export const MaintenanceDetailsForm: React.FC<
         onClose={onNoRecallsClose}
         handleNext={handleDeclineRecalls}
       />
+      <RecallsLoadingModal open={isLoading} />
     </StepWrapper>
   );
 };

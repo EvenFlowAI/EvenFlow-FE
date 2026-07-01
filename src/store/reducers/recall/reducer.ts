@@ -13,6 +13,7 @@ import {
   setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
   setRecallCampaignInfo,
+  setRecallByVinLoading,
   setRecallOrder,
   setRecallPageData,
   setRecallsCount,
@@ -59,6 +60,7 @@ const initialState: TState = {
   isRecallAlertsTableLoading: false,
   selectedRecallAlert: null,
   affectedModels: [],
+  recallByVinLoading: false,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -119,5 +121,8 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setAffectedModels, (state, { payload }) => {
       return { ...state, affectedModels: payload };
+    })
+    .addCase(setRecallByVinLoading, (state, { payload }) => {
+      return { ...state, recallByVinLoading: payload };
     })
 );

@@ -32,6 +32,8 @@ import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUs
 import { BookNewVehicle, NewVehicleCard } from './CarCard/styles';
 import { ReactComponent as CarIcon } from '../../../../../assets/img/caricon.svg';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
+import { loadRecallsByVin } from '../../../../../store/reducers/recall/actions';
+import { decodeSCID } from '../../../../../utils/utils';
 
 type TProps = {
   onBack: TCallback;
@@ -161,6 +163,11 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     (vehicle: ILoadedVehicle) => {
       clearAllData().then(() => {
         dispatch(setVehicle(vehicle));
+        if (vehicle?.vin?.length && vehicle?.make && vehicle?.model && vehicle?.year) {
+          dispatch(
+            loadRecallsByVin(decodeSCID(id), vehicle.vin, vehicle.make, vehicle.model, vehicle.year)
+          );
+        }
         if (needToShowServiceSelection) {
           handleServiceTypeSelection();
         } else {

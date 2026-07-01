@@ -117,6 +117,7 @@ export type TState = {
   recallAlertsOrderWorkflow: IOrder<IRecallAlert>;
   recallAlertsOrderStats: IOrder<IRecallAlert>;
   searchTerm: string;
+  recallByVinLoading: boolean;
   recallCampaignInfo: IRecallCampaign[];
   selectedStatus: TOption;
   updatedAlerts: {

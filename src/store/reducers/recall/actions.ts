@@ -48,6 +48,7 @@ export const setRecallAlertsOrderWorkflow = createAction<IOrder<IRecallAlert>>(
   'Recall/SetRecallAlertsOrderWorkflow'
 );
 export const setRecallSearch = createAction<string>('Recall/SetSearch');
+export const setRecallByVinLoading = createAction<boolean>('Recall/SetRecallByVinLoading');
 export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
   'Recall/SetRecallCampaignInfo'
 );
@@ -158,16 +159,24 @@ export const loadRecallsByVin =
   (serviceCenterId: number, vin: string, make: string, model: string, year: number): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
+    dispatch(setRecallByVinLoading(true));
     Api.call(Api.endpoints.Recalls.GetByVin, {
       data: { serviceCenterId, vin: vin.toUpperCase(), make, model, year },
     })
       .then(result => {
-        if (result.data) dispatch(getRecallsByVin(result.data));
+        if (result.data) {
+          dispatch(getRecallsByVin(result.data));
+        } else {
+          dispatch(getRecallsByVin([]));
+        }
       })
       .catch(err => {
         console.log('get recalls by vin err', err);
       })
-      .finally(() => dispatch(setLoading(false)));
+      .finally(() => {
+        dispatch(setLoading(false));
+        dispatch(setRecallByVinLoading(false));
+      });
   };
 
 export const updateSelectedRecalls =

@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
 import { decodeSCID } from '../../../utils/utils';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
@@ -63,15 +62,6 @@ const RecallsByVinModal: React.FC<
   } = useModal();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
-
-  useEffect(() => {
-    if (selectedVehicle) {
-      const { make, model, year, vin } = selectedVehicle;
-      if (vin?.length && open && make && model && year) {
-        dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year));
-      }
-    }
-  }, [selectedVehicle, open]);
 
   useEffect(() => {
     if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
