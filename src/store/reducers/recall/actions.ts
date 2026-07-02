@@ -21,6 +21,7 @@ import {
   TCallback,
   TOption,
 } from '../../../types/types';
+import { setSelectedRecalls } from '../appointmentFrameReducer/actions';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import queryString from 'query-string';
 import { ComparisonOperatorE, EventRulesFilterTypeE } from '../dealerOperations/actions';
@@ -165,6 +166,38 @@ export const loadRecallsByVin =
       })
       .catch(err => {
         console.log('get recalls by vin err', err);
+      })
+      .finally(() => dispatch(setLoading(false)));
+  };
+
+export const updateSelectedRecalls =
+  (
+    serviceCenterId: number,
+    vin: string,
+    make: string,
+    model: string,
+    year: number,
+    recallsNumbers: string[]
+  ): AppThunk =>
+  dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.Recalls.GetByVin, {
+      data: { serviceCenterId, vin: vin.toUpperCase(), make, model, year },
+    })
+      .then(result => {
+        if (result.data) {
+          const data: IRecallByVin[] = result.data;
+          dispatch(getRecallsByVin(data));
+          const selected = data.filter(item => {
+            return item.campaignNumber
+              ? recallsNumbers.includes(item.campaignNumber)
+              : item.oemProgram && recallsNumbers.includes(item.oemProgram);
+          });
+          dispatch(setSelectedRecalls(selected));
+        }
+      })
+      .catch(err => {
+        console.log('set update selected recalls err', err);
       })
       .finally(() => dispatch(setLoading(false)));
   };

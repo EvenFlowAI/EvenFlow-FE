@@ -91,6 +91,7 @@ import {
 import { IHOODataForm } from '../serviceCenters/types';
 import { IFirstScreenOption } from '../serviceTypes/types';
 import { TPackagePrice } from '../packages/types';
+import { updateSelectedRecalls } from '../recall/actions';
 import { EServiceCategoryType } from '../categories/types';
 import { setAdvisorAvailable } from '../bookingFlowConfig/actions';
 import { EScheduler } from '../appointments/types';
@@ -811,6 +812,10 @@ export const updateRecalls =
       serviceCategories,
     } = data;
     if (vehicle?.vin && scProfile && recalls?.length) {
+      const { vin, make, model, year } = vehicle;
+      if (make && model && make && year) {
+        dispatch(updateSelectedRecalls(scProfile.id, vin, make, model, year, recalls));
+      }
       const serviceType =
         serviceTypeOption?.type === EServiceType.MobileService
           ? EServiceType.MobileService
