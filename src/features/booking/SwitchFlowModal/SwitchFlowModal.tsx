@@ -229,8 +229,11 @@ const SwitchFlowModal: React.FC<TProps> = ({
   };
 
   const onCancel = () => {
+    console.log('lastTransportation', lastTransportation);
     if (lastTransportation !== undefined) {
       dispatch(setTransportation(lastTransportation));
+    } else {
+      dispatch(setTransportation(null));
     }
     resetLastTransportation && resetLastTransportation();
     clearData();
