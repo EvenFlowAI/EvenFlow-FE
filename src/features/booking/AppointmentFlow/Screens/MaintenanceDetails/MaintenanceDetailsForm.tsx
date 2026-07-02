@@ -389,10 +389,12 @@ export const MaintenanceDetailsForm: React.FC<
       const { vin, make, year, model } = selectedVehicle;
       if (checkVin(vin)) {
         if (vin && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
-          const previousVin = customerLoadedData?.vehicles?.find(v => v.vin === vin)?.vin;
+          const vinFromExistingCustomer = customerLoadedData?.vehicles?.find(
+            v => v.vin === vin
+          )?.vin;
           if (
             (customerLoadedData?.fromSearchByName || userType === EUserType.Existing) &&
-            previousVin?.length
+            vinFromExistingCustomer?.length
           ) {
             if (recallByVinLoading) {
               setLoading(true);

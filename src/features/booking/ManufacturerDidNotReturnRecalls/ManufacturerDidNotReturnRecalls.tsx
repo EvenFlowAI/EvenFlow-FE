@@ -10,9 +10,13 @@ import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useStyles } from './styles';
 
-const ManufacturerDidNotReturnRecalls: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<DialogProps & { handleNext: () => void }>>
-> = ({ open, onClose, handleNext }) => {
+type TManufacturerDidNotReturnRecallsProps = DialogProps & { handleNext: () => void };
+
+const ManufacturerDidNotReturnRecalls: React.FC<TManufacturerDidNotReturnRecallsProps> = ({
+  open,
+  onClose,
+  handleNext,
+}) => {
   const { classes } = useStyles();
   const { t } = useTranslation();
 
@@ -30,7 +34,7 @@ const ManufacturerDidNotReturnRecalls: React.FC<
       </DialogContent>
       <DialogActions>
         <Button onClick={onProceed} variant="contained" color="primary">
-          Proceed
+          {t('Proceed')}
         </Button>
       </DialogActions>
     </BaseModal>

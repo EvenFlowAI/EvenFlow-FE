@@ -179,6 +179,8 @@ export const loadRecallsByVin =
         const backendError = err?.response?.data?.errorCode;
         if (backendError === ErrorCode.ManufacturerDidNotReturnAnyRecalls)
           dispatch(setHasManufacturerRecallTimeout(true));
+        dispatch(setLoading(false));
+        dispatch(setRecallByVinLoading(false));
       })
       .finally(() => {
         dispatch(setLoading(false));
