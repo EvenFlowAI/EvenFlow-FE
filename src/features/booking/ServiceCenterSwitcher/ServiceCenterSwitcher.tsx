@@ -30,7 +30,7 @@ import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import { useTranslation } from 'react-i18next';
 import {
-  setHasManufacturerRecallTimeout,
+  setHasManufacturerDidNotReturnRecalls,
   setRecallByVinLoading,
 } from '../../../store/reducers/recall/actions';
 
@@ -67,7 +67,7 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setServiceTypeOption(null));
         dispatch(getActiveTransportations([]));
         dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
-        dispatch(setHasManufacturerRecallTimeout(false));
+        dispatch(setHasManufacturerDidNotReturnRecalls(false));
         dispatch(setRecallsAreShown(false));
         dispatch(setRecallByVinLoading(false));
         if (scProfile) {

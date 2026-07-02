@@ -50,8 +50,8 @@ export const setRecallAlertsOrderWorkflow = createAction<IOrder<IRecallAlert>>(
 );
 export const setRecallSearch = createAction<string>('Recall/SetSearch');
 export const setRecallByVinLoading = createAction<boolean>('Recall/SetRecallByVinLoading');
-export const setHasManufacturerRecallTimeout = createAction<boolean>(
-  'Recall/SetHasManufacturerRecallTimeout'
+export const setHasManufacturerDidNotReturnRecalls = createAction<boolean>(
+  'Recall/SetHasManufacturerDidNotReturnRecalls'
 );
 export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
   'Recall/SetRecallCampaignInfo'
@@ -164,6 +164,7 @@ export const loadRecallsByVin =
   dispatch => {
     dispatch(setLoading(true));
     dispatch(setRecallByVinLoading(true));
+    dispatch(setHasManufacturerDidNotReturnRecalls(false));
     Api.call(Api.endpoints.Recalls.GetByVin, {
       data: { serviceCenterId, vin: vin.toUpperCase(), make, model, year },
     })
@@ -178,9 +179,7 @@ export const loadRecallsByVin =
         console.log('get recalls by vin err', err);
         const backendError = err?.response?.data?.errorCode;
         if (backendError === ErrorCode.ManufacturerDidNotReturnAnyRecalls)
-          dispatch(setHasManufacturerRecallTimeout(true));
-        dispatch(setLoading(false));
-        dispatch(setRecallByVinLoading(false));
+          dispatch(setHasManufacturerDidNotReturnRecalls(true));
       })
       .finally(() => {
         dispatch(setLoading(false));

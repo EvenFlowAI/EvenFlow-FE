@@ -46,7 +46,7 @@ import { ErrorCode } from '../../../../../api/request';
 import ManufacturerDidNotReturnRecalls from '../../../ManufacturerDidNotReturnRecalls/ManufacturerDidNotReturnRecalls';
 import {
   getRecallsByVin,
-  setHasManufacturerRecallTimeout,
+  setHasManufacturerDidNotReturnRecalls,
 } from '../../../../../store/reducers/recall/actions';
 
 export const MaintenanceDetailsForm: React.FC<
@@ -70,7 +70,7 @@ export const MaintenanceDetailsForm: React.FC<
   );
   const { id } = useParams<{ id: string }>();
   const { mileage, engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
-  const { recallByVinLoading, recallsByVin, hasManufacturerRecallTimeout } = useSelector(
+  const { recallByVinLoading, recallsByVin, hasManufacturerDidNotReturnRecalls } = useSelector(
     (state: RootState) => state.recalls
   );
   const { currentConfig } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -330,8 +330,8 @@ export const MaintenanceDetailsForm: React.FC<
     setLoadingWhenNextClicked(false);
     setLoading(false);
     dispatch(setRecallsAreShown(true));
-    if (hasManufacturerRecallTimeout) {
-      dispatch(setHasManufacturerRecallTimeout(false));
+    if (hasManufacturerDidNotReturnRecalls) {
+      dispatch(setHasManufacturerDidNotReturnRecalls(false));
       onManufacturerRecallsOpen();
       return;
     }
@@ -340,7 +340,12 @@ export const MaintenanceDetailsForm: React.FC<
     } else {
       onEmptyRecalls();
     }
-  }, [loadingWhenNextClicked, recallByVinLoading, recallsByVin, hasManufacturerRecallTimeout]);
+  }, [
+    loadingWhenNextClicked,
+    recallByVinLoading,
+    recallsByVin,
+    hasManufacturerDidNotReturnRecalls,
+  ]);
 
   const isValid = () => {
     const errorsArray: string[] = [];
@@ -404,8 +409,8 @@ export const MaintenanceDetailsForm: React.FC<
 
             dispatch(setRecallsAreShown(true));
 
-            if (hasManufacturerRecallTimeout) {
-              dispatch(setHasManufacturerRecallTimeout(false));
+            if (hasManufacturerDidNotReturnRecalls) {
+              dispatch(setHasManufacturerDidNotReturnRecalls(false));
               onManufacturerRecallsOpen();
               return;
             }
