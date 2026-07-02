@@ -74,6 +74,7 @@ const SwitchFlowModal: React.FC<TProps> = ({
     zipCode: zipCodeValue,
     transportation,
     transportations,
+    isPickupDropoffWithoutFirstScreenOption,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { id } = useParams<{ id: string }>();
@@ -269,14 +270,21 @@ const SwitchFlowModal: React.FC<TProps> = ({
       t => t.type === ETransportationType.PickUpDelivery
     );
 
-    const selectedTransportation =
-      selectedOption?.transportationOption ||
-      transportationOption ||
-      (selectedOption?.type === EServiceType.PickUpDropOff
-        ? svTransportation || null
-        : selectedOption?.type === EServiceType.VisitCenter
-          ? transportations[0]
-          : transportation);
+    let selectedTransportation: ITransportation | null;
+
+    if (isPickupDropoffWithoutFirstScreenOption) {
+      selectedTransportation =
+        transportations?.find(t => t.type === ETransportationType.PickUpDelivery) || null;
+    } else {
+      selectedTransportation =
+        selectedOption?.transportationOption ||
+        transportationOption ||
+        (selectedOption?.type === EServiceType.PickUpDropOff
+          ? svTransportation || null
+          : selectedOption?.type === EServiceType.VisitCenter
+            ? transportations[0]
+            : transportation);
+    }
 
     dispatch(
       updateAppointmentDetails({
