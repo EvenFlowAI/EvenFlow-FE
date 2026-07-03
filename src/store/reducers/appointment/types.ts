@@ -239,6 +239,7 @@ export type TAppointmentState = {
   isDemandSmoothMode: boolean;
   demandAppointmentId: string;
   serviceValetCapacity: ServiceValetCapacity | null;
+  isEditMode: boolean;
 };
 
 export enum EContactMethodTypes {

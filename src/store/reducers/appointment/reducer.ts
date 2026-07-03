@@ -39,6 +39,7 @@ import {
   setServiceValetCapacity,
   setIsDemandSmoothMode,
   setDemandAppointmentId,
+  setIsEditMode,
 } from './actions';
 import { setPackage } from '../appointmentFrameReducer/actions';
 import dayjs from 'dayjs';
@@ -97,6 +98,7 @@ const initialState: TAppointmentState = {
   isDemandSmoothMode: false,
   serviceValetCapacity: null,
   demandAppointmentId: '',
+  isEditMode: false,
 };
 
 export const appointmentReducer = createReducer(initialState, builder =>
@@ -248,6 +250,9 @@ export const appointmentReducer = createReducer(initialState, builder =>
     })
     .addCase(setIsCloneMode, (state, { payload }) => {
       return { ...state, isCloneMode: payload };
+    })
+    .addCase(setIsEditMode, (state, { payload }) => {
+      return { ...state, isEditMode: payload };
     })
     .addCase(setIsDemandSmoothMode, (state, { payload }) => {
       return { ...state, isDemandSmoothMode: payload };

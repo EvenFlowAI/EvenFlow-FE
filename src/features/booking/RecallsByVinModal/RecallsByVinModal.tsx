@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
 import { decodeSCID } from '../../../utils/utils';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
@@ -27,6 +26,7 @@ import { useException } from '../../../hooks/useException/useException';
 import { BfButtonsWrapper } from '../../../components/styled/BfButtonsWrapper';
 import Recall from './Recall/Recall';
 import { EServiceCategoryType } from '../../../store/reducers/categories/types';
+import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
 
 type TRecallsByVinProps = DialogProps & {
   handleNext: () => void;

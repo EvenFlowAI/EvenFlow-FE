@@ -155,6 +155,7 @@ export const setSlotsSearchDate = createAction<ParsableDate>(
   'Appointment/SetSlotsServiceSearchDate'
 );
 export const setIsCloneMode = createAction<boolean>('Appointment/SetIsCloneMode');
+export const setIsEditMode = createAction<boolean>('Appointment/SetIsEditMode');
 export const setIsDemandSmoothMode = createAction<boolean>('Appointment/SetIsDemandSmoothMode');
 export const setDemandAppointmentId = createAction<string>('Appointment/SetDemandAppointmentId');
 

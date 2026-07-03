@@ -22,7 +22,11 @@ import { TScreen } from './types/screens';
 import AppRoutes from './routes/AppRoutes/AppRoutes';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
-import { setIsCloneMode, setIsDemandSmoothMode } from './store/reducers/appointment/actions';
+import {
+  setIsCloneMode,
+  setIsDemandSmoothMode,
+  setIsEditMode,
+} from './store/reducers/appointment/actions';
 import { useAppInitialization } from './hooks/useAppInitialization/useAppInitialization';
 import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandler';
 import { LicenseInfo } from '@mui/x-license';
@@ -211,6 +215,7 @@ const App = () => {
     const handlePopState = (event: PopStateEvent) => {
       event.preventDefault();
       dispatch(setIsCloneMode(false));
+      dispatch(setIsEditMode(false));
       dispatch(setIsDemandSmoothMode(false));
       window.location.reload();
     };
