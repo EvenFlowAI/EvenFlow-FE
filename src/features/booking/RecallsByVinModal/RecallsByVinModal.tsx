@@ -26,6 +26,7 @@ import { useException } from '../../../hooks/useException/useException';
 import { BfButtonsWrapper } from '../../../components/styled/BfButtonsWrapper';
 import Recall from './Recall/Recall';
 import { EServiceCategoryType } from '../../../store/reducers/categories/types';
+import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
 
 type TRecallsByVinProps = DialogProps & {
   handleNext: () => void;
@@ -48,7 +49,7 @@ const RecallsByVinModal: React.FC<
   const { selectedVehicle, isUsualFlowNeeded, service } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
-  const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const { customerLoadedData, isEditMode } = useSelector((state: RootState) => state.appointment);
   const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
@@ -62,6 +63,15 @@ const RecallsByVinModal: React.FC<
   } = useModal();
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    if (selectedVehicle && isEditMode) {
+      const { make, model, year, vin } = selectedVehicle;
+      if (vin?.length && open && make && model && year) {
+        dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year));
+      }
+    }
+  }, [selectedVehicle, open]);
 
   useEffect(() => {
     if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));

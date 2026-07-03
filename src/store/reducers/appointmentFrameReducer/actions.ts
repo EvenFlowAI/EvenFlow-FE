@@ -83,6 +83,7 @@ import {
   setCustomerLoadedData,
   setIsCloneMode,
   setIsDemandSmoothMode,
+  setIsEditMode,
   setSlotsSearchDate,
   setSlotsServiceTypeOptionId,
   setSlotsTransportationId,
@@ -1251,6 +1252,7 @@ export const createOrUpdateAppointment =
       onNext();
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
       dispatch(setIsCloneMode(false));
+      dispatch(setIsEditMode(false));
       dispatch(setIsDemandSmoothMode(false));
     } catch (e) {
       onError(e);

@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { getInitials } from '../../../utils/utils';
 import { useStyles } from './styles';
-import { setIsCloneMode, setIsDemandSmoothMode } from '../../../store/reducers/appointment/actions';
+import {
+  setIsCloneMode,
+  setIsDemandSmoothMode,
+  setIsEditMode,
+} from '../../../store/reducers/appointment/actions';
 
 export const EndUserBar = () => {
   const scProfile = useSelector((state: RootState) => {
@@ -17,6 +21,12 @@ export const EndUserBar = () => {
   useEffect(() => {
     const hasAppointmentClone = window.location.href.includes('appointment-clone');
     const isDemandSmoothing = window.location.href.includes('appointment-load');
+    const isEditMode = window.location.href.includes('appointment-update');
+
+    if (isEditMode) {
+      dispatch(setIsEditMode(true));
+    }
+
     if (hasAppointmentClone || isDemandSmoothing) {
       dispatch(setIsCloneMode(true));
       if (isDemandSmoothing) {
