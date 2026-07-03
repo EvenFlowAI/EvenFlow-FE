@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ReactComponent as Create } from '../../../../../assets/img/create_appointment.svg';
 import { ReactComponent as Update } from '../../../../../assets/img/Manage appointment.svg';
 import { ReactComponent as Edit } from '../../../../../assets/img/editIcon.svg';
@@ -47,8 +47,8 @@ import {
   updateCustomer,
 } from '../../../../../store/reducers/enhancedCustomerSearch/actions';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
-import { useHistory } from 'react-router-dom';
-import { encodeSCID } from '../../../../../utils/utils';
+import { useHistory, useParams } from 'react-router-dom';
+import { decodeSCID, encodeSCID } from '../../../../../utils/utils';
 import {
   EServiceType,
   EUserType,
@@ -66,6 +66,7 @@ import { useTranslation } from 'react-i18next';
 import AppointmentSelectionModal from '../../AppointmentSelectionModal/AppointmentSelectionModal';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { AppointmentSummaryI } from '../../../utils/types';
+import { loadRecallsByVin } from '../../../../../store/reducers/recall/actions';
 
 type TCustomerSearchTableProps = {
   onClose: TCallback;
@@ -101,6 +102,7 @@ const CustomerSearchTable: React.FC<
     changePageData
   );
   const { onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory } = useModal();
+  const { id } = useParams<{ id: string }>();
   const { onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm } = useModal();
   const {
     onOpen: onOpenAppointmentSelection,
@@ -122,7 +124,6 @@ const CustomerSearchTable: React.FC<
     // Fixed widths for the first three columns
     const iconColumnWidth = 124;
     const lastNameWidth = 150;
-    const firstNameWidth = 150;
 
     setOffset(() => ({
       secondColumn: iconColumnWidth,
@@ -196,6 +197,9 @@ const CustomerSearchTable: React.FC<
     await dispatch(setSideBarSteps([]));
     await setCustomerData(item, false);
     await dispatch(setUserType(EUserType.Existing));
+    if (item?.vin?.length && item?.make && item?.model && item?.year) {
+      dispatch(loadRecallsByVin(decodeSCID(id), item.vin, item.make, item.model, item.year));
+    }
     if (firstScreenOptions?.length) {
       if (firstScreenOptions.length > 1) {
         await dispatch(setWelcomeScreenView('serviceSelect'));

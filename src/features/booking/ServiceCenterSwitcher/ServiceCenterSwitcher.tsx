@@ -14,6 +14,7 @@ import {
   getActiveTransportations,
   setCurrentFrameScreen,
   setIsPickupDropoffWithoutFirstScreenOption,
+  setRecallsAreShown,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -28,6 +29,10 @@ import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import { useTranslation } from 'react-i18next';
+import {
+  setHasManufacturerDidNotReturnRecalls,
+  setRecallByVinLoading,
+} from '../../../store/reducers/recall/actions';
 
 export const ServiceCenterSwitcher = () => {
   const { scProfile, isCloneMode } = useSelector((state: RootState) => state.appointment);
@@ -62,6 +67,9 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setServiceTypeOption(null));
         dispatch(getActiveTransportations([]));
         dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
+        dispatch(setHasManufacturerDidNotReturnRecalls(false));
+        dispatch(setRecallsAreShown(false));
+        dispatch(setRecallByVinLoading(false));
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);

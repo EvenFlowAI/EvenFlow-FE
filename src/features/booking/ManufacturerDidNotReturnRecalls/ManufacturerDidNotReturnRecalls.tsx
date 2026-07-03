@@ -10,9 +10,13 @@ import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useStyles } from './styles';
 
-const NoRecallsModal: React.FC<
-  React.PropsWithChildren<React.PropsWithChildren<DialogProps & { handleNext: () => void }>>
-> = ({ open, onClose, handleNext }) => {
+type TManufacturerDidNotReturnRecallsProps = DialogProps & { handleNext: () => void };
+
+const ManufacturerDidNotReturnRecalls: React.FC<TManufacturerDidNotReturnRecallsProps> = ({
+  open,
+  onClose,
+  handleNext,
+}) => {
   const { classes } = useStyles();
   const { t } = useTranslation();
 
@@ -24,7 +28,9 @@ const NoRecallsModal: React.FC<
     <BaseModal open={open} onClose={onClose}>
       <DialogTitle onClose={onClose} style={{ justifyContent: 'flex-start' }} />
       <DialogContent>
-        <div className={classes.wrapper}>{t('There are no open recalls for your vehicle')}.</div>
+        <div className={classes.wrapper}>
+          {t('Manufacturer did not return any recalls for your vehicle.')}
+        </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={onProceed} variant="contained" color="primary">
@@ -35,4 +41,4 @@ const NoRecallsModal: React.FC<
   );
 };
 
-export default NoRecallsModal;
+export default ManufacturerDidNotReturnRecalls;

@@ -396,7 +396,11 @@
       "An error occurred while processing your request": "An error occurred while processing your request",
       "Can not find appointment for cancel or appointmentHashKey": "Can not find appointment for cancel or appointmentHashKey",
       "Any search field must contain 2 or more characters": "Any search field must contain 2 or more characters",
-      "There are not Service Centers list of the current Dealership": "There are not Service Centers list of the current Dealership"
+      "There are not Service Centers list of the current Dealership": "There are not Service Centers list of the current Dealership",
+      "Checking for Open Recalls": "Checking for Open Recalls",
+      "One moment please as this may take a few seconds": "One moment please as this may take a few seconds",
+      "Manufacturer did not return any recalls for your vehicle.": "Manufacturer did not return any recalls for your vehicle.",
+      "Proceed": "Proceed"
     }
   },
   "es": {

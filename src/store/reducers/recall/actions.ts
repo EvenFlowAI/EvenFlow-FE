@@ -29,6 +29,7 @@ import type {
   HistoryRecallData,
   TriggerI,
 } from '../../../pages/admin/DealerOperations/Customer/types';
+import { ErrorCode } from '../../../api/request';
 
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
@@ -48,6 +49,10 @@ export const setRecallAlertsOrderWorkflow = createAction<IOrder<IRecallAlert>>(
   'Recall/SetRecallAlertsOrderWorkflow'
 );
 export const setRecallSearch = createAction<string>('Recall/SetSearch');
+export const setRecallByVinLoading = createAction<boolean>('Recall/SetRecallByVinLoading');
+export const setHasManufacturerDidNotReturnRecalls = createAction<boolean>(
+  'Recall/SetHasManufacturerDidNotReturnRecalls'
+);
 export const setRecallCampaignInfo = createAction<IRecallCampaign[]>(
   'Recall/SetRecallCampaignInfo'
 );
@@ -158,16 +163,28 @@ export const loadRecallsByVin =
   (serviceCenterId: number, vin: string, make: string, model: string, year: number): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
+    dispatch(setRecallByVinLoading(true));
+    dispatch(setHasManufacturerDidNotReturnRecalls(false));
     Api.call(Api.endpoints.Recalls.GetByVin, {
       data: { serviceCenterId, vin: vin.toUpperCase(), make, model, year },
     })
       .then(result => {
-        if (result.data) dispatch(getRecallsByVin(result.data));
+        if (result.data) {
+          dispatch(getRecallsByVin(result.data));
+        } else {
+          dispatch(getRecallsByVin([]));
+        }
       })
       .catch(err => {
         console.log('get recalls by vin err', err);
+        const backendError = err?.response?.data?.errorCode;
+        if (backendError === ErrorCode.ManufacturerDidNotReturnAnyRecalls)
+          dispatch(setHasManufacturerDidNotReturnRecalls(true));
       })
-      .finally(() => dispatch(setLoading(false)));
+      .finally(() => {
+        dispatch(setLoading(false));
+        dispatch(setRecallByVinLoading(false));
+      });
   };
 
 export const updateSelectedRecalls =

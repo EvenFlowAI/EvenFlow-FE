@@ -13,6 +13,7 @@ import {
   setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
   setRecallCampaignInfo,
+  setRecallByVinLoading,
   setRecallOrder,
   setRecallPageData,
   setRecallsCount,
@@ -20,6 +21,7 @@ import {
   setSelectedRecallAlert,
   setSelectedStatus,
   setUpdatedAlerts,
+  setHasManufacturerDidNotReturnRecalls,
 } from './actions';
 import { RECALL_ALERTS_STATUSES } from '../../../utils/constants';
 
@@ -59,6 +61,8 @@ const initialState: TState = {
   isRecallAlertsTableLoading: false,
   selectedRecallAlert: null,
   affectedModels: [],
+  recallByVinLoading: false,
+  hasManufacturerDidNotReturnRecalls: false,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -119,5 +123,11 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setAffectedModels, (state, { payload }) => {
       return { ...state, affectedModels: payload };
+    })
+    .addCase(setRecallByVinLoading, (state, { payload }) => {
+      return { ...state, recallByVinLoading: payload };
+    })
+    .addCase(setHasManufacturerDidNotReturnRecalls, (state, { payload }) => {
+      return { ...state, hasManufacturerDidNotReturnRecalls: payload };
     })
 );
