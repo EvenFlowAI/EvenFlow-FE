@@ -209,6 +209,7 @@ export interface IRecallByVin {
   isRemedyAvailable: boolean;
   rolloverMessage?: string;
   oemProgram?: string;
+  number?: string;
 }
 
 export type TActionProps = {
