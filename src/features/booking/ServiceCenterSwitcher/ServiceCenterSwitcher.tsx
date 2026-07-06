@@ -81,9 +81,9 @@ export const ServiceCenterSwitcher = () => {
     }
     if (isCloneMode) {
       dispatch(setIsCloneMode(false));
-      dispatch(setIsEditMode(false));
       dispatch(setIsDemandSmoothMode(false));
     }
+    dispatch(setIsEditMode(false));
   };
 
   return isAuthorized && (welcomeScreenView !== 'serviceCenterSelect' || !isWelcomePage) ? (

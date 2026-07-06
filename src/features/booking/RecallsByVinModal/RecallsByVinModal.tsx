@@ -20,6 +20,7 @@ import {
 import AskAddService from '../../../components/modals/booking/AskAddService/AskAddService';
 import { checkPodChanged } from '../../../store/reducers/appointments/actions';
 import { useStyles } from './styles';
+import { useStyles as useLoaderStyles } from '../RecallsLoadingModal/styles';
 import { IRecallByVin } from '../../../types/types';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useException } from '../../../hooks/useException/useException';
@@ -56,6 +57,7 @@ const RecallsByVinModal: React.FC<
   const showError = useException();
   const { t } = useTranslation();
   const { classes } = useStyles();
+  const { classes: loaderClasses } = useLoaderStyles();
   const {
     isOpen: isAddServiceOpen,
     onClose: onAddServiceClose,
@@ -65,13 +67,13 @@ const RecallsByVinModal: React.FC<
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    if (selectedVehicle && isEditMode) {
+    if (selectedVehicle && isEditMode && !recallsByVin.length) {
       const { make, model, year, vin } = selectedVehicle;
       if (vin?.length && open && make && model && year) {
         dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year));
       }
     }
-  }, [selectedVehicle, open]);
+  }, [selectedVehicle, open, recallsByVin]);
 
   useEffect(() => {
     if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
@@ -138,7 +140,15 @@ const RecallsByVinModal: React.FC<
     <BaseModal open={open} onClose={onClose} width={800}>
       <DialogTitle onClose={onClose} style={{ justifyContent: 'flex-start' }}></DialogTitle>
       {isLoading ? (
-        <Loading />
+        <div className={loaderClasses.wrapper}>
+          <div className={loaderClasses.loading}>
+            <Loading />
+          </div>
+          <div className={loaderClasses.title}>{t('Checking for Open Recalls')}</div>
+          <div className={loaderClasses.subTitle}>
+            {t('One moment please as this may take a few seconds')}
+          </div>
+        </div>
       ) : (
         <DialogContent style={{ padding: isSm ? '10px 16px' : '10px 36px' }}>
           <div className={classes.mainTitle}>

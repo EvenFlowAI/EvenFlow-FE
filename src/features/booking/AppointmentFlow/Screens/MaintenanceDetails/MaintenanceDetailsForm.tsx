@@ -65,7 +65,7 @@ export const MaintenanceDetailsForm: React.FC<
     selectedRecalls,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
-  const { customerLoadedData, scProfile, selectedSR } = useSelector(
+  const { customerLoadedData, scProfile, selectedSR, isEditMode } = useSelector(
     (state: RootState) => state.appointment
   );
   const { id } = useParams<{ id: string }>();
@@ -399,7 +399,8 @@ export const MaintenanceDetailsForm: React.FC<
           )?.vin;
           if (
             (customerLoadedData?.fromSearchByName || userType === EUserType.Existing) &&
-            vinFromExistingCustomer?.length
+            vinFromExistingCustomer?.length &&
+            !isEditMode
           ) {
             if (recallByVinLoading) {
               setLoading(true);
