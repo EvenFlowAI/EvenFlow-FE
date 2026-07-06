@@ -5,6 +5,7 @@ export interface ICustomerByName {
   customerId: number;
   lastName: string;
   firstName: string;
+  middleName?: string;
   cellPhone: string;
   homePhone: string;
   email: string;
@@ -70,6 +71,7 @@ export interface ICustomerWithVehicles {
   customerId: number;
   lastName: string;
   firstName: string;
+  middleName?: string;
   cellPhone: string;
   homePhone: string;
   otherPhone: string;
@@ -123,6 +125,7 @@ export interface IRepairHistory {
   customerId: number;
   lastName: string;
   firstName: string;
+  middleName?: string;
   cellPhone: string;
   homePhone: string;
   vehicleId: number;
