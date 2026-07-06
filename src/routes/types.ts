@@ -17,7 +17,7 @@ export enum AdminRoutes {
   OpCodeCategory = '/admin/application/op-code-category',
   RoleManagement = '/admin/application/role-management',
   RecallDatabase = '/admin/application/recall-database',
-  RecallCredits = '/admin/application/recall-credits',
+  // RecallCredits = '/admin/application/recall-credits',
 }
 
 export enum AdminLogin {

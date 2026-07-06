@@ -7,7 +7,6 @@ import ApplicationVehicles from '../../pages/admin/ApplicationVehicles/Applicati
 import ApplicationOpCodeCategory from '../../pages/admin/ApplicationOpCodeCategory/ApplicationOpCodeCategory';
 import RoleManagement from '../../pages/admin/RoleManagement/RoleManagement';
 import RecallDatabase from '../../pages/admin/RecallDatabase/RecallDatabase';
-import RecallCredits from '../../pages/admin/RecallCredits/RecallCredits';
 
 const ApplicationRoutes = () => {
   return (
@@ -17,7 +16,7 @@ const ApplicationRoutes = () => {
         <PrivateRoute path={Routes.Admin.OpCodeCategory} component={ApplicationOpCodeCategory} />
         <PrivateRoute path={Routes.Admin.RoleManagement} component={RoleManagement} />
         <PrivateRoute path={Routes.Admin.RecallDatabase} component={RecallDatabase} />
-        <PrivateRoute path={Routes.Admin.RecallCredits} component={RecallCredits} />
+        {/*<PrivateRoute path={Routes.Admin.RecallCredits} component={RecallCredits} />*/}
         <Redirect to={Routes.Admin.Vehicles} />
       </Switch>
     </ContentContainer>
