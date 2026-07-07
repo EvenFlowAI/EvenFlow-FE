@@ -299,14 +299,6 @@ export const MaintenanceDetailsForm: React.FC<
     onBack('serviceNeeds');
   };
 
-  const onEmptyRecalls = () => {
-    if (userType === EUserType.New || isRecallsCategorySelected) {
-      onNoRecallsOpen();
-    } else {
-      onNext();
-    }
-  };
-
   const checkVINforRecallCategory = () => {
     if (!selectedVehicle?.vin || !checkVin(selectedVehicle?.vin)) {
       setErrors(prev => [...prev, 'vin']);
@@ -338,7 +330,7 @@ export const MaintenanceDetailsForm: React.FC<
     if (recallsByVin.length) {
       onOpen();
     } else {
-      onEmptyRecalls();
+      onNoRecallsOpen();
     }
   }, [
     loadingWhenNextClicked,
@@ -419,12 +411,12 @@ export const MaintenanceDetailsForm: React.FC<
             if (recallsByVin.length) {
               onOpen();
             } else {
-              onEmptyRecalls();
+              onNext();
             }
           } else {
             setLoading(true);
             try {
-              const { data: resData } = await Api.call(Api.endpoints.Recalls.GetByVin, {
+              const { data: receivedRecalls } = await Api.call(Api.endpoints.Recalls.GetByVin, {
                 data: {
                   serviceCenterId: decodeSCID(id),
                   vin: vin.toUpperCase(),
@@ -434,11 +426,11 @@ export const MaintenanceDetailsForm: React.FC<
                 },
               });
               dispatch(setRecallsAreShown(true));
-              if (resData.length) {
-                dispatch(getRecallsByVin(resData));
+              if (receivedRecalls.length) {
+                dispatch(getRecallsByVin(receivedRecalls));
                 onOpen();
               } else {
-                onEmptyRecalls();
+                onNoRecallsOpen();
               }
               setLoading(false);
             } catch (err) {
