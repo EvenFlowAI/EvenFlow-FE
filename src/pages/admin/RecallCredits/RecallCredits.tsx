@@ -45,7 +45,7 @@ const RecallCredits = () => {
       getServiceCenterCredits(
         () => {
           setIsLoading(false);
-          dispatch(loadAll());
+          dispatch(loadAll(true));
         },
         () => {
           setIsLoading(false);
