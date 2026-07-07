@@ -411,7 +411,11 @@ export const MaintenanceDetailsForm: React.FC<
             if (recallsByVin.length) {
               onOpen();
             } else {
-              onNext();
+              if (isRecallsCategorySelected) {
+                onNoRecallsOpen();
+              } else {
+                onNext();
+              }
             }
           } else {
             setLoading(true);
