@@ -3,7 +3,10 @@ import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
-import { EUserType } from '../../../../../store/reducers/appointmentFrameReducer/types';
+import {
+  EServiceType,
+  EUserType,
+} from '../../../../../store/reducers/appointmentFrameReducer/types';
 import {
   clearAppointmentSteps,
   selectCategories,
@@ -48,6 +51,7 @@ import {
   getRecallsByVin,
   setHasManufacturerDidNotReturnRecalls,
 } from '../../../../../store/reducers/recall/actions';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -63,6 +67,9 @@ export const MaintenanceDetailsForm: React.FC<
     serviceCategories,
     selectedPackage,
     selectedRecalls,
+    serviceTypeOption,
+    transportation,
+    customer,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
   const { customerLoadedData, scProfile, selectedSR, isEditMode } = useSelector(
@@ -99,6 +106,27 @@ export const MaintenanceDetailsForm: React.FC<
 
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
   const isSM = useMediaQuery(theme.breakpoints.down('md'));
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
 
   const isBmWService = useMemo(
     () =>
@@ -420,6 +448,8 @@ export const MaintenanceDetailsForm: React.FC<
           } else {
             setLoading(true);
             try {
+              const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+              const serviceTypeOptionId = serviceTypeOption?.id;
               const { data: receivedRecalls } = await Api.call(Api.endpoints.Recalls.GetByVin, {
                 data: {
                   serviceCenterId: decodeSCID(id),
@@ -427,6 +457,9 @@ export const MaintenanceDetailsForm: React.FC<
                   make,
                   year: +year,
                   model,
+                  serviceTypeOptionId,
+                  transportationOptionId,
+                  customerId,
                 },
               });
               dispatch(setRecallsAreShown(true));
