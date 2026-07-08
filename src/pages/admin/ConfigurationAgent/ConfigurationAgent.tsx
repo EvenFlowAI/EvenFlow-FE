@@ -8,7 +8,7 @@ import { useException } from '../../../hooks/useException/useException';
 
 const CONFIGURATION_AGENT_URL =
   process.env.REACT_APP_ENV === 'production'
-    ? 'https://change-api.d1efez2luv2lh1.amplifyapp.com/'
+    ? 'https://main.d1efez2luv2lh1.amplifyapp.com/'
     : process.env.REACT_APP_ENV === 'PreProd'
       ? 'https://preprod.d1efez2luv2lh1.amplifyapp.com/'
       : process.env.REACT_APP_ENV === 'uat'
