@@ -129,6 +129,7 @@ const ShoppingCart = () => {
         handleSideBarSteps();
         return;
       case 'recall':
+        console.log('item', item);
         dispatch(deleteRecall(item));
         setAppointmentChanged();
         return;
