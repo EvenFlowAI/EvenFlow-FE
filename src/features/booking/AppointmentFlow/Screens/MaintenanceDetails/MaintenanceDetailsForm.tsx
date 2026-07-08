@@ -471,6 +471,13 @@ export const MaintenanceDetailsForm: React.FC<
               }
               setLoading(false);
             } catch (err) {
+              const errors = (err as any).response?.data?.errors;
+              if (errors?.length) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errors.forEach((err: { message: string }) => {
+                  showError(err.message || '');
+                });
+              }
               if (
                 (err as any).response?.data?.errorCode ===
                 ErrorCode.ManufacturerDidNotReturnAnyRecalls
