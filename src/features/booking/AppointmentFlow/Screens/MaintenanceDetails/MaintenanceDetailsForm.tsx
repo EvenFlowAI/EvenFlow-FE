@@ -41,7 +41,6 @@ import { FormWithSelectors } from './FormWithSelectors/FormWithSelectors';
 import FormWithAutocompletes from './FormWithAutocompletes/FormWithAutocompletes';
 import { blankOptions } from './constants';
 import VinCodeInput from './VinCodeInput/VinCodeInput';
-import { enqueueSnackbar } from 'notistack';
 import { checkVin } from '../../../../../utils/svAppointments';
 import { decodeSCID } from '../../../../../utils/utils';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
@@ -408,21 +407,15 @@ export const MaintenanceDetailsForm: React.FC<
               onEmptyRecalls();
             }
           } catch (err) {
-            enqueueSnackbar(
-              (err as any).response?.data?.message ||
-                t('An error occurred while processing your request'),
-              {
-                variant: 'error',
-                autoHideDuration: 3000,
-                anchorOrigin: {
-                  vertical: 'top',
-                  horizontal: 'right',
-                },
-              }
-            );
+            const errors = (err as any).response?.data?.errors;
+            if (errors?.length) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errors.forEach((err: { message: string }) => {
+                showError(err.message || '');
+              });
+            }
             setLoading(false);
             return;
-            // onEmptyRecalls();
           }
         } else {
           handleNoRecalls();
