@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogContent,
@@ -27,6 +27,8 @@ import { BfButtonsWrapper } from '../../../components/styled/BfButtonsWrapper';
 import Recall from './Recall/Recall';
 import { EServiceCategoryType } from '../../../store/reducers/categories/types';
 import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
+import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TRecallsByVinProps = DialogProps & {
   handleNext: () => void;
@@ -46,9 +48,14 @@ const RecallsByVinModal: React.FC<
   isRecallsCategorySelected,
 }) => {
   const { recallsByVin, isLoading } = useSelector((state: RootState) => state.recalls);
-  const { selectedVehicle, isUsualFlowNeeded, service } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const {
+    selectedVehicle,
+    isUsualFlowNeeded,
+    service,
+    serviceTypeOption,
+    transportation,
+    customer,
+  } = useSelector((state: RootState) => state.appointmentFrame);
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
   const dispatch = useDispatch();
@@ -64,11 +71,44 @@ const RecallsByVinModal: React.FC<
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
+
   useEffect(() => {
     if (selectedVehicle) {
       const { make, model, year, vin } = selectedVehicle;
       if (vin?.length && open && make && model && year) {
-        dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year));
+        const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+        dispatch(
+          loadRecallsByVin(
+            decodeSCID(id),
+            vin,
+            make,
+            model,
+            year,
+            serviceTypeOption?.id,
+            transportationOptionId,
+            customerId
+          )
+        );
       }
     }
   }, [selectedVehicle, open]);

@@ -112,11 +112,29 @@ export const deleteRecall =
   };
 
 export const loadRecallsByVin =
-  (serviceCenterId: number, vin: string, make: string, model: string, year: number): AppThunk =>
+  (
+    serviceCenterId: number,
+    vin: string,
+    make: string,
+    model: string,
+    year: number,
+    serviceTypeOptionId?: number,
+    transportationOptionId?: number,
+    customerId?: number
+  ): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.Recalls.GetByVin, {
-      data: { serviceCenterId, vin: vin.toUpperCase(), make, model, year },
+      data: {
+        serviceCenterId,
+        vin: vin.toUpperCase(),
+        make,
+        model,
+        year,
+        serviceTypeOptionId,
+        transportationOptionId,
+        customerId,
+      },
     })
       .then(result => {
         if (result.data) dispatch(getRecallsByVin(result.data));

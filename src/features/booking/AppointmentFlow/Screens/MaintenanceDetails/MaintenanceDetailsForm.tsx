@@ -3,7 +3,10 @@ import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
-import { EUserType } from '../../../../../store/reducers/appointmentFrameReducer/types';
+import {
+  EServiceType,
+  EUserType,
+} from '../../../../../store/reducers/appointmentFrameReducer/types';
 import {
   clearAppointmentSteps,
   selectCategories,
@@ -16,9 +19,7 @@ import {
   updateVehicle,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { RootState } from '../../../../../store/rootReducer';
-import { useParams } from 'react-router-dom';
 import { EServiceCategoryPage, EServiceCenterName, ILoadedVehicle } from '../../../../../api/types';
-import { decodeSCID } from '../../../../../utils/utils';
 import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 import { useTranslation } from 'react-i18next';
 import { IEngineType } from '../../../../../store/reducers/vehicleDetails/types';
@@ -35,7 +36,6 @@ import {
 } from './types';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
-import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { isAndroid } from 'react-device-detect';
 import { FormWithSelectors } from './FormWithSelectors/FormWithSelectors';
 import FormWithAutocompletes from './FormWithAutocompletes/FormWithAutocompletes';
@@ -43,6 +43,10 @@ import { blankOptions } from './constants';
 import VinCodeInput from './VinCodeInput/VinCodeInput';
 import { enqueueSnackbar } from 'notistack';
 import { checkVin } from '../../../../../utils/svAppointments';
+import { decodeSCID } from '../../../../../utils/utils';
+import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
+import { useParams } from 'react-router-dom';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -58,6 +62,9 @@ export const MaintenanceDetailsForm: React.FC<
     serviceCategories,
     selectedPackage,
     selectedRecalls,
+    serviceTypeOption,
+    transportation,
+    customer,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
   const { customerLoadedData, scProfile, selectedSR } = useSelector(
@@ -85,6 +92,27 @@ export const MaintenanceDetailsForm: React.FC<
 
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
   const isSM = useMediaQuery(theme.breakpoints.down('md'));
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
 
   const isBmWService = useMemo(
     () =>
@@ -359,6 +387,8 @@ export const MaintenanceDetailsForm: React.FC<
         if (vin && make && (recallsFromTheAdmin || isRecallsCategorySelected) && year) {
           setLoading(true);
           try {
+            const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+            const serviceTypeOptionId = serviceTypeOption?.id;
             const { data: resData } = await Api.call(Api.endpoints.Recalls.GetByVin, {
               data: {
                 serviceCenterId: decodeSCID(id),
@@ -366,6 +396,9 @@ export const MaintenanceDetailsForm: React.FC<
                 make,
                 year: +year,
                 model,
+                serviceTypeOptionId,
+                transportationOptionId,
+                customerId,
               },
             });
             dispatch(setRecallsAreShown(true));

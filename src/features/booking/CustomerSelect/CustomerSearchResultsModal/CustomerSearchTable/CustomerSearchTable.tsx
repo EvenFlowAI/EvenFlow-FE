@@ -48,7 +48,7 @@ import {
 } from '../../../../../store/reducers/enhancedCustomerSearch/actions';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import { useHistory } from 'react-router-dom';
-import { encodeSCID } from '../../../../../utils/utils';
+import { decodeSCID, encodeSCID } from '../../../../../utils/utils';
 import {
   EServiceType,
   EUserType,
@@ -66,6 +66,8 @@ import { useTranslation } from 'react-i18next';
 import AppointmentSelectionModal from '../../AppointmentSelectionModal/AppointmentSelectionModal';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { AppointmentSummaryI } from '../../../utils/types';
+import { loadRecallsByVin } from '../../../../../store/reducers/recall/actions';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TCustomerSearchTableProps = {
   onClose: TCallback;
@@ -81,9 +83,11 @@ const CustomerSearchTable: React.FC<
   const { customers, isLoading, paging, pageData } = useSelector(
     (state: RootState) => state.customers
   );
-  const { scProfile } = useSelector((state: RootState) => state.appointment);
+  const { scProfile, customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-
+  const { serviceTypeOption, customer, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const [data, setData] = useState<ICustomerWithPhones[]>([]);
   const [sorting, setSorting] = useState<TSortOrder>({ isAscending: true, order: null });
   const [isEdit, setEdit] = useState<boolean>(false);
@@ -113,6 +117,7 @@ const CustomerSearchTable: React.FC<
   const history = useHistory();
   const { t } = useTranslation();
   const { askConfirm } = useConfirm();
+  const { id } = useParams<{ id: string }>();
 
   const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
     return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize];
@@ -134,6 +139,27 @@ const CustomerSearchTable: React.FC<
     const orderedData = customers.map((el, i) => ({ ...el, sortOrder: i }));
     setData(orderedData);
   }, [customers]);
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
 
   const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
     const phoneNumber = item.cellPhone ?? item.homePhone ?? item.otherPhone;
@@ -196,6 +222,22 @@ const CustomerSearchTable: React.FC<
     await dispatch(setSideBarSteps([]));
     await setCustomerData(item, false);
     await dispatch(setUserType(EUserType.Existing));
+    if (item?.vin?.length && item?.make && item?.model && item?.year) {
+      const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+
+      dispatch(
+        loadRecallsByVin(
+          decodeSCID(id),
+          item.vin,
+          item.make,
+          item.model,
+          item.year,
+          serviceTypeOption?.id,
+          transportationOptionId,
+          customerId
+        )
+      );
+    }
     if (firstScreenOptions?.length) {
       if (firstScreenOptions.length > 1) {
         await dispatch(setWelcomeScreenView('serviceSelect'));
