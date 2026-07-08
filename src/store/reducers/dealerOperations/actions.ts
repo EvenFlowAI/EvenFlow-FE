@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 
 import { createAction } from '@reduxjs/toolkit';
-import { Credits, DashboardItemI, IntegrationSettingsI } from './types';
+import { Credits, DashboardItemI, IntegrationSettingsI, ITag } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
 import { ActionCreator } from 'redux';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -46,6 +46,12 @@ export const setUpdatedEventsName = createAction<
 >('Optimizer/setUpdatedEventsName');
 
 export const setCredits = createAction<Credits>('Optimizer/SetCredits');
+export const setAvailableTagsForOutboundEvents = createAction<ITag[]>(
+  'Optimizer/SetAvailableTagsForOutboundEvents'
+);
+export const setAvailableTagsForRecallAlerts = createAction<ITag[]>(
+  'Optimizer/SetAvailableTagsForRecallAlerts'
+);
 
 export const setTextIntegrationSettings = createAction<IntegrationSettingsI>(
   'Optimizer/setTextIntegrationSettings'
@@ -360,6 +366,31 @@ export const loadAvailableCredits =
         if (response?.data?.data) {
           const data = response.data.data;
           dispatch(setCredits(data));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        onSuccess();
+      });
+  };
+
+export const loadExistingTags =
+  (EventType: string, onSuccess: () => void): AppThunk =>
+  dispatch => {
+    Api.call(Api.endpoints.DealerOperations.MessageTags, {
+      params: { EventType },
+    })
+      .then(response => {
+        if (response?.data?.data) {
+          const data = response.data.data;
+          if (EventType === 'OutboundEvent') {
+            dispatch(setAvailableTagsForOutboundEvents(data.availableTags));
+          }
+          if (EventType === 'RecallAlert') {
+            dispatch(setAvailableTagsForRecallAlerts(data.availableTags));
+          }
         }
       })
       .catch(err => {

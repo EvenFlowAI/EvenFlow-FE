@@ -12,7 +12,6 @@ import {
   DialogContent,
   DialogTitle,
 } from '../../../../../../components/modals/BaseModal/BaseModal';
-import { customerRecallTags } from '../../../../../../config/data';
 import { Textarea } from '../../../../../../components/modals/admin/MapIframeLink/styles';
 import { ReactComponent as CopyIcon } from '../../../../../../assets/img/copy.svg';
 import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmallGreen.svg';
@@ -21,10 +20,16 @@ import { ReactComponent as Info } from '../../../../../../assets/img/info.svg';
 import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
 import { DialogProps } from '../../../../../../components/modals/BaseModal/types';
-import { sendTestSMSMessage } from '../../../../../../store/reducers/dealerOperations/actions';
+import {
+  loadExistingTags,
+  sendTestSMSMessage,
+} from '../../../../../../store/reducers/dealerOperations/actions';
 import { updateRecallAlertText } from '../../../../../../store/reducers/recall/actions';
 import { LightTooltip } from './LightTooltip';
 import { RootState } from '../../../../../../store/rootReducer';
+import { Loading } from '../../../../../../components/wrappers/Loading/Loading';
+import { ITag } from '../../../../../../store/reducers/dealerOperations/types';
+import { handleInsertTag } from '../../../../../../components/modals/admin/CustomerTextConfiguration/helper';
 
 type TextConfigurationRecallProps = DialogProps & {
   updatedRecallAlert: IRecallAlert | null;
@@ -44,7 +49,10 @@ const TextConfigurationRecall = ({
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const [phoneNumberForTest, setPhoneNumberForTest] = React.useState<string>('');
-  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const { textIntegrationSettings, availableTagsForRecallAlerts } = useSelector(
+    (state: RootState) => state.dealerOperations
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
 
@@ -66,39 +74,22 @@ const TextConfigurationRecall = ({
         textarea.setSelectionRange(cursorPos, cursorPos);
       }
     }, 0);
+
+    if (open) {
+      setLoading(true);
+      dispatch(
+        loadExistingTags('RecallAlert', () => {
+          setLoading(false);
+        })
+      );
+    }
   }, [open]);
 
-  useEffect(() => {
-    return () => {
-      setTextMessage('');
-    };
-  }, []);
-
-  const handleInsertTag = (tag: string) => {
-    if (!textareaRef.current) return;
-
-    const textarea = textareaRef.current;
-    const value = textMessage || '';
-
-    const start = textarea.selectionStart ?? value.length;
-    const end = textarea.selectionEnd ?? value.length;
-
-    const before = value.slice(0, start);
-    const after = value.slice(end);
-
-    const needSpaceBefore = before && !before.endsWith(' ') ? ' ' : '';
-    const needSpaceAfter = after && !after.startsWith(' ') && after !== '' ? ' ' : '';
-
-    const tagToInsert = `${needSpaceBefore}${tag}${needSpaceAfter}`;
-    const newValue = before + tagToInsert + after;
-    if (newValue.length <= 1000) setTextMessage(newValue);
-
-    setTimeout(() => {
-      textarea.focus();
-      const cursorPos = before.length + tagToInsert.length;
-      textarea.setSelectionRange(cursorPos, cursorPos);
-    }, 0);
-  };
+    useEffect(() => {
+      return () => {
+        setTextMessage('');
+      };
+    }, []);
 
   const handleClose = () => {
     onClose();
@@ -106,15 +97,18 @@ const TextConfigurationRecall = ({
     setTextMessage('');
   };
 
-  const renderTagItem = (tag: string) => {
-    const canRender = tag !== '{{Shortlink}}';
+  const renderTagItem = (element: ITag) => {
+    const canRender = element.tag !== '{{Shortlink}}';
 
     if (!canRender) return null;
 
     return (
-      <li key={tag} className={classes.tagItem}>
-        <span className={classes.insertTag} onClick={() => handleInsertTag(tag)}>
-          {tag}
+      <li key={element.tag} className={classes.tagItem}>
+        <span
+          className={classes.insertTag}
+          onClick={() => handleInsertTag(element.tag, textareaRef, textMessage, dispatch)}
+        >
+          {element.tag}
         </span>
         <LightTooltip width={110} title="Copy to clipboard" placement="top-start">
           <button
@@ -122,7 +116,7 @@ const TextConfigurationRecall = ({
             className={classes.copyTag}
             onClick={e => {
               e.stopPropagation();
-              navigator.clipboard.writeText(tag);
+              navigator.clipboard.writeText(element.tag);
               const input = autocompleteRef.current?.querySelector('input');
               if (input) (input as HTMLElement).blur();
               showMessage('Tag copied to clipboard');
@@ -198,12 +192,16 @@ const TextConfigurationRecall = ({
                 </p>
               )}
             </div>
-            <div className={classes.tagsWrapper}>
-              <span className={classes.insertTagText}>Insert tag</span>
-              <div className={classes.scrollableTags}>
-                {customerRecallTags.map(tag => renderTagItem(tag))}
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className={classes.tagsWrapper}>
+                <span className={classes.insertTagText}>Insert tag</span>
+                <div className={classes.scrollableTags}>
+                  {availableTagsForRecallAlerts?.map(tag => renderTagItem(tag))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className={classes.textMessageWrapper}>
