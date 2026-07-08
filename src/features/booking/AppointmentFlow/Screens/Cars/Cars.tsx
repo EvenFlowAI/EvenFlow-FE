@@ -32,8 +32,6 @@ import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUs
 import { BookNewVehicle, NewVehicleCard } from './CarCard/styles';
 import { ReactComponent as CarIcon } from '../../../../../assets/img/caricon.svg';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
-import { decodeSCID } from '../../../../../utils/utils';
-import { loadRecallsByVin } from '../../../../../store/reducers/recall/actions';
 
 type TProps = {
   onBack: TCallback;
@@ -61,7 +59,6 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     makes,
     isUsualFlowNeeded,
     transportation,
-    customer,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -160,37 +157,10 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     }
   }, [history, needToShowServiceSelection]);
 
-  const transportationOptionId =
-    serviceType === EServiceType.VisitCenter
-      ? serviceTypeOption?.transportationOption
-        ? serviceTypeOption?.transportationOption?.id
-        : !serviceTypeOption?.transportationOption && transportation
-          ? transportation?.id
-          : undefined
-      : serviceType === EServiceType.PickUpDropOff
-        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
-        : undefined;
-
   const handleAddNewCarAppointment = useCallback(
     (vehicle: ILoadedVehicle) => {
       clearAllData().then(() => {
         dispatch(setVehicle(vehicle));
-        if (vehicle?.vin?.length && vehicle?.make && vehicle?.model && vehicle?.year) {
-          const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
-
-          dispatch(
-            loadRecallsByVin(
-              decodeSCID(id),
-              vehicle.vin,
-              vehicle.make,
-              vehicle.model,
-              vehicle.year,
-              serviceTypeOption?.id,
-              transportationOptionId,
-              customerId
-            )
-          );
-        }
         if (needToShowServiceSelection) {
           handleServiceTypeSelection();
         } else {
