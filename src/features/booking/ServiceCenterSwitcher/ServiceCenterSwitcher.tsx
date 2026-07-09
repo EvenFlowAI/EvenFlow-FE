@@ -16,6 +16,7 @@ import {
   setCurrentFrameScreen,
   setIsPickupDropoffWithoutFirstScreenOption,
   setRecallsAreShown,
+  setCustomer,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -71,6 +72,15 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setHasManufacturerDidNotReturnRecalls(false));
         dispatch(setRecallsAreShown(false));
         dispatch(setRecallByVinLoading(false));
+        dispatch(
+          setCustomer({
+            fullName: '',
+            phoneNumber: '',
+            email: '',
+            city: '',
+            companyName: '',
+          })
+        );
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);
