@@ -83,9 +83,9 @@ const CustomerSearchTable: React.FC<
   const { customers, isLoading, paging, pageData } = useSelector(
     (state: RootState) => state.customers
   );
-  const { scProfile, customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-  const { serviceTypeOption, customer, transportation } = useSelector(
+  const { serviceTypeOption, transportation } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const [data, setData] = useState<ICustomerWithPhones[]>([]);
@@ -244,7 +244,7 @@ const CustomerSearchTable: React.FC<
         pickUpDropOffConfig?.checkRecallsExisting ||
         mobileServiceConfig?.checkRecallsExisting)
     ) {
-      const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+      const customerId = item?.customerId;
 
       dispatch(
         loadRecallsByVin(
@@ -255,7 +255,8 @@ const CustomerSearchTable: React.FC<
           item.year,
           serviceTypeOption?.id,
           transportationOptionId,
-          customerId
+          customerId,
+          true
         )
       );
     }

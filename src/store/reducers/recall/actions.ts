@@ -167,7 +167,8 @@ export const loadRecallsByVin =
     year: number,
     serviceTypeOptionId?: number,
     transportationOptionId?: number,
-    customerId?: number
+    customerId?: number,
+    isPreFetch?: boolean
   ): AppThunk =>
   dispatch => {
     dispatch(setLoading(true));
@@ -183,6 +184,7 @@ export const loadRecallsByVin =
         serviceTypeOptionId,
         transportationOptionId,
         customerId,
+        isPreFetch,
       },
     })
       .then(result => {

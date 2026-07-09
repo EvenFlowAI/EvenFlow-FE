@@ -85,6 +85,21 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
   const history = useHistory();
   const currentUser = useCurrentUser();
 
+  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+
+  const visitCenterConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.VisitCenter),
+    [config]
+  );
+  const mobileServiceConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.MobileService),
+    [config]
+  );
+  const pickUpDropOffConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.PickUpDropOff),
+    [config]
+  );
+
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
     [currentUser, scProfile]
@@ -175,7 +190,15 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     (vehicle: ILoadedVehicle) => {
       clearAllData().then(() => {
         dispatch(setVehicle(vehicle));
-        if (vehicle?.vin?.length && vehicle?.make && vehicle?.model && vehicle?.year) {
+        if (
+          vehicle?.vin?.length &&
+          vehicle?.make &&
+          vehicle?.model &&
+          vehicle?.year &&
+          (visitCenterConfig?.checkRecallsExisting ||
+            pickUpDropOffConfig?.checkRecallsExisting ||
+            mobileServiceConfig?.checkRecallsExisting)
+        ) {
           const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
 
           dispatch(
@@ -187,7 +210,8 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
               vehicle.year,
               serviceTypeOption?.id,
               transportationOptionId,
-              customerId
+              customerId,
+              true
             )
           );
         }
