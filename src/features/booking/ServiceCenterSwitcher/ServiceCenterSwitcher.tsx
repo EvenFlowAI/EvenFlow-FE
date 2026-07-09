@@ -14,6 +14,7 @@ import {
   clearAppointmentData,
   getActiveTransportations,
   setCurrentFrameScreen,
+  setCustomer,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -61,6 +62,15 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setWelcomeScreenView('serviceCenterSelect'));
         dispatch(setServiceTypeOption(null));
         dispatch(getActiveTransportations([]));
+        dispatch(
+          setCustomer({
+            fullName: '',
+            phoneNumber: '',
+            email: '',
+            city: '',
+            companyName: '',
+          })
+        );
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);
