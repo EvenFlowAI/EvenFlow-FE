@@ -1741,7 +1741,7 @@ export const handleAppointmentUpdate =
             dispatch(
               loadConsultantsForUpdating(
                 id,
-                option ? option.id : (data.serviceTypeOption?.id ?? null),
+                option?.id ?? data.serviceTypeOption?.id ?? null,
                 data,
                 () => {
                   dispatch(updateConsultant(data.advisorId));
