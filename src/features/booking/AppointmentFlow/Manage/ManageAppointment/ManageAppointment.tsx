@@ -180,7 +180,11 @@ export const ManageAppointment: React.FC<
   useEffect(() => {
     // load active transportation when appointmentByKey is available
     if (appointmentByKey && isCloneMode) {
-      dispatch(loadActiveTransportations(decodeSCID(id)));
+      if (appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService) {
+        dispatch(loadActiveTransportations(decodeSCID(id)));
+      } else {
+        onChangeSlot();
+      }
     }
   }, [appointmentByKey, isCloneMode]);
 
@@ -196,6 +200,7 @@ export const ManageAppointment: React.FC<
   }, [appointmentByKey, selectedVehicle]);
 
   const handleConsultants = async () => {
+    console.log(appointmentByKey);
     if (appointmentByKey) {
       dispatch(
         loadConsultantsForUpdating(

@@ -1739,9 +1739,14 @@ export const handleAppointmentUpdate =
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(
-              loadConsultantsForUpdating(id, option ? option.id : null, data, () => {
-                dispatch(updateConsultant(data.advisorId));
-              })
+              loadConsultantsForUpdating(
+                id,
+                option ? option.id : (data.serviceTypeOption?.id ?? null),
+                data,
+                () => {
+                  dispatch(updateConsultant(data.advisorId));
+                }
+              )
             );
             dispatch(checkCarIsValid());
             setLoadingCar(false);
