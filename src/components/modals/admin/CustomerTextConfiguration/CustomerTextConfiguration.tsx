@@ -90,7 +90,7 @@ const CustomerTextConfiguration = ({
     if (!canRender) return null;
 
     return (
-      <li className={classes.tagItem}>
+      <li key={element.tag} className={classes.tagItem}>
         <span
           className={classes.insertTag}
           onClick={() =>

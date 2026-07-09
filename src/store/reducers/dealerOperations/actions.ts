@@ -377,20 +377,21 @@ export const loadAvailableCredits =
   };
 
 export const loadExistingTags =
-  (EventType: string, onSuccess: () => void): AppThunk =>
+  (eventType: 'OutboundEvent' | 'RecallAlert', onSuccess: () => void): AppThunk =>
   dispatch => {
     Api.call(Api.endpoints.DealerOperations.MessageTags, {
-      params: { EventType },
+      params: { EventType: eventType },
     })
       .then(response => {
-        if (response?.data?.data) {
-          const data = response.data.data;
-          if (EventType === 'OutboundEvent') {
-            dispatch(setAvailableTagsForOutboundEvents(data.availableTags));
-          }
-          if (EventType === 'RecallAlert') {
-            dispatch(setAvailableTagsForRecallAlerts(data.availableTags));
-          }
+        const availableTags = response?.data?.data?.availableTags;
+        if (!availableTags) return;
+        switch (eventType) {
+          case 'OutboundEvent':
+            dispatch(setAvailableTagsForOutboundEvents(availableTags));
+            break;
+          case 'RecallAlert':
+            dispatch(setAvailableTagsForRecallAlerts(availableTags));
+            break;
         }
       })
       .catch(err => {

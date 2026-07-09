@@ -1,6 +1,8 @@
+import type { RefObject } from 'react';
+
 export const handleInsertTag = (
   tag: string,
-  textareaRef: React.RefObject<HTMLTextAreaElement>,
+  textareaRef: RefObject<HTMLTextAreaElement>,
   textMessage: string,
   setTextMessage: (value: string) => void
 ) => {
