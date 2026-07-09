@@ -30,6 +30,7 @@ import { RootState } from '../../../../../../store/rootReducer';
 import { Loading } from '../../../../../../components/wrappers/Loading/Loading';
 import { ITag } from '../../../../../../store/reducers/dealerOperations/types';
 import { handleInsertTag } from '../../../../../../components/modals/admin/CustomerTextConfiguration/helper';
+import { setTextMessage as setTextMessageAction } from '../../../../../../store/reducers/dealerOperations/actions';
 
 type TextConfigurationRecallProps = DialogProps & {
   updatedRecallAlert: IRecallAlert | null;
@@ -106,7 +107,11 @@ const TextConfigurationRecall = ({
       <li key={element.tag} className={classes.tagItem}>
         <span
           className={classes.insertTag}
-          onClick={() => handleInsertTag(element.tag, textareaRef, textMessage, dispatch)}
+          onClick={() =>
+            handleInsertTag(element.tag, textareaRef, textMessage, (newTextMessage: string) => {
+              dispatch(setTextMessageAction(newTextMessage));
+            })
+          }
         >
           {element.tag}
         </span>

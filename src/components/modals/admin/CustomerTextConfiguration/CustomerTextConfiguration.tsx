@@ -93,7 +93,11 @@ const CustomerTextConfiguration = ({
       <li className={classes.tagItem}>
         <span
           className={classes.insertTag}
-          onClick={() => handleInsertTag(element.tag, textareaRef, textMessage, dispatch)}
+          onClick={() =>
+            handleInsertTag(element.tag, textareaRef, textMessage, (newTextMessage: string) => {
+              dispatch(setTextMessage(newTextMessage));
+            })
+          }
         >
           {element.tag}
         </span>

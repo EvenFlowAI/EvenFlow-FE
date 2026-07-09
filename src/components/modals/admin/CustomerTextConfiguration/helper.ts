@@ -1,11 +1,8 @@
-import { setTextMessage } from '../../../../store/reducers/dealerOperations/actions';
-import { AppDispatch } from '../../../../store/store';
-
 export const handleInsertTag = (
   tag: string,
   textareaRef: React.RefObject<HTMLTextAreaElement>,
   textMessage: string,
-  dispatch: AppDispatch
+  setTextMessage: (value: string) => void
 ) => {
   if (!textareaRef.current) return;
 
@@ -24,7 +21,7 @@ export const handleInsertTag = (
   const tagToInsert = `${needSpaceBefore}${tag}${needSpaceAfter}`;
   const newValue = before + tagToInsert + after;
 
-  dispatch(setTextMessage(newValue));
+  setTextMessage(newValue);
 
   setTimeout(() => {
     textarea.focus();
