@@ -205,6 +205,14 @@ export const MaintenanceDetailsForm: React.FC<
   }, [selectedVehicle, currentConfig, isRecallsCategorySelected]);
 
   useEffect(() => {
+    return () => {
+      if (isRecallsCategorySelected && !selectedRecalls.length) {
+        removeRecallCategory();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const selectedMileage = mileage.find(
       item => item.value.toString() === selectedVehicle?.mileage?.toString()
     );
@@ -296,7 +304,6 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleBack = () => {
-    if (isRecallsCategorySelected && !selectedRecalls.length) removeRecallCategory();
     onBack(
       service?.type === EServiceCategoryType.Diagnose ||
         subService?.type === EServiceCategoryType.IndividualServices
