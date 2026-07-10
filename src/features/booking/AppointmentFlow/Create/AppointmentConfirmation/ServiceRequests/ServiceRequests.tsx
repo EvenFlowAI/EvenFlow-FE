@@ -101,35 +101,41 @@ const ServiceRequests = () => {
               );
               const comment = currentCategory?.comment || currentServiceRequest?.comment;
 
+              const isRecallSelected = selectedRecalls.some(
+                recall => recall.recallComponent === item.requestName
+              );
+
               return (
                 <ServiceItem key={item.requestName}>
                   {item.requestName.includes('Going')
                     ? t('My Description of Needs')
                     : item.requestName}
-                  <MessageIconWrapper
-                    onClick={() => {
-                      if (currentServiceRequest?.type === 0) {
-                        setSelectedRequest({
-                          isCommentRequired: currentServiceRequest?.isCommentRequired ?? false,
-                          description: currentServiceRequest?.description ?? '',
-                          id: currentServiceRequest?.id ?? 0,
-                          code: 'specialCategory',
-                          comment: comment ?? '',
-                        });
-                      } else {
-                        setSelectedRequest({
-                          isCommentRequired: false,
-                          description: currentCategory?.requestName ?? '',
-                          id: currentCategory?.id ?? 0,
-                          comment: comment ?? '',
-                        });
-                      }
+                  {!isRecallSelected && (
+                    <MessageIconWrapper
+                      onClick={() => {
+                        if (currentServiceRequest?.type === 0) {
+                          setSelectedRequest({
+                            isCommentRequired: currentServiceRequest?.isCommentRequired ?? false,
+                            description: currentServiceRequest?.description ?? '',
+                            id: currentServiceRequest?.id ?? 0,
+                            code: 'specialCategory',
+                            comment: comment ?? '',
+                          });
+                        } else {
+                          setSelectedRequest({
+                            isCommentRequired: false,
+                            description: currentCategory?.requestName ?? '',
+                            id: currentCategory?.id ?? 0,
+                            comment: comment ?? '',
+                          });
+                        }
 
-                      onCommentOpen();
-                    }}
-                  >
-                    {comment ? <MessageIconFilled /> : <MessageIcon />}
-                  </MessageIconWrapper>
+                        onCommentOpen();
+                      }}
+                    >
+                      {comment ? <MessageIconFilled /> : <MessageIcon />}
+                    </MessageIconWrapper>
+                  )}
                 </ServiceItem>
               );
             })
