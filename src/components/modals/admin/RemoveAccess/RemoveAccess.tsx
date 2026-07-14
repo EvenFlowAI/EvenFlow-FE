@@ -157,10 +157,18 @@ const RemoveAccess = ({ isOpen, onClose, payload }: RemoveAccessProps) => {
               <div className={classes.dealershipHeader}>
                 <div className={classes.dealershipLeft}>
                   <Checkbox
-                    checked={isDealershipChecked(serviceCenters)}
-                    indeterminate={isDealershipIndeterminate(serviceCenters)}
+                    checked={isDealershipChecked(
+                      payload.serviceCenters.filter(sc => sc.categoryId === dealership.value)
+                    )}
+                    indeterminate={isDealershipIndeterminate(
+                      payload.serviceCenters.filter(sc => sc.categoryId === dealership.value)
+                    )}
                     inputProps={{ 'aria-label': `Select ${dealership.name}` }}
-                    onChange={() => toggleDealership(serviceCenters)}
+                    onChange={() =>
+                      toggleDealership(
+                        payload.serviceCenters.filter(sc => sc.categoryId === dealership.value)
+                      )
+                    }
                   />
                   <p className={classes.dealershipName}>
                     {dealership.name}{' '}
