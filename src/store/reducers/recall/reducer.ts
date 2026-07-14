@@ -31,8 +31,8 @@ export const initialOrder = {
 };
 
 export const initialOrderForRecallAlerts = {
-  orderBy: 'Name',
-  isAscending: true,
+  orderBy: 'CreatedAt',
+  isAscending: false,
 };
 
 const initialState: TState = {
