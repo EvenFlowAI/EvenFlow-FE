@@ -31,7 +31,7 @@ interface UsersTableProps {
   pageData: { pageIndex: number; pageSize: number };
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
   filterServiceCenterId?: number;
-  openRemoveModal?: (open: boolean) => void;
+  openRemoveModal?: () => void;
 }
 
 const UsersTableWrapper = ({
@@ -189,7 +189,7 @@ const UsersTableWrapper = ({
         dispatch(setLoading(true));
         dispatch(removeUser(editedItem.id, onSuccess));
       } else {
-        if (openRemoveModal) openRemoveModal(true);
+        if (openRemoveModal) openRemoveModal();
       }
       setAnchorEl(null);
     }
@@ -244,9 +244,7 @@ const UsersTableWrapper = ({
         </MenuItem>
         {!isAdminPanel ? (
           editedItem?.status === UserStatus.Active || editedItem?.status === UserStatus.Inactive ? (
-            <>
-              <MenuItem onClick={handleRemove}>Remove</MenuItem>
-            </>
+            <MenuItem onClick={handleRemove}>Remove</MenuItem>
           ) : (
             <MenuItem onClick={handleRestore}>Restore</MenuItem>
           )

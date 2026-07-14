@@ -65,9 +65,6 @@ export const useStyles = makeStyles()(theme => ({
     background: 'transparent',
     border: 0,
   },
-  serviceCentersWrapper: {
-    // paddingLeft: theme.spacing(4),
-  },
   serviceCenterRow: {
     display: 'flex',
     alignItems: 'center',
