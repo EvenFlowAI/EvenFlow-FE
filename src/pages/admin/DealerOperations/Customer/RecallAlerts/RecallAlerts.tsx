@@ -25,6 +25,7 @@ import { getAllGlobalRecalls } from '../../../../../store/reducers/recallDatabas
 import TextConfigurationRecall from './layouts/TextConfigurationRecall';
 import HistoryRecall from './layouts/HistoryRecall';
 import { RECALL_ALERTS_STATUSES } from '../../../../../utils/constants';
+import { normalizeWhitespace } from '../../../../../utils/string';
 
 const RecallAlerts = () => {
   const [tableMode, setTableMode] = useState<'workflow' | 'stats'>('workflow');
@@ -83,14 +84,16 @@ const RecallAlerts = () => {
       let counter = 0;
       recallAlerts.forEach(event => {
         updatedAlerts.forEach(updatedEvent => {
+          const normalizedName = normalizeWhitespace(updatedEvent.name);
+
           if (event.id === updatedEvent.id) {
-            if (event.name !== updatedEvent.name) {
+            if (event.name !== normalizedName) {
               dispatch(setIsRecallAlertsTableLoading(true));
               dispatch(
                 updateRecallAlertName(
                   {
                     id: updatedEvent.id,
-                    name: updatedEvent.name.trim(),
+                    name: normalizedName,
                     serviceCenterId: selectedSC?.id,
                   },
                   tableMode,
