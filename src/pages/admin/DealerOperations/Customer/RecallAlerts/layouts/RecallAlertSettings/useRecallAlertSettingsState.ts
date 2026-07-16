@@ -14,6 +14,12 @@ import {
   toEnumLabel,
   TSelectedModelKey,
 } from '../../../../helper';
+import {
+  getAffectedModels,
+  setAffectedModels,
+} from '../../../../../../../store/reducers/recall/actions';
+import { useDispatch } from 'react-redux';
+import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 
 interface IUseRecallAlertSettingsState {
   selectedRecallAlert: IRecallAlert | null;
@@ -26,6 +32,8 @@ const useRecallAlertSettingsState = ({
   affectedModels,
   initialEditMode,
 }: IUseRecallAlertSettingsState) => {
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
   const [isEditTable, setIsEditTable] = useState<boolean>(initialEditMode ?? false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [updatedRecallAlert, setUpdatedRecallAlert] = useState<IRecallAlert | null>(null);
@@ -113,6 +121,20 @@ const useRecallAlertSettingsState = ({
       mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
     );
     resetValidationErrors();
+    if (selectedSC?.id) {
+      if (selectedRecallAlert?.recallCampaignId) {
+        dispatch(
+          getAffectedModels(
+            selectedRecallAlert?.recallCampaignId,
+            selectedSC?.id,
+            () => {},
+            () => {}
+          )
+        );
+      } else {
+        dispatch(setAffectedModels([]));
+      }
+    }
   };
 
   return {

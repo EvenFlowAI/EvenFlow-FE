@@ -9,6 +9,7 @@ import { RootState } from '../../../../../../../store/rootReducer';
 import {
   getAffectedModels,
   setRecallAlertSettingsEditMode,
+  setAffectedModels,
   setSelectedRecallAlert,
 } from '../../../../../../../store/reducers/recall/actions';
 import { useStyles } from '../../../../styles';
@@ -85,6 +86,12 @@ const RecallAlertSettings: React.FC = () => {
     setFirstTriggerDateError,
     setTriggerDateErrors,
   });
+
+  useEffect(() => {
+    return () => {
+      dispatch(setAffectedModels([]));
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedSC) return;

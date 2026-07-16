@@ -399,7 +399,7 @@ export const updateRecallAlert =
     data: {
       id: number;
       listType?: number;
-      recallCampaignId?: number;
+      recallCampaignId?: number | null;
       serviceCenterId: number;
       filterRules?: {
         id?: number;

@@ -18,7 +18,7 @@ interface RecallFormI {
   isEditTable: boolean;
   updatedRecallAlert: IRecallAlert;
   handleListMethodChange: (newValue: string) => void;
-  handleRecallCampaignChange: (newValue: number) => void;
+  handleRecallCampaignChange: (newValue: number | null) => void;
   onFileChange: (file: File | null) => void;
   file: File | null;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -241,7 +241,9 @@ const RecallForm = ({
           isOptionEqualToValue={(o, v) => String(o) === String(v)}
           getOptionLabel={o => o}
           onChange={(e, v) =>
-            handleRecallCampaignChange(allGlobalRecalls.find(c => c.nhtsaCampaign === v)?.id || 0)
+            handleRecallCampaignChange(
+              allGlobalRecalls.find(c => c.nhtsaCampaign === v)?.id || null
+            )
           }
           renderInput={autocompleteRender({
             isCustomFontSize: true,
