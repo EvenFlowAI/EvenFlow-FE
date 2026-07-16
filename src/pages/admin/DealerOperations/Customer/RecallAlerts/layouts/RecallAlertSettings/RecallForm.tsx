@@ -242,7 +242,7 @@ const RecallForm = ({
           getOptionLabel={o => o}
           onChange={(e, v) =>
             handleRecallCampaignChange(
-              allGlobalRecalls.find(c => c.nhtsaCampaign === v)?.id ?? null
+              allGlobalRecalls.find(c => c.nhtsaCampaign === v)?.id || null
             )
           }
           renderInput={autocompleteRender({
