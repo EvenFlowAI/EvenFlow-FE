@@ -10,7 +10,7 @@ import { ReactComponent as Upload } from '../../../../../../../assets/img/upload
 import { ReactComponent as Reupload } from '../../../../../../../assets/img/Reupload.svg';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import { useStyles } from '../../../styles';
-import { checkVins } from '../../../../../../../store/reducers/recall/actions';
+import { checkVins, getRecallEvents } from '../../../../../../../store/reducers/recall/actions';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { RecallEventStatus } from '../../../types';
 
@@ -57,6 +57,7 @@ interface IListMethodActionProps {
   handleFileChange: ChangeEventHandler<HTMLInputElement>;
   callRecallTrigger: () => void;
   campaignRecallGroupBatchId?: number;
+  updatedRecallAlert: IRecallAlert;
 }
 
 const ListMethodAction: React.FC<IListMethodActionProps> = ({
@@ -65,6 +66,7 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
   hasSelectedModels,
   hasAvailableCredits,
   classes,
+  updatedRecallAlert,
   file,
   inputRef,
   handleFileChange,
@@ -73,7 +75,12 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
 }) => {
   if (listType === RecallListType.VIN_CHECK_API) {
     const isCheckVinsDisabled =
-      !isEditTable || !hasSelectedModels || !hasAvailableCredits || !campaignRecallGroupBatchId;
+      !isEditTable ||
+      !hasSelectedModels ||
+      !hasAvailableCredits ||
+      !campaignRecallGroupBatchId ||
+      updatedRecallAlert.status === RecallEventStatus.Running ||
+      updatedRecallAlert.status === RecallEventStatus.CheckRequested;
 
     const button = (
       <Button
@@ -181,7 +188,16 @@ const RecallForm = ({
       checkVins(
         updatedRecallAlert?.campaignRecallGroupBatchId,
         () => {
-          setIsLoading(false);
+          dispatch(
+            getRecallEvents(
+              selectedSC?.id,
+              'workflow',
+              () => {},
+              () => {
+                setIsLoading(false);
+              }
+            )
+          );
         },
         (e: string) => {
           showError(e);
@@ -196,7 +212,11 @@ const RecallForm = ({
       <div className={classes.recallFormSection}>
         <div style={{ marginBottom: file ? '4px' : '16px' }} className={classes.recallFormRow}>
           <Autocomplete
-            disabled={!isEditTable || updatedRecallAlert.status === RecallEventStatus.Running}
+            disabled={
+              !isEditTable ||
+              updatedRecallAlert.status === RecallEventStatus.Running ||
+              updatedRecallAlert.status === RecallEventStatus.CheckRequested
+            }
             className={classes.recallFormField}
             value={getListMethodValue(updatedRecallAlert.listType)}
             disableClearable
@@ -212,6 +232,7 @@ const RecallForm = ({
           />
           <ListMethodAction
             listType={updatedRecallAlert.listType}
+            updatedRecallAlert={updatedRecallAlert}
             isEditTable={isEditTable}
             hasSelectedModels={hasSelectedModels}
             hasAvailableCredits={hasAvailableCredits}
@@ -231,7 +252,11 @@ const RecallForm = ({
       </div>
       <div className={classes.recallFormRow}>
         <Autocomplete
-          disabled={!isEditTable || updatedRecallAlert.status === RecallEventStatus.Running}
+          disabled={
+            !isEditTable ||
+            updatedRecallAlert.status === RecallEventStatus.Running ||
+            updatedRecallAlert.status === RecallEventStatus.CheckRequested
+          }
           className={classes.recallFormField}
           value={
             allGlobalRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId)
