@@ -192,7 +192,6 @@ export interface IBaseAppointment {
   transactionValue: number;
   serviceCenterId: number;
   transportationOption: ITransportation | null;
-  isNeedCall: boolean;
   offerId: number;
   offer: IOffer;
   isEditable: boolean;
