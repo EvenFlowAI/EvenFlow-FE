@@ -134,6 +134,11 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
+    if (updatedRecallAlert.recallCampaignId && !selectedModelKeys.length) {
+      showError('At least one model must be selected');
+      return;
+    }
+
     setIsLoading(true);
 
     if (updatedRecallAlert.listType === RecallListType.UPLOAD_CSV) {
