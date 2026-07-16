@@ -66,11 +66,13 @@ const TextConfigurationRecall = ({
         textarea.setSelectionRange(cursorPos, cursorPos);
       }
     }, 0);
+  }, [open]);
 
+  useEffect(() => {
     return () => {
       setTextMessage('');
     };
-  }, [open]);
+  }, []);
 
   const handleInsertTag = (tag: string) => {
     if (!textareaRef.current) return;

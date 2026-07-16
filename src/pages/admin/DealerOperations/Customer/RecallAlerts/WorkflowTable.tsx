@@ -200,12 +200,10 @@ const WorkflowTable: React.FC<
           }}
         >
           <ConfirmationBadge
-            isConfirmed={
-              !!(
-                el.communicationDetails?.textMessage.length > 0 &&
-                textIntegrationSettings?.fromPhoneNumber
-              )
-            }
+            isConfirmed={Boolean(
+              el.communicationDetails?.textMessage?.length &&
+              textIntegrationSettings?.fromPhoneNumber
+            )}
           />
         </div>
       ),
