@@ -100,7 +100,7 @@ const Triggers = ({
   const { classes: formClasses } = useFormStyles();
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
   const formattedListGeneratedDate = selectedRecallAlert?.listGeneratedDate?.length
-    ? dayjs(selectedRecallAlert?.listGeneratedDate).add(1, 'day').format('dddd, MMM D, YYYY')
+    ? dayjs(selectedRecallAlert?.listGeneratedDate).format('dddd, MMM D, YYYY')
     : '';
 
   const handleAddTrigger = () => {
@@ -241,7 +241,9 @@ const Triggers = ({
                   {!isOutboundMode && formattedListGeneratedDate ? (
                     <div className={formClasses.recallTriggerStats}>
                       <span className={formClasses.recallTriggerStatsDate}>
-                        {formattedListGeneratedDate}
+                        {dayjs(formattedListGeneratedDate)
+                          .add(trigger.daysFromListGeneration, 'day')
+                          .format('dddd, MMM D, YYYY')}
                       </span>
                       <div className={formClasses.recallTriggerStatsCounters}>
                         <span className={formClasses.recallTriggerStatsCounter}>
