@@ -247,10 +247,10 @@ const Triggers = ({
                       </span>
                       <div className={formClasses.recallTriggerStatsCounters}>
                         <span className={formClasses.recallTriggerStatsCounter}>
-                          Estimated Recipients: {selectedRecallAlert?.estimatedRecipients || 0}
+                          Estimated Recipients: {trigger?.estimatedRecipients || 0}
                         </span>
                         <span className={formClasses.recallTriggerStatsCounter}>
-                          Actual Recipients: {selectedRecallAlert?.actualRecipients || 0}
+                          Actual Recipients: {trigger?.actualRecipients || 0}
                         </span>
                       </div>
                     </div>
