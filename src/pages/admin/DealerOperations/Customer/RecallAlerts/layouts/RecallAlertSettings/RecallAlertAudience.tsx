@@ -38,7 +38,7 @@ const RecallAlertAudience = ({
     });
   };
 
-  const handleRecallCampaignChange = (newValue: number) => {
+  const handleRecallCampaignChange = (newValue: number | null) => {
     setUpdatedRecallAlert(prev => {
       if (!prev) return prev;
 

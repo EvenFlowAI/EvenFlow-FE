@@ -47,7 +47,7 @@ export interface IRecallAlert {
   listGeneratedDate: string;
   globalModelIds: number[];
   campaignRecallGroupBatchId: number;
-  recallCampaignId: number;
+  recallCampaignId: number | null;
   status: number;
   listType: RecallListType;
   communicationDetails: {
