@@ -68,6 +68,12 @@ const TextConfigurationRecall = ({
     }, 0);
   }, [open]);
 
+  useEffect(() => {
+    return () => {
+      setTextMessage('');
+    };
+  }, []);
+
   const handleInsertTag = (tag: string) => {
     if (!textareaRef.current) return;
 

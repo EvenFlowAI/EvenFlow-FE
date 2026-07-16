@@ -149,7 +149,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     },
     {
       header: 'Actual Recipients',
-      val: el => (el.actualRecipients >= 0 ? String(el.actualRecipients) : ''),
+      val: el => (el.actualRecipients > 0 ? String(el.actualRecipients) : '-'),
     },
   ];
 
