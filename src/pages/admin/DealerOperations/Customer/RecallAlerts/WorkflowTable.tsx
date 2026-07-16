@@ -52,6 +52,7 @@ const WorkflowTable: React.FC<
   const showError = useException();
   const { askConfirm } = useConfirm();
   const { selectedSC } = useSCs();
+  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
   const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
     (s: RootState) => s.recalls.recallAlertsPageData,
     setRecallAlertsPageData
@@ -198,7 +199,14 @@ const WorkflowTable: React.FC<
             onOpenText();
           }}
         >
-          <ConfirmationBadge isConfirmed={el.communicationDetails?.textMessage.length > 0} />
+          <ConfirmationBadge
+            isConfirmed={
+              !!(
+                el.communicationDetails?.textMessage.length > 0 &&
+                textIntegrationSettings?.fromPhoneNumber
+              )
+            }
+          />
         </div>
       ),
     },
