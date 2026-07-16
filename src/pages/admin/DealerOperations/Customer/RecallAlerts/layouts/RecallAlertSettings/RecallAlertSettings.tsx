@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import {
   getAffectedModels,
+  setRecallAlertSettingsEditMode,
   setSelectedRecallAlert,
 } from '../../../../../../../store/reducers/recall/actions';
 import { useStyles } from '../../../../styles';
@@ -28,7 +29,9 @@ import useRecallAlertSettingsState from './useRecallAlertSettingsState';
 import useRecallAlertSettingsSave from './useRecallAlertSettingsSave';
 
 const RecallAlertSettings: React.FC = () => {
-  const { selectedRecallAlert, affectedModels } = useSelector((state: RootState) => state.recalls);
+  const { selectedRecallAlert, affectedModels, isRecallAlertSettingsEditMode } = useSelector(
+    (state: RootState) => state.recalls
+  );
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const { classes: recallAlertSettingsClasses } = useRecallAlertSettingsStyles();
@@ -60,7 +63,13 @@ const RecallAlertSettings: React.FC = () => {
   } = useRecallAlertSettingsState({
     selectedRecallAlert,
     affectedModels,
+    initialEditMode: isRecallAlertSettingsEditMode,
   });
+
+  const closeRecallAlertSettings = () => {
+    dispatch(setRecallAlertSettingsEditMode(false));
+    dispatch(setSelectedRecallAlert(null));
+  };
 
   const { validateChangesBeforeSave } = useRecallAlertSettingsSave({
     updatedRecallAlert,
@@ -111,7 +120,7 @@ const RecallAlertSettings: React.FC = () => {
         pad
         parent={dealerOperationsCustomer}
         secondParent={dealerOperationsRoot}
-        actions={() => dispatch(setSelectedRecallAlert(null))}
+        actions={closeRecallAlertSettings}
       />
 
       <div className={classes.backButton}>
@@ -119,7 +128,7 @@ const RecallAlertSettings: React.FC = () => {
           variant="text"
           className={classes.backWrapper}
           onClick={() =>
-            isEditTable ? onOpenLeaveWithoutSavingModal() : dispatch(setSelectedRecallAlert(null))
+            isEditTable ? onOpenLeaveWithoutSavingModal() : closeRecallAlertSettings()
           }
         >
           <ArrowLeft />
@@ -210,7 +219,7 @@ const RecallAlertSettings: React.FC = () => {
       <LeaveWithoutSaving
         open={isOpenLeaveWithoutSavingModal}
         onClose={onCloseLeaveWithoutSavingModal}
-        handleLeave={() => dispatch(setSelectedRecallAlert(null))}
+        handleLeave={closeRecallAlertSettings}
       />
     </div>
   );

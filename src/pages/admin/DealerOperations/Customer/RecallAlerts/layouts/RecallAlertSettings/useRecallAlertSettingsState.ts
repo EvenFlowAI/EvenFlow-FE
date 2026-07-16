@@ -18,13 +18,15 @@ import {
 interface IUseRecallAlertSettingsState {
   selectedRecallAlert: IRecallAlert | null;
   affectedModels: IRecallAffectedModel[];
+  initialEditMode?: boolean;
 }
 
 const useRecallAlertSettingsState = ({
   selectedRecallAlert,
   affectedModels,
+  initialEditMode,
 }: IUseRecallAlertSettingsState) => {
-  const [isEditTable, setIsEditTable] = useState<boolean>(false);
+  const [isEditTable, setIsEditTable] = useState<boolean>(initialEditMode ?? false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [updatedRecallAlert, setUpdatedRecallAlert] = useState<IRecallAlert | null>(null);
   const [file, setFile] = useState<File | null>(null);

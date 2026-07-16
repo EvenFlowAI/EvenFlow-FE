@@ -69,6 +69,9 @@ export const setIsRecallAlertsTableLoading = createAction<boolean>(
 export const setSelectedRecallAlert = createAction<IRecallAlert | null>(
   'Recall/SetSelectedRecallAlert'
 );
+export const setRecallAlertSettingsEditMode = createAction<boolean>(
+  'Recall/SetRecallAlertSettingsEditMode'
+);
 export const setAffectedModels = createAction<IRecallAffectedModel[]>('Recall/SetAffectedModels');
 
 export const loadRecalls =
