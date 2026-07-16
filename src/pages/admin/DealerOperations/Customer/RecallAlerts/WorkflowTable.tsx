@@ -5,6 +5,7 @@ import {
   deleteRecallAlert,
   getRecallEvents,
   setIsRecallAlertsTableLoading,
+  setRecallAlertSettingsEditMode,
   setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
   setSelectedRecallAlert,
@@ -173,6 +174,7 @@ const WorkflowTable: React.FC<
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setCurrentItem(el);
+            dispatch(setRecallAlertSettingsEditMode(false));
             dispatch(setSelectedRecallAlert(el));
           }}
         >
@@ -242,6 +244,11 @@ const WorkflowTable: React.FC<
 
   const openEdit = () => {
     setAnchorEl(null);
+    if (!currentItem) {
+      dispatch(setRecallAlertSettingsEditMode(false));
+      return;
+    }
+    dispatch(setRecallAlertSettingsEditMode(true));
     dispatch(setSelectedRecallAlert(currentItem));
   };
 

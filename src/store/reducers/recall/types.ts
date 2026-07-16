@@ -127,6 +127,7 @@ export type TState = {
   isEditName: boolean;
   isRecallAlertsTableLoading: boolean;
   selectedRecallAlert: IRecallAlert | null;
+  isRecallAlertSettingsEditMode: boolean;
   affectedModels: IRecallAffectedModel[];
   hasManufacturerDidNotReturnRecalls: boolean;
 };

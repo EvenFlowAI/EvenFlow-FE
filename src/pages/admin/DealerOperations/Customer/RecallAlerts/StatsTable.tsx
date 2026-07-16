@@ -3,6 +3,7 @@ import {
   deleteRecallAlert,
   getRecallEvents,
   setIsRecallAlertsTableLoading,
+  setRecallAlertSettingsEditMode,
   setRecallAlertsOrderStats,
   setRecallAlertsPageData,
   setSelectedRecallAlert,
@@ -167,6 +168,11 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
 
   const openEdit = () => {
     setAnchorEl(null);
+    if (!currentItem) {
+      dispatch(setRecallAlertSettingsEditMode(false));
+      return;
+    }
+    dispatch(setRecallAlertSettingsEditMode(true));
     dispatch(setSelectedRecallAlert(currentItem));
   };
 
