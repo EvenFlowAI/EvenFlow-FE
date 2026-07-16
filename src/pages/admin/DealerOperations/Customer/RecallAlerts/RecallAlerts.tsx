@@ -112,6 +112,7 @@ const RecallAlerts = () => {
 
       if (counter === 0) {
         dispatch(setIsEditName(false));
+        setStartedNames();
       }
     }
   };

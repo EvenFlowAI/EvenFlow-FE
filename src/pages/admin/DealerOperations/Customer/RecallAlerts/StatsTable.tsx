@@ -240,6 +240,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
         count={recallAlertsCount}
         hidePagination={recallAlertsCount < 11}
         isLoading={isRecallAlertsTableLoading}
+        customPaginationData
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
