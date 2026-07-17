@@ -65,6 +65,7 @@ export interface IRecallAlert {
     value: string;
     isCriteria?: boolean;
   }[];
+  vinsFileLink?: string;
 }
 
 export interface ICreateUpdateRecall {
