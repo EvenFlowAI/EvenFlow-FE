@@ -9,6 +9,7 @@ import {
   IRecallAlert,
   IRecallCampaign,
   IRecallResponse,
+  RecallListType,
   TRecallRequest,
   TUpdateRecall,
 } from './types';
@@ -60,6 +61,8 @@ export const setUpdatedAlerts = createAction<
   {
     id: number;
     name: string;
+    recallCampaignId: number | null;
+    listType: RecallListType;
   }[]
 >('Recall/SetUpdatedAlerts');
 export const setIsEditName = createAction<boolean>('Recall/SetIsEditName');
@@ -354,6 +357,8 @@ export const updateRecallAlertName =
       id: number;
       name: string;
       serviceCenterId: number;
+      listType: RecallListType;
+      recallCampaignId: number | null;
     },
     tableType: 'workflow' | 'stats',
     onSuccess: () => void,
