@@ -416,7 +416,13 @@ export const updateRecallAlert =
     onError?: (error: string) => void
   ): AppThunk =>
   async dispatch => {
-    let filterRules;
+    let filterRules: {
+      type: EventRulesFilterTypeE;
+      operator: ComparisonOperatorE;
+      value: string;
+      id?: number | undefined;
+      isCriteria?: boolean | undefined;
+    }[];
     if (data.filterRules?.length) {
       filterRules = data.filterRules?.map(el => {
         return {
@@ -427,7 +433,7 @@ export const updateRecallAlert =
         };
       });
     } else {
-      filterRules = null;
+      filterRules = [];
     }
 
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
