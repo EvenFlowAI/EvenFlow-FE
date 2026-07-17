@@ -520,6 +520,8 @@ export const updateRecallAlertText =
       communicationDetails: {
         textMessage: string;
       };
+      recallCampaignId: number | null;
+      listType: RecallListType | null;
       serviceCenterId: number;
     },
     tableType: 'workflow' | 'stats',

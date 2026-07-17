@@ -162,6 +162,8 @@ const TextConfigurationRecall = ({
             communicationDetails: {
               textMessage,
             },
+            recallCampaignId: updatedRecallAlert?.recallCampaignId,
+            listType: updatedRecallAlert?.listType,
           },
           tableType,
           () => {
