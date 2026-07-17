@@ -42,7 +42,7 @@ const RecallAlertAudience = ({
   };
 
   const handleRecallCampaignChange = (newValue: number | null) => {
-    if (!newValue) dispatch(setAffectedModels([]));
+    dispatch(setAffectedModels([]));
 
     setUpdatedRecallAlert(prev => {
       if (!prev) return prev;

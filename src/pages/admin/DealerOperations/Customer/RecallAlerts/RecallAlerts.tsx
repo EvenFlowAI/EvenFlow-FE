@@ -63,6 +63,8 @@ const RecallAlerts = () => {
           return {
             id: item.id,
             name: item.name,
+            listType: item.listType,
+            recallCampaignId: item.recallCampaignId,
           };
         })
       )
@@ -94,6 +96,8 @@ const RecallAlerts = () => {
                   {
                     id: updatedEvent.id,
                     name: normalizedName,
+                    listType: updatedEvent.listType,
+                    recallCampaignId: updatedEvent.recallCampaignId,
                     serviceCenterId: selectedSC?.id,
                   },
                   tableMode,

@@ -123,6 +123,8 @@ export type TState = {
   updatedAlerts: {
     id: number;
     name: string;
+    listType: RecallListType;
+    recallCampaignId: number | null;
   }[];
   isEditName: boolean;
   isRecallAlertsTableLoading: boolean;

@@ -65,10 +65,6 @@ const useRecallAlertSettingsState = ({
   }, [setDefaultData]);
 
   useEffect(() => {
-    if (isEditTable) {
-      return;
-    }
-
     if (!affectedModels.length) {
       setSelectedModelKeys(prev => (prev.length ? [] : prev));
       return;

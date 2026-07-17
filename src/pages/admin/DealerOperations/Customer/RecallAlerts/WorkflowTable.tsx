@@ -77,7 +77,12 @@ const WorkflowTable: React.FC<
       setUpdatedAlerts(
         updatedAlerts.map(ev => {
           if (ev.id === id && value.length < 51) {
-            return { ...ev, name: value };
+            return {
+              ...ev,
+              name: value,
+              recallCampaignId: ev.recallCampaignId,
+              listType: ev.listType,
+            };
           }
           return ev;
         })

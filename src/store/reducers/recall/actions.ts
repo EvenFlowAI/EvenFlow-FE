@@ -9,6 +9,7 @@ import {
   IRecallAlert,
   IRecallCampaign,
   IRecallResponse,
+  RecallListType,
   TRecallRequest,
   TUpdateRecall,
 } from './types';
@@ -60,6 +61,8 @@ export const setUpdatedAlerts = createAction<
   {
     id: number;
     name: string;
+    recallCampaignId: number | null;
+    listType: RecallListType;
   }[]
 >('Recall/SetUpdatedAlerts');
 export const setIsEditName = createAction<boolean>('Recall/SetIsEditName');
@@ -354,6 +357,8 @@ export const updateRecallAlertName =
       id: number;
       name: string;
       serviceCenterId: number;
+      listType: RecallListType;
+      recallCampaignId: number | null;
     },
     tableType: 'workflow' | 'stats',
     onSuccess: () => void,
@@ -416,7 +421,13 @@ export const updateRecallAlert =
     onError?: (error: string) => void
   ): AppThunk =>
   async dispatch => {
-    let filterRules;
+    let filterRules: {
+      type: EventRulesFilterTypeE;
+      operator: ComparisonOperatorE;
+      value: string;
+      id?: number | undefined;
+      isCriteria?: boolean | undefined;
+    }[];
     if (data.filterRules?.length) {
       filterRules = data.filterRules?.map(el => {
         return {
@@ -427,7 +438,7 @@ export const updateRecallAlert =
         };
       });
     } else {
-      filterRules = null;
+      filterRules = [];
     }
 
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
@@ -509,6 +520,8 @@ export const updateRecallAlertText =
       communicationDetails: {
         textMessage: string;
       };
+      recallCampaignId: number | null;
+      listType: RecallListType | null;
       serviceCenterId: number;
     },
     tableType: 'workflow' | 'stats',

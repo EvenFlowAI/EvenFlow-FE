@@ -71,7 +71,12 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       setUpdatedAlerts(
         updatedAlerts.map(ev => {
           if (ev.id === id && value.length < 51) {
-            return { ...ev, name: value };
+            return {
+              ...ev,
+              name: value,
+              listType: ev.listType,
+              recallCampaignId: ev.recallCampaignId,
+            };
           }
           return ev;
         })
