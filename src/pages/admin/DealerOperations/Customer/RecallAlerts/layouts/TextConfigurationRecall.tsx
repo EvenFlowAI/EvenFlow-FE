@@ -104,6 +104,7 @@ const TextConfigurationRecall = ({
   const handleClose = () => {
     onClose();
     setPhoneNumberForTest('');
+    setTextMessage('');
   };
 
   const renderTagItem = (tag: string) => {
