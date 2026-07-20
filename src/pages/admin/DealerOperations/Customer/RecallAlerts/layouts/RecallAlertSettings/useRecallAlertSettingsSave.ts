@@ -1,6 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateRecallAlert, uploadCSV } from '../../../../../../../store/reducers/recall/actions';
+import {
+  getRecallEvents,
+  updateRecallAlert,
+  uploadCSV,
+} from '../../../../../../../store/reducers/recall/actions';
 import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
@@ -124,9 +128,18 @@ const useRecallAlertSettingsSave = ({
           : undefined,
         (error: string) => {
           showError(error);
-          setIsEditTable(false);
-          setFile(null);
-          setIsLoading(false);
+          dispatch(
+            getRecallEvents(
+              selectedSC.id,
+              'workflow',
+              () => {},
+              () => {
+                setIsEditTable(false);
+                setFile(null);
+                setIsLoading(false);
+              }
+            )
+          );
         }
       )
     );
