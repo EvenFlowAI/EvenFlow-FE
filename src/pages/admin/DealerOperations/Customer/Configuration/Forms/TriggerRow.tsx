@@ -97,7 +97,12 @@ const TriggerRow: React.FC<ITriggerRow> = ({
                 className: !isOutboundMode ? formClasses.scheduledTimeInput : undefined,
                 placeholder: '',
                 error: index === 0 && firstTriggerDateError,
-                endAdornment: !isOutboundMode && isEditTable ? <Time width={26} /> : null,
+                endAdornment:
+                  !isOutboundMode &&
+                  isEditTable &&
+                  updatedRecallAlert?.status !== RecallEventStatus.Running ? (
+                    <Time width={26} />
+                  ) : null,
               }}
             />
           </div>
