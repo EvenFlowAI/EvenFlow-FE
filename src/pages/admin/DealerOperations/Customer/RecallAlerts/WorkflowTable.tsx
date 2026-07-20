@@ -120,6 +120,19 @@ const WorkflowTable: React.FC<
     );
   };
 
+  const isAudienceConfigured = (el: IRecallAlert): boolean => {
+    return (
+      el.status !== RecallEventStatus.NotConfigured &&
+      el.triggers.length > 0 &&
+      el.listType !== null &&
+      el.listType !== undefined &&
+      (el.listType === RecallListType.UPLOAD_CSV && el.vinsFileLink
+        ? el.vinsFileLink?.length > 0
+        : el.globalModelIds?.length > 0) &&
+      !!el.recallCampaignId
+    );
+  };
+
   const rowData: TableRowDataType<IRecallAlert>[] = [
     {
       header: 'Alert Name',
@@ -183,7 +196,7 @@ const WorkflowTable: React.FC<
             dispatch(setSelectedRecallAlert(el));
           }}
         >
-          <ConfirmationBadge isConfirmed={el.status !== RecallEventStatus.NotConfigured} />
+          <ConfirmationBadge isConfirmed={isAudienceConfigured(el)} />
         </div>
       ),
     },
@@ -221,9 +234,9 @@ const WorkflowTable: React.FC<
         <Switch
           disabled={
             el.status !== RecallEventStatus.ResultsAvailable ||
-            !el.triggers?.length ||
             !el.communicationDetails?.textMessage?.length ||
-            !textIntegrationSettings?.fromPhoneNumber?.length
+            !textIntegrationSettings?.fromPhoneNumber?.length ||
+            !isAudienceConfigured(el)
           }
           checked={isRecallAlertActive(el)}
           onChange={(_, checked) => handleActiveChange(el, checked)}
