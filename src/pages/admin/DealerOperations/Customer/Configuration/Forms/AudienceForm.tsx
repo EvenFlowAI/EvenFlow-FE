@@ -184,21 +184,31 @@ const AudienceForm = ({
         <IconButton
           onClick={handleAddCriteria}
           disabled={
-            (isOutboundMode ? !!criterias.length : false) ||
+            (isOutboundMode ? !!criterias.length : criterias.length === 5) ||
             updatedRecallAlert?.status === RecallEventStatus.Running
           }
           className={classes.iconPlus}
           size="large"
         >
           <AddCircleOutline
-            className={isOutboundMode ? (criterias.length ? 'isDisabled' : '') : ''}
+            className={
+              isOutboundMode
+                ? criterias.length
+                  ? 'isDisabled'
+                  : ''
+                : criterias.length === 5
+                  ? 'isDisabled'
+                  : ''
+            }
           />
           <span
             className={clsx(classes.addCriteriaButton, {
-              [formClasses.disabledAddButtonText]: isOutboundMode && criterias.length,
+              [formClasses.disabledAddButtonText]: isOutboundMode
+                ? criterias.length
+                : criterias.length === 5,
             })}
           >
-            Audience Criteria
+            {isOutboundMode ? 'Audience Criteria' : 'Add Filter'}
           </span>
         </IconButton>
       ) : null}
