@@ -58,9 +58,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
 
   const isDisabledByLimit = triggersLength === 5;
   const isDisabledByMode = isOutboundMode ? disableAdd : false;
-  const isDisabledByStatus =
-    updatedRecallAlert?.status === RecallEventStatus.Running ||
-    updatedRecallAlert?.status === RecallEventStatus.CheckRequested;
+  const isDisabledByStatus = updatedRecallAlert?.status === RecallEventStatus.Running;
   const isDisabled = isDisabledByLimit || isDisabledByMode || isDisabledByStatus;
 
   return (
@@ -113,11 +111,7 @@ const Triggers = ({
   };
 
   const handleRemoveTrigger = (index: number) => {
-    if (
-      updatedRecallAlert?.status === RecallEventStatus.Running ||
-      updatedRecallAlert?.status === RecallEventStatus.CheckRequested
-    )
-      return;
+    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
     setFirstTriggerDateError(false);
     setTriggerDateErrors(prev => ({
       ...prev,

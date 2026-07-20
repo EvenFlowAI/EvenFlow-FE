@@ -256,13 +256,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
-        <MenuItem
-          disabled={
-            currentItem?.status === RecallEventStatus.Running ||
-            currentItem?.status === RecallEventStatus.CheckRequested
-          }
-          onClick={askRemove}
-        >
+        <MenuItem disabled={currentItem?.status === RecallEventStatus.Running} onClick={askRemove}>
           Remove
         </MenuItem>
       </Menu>

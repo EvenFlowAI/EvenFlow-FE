@@ -5,6 +5,7 @@ import { ReactComponent as Upload } from '../../../../../../../assets/img/upload
 import { ReactComponent as Reupload } from '../../../../../../../assets/img/Reupload.svg';
 import { useStyles } from '../../../styles';
 import { isRecallLocked } from './recallForm.utils';
+import { RecallEventStatus } from '../../../types';
 
 interface IListMethodActionProps {
   listType: RecallListType;
@@ -33,6 +34,11 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
   callRecallTrigger,
   campaignRecallGroupBatchId,
 }) => {
+  const isDisableUpload =
+    !isEditTable ||
+    updatedRecallAlert?.status === RecallEventStatus.Running ||
+    updatedRecallAlert?.status === RecallEventStatus.CheckRequested;
+
   if (listType === RecallListType.VIN_CHECK_API) {
     const isCheckVinsDisabled =
       !isEditTable ||
@@ -67,25 +73,30 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
     return (
       <label htmlFor="uploadCSV" className={classes.uploadLabel}>
         <Button
-          disabled={!isEditTable}
+          disabled={isDisableUpload}
           className={classes.uploadButton}
           variant="text"
-          onClick={() => inputRef.current?.click()}
+          onClick={() => {
+            if (isDisableUpload) {
+              return;
+            }
+            inputRef.current?.click();
+          }}
         >
           {file || updatedRecallAlert?.vinsFileLink ? (
             <div className={classes.uploadButtonContent}>
-              <Reupload className={!isEditTable ? classes.uploadIconDisabled : ''} />
+              <Reupload className={isDisableUpload ? classes.uploadIconDisabled : ''} />
               <span>Reupload csv file</span>
             </div>
           ) : (
             <div className={classes.uploadButtonContent}>
-              <Upload className={!isEditTable ? classes.uploadIconDisabled : ''} />
+              <Upload className={isDisableUpload ? classes.uploadIconDisabled : ''} />
               <span>Upload csv file</span>
             </div>
           )}
         </Button>
         <input
-          disabled={!isEditTable}
+          disabled={isDisableUpload}
           onChange={handleFileChange}
           className={classes.hiddenInput}
           type="file"

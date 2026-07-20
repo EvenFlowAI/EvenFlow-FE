@@ -56,11 +56,7 @@ const AudienceForm = ({
   };
 
   const handleRemoveCriteria = (index: number) => {
-    if (
-      updatedRecallAlert?.status === RecallEventStatus.Running ||
-      updatedRecallAlert?.status === RecallEventStatus.CheckRequested
-    )
-      return;
+    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
     if (isOutboundMode) {
       if (criterias.length > 1) {
         setCriteria(prev => prev.filter((criteria, i) => i !== index));
@@ -113,9 +109,7 @@ const AudienceForm = ({
               <div key={index} className={classes.criteriaFormWrapper}>
                 <Autocomplete
                   disabled={
-                    !isEditTable ||
-                    updatedRecallAlert?.status === RecallEventStatus.Running ||
-                    updatedRecallAlert?.status === RecallEventStatus.CheckRequested
+                    !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
                   }
                   className={formClasses.criteriaTypeAutocomplete}
                   value={criteria.type}
@@ -141,9 +135,7 @@ const AudienceForm = ({
                 <Autocomplete
                   className={formClasses.criteriaOperatorAutocomplete}
                   disabled={
-                    !isEditTable ||
-                    updatedRecallAlert?.status === RecallEventStatus.Running ||
-                    updatedRecallAlert?.status === RecallEventStatus.CheckRequested
+                    !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
                   }
                   value={criteria.operator}
                   options={['Less than', 'Equal', 'Greater than']}
@@ -161,9 +153,7 @@ const AudienceForm = ({
                   <TextField
                     fullWidth
                     disabled={
-                      !isEditTable ||
-                      updatedRecallAlert?.status === RecallEventStatus.Running ||
-                      updatedRecallAlert?.status === RecallEventStatus.CheckRequested
+                      !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
                     }
                     type="number"
                     error={!Number.isInteger(Number(criteria.value))}
@@ -195,8 +185,7 @@ const AudienceForm = ({
           onClick={handleAddCriteria}
           disabled={
             (isOutboundMode ? !!criterias.length : false) ||
-            updatedRecallAlert?.status === RecallEventStatus.Running ||
-            updatedRecallAlert?.status === RecallEventStatus.CheckRequested
+            updatedRecallAlert?.status === RecallEventStatus.Running
           }
           className={classes.iconPlus}
           size="large"
