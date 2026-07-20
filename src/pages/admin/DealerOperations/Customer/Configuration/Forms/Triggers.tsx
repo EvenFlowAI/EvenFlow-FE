@@ -68,10 +68,13 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
       disabled={isDisabled}
       size="large"
     >
-      <AddCircleOutline className={isDisabledByLimit || isDisabledByMode ? 'isDisabled' : ''} />
+      <AddCircleOutline
+        className={isDisabledByLimit || isDisabledByMode || isDisabledByStatus ? 'isDisabled' : ''}
+      />
       <span
         className={clsx(classes.addCriteriaButton, {
-          [formClasses.disabledAddButtonText]: isDisabledByLimit || isDisabledByMode,
+          [formClasses.disabledAddButtonText]:
+            isDisabledByLimit || isDisabledByMode || isDisabledByStatus,
         })}
       >
         Add {isOutboundMode ? 'Contact' : 'Trigger'}

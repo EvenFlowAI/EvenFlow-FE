@@ -184,7 +184,7 @@ const AudienceForm = ({
         <IconButton
           onClick={handleAddCriteria}
           disabled={
-            (isOutboundMode ? !!criterias.length : criterias.length === 5) ||
+            (isOutboundMode ? !!criterias.length : criterias.length >= 5) ||
             updatedRecallAlert?.status === RecallEventStatus.Running
           }
           className={classes.iconPlus}
@@ -196,7 +196,7 @@ const AudienceForm = ({
                 ? criterias.length
                   ? 'isDisabled'
                   : ''
-                : criterias.length === 5
+                : criterias.length >= 5 || updatedRecallAlert?.status === RecallEventStatus.Running
                   ? 'isDisabled'
                   : ''
             }
@@ -205,7 +205,7 @@ const AudienceForm = ({
             className={clsx(classes.addCriteriaButton, {
               [formClasses.disabledAddButtonText]: isOutboundMode
                 ? criterias.length
-                : criterias.length === 5,
+                : criterias.length >= 5 || updatedRecallAlert?.status === RecallEventStatus.Running,
             })}
           >
             {isOutboundMode ? 'Audience Criteria' : 'Add Filter'}
