@@ -209,7 +209,7 @@ const WorkflowTable: React.FC<
           <ConfirmationBadge
             isConfirmed={Boolean(
               el.communicationDetails?.textMessage?.length &&
-              textIntegrationSettings?.fromPhoneNumber
+              textIntegrationSettings?.fromPhoneNumber?.length
             )}
           />
         </div>
@@ -219,7 +219,12 @@ const WorkflowTable: React.FC<
       header: 'Active',
       val: el => (
         <Switch
-          disabled={el.status !== RecallEventStatus.ResultsAvailable || !el.triggers?.length}
+          disabled={
+            el.status !== RecallEventStatus.ResultsAvailable ||
+            !el.triggers?.length ||
+            !el.communicationDetails?.textMessage?.length ||
+            !textIntegrationSettings?.fromPhoneNumber?.length
+          }
           checked={isRecallAlertActive(el)}
           onChange={(_, checked) => handleActiveChange(el, checked)}
           color="primary"
