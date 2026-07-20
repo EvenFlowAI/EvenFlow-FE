@@ -42,9 +42,7 @@ const TriggerRow: React.FC<ITriggerRow> = ({
   onRemoveTrigger,
   onTriggerChange,
 }) => {
-  const isTriggerLocked =
-    updatedRecallAlert?.status === RecallEventStatus.Running ||
-    updatedRecallAlert?.status === RecallEventStatus.CheckRequested;
+  const isTriggerLocked = updatedRecallAlert?.status === RecallEventStatus.Running;
 
   return (
     <div
