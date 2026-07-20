@@ -49,6 +49,12 @@ const RecallAlerts = () => {
   }, [recallAlerts]);
 
   useEffect(() => {
+    return () => {
+      dispatch(setIsEditName(false));
+    };
+  }, []);
+
+  useEffect(() => {
     if (!selectedSC) return;
 
     dispatch(setIsRecallAlertsTableLoading(true));
@@ -121,6 +127,11 @@ const RecallAlerts = () => {
     }
   };
 
+  const handleOpenText = () => {
+    onOpenText();
+    dispatch(setIsEditName(false));
+  };
+
   return (
     <div>
       <RecallCredits />
@@ -181,7 +192,7 @@ const RecallAlerts = () => {
           <WorkflowTable
             currentItem={currentItem}
             setCurrentItem={setCurrentItem}
-            onOpenText={onOpenText}
+            onOpenText={handleOpenText}
             onOpenHistory={onOpenHistory}
           />
         </div>
