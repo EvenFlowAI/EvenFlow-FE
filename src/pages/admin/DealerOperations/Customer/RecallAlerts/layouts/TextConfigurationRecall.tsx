@@ -91,8 +91,7 @@ const TextConfigurationRecall = ({
 
     const tagToInsert = `${needSpaceBefore}${tag}${needSpaceAfter}`;
     const newValue = before + tagToInsert + after;
-
-    setTextMessage(newValue);
+    if (newValue.length <= 1000) setTextMessage(newValue);
 
     setTimeout(() => {
       textarea.focus();
