@@ -82,7 +82,9 @@ const CustomerTextConfiguration = ({
     const tagToInsert = `${needSpaceBefore}${tag}${needSpaceAfter}`;
     const newValue = before + tagToInsert + after;
 
-    dispatch(setTextMessage(newValue));
+    if (newValue.length <= 1000) {
+      dispatch(setTextMessage(newValue));
+    }
 
     setTimeout(() => {
       textarea.focus();
