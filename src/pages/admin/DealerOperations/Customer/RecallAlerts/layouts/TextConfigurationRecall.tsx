@@ -86,11 +86,11 @@ const TextConfigurationRecall = ({
     }
   }, [open]);
 
-    useEffect(() => {
-      return () => {
-        setTextMessage('');
-      };
-    }, []);
+  useEffect(() => {
+    return () => {
+      setTextMessage('');
+    };
+  }, []);
 
   const handleClose = () => {
     onClose();

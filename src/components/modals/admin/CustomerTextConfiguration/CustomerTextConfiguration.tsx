@@ -78,6 +78,12 @@ const CustomerTextConfiguration = ({
     }
   }, [open]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setTextMessage(''));
+    };
+  }, []);
+
   const handleClose = () => {
     onClose();
     setPhoneNumberForTest('');
