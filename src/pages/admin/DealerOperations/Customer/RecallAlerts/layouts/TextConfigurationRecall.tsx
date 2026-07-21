@@ -62,7 +62,7 @@ const TextConfigurationRecall = ({
     } else {
       setTextMessage('');
     }
-  }, [updatedRecallAlert?.communicationDetails]);
+  }, [updatedRecallAlert?.communicationDetails, open]);
 
   useEffect(() => {
     setTimeout(() => {
