@@ -37,7 +37,8 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
   const isDisableUpload =
     !isEditTable ||
     updatedRecallAlert?.status === RecallEventStatus.Running ||
-    updatedRecallAlert?.status === RecallEventStatus.CheckRequested;
+    updatedRecallAlert?.status === RecallEventStatus.CheckRequested ||
+    updatedRecallAlert?.status === RecallEventStatus.ResultsAvailable;
 
   if (listType === RecallListType.VIN_CHECK_API) {
     const isCheckVinsDisabled =

@@ -244,7 +244,8 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
                         !isEditTable ||
                         (isChecked && selectedModelsCount === 1) ||
                         updatedRecallAlert.status === RecallEventStatus.Running ||
-                        updatedRecallAlert?.status === RecallEventStatus.CheckRequested
+                        updatedRecallAlert?.status === RecallEventStatus.CheckRequested ||
+                        updatedRecallAlert?.status === RecallEventStatus.ResultsAvailable
                       }
                       onChange={() => toggleModel(modelKey, years)}
                     />

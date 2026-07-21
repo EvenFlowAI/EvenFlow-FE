@@ -23,4 +23,6 @@ export const getListMethodValue = (listType: RecallListType): string => {
 };
 
 export const isRecallLocked = (status?: RecallEventStatus) =>
-  status === RecallEventStatus.Running || status === RecallEventStatus.CheckRequested;
+  status === RecallEventStatus.Running ||
+  status === RecallEventStatus.CheckRequested ||
+  status === RecallEventStatus.ResultsAvailable;
