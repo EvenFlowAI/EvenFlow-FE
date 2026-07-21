@@ -14,13 +14,13 @@ const RecallFileInfo: React.FC<IRecallFileInfoProps> = ({ listType, file, vinsFi
   if (file) {
     return (
       <span>
-        {file.name} ({formatFileSize(file.size)})
+        Uploaded: {file.name} ({formatFileSize(file.size)})
       </span>
     );
   }
 
   if (!file && vinsFileLink) {
-    return <span>{vinsFileLink}</span>;
+    return <span>Uploaded: {vinsFileLink}</span>;
   }
 
   return null;
