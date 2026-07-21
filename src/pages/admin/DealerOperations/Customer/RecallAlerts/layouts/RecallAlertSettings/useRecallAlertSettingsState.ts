@@ -112,6 +112,7 @@ const useRecallAlertSettingsState = ({
   const handleCancelChanges = () => {
     setIsLoading(false);
     setIsEditTable(false);
+    setFile(null);
     setDefaultData();
     setSelectedModelKeys(
       mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
