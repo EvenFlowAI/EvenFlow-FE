@@ -98,7 +98,8 @@ const TextConfigurationRecall = ({
   };
 
   const renderTagItem = (element: ITag) => {
-    const canRender = element.tag !== '{{Shortlink}}';
+    const canRender =
+      element.tag !== '{{Shortlink}}' || textIntegrationSettings?.schedulingPageShortLink;
 
     if (!canRender) return null;
 
