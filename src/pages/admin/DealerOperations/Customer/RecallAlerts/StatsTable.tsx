@@ -260,7 +260,13 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
           Edit
         </MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
-        <MenuItem disabled={currentItem?.status === RecallEventStatus.Running} onClick={askRemove}>
+        <MenuItem
+          disabled={
+            currentItem?.status === RecallEventStatus.Running ||
+            currentItem?.status === RecallEventStatus.CheckRequested
+          }
+          onClick={askRemove}
+        >
           Remove
         </MenuItem>
       </Menu>

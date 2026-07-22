@@ -95,21 +95,22 @@ const RecallForm = ({
     <div>
       <div className={classes.recallFormSection}>
         <div style={{ marginBottom: file ? '4px' : '16px' }} className={classes.recallFormRow}>
-          <Autocomplete
-            disabled={isDisabled}
-            className={classes.recallFormField}
-            value={getListMethodValue(updatedRecallAlert.listType)}
-            disableClearable
-            options={[VIN_CHECK_API, UPLOAD_CSV]}
-            isOptionEqualToValue={(o, v) => String(o) === String(v)}
-            getOptionLabel={o => o}
-            onChange={(e, v) => handleListMethodChange(v)}
-            renderInput={autocompleteRender({
-              isCustomFontSize: true,
-              label: 'Generate List Method',
-              placeholder: 'Select method',
-            })}
-          />
+          <div style={{ width: '300px' }}>
+            <Autocomplete
+              disabled={isDisabled}
+              value={getListMethodValue(updatedRecallAlert.listType)}
+              disableClearable
+              options={[VIN_CHECK_API, UPLOAD_CSV]}
+              isOptionEqualToValue={(o, v) => String(o) === String(v)}
+              getOptionLabel={o => o}
+              onChange={(e, v) => handleListMethodChange(v)}
+              renderInput={autocompleteRender({
+                isCustomFontSize: true,
+                label: 'Generate List Method',
+                placeholder: 'Select method',
+              })}
+            />
+          </div>
           <ListMethodAction
             listType={updatedRecallAlert.listType}
             updatedRecallAlert={updatedRecallAlert}

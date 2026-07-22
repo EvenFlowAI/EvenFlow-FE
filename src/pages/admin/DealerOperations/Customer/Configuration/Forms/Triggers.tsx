@@ -47,7 +47,6 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
   triggersLength,
   disableAdd,
   isOutboundMode,
-  updatedRecallAlert,
   onAddTrigger,
   classes,
   formClasses,
@@ -58,8 +57,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
 
   const isDisabledByLimit = triggersLength === 5;
   const isDisabledByMode = isOutboundMode ? disableAdd : false;
-  const isDisabledByStatus = updatedRecallAlert?.status === RecallEventStatus.Running;
-  const isDisabled = isDisabledByLimit || isDisabledByMode || isDisabledByStatus;
+  const isDisabled = isDisabledByLimit || isDisabledByMode;
 
   return (
     <IconButton
@@ -68,13 +66,10 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
       disabled={isDisabled}
       size="large"
     >
-      <AddCircleOutline
-        className={isDisabledByLimit || isDisabledByMode || isDisabledByStatus ? 'isDisabled' : ''}
-      />
+      <AddCircleOutline className={isDisabledByLimit || isDisabledByMode ? 'isDisabled' : ''} />
       <span
         className={clsx(classes.addCriteriaButton, {
-          [formClasses.disabledAddButtonText]:
-            isDisabledByLimit || isDisabledByMode || isDisabledByStatus,
+          [formClasses.disabledAddButtonText]: isDisabledByLimit || isDisabledByMode,
         })}
       >
         Add Contact
@@ -192,7 +187,6 @@ const Triggers = ({
         triggersLength={triggers.length}
         disableAdd={disableAdd}
         isOutboundMode={isOutboundMode}
-        updatedRecallAlert={updatedRecallAlert}
         onAddTrigger={handleAddTrigger}
         classes={classes}
         formClasses={formClasses}
