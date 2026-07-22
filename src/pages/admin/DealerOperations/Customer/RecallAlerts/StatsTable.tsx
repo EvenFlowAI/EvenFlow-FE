@@ -177,7 +177,9 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       dispatch(setRecallAlertSettingsEditMode(false));
       return;
     }
-    dispatch(setRecallAlertSettingsEditMode(true));
+    if (currentItem?.status !== RecallEventStatus.Completed) {
+      dispatch(setRecallAlertSettingsEditMode(true));
+    }
     dispatch(setSelectedRecallAlert(currentItem));
   };
 
@@ -254,7 +256,9 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
         customPaginationData
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
-        <MenuItem onClick={openEdit}>Edit</MenuItem>
+        <MenuItem disabled={currentItem?.status === RecallEventStatus.Completed} onClick={openEdit}>
+          Edit
+        </MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
         <MenuItem disabled={currentItem?.status === RecallEventStatus.Running} onClick={askRemove}>
           Remove

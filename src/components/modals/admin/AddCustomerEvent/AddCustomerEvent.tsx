@@ -57,7 +57,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
 
   return (
     <BaseModal open={open} width={602} onClose={onClose}>
-      <DialogTitle onClose={onClose}>Please enter the name of the new event</DialogTitle>
+      <DialogTitle onClose={onClose}>Add Event</DialogTitle>
       {isLoading ? (
         <Loading />
       ) : (
@@ -65,7 +65,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
           <TextField
             id="event"
             name="event"
-            label="Event"
+            label="Event name"
             placeholder="Enter name"
             fullWidth
             onChange={handleChange}
@@ -75,6 +75,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
             style={{
               textAlign: 'right',
               width: '100%',
+              fontSize: 14,
               display: 'block',
               color: 'rgb(133, 133, 133)',
               marginTop: '4px',
@@ -86,7 +87,7 @@ const AddCustomerEventModal = ({ onClose, open }: TAddCustomerEventModalProps) =
       )}
       <DialogActions>
         <Button onClick={onClose} color="info">
-          Cancel
+          Close
         </Button>
         <LoadingButton
           onClick={handleSaveNewEvent}

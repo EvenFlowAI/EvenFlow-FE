@@ -13,7 +13,6 @@ import {
   DialogTitle,
 } from '../../../../../../components/modals/BaseModal/BaseModal';
 import { Textarea } from '../../../../../../components/modals/admin/MapIframeLink/styles';
-import { ReactComponent as CopyIcon } from '../../../../../../assets/img/copy.svg';
 import { ReactComponent as CheckIcon } from '../../../../../../assets/img/checkboxSmallGreen.svg';
 import { ReactComponent as RedCross } from '../../../../../../assets/img/redCross.svg';
 import { ReactComponent as Info } from '../../../../../../assets/img/info.svg';
@@ -26,10 +25,10 @@ import {
 } from '../../../../../../store/reducers/dealerOperations/actions';
 import { updateRecallAlertText } from '../../../../../../store/reducers/recall/actions';
 import { LightTooltip } from './LightTooltip';
+import { RecallTagItem } from './RecallTagItem';
 import { RootState } from '../../../../../../store/rootReducer';
 import { Loading } from '../../../../../../components/wrappers/Loading/Loading';
-import { ITag } from '../../../../../../store/reducers/dealerOperations/types';
-import { handleInsertTag } from '../../../../../../components/modals/admin/CustomerTextConfiguration/helper';
+import { RecallEventStatus } from '../../types';
 
 type TextConfigurationRecallProps = DialogProps & {
   updatedRecallAlert: IRecallAlert | null;
@@ -97,44 +96,11 @@ const TextConfigurationRecall = ({
     setTextMessage('');
   };
 
-  const renderTagItem = (element: ITag) => {
-    const canRender =
-      element.tag !== '{{Shortlink}}' || textIntegrationSettings?.schedulingPageShortLink;
-
-    if (!canRender) return null;
-
-    return (
-      <li key={element.tag} className={classes.tagItem}>
-        <span
-          className={classes.insertTag}
-          onClick={() =>
-            handleInsertTag(element.tag, textareaRef, textMessage, (newTextMessage: string) => {
-              setTextMessage(newTextMessage);
-            })
-          }
-        >
-          {element.tag}
-        </span>
-        <LightTooltip width={110} title="Copy to clipboard" placement="top-start">
-          <button
-            type="button"
-            className={classes.copyTag}
-            onClick={e => {
-              e.stopPropagation();
-              navigator.clipboard.writeText(element.tag);
-              const input = autocompleteRef.current?.querySelector('input');
-              if (input) (input as HTMLElement).blur();
-              showMessage('Tag copied to clipboard');
-            }}
-          >
-            <p className={classes.copyWrapper}>
-              <CopyIcon />
-              <span className={classes.copyText}>Copy</span>
-            </p>
-          </button>
-        </LightTooltip>
-      </li>
-    );
+  const handleCopyTag = (tag: string) => {
+    navigator.clipboard.writeText(tag);
+    const input = autocompleteRef.current?.querySelector('input');
+    if (input) (input as HTMLElement).blur();
+    showMessage('Tag copied to clipboard');
   };
 
   const sendTestMessage = () => {
@@ -203,7 +169,25 @@ const TextConfigurationRecall = ({
               <div className={classes.tagsWrapper}>
                 <span className={classes.insertTagText}>Insert tag</span>
                 <div className={classes.scrollableTags}>
-                  {availableTagsForRecallAlerts?.map(tag => renderTagItem(tag))}
+                  {availableTagsForRecallAlerts?.map(tag => (
+                    <RecallTagItem
+                      key={tag.tag}
+                      tag={tag}
+                      textMessage={textMessage}
+                      textareaRef={textareaRef}
+                      disabled={updatedRecallAlert?.status === RecallEventStatus.Completed}
+                      showShortlink={Boolean(textIntegrationSettings?.schedulingPageShortLink)}
+                      onTextMessageChange={setTextMessage}
+                      onCopy={handleCopyTag}
+                      classes={{
+                        tagItem: classes.tagItem,
+                        insertTag: classes.insertTag,
+                        copyTag: classes.copyTag,
+                        copyWrapper: classes.copyWrapper,
+                        copyText: classes.copyText,
+                      }}
+                    />
+                  ))}
                 </div>
               </div>
             )}
@@ -215,6 +199,9 @@ const TextConfigurationRecall = ({
                 inputRef={textareaRef}
                 fullWidth
                 multiline
+                disabled={
+                  updatedRecallAlert && updatedRecallAlert?.status === RecallEventStatus.Completed
+                }
                 style={{ marginBottom: 4 }}
                 placeholder="Enter text message"
                 label="Message"
@@ -284,7 +271,10 @@ const TextConfigurationRecall = ({
                 setPhoneNumberForTest('');
                 handleSaveText();
               }}
-              disabled={textMessage?.trim().length < 3}
+              disabled={
+                textMessage?.trim().length < 3 ||
+                updatedRecallAlert?.status === RecallEventStatus.Completed
+              }
               variant="contained"
               color="primary"
             >

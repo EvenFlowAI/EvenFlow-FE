@@ -77,7 +77,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
             isDisabledByLimit || isDisabledByMode || isDisabledByStatus,
         })}
       >
-        Add {isOutboundMode ? 'Contact' : 'Trigger'}
+        Add Contact
       </span>
     </IconButton>
   );
@@ -114,7 +114,7 @@ const Triggers = ({
   };
 
   const handleRemoveTrigger = (index: number) => {
-    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
+    if (updatedRecallAlert?.status === RecallEventStatus.Running && triggers?.length <= 1) return;
     setFirstTriggerDateError(false);
     setTriggerDateErrors(prev => ({
       ...prev,

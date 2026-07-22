@@ -28,6 +28,7 @@ import { useRecallAlertSettingsStyles } from './styles';
 import AffectedModels from './AffectedModels';
 import useRecallAlertSettingsState from './useRecallAlertSettingsState';
 import useRecallAlertSettingsSave from './useRecallAlertSettingsSave';
+import { RecallEventStatus } from '../../../types';
 
 const RecallAlertSettings: React.FC = () => {
   const { selectedRecallAlert, affectedModels, isRecallAlertSettingsEditMode } = useSelector(
@@ -158,7 +159,11 @@ const RecallAlertSettings: React.FC = () => {
                 </Button>
               </>
             ) : (
-              <Button variant="text" onClick={() => setIsEditTable(true)}>
+              <Button
+                variant="text"
+                disabled={updatedRecallAlert?.status === RecallEventStatus.Completed}
+                onClick={() => setIsEditTable(true)}
+              >
                 Edit
               </Button>
             )}
