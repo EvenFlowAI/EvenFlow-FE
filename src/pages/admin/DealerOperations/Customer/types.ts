@@ -32,7 +32,7 @@ export type HistoryRecallStatus =
   | 'results_available'
   | 'running'
   | 'completed'
-  | 'csv_uploaded'
+  | 'UPLOAD_CSV'
   | 'failed';
 
 export interface HistoryRecallData {

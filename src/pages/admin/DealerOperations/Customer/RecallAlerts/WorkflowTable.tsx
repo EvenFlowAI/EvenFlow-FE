@@ -27,7 +27,7 @@ import Status from './layouts/Status';
 import ConfirmationBadge from './layouts/ConfirmationBadge';
 import { RecallEventStatus } from '../types';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
-import { CSV_UPLOADED, VIN_CHECK_API } from '../../helper';
+import { UPLOAD_CSV, VIN_CHECK_API } from '../../helper';
 
 type TRecallTableProps = {
   currentItem: IRecallAlert | null;
@@ -206,7 +206,7 @@ const WorkflowTable: React.FC<
         el.listType === RecallListType.VIN_CHECK_API
           ? VIN_CHECK_API
           : el.listType === RecallListType.UPLOAD_CSV
-            ? CSV_UPLOADED
+            ? UPLOAD_CSV
             : '',
     },
     {
