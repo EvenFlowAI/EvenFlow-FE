@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, useCallback } from 'react';
 import { Autocomplete } from '@mui/material';
-import { CSV_UPLOADED, VIN_CHECK_API } from '../../../../helper';
+import { UPLOAD_CSV, VIN_CHECK_API } from '../../../../helper';
 import { autocompleteRender } from '../../../../../../../utils/autocompleteRenders';
 import { IRecallAlert } from '../../../../../../../store/reducers/recall/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -100,7 +100,7 @@ const RecallForm = ({
             className={classes.recallFormField}
             value={getListMethodValue(updatedRecallAlert.listType)}
             disableClearable
-            options={[VIN_CHECK_API, CSV_UPLOADED]}
+            options={[VIN_CHECK_API, UPLOAD_CSV]}
             isOptionEqualToValue={(o, v) => String(o) === String(v)}
             getOptionLabel={o => o}
             onChange={(e, v) => handleListMethodChange(v)}

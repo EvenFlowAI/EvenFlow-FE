@@ -262,7 +262,7 @@ export const filterValidRulesAndTriggers = (
 });
 
 export const VIN_CHECK_API = 'VIN Check (API)';
-export const CSV_UPLOADED = 'CSV Uploaded';
+export const UPLOAD_CSV = 'Upload CSV';
 
 export const toEnumLabel = <T extends Record<number, string>>(
   value: string,
