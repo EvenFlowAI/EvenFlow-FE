@@ -31,7 +31,7 @@ const historyRecallStatusLabels: Record<HistoryRecallStatus, string> = {
   check_requested: 'VIN check requested',
   running: 'Alert started',
   completed: 'Alert completed',
-  UPLOAD_CSV: 'CSV uploaded',
+  csv_uploaded: 'CSV uploaded',
   failed: 'VIN check failed (AutoAp returned an error)',
   results_available: 'Open Recall received',
 };
@@ -43,7 +43,7 @@ const historyRecallStatusIcons: Record<HistoryRecallStatus, JSX.Element> = {
   results_available: <Received />,
   running: <Started />,
   completed: <Completed />,
-  UPLOAD_CSV: <Received />,
+  csv_uploaded: <Received />,
   failed: <Failed />,
 };
 
@@ -84,7 +84,7 @@ const HistoryRecall = ({ onClose, open, currentItem }: HistoryRecallI) => {
     }
 
     if (status === 'results_available') {
-      return currentItem?.listType === RecallListType.UPLOAD_CSV
+      return currentItem?.listType === RecallListType.CSV_UPLOADED
         ? 'CSV uploaded'
         : 'Open Recall received';
     }

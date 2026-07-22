@@ -30,7 +30,7 @@ export interface IRecall {
 
 export enum RecallListType {
   VIN_CHECK_API,
-  UPLOAD_CSV,
+  CSV_UPLOADED,
 }
 
 export interface IGlobalModelYear {

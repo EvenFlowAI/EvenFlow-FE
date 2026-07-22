@@ -112,7 +112,7 @@ const useRecallAlertSettingsSave = ({
           triggers: triggersWithPause,
           globalModels: !updatedRecallAlert.recallCampaignId
             ? null
-            : updatedRecallAlert.listType === RecallListType.UPLOAD_CSV
+            : updatedRecallAlert.listType === RecallListType.CSV_UPLOADED
               ? null
               : selectedModelKeys,
         },
@@ -157,7 +157,7 @@ const useRecallAlertSettingsSave = ({
 
     setIsLoading(true);
 
-    if (updatedRecallAlert.listType === RecallListType.UPLOAD_CSV) {
+    if (updatedRecallAlert.listType === RecallListType.CSV_UPLOADED) {
       saveRecallAlert(Boolean(file));
       return;
     }

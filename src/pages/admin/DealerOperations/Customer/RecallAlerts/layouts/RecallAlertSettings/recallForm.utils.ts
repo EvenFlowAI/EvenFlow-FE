@@ -1,4 +1,4 @@
-import { UPLOAD_CSV, VIN_CHECK_API } from '../../../../helper';
+import { CSV_UPLOADED, VIN_CHECK_API } from '../../../../helper';
 import { RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { RecallEventStatus } from '../../../types';
 
@@ -15,8 +15,8 @@ export const getListMethodValue = (listType: RecallListType): string => {
     return VIN_CHECK_API;
   }
 
-  if (listType === RecallListType.UPLOAD_CSV) {
-    return UPLOAD_CSV;
+  if (listType === RecallListType.CSV_UPLOADED) {
+    return CSV_UPLOADED;
   }
 
   return '';

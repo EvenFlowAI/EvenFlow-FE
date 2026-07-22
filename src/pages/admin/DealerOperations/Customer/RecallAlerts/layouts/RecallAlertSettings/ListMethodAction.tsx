@@ -70,7 +70,7 @@ const ListMethodAction: React.FC<IListMethodActionProps> = ({
     return button;
   }
 
-  if (listType === RecallListType.UPLOAD_CSV) {
+  if (listType === RecallListType.CSV_UPLOADED) {
     return (
       <label htmlFor="uploadCSV" className={classes.uploadLabel}>
         <Button

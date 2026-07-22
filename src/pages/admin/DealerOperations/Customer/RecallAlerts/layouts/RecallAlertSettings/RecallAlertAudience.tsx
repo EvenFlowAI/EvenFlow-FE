@@ -36,7 +36,7 @@ const RecallAlertAudience = ({
       return {
         ...prev,
         listType:
-          newValue === VIN_CHECK_API ? RecallListType.VIN_CHECK_API : RecallListType.UPLOAD_CSV,
+          newValue === VIN_CHECK_API ? RecallListType.VIN_CHECK_API : RecallListType.CSV_UPLOADED,
       };
     });
   };

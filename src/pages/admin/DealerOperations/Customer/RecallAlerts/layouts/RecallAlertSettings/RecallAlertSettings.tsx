@@ -182,7 +182,7 @@ const RecallAlertSettings: React.FC = () => {
                     setSelectedModelKeys={setSelectedModelKeys}
                     selectedModelKeys={selectedModelKeys}
                   />
-                  {updatedRecallAlert.listType === RecallListType.UPLOAD_CSV && (
+                  {updatedRecallAlert.listType === RecallListType.CSV_UPLOADED && (
                     <div className={recallAlertSettingsClasses.uploadCsvHintText}>
                       Model selection does not affect VIN processing when using CSV upload.
                     </div>

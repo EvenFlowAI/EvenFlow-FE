@@ -9,7 +9,7 @@ interface IRecallFileInfoProps {
 }
 
 const RecallFileInfo: React.FC<IRecallFileInfoProps> = ({ listType, file, vinsFileLink }) => {
-  if (listType !== RecallListType.UPLOAD_CSV) return null;
+  if (listType !== RecallListType.CSV_UPLOADED) return null;
 
   if (file) {
     return (
