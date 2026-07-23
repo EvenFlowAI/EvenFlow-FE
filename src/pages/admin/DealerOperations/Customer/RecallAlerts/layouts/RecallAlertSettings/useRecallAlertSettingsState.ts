@@ -17,6 +17,8 @@ import {
 import {
   getAffectedModels,
   setAffectedModels,
+  setRecallAlertSettingsEditMode,
+  setSelectedRecallAlert,
 } from '../../../../../../../store/reducers/recall/actions';
 import { useDispatch } from 'react-redux';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
@@ -124,7 +126,10 @@ const useRecallAlertSettingsState = ({
           getAffectedModels(
             selectedRecallAlert?.recallCampaignId,
             selectedSC?.id,
-            () => {},
+            () => {
+              dispatch(setRecallAlertSettingsEditMode(false));
+              dispatch(setSelectedRecallAlert(null));
+            },
             () => {}
           )
         );
