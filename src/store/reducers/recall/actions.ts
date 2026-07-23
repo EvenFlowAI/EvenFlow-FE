@@ -551,14 +551,18 @@ export const updateRecallAlertText =
   };
 
 export const checkVins =
-  (id: number, onSuccess: () => void, onError?: (eventName: string) => void): AppThunk =>
+  (
+    id: number,
+    onSuccess: (warning: string) => void,
+    onError?: (eventName: string) => void
+  ): AppThunk =>
   async () => {
     Api.call(Api.endpoints.Recalls.RecallTrigger, {
       urlParams: { id },
       data: {},
     })
-      .then(() => {
-        onSuccess();
+      .then(r => {
+        onSuccess(r.data.warning || '');
       })
       .catch(e => {
         const backendMessage = e?.response?.data?.message || e.message || 'Unknown error';

@@ -13,6 +13,7 @@ import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import ListMethodAction from './ListMethodAction';
 import RecallFileInfo from './RecallFileInfo';
 import { getListMethodValue, isRecallLocked } from './recallForm.utils';
+import { useMessage } from '../../../../../../../hooks/useMessage/useMessage';
 interface RecallFormI {
   isEditTable: boolean;
   updatedRecallAlert: IRecallAlert;
@@ -45,6 +46,8 @@ const RecallForm = ({
   const isDisabled = !isEditTable || isRecallLocked(updatedRecallAlert.status);
   const selectedRecall = allGlobalRecalls.find(c => c.id === updatedRecallAlert.recallCampaignId);
   const recallCampaignOptions = allGlobalRecalls.map(c => c.nhtsaCampaign);
+  const showMessage = useMessage();
+
   const handleFileChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     event => {
       if (event.target.files) {
@@ -72,7 +75,7 @@ const RecallForm = ({
     dispatch(
       checkVins(
         updatedRecallAlert?.campaignRecallGroupBatchId,
-        () => {
+        (warning: string) => {
           dispatch(
             getRecallEvents(
               selectedSC?.id,
@@ -83,6 +86,7 @@ const RecallForm = ({
               }
             )
           );
+          if (warning?.length) showMessage(warning, 'warning');
         },
         (e: string) => {
           showError(e);
