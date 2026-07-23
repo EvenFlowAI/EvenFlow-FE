@@ -143,7 +143,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     },
     {
       header: 'Credits Used',
-      val: el => (el.creditsUsed >= 0 ? String(el.creditsUsed) : ''),
+      val: el => (el.creditsUsed > 0 ? String(el.creditsUsed) : '-'),
       width: 151,
       orderId: 'CreditsUsed',
     },
