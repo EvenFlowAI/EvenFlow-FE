@@ -11,8 +11,7 @@ import {
   ICategory,
   TNewCategory,
 } from '../../../../store/reducers/categories/types';
-import { Button, Divider, FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { Button, Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loadAllAssignedServiceRequests,
@@ -29,7 +28,6 @@ import { loadBookingFlowConfig } from '../../../../store/reducers/bookingFlowCon
 import { EServiceType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { OpsCodesOrderTable } from './OpsCodesOrderTable/OpsCodesOrderTable';
 import { CategoryFormState, initialFormState } from './types';
-import { useStyles } from './styles';
 import {
   buildCategoryData,
   categoryOptions,
@@ -65,7 +63,6 @@ export const AddServiceCategoryModal: React.FC<
   const dispatch = useDispatch();
   const showError = useException();
   const showMessage = useMessage();
-  const { classes } = useStyles();
 
   const disabledOpsCodes = useMemo(
     () =>
@@ -168,10 +165,6 @@ export const AddServiceCategoryModal: React.FC<
     props.onClose();
   }, []);
 
-  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(prev => ({ ...prev, description: e.target.value }));
-  };
-
   const onSuccessCreate = useCallback(
     (categoryId: number) => {
       if (form.fileState.file)
@@ -230,48 +223,12 @@ export const AddServiceCategoryModal: React.FC<
     }
   }, [selectedSC, form, categoryHasCodesOrder, editingItem, visitCenterConfig, tabServiceType]);
 
-  const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(prev => ({
-      ...prev,
-      selectedServiceType:
-        e.target.value === '0' ? EServiceType.VisitCenter : EServiceType.MobileService,
-    }));
-  };
-
   return (
-    <BaseModal {...props} width={1128} onClose={onCancel}>
+    <BaseModal {...props} width={940} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>{editingItem ? 'Edit' : 'Add'} Service Category</DialogTitle>
       <DialogContent>
-        <RadioGroup
-          row
-          aria-label="countType"
-          name="countType"
-          value={form.selectedServiceType}
-          onChange={handleTypeChange}
-          className={classes.radioGroup}
-        >
-          <FormControlLabel
-            value={EServiceType.VisitCenter}
-            control={<Radio color="primary" />}
-            label="VISIT CENTER"
-            labelPlacement="end"
-          />
-          <FormControlLabel
-            value={EServiceType.MobileService}
-            control={<Radio color="primary" />}
-            label="MOBILE SERVICE"
-            labelPlacement="end"
-          />
-        </RadioGroup>
         <SettingsForm editingItem={editingItem} form={form} setForm={setForm} />
-        <TextField
-          fullWidth
-          value={form.description}
-          label="Service Category Description"
-          placeholder="Enter Description"
-          onChange={onDescriptionChange}
-        />
-        <Divider />
+        <Divider style={{ margin: '16px 0' }} />
         {categoryHasCodesOrder ? (
           <OpsCodesOrderTable form={form} setForm={setForm} disabled={disabledOpsCodes} />
         ) : (
