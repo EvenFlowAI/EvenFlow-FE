@@ -177,7 +177,10 @@ const App = () => {
     const clientIdFromOldDealers =
       typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
     const clientData =
-      typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string'
+      typeof event.data === 'object' &&
+      event.data !== null &&
+      event.data.type === 'init' &&
+      (typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string')
         ? event.data
         : '';
 
