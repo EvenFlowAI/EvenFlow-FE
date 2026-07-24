@@ -11,12 +11,16 @@ type TSelectedModelWithCount = TSelectedModelKey & {
   vehicleCount?: number;
 };
 
-const StatisticData = ({
-  updatedRecallAlert,
-  selectedModelKeys,
-}: {
+interface StatisticDataProps {
   updatedRecallAlert: IRecallAlert | null;
   selectedModelKeys: TSelectedModelKey[];
+  isEditTable: boolean;
+}
+
+const StatisticData: React.FC<StatisticDataProps> = ({
+  updatedRecallAlert,
+  selectedModelKeys,
+  isEditTable,
 }) => {
   const { classes } = useStyles();
   const { affectedModels } = useSelector((state: RootState) => state.recalls);
@@ -32,9 +36,11 @@ const StatisticData = ({
 
   const vehiclesInDmsValue = !affectedModels.length
     ? 0
-    : !updatedRecallAlert?.vehiclesInDms || updatedRecallAlert?.vehiclesInDms === 0
+    : isEditTable
       ? selectedVehiclesInDms
-      : (updatedRecallAlert?.vehiclesInDms ?? 0);
+      : !updatedRecallAlert?.vehiclesInDms || updatedRecallAlert?.vehiclesInDms === 0
+        ? selectedVehiclesInDms
+        : (updatedRecallAlert?.vehiclesInDms ?? 0);
 
   return (
     <div className={classes.statisticDataContainer}>
