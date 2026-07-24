@@ -135,6 +135,8 @@ const useRecallAlertSettingsState = ({
         );
       } else {
         dispatch(setAffectedModels([]));
+        dispatch(setRecallAlertSettingsEditMode(false));
+        dispatch(setSelectedRecallAlert(null));
       }
     }
   };
