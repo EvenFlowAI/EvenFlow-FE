@@ -116,7 +116,7 @@ const useRecallAlertSettingsSave = ({
           filterRules: criterias,
           triggers: triggersWithPause,
           globalModels: !updatedRecallAlert.recallCampaignId
-            ? null
+            ? []
             : updatedRecallAlert.listType === RecallListType.CSV_UPLOADED
               ? null
               : selectedModelKeys,
