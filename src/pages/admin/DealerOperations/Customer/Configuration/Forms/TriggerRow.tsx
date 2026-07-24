@@ -42,8 +42,6 @@ const TriggerRow: React.FC<ITriggerRow> = ({
   onRemoveTrigger,
   onTriggerChange,
 }) => {
-  const isTriggerLocked = updatedRecallAlert?.status === RecallEventStatus.Running;
-
   return (
     <div
       className={clsx(classes.triggerItemWrapper, {
@@ -69,7 +67,7 @@ const TriggerRow: React.FC<ITriggerRow> = ({
             <TextField
               fullWidth
               labelFitContent={true}
-              disabled={!isEditTable || isTriggerLocked}
+              disabled={!isEditTable}
               type="number"
               inputProps={{ min: 0 }}
               error={
@@ -89,7 +87,7 @@ const TriggerRow: React.FC<ITriggerRow> = ({
           >
             <ClockTimePicker
               value={trigger.scheduledTime ? dayjs(trigger.scheduledTime, 'HH:mm:ss') : null}
-              disabled={!isEditTable || isTriggerLocked}
+              disabled={!isEditTable}
               onChange={e => onTriggerChange(index, 'scheduledTime', dayjs(e).format('HH:mm:ss'))}
               label={'Scheduled time'}
               InputProps={{

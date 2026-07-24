@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   getRecallEvents,
+  setRecallAlertSettingsEditMode,
+  setSelectedRecallAlert,
   updateRecallAlert,
   uploadCSV,
 } from '../../../../../../../store/reducers/recall/actions';
@@ -99,7 +101,10 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
-    const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
+    const triggersWithPause = triggers.map(trigger => ({
+      ...trigger,
+      isPaused: trigger.isPaused ?? true,
+    }));
 
     dispatch(
       updateRecallAlert(
@@ -120,6 +125,8 @@ const useRecallAlertSettingsSave = ({
           setIsEditTable(false);
           setFile(null);
           setIsLoading(false);
+          dispatch(setRecallAlertSettingsEditMode(false));
+          dispatch(setSelectedRecallAlert(null));
         },
         shouldHandleFile
           ? (callback: TCallback) => {
