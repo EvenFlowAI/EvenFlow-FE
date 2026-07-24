@@ -2,16 +2,14 @@ import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { Autocomplete, Switch } from '@mui/material';
 import { EServiceType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { categoryOptions, getOptionLabel, getPageOptions, updateCodesWithOrder } from './utils';
+import { categoryOptions, getOptionLabel, getPageOptions } from './utils';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { FileInput } from '../../../../components/formControls/FileInput/FileInput';
 import { Label, useStyles } from './styles';
 import { EServiceCategoryType, ICategory } from '../../../../store/reducers/categories/types';
-import OpsCodesSelected from './OpsCodesSelected/OpsCodesSelected';
 import { CategoryFormState, IIconState, TOption } from './types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { IAssignedServiceRequest } from '../../../../store/reducers/serviceRequests/types';
 
 interface SettingsFormProps {
   editingItem: ICategory | null;
@@ -28,7 +26,6 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
   const { classes } = useStyles();
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const { categories } = useSelector((state: RootState) => state.categories);
-  const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
 
   const serviceTypeOptions: IServiceTypeOption[] = useMemo(
     () => [
@@ -120,32 +117,6 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
 
   const handleSwitch = (e: React.SyntheticEvent, value: boolean) => {
     setForm(prev => ({ ...prev, isCommentRequired: value }));
-  };
-
-  const categoryHasCodesOrder = useMemo(
-    () =>
-      form.categoryType?.value === EServiceCategoryType.IndividualServices ||
-      form.categoryType?.value === EServiceCategoryType.Diagnose,
-    [form.categoryType]
-  );
-
-  const filteredIndCodes = useMemo(
-    () => allAssignedList.filter(el => form.selectedCodesWithOrder.find(item => item.id === el.id)),
-    [allAssignedList, form.selectedCodesWithOrder]
-  );
-
-  const onDelete = (serviceRequest: IAssignedServiceRequest) => {
-    if (categoryHasCodesOrder) {
-      setForm(prev => ({
-        ...prev,
-        selectedCodesWithOrder: updateCodesWithOrder(prev.selectedCodesWithOrder, serviceRequest),
-      }));
-    } else {
-      setForm(prev => ({
-        ...prev,
-        selectedCodes: prev.selectedCodes.filter(el => el.id !== serviceRequest.id),
-      }));
-    }
   };
 
   return (
@@ -262,10 +233,6 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
         }
         label="Comment Field Is Required"
         labelPlacement="start"
-      />
-      <OpsCodesSelected
-        selectedCodes={categoryHasCodesOrder ? filteredIndCodes : form.selectedCodes}
-        onDelete={onDelete}
       />
     </>
   );

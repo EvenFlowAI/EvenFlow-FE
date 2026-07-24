@@ -23,10 +23,8 @@ import {
   updateCategory,
   updateCategoryIcon,
 } from '../../../../store/reducers/categories/actions';
-import { OpsCodesTable } from './OpsCodesTable/OpsCodesTable';
 import { loadBookingFlowConfig } from '../../../../store/reducers/bookingFlowConfig/actions';
 import { EServiceType } from '../../../../store/reducers/appointmentFrameReducer/types';
-import { OpsCodesOrderTable } from './OpsCodesOrderTable/OpsCodesOrderTable';
 import { CategoryFormState, initialFormState } from './types';
 import {
   buildCategoryData,
@@ -40,6 +38,7 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import SettingsForm from './SettingsForm';
+import { OpsCodesTransferPanel } from './OpsCodesTransferPanel/OpsCodesTransferPanel';
 
 type TAddServiceCategoryProps = DialogProps & {
   editingItem: ICategory | null;
@@ -229,11 +228,12 @@ export const AddServiceCategoryModal: React.FC<
       <DialogContent>
         <SettingsForm editingItem={editingItem} form={form} setForm={setForm} />
         <Divider style={{ margin: '16px 0' }} />
-        {categoryHasCodesOrder ? (
-          <OpsCodesOrderTable form={form} setForm={setForm} disabled={disabledOpsCodes} />
-        ) : (
-          <OpsCodesTable form={form} setForm={setForm} disabled={disabledOpsCodes} />
-        )}
+        <OpsCodesTransferPanel
+          form={form}
+          setForm={setForm}
+          disabled={disabledOpsCodes}
+          categoryHasCodesOrder={categoryHasCodesOrder}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel} color="info">
