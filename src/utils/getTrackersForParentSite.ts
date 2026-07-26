@@ -84,7 +84,7 @@ const parentTrackersMap: Record<number, GATrackers[]> = {
   [ServiceCenters.FremontMotorRiverton]: [
     { measurementId: 'G-92EJQHZMGQ', gmtId: 'GTM-W3DJPG' },
     { measurementId: 'G-YT0WTD548Z' },
-    { measurementId: 'G-MRFMX9BERG' },
+    // { measurementId: 'G-MRFMX9BERG' },
   ],
   [ServiceCenters.FremontMotorPowell]: [
     { measurementId: 'G-QTPHWHLZC6', gmtId: 'GTM-PBT4Q7' },
