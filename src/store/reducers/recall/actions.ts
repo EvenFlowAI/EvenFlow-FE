@@ -406,14 +406,16 @@ export const updateRecallAlert =
       listType?: number;
       recallCampaignId?: number | null;
       serviceCenterId: number;
-      filterRules?: {
-        id?: number;
-        type: string;
-        operator: string;
-        value: string;
-        isCriteria?: boolean;
-      }[];
-      triggers?: TriggerI[];
+      filterRules?:
+        | {
+            id?: number;
+            type: string;
+            operator: string;
+            value: string;
+            isCriteria?: boolean;
+          }[]
+        | null;
+      triggers?: TriggerI[] | null;
       globalModels?: IGlobalModelYear[] | null;
     },
     onSuccess: () => void,
@@ -421,13 +423,15 @@ export const updateRecallAlert =
     onError?: (error: string) => void
   ): AppThunk =>
   async dispatch => {
-    let filterRules: {
-      type: EventRulesFilterTypeE;
-      operator: ComparisonOperatorE;
-      value: string;
-      id?: number | undefined;
-      isCriteria?: boolean | undefined;
-    }[];
+    let filterRules:
+      | {
+          type: EventRulesFilterTypeE;
+          operator: ComparisonOperatorE;
+          value: string;
+          id?: number | undefined;
+          isCriteria?: boolean | undefined;
+        }[]
+      | null;
     if (data.filterRules?.length) {
       filterRules = data.filterRules?.map(el => {
         return {
@@ -438,7 +442,11 @@ export const updateRecallAlert =
         };
       });
     } else {
-      filterRules = [];
+      if (data.filterRules !== null) {
+        filterRules = [];
+      } else {
+        filterRules = null;
+      }
     }
 
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
