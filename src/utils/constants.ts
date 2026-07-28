@@ -138,6 +138,7 @@ export const SCREENS = {
 export const options: TGAOptions = {
   siteSpeedSampleRate: 100,
   cookieDomain: 'auto',
+  cookieFlags: 'SameSite=None;Secure',
   allowLinker: true,
   storage: 'none',
 };
