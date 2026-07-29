@@ -19,6 +19,7 @@ import { RootState } from '../../store/rootReducer';
 import AppointmentFlow from '../../pages/booking/AppointmentFlow/AppointmentFlow';
 import { setTransportationAvailable } from '../../store/reducers/bookingFlowConfig/actions';
 import FallBack from '../../components/FallBack/FallBack';
+import { ShortLink } from '../../pages/booking/ShortLink/ShortLink';
 
 type TProps = {
   valueServicePreviousScreen: TScreen;
@@ -61,6 +62,7 @@ const AppRoutes: React.FC<React.PropsWithChildren<React.PropsWithChildren<TProps
       <Route path={Routes.EndUser.EditAppointmentFromEmail} exact component={BookingFlow} />
       <Route path={Routes.EndUser.CloneAppointmentFromEmail} exact component={BookingFlow} />
       <Route path={Routes.EndUser.DemandAppointment} exact component={BookingFlow} />
+      <Route path={Routes.EndUser.ShortLink} exact component={ShortLink} />
       <Route path={Routes.EndUser.Base} exact component={BookingFlow} />
       <Route path={Routes.EndUser.PaymentBill} exact component={PaymentBill} />
       <Route path={Routes.Login.Base} component={Login} />
