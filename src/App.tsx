@@ -185,8 +185,6 @@ const App = () => {
     const clientIdFromOldDealers =
       typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
 
-    console.log('TEMP_LOG:', event.data);
-
     const clientData =
       typeof event.data === 'object' &&
       event.data !== null &&

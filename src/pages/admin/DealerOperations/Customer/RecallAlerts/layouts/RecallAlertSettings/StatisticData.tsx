@@ -34,13 +34,17 @@ const StatisticData: React.FC<StatisticDataProps> = ({
     [selectedModelKeys]
   );
 
+  console.log(affectedModels);
+
   const vehiclesInDmsValue = !affectedModels.length
     ? 0
-    : isEditTable
-      ? selectedVehiclesInDms
-      : !updatedRecallAlert?.vehiclesInDms || updatedRecallAlert?.vehiclesInDms === 0
+    : updatedRecallAlert?.vinsFileLink
+      ? updatedRecallAlert?.vehiclesInDms || '0'
+      : isEditTable
         ? selectedVehiclesInDms
-        : (updatedRecallAlert?.vehiclesInDms ?? 0);
+        : !updatedRecallAlert?.vehiclesInDms || updatedRecallAlert?.vehiclesInDms === 0
+          ? selectedVehiclesInDms
+          : (updatedRecallAlert?.vehiclesInDms ?? 0);
 
   return (
     <div className={classes.statisticDataContainer}>

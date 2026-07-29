@@ -402,6 +402,13 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleSubmit = async () => {
+    if (isRecallsCategorySelected && !recallsToggledOn) {
+      showError(
+        t('Recalls are unavailable due to restricted access. Please contact your manager.')
+      );
+      return;
+    }
+
     const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
     const makeInTheList = makes.find(
       item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase()
@@ -417,6 +424,20 @@ export const MaintenanceDetailsForm: React.FC<
           const vinFromExistingCustomer = customerLoadedData?.vehicles?.find(
             v => v.vin === vin
           )?.vin;
+          console.log(
+            'Info log in MaintenanceDetailsForm.tsx',
+            'customerLoadedData: ',
+            customerLoadedData,
+            'vinFromExistingCustomer: ',
+            vinFromExistingCustomer,
+            'userType: ',
+            userType,
+            'isEditMode: ',
+            isEditMode,
+            'recallByVinLoading: ',
+            recallByVinLoading
+          );
+
           if (
             (customerLoadedData?.fromSearchByName || userType === EUserType.Existing) &&
             vinFromExistingCustomer?.length &&
@@ -450,6 +471,7 @@ export const MaintenanceDetailsForm: React.FC<
             try {
               const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
               const serviceTypeOptionId = serviceTypeOption?.id;
+              console.log('Send from the MaintenanceDetailsForm.tsx');
               const { data: receivedRecalls } = await Api.call(Api.endpoints.Recalls.GetByVin, {
                 data: {
                   serviceCenterId: decodeSCID(id),
