@@ -402,6 +402,13 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleSubmit = async () => {
+    if (isRecallsCategorySelected && !recallsToggledOn) {
+      showError(
+        t('Recalls are unavailable due to restricted access. Please contact your manager.')
+      );
+      return;
+    }
+
     const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
     const makeInTheList = makes.find(
       item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase()
