@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useStyles } from '../../../styles';
-import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
+import { IRecallAlert } from '../../../../../../../store/reducers/recall/types';
 import { ReactComponent as Car } from '../../../../../../../assets/img/car.svg';
 import { ReactComponent as People } from '../../../../../../../assets/img/people.svg';
 import { TSelectedModelKey } from '../../../../helper';
@@ -38,8 +38,8 @@ const StatisticData: React.FC<StatisticDataProps> = ({
 
   const vehiclesInDmsValue = !affectedModels.length
     ? 0
-    : updatedRecallAlert?.listType === RecallListType.CSV_UPLOADED
-      ? updatedRecallAlert?.vehiclesInDms
+    : updatedRecallAlert?.vinsFileLink
+      ? updatedRecallAlert?.vehiclesInDms || '0'
       : isEditTable
         ? selectedVehiclesInDms
         : !updatedRecallAlert?.vehiclesInDms || updatedRecallAlert?.vehiclesInDms === 0
