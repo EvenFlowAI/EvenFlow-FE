@@ -99,6 +99,13 @@ const RecallsByVinModal: React.FC<
       const { make, model, year, vin } = selectedVehicle;
       if (vin?.length && open && make && model && year) {
         const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+        console.log(
+          'Info log in RecallsByVinModal.tsx',
+          'customerLoadedData: ',
+          customerLoadedData,
+          'selectedVehicle: ',
+          selectedVehicle
+        );
         dispatch(
           loadRecallsByVin(
             decodeSCID(id),

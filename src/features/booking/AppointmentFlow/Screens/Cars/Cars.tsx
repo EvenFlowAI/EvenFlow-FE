@@ -200,7 +200,13 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
             mobileServiceConfig?.checkRecallsExisting)
         ) {
           const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
-
+          console.log(
+            'Send from the Cars.tsx',
+            'customerLoadedData: ',
+            customerLoadedData,
+            'vehicle: ',
+            vehicle
+          );
           dispatch(
             loadRecallsByVin(
               decodeSCID(id),
