@@ -245,7 +245,7 @@ const CustomerSearchTable: React.FC<
         mobileServiceConfig?.checkRecallsExisting)
     ) {
       const customerId = item?.customerId;
-      console.log('Send from the CustomerSearchTable.tsx', 'item: ', item);
+
       dispatch(
         loadRecallsByVin(
           decodeSCID(id),
