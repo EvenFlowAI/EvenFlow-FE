@@ -138,7 +138,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     },
     {
       header: 'Vehicles In DMS',
-      val: el => (el.vehiclesInDms >= 0 ? String(el.vehiclesInDms) : ''),
+      val: el => (el.vehiclesInDms > 0 ? String(el.vehiclesInDms) : '-'),
       orderId: 'VehiclesNumber',
     },
     {
