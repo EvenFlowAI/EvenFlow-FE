@@ -124,10 +124,10 @@ const RecallCreditsTable: React.FC<TProps> = ({
         onChangeRowsPerPage={onChangeRowsPerPage}
         onChangePage={onChangePage}
         onSort={handleSort}
-        hidePagination={data.length <= pageData.pageSize}
+        hidePagination={data.length <= 10}
         isLoading={isLoading}
-        customRowsPerPageOptions={[15, 50, 100]}
-        customRowsPerPage={15}
+        customRowsPerPageOptions={[10, 50, 100]}
+        customRowsPerPage={10}
       />
     </>
   );
