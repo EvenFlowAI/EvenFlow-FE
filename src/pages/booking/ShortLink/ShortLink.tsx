@@ -29,6 +29,7 @@ export const ShortLink = () => {
 
   useEffect(() => {
     let isActive = true;
+    setState('loading');
 
     if (!code || !SHORT_CODE_PATTERN.test(code)) {
       setState('error');
