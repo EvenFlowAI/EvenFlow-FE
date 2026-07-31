@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 import Checkbox from '../../../../../../../components/formControls/Checkbox/Checkbox';
 import { RootState } from '../../../../../../../store/rootReducer';
-import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
+import { IRecallAlert } from '../../../../../../../store/reducers/recall/types';
 import { useRecallAlertSettingsStyles } from './styles';
 import { RecallEventStatus } from '../../../types';
 import { TSelectedModelKey } from '../../../../helper';
@@ -62,7 +62,6 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
 }) => {
   const { classes } = useRecallAlertSettingsStyles();
   const { affectedModels } = useSelector((state: RootState) => state.recalls);
-  const isCsvUploaded = updatedRecallAlert?.listType === RecallListType.CSV_UPLOADED;
 
   const groupedByMake = useMemo<TGroupedMake[]>(() => {
     const makeMap = new Map<
@@ -225,7 +224,7 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
 
             {models.map(({ globalVehicleModelId, model, years, vehicleCount }) => {
               const modelKey = globalVehicleModelId;
-              const isChecked = !isCsvUploaded && isModelSelected(modelKey, years);
+              const isChecked = isModelSelected(modelKey, years);
 
               return (
                 <div key={modelKey} className={classes.modelRow}>
@@ -242,18 +241,13 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
                       }
                       checked={isChecked}
                       disabled={
-                        isCsvUploaded ||
                         !isEditTable ||
                         (isChecked && selectedModelsCount === 1) ||
                         updatedRecallAlert.status === RecallEventStatus.Running ||
                         updatedRecallAlert?.status === RecallEventStatus.CheckRequested ||
                         updatedRecallAlert?.status === RecallEventStatus.ResultsAvailable
                       }
-                      onChange={() => {
-                        if (!isCsvUploaded) {
-                          toggleModel(modelKey, years);
-                        }
-                      }}
+                      onChange={() => toggleModel(modelKey, years)}
                     />
                     {model}
                   </div>

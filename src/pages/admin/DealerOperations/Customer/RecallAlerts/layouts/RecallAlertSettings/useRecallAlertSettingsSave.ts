@@ -157,13 +157,7 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
-    const requiresModelSelection = updatedRecallAlert.listType !== RecallListType.CSV_UPLOADED;
-
-    if (
-      requiresModelSelection &&
-      updatedRecallAlert.recallCampaignId &&
-      !selectedModelKeys.length
-    ) {
+    if (updatedRecallAlert.recallCampaignId && !selectedModelKeys.length) {
       showError('At least one model must be selected');
       return;
     }
