@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 import { reviewOptions } from '../../../../utils/constants';
+import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 
 type TProps = {
   onMakesChange: (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => void;
@@ -67,6 +68,16 @@ const Filters: React.FC<TProps> = ({
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         onChange={onMakesChange}
+        renderTags={(selected, getTagProps) =>
+          renderChipTagsWithoutOptionObject(
+            selected.map(item => item.vinMake),
+            getTagProps,
+            400,
+            option => {
+              return option;
+            }
+          )
+        }
         renderInput={autocompleteRender({
           label: 'Makes',
           placeholder: 'Not selected',
@@ -83,6 +94,16 @@ const Filters: React.FC<TProps> = ({
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinModel}
         onChange={onModelsChange}
+        renderTags={(selected, getTagProps) =>
+          renderChipTagsWithoutOptionObject(
+            selected.map(item => item.vinModel),
+            getTagProps,
+            400,
+            option => {
+              return option;
+            }
+          )
+        }
         renderInput={autocompleteRender({
           label: 'Models',
           placeholder: 'Not selected',
