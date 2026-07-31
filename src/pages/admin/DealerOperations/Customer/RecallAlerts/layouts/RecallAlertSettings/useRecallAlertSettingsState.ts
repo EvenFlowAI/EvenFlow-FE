@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   IRecallAffectedModel,
   IRecallAlert,
+  RecallListType,
 } from '../../../../../../../store/reducers/recall/types';
 import { CriteriaI, TriggerI } from '../../../types';
 import {
@@ -67,6 +68,11 @@ const useRecallAlertSettingsState = ({
   }, [setDefaultData]);
 
   useEffect(() => {
+    if (updatedRecallAlert?.listType === RecallListType.CSV_UPLOADED) {
+      setSelectedModelKeys(prev => (prev.length ? [] : prev));
+      return;
+    }
+
     if (!affectedModels.length) {
       setSelectedModelKeys(prev => (prev.length ? [] : prev));
       return;
@@ -80,7 +86,7 @@ const useRecallAlertSettingsState = ({
     }
 
     setSelectedModelKeys(mapAllAffectedModelsToSelectedKeys(affectedModels));
-  }, [affectedModels, isEditTable, selectedRecallAlert]);
+  }, [affectedModels, isEditTable, selectedRecallAlert, updatedRecallAlert?.listType]);
 
   useEffect(() => {
     if (!isEditTable || !updatedRecallAlert?.recallCampaignId || !affectedModels.length) {
