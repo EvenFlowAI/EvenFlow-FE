@@ -366,7 +366,8 @@ export const updateRecallAlertName =
     },
     tableType: 'workflow' | 'stats',
     onSuccess: () => void,
-    onError?: (eventName: string) => void
+    onError: () => void,
+    showError: (message: string) => void
   ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
@@ -377,7 +378,16 @@ export const updateRecallAlertName =
         dispatch(getRecallEvents(data.serviceCenterId, tableType, () => {}, onSuccess));
       })
       .catch(e => {
-        if (onError) onError(data.name);
+        const errors: {
+          field: string;
+          message: string;
+        }[] = e.response?.data?.errors;
+        if (errors?.length) {
+          errors.map(error => {
+            showError(error.message);
+          });
+        }
+        onError();
         console.log('Update Recall Alert error', e);
       });
   };

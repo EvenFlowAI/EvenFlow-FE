@@ -81,8 +81,7 @@ const RecallAlerts = () => {
     dispatch(setIsEditName(false));
   };
 
-  const onError = (eventName: string) => {
-    showError(`Recall alert name "${eventName}" is already used. Please enter a unique name.`);
+  const onError = () => {
     dispatch(setIsEditName(true));
     dispatch(setIsRecallAlertsTableLoading(false));
   };
@@ -111,7 +110,8 @@ const RecallAlerts = () => {
                     dispatch(setIsRecallAlertsTableLoading(false));
                     onSuccess();
                   },
-                  onError
+                  onError,
+                  message => showError(message)
                 )
               );
               counter += 1;
