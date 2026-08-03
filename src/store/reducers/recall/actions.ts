@@ -272,9 +272,13 @@ export const getRecallEvents =
         const recallEvents = response?.data?.data;
         const paging = response?.data?.meta?.paging;
         if (recallEvents?.length && paging) {
-          const ids = (recallEvents || [])
-            .map((item: IRecallAlert) => item.recallCampaignId)
-            .filter((id: number | undefined | null) => id !== undefined && id !== null);
+          const ids = Array.from(
+            new Set(
+              (recallEvents || [])
+                .map((item: IRecallAlert) => item.recallCampaignId)
+                .filter((id: number | undefined | null) => id !== undefined && id !== null)
+            )
+          );
 
           if (ids.length > 0) {
             return Api.call(Api.endpoints.GlobalRecalls.GetGlobalRecalls, {
