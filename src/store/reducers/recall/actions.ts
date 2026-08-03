@@ -387,6 +387,9 @@ export const updateRecallAlertName =
             showError(error.message);
           });
         }
+        if (e.response?.data?.error) {
+          showError(e.response?.data?.error.message);
+        }
         onError();
         console.log('Update Recall Alert error', e);
       });
