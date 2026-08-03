@@ -35,7 +35,7 @@ export const ServiceCard: React.FC<React.PropsWithChildren<React.PropsWithChildr
       />
       <CardIcon iconPath={card.iconPath} isSM={isSM} active={active} />
       <span style={{ color: active ? '#FFFFFF' : '#252733' }}>{card.name}</span>
-      {!isSM ? <CardPrice price={price} offer={card.offer} /> : null}
+      <CardPrice price={price} offer={card.offer} />
 
       {/*todo uncomment for offer new functionality*/}
       {/*{card.offer*/}
