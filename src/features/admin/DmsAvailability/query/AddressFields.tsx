@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GooglePlacesAutocomplete, { geocodeByPlaceId } from 'react-google-places-autocomplete';
 import { useStyles } from '../styles';
 import { parseGeoCode } from '../../../booking/AppointmentFlow/Screens/YourLocation/utils';
@@ -23,6 +23,10 @@ const AddressFields = ({
 }: AddressFieldsProps) => {
   const form = formTekion || formXTime;
   const { classes } = useStyles();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [pickUpAddressOption, setPickUpAddressOption] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [dropOffAddressOption, setDropOffAddressOption] = useState<any>(null);
 
   if (!form) return null;
 
@@ -41,6 +45,7 @@ const AddressFields = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeAddress = (e: any) => {
     setIsFormChecked(false);
+    setPickUpAddressOption(e ?? null);
     if (e?.value?.place_id && e?.label) {
       geocodeByPlaceId(e.value.place_id).then(res => {
         const data = parseGeoCode(
@@ -69,6 +74,7 @@ const AddressFields = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeAddressForDropOff = (e: any) => {
     setIsFormChecked(false);
+    setDropOffAddressOption(e ?? null);
     if (e?.value?.place_id && e?.label) {
       geocodeByPlaceId(e.value.place_id).then(res => {
         const data = parseGeoCode(
@@ -91,6 +97,28 @@ const AddressFields = ({
       if (setFormXTime) {
         setFormXTime(prev => ({ ...prev, dropOffAddress: null }));
       }
+    }
+  };
+
+  const handlePickUpAddressFocus = () => {
+    setIsFormChecked(false);
+    setPickUpAddressOption(null);
+    if (setFormTekion) {
+      setFormTekion(prev => ({ ...prev, pickUpAddress: null }));
+    }
+    if (setFormXTime) {
+      setFormXTime(prev => ({ ...prev, pickUpAddress: null }));
+    }
+  };
+
+  const handleDropOffAddressFocus = () => {
+    setIsFormChecked(false);
+    setDropOffAddressOption(null);
+    if (setFormTekion) {
+      setFormTekion(prev => ({ ...prev, dropOffAddress: null }));
+    }
+    if (setFormXTime) {
+      setFormXTime(prev => ({ ...prev, dropOffAddress: null }));
     }
   };
 
@@ -118,10 +146,7 @@ const AddressFields = ({
               },
             }}
             selectProps={{
-              addressValue:
-                typeof form.pickUpAddress === 'string' && form.pickUpAddress.length
-                  ? form.pickUpAddress
-                  : '',
+              value: pickUpAddressOption,
               className:
                 typeof form.pickUpAddress === 'string' && form.pickUpAddress.length
                   ? classes.select
@@ -131,6 +156,8 @@ const AddressFields = ({
                       : classes.emptySelect
                     : classes.select,
               onChange: handleChangeAddress,
+              onFocus: handlePickUpAddressFocus,
+              openMenuOnFocus: true,
               placeholder: getPlaceholderLabel(),
               isClearable: true,
               isSearchable: true,
@@ -158,10 +185,7 @@ const AddressFields = ({
               },
             }}
             selectProps={{
-              addressValue:
-                typeof form.dropOffAddress === 'string' && form.dropOffAddress.length
-                  ? form.dropOffAddress
-                  : '',
+              value: dropOffAddressOption,
               className:
                 typeof form.dropOffAddress === 'string' && form.dropOffAddress.length
                   ? classes.select
@@ -171,6 +195,8 @@ const AddressFields = ({
                       : classes.emptySelect
                     : classes.select,
               onChange: handleChangeAddressForDropOff,
+              onFocus: handleDropOffAddressFocus,
+              openMenuOnFocus: true,
               placeholder: getPlaceholderLabelForDropOff(),
               isClearable: true,
               isSearchable: true,
