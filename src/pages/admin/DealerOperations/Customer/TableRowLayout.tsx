@@ -16,6 +16,7 @@ import { Switch } from '@mui/material';
 import { RootState } from '../../../../store/rootReducer';
 import { DashboardItemI } from '../../../../store/reducers/dealerOperations/types';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmallGreen.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
 import { ReactComponent as GreyCross } from '../../../../assets/img/greyCross.svg';
@@ -36,6 +37,7 @@ const TableRowLayout = ({
 }: TableRowLayoutI) => {
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
+  const { askConfirm } = useConfirm();
   const { classes } = useStyles();
 
   const { textIntegrationSettings, updatedEventsName } = useSelector(
@@ -71,6 +73,14 @@ const TableRowLayout = ({
     dispatch(
       deleteCustomerEvent({ serviceCenterId: selectedSC.id, id }, () => setIsLoading(false))
     );
+  };
+
+  const askRemove = () => {
+    askConfirm({
+      isRemove: true,
+      title: `Please confirm you want to remove ${event.name} event`,
+      onConfirm: () => handleDeleteCustomerEvent(event.id),
+    });
   };
 
   const handleNameChange = (value: string) => {
@@ -163,7 +173,7 @@ const TableRowLayout = ({
         style={{ textTransform: 'uppercase', fontWeight: '700' }}
         subText="Remove"
         color="#7898FF"
-        onClick={() => handleDeleteCustomerEvent(event.id)}
+        onClick={askRemove}
       />
     </StyledTableCell>
   );
