@@ -292,7 +292,7 @@ export const getModelCode = (
 ): string | null => {
   return (
     makes
-      .find(item => item.name == selectedVehicle?.make)
-      ?.models?.find(model => model.name == selectedVehicle?.model)?.modelCode?.modelCode ?? '0'
+      .find(item => item.name === selectedVehicle?.make)
+      ?.models?.find(model => model.name === selectedVehicle?.model)?.modelCode?.modelCode ?? '0'
   );
 };
