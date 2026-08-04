@@ -113,7 +113,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
         );
       },
       orderId: 'Name',
-      width: 200,
+      width: 210,
     },
     {
       header: 'NHTSA Campaign',
@@ -123,7 +123,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     },
     {
       header: 'Recall Component',
-      width: 209,
+      width: 250,
       val: el => {
         const text = el.recallComponent ?? '';
         return text.length > 20 ? (
@@ -139,6 +139,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     {
       header: 'Vehicles In DMS',
       val: el => (el.vehiclesInDms > 0 ? String(el.vehiclesInDms) : '-'),
+      width: 100,
       orderId: 'VehiclesNumber',
     },
     {
@@ -148,8 +149,9 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       orderId: 'CreditsUsed',
     },
     {
-      header: 'Est. Recipients',
+      header: 'Estimated Recipients',
       val: el => (el.estimatedRecipients >= 0 ? String(el.estimatedRecipients) : ''),
+      width: 100,
       orderId: 'EstimatedRecipientsNumber',
     },
     {
@@ -160,6 +162,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
           : el.status === RecallEventStatus.Completed
             ? '0'
             : '-',
+      width: 100
     },
   ];
 
