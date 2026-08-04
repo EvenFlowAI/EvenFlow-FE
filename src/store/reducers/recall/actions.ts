@@ -493,7 +493,7 @@ export const updateRecallAlert =
   };
 
 export const uploadCSV =
-  (id: number, file: File, onSuccess: () => void, onError?: (text: string) => void): AppThunk =>
+  (id: number, file: File, onSuccess: () => void, onError: (text: string) => void): AppThunk =>
   async () => {
     const fd = new FormData();
     fd.append('file', file, file.name);
@@ -507,7 +507,17 @@ export const uploadCSV =
       .catch(err => {
         const backendMessage =
           err?.response?.data?.error?.message || err.message || 'Unknown error';
-        if (onError) onError(backendMessage);
+        const errors: {
+          field: string;
+          message: string;
+        }[] = err?.response?.data?.errors;
+        if (errors?.length) {
+          errors.map(error => {
+            onError(error.message);
+          });
+        } else {
+          if (backendMessage) onError(backendMessage);
+        }
         console.log('Update Recall Alert error', err);
       });
   };
