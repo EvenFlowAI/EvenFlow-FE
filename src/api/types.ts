@@ -513,7 +513,6 @@ export interface IModel {
   };
   id: number;
   name: string;
-  code: string;
 }
 
 export interface IMake {
