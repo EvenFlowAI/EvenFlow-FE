@@ -21,6 +21,10 @@ const GooglePlaces = ({
 }: GooglePlacesProps) => {
   const { classes } = useLocationStyles();
 
+  const handleAddressFocus = () => {
+    handleChangeAddress(null);
+  };
+
   return (
     <GooglePlacesAutocomplete
       apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
@@ -31,10 +35,7 @@ const GooglePlaces = ({
         },
       }}
       selectProps={{
-        addressValue:
-          typeof userAddress === 'string' && userAddress.length
-            ? userAddress
-            : (userAddress?.label ?? null),
+        value: typeof userAddress === 'string' ? null : userAddress?.label ? userAddress : null,
         className:
           typeof userAddress === 'string' && userAddress.length
             ? classes.select
@@ -44,10 +45,11 @@ const GooglePlaces = ({
                 : classes.emptySelect
               : classes.select,
         onChange: handleChangeAddress,
+        onFocus: handleAddressFocus,
+        openMenuOnFocus: true,
         placeholder: placeholderLabel,
         isClearable: true,
         isSearchable: true,
-        key: userAddress?.label || 'label',
         menuPosition: 'fixed',
       }}
     />
