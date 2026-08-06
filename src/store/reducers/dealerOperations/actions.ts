@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 
 import { createAction } from '@reduxjs/toolkit';
-import { Credits, DashboardItemI, IntegrationSettingsI } from './types';
+import { Credits, DashboardItemI, IntegrationSettingsI, ITag } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
 import { ActionCreator } from 'redux';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
@@ -46,6 +46,12 @@ export const setUpdatedEventsName = createAction<
 >('Optimizer/setUpdatedEventsName');
 
 export const setCredits = createAction<Credits>('Optimizer/SetCredits');
+export const setAvailableTagsForOutboundEvents = createAction<ITag[]>(
+  'Optimizer/SetAvailableTagsForOutboundEvents'
+);
+export const setAvailableTagsForRecallAlerts = createAction<ITag[]>(
+  'Optimizer/SetAvailableTagsForRecallAlerts'
+);
 
 export const setTextIntegrationSettings = createAction<IntegrationSettingsI>(
   'Optimizer/setTextIntegrationSettings'
@@ -360,6 +366,34 @@ export const loadAvailableCredits =
         if (response?.data?.data) {
           const data = response.data.data;
           dispatch(setCredits(data));
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        onSuccess();
+      });
+  };
+
+export const loadExistingTags =
+  (eventType: 'OutboundEvent' | 'RecallAlert', onSuccess: () => void): AppThunk =>
+  dispatch => {
+    const eventTypeCode = eventType === 'OutboundEvent' ? 0 : 1;
+
+    Api.call(Api.endpoints.DealerOperations.MessageTags, {
+      params: { EventType: eventTypeCode },
+    })
+      .then(response => {
+        const availableTags = response?.data?.data?.availableTags;
+        if (!availableTags) return;
+        switch (eventType) {
+          case 'OutboundEvent':
+            dispatch(setAvailableTagsForOutboundEvents(availableTags));
+            break;
+          case 'RecallAlert':
+            dispatch(setAvailableTagsForRecallAlerts(availableTags));
+            break;
         }
       })
       .catch(err => {

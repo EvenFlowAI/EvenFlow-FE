@@ -423,11 +423,13 @@ export interface IApiEndpoints {
     | 'GetTextIntegration'
     | 'SetTextIntegration'
     | 'GetPhoneNumbers'
-    | 'SendSMSMessage',
+    | 'SendSMSMessage'
+    | 'MessageTags',
     TApiEndpoint
   >;
   ServiceCenterCredits: Record<
     'GetServiceCenterCredits' | 'UpdateServiceCenterCredits',
     TApiEndpoint
   >;
+  ShortUrls: Record<'Resolve', TApiEndpoint>;
 }

@@ -3,6 +3,8 @@ import { VIN_CHECK_API } from '../../../../helper';
 import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import RecallForm from './RecallForm';
 import { useStyles } from '../../../styles';
+import { setAffectedModels } from '../../../../../../../store/reducers/recall/actions';
+import { useDispatch } from 'react-redux';
 
 interface RecallAlertAudienceI {
   isEditTable: boolean;
@@ -22,6 +24,7 @@ const RecallAlertAudience = ({
   setIsLoading,
 }: RecallAlertAudienceI) => {
   const { classes } = useStyles();
+  const dispatch = useDispatch();
 
   const handleListMethodChange = (newValue: string) => {
     if (newValue === VIN_CHECK_API) {
@@ -33,12 +36,14 @@ const RecallAlertAudience = ({
       return {
         ...prev,
         listType:
-          newValue === VIN_CHECK_API ? RecallListType.VIN_CHECK_API : RecallListType.UPLOAD_CSV,
+          newValue === VIN_CHECK_API ? RecallListType.VIN_CHECK_API : RecallListType.CSV_UPLOADED,
       };
     });
   };
 
-  const handleRecallCampaignChange = (newValue: number) => {
+  const handleRecallCampaignChange = (newValue: number | null) => {
+    dispatch(setAffectedModels([]));
+
     setUpdatedRecallAlert(prev => {
       if (!prev) return prev;
 

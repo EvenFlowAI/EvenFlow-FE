@@ -6,8 +6,8 @@ import { getAuthenticationTokenForAdmin } from '../../../api/helper';
 
 const ANOMALY_AGENT_URL =
   process.env.REACT_APP_ENV === 'production' || process.env.REACT_APP_ENV === 'PreProd'
-    ? 'https://main.d34ipg4fel3d7.amplifyapp.com/'
-    : 'https://develop.d34ipg4fel3d7.amplifyapp.com/';
+    ? 'https://main.d73ij6j8ijvz9.amplifyapp.com/'
+    : 'https://develop.d73ij6j8ijvz9.amplifyapp.com/';
 
 const AnomalyAgent = () => {
   const { selectedSC } = useSCs();
