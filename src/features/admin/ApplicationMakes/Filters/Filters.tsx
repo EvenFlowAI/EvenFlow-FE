@@ -8,6 +8,7 @@ import { RootState } from '../../../../store/rootReducer';
 
 import { reviewOptions } from '../../../../utils/constants';
 import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
+import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 
 type TProps = {
   onMakesChange: (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => void;
@@ -31,15 +32,27 @@ const Filters: React.FC<TProps> = ({
   return (
     <FiltersWrapper>
       <Autocomplete
+        multiple
         classes={classes}
         style={{ width: 465 }}
+        options={allMakesOptions}
         loading={isLoading}
         value={selectedMake}
         disabled={isLoading || disabled}
-        options={allMakesOptions}
-        multiple
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
+        disableCloseOnSelect
+        disableClearable
+        renderTags={(selected, getTagProps) =>
+          renderChipTagsWithoutOptionObject(
+            selected.map(item => item.vinMake),
+            getTagProps,
+            400,
+            option => {
+              return option;
+            }
+          )
+        }
         onChange={onMakesChange}
         renderInput={autocompleteRender({
           label: 'Makes',

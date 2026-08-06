@@ -173,6 +173,7 @@ const MakeModelInput = ({
           },
           '& .MuiAutocomplete-inputRoot': {
             flexWrap: 'nowrap',
+            width: 469,
             overflowX: 'auto',
             '&::-webkit-scrollbar': {
               display: 'none',
@@ -231,6 +232,8 @@ const MakeModelInput = ({
           const maxVisibleTags = calculateMaxVisibleTags();
           const visibleTags = value.slice(0, maxVisibleTags);
           const remainingCount = value.length - maxVisibleTags;
+          const tooltipMaxItems = 30;
+          const tooltipItemHeight = 24;
 
           return (
             <>
@@ -265,11 +268,16 @@ const MakeModelInput = ({
                 <div {...getTagProps({ index: maxVisibleTags })}>
                   <Tooltip
                     title={
-                      <React.Fragment>
+                      <div
+                        style={{
+                          maxHeight: `${tooltipMaxItems * tooltipItemHeight}px`,
+                          overflowY: 'auto',
+                        }}
+                      >
                         {value.slice(maxVisibleTags).map(option => (
                           <div key={option.id}>{option.text}</div>
                         ))}
-                      </React.Fragment>
+                      </div>
                     }
                     arrow
                     placement="top"

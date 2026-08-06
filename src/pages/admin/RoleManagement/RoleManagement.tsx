@@ -15,10 +15,12 @@ import { loadRoleUsers, setLoading } from '../../../store/reducers/roleManagemen
 import { RootState } from '../../../store/rootReducer';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 import { AddUserButtonWrapper } from '../EmployeesAddDelete/AddUserButtonWrapper';
+import RemoveAccess from '../../../components/modals/admin/RemoveAccess/RemoveAccess';
 
 const RoleManagement = () => {
   const { classes } = useStyles();
   const { onOpen, isOpen, onClose } = useModal();
+  const { onOpen: onOpenRemove, isOpen: isOpenRemove, onClose: onCloseRemove } = useModal();
   const dispatch = useDispatch();
 
   const { isLoading } = useSelector((state: RootState) => state.roleManagement);
@@ -56,8 +58,10 @@ const RoleManagement = () => {
         isLoading={isLoading}
         setEditedItem={setEditedItem}
         editedItem={editedItem}
+        openRemoveModal={onOpenRemove}
       />
       <AddUserAccount open={isOpen} onClose={onClose} payload={editedItem} isAdminPanel={false} />
+      <RemoveAccess isOpen={isOpenRemove} onClose={onCloseRemove} payload={editedItem} />
     </div>
   );
 };

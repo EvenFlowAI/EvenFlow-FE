@@ -29,8 +29,7 @@ import type {
   HistoryRecallData,
   TriggerI,
 } from '../../../pages/admin/DealerOperations/Customer/types';
-import { ErrorCode } from '../../../api/request';
-
+import { ErrorCode } from '../../../types/errorCodes';
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
 export const setLoading = createAction<boolean>('Recall/SetLoading');
@@ -203,7 +202,7 @@ export const loadRecallsByVin =
       .catch(err => {
         console.log('get recalls by vin err', err);
         const backendError = err?.response?.data?.errorCode;
-        if (backendError === ErrorCode.ManufacturerDidNotReturnAnyRecalls)
+        if (backendError === ErrorCode.TimeoutError)
           dispatch(setHasManufacturerDidNotReturnRecalls(true));
       })
       .finally(() => {
@@ -387,6 +386,9 @@ export const updateRecallAlertName =
             showError(error.message);
           });
         }
+        if (e.response?.data?.error) {
+          showError(e.response?.data?.error.message);
+        }
         onError();
         console.log('Update Recall Alert error', e);
       });
@@ -490,7 +492,7 @@ export const updateRecallAlert =
   };
 
 export const uploadCSV =
-  (id: number, file: File, onSuccess: () => void, onError?: (text: string) => void): AppThunk =>
+  (id: number, file: File, onSuccess: () => void, onError: (text: string) => void): AppThunk =>
   async () => {
     const fd = new FormData();
     fd.append('file', file, file.name);
@@ -504,7 +506,17 @@ export const uploadCSV =
       .catch(err => {
         const backendMessage =
           err?.response?.data?.error?.message || err.message || 'Unknown error';
-        if (onError) onError(backendMessage);
+        const errors: {
+          field: string;
+          message: string;
+        }[] = err?.response?.data?.errors;
+        if (errors?.length) {
+          errors.map(error => {
+            onError(error.message);
+          });
+        } else {
+          if (backendMessage) onError(backendMessage);
+        }
         console.log('Update Recall Alert error', err);
       });
   };

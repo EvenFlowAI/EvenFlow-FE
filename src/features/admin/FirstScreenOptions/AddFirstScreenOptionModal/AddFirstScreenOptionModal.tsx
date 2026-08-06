@@ -71,6 +71,14 @@ export const AddFirstScreenOptionModal: React.FC<
   const { classes } = useStyles();
 
   const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
+  const pickUpDeliveryOption = useMemo(
+    () =>
+      enabledTransportationOptions.find(
+        option => option.type === ETransportationType.PickUpDelivery
+      ) ?? null,
+    [enabledTransportationOptions]
+  );
+  const isPickUpDropOffType = selectedServiceType?.value === EServiceType.PickUpDropOff.toString();
   const isTransportationDisabled = useMemo(
     () =>
       !enabledTransportationOptions.length ||
@@ -105,6 +113,16 @@ export const AddFirstScreenOptionModal: React.FC<
       if (editingItem.taglineFontColorHex) setTaglineColor(editingItem.taglineFontColorHex);
     }
   }, [props.open, editingItem, options]);
+
+  useEffect(() => {
+    if (!props.open || editingItem || !isPickUpDropOffType || defaultTransportation) {
+      return;
+    }
+
+    if (pickUpDeliveryOption) {
+      setDefaultTransportation(pickUpDeliveryOption);
+    }
+  }, [props.open, editingItem, isPickUpDropOffType, defaultTransportation, pickUpDeliveryOption]);
 
   const onCancel = useCallback(() => {
     setFormIsChecked(false);
@@ -188,6 +206,10 @@ export const AddFirstScreenOptionModal: React.FC<
       showError('"Order Index" is required');
       isValid = false;
     }
+    if (isPickUpDropOffType && !defaultTransportation) {
+      showError('Default Transportation Option is required');
+      isValid = false;
+    }
     return isValid;
   };
 
@@ -244,15 +266,19 @@ export const AddFirstScreenOptionModal: React.FC<
       setFormIsChecked(false);
       setSelectedServiceType(value);
       if (value && defaultTransportation) {
-        if (
-          value?.value === EServiceType.MobileService.toString() ||
-          value?.value === EServiceType.PickUpDropOff.toString()
-        ) {
+        if (value?.value === EServiceType.MobileService.toString()) {
           setDefaultTransportation(null);
         }
       }
+
+      if (
+        value?.value === EServiceType.PickUpDropOff.toString() &&
+        (!defaultTransportation || !editingItem)
+      ) {
+        setDefaultTransportation(pickUpDeliveryOption);
+      }
     },
-    [showError, defaultTransportation]
+    [defaultTransportation, editingItem, pickUpDeliveryOption]
   );
 
   const onTaglineTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -318,6 +344,7 @@ export const AddFirstScreenOptionModal: React.FC<
             })}
           />
           <Autocomplete
+            disableClearable={isPickUpDropOffType}
             options={enabledTransportationOptions}
             isOptionEqualToValue={option => option.id === defaultTransportation?.id}
             getOptionLabel={o => getTransportationOptionString(o.type.toString())}
