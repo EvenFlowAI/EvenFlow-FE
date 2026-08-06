@@ -379,8 +379,10 @@ export const loadAvailableCredits =
 export const loadExistingTags =
   (eventType: 'OutboundEvent' | 'RecallAlert', onSuccess: () => void): AppThunk =>
   dispatch => {
+    const eventTypeCode = eventType === 'OutboundEvent' ? 0 : 1;
+
     Api.call(Api.endpoints.DealerOperations.MessageTags, {
-      params: { EventType: eventType },
+      params: { EventType: eventTypeCode },
     })
       .then(response => {
         const availableTags = response?.data?.data?.availableTags;

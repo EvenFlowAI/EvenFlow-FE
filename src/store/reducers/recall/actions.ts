@@ -272,9 +272,13 @@ export const getRecallEvents =
         const recallEvents = response?.data?.data;
         const paging = response?.data?.meta?.paging;
         if (recallEvents?.length && paging) {
-          const ids = (recallEvents || [])
-            .map((item: IRecallAlert) => item.recallCampaignId)
-            .filter((id: number | undefined | null) => id !== undefined && id !== null);
+          const ids = Array.from(
+            new Set(
+              (recallEvents || [])
+                .map((item: IRecallAlert) => item.recallCampaignId)
+                .filter((id: number | undefined | null) => id !== undefined && id !== null)
+            )
+          );
 
           if (ids.length > 0) {
             return Api.call(Api.endpoints.GlobalRecalls.GetGlobalRecalls, {
@@ -362,7 +366,8 @@ export const updateRecallAlertName =
     },
     tableType: 'workflow' | 'stats',
     onSuccess: () => void,
-    onError?: (eventName: string) => void
+    onError: () => void,
+    showError: (message: string) => void
   ): AppThunk =>
   async dispatch => {
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
@@ -373,7 +378,19 @@ export const updateRecallAlertName =
         dispatch(getRecallEvents(data.serviceCenterId, tableType, () => {}, onSuccess));
       })
       .catch(e => {
-        if (onError) onError(data.name);
+        const errors: {
+          field: string;
+          message: string;
+        }[] = e.response?.data?.errors;
+        if (errors?.length) {
+          errors.map(error => {
+            showError(error.message);
+          });
+        }
+        if (e.response?.data?.error) {
+          showError(e.response?.data?.error.message);
+        }
+        onError();
         console.log('Update Recall Alert error', e);
       });
   };
@@ -406,14 +423,16 @@ export const updateRecallAlert =
       listType?: number;
       recallCampaignId?: number | null;
       serviceCenterId: number;
-      filterRules?: {
-        id?: number;
-        type: string;
-        operator: string;
-        value: string;
-        isCriteria?: boolean;
-      }[];
-      triggers?: TriggerI[];
+      filterRules?:
+        | {
+            id?: number;
+            type: string;
+            operator: string;
+            value: string;
+            isCriteria?: boolean;
+          }[]
+        | null;
+      triggers?: TriggerI[] | null;
       globalModels?: IGlobalModelYear[] | null;
     },
     onSuccess: () => void,
@@ -421,13 +440,15 @@ export const updateRecallAlert =
     onError?: (error: string) => void
   ): AppThunk =>
   async dispatch => {
-    let filterRules: {
-      type: EventRulesFilterTypeE;
-      operator: ComparisonOperatorE;
-      value: string;
-      id?: number | undefined;
-      isCriteria?: boolean | undefined;
-    }[];
+    let filterRules:
+      | {
+          type: EventRulesFilterTypeE;
+          operator: ComparisonOperatorE;
+          value: string;
+          id?: number | undefined;
+          isCriteria?: boolean | undefined;
+        }[]
+      | null;
     if (data.filterRules?.length) {
       filterRules = data.filterRules?.map(el => {
         return {
@@ -438,7 +459,11 @@ export const updateRecallAlert =
         };
       });
     } else {
-      filterRules = [];
+      if (data.filterRules !== null) {
+        filterRules = [];
+      } else {
+        filterRules = null;
+      }
     }
 
     Api.call(Api.endpoints.Recalls.UpdateRecallEvent, {
@@ -468,7 +493,7 @@ export const updateRecallAlert =
   };
 
 export const uploadCSV =
-  (id: number, file: File, onSuccess: () => void, onError?: (text: string) => void): AppThunk =>
+  (id: number, file: File, onSuccess: () => void, onError: (text: string) => void): AppThunk =>
   async () => {
     const fd = new FormData();
     fd.append('file', file, file.name);
@@ -482,7 +507,17 @@ export const uploadCSV =
       .catch(err => {
         const backendMessage =
           err?.response?.data?.error?.message || err.message || 'Unknown error';
-        if (onError) onError(backendMessage);
+        const errors: {
+          field: string;
+          message: string;
+        }[] = err?.response?.data?.errors;
+        if (errors?.length) {
+          errors.map(error => {
+            onError(error.message);
+          });
+        } else {
+          if (backendMessage) onError(backendMessage);
+        }
         console.log('Update Recall Alert error', err);
       });
   };

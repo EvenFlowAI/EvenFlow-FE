@@ -115,11 +115,7 @@ const useRecallAlertSettingsSave = ({
           listType: updatedRecallAlert.listType,
           filterRules: criterias,
           triggers: triggersWithPause,
-          globalModels: !updatedRecallAlert.recallCampaignId
-            ? null
-            : updatedRecallAlert.listType === RecallListType.CSV_UPLOADED
-              ? null
-              : selectedModelKeys,
+          globalModels: !updatedRecallAlert.recallCampaignId ? [] : selectedModelKeys,
         },
         () => {
           setIsEditTable(false);
