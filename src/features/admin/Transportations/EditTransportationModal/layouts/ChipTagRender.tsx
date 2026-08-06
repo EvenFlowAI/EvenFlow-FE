@@ -17,15 +17,20 @@ const dayOrder: Record<string, number> = {
   Saturday: 6,
 };
 
+const TOOLTIP_MAX_ITEMS = 30;
+const TOOLTIP_ITEM_HEIGHT = 24;
+const tooltipListStyle: React.CSSProperties = {
+  maxHeight: `${TOOLTIP_MAX_ITEMS * TOOLTIP_ITEM_HEIGHT}px`,
+  overflowY: 'auto',
+};
+
 export const renderChipTags = (
   selectedValues: TOption[],
   getTagProps: (params: { index: number }) => any,
   containerWidth = 500
 ) => {
   const sortedValues = [...selectedValues].sort((a, b) => {
-    const aIndex = dayOrder[a.name] ?? 999;
-    const bIndex = dayOrder[b.name] ?? 999;
-    return aIndex - bIndex;
+    return (dayOrder[a.name] ?? 999) - (dayOrder[b.name] ?? 999);
   });
 
   const maxVisibleTags = calculateMaxVisibleTags(sortedValues, containerWidth);
@@ -64,7 +69,7 @@ export const renderChipTags = (
         {remainingCount > 0 && (
           <Tooltip
             title={
-              <div>
+              <div style={tooltipListStyle}>
                 {sortedValues.slice(maxVisibleTags).map(option => (
                   <div key={option.value}>{option.name}</div>
                 ))}
@@ -97,9 +102,7 @@ export const renderChipTagsForDealership = (
   containerWidth = 420
 ) => {
   const sortedValues = [...selectedValues].sort((a, b) => {
-    const aIndex = dayOrder[a.name] ?? 999;
-    const bIndex = dayOrder[b.name] ?? 999;
-    return aIndex - bIndex;
+    return (dayOrder[a.name] ?? 999) - (dayOrder[b.name] ?? 999);
   });
 
   const maxVisibleTags = calculateMaxVisibleTagsForDealershipGroupForm(
@@ -140,7 +143,7 @@ export const renderChipTagsForDealership = (
         {remainingCount > 0 && (
           <Tooltip
             title={
-              <div>
+              <div style={tooltipListStyle}>
                 {sortedValues.slice(maxVisibleTags).map(option => (
                   <div key={option.value}>{option.name}</div>
                 ))}
@@ -174,9 +177,7 @@ export const renderChipTagsWithoutOptionObject = (
   handleDelete: (tag: string) => void
 ) => {
   const sortedValues = [...selectedValues].sort((a, b) => {
-    const aIndex = dayOrder[a] ?? 999;
-    const bIndex = dayOrder[b] ?? 999;
-    return aIndex - bIndex;
+    return (dayOrder[a] ?? 999) - (dayOrder[b] ?? 999);
   });
 
   const maxVisibleTags = calculateMaxVisibleTagsForWithoutOptionObject(
@@ -218,7 +219,7 @@ export const renderChipTagsWithoutOptionObject = (
         {remainingCount > 0 && (
           <Tooltip
             title={
-              <div>
+              <div style={tooltipListStyle}>
                 {sortedValues.slice(maxVisibleTags).map(option => (
                   <div key={option}>{option}</div>
                 ))}
