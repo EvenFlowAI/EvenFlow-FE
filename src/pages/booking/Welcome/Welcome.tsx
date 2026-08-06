@@ -43,6 +43,7 @@ import { useStorage } from '../../../hooks/useStorage/useStorage';
 import { useLayout } from '../../../hooks/useLayout/useLayout';
 import { useException } from '../../../hooks/useException/useException';
 import { Routes } from '../../../routes/constants';
+import { ErrorCode } from '../../../types/errorCodes';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import usePopState from '../../../hooks/usePopState/usePopState';
 import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
@@ -162,7 +163,7 @@ export const Welcome = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       dispatch(setSessionId(''));
-      if (err.response?.data?.errorCode === 6) {
+      if (err.response?.data?.errorCode === ErrorCode.EmailUnconfirmed) {
         onOpen();
       } else showError(err);
     } finally {

@@ -45,13 +45,13 @@ import { checkVin } from '../../../../../utils/svAppointments';
 import { decodeSCID } from '../../../../../utils/utils';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { useParams } from 'react-router-dom';
-import { ErrorCode } from '../../../../../api/request';
 import ManufacturerDidNotReturnRecalls from '../../../ManufacturerDidNotReturnRecalls/ManufacturerDidNotReturnRecalls';
 import {
   getRecallsByVin,
   setHasManufacturerDidNotReturnRecalls,
 } from '../../../../../store/reducers/recall/actions';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
+import { ErrorCode } from '../../../../../types/errorCodes';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -485,10 +485,7 @@ export const MaintenanceDetailsForm: React.FC<
                   showError(err.message || '');
                 });
               }
-              if (
-                (err as any).response?.data?.errorCode ===
-                ErrorCode.ManufacturerDidNotReturnAnyRecalls
-              ) {
+              if ((err as any).response?.data?.errorCode === ErrorCode.TimeoutError) {
                 onManufacturerRecallsOpen();
               }
               setLoading(false);
