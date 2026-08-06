@@ -76,7 +76,7 @@ export const getMaintenanceList = (
         id: item.serviceRequestId,
         name: item.recallComponent,
         type: 'recall',
-        campaignNumber: item.campaignNumber ?? item.oemProgram,
+        campaignNumber: item.campaignNumber ?? item.oemProgram ?? item.number,
       });
     });
   }

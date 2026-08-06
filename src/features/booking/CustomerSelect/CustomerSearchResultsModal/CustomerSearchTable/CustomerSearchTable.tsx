@@ -67,6 +67,7 @@ import AppointmentSelectionModal from '../../AppointmentSelectionModal/Appointme
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { AppointmentSummaryI } from '../../../utils/types';
 import { loadRecallsByVin } from '../../../../../store/reducers/recall/actions';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TCustomerSearchTableProps = {
   onClose: TCallback;
@@ -84,7 +85,9 @@ const CustomerSearchTable: React.FC<
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
-
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const [data, setData] = useState<ICustomerWithPhones[]>([]);
   const [sorting, setSorting] = useState<TSortOrder>({ isAscending: true, order: null });
   const [isEdit, setEdit] = useState<boolean>(false);
@@ -115,6 +118,20 @@ const CustomerSearchTable: React.FC<
   const history = useHistory();
   const { t } = useTranslation();
   const { askConfirm } = useConfirm();
+  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+
+  const visitCenterConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.VisitCenter),
+    [config]
+  );
+  const mobileServiceConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.MobileService),
+    [config]
+  );
+  const pickUpDropOffConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.PickUpDropOff),
+    [config]
+  );
 
   const [currentFirstItemIndex, currentLastItemIndex] = useMemo(() => {
     return [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize];
@@ -135,6 +152,27 @@ const CustomerSearchTable: React.FC<
     const orderedData = customers.map((el, i) => ({ ...el, sortOrder: i }));
     setData(orderedData);
   }, [customers]);
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
 
   const setCustomerData = async (item: ICustomerWithPhones, isUpdating: boolean) => {
     const phoneNumber = item.cellPhone ?? item.homePhone ?? item.otherPhone;
@@ -197,8 +235,30 @@ const CustomerSearchTable: React.FC<
     await dispatch(setSideBarSteps([]));
     await setCustomerData(item, false);
     await dispatch(setUserType(EUserType.Existing));
-    if (item?.vin?.length && item?.make && item?.model && item?.year) {
-      dispatch(loadRecallsByVin(decodeSCID(id), item.vin, item.make, item.model, item.year));
+    if (
+      item?.vin?.length &&
+      item?.make &&
+      item?.model &&
+      item?.year &&
+      (visitCenterConfig?.checkRecallsExisting ||
+        pickUpDropOffConfig?.checkRecallsExisting ||
+        mobileServiceConfig?.checkRecallsExisting)
+    ) {
+      const customerId = item?.customerId;
+
+      dispatch(
+        loadRecallsByVin(
+          decodeSCID(id),
+          item.vin,
+          item.make,
+          item.model,
+          item.year,
+          serviceTypeOption?.id,
+          transportationOptionId,
+          customerId,
+          true
+        )
+      );
     }
     if (firstScreenOptions?.length) {
       if (firstScreenOptions.length > 1) {

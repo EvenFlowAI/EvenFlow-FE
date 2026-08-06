@@ -6,6 +6,7 @@ import {
   clearAppointmentData,
   setAddress,
   setCity,
+  setCustomer,
   setPoliticalState,
   setServiceOptionChanged,
   setSideBarSteps,
@@ -43,6 +44,15 @@ const MakeNewButton = () => {
     await dispatch(setServiceOptionChanged(false));
     await dispatch(setSideBarSteps([]));
     await dispatch(setWelcomeScreenView(currentUser ? 'serviceCenterSelect' : 'select'));
+    dispatch(
+      setCustomer({
+        fullName: '',
+        phoneNumber: '',
+        email: '',
+        city: '',
+        companyName: '',
+      })
+    );
     history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);
   };
 

@@ -3,7 +3,10 @@ import { Grid, useMediaQuery, useTheme } from '@mui/material';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
-import { EUserType } from '../../../../../store/reducers/appointmentFrameReducer/types';
+import {
+  EServiceType,
+  EUserType,
+} from '../../../../../store/reducers/appointmentFrameReducer/types';
 import {
   clearAppointmentSteps,
   selectCategories,
@@ -48,6 +51,7 @@ import {
   getRecallsByVin,
   setHasManufacturerDidNotReturnRecalls,
 } from '../../../../../store/reducers/recall/actions';
+import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -63,9 +67,12 @@ export const MaintenanceDetailsForm: React.FC<
     serviceCategories,
     selectedPackage,
     selectedRecalls,
+    serviceTypeOption,
+    transportation,
+    customer,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
-  const { customerLoadedData, scProfile, selectedSR } = useSelector(
+  const { customerLoadedData, scProfile, selectedSR, isEditMode } = useSelector(
     (state: RootState) => state.appointment
   );
   const { id } = useParams<{ id: string }>();
@@ -99,6 +106,27 @@ export const MaintenanceDetailsForm: React.FC<
 
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
   const isSM = useMediaQuery(theme.breakpoints.down('md'));
+
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
 
   const isBmWService = useMemo(
     () =>
@@ -299,14 +327,6 @@ export const MaintenanceDetailsForm: React.FC<
     onBack('serviceNeeds');
   };
 
-  const onEmptyRecalls = () => {
-    if (userType === EUserType.New || isRecallsCategorySelected) {
-      onNoRecallsOpen();
-    } else {
-      onNext();
-    }
-  };
-
   const checkVINforRecallCategory = () => {
     if (!selectedVehicle?.vin || !checkVin(selectedVehicle?.vin)) {
       setErrors(prev => [...prev, 'vin']);
@@ -338,7 +358,7 @@ export const MaintenanceDetailsForm: React.FC<
     if (recallsByVin.length) {
       onOpen();
     } else {
-      onEmptyRecalls();
+      onNoRecallsOpen();
     }
   }, [
     loadingWhenNextClicked,
@@ -382,6 +402,13 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleSubmit = async () => {
+    if (isRecallsCategorySelected && !recallsToggledOn) {
+      showError(
+        t('Recalls are unavailable due to restricted access. Please contact your manager.')
+      );
+      return;
+    }
+
     const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
     const makeInTheList = makes.find(
       item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase()
@@ -399,7 +426,8 @@ export const MaintenanceDetailsForm: React.FC<
           )?.vin;
           if (
             (customerLoadedData?.fromSearchByName || userType === EUserType.Existing) &&
-            vinFromExistingCustomer?.length
+            vinFromExistingCustomer?.length &&
+            !isEditMode
           ) {
             if (recallByVinLoading) {
               setLoading(true);
@@ -418,29 +446,45 @@ export const MaintenanceDetailsForm: React.FC<
             if (recallsByVin.length) {
               onOpen();
             } else {
-              onEmptyRecalls();
+              if (isRecallsCategorySelected) {
+                onNoRecallsOpen();
+              } else {
+                onNext();
+              }
             }
           } else {
             setLoading(true);
             try {
-              const { data: resData } = await Api.call(Api.endpoints.Recalls.GetByVin, {
+              const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+              const serviceTypeOptionId = serviceTypeOption?.id;
+              const { data: receivedRecalls } = await Api.call(Api.endpoints.Recalls.GetByVin, {
                 data: {
                   serviceCenterId: decodeSCID(id),
                   vin: vin.toUpperCase(),
                   make,
                   year: +year,
                   model,
+                  serviceTypeOptionId,
+                  transportationOptionId,
+                  customerId,
                 },
               });
               dispatch(setRecallsAreShown(true));
-              if (resData.length) {
-                dispatch(getRecallsByVin(resData));
+              if (receivedRecalls.length) {
+                dispatch(getRecallsByVin(receivedRecalls));
                 onOpen();
               } else {
-                onEmptyRecalls();
+                onNoRecallsOpen();
               }
               setLoading(false);
             } catch (err) {
+              const errors = (err as any).response?.data?.errors;
+              if (errors?.length) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                errors.forEach((err: { message: string }) => {
+                  showError(err.message || '');
+                });
+              }
               if (
                 (err as any).response?.data?.errorCode ===
                 ErrorCode.ManufacturerDidNotReturnAnyRecalls

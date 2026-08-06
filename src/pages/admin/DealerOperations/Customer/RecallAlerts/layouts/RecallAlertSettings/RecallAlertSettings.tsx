@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../../store/rootReducer';
 import {
   getAffectedModels,
+  setRecallAlertSettingsEditMode,
+  setAffectedModels,
   setSelectedRecallAlert,
 } from '../../../../../../../store/reducers/recall/actions';
 import { useStyles } from '../../../../styles';
@@ -26,9 +28,12 @@ import { useRecallAlertSettingsStyles } from './styles';
 import AffectedModels from './AffectedModels';
 import useRecallAlertSettingsState from './useRecallAlertSettingsState';
 import useRecallAlertSettingsSave from './useRecallAlertSettingsSave';
+import { RecallEventStatus } from '../../../types';
 
 const RecallAlertSettings: React.FC = () => {
-  const { selectedRecallAlert, affectedModels } = useSelector((state: RootState) => state.recalls);
+  const { selectedRecallAlert, affectedModels, isRecallAlertSettingsEditMode } = useSelector(
+    (state: RootState) => state.recalls
+  );
   const dispatch = useDispatch();
   const { classes } = useStyles();
   const { classes: recallAlertSettingsClasses } = useRecallAlertSettingsStyles();
@@ -60,7 +65,13 @@ const RecallAlertSettings: React.FC = () => {
   } = useRecallAlertSettingsState({
     selectedRecallAlert,
     affectedModels,
+    initialEditMode: isRecallAlertSettingsEditMode,
   });
+
+  const closeRecallAlertSettings = () => {
+    dispatch(setRecallAlertSettingsEditMode(false));
+    dispatch(setSelectedRecallAlert(null));
+  };
 
   const { validateChangesBeforeSave } = useRecallAlertSettingsSave({
     updatedRecallAlert,
@@ -76,6 +87,12 @@ const RecallAlertSettings: React.FC = () => {
     setFirstTriggerDateError,
     setTriggerDateErrors,
   });
+
+  useEffect(() => {
+    return () => {
+      dispatch(setAffectedModels([]));
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedSC) return;
@@ -111,7 +128,7 @@ const RecallAlertSettings: React.FC = () => {
         pad
         parent={dealerOperationsCustomer}
         secondParent={dealerOperationsRoot}
-        actions={() => dispatch(setSelectedRecallAlert(null))}
+        actions={closeRecallAlertSettings}
       />
 
       <div className={classes.backButton}>
@@ -119,7 +136,7 @@ const RecallAlertSettings: React.FC = () => {
           variant="text"
           className={classes.backWrapper}
           onClick={() =>
-            isEditTable ? onOpenLeaveWithoutSavingModal() : dispatch(setSelectedRecallAlert(null))
+            isEditTable ? onOpenLeaveWithoutSavingModal() : closeRecallAlertSettings()
           }
         >
           <ArrowLeft />
@@ -142,7 +159,11 @@ const RecallAlertSettings: React.FC = () => {
                 </Button>
               </>
             ) : (
-              <Button variant="text" onClick={() => setIsEditTable(true)}>
+              <Button
+                variant="text"
+                disabled={updatedRecallAlert?.status === RecallEventStatus.Completed}
+                onClick={() => setIsEditTable(true)}
+              >
                 Edit
               </Button>
             )}
@@ -166,7 +187,7 @@ const RecallAlertSettings: React.FC = () => {
                     setSelectedModelKeys={setSelectedModelKeys}
                     selectedModelKeys={selectedModelKeys}
                   />
-                  {updatedRecallAlert.listType === RecallListType.UPLOAD_CSV && (
+                  {updatedRecallAlert.listType === RecallListType.CSV_UPLOADED && (
                     <div className={recallAlertSettingsClasses.uploadCsvHintText}>
                       Model selection does not affect VIN processing when using CSV upload.
                     </div>
@@ -176,6 +197,7 @@ const RecallAlertSettings: React.FC = () => {
               <StatisticData
                 updatedRecallAlert={updatedRecallAlert}
                 selectedModelKeys={selectedModelKeys}
+                isEditTable={isEditTable}
               />
               <hr className={recallAlertSettingsClasses.divider} />
               <div className={recallAlertSettingsClasses.audienceForm}>
@@ -210,7 +232,7 @@ const RecallAlertSettings: React.FC = () => {
       <LeaveWithoutSaving
         open={isOpenLeaveWithoutSavingModal}
         onClose={onCloseLeaveWithoutSavingModal}
-        handleLeave={() => dispatch(setSelectedRecallAlert(null))}
+        handleLeave={closeRecallAlertSettings}
       />
     </div>
   );

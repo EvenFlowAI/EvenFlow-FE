@@ -152,7 +152,8 @@ export const useStyles = makeStyles()(() => ({
     height: '42px',
   },
   uploadLabel: {
-    width: '100%',
+    width: 'fit-content',
+    cursor: 'pointer',
   },
   uploadButton: {
     height: '42px',

@@ -5,6 +5,7 @@ import {
   deleteRecallAlert,
   getRecallEvents,
   setIsRecallAlertsTableLoading,
+  setRecallAlertSettingsEditMode,
   setRecallAlertsOrderWorkflow,
   setRecallAlertsPageData,
   setSelectedRecallAlert,
@@ -52,6 +53,7 @@ const WorkflowTable: React.FC<
   const showError = useException();
   const { askConfirm } = useConfirm();
   const { selectedSC } = useSCs();
+  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
   const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
     (s: RootState) => s.recalls.recallAlertsPageData,
     setRecallAlertsPageData
@@ -75,7 +77,12 @@ const WorkflowTable: React.FC<
       setUpdatedAlerts(
         updatedAlerts.map(ev => {
           if (ev.id === id && value.length < 51) {
-            return { ...ev, name: value };
+            return {
+              ...ev,
+              name: value,
+              recallCampaignId: ev.recallCampaignId,
+              listType: ev.listType,
+            };
           }
           return ev;
         })
@@ -101,6 +108,8 @@ const WorkflowTable: React.FC<
         {
           id: recallAlert.id,
           serviceCenterId: selectedSC.id,
+          filterRules: null,
+          globalModels: null,
           triggers: (recallAlert.triggers || []).map(trigger => ({
             ...trigger,
             isPaused: !nextChecked,
@@ -110,6 +119,19 @@ const WorkflowTable: React.FC<
         undefined,
         showError
       )
+    );
+  };
+
+  const isAudienceConfigured = (el: IRecallAlert): boolean => {
+    return (
+      el.status !== RecallEventStatus.NotConfigured &&
+      el.triggers.length > 0 &&
+      el.listType !== null &&
+      el.listType !== undefined &&
+      (el.listType === RecallListType.CSV_UPLOADED && el.vinsFileLink
+        ? el.vinsFileLink?.length > 0
+        : el.globalModelIds?.length > 0) &&
+      !!el.recallCampaignId
     );
   };
 
@@ -172,10 +194,11 @@ const WorkflowTable: React.FC<
           style={{ cursor: 'pointer' }}
           onClick={() => {
             setCurrentItem(el);
+            dispatch(setRecallAlertSettingsEditMode(false));
             dispatch(setSelectedRecallAlert(el));
           }}
         >
-          <ConfirmationBadge isConfirmed={el.status !== RecallEventStatus.NotConfigured} />
+          <ConfirmationBadge isConfirmed={isAudienceConfigured(el)} />
         </div>
       ),
     },
@@ -184,7 +207,7 @@ const WorkflowTable: React.FC<
       val: el =>
         el.listType === RecallListType.VIN_CHECK_API
           ? VIN_CHECK_API
-          : el.listType === RecallListType.UPLOAD_CSV
+          : el.listType === RecallListType.CSV_UPLOADED
             ? CSV_UPLOADED
             : '',
     },
@@ -198,7 +221,12 @@ const WorkflowTable: React.FC<
             onOpenText();
           }}
         >
-          <ConfirmationBadge isConfirmed={el.communicationDetails?.textMessage.length > 0} />
+          <ConfirmationBadge
+            isConfirmed={Boolean(
+              el.communicationDetails?.textMessage?.length &&
+              textIntegrationSettings?.fromPhoneNumber?.length
+            )}
+          />
         </div>
       ),
     },
@@ -206,7 +234,12 @@ const WorkflowTable: React.FC<
       header: 'Active',
       val: el => (
         <Switch
-          disabled={el.status !== RecallEventStatus.ResultsAvailable || !el.triggers?.length}
+          disabled={
+            el.status !== RecallEventStatus.ResultsAvailable ||
+            !el.communicationDetails?.textMessage?.length ||
+            !textIntegrationSettings?.fromPhoneNumber?.length ||
+            !isAudienceConfigured(el)
+          }
           checked={isRecallAlertActive(el)}
           onChange={(_, checked) => handleActiveChange(el, checked)}
           color="primary"
@@ -236,6 +269,13 @@ const WorkflowTable: React.FC<
 
   const openEdit = () => {
     setAnchorEl(null);
+    if (!currentItem) {
+      dispatch(setRecallAlertSettingsEditMode(false));
+      return;
+    }
+    if (currentItem?.status !== RecallEventStatus.Completed) {
+      dispatch(setRecallAlertSettingsEditMode(true));
+    }
     dispatch(setSelectedRecallAlert(currentItem));
   };
 
@@ -312,7 +352,9 @@ const WorkflowTable: React.FC<
         customPaginationData
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
-        <MenuItem onClick={openEdit}>Edit</MenuItem>
+        <MenuItem disabled={currentItem?.status === RecallEventStatus.Completed} onClick={openEdit}>
+          Edit
+        </MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
         <MenuItem
           disabled={

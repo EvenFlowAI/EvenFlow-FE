@@ -812,8 +812,12 @@ export const updateRecalls =
       serviceCategories,
     } = data;
     if (scProfile && recalls?.length) {
-      dispatch(getRecallsByVin(recalls));
-      dispatch(setSelectedRecalls(recalls));
+      const updatedRecalls = recalls.map(recall => ({
+        ...recall,
+        campaignNumber: recall.number,
+      }));
+      dispatch(getRecallsByVin(updatedRecalls));
+      dispatch(setSelectedRecalls(updatedRecalls));
       const serviceType =
         serviceTypeOption?.type === EServiceType.MobileService
           ? EServiceType.MobileService
@@ -1735,9 +1739,14 @@ export const handleAppointmentUpdate =
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(
-              loadConsultantsForUpdating(id, option ? option.id : null, data, () => {
-                dispatch(updateConsultant(data.advisorId));
-              })
+              loadConsultantsForUpdating(
+                id,
+                option?.id ?? data.serviceTypeOption?.id ?? null,
+                data,
+                () => {
+                  dispatch(updateConsultant(data.advisorId));
+                }
+              )
             );
             dispatch(checkCarIsValid());
             setLoadingCar(false);

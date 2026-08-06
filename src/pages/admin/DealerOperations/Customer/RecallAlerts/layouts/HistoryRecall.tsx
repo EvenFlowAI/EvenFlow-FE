@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '../../../../../../components/modals/BaseModal/BaseModal';
 import { DialogProps } from '../../../../../../components/modals/BaseModal/types';
-import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
+import { IRecallAlert, RecallListType } from '../../../../../../store/reducers/recall/types';
 import { useDispatch } from 'react-redux';
 import { viewHistoryData } from '../../../../../../store/reducers/recall/actions';
 import { Loading } from '../../../../../../components/wrappers/Loading/Loading';
@@ -29,11 +29,11 @@ const historyRecallStatusLabels: Record<HistoryRecallStatus, string> = {
   not_configured: 'Alert not configured (Alert created)',
   configured: 'Alert configured',
   check_requested: 'VIN check requested',
-  results_available: 'Open Recall received',
   running: 'Alert started',
   completed: 'Alert completed',
   csv_uploaded: 'CSV uploaded',
   failed: 'VIN check failed (AutoAp returned an error)',
+  results_available: 'Open Recall received',
 };
 
 const historyRecallStatusIcons: Record<HistoryRecallStatus, JSX.Element> = {
@@ -81,6 +81,12 @@ const HistoryRecall = ({ onClose, open, currentItem }: HistoryRecallI) => {
   const normalizeEventName = (status?: HistoryRecallStatus) => {
     if (!status) {
       return '-';
+    }
+
+    if (status === 'results_available') {
+      return currentItem?.listType === RecallListType.CSV_UPLOADED
+        ? 'CSV uploaded'
+        : 'Open Recall received';
     }
 
     return historyRecallStatusLabels[status];

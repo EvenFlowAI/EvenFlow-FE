@@ -95,6 +95,7 @@ export enum EndUser {
   EditAppointmentFromEmail = '/appointment-update/:id/by-key',
   CloneAppointmentFromEmail = '/appointment-clone/:id/by-key',
   DemandAppointment = '/appointment-load',
+  ShortLink = '/s/:code',
   Appointment = '/appointment/:id',
   AppointmentFrame = '/f/appointment/:id',
   ManageAppointmentFrame = '/f/appointment-manage/:id',

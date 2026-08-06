@@ -61,6 +61,7 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     makes,
     isUsualFlowNeeded,
     transportation,
+    customer,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
   const { isAdvisorAvailable } = useSelector((state: RootState) => state.bookingFlowConfig);
@@ -83,6 +84,21 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
   const currentUser = useCurrentUser();
+
+  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
+
+  const visitCenterConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.VisitCenter),
+    [config]
+  );
+  const mobileServiceConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.MobileService),
+    [config]
+  );
+  const pickUpDropOffConfig = useMemo(
+    () => config?.find(item => item.serviceType === EServiceType.PickUpDropOff),
+    [config]
+  );
 
   const isAuthorized = useMemo(
     () => currentUser && currentUser.dealershipId === scProfile?.dealershipId,
@@ -159,13 +175,44 @@ export const Cars: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPro
     }
   }, [history, needToShowServiceSelection]);
 
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
+
   const handleAddNewCarAppointment = useCallback(
     (vehicle: ILoadedVehicle) => {
       clearAllData().then(() => {
         dispatch(setVehicle(vehicle));
-        if (vehicle?.vin?.length && vehicle?.make && vehicle?.model && vehicle?.year) {
+        if (
+          vehicle?.vin?.length &&
+          vehicle?.make &&
+          vehicle?.model &&
+          vehicle?.year &&
+          (visitCenterConfig?.checkRecallsExisting ||
+            pickUpDropOffConfig?.checkRecallsExisting ||
+            mobileServiceConfig?.checkRecallsExisting)
+        ) {
+          const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+
           dispatch(
-            loadRecallsByVin(decodeSCID(id), vehicle.vin, vehicle.make, vehicle.model, vehicle.year)
+            loadRecallsByVin(
+              decodeSCID(id),
+              vehicle.vin,
+              vehicle.make,
+              vehicle.model,
+              vehicle.year,
+              serviceTypeOption?.id,
+              transportationOptionId,
+              customerId,
+              true
+            )
           );
         }
         if (needToShowServiceSelection) {

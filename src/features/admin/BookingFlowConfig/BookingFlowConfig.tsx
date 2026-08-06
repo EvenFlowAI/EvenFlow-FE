@@ -337,6 +337,7 @@ export const BookingFlowConfig = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Switch
+                      disabled={!visitCenterConfig?.available}
                       onChange={onCheck(EServiceType.VisitCenter, 'checkRecallsExisting')}
                       checked={Boolean(visitCenterConfig?.checkRecallsExisting)}
                       color="primary"
@@ -344,6 +345,7 @@ export const BookingFlowConfig = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Switch
+                      disabled={!mobileServiceConfig?.available}
                       onChange={onCheck(EServiceType.MobileService, 'checkRecallsExisting')}
                       checked={Boolean(mobileServiceConfig?.checkRecallsExisting)}
                       color="primary"
@@ -351,6 +353,7 @@ export const BookingFlowConfig = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Switch
+                      disabled={!pickUpDropOffConfig?.available}
                       onChange={onCheck(EServiceType.PickUpDropOff, 'checkRecallsExisting')}
                       checked={Boolean(pickUpDropOffConfig?.checkRecallsExisting)}
                       color="primary"
@@ -363,6 +366,7 @@ export const BookingFlowConfig = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Switch
+                      disabled={!visitCenterConfig?.available}
                       onChange={onCheck(EServiceType.VisitCenter, 'checkRecallsNew')}
                       checked={Boolean(visitCenterConfig?.checkRecallsNew)}
                       color="primary"
@@ -370,6 +374,7 @@ export const BookingFlowConfig = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Switch
+                      disabled={!mobileServiceConfig?.available}
                       onChange={onCheck(EServiceType.MobileService, 'checkRecallsNew')}
                       checked={Boolean(mobileServiceConfig?.checkRecallsNew)}
                       color="primary"
@@ -377,6 +382,7 @@ export const BookingFlowConfig = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Switch
+                      disabled={!pickUpDropOffConfig?.available}
                       onChange={onCheck(EServiceType.PickUpDropOff, 'checkRecallsNew')}
                       checked={Boolean(pickUpDropOffConfig?.checkRecallsNew)}
                       color="primary"
