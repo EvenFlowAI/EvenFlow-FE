@@ -37,12 +37,16 @@ const StatisticData: React.FC<StatisticDataProps> = ({
   const isCSVUploaded = updatedRecallAlert?.listType === RecallListType.CSV_UPLOADED;
   const vehiclesInDmsValueForCSV = updatedRecallAlert?.vinsFileLink
     ? updatedRecallAlert?.vehiclesInDms || '0'
-    : '0';
+    : updatedRecallAlert?.recallCampaignId
+      ? '0'
+      : '-';
 
   const vehiclesInDmsValue = isCSVUploaded
     ? vehiclesInDmsValueForCSV
     : !affectedModels.length
-      ? '0'
+      ? updatedRecallAlert?.recallCampaignId
+        ? '0'
+        : '-'
       : isEditTable
         ? selectedVehiclesInDms
         : !updatedRecallAlert?.vehiclesInDms || updatedRecallAlert?.vehiclesInDms === 0
@@ -63,7 +67,7 @@ const StatisticData: React.FC<StatisticDataProps> = ({
         <div>
           <div className={classes.statisticLabel}>ESTIMATED RECIPIENTS</div>
           <div className={classes.statisticValue}>
-            {updatedRecallAlert?.estimatedRecipients || '0'}
+            {updatedRecallAlert?.estimatedRecipients || '-'}
           </div>
         </div>
         <People />
