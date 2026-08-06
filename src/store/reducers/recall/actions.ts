@@ -29,7 +29,8 @@ import type {
   HistoryRecallData,
   TriggerI,
 } from '../../../pages/admin/DealerOperations/Customer/types';
-import { ErrorCode } from '../../../types/errorCodes';
+import { ErrorCode } from '../../../api/request';
+
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
 export const setLoading = createAction<boolean>('Recall/SetLoading');
@@ -202,7 +203,7 @@ export const loadRecallsByVin =
       .catch(err => {
         console.log('get recalls by vin err', err);
         const backendError = err?.response?.data?.errorCode;
-        if (backendError === ErrorCode.TimeoutError)
+        if (backendError === ErrorCode.ManufacturerDidNotReturnAnyRecalls)
           dispatch(setHasManufacturerDidNotReturnRecalls(true));
       })
       .finally(() => {

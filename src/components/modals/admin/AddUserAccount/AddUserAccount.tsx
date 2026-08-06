@@ -21,9 +21,14 @@ import {
   setLoading as setTableLoading,
 } from '../../../../store/reducers/roleManagement/actions';
 import { Roles } from '../../../../types/types';
-import { ErrorCode } from '../../../../types/errorCodes';
 import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
+
+enum ERROR_CODES {
+  DATA_NOT_COMPLETE = 1,
+  EMAIL_ALREADY_IN_USE = 9,
+  USER_WITH_DMS_ID_ALREADY_EXISTS = 5,
+}
 
 type AddUserAccountProps = React.PropsWithChildren<DialogProps<TUserAccountForm | null>> & {
   isAdminPanel: boolean;
@@ -138,13 +143,13 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   }
 
   const handleError = (errorCode: number) => {
-    if (errorCode === ErrorCode.InvalidData) {
+    if (errorCode === ERROR_CODES.USER_WITH_DMS_ID_ALREADY_EXISTS) {
       dispatch(setDmsIdError(true));
     }
-    if (errorCode === ErrorCode.EmailAlreadyTaken) {
+    if (errorCode === ERROR_CODES.EMAIL_ALREADY_IN_USE) {
       dispatch(setEmailError(true));
     }
-    if (errorCode === ErrorCode.ValidationFailed) {
+    if (errorCode === ERROR_CODES.DATA_NOT_COMPLETE) {
       showError('Please fill in all required fields');
     }
     setLoading(false);

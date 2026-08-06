@@ -1,7 +1,6 @@
 import { ICredentials, IRefreshTokenData, ITokens, LocalTokens } from '../../types/auth';
-import { ErrorCode } from '../../types/errorCodes';
 import { API } from '../api';
-import { request } from '../request';
+import { ErrorCode, request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';
 import { authChannel } from '../../index';
 import { ADMIN_TOKEN_UPDATED } from '../../config/data';
@@ -136,7 +135,7 @@ class AuthService {
       });
       this.syncRequestAuthWithLocalStorage();
     } catch (e: any) {
-      if (e?.response?.data?.errorCode === ErrorCode.InvalidPermission) {
+      if (e?.response?.data?.errorCode === ErrorCode.ServiceCenterAccessDenied) {
         window.location.reload();
       }
       console.error(e);
