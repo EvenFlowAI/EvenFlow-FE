@@ -54,21 +54,9 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
     setForm(prev => ({
       ...prev,
       selectedServiceType: value?.value ?? prev.selectedServiceType,
+      formIsChecked: false,
     }));
   };
-
-  // const handleSearch = useCallback(() => {
-  //   if (selectedSC) {
-  //     dispatch(loadAllAssignedServiceRequests(selectedSC.id));
-  //   }
-  // }, [dispatch, selectedSC]);
-  //
-  // const handleSearchChange = useCallback(
-  //   (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     dispatch(setAssignedFilter({ searchTerm: e.target.value }));
-  //   },
-  //   [dispatch]
-  // );
 
   const getCategoryOptions = () => {
     let options: TOption[] = categoryOptions;
@@ -170,14 +158,6 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
               placeholder: 'Select a page',
             })}
           />
-          {/*<div className={classes.inputWrapper}>*/}
-          {/*  <label className={classes.label}>Add Op Codes</label>*/}
-          {/*  <SearchInput*/}
-          {/*    onSearch={handleSearch}*/}
-          {/*    onChange={handleSearchChange}*/}
-          {/*    value={assignedFilter.searchTerm}*/}
-          {/*  />*/}
-          {/*</div>*/}
           <Autocomplete
             style={{ width: '276px' }}
             options={getCategoryOptions()}
