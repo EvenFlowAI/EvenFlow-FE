@@ -173,6 +173,7 @@ const MakeModelInput = ({
           },
           '& .MuiAutocomplete-inputRoot': {
             flexWrap: 'nowrap',
+            width: 469,
             overflowX: 'auto',
             '&::-webkit-scrollbar': {
               display: 'none',
