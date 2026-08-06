@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { APIUrl } from '../config/config';
 import { ITokens, LocalTokens } from '../types/auth';
-import { ErrorCode } from '../types/errorCodes';
 import { authService } from './AuthService/AuthService';
 import { Api } from './ApiEndpoints/ApiEndpoints';
 import { ClientId } from '../config/tokens';
@@ -11,6 +10,11 @@ import {
   setAuthenticationTokenForSelfCustomer,
   setRefreshTokenForSelfCustomer,
 } from './helper';
+
+export enum ErrorCode {
+  ServiceCenterAccessDenied = 2,
+  ManufacturerDidNotReturnAnyRecalls = 17,
+}
 
 const setSelfCustomerToken = () => {
   Api.call<ITokens>(Api.endpoints.Authentications.Anonymous, {
@@ -75,7 +79,7 @@ request.interceptors.response.use(
   resp => resp,
   async error => {
     if (error?.response?.status === 401 && authService.getRefreshToken()) {
-      if (error?.response?.data?.errorCode === ErrorCode.InvalidPermission) {
+      if (error?.response?.data?.errorCode === ErrorCode.ServiceCenterAccessDenied) {
         window.location.reload();
       }
       const rq = error.config;
