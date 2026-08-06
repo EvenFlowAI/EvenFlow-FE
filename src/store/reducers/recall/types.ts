@@ -102,6 +102,7 @@ export interface IRecallAffectedModel {
   make: string;
   model: string;
   vehicleCount: number;
+  eligibleVehicleCount: number;
   year: number;
 }
 
