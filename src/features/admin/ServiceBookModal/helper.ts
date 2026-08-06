@@ -51,7 +51,6 @@ export function getSelectedModels(modelsOptions: IModel[], vehicleModels?: IPodV
       globalId: sourceModel.globalId,
       isReadOnly: sourceModel.isReadOnly,
       orderIndex: sourceModel.orderIndex,
-      code: sourceModel.code,
     };
   });
 }

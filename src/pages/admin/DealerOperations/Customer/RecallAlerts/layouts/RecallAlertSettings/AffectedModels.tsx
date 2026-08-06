@@ -197,7 +197,7 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
           vehicleCount:
             affectedModels.find(
               model => model.globalVehicleModelId === modelId && model.year === year
-            )?.vehicleCount || 0,
+            )?.eligibleVehicleCount || 0,
         }));
 
       return [...prev, ...missingYears];

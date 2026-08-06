@@ -20,6 +20,7 @@ export const getCurrentUser =
   async (dispatch, getState) => {
     const { welcomeScreenView, shouldShowServiceCentersList } = getState().appointmentFrame;
     const { customerLoadedData, scProfile } = getState().appointment;
+    const serviceOptionViewIsActive = welcomeScreenView === 'serviceSelect';
     try {
       dispatch(loading(true));
       const result = await Api.call<ICurrentUser>(Api.endpoints.Accounts.Profile);
@@ -30,6 +31,7 @@ export const getCurrentUser =
           : true;
         if (
           welcomeScreenView !== 'serviceCenterSelect' &&
+          !serviceOptionViewIsActive &&
           !keepWelcomeScreen &&
           !customerLoadedData?.isUpdating &&
           isAuthorized
