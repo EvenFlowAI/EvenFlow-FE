@@ -1,6 +1,12 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateRecallAlert, uploadCSV } from '../../../../../../../store/reducers/recall/actions';
+import {
+  getRecallEvents,
+  setRecallAlertSettingsEditMode,
+  setSelectedRecallAlert,
+  updateRecallAlert,
+  uploadCSV,
+} from '../../../../../../../store/reducers/recall/actions';
 import { IRecallAlert, RecallListType } from '../../../../../../../store/reducers/recall/types';
 import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../../../hooks/useException/useException';
@@ -95,7 +101,10 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
-    const triggersWithPause = triggers.map(trigger => ({ ...trigger, isPaused: true }));
+    const triggersWithPause = triggers.map(trigger => ({
+      ...trigger,
+      isPaused: trigger.isPaused ?? true,
+    }));
 
     dispatch(
       updateRecallAlert(
@@ -106,13 +115,14 @@ const useRecallAlertSettingsSave = ({
           listType: updatedRecallAlert.listType,
           filterRules: criterias,
           triggers: triggersWithPause,
-          globalModels:
-            updatedRecallAlert.listType === RecallListType.UPLOAD_CSV ? null : selectedModelKeys,
+          globalModels: !updatedRecallAlert.recallCampaignId ? [] : selectedModelKeys,
         },
         () => {
           setIsEditTable(false);
           setFile(null);
           setIsLoading(false);
+          dispatch(setRecallAlertSettingsEditMode(false));
+          dispatch(setSelectedRecallAlert(null));
         },
         shouldHandleFile
           ? (callback: TCallback) => {
@@ -121,9 +131,18 @@ const useRecallAlertSettingsSave = ({
           : undefined,
         (error: string) => {
           showError(error);
-          setIsEditTable(false);
-          setFile(null);
-          setIsLoading(false);
+          dispatch(
+            getRecallEvents(
+              selectedSC.id,
+              'workflow',
+              () => {},
+              () => {
+                setIsEditTable(false);
+                setFile(null);
+                setIsLoading(false);
+              }
+            )
+          );
         }
       )
     );
@@ -134,9 +153,14 @@ const useRecallAlertSettingsSave = ({
       return;
     }
 
+    if (updatedRecallAlert.recallCampaignId && !selectedModelKeys.length) {
+      showError('At least one model must be selected');
+      return;
+    }
+
     setIsLoading(true);
 
-    if (updatedRecallAlert.listType === RecallListType.UPLOAD_CSV) {
+    if (updatedRecallAlert.listType === RecallListType.CSV_UPLOADED) {
       saveRecallAlert(Boolean(file));
       return;
     }

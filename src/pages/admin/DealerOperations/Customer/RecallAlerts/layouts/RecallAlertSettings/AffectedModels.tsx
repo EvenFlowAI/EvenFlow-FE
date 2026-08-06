@@ -197,7 +197,7 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
           vehicleCount:
             affectedModels.find(
               model => model.globalVehicleModelId === modelId && model.year === year
-            )?.vehicleCount || 0,
+            )?.eligibleVehicleCount || 0,
         }));
 
       return [...prev, ...missingYears];
@@ -243,7 +243,9 @@ const AffectedModels: React.FC<AffectedModelsProps> = ({
                       disabled={
                         !isEditTable ||
                         (isChecked && selectedModelsCount === 1) ||
-                        updatedRecallAlert.status === RecallEventStatus.Running
+                        updatedRecallAlert.status === RecallEventStatus.Running ||
+                        updatedRecallAlert?.status === RecallEventStatus.CheckRequested ||
+                        updatedRecallAlert?.status === RecallEventStatus.ResultsAvailable
                       }
                       onChange={() => toggleModel(modelKey, years)}
                     />

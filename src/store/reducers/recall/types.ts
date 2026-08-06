@@ -30,7 +30,7 @@ export interface IRecall {
 
 export enum RecallListType {
   VIN_CHECK_API,
-  UPLOAD_CSV,
+  CSV_UPLOADED,
 }
 
 export interface IGlobalModelYear {
@@ -47,7 +47,7 @@ export interface IRecallAlert {
   listGeneratedDate: string;
   globalModelIds: number[];
   campaignRecallGroupBatchId: number;
-  recallCampaignId: number;
+  recallCampaignId: number | null;
   status: number;
   listType: RecallListType;
   communicationDetails: {
@@ -65,6 +65,7 @@ export interface IRecallAlert {
     value: string;
     isCriteria?: boolean;
   }[];
+  vinsFileLink?: string;
 }
 
 export interface ICreateUpdateRecall {
@@ -101,6 +102,7 @@ export interface IRecallAffectedModel {
   make: string;
   model: string;
   vehicleCount: number;
+  eligibleVehicleCount: number;
   year: number;
 }
 
@@ -123,10 +125,13 @@ export type TState = {
   updatedAlerts: {
     id: number;
     name: string;
+    listType: RecallListType;
+    recallCampaignId: number | null;
   }[];
   isEditName: boolean;
   isRecallAlertsTableLoading: boolean;
   selectedRecallAlert: IRecallAlert | null;
+  isRecallAlertSettingsEditMode: boolean;
   affectedModels: IRecallAffectedModel[];
   hasManufacturerDidNotReturnRecalls: boolean;
 };

@@ -26,7 +26,7 @@ const RecallCredits = () => {
   const { recallCredits } = useSelector((state: RootState) => state.recallDatabase);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [order, setOrder] = useState<IOrder<ServiceCenterCredit>>(initialOrder);
-  const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 15 });
+  const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 10 });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const showError = useException();
   const showMessage = useMessage();

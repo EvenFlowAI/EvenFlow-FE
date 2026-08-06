@@ -11,7 +11,12 @@ const RecallCredits = () => {
     <div style={{ marginBottom: '12px' }}>
       <span>
         Available Recall Credits{' '}
-        <span className={classes.availableCreditCounter}>{credits?.availableCredits}</span>
+        <span
+          style={credits?.availableCredits ? {} : { color: 'red' }}
+          className={classes.availableCreditCounter}
+        >
+          {credits?.availableCredits}
+        </span>
       </span>
     </div>
   );

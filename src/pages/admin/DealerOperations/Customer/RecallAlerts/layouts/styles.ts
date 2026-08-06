@@ -26,6 +26,8 @@ export const useHistoryRecallStyles = makeStyles()(theme => ({
     padding: theme.spacing(1.25),
     borderRadius: theme.spacing(5),
     backgroundColor: '#F2F4FB',
+    width: 44,
+    height: 44,
   },
   textContainer: {
     display: 'flex',
