@@ -17,8 +17,6 @@ export const Label = withStyles(FormControlLabel, {
 
 export const useStyles = makeStyles()(() => ({
   inputsWrapper: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
     gap: 18,
     marginBottom: 18,
   },
