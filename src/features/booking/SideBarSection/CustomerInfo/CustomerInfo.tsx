@@ -37,6 +37,7 @@ const CustomerInfo = () => {
   return userType === EUserType.Existing && customerLoadedData ? (
     <div className={classes.wrapper}>
       <div className={classes.title}>{t('Customer')}</div>
+      {customerLoadedData?.companyName && <div>{customerLoadedData?.companyName}</div>}
       <div>{customerName}</div>
 
       <div>{getPreferredPhone()}</div>
