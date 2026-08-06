@@ -15,6 +15,7 @@ import { RootState } from '../../../store/rootReducer';
 import { IUserAccount } from '../RoleManagement/types';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
+import RemoveAccess from '../../../components/modals/admin/RemoveAccess/RemoveAccess';
 
 export const EmployeesAddDelete = () => {
   const [editedItem, setEditedItem] = useState<TUserAccountForm | null>(null);
@@ -25,6 +26,7 @@ export const EmployeesAddDelete = () => {
   const [pageData, setPageData] = useState({ pageIndex: 0, pageSize: 25 });
   const { selectedSC } = useSCs();
   const [filterServiceCenterId, setFilterServiceCenterId] = useState<number>(0);
+  const { onOpen: onOpenRemove, isOpen: isOpenRemove, onClose: onCloseRemove } = useModal();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('mdl'));
@@ -69,8 +71,10 @@ export const EmployeesAddDelete = () => {
         isLoading={isLoading}
         setEditedItem={setEditedItem}
         editedItem={editedItem}
+        openRemoveModal={onOpenRemove}
       />
       <AddUserAccount open={isOpen} onClose={onClose} payload={editedItem} isAdminPanel />
+      <RemoveAccess isOpen={isOpenRemove} onClose={onCloseRemove} payload={editedItem} />
     </div>
   );
 };

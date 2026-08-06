@@ -7,11 +7,7 @@ import { TableAvatarAccounts } from '../../../components/wrappers/TableAvatar/Ta
 import { IOrder, TableRowDataType } from '../../../types/types';
 import { RenderDealershipAndServiceAccordion } from './RenderDealershipAndServiceAccordion';
 import { TUserAccountForm } from '../../../components/modals/admin/AddUserAccount/types';
-import {
-  removeUser,
-  restoreUser,
-  setLoading,
-} from '../../../store/reducers/roleManagement/actions';
+import { restoreUser, setLoading } from '../../../store/reducers/roleManagement/actions';
 import { useDispatch } from 'react-redux';
 import { useMessage } from '../../../hooks/useMessage/useMessage';
 import { convertUserAccountToEditedItem, truncateText } from './helper';
@@ -31,7 +27,7 @@ interface UsersTableProps {
   pageData: { pageIndex: number; pageSize: number };
   setPageData: React.Dispatch<React.SetStateAction<{ pageIndex: number; pageSize: number }>>;
   filterServiceCenterId?: number;
-  openRemoveModal?: () => void;
+  openRemoveModal: () => void;
 }
 
 const UsersTableWrapper = ({
@@ -185,14 +181,9 @@ const UsersTableWrapper = ({
 
   const handleRemove = async () => {
     if (editedItem?.id) {
-      if (isAdminPanel) {
-        dispatch(setLoading(true));
-        dispatch(removeUser(editedItem.id, onSuccess));
-      } else {
-        if (openRemoveModal) openRemoveModal();
-      }
-      setAnchorEl(null);
+      openRemoveModal();
     }
+    setAnchorEl(null);
   };
 
   const handleRestore = async () => {
@@ -248,7 +239,9 @@ const UsersTableWrapper = ({
           ) : (
             <MenuItem onClick={handleRestore}>Restore</MenuItem>
           )
-        ) : null}
+        ) : (
+          <MenuItem onClick={handleRemove}>Remove</MenuItem>
+        )}
         {!editedItem?.emailConfirmed ? (
           <MenuItem disabled={editedItem?.status === UserStatus.Removed} onClick={handleResend}>
             Resend
