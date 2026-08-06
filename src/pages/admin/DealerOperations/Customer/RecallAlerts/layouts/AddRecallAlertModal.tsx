@@ -14,6 +14,7 @@ import { TextField } from '../../../../../../components/formControls/TextFieldSt
 import { LoadingButton } from '../../../../../../components/buttons/LoadingButton/LoadingButton';
 import { DialogProps } from '../../../../../../components/modals/BaseModal/types';
 import { createRecallAlert } from '../../../../../../store/reducers/recall/actions';
+import { normalizeWhitespace } from '../../../../../../utils/string';
 
 type TAddCustomerEventModalProps = DialogProps & {
   tableType: 'workflow' | 'stats';
@@ -38,7 +39,9 @@ const AddRecallAlertModal = ({ onClose, open, tableType }: TAddCustomerEventModa
   };
 
   const onError = () => {
-    showError(`Recall alert name "${newEventName}" is already used. Please enter a unique name.`);
+    showError(
+      `Recall alert name "${normalizeWhitespace(newEventName)}" is already used. Please enter a unique name.`
+    );
     setIsLoading(false);
   };
 
@@ -52,7 +55,7 @@ const AddRecallAlertModal = ({ onClose, open, tableType }: TAddCustomerEventModa
       setIsLoading(true);
       dispatch(
         createRecallAlert(
-          { serviceCenterId: selectedSC?.id, name: newEventName.trim() },
+          { serviceCenterId: selectedSC?.id, name: normalizeWhitespace(newEventName) },
           tableType,
           () => {
             onClose();

@@ -7,6 +7,7 @@ import {
   setIsEditName,
   setIsRecallAlertsTableLoading,
   setLoading,
+  setRecallAlertSettingsEditMode,
   setRecallAlerts,
   setRecallAlertsCount,
   setRecallAlertsOrderStats,
@@ -31,8 +32,8 @@ export const initialOrder = {
 };
 
 export const initialOrderForRecallAlerts = {
-  orderBy: 'Name',
-  isAscending: true,
+  orderBy: 'CreatedAt',
+  isAscending: false,
 };
 
 const initialState: TState = {
@@ -60,6 +61,7 @@ const initialState: TState = {
   isEditName: false,
   isRecallAlertsTableLoading: false,
   selectedRecallAlert: null,
+  isRecallAlertSettingsEditMode: false,
   affectedModels: [],
   recallByVinLoading: false,
   hasManufacturerDidNotReturnRecalls: false,
@@ -120,6 +122,9 @@ export const recallsReducer = createReducer(initialState, builder =>
     })
     .addCase(setSelectedRecallAlert, (state, { payload }) => {
       return { ...state, selectedRecallAlert: payload };
+    })
+    .addCase(setRecallAlertSettingsEditMode, (state, { payload }) => {
+      return { ...state, isRecallAlertSettingsEditMode: payload };
     })
     .addCase(setAffectedModels, (state, { payload }) => {
       return { ...state, affectedModels: payload };

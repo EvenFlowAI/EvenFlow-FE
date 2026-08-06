@@ -2,23 +2,44 @@ import { TColumn, TSearchColumnName } from './types';
 
 export const customerDataColumns: TColumn[] = [
   {
-    name: 'Last Name',
-    order: 'lastName',
-  },
-  {
     name: 'First Name',
     order: 'firstName',
   },
   {
+    name: 'Middle Name',
+    order: 'middleName',
+  },
+  {
+    name: 'Last Name',
+    order: 'lastName',
+  },
+  {
     name: 'Company Name',
+  },
+  {
+    name: 'Make',
+  },
+  {
+    name: 'Model',
+  },
+  {
+    name: 'Year',
+  },
+  {
+    name: 'VIN',
+    order: 'vin',
+  },
+  {
+    name: 'Cell',
+    order: 'cellPhone',
   },
   {
     name: 'Home',
     order: 'homePhone',
   },
   {
-    name: 'Cell',
-    order: 'cellPhone',
+    name: 'Work',
+    order: 'workPhone',
   },
   {
     name: 'Other',
@@ -39,19 +60,6 @@ export const customerDataColumns: TColumn[] = [
   },
   {
     name: 'ZIP',
-  },
-  {
-    name: 'Year',
-  },
-  {
-    name: 'Make',
-  },
-  {
-    name: 'Model',
-  },
-  {
-    name: 'VIN',
-    order: 'vin',
   },
 ];
 

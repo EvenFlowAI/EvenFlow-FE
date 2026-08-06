@@ -3,7 +3,10 @@ import { TArgCallback } from '../../../../../types/types';
 import { TScreen } from '../../../../../types/screens';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { setShowServiceCentersList } from '../../../../../store/reducers/appointmentFrameReducer/actions';
+import {
+  setShowServiceCentersList,
+  setWelcomeScreenView,
+} from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useHistory, useParams } from 'react-router-dom';
 import { EServiceCategoryPage, IServiceCategory } from '../../../../../api/types';
 import {
@@ -64,6 +67,7 @@ export const ServiceNeedsCreate: React.FC<
       ) {
         onBack();
       } else {
+        dispatch(setWelcomeScreenView('serviceSelect'));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);
       }
     }

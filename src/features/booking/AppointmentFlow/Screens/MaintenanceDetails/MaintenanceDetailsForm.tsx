@@ -45,13 +45,13 @@ import { checkVin } from '../../../../../utils/svAppointments';
 import { decodeSCID } from '../../../../../utils/utils';
 import { Api } from '../../../../../api/ApiEndpoints/ApiEndpoints';
 import { useParams } from 'react-router-dom';
-import { ErrorCode } from '../../../../../api/request';
 import ManufacturerDidNotReturnRecalls from '../../../ManufacturerDidNotReturnRecalls/ManufacturerDidNotReturnRecalls';
 import {
   getRecallsByVin,
   setHasManufacturerDidNotReturnRecalls,
 } from '../../../../../store/reducers/recall/actions';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
+import { ErrorCode } from '../../../../../types/errorCodes';
 
 export const MaintenanceDetailsForm: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TMaintenanceDetailsProps>>
@@ -205,6 +205,14 @@ export const MaintenanceDetailsForm: React.FC<
   }, [selectedVehicle, currentConfig, isRecallsCategorySelected]);
 
   useEffect(() => {
+    return () => {
+      if (isRecallsCategorySelected && !selectedRecalls.length) {
+        removeRecallCategory();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const selectedMileage = mileage.find(
       item => item.value.toString() === selectedVehicle?.mileage?.toString()
     );
@@ -296,7 +304,6 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleBack = () => {
-    if (isRecallsCategorySelected && !selectedRecalls.length) removeRecallCategory();
     onBack(
       service?.type === EServiceCategoryType.Diagnose ||
         subService?.type === EServiceCategoryType.IndividualServices
@@ -402,6 +409,13 @@ export const MaintenanceDetailsForm: React.FC<
   };
 
   const handleSubmit = async () => {
+    if (isRecallsCategorySelected && !recallsToggledOn) {
+      showError(
+        t('Recalls are unavailable due to restricted access. Please contact your manager.')
+      );
+      return;
+    }
+
     const recallsFromTheAdmin = !recallsAreShown && recallsToggledOn;
     const makeInTheList = makes.find(
       item => item.name.toLowerCase() === selectedVehicle?.make.toLowerCase()
@@ -478,10 +492,7 @@ export const MaintenanceDetailsForm: React.FC<
                   showError(err.message || '');
                 });
               }
-              if (
-                (err as any).response?.data?.errorCode ===
-                ErrorCode.ManufacturerDidNotReturnAnyRecalls
-              ) {
+              if ((err as any).response?.data?.errorCode === ErrorCode.TimeoutError) {
                 onManufacturerRecallsOpen();
               }
               setLoading(false);
