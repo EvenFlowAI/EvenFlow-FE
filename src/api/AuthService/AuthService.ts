@@ -1,9 +1,11 @@
 import { ICredentials, IRefreshTokenData, ITokens, LocalTokens } from '../../types/auth';
+import { ErrorCode } from '../../types/errorCodes';
 import { API } from '../api';
-import { ErrorCode, request } from '../request';
+import { request } from '../request';
 import { Api } from '../ApiEndpoints/ApiEndpoints';
 import { authChannel } from '../../index';
 import { ADMIN_TOKEN_UPDATED } from '../../config/data';
+import { ClientId } from '../../config/tokens';
 import {
   getAuthenticationTokenForAdmin,
   getAuthenticationTokenForSelfCustomer,
@@ -71,6 +73,23 @@ class AuthService {
     return !!getAuthenticationTokenForAdmin();
   }
 
+  /**
+   * Makes sure an anonymous (Booking Flow Anonymous) token is available before calling an endpoint
+   * that is not [AllowAnonymous]. Recipients of outbound SMS/email links are not logged in, so the
+   * self-customer token has to be acquired up front. Unlike the interceptor in request.ts this does
+   * not reload the page - the caller awaits it and then issues its own request.
+   */
+  async ensureAnonymousToken(): Promise<void> {
+    if (!this.getLocalToken()) {
+      const resp = await Api.call<ITokens>(Api.endpoints.Authentications.Anonymous, {
+        data: { ClientId },
+      });
+      setAuthenticationTokenForSelfCustomer(resp.data.accessToken);
+      setRefreshTokenForSelfCustomer(resp.data.refreshToken);
+    }
+    this.syncRequestAuthWithLocalStorage();
+  }
+
   syncRequestAuthWithLocalStorage(): void {
     const token = this.getLocalToken();
     if (token) {
@@ -117,7 +136,7 @@ class AuthService {
       });
       this.syncRequestAuthWithLocalStorage();
     } catch (e: any) {
-      if (e?.response?.data?.errorCode === ErrorCode.ServiceCenterAccessDenied) {
+      if (e?.response?.data?.errorCode === ErrorCode.InvalidPermission) {
         window.location.reload();
       }
       console.error(e);

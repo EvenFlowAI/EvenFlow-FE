@@ -49,6 +49,7 @@ export type TGAOptions = {
   siteSpeedSampleRate: number;
   cookieDomain: string;
   allowLinker: boolean;
+  cookieFlags: string;
   storage: string;
   clientId?: string;
   name?: string;

@@ -123,7 +123,11 @@ export const AppointmentSelectedDate: React.FC<
   };
 
   const handleChangeSlot = () => {
-    dispatch(loadActiveTransportations(decodeSCID(id), onSuccess));
+    if (![EServiceType.MobileService].includes(serviceType as EServiceType)) {
+      dispatch(loadActiveTransportations(decodeSCID(id), onSuccess));
+    } else {
+      onSuccess();
+    }
   };
 
   return (

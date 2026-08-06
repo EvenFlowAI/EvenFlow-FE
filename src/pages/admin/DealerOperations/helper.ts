@@ -263,6 +263,7 @@ export const filterValidRulesAndTriggers = (
 
 export const VIN_CHECK_API = 'VIN Check (API)';
 export const CSV_UPLOADED = 'CSV Uploaded';
+export const UPLOAD_CSV = 'Upload CSV';
 
 export const toEnumLabel = <T extends Record<number, string>>(
   value: string,
@@ -290,7 +291,7 @@ export const mapModelIdsToGlobalModels = (
     .map(item => ({
       globalVehicleModelId: item.globalVehicleModelId,
       year: item.year,
-      vehicleCount: item.vehicleCount || 0,
+      vehicleCount: item.eligibleVehicleCount || 0,
     }));
 
   const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
@@ -306,11 +307,11 @@ export const mapAllAffectedModelsToSelectedKeys = (
 ) => {
   const uniqueByModelAndYear = new Map<string, TSelectedModelKey>();
 
-  models.forEach(({ globalVehicleModelId, year, vehicleCount }) => {
+  models.forEach(({ globalVehicleModelId, year, eligibleVehicleCount }) => {
     uniqueByModelAndYear.set(`${globalVehicleModelId}-${year}`, {
       globalVehicleModelId,
       year,
-      vehicleCount,
+      vehicleCount: eligibleVehicleCount,
     });
   });
 
