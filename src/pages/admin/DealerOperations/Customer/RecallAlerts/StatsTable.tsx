@@ -3,6 +3,7 @@ import {
   deleteRecallAlert,
   getRecallEvents,
   setIsRecallAlertsTableLoading,
+  setRecallAlertSettingsEditMode,
   setRecallAlertsOrderStats,
   setRecallAlertsPageData,
   setSelectedRecallAlert,
@@ -70,7 +71,12 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
       setUpdatedAlerts(
         updatedAlerts.map(ev => {
           if (ev.id === id && value.length < 51) {
-            return { ...ev, name: value };
+            return {
+              ...ev,
+              name: value,
+              listType: ev.listType,
+              recallCampaignId: ev.recallCampaignId,
+            };
           }
           return ev;
         })
@@ -107,7 +113,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
         );
       },
       orderId: 'Name',
-      width: 200,
+      width: 210,
     },
     {
       header: 'NHTSA Campaign',
@@ -117,7 +123,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     },
     {
       header: 'Recall Component',
-      width: 209,
+      width: 250,
       val: el => {
         const text = el.recallComponent ?? '';
         return text.length > 20 ? (
@@ -132,23 +138,31 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
     },
     {
       header: 'Vehicles In DMS',
-      val: el => (el.vehiclesInDms >= 0 ? String(el.vehiclesInDms) : ''),
+      val: el => (el.vehiclesInDms > 0 ? String(el.vehiclesInDms) : '-'),
+      width: 100,
       orderId: 'VehiclesNumber',
     },
     {
       header: 'Credits Used',
-      val: el => (el.creditsUsed >= 0 ? String(el.creditsUsed) : ''),
+      val: el => (el.creditsUsed > 0 ? String(el.creditsUsed) : '-'),
       width: 151,
       orderId: 'CreditsUsed',
     },
     {
-      header: 'Est. Recipients',
+      header: 'Estimated Recipients',
       val: el => (el.estimatedRecipients >= 0 ? String(el.estimatedRecipients) : ''),
+      width: 100,
       orderId: 'EstimatedRecipientsNumber',
     },
     {
       header: 'Actual Recipients',
-      val: el => (el.actualRecipients >= 0 ? String(el.actualRecipients) : ''),
+      val: el =>
+        el.actualRecipients > 0
+          ? String(el.actualRecipients)
+          : el.status === RecallEventStatus.Completed
+            ? '0'
+            : '-',
+      width: 100
     },
   ];
 
@@ -167,6 +181,13 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
 
   const openEdit = () => {
     setAnchorEl(null);
+    if (!currentItem) {
+      dispatch(setRecallAlertSettingsEditMode(false));
+      return;
+    }
+    if (currentItem?.status !== RecallEventStatus.Completed) {
+      dispatch(setRecallAlertSettingsEditMode(true));
+    }
     dispatch(setSelectedRecallAlert(currentItem));
   };
 
@@ -240,9 +261,12 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
         count={recallAlertsCount}
         hidePagination={recallAlertsCount < 11}
         isLoading={isRecallAlertsTableLoading}
+        customPaginationData
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
-        <MenuItem onClick={openEdit}>Edit</MenuItem>
+        <MenuItem disabled={currentItem?.status === RecallEventStatus.Completed} onClick={openEdit}>
+          Edit
+        </MenuItem>
         <MenuItem onClick={viewHistory}>View History</MenuItem>
         <MenuItem
           disabled={

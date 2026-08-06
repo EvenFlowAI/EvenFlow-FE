@@ -1,20 +1,16 @@
 import React from 'react';
 import clsx from 'clsx';
-import { numberToOrdinalWord } from '../../../helper';
 import { IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import { RecallEventStatus, TriggerI } from '../../types';
-import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
-import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
 import { ReactComponent as EmptyCalendar } from '../../../../../../assets/img/empthyCalendar.svg';
-import { ReactComponent as Time } from '../../../../../../assets/img/time.svg';
 import dayjs from 'dayjs';
 import { useStyles } from '../../../styles';
 import { useFormStyles } from './styles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
 import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
+import TriggerRow from './TriggerRow';
 
 interface TriggersI {
   triggers: TriggerI[];
@@ -51,7 +47,6 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
   triggersLength,
   disableAdd,
   isOutboundMode,
-  updatedRecallAlert,
   onAddTrigger,
   classes,
   formClasses,
@@ -62,8 +57,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
 
   const isDisabledByLimit = triggersLength === 5;
   const isDisabledByMode = isOutboundMode ? disableAdd : false;
-  const isDisabledByStatus = updatedRecallAlert?.status === RecallEventStatus.Running;
-  const isDisabled = isDisabledByLimit || isDisabledByMode || isDisabledByStatus;
+  const isDisabled = isDisabledByLimit || isDisabledByMode;
 
   return (
     <IconButton
@@ -78,7 +72,7 @@ const AddTriggerAction: React.FC<IAddTriggerAction> = ({
           [formClasses.disabledAddButtonText]: isDisabledByLimit || isDisabledByMode,
         })}
       >
-        Add {isOutboundMode ? 'Contact' : 'Trigger'}
+        Add Contact
       </span>
     </IconButton>
   );
@@ -100,7 +94,7 @@ const Triggers = ({
   const { classes: formClasses } = useFormStyles();
   const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
   const formattedListGeneratedDate = selectedRecallAlert?.listGeneratedDate?.length
-    ? dayjs(selectedRecallAlert?.listGeneratedDate).add(1, 'day').format('dddd, MMM D, YYYY')
+    ? dayjs(selectedRecallAlert?.listGeneratedDate).format('dddd, MMM D, YYYY')
     : '';
 
   const handleAddTrigger = () => {
@@ -109,12 +103,17 @@ const Triggers = ({
     } else {
       setTriggers(prev => [
         ...prev,
-        { daysFromListGeneration: 0, scheduledTime: '', isPaused: true },
+        {
+          daysFromListGeneration: 0,
+          scheduledTime: '',
+          isPaused: selectedRecallAlert?.status !== RecallEventStatus.Running,
+        },
       ]);
     }
   };
 
   const handleRemoveTrigger = (index: number) => {
+    if (updatedRecallAlert?.status === RecallEventStatus.Running && triggers?.length <= 1) return;
     setFirstTriggerDateError(false);
     setTriggerDateErrors(prev => ({
       ...prev,
@@ -163,100 +162,23 @@ const Triggers = ({
       )}
       {triggers.length ? (
         <div className={classes.criteriaWrapper}>
-          {triggers.map((trigger, index) => {
-            return (
-              <div
-                key={index}
-                className={clsx(classes.triggerItemWrapper, {
-                  [formClasses.triggerItemWrapperWithPadding]: !isOutboundMode,
-                })}
-              >
-                <div className={classes.triggerItem}>
-                  <span className={classes.contactCounter}>
-                    {numberToOrdinalWord(index + 1)} Contact
-                  </span>
-                  {isEditTable ? (
-                    <div
-                      className={formClasses.removeTriggerButton}
-                      onClick={() => handleRemoveTrigger(index)}
-                    >
-                      <CloseNew />
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className={classes.triggersFormWrapper}>
-                  <div className={formClasses.triggerControlsRow}>
-                    <div
-                      className={clsx(classes.triggersForm, {
-                        [formClasses.triggerDaysFieldRecall]: !isOutboundMode,
-                      })}
-                    >
-                      <TextField
-                        fullWidth
-                        labelFitContent={true}
-                        disabled={
-                          !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
-                        }
-                        type="number"
-                        inputProps={{ min: 0 }}
-                        error={
-                          !Number.isInteger(Number(trigger.daysFromListGeneration)) ||
-                          triggerDateErrors[index]
-                        }
-                        label="Days from list generation"
-                        placeholder=""
-                        onChange={e =>
-                          handleTriggerChange(index, 'daysFromListGeneration', e.target.value || '')
-                        }
-                        value={+trigger.daysFromListGeneration}
-                      />
-                    </div>
-                    <div
-                      className={clsx(classes.triggerClockWrapper, {
-                        [formClasses.triggerClockFieldRecall]: !isOutboundMode,
-                      })}
-                    >
-                      <ClockTimePicker
-                        value={
-                          trigger.scheduledTime ? dayjs(trigger.scheduledTime, 'HH:mm:ss') : null
-                        }
-                        disabled={
-                          !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
-                        }
-                        onChange={e =>
-                          handleTriggerChange(index, 'scheduledTime', dayjs(e).format('HH:mm:ss'))
-                        }
-                        label={'Scheduled time'}
-                        InputProps={{
-                          id: 'Scheduled time',
-                          className: !isOutboundMode ? formClasses.scheduledTimeInput : undefined,
-                          placeholder: '',
-                          error: index === 0 && firstTriggerDateError,
-                          endAdornment: !isOutboundMode && isEditTable ? <Time width={26} /> : null,
-                        }}
-                      />
-                    </div>
-                  </div>
-                  {!isOutboundMode && formattedListGeneratedDate ? (
-                    <div className={formClasses.recallTriggerStats}>
-                      <span className={formClasses.recallTriggerStatsDate}>
-                        {formattedListGeneratedDate}
-                      </span>
-                      <div className={formClasses.recallTriggerStatsCounters}>
-                        <span className={formClasses.recallTriggerStatsCounter}>
-                          Estimated Recipients: {selectedRecallAlert?.estimatedRecipients || 0}
-                        </span>
-                        <span className={formClasses.recallTriggerStatsCounter}>
-                          Actual Recipients: {selectedRecallAlert?.actualRecipients || 0}
-                        </span>
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            );
-          })}
+          {triggers.map((trigger, index) => (
+            <TriggerRow
+              key={index}
+              trigger={trigger}
+              index={index}
+              isOutboundMode={isOutboundMode}
+              isEditTable={isEditTable}
+              updatedRecallAlert={updatedRecallAlert}
+              triggerDateErrors={triggerDateErrors}
+              firstTriggerDateError={firstTriggerDateError}
+              formattedListGeneratedDate={formattedListGeneratedDate}
+              classes={classes}
+              formClasses={formClasses}
+              onRemoveTrigger={handleRemoveTrigger}
+              onTriggerChange={handleTriggerChange}
+            />
+          ))}
         </div>
       ) : isOutboundMode ? null : (
         <div className={formClasses.emptyTriggersState}>
@@ -269,7 +191,6 @@ const Triggers = ({
         triggersLength={triggers.length}
         disableAdd={disableAdd}
         isOutboundMode={isOutboundMode}
-        updatedRecallAlert={updatedRecallAlert}
         onAddTrigger={handleAddTrigger}
         classes={classes}
         formClasses={formClasses}

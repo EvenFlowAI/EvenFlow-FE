@@ -49,6 +49,12 @@ const RecallAlerts = () => {
   }, [recallAlerts]);
 
   useEffect(() => {
+    return () => {
+      dispatch(setIsEditName(false));
+    };
+  }, []);
+
+  useEffect(() => {
     if (!selectedSC) return;
 
     dispatch(setIsRecallAlertsTableLoading(true));
@@ -63,6 +69,8 @@ const RecallAlerts = () => {
           return {
             id: item.id,
             name: item.name,
+            listType: item.listType,
+            recallCampaignId: item.recallCampaignId,
           };
         })
       )
@@ -73,8 +81,7 @@ const RecallAlerts = () => {
     dispatch(setIsEditName(false));
   };
 
-  const onError = (eventName: string) => {
-    showError(`Recall alert name "${eventName}" is already used. Please enter a unique name.`);
+  const onError = () => {
     dispatch(setIsEditName(true));
     dispatch(setIsRecallAlertsTableLoading(false));
   };
@@ -94,6 +101,8 @@ const RecallAlerts = () => {
                   {
                     id: updatedEvent.id,
                     name: normalizedName,
+                    listType: updatedEvent.listType,
+                    recallCampaignId: updatedEvent.recallCampaignId,
                     serviceCenterId: selectedSC?.id,
                   },
                   tableMode,
@@ -101,7 +110,8 @@ const RecallAlerts = () => {
                     dispatch(setIsRecallAlertsTableLoading(false));
                     onSuccess();
                   },
-                  onError
+                  onError,
+                  message => showError(message)
                 )
               );
               counter += 1;
@@ -112,8 +122,14 @@ const RecallAlerts = () => {
 
       if (counter === 0) {
         dispatch(setIsEditName(false));
+        setStartedNames();
       }
     }
+  };
+
+  const handleOpenText = () => {
+    onOpenText();
+    dispatch(setIsEditName(false));
   };
 
   return (
@@ -176,7 +192,7 @@ const RecallAlerts = () => {
           <WorkflowTable
             currentItem={currentItem}
             setCurrentItem={setCurrentItem}
-            onOpenText={onOpenText}
+            onOpenText={handleOpenText}
             onOpenHistory={onOpenHistory}
           />
         </div>

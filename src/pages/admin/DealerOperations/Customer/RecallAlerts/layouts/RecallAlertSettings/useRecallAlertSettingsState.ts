@@ -14,17 +14,29 @@ import {
   toEnumLabel,
   TSelectedModelKey,
 } from '../../../../helper';
+import {
+  getAffectedModels,
+  setAffectedModels,
+  setRecallAlertSettingsEditMode,
+  setSelectedRecallAlert,
+} from '../../../../../../../store/reducers/recall/actions';
+import { useDispatch } from 'react-redux';
+import { useSCs } from '../../../../../../../hooks/useSCs/useSCs';
 
 interface IUseRecallAlertSettingsState {
   selectedRecallAlert: IRecallAlert | null;
   affectedModels: IRecallAffectedModel[];
+  initialEditMode?: boolean;
 }
 
 const useRecallAlertSettingsState = ({
   selectedRecallAlert,
   affectedModels,
+  initialEditMode,
 }: IUseRecallAlertSettingsState) => {
-  const [isEditTable, setIsEditTable] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+  const [isEditTable, setIsEditTable] = useState<boolean>(initialEditMode ?? false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [updatedRecallAlert, setUpdatedRecallAlert] = useState<IRecallAlert | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -55,10 +67,6 @@ const useRecallAlertSettingsState = ({
   }, [setDefaultData]);
 
   useEffect(() => {
-    if (isEditTable) {
-      return;
-    }
-
     if (!affectedModels.length) {
       setSelectedModelKeys(prev => (prev.length ? [] : prev));
       return;
@@ -89,12 +97,29 @@ const useRecallAlertSettingsState = ({
       selectedModel => !isKeyPresentInAffectedModels(selectedModel)
     );
 
+    const selectedModelIds = selectedRecallAlert?.globalModelIds || [];
+
+    if (selectedModelIds.length) {
+      if (!hasSelectionForCurrentCampaign || hasOutdatedSelection) {
+        const mappedSelection = mapModelIdsToGlobalModels(selectedModelIds, affectedModels);
+        setSelectedModelKeys(mappedSelection);
+      }
+
+      return;
+    }
+
     if (!hasOutdatedSelection && hasSelectionForCurrentCampaign) {
       return;
     }
 
     setSelectedModelKeys(mapAllAffectedModelsToSelectedKeys(affectedModels));
-  }, [affectedModels, isEditTable, selectedModelKeys, updatedRecallAlert?.recallCampaignId]);
+  }, [
+    affectedModels,
+    isEditTable,
+    selectedModelKeys,
+    selectedRecallAlert,
+    updatedRecallAlert?.recallCampaignId,
+  ]);
 
   const resetValidationErrors = () => {
     setCriteriaTypeErrors({});
@@ -106,11 +131,31 @@ const useRecallAlertSettingsState = ({
   const handleCancelChanges = () => {
     setIsLoading(false);
     setIsEditTable(false);
+    setFile(null);
     setDefaultData();
     setSelectedModelKeys(
       mapModelIdsToGlobalModels(selectedRecallAlert?.globalModelIds || [], affectedModels)
     );
     resetValidationErrors();
+    if (selectedSC?.id) {
+      if (selectedRecallAlert?.recallCampaignId) {
+        dispatch(
+          getAffectedModels(
+            selectedRecallAlert?.recallCampaignId,
+            selectedSC?.id,
+            () => {
+              dispatch(setRecallAlertSettingsEditMode(false));
+              dispatch(setSelectedRecallAlert(null));
+            },
+            () => {}
+          )
+        );
+      } else {
+        dispatch(setAffectedModels([]));
+        dispatch(setRecallAlertSettingsEditMode(false));
+        dispatch(setSelectedRecallAlert(null));
+      }
+    }
   };
 
   return {
