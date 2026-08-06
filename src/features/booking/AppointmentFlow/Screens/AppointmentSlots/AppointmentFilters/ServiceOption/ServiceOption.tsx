@@ -7,25 +7,28 @@ import { IFirstScreenOption } from '../../../../../../../store/reducers/serviceT
 import { TCallback } from '../../../../../../../types/types';
 import { useStyles } from './styles';
 import clsx from 'clsx';
+import { ITransportation } from '../../../../../../../api/types';
 
 type TProps = {
   hideLabel?: boolean;
   isVisible: boolean;
   options: React.JSX.Element[];
   setSelectedOption: Dispatch<SetStateAction<IFirstScreenOption | null>>;
-  onChangeServiceOption: TCallback;
+  setLastTransportation?: Dispatch<SetStateAction<ITransportation | null | undefined>>;
   onSwitchFlowOpen: TCallback;
 };
 
 const ServiceOption: React.FC<TProps> = ({
-  onChangeServiceOption,
   isVisible,
   options,
   hideLabel,
   setSelectedOption,
+  setLastTransportation,
   onSwitchFlowOpen,
 }) => {
-  const { serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { serviceTypeOption, transportation } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
   const { firstScreenOptions } = useSelector((state: RootState) => state.serviceTypes);
 
@@ -34,6 +37,8 @@ const ServiceOption: React.FC<TProps> = ({
 
   const onServiceOptionChange = (e: SelectChangeEvent<unknown>) => {
     const newOption = firstScreenOptions.find(item => item.id === e.target.value);
+    setLastTransportation?.(transportation ?? null);
+
     if (newOption) {
       setSelectedOption(newOption);
       onSwitchFlowOpen();

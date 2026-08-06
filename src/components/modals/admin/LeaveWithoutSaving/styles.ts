@@ -6,5 +6,7 @@ export const useStyles = makeStyles()(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     gap: '10px',
+    padding: '0 25px',
+    marginBottom: '20px',
   },
 }));

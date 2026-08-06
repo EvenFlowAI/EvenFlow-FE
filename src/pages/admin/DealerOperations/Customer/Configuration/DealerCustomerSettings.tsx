@@ -288,6 +288,7 @@ const DealerCustomerSettings = () => {
             <div className={classes.settingsBlock}>
               <div className={classes.rulesWrapper}>
                 <AudienceForm
+                  isOutboundMode
                   criteriaOperatorErrors={criteriaOperatorErrors}
                   setCriteriaOperatorErrors={setCriteriaOperatorErrors}
                   criteriaTypeErrors={criteriaTypeErrors}
@@ -316,6 +317,7 @@ const DealerCustomerSettings = () => {
 
               <div className={classes.triggersWrapper}>
                 <Triggers
+                  isOutboundMode
                   setTriggerDateErrors={setTriggerDateErrors}
                   triggerDateErrors={triggerDateErrors}
                   firstTriggerDateError={firstTriggerDateError}

@@ -32,6 +32,9 @@ import {
   loadAllServiceCenterSettings,
   loadSRs,
   setCustomerLoadedData,
+  setIsCloneMode,
+  setIsDemandSmoothMode,
+  setIsEditMode,
 } from '../../../../../store/reducers/appointment/actions';
 import AppointmentVehicleInfo from '../../Screens/components/AppointmentVehicleInfo/AppointmentVehicleInfo';
 import PaymentTypeModal from '../../../PaymentTypeModal/PaymentTypeModal';
@@ -178,9 +181,13 @@ export const ManageAppointment: React.FC<
   }, []);
 
   useEffect(() => {
-    // load active transportation when appointmentByKey is available
+    // In clone mode: load active transportation for non-mobile services; for mobile services, refresh slots.
     if (appointmentByKey && isCloneMode) {
-      dispatch(loadActiveTransportations(decodeSCID(id)));
+      if (appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService) {
+        dispatch(loadActiveTransportations(decodeSCID(id)));
+      } else {
+        onChangeSlot();
+      }
     }
   }, [appointmentByKey, isCloneMode]);
 
@@ -353,6 +360,9 @@ export const ManageAppointment: React.FC<
         dispatch(setServiceTypeOption(null));
         dispatch(setCustomerLoadedData(null));
         dispatch(setWelcomeScreenView('select'));
+        dispatch(setIsCloneMode(false));
+        dispatch(setIsEditMode(false));
+        dispatch(setIsDemandSmoothMode(false));
         history.push(Routes.EndUser.Welcome + '/' + id + '?frame=1');
       } catch (e) {
         showError(e);

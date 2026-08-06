@@ -49,7 +49,7 @@ export const getServicesForCloning = (
       });
     }
     if (appointment.recalls) {
-      appointment.recalls.forEach(el => services.push(el));
+      appointment.recalls.forEach(el => services.push(el.recallComponent || ''));
     }
   }
 

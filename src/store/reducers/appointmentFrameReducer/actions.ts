@@ -83,6 +83,7 @@ import {
   setCustomerLoadedData,
   setIsCloneMode,
   setIsDemandSmoothMode,
+  setIsEditMode,
   setSlotsSearchDate,
   setSlotsServiceTypeOptionId,
   setSlotsTransportationId,
@@ -91,7 +92,7 @@ import {
 import { IHOODataForm } from '../serviceCenters/types';
 import { IFirstScreenOption } from '../serviceTypes/types';
 import { TPackagePrice } from '../packages/types';
-import { updateSelectedRecalls } from '../recall/actions';
+import { getRecallsByVin } from '../recall/actions';
 import { EServiceCategoryType } from '../categories/types';
 import { setAdvisorAvailable } from '../bookingFlowConfig/actions';
 import { EScheduler } from '../appointments/types';
@@ -243,7 +244,9 @@ export const updateAppointmentAddress = createAction<{
   state: string;
   street: string;
 }>('fAppointment/UpdateAppointmentAddress');
-export const setIsSVWithoutConfig = createAction<boolean>('fAppointment/SetIsSVWithouConfig');
+export const setIsPickupDropoffWithoutFirstScreenOption = createAction<boolean>(
+  'fAppointment/SetIsPickupDropoffWithoutFirstScreenOption'
+);
 
 export const setValueServicePartial =
   (data: Partial<IValueService>): AppThunk =>
@@ -755,7 +758,6 @@ export const handleAppointmentResponse =
     if (data.maintenancePackageOption?.priceType) {
       dispatch(setPackagePricingType(data.maintenancePackageOption.priceType));
     }
-    console.log('data', data);
     if (data.detailedPriceList) dispatch(getAppointmentRequestsPrices(data.detailedPriceList));
     dispatch(getTransactionValue(data.transactionValue ?? 0));
 
@@ -803,18 +805,19 @@ export const updateRecalls =
   (dispatch, getState) => {
     const { scProfile } = getState().appointment;
     const {
-      vehicle,
       recalls,
       maintenancePackageOption,
       serviceRequests,
       serviceTypeOption,
       serviceCategories,
     } = data;
-    if (vehicle?.vin && scProfile && recalls?.length) {
-      const { vin, make, model, year } = vehicle;
-      if (make && model && make && year) {
-        dispatch(updateSelectedRecalls(scProfile.id, vin, make, model, year, recalls));
-      }
+    if (scProfile && recalls?.length) {
+      const updatedRecalls = recalls.map(recall => ({
+        ...recall,
+        campaignNumber: recall.number,
+      }));
+      dispatch(getRecallsByVin(updatedRecalls));
+      dispatch(setSelectedRecalls(updatedRecalls));
       const serviceType =
         serviceTypeOption?.type === EServiceType.MobileService
           ? EServiceType.MobileService
@@ -1253,6 +1256,7 @@ export const createOrUpdateAppointment =
       onNext();
       dispatch(handleAppointmentResponse(response.data, endpoint, onNext));
       dispatch(setIsCloneMode(false));
+      dispatch(setIsEditMode(false));
       dispatch(setIsDemandSmoothMode(false));
     } catch (e) {
       onError(e);
@@ -1735,9 +1739,14 @@ export const handleAppointmentUpdate =
             handleServiceTypeOption(data);
             dispatch(handleSideBarAppointmentUpdate());
             dispatch(
-              loadConsultantsForUpdating(id, option ? option.id : null, data, () => {
-                dispatch(updateConsultant(data.advisorId));
-              })
+              loadConsultantsForUpdating(
+                id,
+                option?.id ?? data.serviceTypeOption?.id ?? null,
+                data,
+                () => {
+                  dispatch(updateConsultant(data.advisorId));
+                }
+              )
             );
             dispatch(checkCarIsValid());
             setLoadingCar(false);

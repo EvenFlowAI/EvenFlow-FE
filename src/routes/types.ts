@@ -17,6 +17,7 @@ export enum AdminRoutes {
   OpCodeCategory = '/admin/application/op-code-category',
   RoleManagement = '/admin/application/role-management',
   RecallDatabase = '/admin/application/recall-database',
+  RecallCredits = '/admin/application/recall-credits',
 }
 
 export enum AdminLogin {
@@ -94,6 +95,7 @@ export enum EndUser {
   EditAppointmentFromEmail = '/appointment-update/:id/by-key',
   CloneAppointmentFromEmail = '/appointment-clone/:id/by-key',
   DemandAppointment = '/appointment-load',
+  ShortLink = '/s/:code',
   Appointment = '/appointment/:id',
   AppointmentFrame = '/f/appointment/:id',
   ManageAppointmentFrame = '/f/appointment-manage/:id',

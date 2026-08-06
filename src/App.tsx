@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import {
   Box,
@@ -22,7 +22,11 @@ import { TScreen } from './types/screens';
 import AppRoutes from './routes/AppRoutes/AppRoutes';
 import { disableEmotionWarning } from './utils/utils';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
-import { setIsCloneMode, setIsDemandSmoothMode } from './store/reducers/appointment/actions';
+import {
+  setIsCloneMode,
+  setIsDemandSmoothMode,
+  setIsEditMode,
+} from './store/reducers/appointment/actions';
 import { useAppInitialization } from './hooks/useAppInitialization/useAppInitialization';
 import { useSSOTokenHandler } from './hooks/useSSOTokenHandler/useSSOTokenHandler';
 import { LicenseInfo } from '@mui/x-license';
@@ -128,13 +132,22 @@ const App = () => {
     }
   }, [process.env.REACT_APP_ENV]);
 
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
   useEffect(() => {
-    const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
     const currentConfiguration = config.find(
       item => item.serviceType?.toString() === serviceType.toString()
     );
     if (currentConfiguration) dispatch(setConfiguration(currentConfiguration, serviceTypeOption));
-  }, [serviceTypeOption, config]);
+  }, [serviceTypeOption, config, serviceType]);
 
   useEffect(() => {
     if (
@@ -146,11 +159,10 @@ const App = () => {
     } else {
       setValueServicePreviousScreen('serviceNeeds');
     }
-    const serviceType = serviceTypeOption?.type ?? EServiceType.VisitCenter;
     if ((currentConfig && !isAdvisorAvailable) || serviceType === EServiceType.MobileService) {
       setValueServiceNextScreen('appointmentTiming');
     }
-  }, [serviceTypeOption, currentConfig, isAdvisorAvailable]);
+  }, [serviceTypeOption, currentConfig, isAdvisorAvailable, serviceType]);
 
   useEffect(() => {
     if (scProfile) {
@@ -170,9 +182,14 @@ const App = () => {
   LicenseInfo.setLicenseKey(MUI_PRO_LICENSE_KEY);
 
   const handleMessage = (event: MessageEvent) => {
-    const clientIdFromOldDealers = typeof event.data === 'string' ? event.data : '';
+    const clientIdFromOldDealers =
+      typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
+
     const clientData =
-      typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string'
+      typeof event.data === 'object' &&
+      event.data !== null &&
+      event.data.type === 'init' &&
+      (typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string')
         ? event.data
         : '';
 
@@ -211,6 +228,7 @@ const App = () => {
     const handlePopState = (event: PopStateEvent) => {
       event.preventDefault();
       dispatch(setIsCloneMode(false));
+      dispatch(setIsEditMode(false));
       dispatch(setIsDemandSmoothMode(false));
       window.location.reload();
     };

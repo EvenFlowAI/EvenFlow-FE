@@ -11,6 +11,9 @@ import {
   setEventForTextConfiguration,
   setEventIdForRulesConfiguration,
   setUpdatedEventsName,
+  setCredits,
+  setAvailableTagsForOutboundEvents,
+  setAvailableTagsForRecallAlerts,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -28,6 +31,9 @@ const initialState: TState = {
   eventForTextConfiguration: null,
   eventIdForRulesConfiguration: null,
   updatedEventsName: [],
+  credits: null,
+  availableTagsForOutboundEvents: [],
+  availableTagsForRecallAlerts: [],
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -64,5 +70,14 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(setUpdatedEventsName, (state, { payload }) => {
       return { ...state, updatedEventsName: payload };
+    })
+    .addCase(setCredits, (state, { payload }) => {
+      return { ...state, credits: payload };
+    })
+    .addCase(setAvailableTagsForOutboundEvents, (state, { payload }) => {
+      return { ...state, availableTagsForOutboundEvents: payload };
+    })
+    .addCase(setAvailableTagsForRecallAlerts, (state, { payload }) => {
+      return { ...state, availableTagsForRecallAlerts: payload };
     })
 );

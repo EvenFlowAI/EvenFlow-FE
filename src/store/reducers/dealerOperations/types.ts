@@ -1,5 +1,10 @@
 import { IPageRequest, IPagingResponse } from '../../../types/types';
 
+export interface ITag {
+  tag: string;
+  description: string;
+}
+
 export type TState = {
   dashboardItems: DashboardItemI[];
   customerCommunicationPageData: IPageRequest;
@@ -14,7 +19,16 @@ export type TState = {
     id: number;
     name: string;
   }[];
+  credits: Credits | null;
+  availableTagsForOutboundEvents: ITag[];
+  availableTagsForRecallAlerts: ITag[];
 };
+
+export interface Credits {
+  availableCredits: number;
+  recallCredits: number;
+  recallMonthlyUsageCredits: number;
+}
 
 export interface DashboardItemI {
   id: number;

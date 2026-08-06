@@ -3,29 +3,68 @@ import { TState } from './types';
 import {
   getRecalls,
   getRecallsByVin,
+  setAffectedModels,
+  setIsEditName,
+  setIsRecallAlertsTableLoading,
   setLoading,
+  setRecallAlertSettingsEditMode,
+  setRecallAlerts,
+  setRecallAlertsCount,
+  setRecallAlertsOrderStats,
+  setRecallAlertsOrderWorkflow,
+  setRecallAlertsPageData,
+  setRecallCampaignInfo,
+  setRecallByVinLoading,
   setRecallOrder,
   setRecallPageData,
   setRecallsCount,
   setRecallSearch,
+  setSelectedRecallAlert,
+  setSelectedStatus,
+  setUpdatedAlerts,
+  setHasManufacturerDidNotReturnRecalls,
 } from './actions';
+import { RECALL_ALERTS_STATUSES } from '../../../utils/constants';
 
 export const initialOrder = {
   orderBy: 'CampaignNumber',
   isAscending: true,
 };
 
+export const initialOrderForRecallAlerts = {
+  orderBy: 'CreatedAt',
+  isAscending: false,
+};
+
 const initialState: TState = {
   recalls: [],
+  recallAlerts: [],
   isLoading: false,
   recallsCount: 0,
+  recallAlertsCount: 0,
   recallPageData: {
+    pageIndex: 0,
+    pageSize: 10,
+  },
+  recallAlertsPageData: {
     pageIndex: 0,
     pageSize: 10,
   },
   recallsByVin: [],
   order: initialOrder,
+  recallAlertsOrderStats: initialOrderForRecallAlerts,
+  recallAlertsOrderWorkflow: initialOrderForRecallAlerts,
   searchTerm: '',
+  recallCampaignInfo: [],
+  selectedStatus: RECALL_ALERTS_STATUSES[0],
+  updatedAlerts: [],
+  isEditName: false,
+  isRecallAlertsTableLoading: false,
+  selectedRecallAlert: null,
+  isRecallAlertSettingsEditMode: false,
+  affectedModels: [],
+  recallByVinLoading: false,
+  hasManufacturerDidNotReturnRecalls: false,
 };
 
 export const recallsReducer = createReducer(initialState, builder =>
@@ -33,8 +72,14 @@ export const recallsReducer = createReducer(initialState, builder =>
     .addCase(getRecalls, (state, { payload }) => {
       return { ...state, recalls: payload };
     })
+    .addCase(setRecallAlerts, (state, { payload }) => {
+      return { ...state, recallAlerts: payload };
+    })
     .addCase(setRecallsCount, (state, { payload }) => {
       return { ...state, recallsCount: payload };
+    })
+    .addCase(setRecallAlertsCount, (state, { payload }) => {
+      return { ...state, recallAlertsCount: payload };
     })
     .addCase(setLoading, (state, { payload }) => {
       return { ...state, isLoading: payload };
@@ -42,13 +87,52 @@ export const recallsReducer = createReducer(initialState, builder =>
     .addCase(setRecallPageData, (state, { payload }) => {
       return { ...state, recallPageData: { ...state.recallPageData, ...payload } };
     })
+    .addCase(setRecallAlertsPageData, (state, { payload }) => {
+      return { ...state, recallAlertsPageData: { ...state.recallAlertsPageData, ...payload } };
+    })
     .addCase(getRecallsByVin, (state, { payload }) => {
       return { ...state, recallsByVin: payload };
     })
     .addCase(setRecallOrder, (state, { payload }) => {
       return { ...state, order: payload };
     })
+    .addCase(setRecallAlertsOrderStats, (state, { payload }) => {
+      return { ...state, recallAlertsOrderStats: payload };
+    })
+    .addCase(setRecallAlertsOrderWorkflow, (state, { payload }) => {
+      return { ...state, recallAlertsOrderWorkflow: payload };
+    })
     .addCase(setRecallSearch, (state, { payload }) => {
       return { ...state, searchTerm: payload };
+    })
+    .addCase(setRecallCampaignInfo, (state, { payload }) => {
+      return { ...state, recallCampaignInfo: payload };
+    })
+    .addCase(setSelectedStatus, (state, { payload }) => {
+      return { ...state, selectedStatus: payload };
+    })
+    .addCase(setUpdatedAlerts, (state, { payload }) => {
+      return { ...state, updatedAlerts: payload };
+    })
+    .addCase(setIsEditName, (state, { payload }) => {
+      return { ...state, isEditName: payload };
+    })
+    .addCase(setIsRecallAlertsTableLoading, (state, { payload }) => {
+      return { ...state, isRecallAlertsTableLoading: payload };
+    })
+    .addCase(setSelectedRecallAlert, (state, { payload }) => {
+      return { ...state, selectedRecallAlert: payload };
+    })
+    .addCase(setRecallAlertSettingsEditMode, (state, { payload }) => {
+      return { ...state, isRecallAlertSettingsEditMode: payload };
+    })
+    .addCase(setAffectedModels, (state, { payload }) => {
+      return { ...state, affectedModels: payload };
+    })
+    .addCase(setRecallByVinLoading, (state, { payload }) => {
+      return { ...state, recallByVinLoading: payload };
+    })
+    .addCase(setHasManufacturerDidNotReturnRecalls, (state, { payload }) => {
+      return { ...state, hasManufacturerDidNotReturnRecalls: payload };
     })
 );

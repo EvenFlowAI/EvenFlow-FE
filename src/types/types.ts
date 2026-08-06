@@ -177,6 +177,9 @@ export interface ITableProps<Data> {
   verticalAlign?: string;
   getKey?: (el: Data) => string;
   verticalPadding?: number;
+  customRowsPerPage?: number;
+  customPaginationData?: boolean;
+  customRowsPerPageOptions?: number[];
 }
 
 export interface TError {
@@ -206,6 +209,7 @@ export interface IRecallByVin {
   isRemedyAvailable: boolean;
   rolloverMessage?: string;
   oemProgram?: string;
+  number?: string;
 }
 
 export type TActionProps = {
@@ -268,6 +272,7 @@ export enum Titles {
   AiAgents = 'AI Agents (beta)',
   RoleManagement = 'Role Management',
   RecallDatabase = 'Recall Database',
+  RecallCredits = 'Recall Credits',
 }
 
 export enum LocalItems {

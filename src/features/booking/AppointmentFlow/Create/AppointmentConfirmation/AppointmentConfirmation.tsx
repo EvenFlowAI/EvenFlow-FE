@@ -10,6 +10,7 @@ import { TActionProps, TCallback, TError } from '../../../../../types/types';
 import { decodeSCID } from '../../../../../utils/utils';
 import {
   createOrUpdateAppointment,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setReminders,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -137,7 +138,10 @@ export const AppointmentConfirmation: React.FC<
       dispatch(
         createOrUpdateAppointment(
           decodeSCID(id),
-          onNext,
+          () => {
+            onNext();
+            dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
+          },
           handleError,
           isMobile,
           Boolean(currentUser)

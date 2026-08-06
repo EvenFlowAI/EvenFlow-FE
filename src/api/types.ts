@@ -18,7 +18,7 @@ import { IFirstScreenOption } from '../store/reducers/serviceTypes/types';
 import { TPackagePrice } from '../store/reducers/packages/types';
 import { TScheduler, TServiceBook } from '../store/reducers/appointments/types';
 import { TEnumKeyLabel } from '../store/reducers/types';
-import { ParsableDate, TParsableDate } from '../types/types';
+import { IRecallByVin, ParsableDate, TParsableDate } from '../types/types';
 import { EPricingDisplayType } from '../store/reducers/pricingSettings/types';
 import { RepairOrderReportingStatus } from '../features/admin/Appointments/types';
 
@@ -192,7 +192,6 @@ export interface IBaseAppointment {
   transactionValue: number;
   serviceCenterId: number;
   transportationOption: ITransportation | null;
-  isNeedCall: boolean;
   offerId: number;
   offer: IOffer;
   isEditable: boolean;
@@ -233,7 +232,7 @@ export interface IAppointmentByKey extends IBaseAppointment {
   serviceCategories: ICategory[];
   jobType?: EJobType;
   serviceTypeOption?: IFirstScreenOption;
-  recalls?: string[];
+  recalls?: IRecallByVin[];
   recallDescriptions?: string[];
   advisorId: string | null;
   detailedPriceList?: IServiceRequestPrice[];
@@ -250,7 +249,7 @@ export interface IAppointmentByQuery extends IBaseAppointment {
   serviceCategories: ICategory[];
   jobType?: EJobType;
   serviceTypeOption?: IFirstScreenOption;
-  recalls?: string[];
+  recalls?: IRecallByVin[];
   recallDescriptions?: string[];
   consultant?: Partial<IServiceConsultant> | null;
   detailedPriceList?: IServiceRequestPrice[];
@@ -513,7 +512,6 @@ export interface IModel {
   };
   id: number;
   name: string;
-  code: string;
 }
 
 export interface IMake {

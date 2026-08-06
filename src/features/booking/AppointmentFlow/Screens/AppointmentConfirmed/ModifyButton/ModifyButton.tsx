@@ -1,5 +1,8 @@
 import React from 'react';
-import { setCustomerLoadedData } from '../../../../../../store/reducers/appointment/actions';
+import {
+  setCustomerLoadedData,
+  setIsEditMode,
+} from '../../../../../../store/reducers/appointment/actions';
 import {
   clearAppointmentData,
   setCurrentFrameScreen,
@@ -42,6 +45,7 @@ const ModifyButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
       await onUpdateAppointment(selectedVehicle);
       await dispatch(setCurrentFrameScreen('manageAppointment'));
       history.push('/f/appointment-manage/' + id);
+      dispatch(setIsEditMode(true));
     }
   };
 

@@ -28,7 +28,7 @@ const NoRecallsModal: React.FC<
       </DialogContent>
       <DialogActions>
         <Button onClick={onProceed} variant="contained" color="primary">
-          Proceed
+          {t('Proceed')}
         </Button>
       </DialogActions>
     </BaseModal>

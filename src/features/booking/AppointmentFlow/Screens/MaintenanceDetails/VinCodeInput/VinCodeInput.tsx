@@ -57,7 +57,7 @@ const VinCodeInput: React.FC<TProps> = ({
       setErrors(e => e.filter(err => err !== name));
     };
 
-  return recallsToggledOn || isRecallsCategorySelected || selectedVehicle?.vin?.length ? (
+  return recallsToggledOn || isRecallsCategorySelected ? (
     <Grid
       item
       xs={12}

@@ -6,7 +6,8 @@ export const getCurrentMenu = (
   serviceType: EServiceType,
   advisor: boolean,
   transportation: boolean,
-  isManaging: boolean
+  isManaging: boolean,
+  isPickupDropoffWithoutFirstScreenOption?: boolean
 ): string[] => {
   const menu: ICurrentMenu = {
     yourLocation: 'Your Location',
@@ -18,13 +19,15 @@ export const getCurrentMenu = (
     manageAppointment: 'Manage Appointment',
   };
   if (!advisor) delete menu.advisorSelection;
-  if (!transportation) delete menu.transportationNeeds;
+  if (!transportation || isPickupDropoffWithoutFirstScreenOption) delete menu.transportationNeeds;
   if (!isManaging) {
     delete menu.manageAppointment;
   } else {
     delete menu.appointmentConfirmation;
   }
-  if (serviceType === EServiceType.VisitCenter) delete menu.yourLocation;
+  if (serviceType === EServiceType.VisitCenter && !isPickupDropoffWithoutFirstScreenOption) {
+    delete menu.yourLocation;
+  }
   return Object.values(menu);
 };
 
@@ -33,7 +36,8 @@ export const getStepsScreen = (
   advisorSelection: boolean,
   appointmentSelection: boolean,
   transportationNeeds: boolean,
-  isManaging: boolean
+  isManaging: boolean,
+  isPickupDropoffWithoutFirstScreenOption?: boolean
 ): TScreen[] => {
   const screens: { [key: string]: TScreen } = {
     location: 'location',
@@ -45,13 +49,16 @@ export const getStepsScreen = (
     manageAppointment: 'manageAppointment',
   };
   if (!advisorSelection) delete screens.consultantSelection;
-  if (!transportationNeeds) delete screens.transportationNeeds;
+  if (!transportationNeeds || isPickupDropoffWithoutFirstScreenOption)
+    delete screens.transportationNeeds;
   if (!isManaging) {
     delete screens.manageAppointment;
   } else {
     delete screens.appointmentConfirmation;
   }
-  if (serviceType === EServiceType.VisitCenter) delete screens.location;
+  if (serviceType === EServiceType.VisitCenter && !isPickupDropoffWithoutFirstScreenOption) {
+    delete screens.location;
+  }
   return Object.values(screens);
 };
 

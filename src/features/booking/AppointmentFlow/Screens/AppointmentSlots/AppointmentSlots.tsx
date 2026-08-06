@@ -35,7 +35,6 @@ import {
   clearAppointmentSteps,
   loadActiveTransportations,
   searchForCustomerConsents,
-  setIsSVWithoutConfig,
   setServiceTypeOption,
   setTime,
   setWelcomeScreenView,
@@ -397,10 +396,6 @@ export const AppointmentSlots: React.FC<
     [month, selectedTiming, selectFirstSlot]
   );
 
-  const onChangeServiceOption = () => {
-    updateDate(dayjs(), true);
-  };
-
   const setDateCallback = useCallback(
     (d: TParsableDate) => {
       if (selectedTiming !== EAppointmentTimingType.FirstAvailable) {
@@ -695,7 +690,6 @@ export const AppointmentSlots: React.FC<
   const handleNext = useCallback((): void => {
     handleGANext();
     onNext();
-    dispatch(setIsSVWithoutConfig(false));
   }, [onNext, handleGANext]);
 
   const handleBack = useCallback((): void => {
@@ -812,7 +806,6 @@ export const AppointmentSlots: React.FC<
           loading={isConsultantsLoading || isConsentsLoading}
         />
         <AppointmentFilters
-          onChangeServiceOption={onChangeServiceOption}
           isSm={isMd}
           isServiceOptionOpen={isServiceOptionOpen}
           onServiceOptionClose={onServiceOptionClose}

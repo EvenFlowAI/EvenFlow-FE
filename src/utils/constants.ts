@@ -138,6 +138,7 @@ export const SCREENS = {
 export const options: TGAOptions = {
   siteSpeedSampleRate: 100,
   cookieDomain: 'auto',
+  cookieFlags: 'SameSite=None;Secure',
   allowLinker: true,
   storage: 'none',
 };
@@ -182,3 +183,14 @@ export const NHTSA_LINK = 'https://www.nhtsa.gov/recalls?nhtsaId=';
 
 export const GA_CLIENT_ID_FROM_DEALER = 'clientId';
 export const GA_MEASUREMENT_ID_FROM_DEALER = 'measurementId';
+
+export const RECALL_ALERTS_STATUSES = [
+  { name: 'All Statuses', value: '' },
+  { name: 'Not Configured', value: '0' },
+  { name: 'Alert Configured', value: '1' },
+  { name: 'Check Requested', value: '2' },
+  { name: 'Results Available', value: '3' },
+  { name: 'Alert Running', value: '4' },
+  { name: 'Alert Completed', value: '5' },
+  { name: 'Alert Failed', value: '6' },
+];

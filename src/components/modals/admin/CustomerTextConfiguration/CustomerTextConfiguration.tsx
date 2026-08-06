@@ -5,7 +5,6 @@ import { Button, styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/mate
 import { Textarea } from '../../../../features/admin/RecallsParts/AddRecallModal/styles';
 import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { ReactComponent as CopyIcon } from '../../../../assets/img/copy.svg';
-import { customerTags } from '../../../../config/data';
 import { ReactComponent as Info } from '../../../../assets/img/info.svg';
 import { ReactComponent as CheckIcon } from '../../../../assets/img/checkboxSmallGreen.svg';
 import { ReactComponent as RedCross } from '../../../../assets/img/redCross.svg';
@@ -13,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { Loading } from '../../../wrappers/Loading/Loading';
 import {
+  loadExistingTags,
   sendTestSMSMessage,
   setTextMessage,
 } from '../../../../store/reducers/dealerOperations/actions';
@@ -21,6 +21,8 @@ import { TextField } from '../../../formControls/TextFieldStyled/TextField';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../hooks/useException/useException';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { ITag } from '../../../../store/reducers/dealerOperations/types';
+import { handleInsertTag } from './helper';
 
 type TCustomerTextConfigurationProps = DialogProps & {
   handleSaveText: () => void;
@@ -37,9 +39,13 @@ const CustomerTextConfiguration = ({
   handleSaveText,
   isLoading,
 }: TCustomerTextConfigurationProps) => {
-  const { textIntegrationSettings, textMessage, eventForTextConfiguration } = useSelector(
-    (state: RootState) => state.dealerOperations
-  );
+  const {
+    textIntegrationSettings,
+    textMessage,
+    eventForTextConfiguration,
+    availableTagsForOutboundEvents,
+  } = useSelector((state: RootState) => state.dealerOperations);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const { selectedSC } = useSCs();
   const showError = useException();
   const showMessage = useMessage();
@@ -62,49 +68,44 @@ const CustomerTextConfiguration = ({
         textarea.setSelectionRange(cursorPos, cursorPos);
       }
     }, 0);
+    if (open) {
+      setLoading(true);
+      dispatch(
+        loadExistingTags('OutboundEvent', () => {
+          setLoading(false);
+        })
+      );
+    }
   }, [open]);
 
-  const handleInsertTag = (tag: string) => {
-    if (!textareaRef.current) return;
-
-    const textarea = textareaRef.current;
-    const value = textMessage || '';
-
-    const start = textarea.selectionStart ?? value.length;
-    const end = textarea.selectionEnd ?? value.length;
-
-    const before = value.slice(0, start);
-    const after = value.slice(end);
-
-    const needSpaceBefore = before && !before.endsWith(' ') ? ' ' : '';
-    const needSpaceAfter = after && !after.startsWith(' ') && after !== '' ? ' ' : '';
-
-    const tagToInsert = `${needSpaceBefore}${tag}${needSpaceAfter}`;
-    const newValue = before + tagToInsert + after;
-
-    dispatch(setTextMessage(newValue));
-
-    setTimeout(() => {
-      textarea.focus();
-      const cursorPos = before.length + tagToInsert.length;
-      textarea.setSelectionRange(cursorPos, cursorPos);
-    }, 0);
-  };
+  useEffect(() => {
+    return () => {
+      dispatch(setTextMessage(''));
+    };
+  }, []);
 
   const handleClose = () => {
     onClose();
     setPhoneNumberForTest('');
   };
 
-  const renderTagItem = (tag: string) => {
-    const canRender = tag !== '{{Shortlink}}' || textIntegrationSettings?.schedulingPageShortLink;
+  const renderTagItem = (element: ITag) => {
+    const canRender =
+      element.tag !== '{{Shortlink}}' || textIntegrationSettings?.schedulingPageShortLink;
 
     if (!canRender) return null;
 
     return (
-      <li className={classes.tagItem}>
-        <span className={classes.insertTag} onClick={() => handleInsertTag(tag)}>
-          {tag}
+      <li key={element.tag} className={classes.tagItem}>
+        <span
+          className={classes.insertTag}
+          onClick={() =>
+            handleInsertTag(element.tag, textareaRef, textMessage, (newTextMessage: string) => {
+              dispatch(setTextMessage(newTextMessage));
+            })
+          }
+        >
+          {element.tag}
         </span>
         <LightTooltip width={110} title="Copy to clipboard" placement="top-start">
           <button
@@ -112,7 +113,7 @@ const CustomerTextConfiguration = ({
             className={classes.copyTag}
             onClick={e => {
               e.stopPropagation();
-              navigator.clipboard.writeText(tag);
+              navigator.clipboard.writeText(element.tag);
               const input = autocompleteRef.current?.querySelector('input');
               if (input) (input as HTMLElement).blur();
               showMessage('Tag copied to clipboard');
@@ -179,12 +180,16 @@ const CustomerTextConfiguration = ({
                   </p>
                 )}
               </div>
-              <div className={classes.tagsWrapper}>
-                <span className={classes.insertTagText}>Insert tag</span>
-                <div className={classes.scrollableTags}>
-                  {customerTags.map(tag => renderTagItem(tag))}
+              {loading ? (
+                <Loading />
+              ) : (
+                <div className={classes.tagsWrapper}>
+                  <span className={classes.insertTagText}>Insert tag</span>
+                  <div className={classes.scrollableTags}>
+                    {availableTagsForOutboundEvents?.map(tag => renderTagItem(tag))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className={classes.textMessageWrapper}>

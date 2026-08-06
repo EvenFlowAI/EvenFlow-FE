@@ -30,6 +30,7 @@ import {
   loadAncillaryPriceByZip,
   setCity,
   setFilteredZipCodes,
+  setIsPickupDropoffWithoutFirstScreenOption,
   setPoliticalState,
   setServiceTypeOption,
   setStreetName,
@@ -54,16 +55,26 @@ import { setUnavailableServiceOpen } from '../../../store/reducers/modals/action
 
 type TProps = DialogProps & {
   selectedOption: IFirstScreenOption | null;
+  lastTransportation?: ITransportation | null;
+  resetLastTransportation?: TCallback;
   onNext?: TCallback;
 };
 
-const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNext }) => {
+const SwitchFlowModal: React.FC<TProps> = ({
+  open,
+  onClose,
+  selectedOption,
+  lastTransportation,
+  resetLastTransportation,
+  onNext,
+}) => {
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
   const {
     address,
     zipCode: zipCodeValue,
     transportation,
     transportations,
+    isPickupDropoffWithoutFirstScreenOption,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { scProfile } = useSelector((state: RootState) => state.appointment);
   const { id } = useParams<{ id: string }>();
@@ -218,17 +229,23 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
   };
 
   const onCancel = () => {
-    const lastTransportation = localStorage.getItem('lastTransportation');
-    localStorage.removeItem('lastTransportation');
-    if (lastTransportation) dispatch(setTransportation(JSON.parse(lastTransportation)));
+    console.log('lastTransportation', lastTransportation);
+    if (lastTransportation !== undefined) {
+      dispatch(setTransportation(lastTransportation));
+    } else {
+      dispatch(setTransportation(null));
+    }
+    resetLastTransportation && resetLastTransportation();
     clearData();
     clearDate();
+    dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
     onClose();
     onAncillaryPriceClose();
   };
 
   const handleClose = () => {
     clearData();
+    resetLastTransportation && resetLastTransportation();
     onClose();
   };
 
@@ -256,14 +273,21 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
       t => t.type === ETransportationType.PickUpDelivery
     );
 
-    const selectedTransportation =
-      selectedOption?.transportationOption ||
-      transportationOption ||
-      (selectedOption?.type === EServiceType.PickUpDropOff
-        ? svTransportation || null
-        : selectedOption?.type === EServiceType.VisitCenter
-          ? transportations[0]
-          : transportation);
+    let selectedTransportation: ITransportation | null;
+
+    if (isPickupDropoffWithoutFirstScreenOption) {
+      selectedTransportation =
+        transportations?.find(t => t.type === ETransportationType.PickUpDelivery) || null;
+    } else {
+      selectedTransportation =
+        selectedOption?.transportationOption ||
+        transportationOption ||
+        (selectedOption?.type === EServiceType.PickUpDropOff
+          ? svTransportation || null
+          : selectedOption?.type === EServiceType.VisitCenter
+            ? transportations[0]
+            : transportation);
+    }
 
     dispatch(
       updateAppointmentDetails({
@@ -278,7 +302,6 @@ const SwitchFlowModal: React.FC<TProps> = ({ open, onClose, selectedOption, onNe
     );
     clearPrevAppointments();
     handleClose();
-    localStorage.removeItem('lastTransportation');
     onNext && onNext();
   };
 

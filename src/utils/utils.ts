@@ -152,7 +152,7 @@ export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallFo
   return selectedRecalls.map(recall => {
     const data: TRecallForRequest = {
       serviceRequestId: recall.serviceRequestId,
-      number: recall.campaignNumber ?? recall.oemProgram,
+      number: recall.campaignNumber ?? recall.oemProgram ?? recall.number,
       recallComponent: recall.recallComponent,
     };
     if (recall.id) data.id = recall.id;
@@ -292,7 +292,7 @@ export const getModelCode = (
 ): string | null => {
   return (
     makes
-      .find(item => item.name == selectedVehicle?.make)
-      ?.models?.find(model => model.name == selectedVehicle?.model)?.code ?? '0'
+      .find(item => item.name === selectedVehicle?.make)
+      ?.models?.find(model => model.name === selectedVehicle?.model)?.modelCode?.modelCode ?? '0'
   );
 };

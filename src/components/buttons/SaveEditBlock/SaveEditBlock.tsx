@@ -6,7 +6,7 @@ type TSaveEditProps = {
   onEdit: () => void;
   onCancel: () => void;
   isEdit: boolean;
-  isSaving: boolean;
+  isSaving?: boolean;
   isLowerCase?: boolean;
   disabled?: boolean;
   withoutPadding?: boolean;

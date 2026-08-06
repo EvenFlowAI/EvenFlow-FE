@@ -8,11 +8,15 @@ import {
   setCustomerLoadedData,
   setIsCloneMode,
   setIsDemandSmoothMode,
+  setIsEditMode,
 } from '../../../store/reducers/appointment/actions';
 import {
   clearAppointmentData,
   getActiveTransportations,
   setCurrentFrameScreen,
+  setIsPickupDropoffWithoutFirstScreenOption,
+  setRecallsAreShown,
+  setCustomer,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -27,6 +31,10 @@ import { useCurrentUser } from '../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../routes/constants';
 import { initialCustomerSearch } from '../../../store/reducers/constants';
 import { useTranslation } from 'react-i18next';
+import {
+  setHasManufacturerDidNotReturnRecalls,
+  setRecallByVinLoading,
+} from '../../../store/reducers/recall/actions';
 
 export const ServiceCenterSwitcher = () => {
   const { scProfile, isCloneMode } = useSelector((state: RootState) => state.appointment);
@@ -60,6 +68,19 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setWelcomeScreenView('serviceCenterSelect'));
         dispatch(setServiceTypeOption(null));
         dispatch(getActiveTransportations([]));
+        dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
+        dispatch(setHasManufacturerDidNotReturnRecalls(false));
+        dispatch(setRecallsAreShown(false));
+        dispatch(setRecallByVinLoading(false));
+        dispatch(
+          setCustomer({
+            fullName: '',
+            phoneNumber: '',
+            email: '',
+            city: '',
+            companyName: '',
+          })
+        );
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);
@@ -72,6 +93,7 @@ export const ServiceCenterSwitcher = () => {
       dispatch(setIsCloneMode(false));
       dispatch(setIsDemandSmoothMode(false));
     }
+    dispatch(setIsEditMode(false));
   };
 
   return isAuthorized && (welcomeScreenView !== 'serviceCenterSelect' || !isWelcomePage) ? (

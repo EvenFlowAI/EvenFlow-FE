@@ -229,9 +229,14 @@ export class Api {
     },
     GlobalRecalls: {
       GetGlobalRecalls: { route: '/global-recall-campaigns/by-query', method: 'get' },
+      GetAllGlobalRecalls: { route: '/global-recall-campaigns/all', method: 'get' },
       GlobalRecallCampaign: {
         route: '/global-recall-campaigns/{id}/recall-component-booking-flow',
         method: 'patch',
+      },
+      GetAffectedModels: {
+        route: '/global-recall-campaigns/{campaignId}/affected-models',
+        method: 'get',
       },
       GetManufacturers: {
         route: '/global-recall-campaigns/manufacturers',
@@ -408,6 +413,15 @@ export class Api {
       Update: { route: '/recall/{id}', method: 'put' },
       Remove: { route: '/recall/{id}', method: 'delete' },
       UpdateRecallParts: { route: '/recall', method: 'put' },
+      GetRecallEvents: { route: '/recall-events/by-query', method: 'get' },
+      CreateRecallEvent: { route: '/recall-events', method: 'post' },
+      UpdateRecallEvent: { route: '/recall-events', method: 'put' },
+      DeleteRecallEvent: { route: '/recall-events/{id}', method: 'delete' },
+      UploadCSV: { route: '/recall-events/{id}/upload-csv', method: 'patch' },
+      RecallTrigger: { route: '/recall/groups/{id}/trigger', method: 'patch' },
+    },
+    Audit: {
+      History: { route: '/audit/history', method: 'get' },
     },
     ServiceCategories: {
       Create: { route: '/service-categories', method: 'post' },
@@ -510,6 +524,7 @@ export class Api {
         method: 'put',
       },
       SetEmailRequired: { route: '/service-center-settings/{id}/email-required', method: 'patch' },
+      GetAvailableCredits: { route: '/service-centers/{id}/available-credits', method: 'get' },
     },
     ServiceConsultants: {
       Create: { route: '/service-consultants', method: 'post' },
@@ -664,6 +679,14 @@ export class Api {
       SetTextIntegration: { route: '/text-integration', method: 'put' },
       GetPhoneNumbers: { route: '/text-integration/phone-numbers', method: 'post' },
       SendSMSMessage: { route: '/text-integration/sms-message', method: 'post' },
+      MessageTags: { route: '/outbound-events/message-tags', method: 'get' },
+    },
+    ServiceCenterCredits: {
+      GetServiceCenterCredits: { route: '/service-center-credits', method: 'get' },
+      UpdateServiceCenterCredits: { route: '/service-center-credits', method: 'patch' },
+    },
+    ShortUrls: {
+      Resolve: { route: '/short-urls/{code}/resolve', method: 'get' },
     },
   };
 

@@ -1,14 +1,19 @@
 import React from 'react';
+import clsx from 'clsx';
 import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
 import { Autocomplete, IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import { autocompleteRender } from '../../../../../../utils/autocompleteRenders';
 import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
 import { useStyles } from '../../../styles';
-import { CriteriaI } from '../../types';
+import { CriteriaI, RecallEventStatus } from '../../types';
+import { useFormStyles } from './styles';
+import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
 
 interface AudienceFormI {
+  updatedRecallAlert?: IRecallAlert | null;
   criterias: CriteriaI[];
+  isOutboundMode?: boolean;
   isEditTable: boolean;
   setCriteria: React.Dispatch<React.SetStateAction<CriteriaI[]>>;
   criteriaOperatorErrors: {
@@ -30,6 +35,8 @@ interface AudienceFormI {
 }
 
 const AudienceForm = ({
+  updatedRecallAlert,
+  isOutboundMode,
   criterias,
   isEditTable,
   setCriteria,
@@ -39,13 +46,22 @@ const AudienceForm = ({
   setCriteriaTypeErrors,
 }: AudienceFormI) => {
   const { classes } = useStyles();
+  const { classes: formClasses } = useFormStyles();
 
   const handleAddCriteria = () => {
-    setCriteria(prev => [...prev, { type: '', operator: '', value: '', isCriteria: true }]);
+    setCriteria(prev => [
+      ...prev,
+      { type: '', operator: '', value: '', isCriteria: !!isOutboundMode },
+    ]);
   };
 
   const handleRemoveCriteria = (index: number) => {
-    if (criterias.length > 1) {
+    if (updatedRecallAlert?.status === RecallEventStatus.Running) return;
+    if (isOutboundMode) {
+      if (criterias.length > 1) {
+        setCriteria(prev => prev.filter((criteria, i) => i !== index));
+      }
+    } else {
       setCriteria(prev => prev.filter((criteria, i) => i !== index));
     }
   };
@@ -74,7 +90,17 @@ const AudienceForm = ({
 
   return (
     <>
-      <span className={classes.audienceParagraph}>Audience</span>
+      {!isOutboundMode ? (
+        <span
+          className={clsx(classes.audienceParagraph, formClasses.audienceFiltersTitle, {
+            [formClasses.audienceFiltersTitleEmpty]: !criterias.length,
+          })}
+        >
+          Audience Filters
+        </span>
+      ) : (
+        <span className={classes.audienceParagraph}>Audience</span>
+      )}
 
       {criterias.length ? (
         <div className={classes.criteriaWrapper}>
@@ -82,8 +108,10 @@ const AudienceForm = ({
             return (
               <div key={index} className={classes.criteriaFormWrapper}>
                 <Autocomplete
-                  disabled={!isEditTable}
-                  style={{ width: '52%' }}
+                  disabled={
+                    !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                  }
+                  className={formClasses.criteriaTypeAutocomplete}
                   value={criteria.type}
                   disableClearable
                   options={[
@@ -100,21 +128,23 @@ const AudienceForm = ({
                   renderInput={autocompleteRender({
                     isCustomFontSize: true,
                     error: criteriaTypeErrors[index],
-                    label: 'Audience Criteria',
+                    label: isOutboundMode ? 'Audience Criteria' : '',
                     placeholder: 'Not selected',
                   })}
                 />
                 <Autocomplete
-                  style={{ width: '25%' }}
-                  disabled={!isEditTable}
+                  className={formClasses.criteriaOperatorAutocomplete}
+                  disabled={
+                    !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                  }
                   value={criteria.operator}
-                  options={['Equal']}
+                  options={['Less than', 'Equal', 'Greater than']}
                   disableClearable
                   isOptionEqualToValue={(o, v) => String(o) === String(v)}
                   getOptionLabel={o => o}
                   onChange={(e, v) => handleCriteriaChange(index, 'operator', v || '')}
                   renderInput={autocompleteRender({
-                    label: 'Operator',
+                    label: isOutboundMode ? 'Operator' : '',
                     placeholder: '',
                     error: criteriaOperatorErrors[index],
                   })}
@@ -122,11 +152,13 @@ const AudienceForm = ({
                 <div className={classes.criteriaValue}>
                   <TextField
                     fullWidth
-                    disabled={!isEditTable}
+                    disabled={
+                      !isEditTable || updatedRecallAlert?.status === RecallEventStatus.Running
+                    }
                     type="number"
                     error={!Number.isInteger(Number(criteria.value))}
                     inputProps={{ min: 0 }}
-                    label="Value"
+                    label={isOutboundMode ? 'Value' : ''}
                     placeholder=""
                     onChange={e => handleCriteriaChange(index, 'value', e.target.value || '')}
                     value={+criteria.value}
@@ -134,7 +166,9 @@ const AudienceForm = ({
                 </div>
                 {isEditTable ? (
                   <div
-                    className={classes.removeCriteriaIcon}
+                    className={clsx(classes.removeCriteriaIcon, {
+                      [formClasses.removeCriteriaIconCompact]: !isOutboundMode,
+                    })}
                     onClick={() => handleRemoveCriteria(index)}
                   >
                     <CloseNew />
@@ -149,16 +183,32 @@ const AudienceForm = ({
       {isEditTable ? (
         <IconButton
           onClick={handleAddCriteria}
-          disabled={!!criterias.length}
+          disabled={
+            (isOutboundMode ? !!criterias.length : criterias.length >= 5) ||
+            updatedRecallAlert?.status === RecallEventStatus.Running
+          }
           className={classes.iconPlus}
           size="large"
         >
-          <AddCircleOutline className={criterias.length ? 'isDisabled' : ''} />
+          <AddCircleOutline
+            className={
+              isOutboundMode
+                ? criterias.length
+                  ? 'isDisabled'
+                  : ''
+                : criterias.length >= 5 || updatedRecallAlert?.status === RecallEventStatus.Running
+                  ? 'isDisabled'
+                  : ''
+            }
+          />
           <span
-            style={criterias.length ? { color: 'grey' } : {}}
-            className={classes.addCriteriaButton}
+            className={clsx(classes.addCriteriaButton, {
+              [formClasses.disabledAddButtonText]: isOutboundMode
+                ? criterias.length
+                : criterias.length >= 5 || updatedRecallAlert?.status === RecallEventStatus.Running,
+            })}
           >
-            Audience Criteria
+            {isOutboundMode ? 'Audience Criteria' : 'Add Filter'}
           </span>
         </IconButton>
       ) : null}

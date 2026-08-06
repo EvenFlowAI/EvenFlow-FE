@@ -17,8 +17,8 @@ const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen>
   handleSetScreen,
 }) => {
   const {
-    serviceTypeOption,
     consultants,
+    serviceTypeOption,
     appointmentByKey,
     editingPosition,
     serviceOptionChangedFromSlotPage,

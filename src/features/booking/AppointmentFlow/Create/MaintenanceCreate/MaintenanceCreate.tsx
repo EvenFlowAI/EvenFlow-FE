@@ -20,19 +20,31 @@ const MaintenanceCreate: React.FC<TMaintenanceDetailsProps> = ({
 }) => {
   const { isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable } =
     useSelector((state: RootState) => state.bookingFlowConfig);
-  const { service, serviceTypeOption } = useSelector((state: RootState) => state.appointmentFrame);
+  const { service, serviceTypeOption, isPickupDropoffWithoutFirstScreenOption } = useSelector(
+    (state: RootState) => state.appointmentFrame
+  );
 
   const nextLogicalScreen = useMemo(() => {
     let nextScreen: TScreen = 'appointmentSelection';
     if (isAdvisorAvailable) {
       nextScreen = 'consultantSelection';
-    } else if (isTransportationAvailable && !serviceTypeOption?.transportationOption) {
+    } else if (
+      isTransportationAvailable &&
+      !serviceTypeOption?.transportationOption &&
+      !isPickupDropoffWithoutFirstScreenOption
+    ) {
       nextScreen = 'transportationNeeds';
     } else if (isAppointmentTimingAvailable) {
       nextScreen = 'appointmentTiming';
     }
     return nextScreen;
-  }, [isAdvisorAvailable, isAppointmentTimingAvailable, isTransportationAvailable]);
+  }, [
+    isAdvisorAvailable,
+    isAppointmentTimingAvailable,
+    isTransportationAvailable,
+    isPickupDropoffWithoutFirstScreenOption,
+    serviceTypeOption,
+  ]);
 
   const goToNextScreen = () => {
     onNext(

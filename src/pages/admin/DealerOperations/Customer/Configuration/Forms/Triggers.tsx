@@ -1,13 +1,16 @@
 import React from 'react';
-import { numberToOrdinalWord } from '../../../helper';
+import clsx from 'clsx';
 import { IconButton } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
-import { TriggerI } from '../../types';
-import ClockTimePicker from '../../../../../../components/pickers/ClockTimePicker/ClockTimePicker';
-import { TextField } from '../../../../../../components/formControls/TextFieldStyled/TextField';
-import { ReactComponent as CloseNew } from '../../../../../../assets/img/close-new.svg';
+import { RecallEventStatus, TriggerI } from '../../types';
+import { ReactComponent as EmptyCalendar } from '../../../../../../assets/img/empthyCalendar.svg';
 import dayjs from 'dayjs';
 import { useStyles } from '../../../styles';
+import { useFormStyles } from './styles';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../../../store/rootReducer';
+import { IRecallAlert } from '../../../../../../store/reducers/recall/types';
+import TriggerRow from './TriggerRow';
 
 interface TriggersI {
   triggers: TriggerI[];
@@ -24,9 +27,59 @@ interface TriggersI {
   firstTriggerDateError: boolean;
   setFirstTriggerDateError: React.Dispatch<React.SetStateAction<boolean>>;
   disableAdd: boolean;
+  isOutboundMode?: boolean;
+  updatedRecallAlert?: IRecallAlert | null;
 }
 
+interface IAddTriggerAction {
+  isEditTable: boolean;
+  triggersLength: number;
+  disableAdd: boolean;
+  isOutboundMode?: boolean;
+  updatedRecallAlert?: IRecallAlert | null;
+  onAddTrigger: () => void;
+  classes: ReturnType<typeof useStyles>['classes'];
+  formClasses: ReturnType<typeof useFormStyles>['classes'];
+}
+
+const AddTriggerAction: React.FC<IAddTriggerAction> = ({
+  isEditTable,
+  triggersLength,
+  disableAdd,
+  isOutboundMode,
+  onAddTrigger,
+  classes,
+  formClasses,
+}) => {
+  if (!isEditTable) {
+    return null;
+  }
+
+  const isDisabledByLimit = triggersLength === 5;
+  const isDisabledByMode = isOutboundMode ? disableAdd : false;
+  const isDisabled = isDisabledByLimit || isDisabledByMode;
+
+  return (
+    <IconButton
+      onClick={onAddTrigger}
+      className={classes.iconPlus}
+      disabled={isDisabled}
+      size="large"
+    >
+      <AddCircleOutline className={isDisabledByLimit || isDisabledByMode ? 'isDisabled' : ''} />
+      <span
+        className={clsx(classes.addCriteriaButton, {
+          [formClasses.disabledAddButtonText]: isDisabledByLimit || isDisabledByMode,
+        })}
+      >
+        Add Contact
+      </span>
+    </IconButton>
+  );
+};
+
 const Triggers = ({
+  updatedRecallAlert,
   triggers,
   triggerDateErrors,
   setTriggerDateErrors,
@@ -35,14 +88,32 @@ const Triggers = ({
   firstTriggerDateError,
   setFirstTriggerDateError,
   disableAdd,
+  isOutboundMode,
 }: TriggersI) => {
   const { classes } = useStyles();
+  const { classes: formClasses } = useFormStyles();
+  const { selectedRecallAlert } = useSelector((state: RootState) => state.recalls);
+  const formattedListGeneratedDate = selectedRecallAlert?.listGeneratedDate?.length
+    ? dayjs(selectedRecallAlert?.listGeneratedDate).format('dddd, MMM D, YYYY')
+    : '';
 
   const handleAddTrigger = () => {
-    setTriggers(prev => [...prev, { daysFromListGeneration: 0, scheduledTime: '' }]);
+    if (isOutboundMode) {
+      setTriggers(prev => [...prev, { daysFromListGeneration: 0, scheduledTime: '' }]);
+    } else {
+      setTriggers(prev => [
+        ...prev,
+        {
+          daysFromListGeneration: 0,
+          scheduledTime: '',
+          isPaused: selectedRecallAlert?.status !== RecallEventStatus.Running,
+        },
+      ]);
+    }
   };
 
   const handleRemoveTrigger = (index: number) => {
+    if (updatedRecallAlert?.status === RecallEventStatus.Running && triggers?.length <= 1) return;
     setFirstTriggerDateError(false);
     setTriggerDateErrors(prev => ({
       ...prev,
@@ -72,85 +143,58 @@ const Triggers = ({
 
   return (
     <>
-      <span className={classes.audienceParagraph}>Triggers</span>
-
+      <span
+        className={clsx(classes.audienceParagraph, {
+          [formClasses.triggersTitleWithItems]: !isOutboundMode && triggers.length,
+        })}
+      >
+        Triggers
+      </span>
+      {!isOutboundMode && selectedRecallAlert?.listGeneratedDate?.length ? (
+        <>
+          <div className={formClasses.listGeneratedInfo}>
+            <p className={formClasses.listGeneratedLabel}>List Generated On</p>
+            <p className={formClasses.listGeneratedValue}>{formattedListGeneratedDate}</p>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
       {triggers.length ? (
         <div className={classes.criteriaWrapper}>
-          {triggers.map((trigger, index) => {
-            return (
-              <div key={index} className={classes.triggerItemWrapper}>
-                <div className={classes.triggerItem}>
-                  <span className={classes.contactCounter}>
-                    {numberToOrdinalWord(index + 1)} Contact
-                  </span>
-                  {isEditTable ? (
-                    <div style={{ cursor: 'pointer' }} onClick={() => handleRemoveTrigger(index)}>
-                      <CloseNew />
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className={classes.triggersFormWrapper}>
-                  <div className={classes.triggersForm}>
-                    <TextField
-                      fullWidth
-                      labelFitContent={true}
-                      disabled={!isEditTable}
-                      type="number"
-                      inputProps={{ min: 0 }}
-                      error={
-                        !Number.isInteger(Number(trigger.daysFromListGeneration)) ||
-                        triggerDateErrors[index]
-                      }
-                      label="Days from list generation"
-                      placeholder=""
-                      onChange={e =>
-                        handleTriggerChange(index, 'daysFromListGeneration', e.target.value || '')
-                      }
-                      value={+trigger.daysFromListGeneration}
-                    />
-                  </div>
-                  <div className={classes.triggerClockWrapper}>
-                    <ClockTimePicker
-                      value={
-                        trigger.scheduledTime ? dayjs(trigger.scheduledTime, 'HH:mm:ss') : null
-                      }
-                      disabled={!isEditTable}
-                      onChange={e =>
-                        handleTriggerChange(index, 'scheduledTime', dayjs(e).format('HH:mm:ss'))
-                      }
-                      label={'Scheduled time'}
-                      InputProps={{
-                        className: 'ClockTimeTriggers',
-                        id: 'Scheduled time',
-                        placeholder: '',
-                        error: index === 0 && firstTriggerDateError,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {triggers.map((trigger, index) => (
+            <TriggerRow
+              key={index}
+              trigger={trigger}
+              index={index}
+              isOutboundMode={isOutboundMode}
+              isEditTable={isEditTable}
+              updatedRecallAlert={updatedRecallAlert}
+              triggerDateErrors={triggerDateErrors}
+              firstTriggerDateError={firstTriggerDateError}
+              formattedListGeneratedDate={formattedListGeneratedDate}
+              classes={classes}
+              formClasses={formClasses}
+              onRemoveTrigger={handleRemoveTrigger}
+              onTriggerChange={handleTriggerChange}
+            />
+          ))}
         </div>
-      ) : null}
-
-      {isEditTable ? (
-        <IconButton
-          onClick={handleAddTrigger}
-          className={classes.iconPlus}
-          disabled={triggers.length === 5 || disableAdd}
-          size="large"
-        >
-          <AddCircleOutline className={triggers.length === 5 || disableAdd ? 'isDisabled' : ''} />
-          <span
-            style={triggers.length === 5 || disableAdd ? { color: 'grey' } : {}}
-            className={classes.addCriteriaButton}
-          >
-            Add Contact
-          </span>
-        </IconButton>
-      ) : null}
+      ) : isOutboundMode ? null : (
+        <div className={formClasses.emptyTriggersState}>
+          <EmptyCalendar />
+          <span className={formClasses.emptyTriggersStateText}>No triggers configured yet</span>
+        </div>
+      )}
+      <AddTriggerAction
+        isEditTable={isEditTable}
+        triggersLength={triggers.length}
+        disableAdd={disableAdd}
+        isOutboundMode={isOutboundMode}
+        onAddTrigger={handleAddTrigger}
+        classes={classes}
+        formClasses={formClasses}
+      />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogContent,
@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
 import { decodeSCID } from '../../../utils/utils';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
@@ -21,12 +20,16 @@ import {
 import AskAddService from '../../../components/modals/booking/AskAddService/AskAddService';
 import { checkPodChanged } from '../../../store/reducers/appointments/actions';
 import { useStyles } from './styles';
+import { useStyles as useLoaderStyles } from '../RecallsLoadingModal/styles';
 import { IRecallByVin } from '../../../types/types';
 import { useModal } from '../../../hooks/useModal/useModal';
 import { useException } from '../../../hooks/useException/useException';
 import { BfButtonsWrapper } from '../../../components/styled/BfButtonsWrapper';
 import Recall from './Recall/Recall';
 import { EServiceCategoryType } from '../../../store/reducers/categories/types';
+import { loadRecallsByVin } from '../../../store/reducers/recall/actions';
+import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/types';
+import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
 type TRecallsByVinProps = DialogProps & {
   handleNext: () => void;
@@ -46,16 +49,22 @@ const RecallsByVinModal: React.FC<
   isRecallsCategorySelected,
 }) => {
   const { recallsByVin, isLoading } = useSelector((state: RootState) => state.recalls);
-  const { selectedVehicle, isUsualFlowNeeded, service } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
-  const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
+  const {
+    selectedVehicle,
+    isUsualFlowNeeded,
+    service,
+    serviceTypeOption,
+    transportation,
+    customer,
+  } = useSelector((state: RootState) => state.appointmentFrame);
+  const { customerLoadedData, isEditMode } = useSelector((state: RootState) => state.appointment);
   const [recalls, setRecalls] = useState<IRecallByVin[]>([]);
   const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
   const showError = useException();
   const { t } = useTranslation();
   const { classes } = useStyles();
+  const { classes: loaderClasses } = useLoaderStyles();
   const {
     isOpen: isAddServiceOpen,
     onClose: onAddServiceClose,
@@ -64,14 +73,47 @@ const RecallsByVinModal: React.FC<
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const serviceType = useMemo(() => {
+    if (serviceTypeOption) {
+      return serviceTypeOption.type;
+    }
+
+    return transportation?.type === ETransportationType.PickUpDelivery
+      ? EServiceType.PickUpDropOff
+      : EServiceType.VisitCenter;
+  }, [serviceTypeOption, transportation]);
+
+  const transportationOptionId =
+    serviceType === EServiceType.VisitCenter
+      ? serviceTypeOption?.transportationOption
+        ? serviceTypeOption?.transportationOption?.id
+        : !serviceTypeOption?.transportationOption && transportation
+          ? transportation?.id
+          : undefined
+      : serviceType === EServiceType.PickUpDropOff
+        ? (serviceTypeOption?.transportationOption?.id ?? undefined)
+        : undefined;
+
   useEffect(() => {
-    if (selectedVehicle) {
+    if (selectedVehicle && isEditMode && !recallsByVin.length) {
       const { make, model, year, vin } = selectedVehicle;
       if (vin?.length && open && make && model && year) {
-        dispatch(loadRecallsByVin(decodeSCID(id), vin, make, model, year));
+        const customerId = customerLoadedData?.id ? +customerLoadedData?.id : customer?.id;
+        dispatch(
+          loadRecallsByVin(
+            decodeSCID(id),
+            vin,
+            make,
+            model,
+            year,
+            serviceTypeOption?.id,
+            transportationOptionId,
+            customerId
+          )
+        );
       }
     }
-  }, [selectedVehicle, open]);
+  }, [selectedVehicle, open, recallsByVin]);
 
   useEffect(() => {
     if (open) setRecalls(recallsByVin.filter(el => el.isRemedyAvailable));
@@ -138,7 +180,15 @@ const RecallsByVinModal: React.FC<
     <BaseModal open={open} onClose={onClose} width={800}>
       <DialogTitle onClose={onClose} style={{ justifyContent: 'flex-start' }}></DialogTitle>
       {isLoading ? (
-        <Loading />
+        <div className={loaderClasses.wrapper}>
+          <div className={loaderClasses.loading}>
+            <Loading />
+          </div>
+          <div className={loaderClasses.title}>{t('Checking for Open Recalls')}</div>
+          <div className={loaderClasses.subTitle}>
+            {t('One moment please as this may take a few seconds')}
+          </div>
+        </div>
       ) : (
         <DialogContent style={{ padding: isSm ? '10px 16px' : '10px 36px' }}>
           <div className={classes.mainTitle}>
