@@ -27,6 +27,7 @@ import {
   IServiceRequestPrice,
   IVehicle,
 } from '../appointment/types';
+import { ErrorCode } from '../../../types/errorCodes';
 import {
   EPackagePricingType,
   EServiceType,
@@ -662,7 +663,7 @@ export const loadAncillaryPriceByZip =
         dispatch(setAncillaryPriceLoading(false));
       })
       .catch(err => {
-        if (err.response?.data?.errorCode === 7) {
+        if (err.response?.data?.errorCode === ErrorCode.EntityDoesNotExist) {
           onUnavailableOpen();
         } else {
           onError(err);
