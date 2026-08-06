@@ -162,7 +162,7 @@ const StatsTable: React.FC<React.PropsWithChildren<React.PropsWithChildren<TReca
           : el.status === RecallEventStatus.Completed
             ? '0'
             : '-',
-      width: 100
+      width: 100,
     },
   ];
 
