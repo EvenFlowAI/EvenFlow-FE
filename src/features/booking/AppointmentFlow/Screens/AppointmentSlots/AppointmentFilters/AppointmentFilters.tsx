@@ -73,7 +73,10 @@ const AppointmentFilters: React.FC<TProps> = ({
     serviceOptions.length > 1 &&
     Boolean(firstScreenOptions.find(el => el.id === serviceTypeOption?.id));
   const isAdvisorVisible = Boolean(isAdvisorAvailable && consultants?.length);
-  const isVisible = isAdvisorVisible || isServiceOptionVisible || isTransportationsVisible;
+  const isVisible =
+    isAdvisorVisible ||
+    isServiceOptionVisible ||
+    (!!isTransportationsVisible && isTransportationAvailable);
 
   const onArrowClick = () => setFiltersOpen(prev => !prev);
 
@@ -86,7 +89,7 @@ const AppointmentFilters: React.FC<TProps> = ({
     ) {
       return !!isTransportationsVisible && !!transportation && isTransportationAvailable;
     } else {
-      return !!isTransportationsVisible;
+      return !!isTransportationsVisible && isTransportationAvailable;
     }
   };
 

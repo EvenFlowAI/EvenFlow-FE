@@ -22,10 +22,7 @@ import { LoadingButton } from '../../../buttons/LoadingButton/LoadingButton';
 import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import CustomerConsents from '../CustomerConsents/CustomerConsents';
-
-enum ERROR_CODES {
-  TIME_SLOT_NOT_AVAILABLE = 5,
-}
+import { ErrorCode } from '../../../../types/errorCodes';
 
 const AskChangesCompleted = () => {
   const {
@@ -78,8 +75,7 @@ const AskChangesCompleted = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (e: any) => {
-    const timeSlotNotAvailable =
-      e.response?.data?.errorCode === ERROR_CODES.TIME_SLOT_NOT_AVAILABLE;
+    const timeSlotNotAvailable = e.response?.data?.errorCode === ErrorCode.InvalidData;
     const transportationUnavailable = e.response?.data?.message
       ?.toLowerCase()
       .includes('transportation option');

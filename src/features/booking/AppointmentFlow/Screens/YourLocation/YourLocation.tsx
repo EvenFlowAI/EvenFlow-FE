@@ -338,6 +338,11 @@ const YourLocation: React.FC<
     }
   };
 
+  const handleAddressFocus = () => {
+    setFormChecked(false);
+    dispatch(setAddress(null));
+  };
+
   return (
     <StepWrapper>
       <SelectWrapper>
@@ -352,8 +357,7 @@ const YourLocation: React.FC<
               },
             }}
             selectProps={{
-              addressValue:
-                typeof address === 'string' && address.length ? address : (address?.label ?? null),
+              value: typeof address === 'string' ? null : address?.label ? address : null,
               className:
                 typeof address === 'string' && address.length
                   ? classes.select
@@ -363,10 +367,11 @@ const YourLocation: React.FC<
                       : classes.emptySelect
                     : classes.select,
               onChange: handleChangeAddress,
+              onFocus: handleAddressFocus,
+              openMenuOnFocus: true,
               placeholder: getPlaceholderLabel(),
               isClearable: true,
               isSearchable: true,
-              key: address?.label || 'label',
             }}
           />
         </div>
