@@ -25,6 +25,10 @@ import {
 import ColumnsSelectionModal from '../../../components/modals/common/ColumnSelectionModal/ColumnsSelectionModal/ColumnsSelectionModal';
 import { useException } from '../../../hooks/useException/useException';
 
+const renamedColumnsMap: Record<string, string> = {
+  'Customer Name': 'Customer',
+};
+
 export const Appointments = () => {
   const { isLoading } = useSelector((state: RootState) => state.appointments);
   const [viewItem, setViewItem] = useState<IAppointment | undefined>(undefined);
@@ -104,13 +108,34 @@ export const Appointments = () => {
   useEffect(() => {
     const columns = localStorage.getItem(localStorageItemName);
     if (columns) {
-      const columnsParsed = JSON.parse(columns);
-      const customerNameColumnPresent = columnsParsed.find((el: string) => el === 'Customer Name');
-      if (customerNameColumnPresent) {
+      try {
+        const columnsParsed = JSON.parse(columns);
+        const parsedColumns = Array.isArray(columnsParsed)
+          ? columnsParsed.filter((el): el is string => typeof el === 'string')
+          : [];
+
+        const migratedColumns = parsedColumns.map(column => renamedColumnsMap[column] ?? column);
+        const validColumns = migratedColumns.filter(column => allColumns.includes(column));
+        const uniqueColumns = validColumns.filter(
+          (column, index) => validColumns.indexOf(column) === index
+        );
+        const missingRequiredColumns = requiredColumns.filter(
+          column => !uniqueColumns.includes(column)
+        );
+        const nextColumns =
+          uniqueColumns.length > 0
+            ? [...uniqueColumns, ...missingRequiredColumns]
+            : requiredColumns;
+
+        setSelectedColumns(nextColumns);
+
+        const shouldPersistUpdate = JSON.stringify(parsedColumns) !== JSON.stringify(nextColumns);
+        if (shouldPersistUpdate) {
+          localStorage.setItem(localStorageItemName, JSON.stringify(nextColumns));
+        }
+      } catch {
         setSelectedColumns(requiredColumns);
         localStorage.setItem(localStorageItemName, JSON.stringify(requiredColumns));
-      } else {
-        setSelectedColumns(columnsParsed);
       }
     } else {
       setSelectedColumns(requiredColumns);
