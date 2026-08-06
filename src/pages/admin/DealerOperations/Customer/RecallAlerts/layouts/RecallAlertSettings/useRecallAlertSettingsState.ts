@@ -97,12 +97,29 @@ const useRecallAlertSettingsState = ({
       selectedModel => !isKeyPresentInAffectedModels(selectedModel)
     );
 
+    const selectedModelIds = selectedRecallAlert?.globalModelIds || [];
+
+    if (selectedModelIds.length) {
+      if (!hasSelectionForCurrentCampaign || hasOutdatedSelection) {
+        const mappedSelection = mapModelIdsToGlobalModels(selectedModelIds, affectedModels);
+        setSelectedModelKeys(mappedSelection);
+      }
+
+      return;
+    }
+
     if (!hasOutdatedSelection && hasSelectionForCurrentCampaign) {
       return;
     }
 
     setSelectedModelKeys(mapAllAffectedModelsToSelectedKeys(affectedModels));
-  }, [affectedModels, isEditTable, selectedModelKeys, updatedRecallAlert?.recallCampaignId]);
+  }, [
+    affectedModels,
+    isEditTable,
+    selectedModelKeys,
+    selectedRecallAlert,
+    updatedRecallAlert?.recallCampaignId,
+  ]);
 
   const resetValidationErrors = () => {
     setCriteriaTypeErrors({});

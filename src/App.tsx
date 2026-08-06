@@ -184,6 +184,7 @@ const App = () => {
   const handleMessage = (event: MessageEvent) => {
     const clientIdFromOldDealers =
       typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
+
     const clientData =
       typeof event.data === 'object' &&
       event.data !== null &&

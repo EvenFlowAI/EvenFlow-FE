@@ -197,6 +197,7 @@ const RecallAlertSettings: React.FC = () => {
               <StatisticData
                 updatedRecallAlert={updatedRecallAlert}
                 selectedModelKeys={selectedModelKeys}
+                isEditTable={isEditTable}
               />
               <hr className={recallAlertSettingsClasses.divider} />
               <div className={recallAlertSettingsClasses.audienceForm}>

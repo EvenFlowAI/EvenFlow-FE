@@ -108,6 +108,8 @@ const WorkflowTable: React.FC<
         {
           id: recallAlert.id,
           serviceCenterId: selectedSC.id,
+          filterRules: null,
+          globalModels: null,
           triggers: (recallAlert.triggers || []).map(trigger => ({
             ...trigger,
             isPaused: !nextChecked,

@@ -103,7 +103,11 @@ const Triggers = ({
     } else {
       setTriggers(prev => [
         ...prev,
-        { daysFromListGeneration: 0, scheduledTime: '', isPaused: true },
+        {
+          daysFromListGeneration: 0,
+          scheduledTime: '',
+          isPaused: selectedRecallAlert?.status !== RecallEventStatus.Running,
+        },
       ]);
     }
   };
