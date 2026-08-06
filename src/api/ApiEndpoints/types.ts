@@ -431,5 +431,4 @@ export interface IApiEndpoints {
     'GetServiceCenterCredits' | 'UpdateServiceCenterCredits',
     TApiEndpoint
   >;
-  ShortUrls: Record<'Resolve', TApiEndpoint>;
 }

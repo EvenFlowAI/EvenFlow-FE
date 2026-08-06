@@ -685,9 +685,6 @@ export class Api {
       GetServiceCenterCredits: { route: '/service-center-credits', method: 'get' },
       UpdateServiceCenterCredits: { route: '/service-center-credits', method: 'patch' },
     },
-    ShortUrls: {
-      Resolve: { route: '/short-urls/{code}/resolve', method: 'get' },
-    },
   };
 
   static async call<RValue = any>(r: TApiEndpoint, options?: TOptions) {
