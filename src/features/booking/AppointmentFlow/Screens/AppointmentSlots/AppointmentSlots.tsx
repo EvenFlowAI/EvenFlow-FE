@@ -123,12 +123,9 @@ export const AppointmentSlots: React.FC<
     serviceOptionChangedFromSlotPage,
     transportations,
   } = useSelector((state: RootState) => state.appointmentFrame);
-  const {
-    currentConfig,
-    isAppointmentTimingAvailable,
-    isTransportationAvailable,
-    isAdvisorAvailable,
-  } = useSelector((state: RootState) => state.bookingFlowConfig);
+  const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
+    (state: RootState) => state.bookingFlowConfig
+  );
 
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
@@ -370,11 +367,11 @@ export const AppointmentSlots: React.FC<
   }, [appointment, date]);
 
   useEffect(() => {
-    const isAdvisorVisible = Boolean(isAdvisorAvailable && consultants?.length);
-    if (isAdvisorVisible) {
+    const shouldLoadConsultants = Boolean(currentConfig?.advisorSelection);
+    if (shouldLoadConsultants) {
       dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
     }
-  }, []);
+  }, [currentConfig?.advisorSelection, id, serviceTypeOption?.id]);
 
   const clearData = () => {
     dispatch(selectAppointment(null));
