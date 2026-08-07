@@ -34,6 +34,7 @@ import { SVAppointmentTimeSelector } from '../../../../../components/bookingDate
 import {
   clearAppointmentSteps,
   loadActiveTransportations,
+  loadConsultants,
   searchForCustomerConsents,
   setServiceTypeOption,
   setTime,
@@ -122,9 +123,12 @@ export const AppointmentSlots: React.FC<
     serviceOptionChangedFromSlotPage,
     transportations,
   } = useSelector((state: RootState) => state.appointmentFrame);
-  const { currentConfig, isAppointmentTimingAvailable, isTransportationAvailable } = useSelector(
-    (state: RootState) => state.bookingFlowConfig
-  );
+  const {
+    currentConfig,
+    isAppointmentTimingAvailable,
+    isTransportationAvailable,
+    isAdvisorAvailable,
+  } = useSelector((state: RootState) => state.bookingFlowConfig);
 
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
@@ -364,6 +368,13 @@ export const AppointmentSlots: React.FC<
       clearTimeout(timeoutId);
     };
   }, [appointment, date]);
+
+  useEffect(() => {
+    const isAdvisorVisible = Boolean(isAdvisorAvailable && consultants?.length);
+    if (isAdvisorVisible) {
+      dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+    }
+  }, []);
 
   const clearData = () => {
     dispatch(selectAppointment(null));
