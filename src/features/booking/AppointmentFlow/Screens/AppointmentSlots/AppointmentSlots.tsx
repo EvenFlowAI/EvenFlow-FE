@@ -34,6 +34,7 @@ import { SVAppointmentTimeSelector } from '../../../../../components/bookingDate
 import {
   clearAppointmentSteps,
   loadActiveTransportations,
+  loadConsultants,
   searchForCustomerConsents,
   setServiceTypeOption,
   setTime,
@@ -364,6 +365,13 @@ export const AppointmentSlots: React.FC<
       clearTimeout(timeoutId);
     };
   }, [appointment, date]);
+
+  useEffect(() => {
+    const shouldLoadConsultants = Boolean(currentConfig?.advisorSelection);
+    if (shouldLoadConsultants) {
+      dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
+    }
+  }, [currentConfig?.advisorSelection, id, serviceTypeOption?.id]);
 
   const clearData = () => {
     dispatch(selectAppointment(null));
