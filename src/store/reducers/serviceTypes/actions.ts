@@ -5,6 +5,8 @@ import { EServiceType } from '../appointmentFrameReducer/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { ETransportationType } from '../transportationNeeds/types';
 
+const firstScreenOptionsQueryInFlight = new Set<number>();
+
 export const setFirstScreenOptionsLoading = createAction<boolean>('ServiceTypes/SetLoading');
 export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>(
   'ServiceTypes/GetServiceTypesByQuery'
@@ -13,6 +15,11 @@ export const getFirstScreenOptionsByQuery = createAction<IFirstScreenOption[]>(
 export const loadFirstScreenOptionsByQuery =
   (id: number): AppThunk =>
   (dispatch, getState) => {
+    if (firstScreenOptionsQueryInFlight.has(id)) {
+      return;
+    }
+
+    firstScreenOptionsQueryInFlight.add(id);
     dispatch(setFirstScreenOptionsLoading(true));
     const { isMobileServiceOn, isPickUpDropOffServiceOn } = getState().appointmentFrame;
     Api.call<PaginatedAPIResponse<IFirstScreenOption>>(Api.endpoints.ServiceTypes.GetByQuery, {
@@ -39,7 +46,10 @@ export const loadFirstScreenOptionsByQuery =
       .catch(err => {
         console.log('get service types by query', err);
       })
-      .finally(() => dispatch(setFirstScreenOptionsLoading(false)));
+      .finally(() => {
+        firstScreenOptionsQueryInFlight.delete(id);
+        dispatch(setFirstScreenOptionsLoading(false));
+      });
   };
 
 export const loadFirstScreenOptionsList =

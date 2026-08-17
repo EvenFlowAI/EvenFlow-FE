@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { AppointmentUserData } from '../../Screens/components/AppointmentUserData/AppointmentUserData';
@@ -97,17 +97,27 @@ export const ManageAppointment: React.FC<
     advisor,
     transportations,
     consultants,
+    isConsultantsLoading,
+    isTransportationsLoading,
   } = useSelector(({ appointmentFrame }: RootState) => appointmentFrame);
   const { isLoading } = useSelector(({ recalls }: RootState) => recalls);
   const { mileage } = useSelector(({ vehicleDetails }: RootState) => vehicleDetails);
-  const { firstScreenOptions } = useSelector(({ serviceTypes }: RootState) => serviceTypes);
+  const { firstScreenOptions, isLoading: isFirstScreenOptionsLoading } = useSelector(
+    ({ serviceTypes }: RootState) => serviceTypes
+  );
 
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userClickedOnSave, setUserClickedOnSave] = useState<boolean>(false);
   const [pendingSlotChange, setPendingSlotChange] = useState<boolean>(false);
+  const appointmentPricesRequestedRef = useRef<boolean>(false);
+  const cloneTransportationHandledRef = useRef<string | null>(null);
+  const consultantsLoadHandledRef = useRef<string | null>(null);
+  const cloneForwardHandledRef = useRef<string | null>(null);
+  const cloneMileagePromptedRef = useRef<string | null>(null);
   const currentUser = useCurrentUser();
   const { id } = useParams<{ id: string }>();
+  const serviceCenterId = useMemo(() => decodeSCID(id), [id]);
   const { isOpen: isFeesOpen, onClose: onFeesClose, onOpen: onFeesOpen } = useModal();
   const { isOpen: isMileageOpen, onClose: onMileageClose, onOpen: onMileageOpen } = useModal();
   const { isOpen: isPaymentOpen, onClose: onPaymentClose } = useModal();
@@ -158,23 +168,40 @@ export const ManageAppointment: React.FC<
   const { onOpen, isOpen, onClose } = useModal();
 
   useEffect(() => {
-    if (scProfile) {
+    if (scProfile?.id) {
       dispatch(loadCategoriesByQuery(scProfile.id));
       dispatch(loadSRs(scProfile.id));
       dispatch(loadAllServiceCenterSettings(scProfile.id));
     }
-  }, [scProfile]);
+  }, [dispatch, scProfile?.id]);
 
   useEffect(() => {
-    if (currentConfig && scProfile && !firstScreenOptions.length)
+    if (
+      currentConfig &&
+      scProfile?.id &&
+      !firstScreenOptions.length &&
+      !isFirstScreenOptionsLoading
+    )
       dispatch(loadFirstScreenOptionsByQuery(scProfile.id));
-  }, [currentConfig, scProfile, firstScreenOptions?.length]);
+  }, [
+    dispatch,
+    currentConfig,
+    scProfile?.id,
+    firstScreenOptions.length,
+    isFirstScreenOptionsLoading,
+  ]);
 
   useEffect(() => {
-    if (scProfile && appointmentWasChanged) {
+    if (!appointmentWasChanged) {
+      appointmentPricesRequestedRef.current = false;
+      return;
+    }
+
+    if (scProfile?.id && !appointmentPricesRequestedRef.current) {
+      appointmentPricesRequestedRef.current = true;
       dispatch(loadAppointmentRequestsPrices(scProfile.id));
     }
-  }, [scProfile, appointmentWasChanged]);
+  }, [dispatch, scProfile?.id, appointmentWasChanged]);
 
   useEffect(() => {
     dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
@@ -182,14 +209,37 @@ export const ManageAppointment: React.FC<
 
   useEffect(() => {
     // In clone mode: load active transportation for non-mobile services; for mobile services, refresh slots.
-    if (appointmentByKey && isCloneMode) {
-      if (appointmentByKey?.serviceTypeOption?.type !== EServiceType.MobileService) {
-        dispatch(loadActiveTransportations(decodeSCID(id)));
-      } else {
-        onChangeSlot();
-      }
+    if (!appointmentByKey || !isCloneMode) {
+      cloneTransportationHandledRef.current = null;
+      return;
     }
-  }, [appointmentByKey, isCloneMode]);
+
+    const cloneKey = appointmentByKey.hashKey ?? String(appointmentByKey.id);
+    const isMobileService = appointmentByKey.serviceTypeOption?.type === EServiceType.MobileService;
+    const handledKey = `${cloneKey}:${isMobileService ? 'mobile-slot' : 'transportations'}`;
+
+    if (cloneTransportationHandledRef.current === handledKey) {
+      return;
+    }
+
+    if (isMobileService) {
+      cloneTransportationHandledRef.current = handledKey;
+      onChangeSlot();
+      return;
+    }
+
+    if (!isTransportationsLoading) {
+      cloneTransportationHandledRef.current = handledKey;
+      dispatch(loadActiveTransportations(serviceCenterId));
+    }
+  }, [
+    appointmentByKey,
+    dispatch,
+    isCloneMode,
+    isTransportationsLoading,
+    onChangeSlot,
+    serviceCenterId,
+  ]);
 
   useEffect(() => {
     if (
@@ -202,8 +252,9 @@ export const ManageAppointment: React.FC<
     }
   }, [appointmentByKey, selectedVehicle]);
 
-  const handleConsultants = async () => {
+  const handleConsultants = () => {
     if (appointmentByKey) {
+      console.log('test f');
       dispatch(
         loadConsultantsForUpdating(
           id,
@@ -219,10 +270,43 @@ export const ManageAppointment: React.FC<
 
   useEffect(() => {
     const advisorShouldBeSelected = appointmentByKey?.advisorId && !advisor;
-    if (advisorShouldBeSelected && selectedVehicle?.mileage) {
-      handleConsultants().then();
+    if (!advisorShouldBeSelected || !selectedVehicle?.mileage) {
+      return;
     }
-  }, [selectedVehicle, appointmentByKey, advisor]);
+
+    const consultantAlreadyLoaded = consultants?.some(
+      consultant => consultant.id === appointmentByKey?.advisorId
+    );
+    if (consultantAlreadyLoaded) {
+      dispatch(updateConsultant(appointmentByKey?.advisorId));
+      consultantsLoadHandledRef.current = null;
+      return;
+    }
+
+    const consultantsLoadKey = `${appointmentByKey?.hashKey ?? appointmentByKey?.id}:${
+      appointmentByKey?.advisorId
+    }:${selectedVehicle.mileage}`;
+
+    if (isConsultantsLoading) {
+      if (!consultantsLoadHandledRef.current) {
+        consultantsLoadHandledRef.current = consultantsLoadKey;
+      }
+      return;
+    }
+
+    if (consultantsLoadHandledRef.current === consultantsLoadKey) {
+      return;
+    }
+
+    consultantsLoadHandledRef.current = consultantsLoadKey;
+    handleConsultants();
+  }, [selectedVehicle?.mileage, appointmentByKey, advisor, consultants, isConsultantsLoading]);
+
+  useEffect(() => {
+    if (advisor) {
+      consultantsLoadHandledRef.current = null;
+    }
+  }, [advisor]);
 
   const checkIsValid = () => {
     let isValid = true;
@@ -298,6 +382,10 @@ export const ManageAppointment: React.FC<
   };
 
   const handleCreateAppointment = () => {
+    if (isAppointmentSaving) {
+      return;
+    }
+
     setUserClickedOnSave(true);
     const mileageIsValid =
       selectedVehicle?.mileage &&
@@ -309,7 +397,7 @@ export const ManageAppointment: React.FC<
         onMileageClose();
         dispatch(
           createOrUpdateAppointment(
-            decodeSCID(id),
+            serviceCenterId,
             onNext,
             handleError,
             isMobile,
@@ -321,6 +409,10 @@ export const ManageAppointment: React.FC<
   };
 
   const searchForConsents = () => {
+    if (isConsentsLoading || isAppointmentSaving) {
+      return;
+    }
+
     dispatch(searchForCustomerConsents(handleCreateAppointment));
   };
 
@@ -401,7 +493,7 @@ export const ManageAppointment: React.FC<
       onChangeSlot();
       setPendingSlotChange(false);
     }
-  }, [advisor]);
+  }, [advisor, pendingSlotChange, isCloneMode, onChangeSlot]);
 
   const handleChangeSlot = () => {
     if (customerLoadedData?.isUpdating) {
@@ -470,20 +562,41 @@ export const ManageAppointment: React.FC<
   };
 
   useEffect(() => {
-    if (isCloneMode && appointmentByKey) {
-      if (transportations.length) {
-        // when transportations from the backend and appointmentByKey are ready
-        if (appointmentByKey.vehicle.mileage || selectedVehicle?.mileage) {
-          // when advisors from the backend are ready
-          if (consultants) {
-            forwardNextStepCloning();
-          }
-        } else {
-          onOpen();
-        }
-      }
+    if (!isCloneMode || !appointmentByKey) {
+      cloneForwardHandledRef.current = null;
+      cloneMileagePromptedRef.current = null;
+      return;
     }
-  }, [appointmentByKey, transportations, consultants]);
+
+    const cloneKey = appointmentByKey.hashKey ?? String(appointmentByKey.id);
+    const hasMileage = Boolean(appointmentByKey.vehicle.mileage || selectedVehicle?.mileage);
+
+    if (!transportations.length) {
+      return;
+    }
+
+    if (!hasMileage) {
+      if (cloneMileagePromptedRef.current !== cloneKey) {
+        cloneMileagePromptedRef.current = cloneKey;
+        onOpen();
+      }
+      return;
+    }
+
+    if (!consultants || cloneForwardHandledRef.current === cloneKey) {
+      return;
+    }
+
+    cloneForwardHandledRef.current = cloneKey;
+    forwardNextStepCloning();
+  }, [
+    appointmentByKey,
+    transportations.length,
+    selectedVehicle?.mileage,
+    consultants,
+    isCloneMode,
+    onOpen,
+  ]);
 
   const handleBack = () => {
     onCancelConfirmOpen();

@@ -79,7 +79,9 @@ const AppointmentFlow = () => {
       serviceTypeOption?.type === EServiceType.VisitCenter ||
       !serviceTypeOption ||
       Boolean(address && zipCode);
-    if (someRequestsSelected && requestDataIsValid) {
+    const isUpdatingAppointment = Boolean(customerLoadedData?.isUpdating);
+    if (someRequestsSelected && requestDataIsValid && !isUpdatingAppointment) {
+      console.log('test c');
       dispatch(loadConsultants(id, serviceTypeOption?.id ?? null));
     }
   }, [
@@ -91,6 +93,7 @@ const AppointmentFlow = () => {
     id,
     address,
     zipCode,
+    customerLoadedData?.isUpdating,
   ]);
 
   useEffect(() => {

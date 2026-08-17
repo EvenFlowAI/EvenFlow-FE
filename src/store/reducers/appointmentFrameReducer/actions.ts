@@ -109,6 +109,56 @@ import { collectServiceRequestsForConsents } from '../../../utils/collectService
 import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
 import { ETransportationType } from '../transportationNeeds/types';
 
+const CONSULTANTS_QUERY_BURST_CACHE_MS = 1500;
+const consultantsByQueryInFlight = new Map<string, Promise<IServiceConsultant[]>>();
+const consultantsByQueryRecent = new Map<
+  string,
+  { result: IServiceConsultant[]; fetchedAt: number }
+>();
+const appointmentUpdateInFlight = new Set<string>();
+
+const requestConsultantsByQuery = (
+  data: IConsultantsRequestData
+): Promise<IServiceConsultant[]> => {
+  const requestKey = JSON.stringify(data);
+  const now = Date.now();
+
+  consultantsByQueryRecent.forEach((value, key) => {
+    if (now - value.fetchedAt > CONSULTANTS_QUERY_BURST_CACHE_MS) {
+      consultantsByQueryRecent.delete(key);
+    }
+  });
+
+  const cachedResponse = consultantsByQueryRecent.get(requestKey);
+
+  if (cachedResponse && now - cachedResponse.fetchedAt <= CONSULTANTS_QUERY_BURST_CACHE_MS) {
+    return Promise.resolve(cachedResponse.result);
+  }
+
+  const inFlightRequest = consultantsByQueryInFlight.get(requestKey);
+
+  if (inFlightRequest) {
+    return inFlightRequest;
+  }
+
+  const request = Api.call<PaginatedAPIResponse<IServiceConsultant>>(
+    Api.endpoints.ServiceConsultants.GetByQuery,
+    { data }
+  )
+    .then(({ data: { result } }) => {
+      consultantsByQueryRecent.set(requestKey, { result, fetchedAt: Date.now() });
+
+      return result;
+    })
+    .finally(() => {
+      consultantsByQueryInFlight.delete(requestKey);
+    });
+
+  consultantsByQueryInFlight.set(requestKey, request);
+
+  return request;
+};
+
 export const selectService = createAction<IServiceCategory | null>('fAppointment/selectService');
 export const selectSubService = createAction<IServiceCategory | null>(
   'fAppointment/selectSubService'
@@ -268,7 +318,7 @@ export const setValueServicePartial =
 
 export const loadConsultantsForCloning =
   (serviceCenterId: string, appointment: IAppointmentByKey, cb: TCallback): AppThunk =>
-  dispatch => {
+  async dispatch => {
     dispatch(setConsultantsLoading(true));
 
     const {
@@ -309,22 +359,17 @@ export const loadConsultantsForCloning =
     if (hashKey) {
       data.appointmentHashKey = hashKey;
     }
-    Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-      Api.endpoints.ServiceConsultants.GetByQuery,
-      { data }
-    )
-      .then(({ data: { result } }) => {
-        dispatch(setConsultants(result));
-        cb();
-      })
-      .catch(err => {
-        console.log(err);
-        throw err;
-      })
-      .finally(() => {
-        dispatch(setConsultantsLoading(false));
-        dispatch(setCurrentAppointmentLoading(false));
-      });
+    try {
+      const result = await requestConsultantsByQuery(data);
+      dispatch(setConsultants(result));
+      cb();
+    } catch (err) {
+      console.log(err);
+      throw err;
+    } finally {
+      dispatch(setConsultantsLoading(false));
+      dispatch(setCurrentAppointmentLoading(false));
+    }
   };
 
 export const loadConsultantsForUpdating =
@@ -334,7 +379,7 @@ export const loadConsultantsForUpdating =
     appointment: IAppointmentByKey,
     onSuccess?: () => void
   ): AppThunk =>
-  (dispatch, getState) => {
+  async (dispatch, getState) => {
     dispatch(setConsultantsLoading(true));
     const { maintenancePackageOption, serviceRequests, serviceCategories, address } = appointment;
     const {
@@ -348,72 +393,79 @@ export const loadConsultantsForUpdating =
     const { isCloneMode } = getState().appointment;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
     const recalls = mapRecallsForRequest(selectedRecalls);
-    if (selectedVehicle) {
-      if (
-        serviceRequests?.length ||
-        maintenancePackageOption ||
-        serviceCategories?.length ||
-        recalls?.length
-      ) {
-        const data: IConsultantsRequestData = {
-          serviceCenterId: decodeSCID(id),
-          pageIndex: 0,
-          pageSize: 0,
-          serviceRequests: serviceRequests.map(item => ({ id: item.id, comment: null })),
-          recalls,
-          serviceCategories,
-          maintenancePackageOption,
-          serviceTypeOptionId,
-          searchTerm: '',
-          vehicle: {
-            vin: selectedVehicle.vin,
-            year: selectedVehicle.year,
-            make: selectedVehicle.make,
-            model: selectedVehicle.model,
-            mileage:
-              selectedVehicle.mileage || appointmentByKey?.vehicle?.mileage || isCloneMode
-                ? 1
-                : null,
-            engineTypeId: selectedVehicle.engineTypeId,
-          },
-          address: address?.fullAddress ?? '',
-          zipCode: address?.zipCode ?? '',
-          transportationOptionId:
-            serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
-        };
-        if (appointmentByKey?.hashKey) {
-          data.appointmentHashKey = appointmentByKey?.hashKey;
-        }
 
-        if (data.vehicle.mileage) {
-          Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-            Api.endpoints.ServiceConsultants.GetByQuery,
-            { data }
-          )
-            .then(({ data: { result } }) => {
-              dispatch(setConsultants(result));
-              if (onSuccess) {
-                onSuccess();
-              }
-              if (!result.length) {
-                dispatch(setAdvisorAvailable(false));
-              } else {
-                if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                  dispatch(
-                    setSideBarSteps(
-                      sideBarSteps.filter(
-                        el => el !== 'appointmentTiming' && el !== 'appointmentSelection'
-                      )
-                    )
-                  );
-                  dispatch(setAdvisorAvailable(true));
-                }
-              }
-              dispatch(setConsultantsLoading(false));
-            })
-            .catch(err => console.log(err));
+    try {
+      if (!selectedVehicle) {
+        return;
+      }
+
+      if (
+        !(
+          serviceRequests?.length ||
+          maintenancePackageOption ||
+          serviceCategories?.length ||
+          recalls?.length
+        )
+      ) {
+        return;
+      }
+
+      const data: IConsultantsRequestData = {
+        serviceCenterId: decodeSCID(id),
+        pageIndex: 0,
+        pageSize: 0,
+        serviceRequests: serviceRequests.map(item => ({ id: item.id, comment: null })),
+        recalls,
+        serviceCategories,
+        maintenancePackageOption,
+        serviceTypeOptionId,
+        searchTerm: '',
+        vehicle: {
+          vin: selectedVehicle.vin,
+          year: selectedVehicle.year,
+          make: selectedVehicle.make,
+          model: selectedVehicle.model,
+          mileage:
+            selectedVehicle.mileage || appointmentByKey?.vehicle?.mileage || isCloneMode ? 1 : null,
+          engineTypeId: selectedVehicle.engineTypeId,
+        },
+        address: address?.fullAddress ?? '',
+        zipCode: address?.zipCode ?? '',
+        transportationOptionId:
+          serviceTypeOption?.transportationOption?.id ?? transportation?.id ?? null,
+      };
+
+      if (appointmentByKey?.hashKey) {
+        data.appointmentHashKey = appointmentByKey?.hashKey;
+      }
+
+      if (!data.vehicle.mileage) {
+        return;
+      }
+
+      const result = await requestConsultantsByQuery(data);
+      dispatch(setConsultants(result));
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      if (!result.length) {
+        dispatch(setAdvisorAvailable(false));
+      } else {
+        if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+          dispatch(
+            setSideBarSteps(
+              sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== 'appointmentSelection')
+            )
+          );
+          dispatch(setAdvisorAvailable(true));
         }
       }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      dispatch(setConsultantsLoading(false));
     }
   };
 
@@ -455,115 +507,119 @@ export const loadConsultants =
         );
       })
       .map(item => item.id);
-    if (selectedVehicle) {
-      const maintenancePackageOption = selectedPackage
-        ? { id: selectedPackage?.id, priceType: packagePricingType }
-        : packageEMenuType !== null
-          ? { optionType: packageEMenuType }
+    if (!selectedVehicle) {
+      return;
+    }
+
+    const maintenancePackageOption = selectedPackage
+      ? { id: selectedPackage?.id, priceType: packagePricingType }
+      : packageEMenuType !== null
+        ? { optionType: packageEMenuType }
+        : null;
+    const recalls = mapRecallsForRequest(selectedRecalls);
+    const serviceRequestIds = collectServiceRequestIds(
+      service,
+      subService,
+      null,
+      selectedSR,
+      undefined,
+      selectedSRComments
+    );
+
+    const transportationOptionId =
+      serviceTypeOption?.type === EServiceType.VisitCenter
+        ? serviceTypeOption?.transportationOption
+          ? serviceTypeOption?.transportationOption?.id
+          : !serviceTypeOption?.transportationOption && transportation
+            ? transportation?.id
+            : null
+        : serviceTypeOption?.type === EServiceType.PickUpDropOff
+          ? (serviceTypeOption?.transportationOption?.id ?? null)
           : null;
-      const recalls = mapRecallsForRequest(selectedRecalls);
-      const serviceRequestIds = collectServiceRequestIds(
-        service,
-        subService,
-        null,
-        selectedSR,
-        undefined,
-        selectedSRComments
-      );
 
-      const transportationOptionId =
-        serviceTypeOption?.type === EServiceType.VisitCenter
-          ? serviceTypeOption?.transportationOption
-            ? serviceTypeOption?.transportationOption?.id
-            : !serviceTypeOption?.transportationOption && transportation
-              ? transportation?.id
-              : null
-          : serviceTypeOption?.type === EServiceType.PickUpDropOff
-            ? (serviceTypeOption?.transportationOption?.id ?? null)
-            : null;
+    const isServiceValetExist = firstScreenOptions.some(s => s.type === EServiceType.PickUpDropOff);
+    const isPickDropOff =
+      serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+      transportation?.type === ETransportationType.PickUpDelivery;
 
-      const isServiceValetExist = firstScreenOptions.some(
-        s => s.type === EServiceType.PickUpDropOff
-      );
-      const isPickDropOff =
-        serviceTypeOption?.type === EServiceType.PickUpDropOff ||
-        transportation?.type === ETransportationType.PickUpDelivery;
+    const pickUpDropOffTransportation =
+      transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
+      transportation?.id ??
+      null;
 
-      const pickUpDropOffTransportation =
-        transportations.find(t => t.type === ETransportationType.PickUpDelivery)?.id ??
-        transportation?.id ??
-        null;
-
-      if (
+    if (
+      !(
         serviceRequestIds.length ||
         maintenancePackageOption ||
         serviceCategoryIds.length ||
         recalls.length
-      ) {
-        dispatch(setConsultantsLoading(true));
-        const data: IConsultantsRequestData = {
-          serviceCenterId: decodeSCID(id),
-          pageIndex: 0,
-          pageSize: 0,
-          serviceRequests: serviceRequestIds,
-          recalls,
-          serviceCategories: getCategories(allCategories, serviceCategories),
-          maintenancePackageOption,
-          serviceTypeOptionId,
-          searchTerm: '',
-          vehicle: {
-            vin: selectedVehicle.vin,
-            year: selectedVehicle.year,
-            make: selectedVehicle.make,
-            model: selectedVehicle.model,
-            mileage: selectedVehicle.mileage,
-            engineTypeId: selectedVehicle.engineTypeId,
-          },
-          address: typeof address === 'string' ? address : (address?.label ?? ''),
-          zipCode,
-          transportationOptionId: isServiceValetExist
-            ? transportationOptionId
-            : isPickDropOff
-              ? pickUpDropOffTransportation
-              : transportationOptionId,
-        };
-        if (appointmentByKey?.hashKey) {
-          data.appointmentHashKey = appointmentByKey?.hashKey;
+      )
+    ) {
+      return;
+    }
+
+    dispatch(setConsultantsLoading(true));
+    const data: IConsultantsRequestData = {
+      serviceCenterId: decodeSCID(id),
+      pageIndex: 0,
+      pageSize: 0,
+      serviceRequests: serviceRequestIds,
+      recalls,
+      serviceCategories: getCategories(allCategories, serviceCategories),
+      maintenancePackageOption,
+      serviceTypeOptionId,
+      searchTerm: '',
+      vehicle: {
+        vin: selectedVehicle.vin,
+        year: selectedVehicle.year,
+        make: selectedVehicle.make,
+        model: selectedVehicle.model,
+        mileage: selectedVehicle.mileage,
+        engineTypeId: selectedVehicle.engineTypeId,
+      },
+      address: typeof address === 'string' ? address : (address?.label ?? ''),
+      zipCode,
+      transportationOptionId: isServiceValetExist
+        ? transportationOptionId
+        : isPickDropOff
+          ? pickUpDropOffTransportation
+          : transportationOptionId,
+    };
+
+    if (appointmentByKey?.hashKey) {
+      data.appointmentHashKey = appointmentByKey?.hashKey;
+    }
+
+    try {
+      const result = await requestConsultantsByQuery(data);
+      dispatch(setConsultants(result));
+
+      if (!result.length) {
+        if (onEmptyList) {
+          onEmptyList();
         }
-        Api.call<PaginatedAPIResponse<IServiceConsultant>>(
-          Api.endpoints.ServiceConsultants.GetByQuery,
-          { data }
-        )
-          .then(({ data: { result } }) => {
-            dispatch(setConsultants(result));
-            if (!result.length) {
-              if (onEmptyList) {
-                onEmptyList();
-              }
-              dispatch(setAdvisorAvailable(false));
-              dispatch(setAdvisor(null));
-            } else {
-              if (onSuccess) {
-                onSuccess(result);
-              }
-              if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
-                dispatch(
-                  setSideBarSteps(
-                    sideBarSteps.filter(
-                      el => el !== 'appointmentTiming' && el !== 'appointmentSelection'
-                    )
-                  )
-                );
-                dispatch(setAdvisorAvailable(true));
-              }
-              if (advisor && !result.find(el => el.id === advisor.id)) {
-                dispatch(setAdvisor(null));
-              }
-            }
-            dispatch(setConsultantsLoading(false));
-          })
-          .catch(err => console.log(err));
+        dispatch(setAdvisorAvailable(false));
+        dispatch(setAdvisor(null));
+      } else {
+        if (onSuccess) {
+          onSuccess(result);
+        }
+        if (currentConfig?.advisorSelection && !isAdvisorAvailable) {
+          dispatch(
+            setSideBarSteps(
+              sideBarSteps.filter(el => el !== 'appointmentTiming' && el !== 'appointmentSelection')
+            )
+          );
+          dispatch(setAdvisorAvailable(true));
+        }
+        if (advisor && !result.find(el => el.id === advisor.id)) {
+          dispatch(setAdvisor(null));
+        }
       }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      dispatch(setConsultantsLoading(false));
     }
   };
 
@@ -1700,7 +1756,7 @@ export const handleAppointmentUpdate =
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     showError: TArgCallback<any>
   ): AppThunk =>
-  (dispatch, getState) => {
+  async (dispatch, getState) => {
     const { firstScreenOptions } = getState().serviceTypes;
     const { isDemandSmoothMode, demandAppointmentId } = getState().appointment;
     const key = isDemandSmoothMode
@@ -1711,53 +1767,72 @@ export const handleAppointmentUpdate =
 
     setLoadingCar(true);
     setServiceCategoryPage(EServiceCategoryPage.Page1);
-    if (key) {
-      dispatch(setAppointmentSaving(true));
-      requestFunc(key)
-        .then(({ data }) => {
-          if (data) {
-            if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''));
-            const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id);
-            if (data.waitlistTextSettings) {
-              dispatch(
-                setWaitListSettings({
-                  text: data.waitlistTextSettings.text ?? '',
-                  textHex: data.waitlistTextSettings.textHex ?? '',
-                })
-              );
-            }
-            dispatch(updateRecalls(data, id));
-            dispatch(setUpdateAppointment(data));
-            dispatch(setAppointmentByKey(data));
-            dispatch(updatePackageOption(data.maintenancePackageOption));
-            const comments = data.serviceRequests.reduce((acc: { [key: number]: string }, item) => {
-              acc[item.id] = item.comment || '';
-              return acc;
-            }, {});
-            dispatch(
-              selectSRMultiple({ ids: data.serviceRequests.map(el => el.id), comments: comments })
-            );
-            handleServiceTypeOption(data);
-            dispatch(handleSideBarAppointmentUpdate());
-            dispatch(
-              loadConsultantsForUpdating(
-                id,
-                option?.id ?? data.serviceTypeOption?.id ?? null,
-                data,
-                () => {
-                  dispatch(updateConsultant(data.advisorId));
-                }
-              )
-            );
-            dispatch(checkCarIsValid());
-            setLoadingCar(false);
-            dispatch(setAppointmentSaving(false));
+    if (!key) {
+      setLoadingCar(false);
+      return;
+    }
+
+    const appointmentUpdateKey = `${isDemandSmoothMode ? 'source' : 'key'}:${key}`;
+    if (appointmentUpdateInFlight.has(appointmentUpdateKey)) {
+      setLoadingCar(false);
+      return;
+    }
+
+    appointmentUpdateInFlight.add(appointmentUpdateKey);
+    dispatch(setAppointmentSaving(true));
+
+    try {
+      const { data } = await requestFunc(key);
+
+      if (!data) {
+        return;
+      }
+
+      if (isAuth) dispatch(setAppointmentNotes(data.notes ?? ''));
+
+      const option = firstScreenOptions.find(item => item.id === data.serviceTypeOption?.id);
+      if (data.waitlistTextSettings) {
+        dispatch(
+          setWaitListSettings({
+            text: data.waitlistTextSettings.text ?? '',
+            textHex: data.waitlistTextSettings.textHex ?? '',
+          })
+        );
+      }
+
+      dispatch(updateRecalls(data, id));
+      dispatch(setUpdateAppointment(data));
+      dispatch(setAppointmentByKey(data));
+      dispatch(updatePackageOption(data.maintenancePackageOption));
+
+      const comments = data.serviceRequests.reduce((acc: { [key: number]: string }, item) => {
+        acc[item.id] = item.comment || '';
+        return acc;
+      }, {});
+
+      dispatch(
+        selectSRMultiple({ ids: data.serviceRequests.map(el => el.id), comments: comments })
+      );
+      handleServiceTypeOption(data);
+      dispatch(handleSideBarAppointmentUpdate());
+      dispatch(
+        loadConsultantsForUpdating(
+          id,
+          option?.id ?? data.serviceTypeOption?.id ?? null,
+          data,
+          () => {
+            dispatch(updateConsultant(data.advisorId));
           }
-        })
-        .catch(e => {
-          console.log(e);
-          showError(e);
-        });
+        )
+      );
+      dispatch(checkCarIsValid());
+    } catch (e) {
+      console.log(e);
+      showError(e);
+    } finally {
+      appointmentUpdateInFlight.delete(appointmentUpdateKey);
+      setLoadingCar(false);
+      dispatch(setAppointmentSaving(false));
     }
   };
 

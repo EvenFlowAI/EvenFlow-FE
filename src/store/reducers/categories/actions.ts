@@ -4,6 +4,8 @@ import { ICategory, TNewCategory, TSuccessCallback, TUpdateCategoryData } from '
 import { EServiceType } from '../appointmentFrameReducer/types';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 
+const categoriesByQueryInFlight = new Set<number>();
+
 export const setCategoriesPage = createAction<number>('Categories/SetPage');
 export const setCategoriesFilter = createAction<EServiceType>('Categories/SetFilter');
 export const setCategoriesLoading = createAction<boolean>('Categories/SetLoading');
@@ -130,6 +132,11 @@ export const updateCategoryIcon =
 export const loadCategoriesByQuery =
   (id: number): AppThunk =>
   dispatch => {
+    if (categoriesByQueryInFlight.has(id)) {
+      return;
+    }
+
+    categoriesByQueryInFlight.add(id);
     dispatch(setCategoriesLoading(true));
     Api.call(Api.endpoints.ServiceCategories.GetByQuery, {
       data: { serviceCenterId: id, pageSize: 0, pageIndex: 0 },
@@ -141,5 +148,9 @@ export const loadCategoriesByQuery =
       })
       .catch(err => {
         console.log('get categories by query', err);
+      })
+      .finally(() => {
+        categoriesByQueryInFlight.delete(id);
+        dispatch(setCategoriesLoading(false));
       });
   };
