@@ -162,14 +162,14 @@ export const ServiceRequests = () => {
                 })}
               />
             ) : null}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
               <SearchInput
                 onChange={handleSearchChange}
                 value={searchTerm}
                 onSearch={handleSearch}
               />
               <Button
-                style={{ marginLeft: 16 }}
+                style={{ marginLeft: 16, height: 43, width: 180 }}
                 color="primary"
                 variant="contained"
                 onClick={handleAddOpsCode}
@@ -177,7 +177,7 @@ export const ServiceRequests = () => {
                 Add Op Codes
               </Button>
               <Button
-                style={{ marginLeft: 8 }}
+                style={{ marginLeft: 8, height: 43, width: 160 }}
                 variant="outlined"
                 onClick={handleDownloadCSV}
                 disabled={!selectedSC}
