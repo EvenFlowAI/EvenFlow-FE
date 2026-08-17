@@ -71,26 +71,29 @@ export const buildUpdatedUserAfterRemovingAccess = (
   const selectedIds = new Set(selectedServiceCenterIds);
   const remainingServiceCenters = payload.serviceCenters.filter(sc => !selectedIds.has(sc.value));
 
-  const dealerships = payload.dealerships
-    .map(dealership => {
-      const serviceCenters = remainingServiceCenters
-        .filter(sc => sc.categoryId === dealership.value)
-        .map(serviceCenter => mapServiceCenterForUserUpdate(serviceCenter, payload.role));
+  const dealerships: IUserAccount['dealerships'] =
+    remainingServiceCenters.length === 0
+      ? []
+      : payload.dealerships
+          .map(dealership => {
+            const serviceCenters = remainingServiceCenters
+              .filter(sc => sc.categoryId === dealership.value)
+              .map(serviceCenter => mapServiceCenterForUserUpdate(serviceCenter, payload.role));
 
-      return {
-        id: dealership.value,
-        name: dealership.name,
-        hasFullAccess: null,
-        serviceCenters,
-      };
-    })
-    .filter(dealership =>
-      payload.role === Roles.ServiceDirector ||
-      payload.role === Roles.BDCAgent ||
-      payload.role === Roles.BDCManager
-        ? true
-        : dealership.serviceCenters.length > 0
-    );
+            return {
+              id: dealership.value,
+              name: dealership.name,
+              hasFullAccess: null,
+              serviceCenters,
+            };
+          })
+          .filter(dealership =>
+            payload.role === Roles.ServiceDirector ||
+            payload.role === Roles.BDCAgent ||
+            payload.role === Roles.BDCManager
+              ? true
+              : dealership.serviceCenters.length > 0
+          );
 
   return {
     id: payload.id,
