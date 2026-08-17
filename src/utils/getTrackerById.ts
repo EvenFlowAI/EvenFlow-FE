@@ -61,6 +61,7 @@ const productionTrackerMap: Record<string, string> = {
   [ServiceCenters.ChevroletBuickGMCAtAttleboro]: 'G-6G3K67N1FR',
   [ServiceCenters.ZookMotors]: 'G-NRYT3E7FHQ',
   [ServiceCenters.KiaOfAttleboro]: 'G-MM4Y8CQ735',
+  [ServiceCenters.FremontFordSheridan]: 'G-JDTGJQJR4V',
 };
 
 export const getTrackerById = (id: string): string => {
