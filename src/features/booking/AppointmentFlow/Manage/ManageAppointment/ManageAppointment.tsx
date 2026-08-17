@@ -23,7 +23,6 @@ import {
   setVehicle,
   setWelcomeScreenView,
   updateConsultant,
-  setReminders,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
@@ -68,7 +67,6 @@ import CustomerConsents from '../../../../../components/modals/booking/CustomerC
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 import MileageModal from '../../../../../components/modals/booking/MileageModal/MileageModal';
 import usePopState from '../../../../../hooks/usePopState/usePopState';
-import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 type TProps = {
@@ -175,10 +173,6 @@ export const ManageAppointment: React.FC<
       dispatch(loadAppointmentRequestsPrices(scProfile.id));
     }
   }, [scProfile, appointmentWasChanged]);
-
-  useEffect(() => {
-    dispatch(setReminders([EContactMethodTypes.Email, EContactMethodTypes.Sms]));
-  }, []);
 
   useEffect(() => {
     // In clone mode: load active transportation for non-mobile services; for mobile services, refresh slots.
