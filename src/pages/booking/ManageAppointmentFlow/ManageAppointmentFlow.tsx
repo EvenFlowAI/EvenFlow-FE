@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Cars } from '../../../features/booking/AppointmentFlow/Screens/Cars/Cars';
 import { AppointmentConfirmation } from '../../../features/booking/AppointmentFlow/Create/AppointmentConfirmation/AppointmentConfirmation';
 import { AppointmentComment } from '../../../features/booking/AppointmentFlow/Screens/AppointmentComment/AppointmentComment';
@@ -53,20 +53,43 @@ export const ManageAppointmentFlow: React.FC<TFlowProps> = ({
     useSelector((state: RootState) => state.bookingFlowConfig);
 
   const [lastSelectedCategory, setLastSelectedCategory] = useState<IServiceCategory | null>(null);
+  const updateRequestHandledRef = useRef<string | null>(null);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (selectedVehicle && customerLoadedData?.isUpdating) {
-      if (customerLoadedData?.fromSearchByName) {
-        dispatch(setCustomerLoadedData({ ...customerLoadedData, fromSearchByName: false }));
-      }
-
-      if (welcomeScreenView !== 'serviceSelect') {
-        onUpdateAppointment(selectedVehicle).then(() => handleSetScreen('manageAppointment'));
-      }
+    const isUpdating = Boolean(customerLoadedData?.isUpdating);
+    if (!isUpdating || !selectedVehicle || welcomeScreenView === 'serviceSelect') {
+      updateRequestHandledRef.current = null;
+      return;
     }
-  }, [customerLoadedData, selectedVehicle?.make, welcomeScreenView]);
+
+    if (appointmentByKey?.hashKey) {
+      updateRequestHandledRef.current = appointmentByKey.hashKey;
+      return;
+    }
+
+    const updateKey =
+      String(selectedVehicle.id ?? '') || selectedVehicle.vin || selectedVehicle.make || 'unknown';
+    if (updateRequestHandledRef.current === updateKey) {
+      return;
+    }
+
+    updateRequestHandledRef.current = updateKey;
+
+    if (customerLoadedData?.fromSearchByName) {
+      dispatch(setCustomerLoadedData({ ...customerLoadedData, fromSearchByName: false }));
+    }
+
+    onUpdateAppointment(selectedVehicle).then(() => handleSetScreen('manageAppointment'));
+  }, [
+    customerLoadedData,
+    selectedVehicle,
+    welcomeScreenView,
+    appointmentByKey?.hashKey,
+    onUpdateAppointment,
+    handleSetScreen,
+  ]);
 
   const onChangeSlot = () => {
     if (isDemandSmoothMode) {

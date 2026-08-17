@@ -52,6 +52,9 @@ import { TFormTekion, TFormXTime } from '../../../features/admin/DmsAvailability
 import { getAvailability } from '../demandManagement/actions';
 import { ServiceValetCapacity } from './add-types';
 
+const serviceRequestsInFlight = new Set<number>();
+const serviceCenterSettingsInFlight = new Set<number>();
+
 export const setProfileLoading = createAction<boolean>('Appointment/SetProfileLoading');
 export const setTopAligning = createAction<boolean>('Appointment/SetTopAligning');
 export const getServiceCenterProfile = createAction<IServiceCenterProfile>(
@@ -86,6 +89,11 @@ export const getSRs = createAction<ISR[]>('Appointment/GetSRs');
 export const loadSRs =
   (serviceCenterId: number): AppThunk =>
   async (dispatch, getState) => {
+    if (serviceRequestsInFlight.has(serviceCenterId)) {
+      return;
+    }
+
+    serviceRequestsInFlight.add(serviceCenterId);
     try {
       const {
         data: { result },
@@ -100,6 +108,8 @@ export const loadSRs =
       dispatch(getSRs(result));
     } catch (err) {
       console.log('load sr list err', err);
+    } finally {
+      serviceRequestsInFlight.delete(serviceCenterId);
     }
   };
 export const selectSR = createAction<number | null>('Appointment/SelectSR');
@@ -565,21 +575,28 @@ export const getAppointmentAvailabilityCSVXTime =
 
 export const loadAllServiceCenterSettings =
   (serviceCenterId: number): AppThunk =>
-  dispatch => {
-    Api.call(Api.endpoints.ServiceCenters.GetAllServiceCenterSettings, {
-      params: {
-        serviceCenterId,
-      },
-    })
-      .then(response => {
-        if (response?.data?.data) {
-          const data = response.data.data;
-          if (data.serviceValetSettings) dispatch(getDropOffSettings(data.serviceValetSettings));
-          if (data.serviceValetCapacities)
-            dispatch(setServiceValetCapacity(data.serviceValetCapacities));
-        }
-      })
-      .catch(err => {
-        console.log(err);
+  async dispatch => {
+    if (serviceCenterSettingsInFlight.has(serviceCenterId)) {
+      return;
+    }
+
+    serviceCenterSettingsInFlight.add(serviceCenterId);
+    try {
+      const response = await Api.call(Api.endpoints.ServiceCenters.GetAllServiceCenterSettings, {
+        params: {
+          serviceCenterId,
+        },
       });
+
+      if (response?.data?.data) {
+        const data = response.data.data;
+        if (data.serviceValetSettings) dispatch(getDropOffSettings(data.serviceValetSettings));
+        if (data.serviceValetCapacities)
+          dispatch(setServiceValetCapacity(data.serviceValetCapacities));
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      serviceCenterSettingsInFlight.delete(serviceCenterId);
+    }
   };
