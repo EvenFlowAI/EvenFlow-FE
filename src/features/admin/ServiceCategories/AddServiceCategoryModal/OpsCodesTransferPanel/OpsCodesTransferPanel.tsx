@@ -361,7 +361,11 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
                     </Draggable>
                   ))
                 ) : (
-                  <div className={classes.emptyState}>No selected op codes</div>
+                  <div className={classes.emptyState}>
+                    {selectedSearchTerm.trim() && selectedCodes.length
+                      ? 'No matches'
+                      : 'No op codes selected'}
+                  </div>
                 )}
                 {provided.placeholder}
               </div>
