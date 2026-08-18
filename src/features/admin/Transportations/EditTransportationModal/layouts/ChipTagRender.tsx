@@ -196,7 +196,6 @@ export const renderChipTagsWithoutOptionObject = (
       >
         {visibleTags.map((option, tagIndex) => {
           const props = getTagProps({ index: tagIndex });
-          console.log(props.onDelete);
           return (
             <Chip
               key={option}

@@ -46,8 +46,6 @@ export const AvailabilityResults = ({
     )
   ).sort((a, b) => dayjs(a, 'hh:mm A').diff(dayjs(b, 'hh:mm A')));
 
-  console.log('allTimeSlots', allTimeSlots);
-
   if (availability.length === 0) return null;
 
   const handleLoadCSV = () => {
