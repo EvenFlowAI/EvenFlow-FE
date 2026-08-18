@@ -20,6 +20,8 @@ type TOpsCodesTransferPanelProps = {
   setForm: Dispatch<SetStateAction<CategoryFormState>>;
 };
 
+const MAX_SEARCH_INPUT_LENGTH = 100;
+
 const getCodeDescription = (item: IAssignedServiceRequest): string =>
   item.serviceRequestOverride?.description?.length
     ? item.serviceRequestOverride.description
@@ -261,7 +263,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
             style={{ width: '100%' }}
             placeholder="Search..."
             onSearch={() => undefined}
-            onChange={e => setAvailableSearchTerm(e.target.value)}
+            onChange={e => setAvailableSearchTerm(e.target.value.slice(0, MAX_SEARCH_INPUT_LENGTH))}
             delay={250}
           />
         </div>
@@ -303,7 +305,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
             style={{ width: '100%' }}
             placeholder="Filter selected..."
             onSearch={() => undefined}
-            onChange={e => setSelectedSearchTerm(e.target.value)}
+            onChange={e => setSelectedSearchTerm(e.target.value.slice(0, MAX_SEARCH_INPUT_LENGTH))}
             delay={250}
           />
         </div>
