@@ -232,8 +232,6 @@ const MakeModelInput = ({
           const maxVisibleTags = calculateMaxVisibleTags();
           const visibleTags = value.slice(0, maxVisibleTags);
           const remainingCount = value.length - maxVisibleTags;
-          const tooltipMaxItems = 30;
-          const tooltipItemHeight = 24;
 
           return (
             <>
@@ -270,7 +268,7 @@ const MakeModelInput = ({
                     title={
                       <div
                         style={{
-                          maxHeight: `${tooltipMaxItems * tooltipItemHeight}px`,
+                          maxHeight: '400px',
                           overflowY: 'auto',
                         }}
                       >
@@ -280,7 +278,7 @@ const MakeModelInput = ({
                       </div>
                     }
                     arrow
-                    placement="top"
+                    placement="bottom"
                   >
                     <div className={autocompleteClasses.classes.tag}>+{remainingCount} others</div>
                   </Tooltip>

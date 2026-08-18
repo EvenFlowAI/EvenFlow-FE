@@ -17,10 +17,8 @@ const dayOrder: Record<string, number> = {
   Saturday: 6,
 };
 
-const TOOLTIP_MAX_ITEMS = 30;
-const TOOLTIP_ITEM_HEIGHT = 24;
 const tooltipListStyle: React.CSSProperties = {
-  maxHeight: `${TOOLTIP_MAX_ITEMS * TOOLTIP_ITEM_HEIGHT}px`,
+  maxHeight: '400px',
   overflowY: 'auto',
 };
 
@@ -226,7 +224,7 @@ export const renderChipTagsWithoutOptionObject = (
               </div>
             }
             arrow
-            placement="top"
+            placement="bottom"
           >
             <Chip
               key="others"
