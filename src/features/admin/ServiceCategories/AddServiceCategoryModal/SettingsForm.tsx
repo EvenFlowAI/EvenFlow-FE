@@ -83,10 +83,12 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
 
   const onCategoryTypeChange = useCallback(
     (e: React.SyntheticEvent, value: TOption | null): void => {
+      const isGeneralCategory = value?.value === EServiceCategoryType.GeneralCategory;
       setForm(prev => ({
         ...prev,
         formIsChecked: false,
         categoryType: value,
+        isCommentRequired: isGeneralCategory ? prev.isCommentRequired : false,
         selectedCodes: [],
         selectedCodesWithOrder: [],
         wrongOrderIndexes: [],
@@ -94,6 +96,8 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
     },
     []
   );
+
+  const isGeneralCategory = form.categoryType?.value === EServiceCategoryType.GeneralCategory;
 
   const onOrderIndexChange = useCallback((e: React.SyntheticEvent, value: string): void => {
     setForm(prev => ({
@@ -199,21 +203,15 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
           </div>
         </div>
       </div>
-      <Label
-        control={
-          <Switch
-            disabled={
-              !form.categoryType ||
-              form.categoryType?.value !== EServiceCategoryType.GeneralCategory
-            }
-            onChange={handleSwitch}
-            checked={form.isCommentRequired}
-            color="primary"
-          />
-        }
-        label="Comment Field Is Required"
-        labelPlacement="start"
-      />
+      {isGeneralCategory && (
+        <Label
+          control={
+            <Switch onChange={handleSwitch} checked={form.isCommentRequired} color="primary" />
+          }
+          label="Comment Field Is Required"
+          labelPlacement="start"
+        />
+      )}
     </>
   );
 };

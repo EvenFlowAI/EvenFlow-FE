@@ -81,9 +81,7 @@ export const AddServiceCategoryModal: React.FC<
   }, [config, form.selectedServiceType]);
 
   const categoryHasCodesOrder = useMemo(
-    () =>
-      form.categoryType?.value === EServiceCategoryType.IndividualServices ||
-      form.categoryType?.value === EServiceCategoryType.Diagnose,
+    () => form.categoryType?.value !== EServiceCategoryType.GeneralCategory,
     [form.categoryType]
   );
 

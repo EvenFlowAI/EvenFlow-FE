@@ -197,7 +197,6 @@ From repository scripts/config:
 - local: `npm start`
 - env variants: `npm run startDev`, `npm run startUat`, `npm run startPreProd`, `npm run startProduction`
 - build: `npm run build`
-- test: `npm test`
 - quality: `npm run lint`, `npm run lint:fix`, `npm run prettier:fix`, `npm run all-fix`
 
 CI/CD notes:
