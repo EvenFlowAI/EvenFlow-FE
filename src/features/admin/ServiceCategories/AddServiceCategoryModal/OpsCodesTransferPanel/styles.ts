@@ -65,8 +65,8 @@ export const useStyles = makeStyles()(theme => ({
     overflowX: 'hidden',
   },
   row: {
-    display: 'grid',
-    gridTemplateColumns: '36px minmax(80px, 110px) minmax(130px, 1fr) minmax(88px, 100px)',
+    display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
     gap: theme.spacing(1),
     padding: theme.spacing(0.75, 1),
@@ -83,11 +83,13 @@ export const useStyles = makeStyles()(theme => ({
     color: '#252733',
   },
   codeStack: {
+    width: 227,
     display: 'flex',
     flexDirection: 'column',
     minWidth: 0,
   },
   codeInline: {
+    fontSize: 14,
     fontWeight: 700,
     lineHeight: '18px',
     overflow: 'hidden',
@@ -95,25 +97,28 @@ export const useStyles = makeStyles()(theme => ({
     whiteSpace: 'nowrap',
   },
   descriptionInline: {
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: '16px',
     color: '#252733',
     textTransform: 'uppercase',
   },
   code: {
     fontWeight: 700,
+    width: 62,
+    fontSize: 14,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
   description: {
-    // overflow: 'hidden',
-    // textOverflow: 'ellipsis',
-    // whiteSpace: 'nowrap',
     textTransform: 'uppercase',
+    width: 206,
+    fontSize: 12,
   },
   price: {
     textAlign: 'right',
+    width: 60,
+    fontSize: 14,
   },
   dragHandle: {
     color: theme.palette.text.secondary,

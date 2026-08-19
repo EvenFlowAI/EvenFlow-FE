@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
-import { Button, Divider, IconButton } from '@mui/material';
+import { Button, Divider, IconButton, Tooltip } from '@mui/material';
 import { DragIndicator } from '@mui/icons-material';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
@@ -206,7 +206,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      if (disabled || !result.destination) {
+      if (disabled || !categoryHasCodesOrder || !result.destination) {
         return;
       }
 
@@ -282,9 +282,19 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
                   checked={pendingIds.includes(item.id)}
                   onChange={() => onPendingChange(item.id)}
                 />
-                <span className={classes.code}>{item.serviceRequest.code}</span>
-                <span className={classes.description}>{getCodeDescription(item)}</span>
-                <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
+                <p className={classes.code}>{item.serviceRequest.code}</p>
+                {getCodeDescription(item).length > 48 ? (
+                  <Tooltip placement="top" title={getCodeDescription(item)}>
+                    <div className={classes.description}>
+                      {getCodeDescription(item).length > 48
+                        ? getCodeDescription(item).slice(0, 48).concat('...')
+                        : getCodeDescription(item)}
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <div className={classes.description}>{getCodeDescription(item)}</div>
+                )}
+                <div className={classes.price}>${getCodePrice(item).toFixed(2)}</div>
               </div>
             ))
           ) : (
@@ -296,7 +306,9 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
       <div className={classes.column}>
         <div className={classes.titleRowRight}>
           <span className={classes.title}>Selected ({selectedCodes.length})</span>
-          <span className={classes.helperText}>Use drag and drop to reorder</span>
+          {categoryHasCodesOrder && (
+            <span className={classes.helperText}>Use drag and drop to reorder</span>
+          )}
         </div>
 
         <div className={classes.search}>
@@ -312,68 +324,103 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
 
         <Divider className={classMap.divider} />
 
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="selected-op-codes">
-            {provided => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={classes.listBody}
-              >
-                {filteredSelectedCodes.length ? (
-                  filteredSelectedCodes.map((item, index) => (
-                    <Draggable key={item.id} draggableId={`op-code-${item.id}`} index={index}>
-                      {(draggableProvided, snapshot) => (
-                        <div
-                          ref={draggableProvided.innerRef}
-                          {...draggableProvided.draggableProps}
-                          className={cx(classes.row, classes.selectedRow)}
-                          style={{
-                            ...draggableProvided.draggableProps.style,
-                            backgroundColor: snapshot.isDragging
-                              ? '#f5f7ff'
-                              : index % 2 === 1
-                                ? '#F2F4FB'
-                                : 'transparent',
-                          }}
-                        >
-                          <span {...draggableProvided.dragHandleProps}>
-                            <DragIndicator className={classes.dragHandle} />
-                          </span>
-                          <span className={classMap.orderIndex}>
-                            {selectedOrderMap.get(item.id)}
-                          </span>
-                          <div className={classMap.codeStack}>
-                            <span className={classMap.codeInline}>{item.serviceRequest.code}</span>
-                            <span className={classMap.descriptionInline}>
-                              {getCodeDescription(item)}
-                            </span>
-                          </div>
-                          <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            disabled={disabled}
-                            onClick={() => deleteCode(item.id)}
+        {categoryHasCodesOrder ? (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="selected-op-codes">
+              {provided => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={classes.listBody}
+                >
+                  {filteredSelectedCodes.length ? (
+                    filteredSelectedCodes.map((item, index) => (
+                      <Draggable key={item.id} draggableId={`op-code-${item.id}`} index={index}>
+                        {(draggableProvided, snapshot) => (
+                          <div
+                            ref={draggableProvided.innerRef}
+                            {...draggableProvided.draggableProps}
+                            className={cx(classes.row, classes.selectedRow)}
+                            style={{
+                              ...draggableProvided.draggableProps.style,
+                              backgroundColor: snapshot.isDragging
+                                ? '#f5f7ff'
+                                : index % 2 === 1
+                                  ? '#F2F4FB'
+                                  : 'transparent',
+                            }}
                           >
-                            <TrashBlue width={16} height={20} />
-                          </IconButton>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))
-                ) : (
-                  <div className={classes.emptyState}>
-                    {selectedSearchTerm.trim() && selectedCodes.length
-                      ? 'No matches'
-                      : 'No op codes selected'}
+                            <span
+                              style={{ display: 'flex' }}
+                              {...draggableProvided.dragHandleProps}
+                            >
+                              <DragIndicator className={classes.dragHandle} />
+                            </span>
+                            <span className={classMap.orderIndex}>
+                              {selectedOrderMap.get(item.id)}
+                            </span>
+                            <div className={classMap.codeStack}>
+                              <span className={classMap.codeInline}>
+                                {item.serviceRequest.code}
+                              </span>
+                              <span className={classMap.descriptionInline}>
+                                {getCodeDescription(item)}
+                              </span>
+                            </div>
+                            <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
+                            <IconButton
+                              size="small"
+                              color="error"
+                              disabled={disabled}
+                              onClick={() => deleteCode(item.id)}
+                            >
+                              <TrashBlue width={16} height={20} />
+                            </IconButton>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  ) : (
+                    <div className={classes.emptyState}>
+                      {selectedSearchTerm.trim() && selectedCodes.length
+                        ? 'No matches'
+                        : 'No op codes selected'}
+                    </div>
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        ) : (
+          <div className={classes.listBody}>
+            {filteredSelectedCodes.length ? (
+              filteredSelectedCodes.map(item => (
+                <div key={item.id} className={cx(classes.row, classes.selectedRow)}>
+                  <div className={classMap.codeStack}>
+                    <span className={classMap.codeInline}>{item.serviceRequest.code}</span>
+                    <span className={classMap.descriptionInline}>{getCodeDescription(item)}</span>
                   </div>
-                )}
-                {provided.placeholder}
+                  <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
+                  <IconButton
+                    size="small"
+                    color="error"
+                    disabled={disabled}
+                    onClick={() => deleteCode(item.id)}
+                  >
+                    <TrashBlue width={16} height={20} />
+                  </IconButton>
+                </div>
+              ))
+            ) : (
+              <div className={classes.emptyState}>
+                {selectedSearchTerm.trim() && selectedCodes.length
+                  ? 'No matches'
+                  : 'No op codes selected'}
               </div>
             )}
-          </Droppable>
-        </DragDropContext>
+          </div>
+        )}
       </div>
     </div>
   );
