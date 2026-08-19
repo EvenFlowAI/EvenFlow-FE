@@ -104,15 +104,11 @@ export const useStyles = makeStyles()(theme => ({
   },
   code: {
     fontWeight: 700,
-    width: 62,
     fontSize: 14,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
   },
   description: {
     textTransform: 'uppercase',
-    width: 206,
+    width: 260,
     fontSize: 12,
   },
   price: {

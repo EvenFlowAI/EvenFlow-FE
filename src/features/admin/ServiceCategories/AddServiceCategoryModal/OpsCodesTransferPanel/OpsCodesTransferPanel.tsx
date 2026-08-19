@@ -282,18 +282,20 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
                   checked={pendingIds.includes(item.id)}
                   onChange={() => onPendingChange(item.id)}
                 />
-                <p className={classes.code}>{item.serviceRequest.code}</p>
-                {getCodeDescription(item).length > 48 ? (
-                  <Tooltip placement="top" title={getCodeDescription(item)}>
-                    <div className={classes.description}>
-                      {getCodeDescription(item).length > 48
-                        ? getCodeDescription(item).slice(0, 48).concat('...')
-                        : getCodeDescription(item)}
-                    </div>
-                  </Tooltip>
-                ) : (
-                  <div className={classes.description}>{getCodeDescription(item)}</div>
-                )}
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div className={classes.code}>{item.serviceRequest.code}</div>
+                  {getCodeDescription(item).length > 70 ? (
+                    <Tooltip placement="top" title={getCodeDescription(item)}>
+                      <div className={classes.description}>
+                        {getCodeDescription(item).length > 70
+                          ? getCodeDescription(item).slice(0, 70).concat('...')
+                          : getCodeDescription(item)}
+                      </div>
+                    </Tooltip>
+                  ) : (
+                    <div className={classes.description}>{getCodeDescription(item)}</div>
+                  )}
+                </div>
                 <div className={classes.price}>${getCodePrice(item).toFixed(2)}</div>
               </div>
             ))
