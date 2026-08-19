@@ -16,6 +16,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 type TModelCodesConfiguration = DialogProps & {
   configuredModels: IData[];
@@ -26,6 +28,7 @@ export const ModelCodesConfiguration: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TModelCodesConfiguration>>
 > = ({ onClose, configuredModels, setConfiguredModels, onSaveModels, ...props }) => {
   const { classes } = useStyles();
+  const { selectedSC } = useSCs();
   const { makeModelCodes } = useSelector((state: RootState) => state.vehicleDetails);
 
   const handleUpdateCode = (prevEl: IData, value: string) => {
@@ -74,9 +77,15 @@ export const ModelCodesConfiguration: React.FC<
               <TableCell width="20%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
                 Model Code
               </TableCell>
-              <TableCell width="30%" align="left" style={{ backgroundColor: 'rgb(247, 248, 251)' }}>
-                Model Description
-              </TableCell>
+              {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
+                <TableCell
+                  width="30%"
+                  align="left"
+                  style={{ backgroundColor: 'rgb(247, 248, 251)' }}
+                >
+                  Model Description
+                </TableCell>
+              ) : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -100,43 +109,45 @@ export const ModelCodesConfiguration: React.FC<
                     })}
                   />
                 </TableCell>
-                <TableCell>
-                  {getDesc(el.code || '', false).length > 29 ? (
-                    <Tooltip placement="top" title={getDesc(el.code || '', false)}>
-                      <strong style={{ cursor: 'pointer', userSelect: 'none' }}>
-                        <TextField
-                          id="description"
-                          disabled
-                          value={getDesc(el.code || '', true)}
-                          onChange={() => {}}
-                          error={false}
-                          placeholder="Model Description"
-                          name="Description"
-                          inputProps={{
-                            style: {
-                              width: '250px',
-                            },
-                          }}
-                        />
-                      </strong>
-                    </Tooltip>
-                  ) : (
-                    <TextField
-                      id="description"
-                      disabled
-                      value={getDesc(el.code || '', true)}
-                      onChange={() => {}}
-                      error={false}
-                      placeholder="Model Description"
-                      name="Description"
-                      inputProps={{
-                        style: {
-                          width: '250px',
-                        },
-                      }}
-                    />
-                  )}
-                </TableCell>
+                {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
+                  <TableCell>
+                    {getDesc(el.code || '', false).length > 29 ? (
+                      <Tooltip placement="top" title={getDesc(el.code || '', false)}>
+                        <strong style={{ cursor: 'pointer', userSelect: 'none' }}>
+                          <TextField
+                            id="description"
+                            disabled
+                            value={getDesc(el.code || '', true)}
+                            onChange={() => {}}
+                            error={false}
+                            placeholder="Model Description"
+                            name="Description"
+                            inputProps={{
+                              style: {
+                                width: '250px',
+                              },
+                            }}
+                          />
+                        </strong>
+                      </Tooltip>
+                    ) : (
+                      <TextField
+                        id="description"
+                        disabled
+                        value={getDesc(el.code || '', true)}
+                        onChange={() => {}}
+                        error={false}
+                        placeholder="Model Description"
+                        name="Description"
+                        inputProps={{
+                          style: {
+                            width: '250px',
+                          },
+                        }}
+                      />
+                    )}
+                  </TableCell>
+                ) : null}
               </TableRow>
             ))}
           </TableBody>
