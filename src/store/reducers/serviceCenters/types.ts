@@ -13,7 +13,7 @@ export enum SystemType {
 
 export enum SystemIntegrationType {
   Fortellis = 1,
-  Motive = 2,
+  XTime = 2,
   DealerTrack = 4,
   Reynolds = 8,
   CDK = 16,
