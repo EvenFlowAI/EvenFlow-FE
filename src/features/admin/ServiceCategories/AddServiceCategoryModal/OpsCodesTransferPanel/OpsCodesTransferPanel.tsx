@@ -1,17 +1,16 @@
 /* eslint-disable max-lines */
 
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
-import { Button, Divider, IconButton, Tooltip } from '@mui/material';
-import { DragIndicator } from '@mui/icons-material';
+import { Button, Divider } from '@mui/material';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
-import Checkbox from '../../../../../components/formControls/Checkbox/Checkbox';
 import { SearchInput } from '../../../../../components/formControls/SearchInput/SearchInput';
 import { RootState } from '../../../../../store/rootReducer';
 import { IAssignedServiceRequest } from '../../../../../store/reducers/serviceRequests/types';
 import { CategoryFormState } from '../types';
 import { useStyles } from './styles';
-import { ReactComponent as TrashBlue } from '../../../../../assets/img/trash_blue.svg';
+import { AvailableOpCodeRow } from './AvailableOpCodeRow';
+import { SelectedOpCodeContent } from './SelectedOpCodeContent';
 
 type TOpsCodesTransferPanelProps = {
   disabled: boolean;
@@ -76,7 +75,6 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     (state: RootState) => state.serviceRequests
   );
   const { classes, cx } = useStyles();
-  const classMap = classes as Record<string, string>;
 
   const [availableSearchTerm, setAvailableSearchTerm] = useState('');
   const [selectedSearchTerm, setSelectedSearchTerm] = useState('');
@@ -268,36 +266,26 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
           />
         </div>
 
-        <Divider className={classMap.divider} />
+        <Divider className={classes.divider} />
 
         <div className={classes.listBody}>
           {assignedLoading ? (
             <div className={classes.emptyState}>Loading op codes...</div>
           ) : filteredAvailableCodes.length ? (
             filteredAvailableCodes.map(item => (
-              <div key={item.id} className={classes.row}>
-                <Checkbox
-                  color="primary"
-                  disabled={disabled}
-                  checked={pendingIds.includes(item.id)}
-                  onChange={() => onPendingChange(item.id)}
-                />
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div className={classes.code}>{item.serviceRequest.code}</div>
-                  {getCodeDescription(item).length > 60 ? (
-                    <Tooltip placement="top" title={getCodeDescription(item)}>
-                      <div className={classes.description}>
-                        {getCodeDescription(item).length > 60
-                          ? getCodeDescription(item).slice(0, 60).concat('...')
-                          : getCodeDescription(item)}
-                      </div>
-                    </Tooltip>
-                  ) : (
-                    <div className={classes.description}>{getCodeDescription(item)}</div>
-                  )}
-                </div>
-                <div className={classes.price}>${getCodePrice(item).toFixed(2)}</div>
-              </div>
+              <AvailableOpCodeRow
+                key={item.id}
+                item={item}
+                description={getCodeDescription(item)}
+                price={getCodePrice(item)}
+                disabled={disabled}
+                checked={pendingIds.includes(item.id)}
+                rowClassName={classes.row}
+                codeClassName={classes.code}
+                descriptionClassName={classes.description}
+                priceClassName={classes.price}
+                onToggle={onPendingChange}
+              />
             ))
           ) : (
             <div className={classes.emptyState}>No op codes found</div>
@@ -324,7 +312,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
           />
         </div>
 
-        <Divider className={classMap.divider} />
+        <Divider className={classes.divider} />
 
         {categoryHasCodesOrder ? (
           <DragDropContext onDragEnd={onDragEnd}>
@@ -352,42 +340,22 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
                                   : 'transparent',
                             }}
                           >
-                            <span
-                              style={{ display: 'flex' }}
-                              {...draggableProvided.dragHandleProps}
-                            >
-                              <DragIndicator className={classes.dragHandle} />
-                            </span>
-                            <span className={classMap.orderIndex}>
-                              {selectedOrderMap.get(item.id)}
-                            </span>
-                            <div className={classMap.codeStack}>
-                              <span className={classMap.codeInline}>
-                                {item.serviceRequest.code}
-                              </span>
-                              {getCodeDescription(item).length > 60 ? (
-                                <Tooltip placement="top" title={getCodeDescription(item)}>
-                                  <div className={classes.descriptionInline}>
-                                    {getCodeDescription(item).length > 60
-                                      ? getCodeDescription(item).slice(0, 60).concat('...')
-                                      : getCodeDescription(item)}
-                                  </div>
-                                </Tooltip>
-                              ) : (
-                                <div className={classes.descriptionInline}>
-                                  {getCodeDescription(item)}
-                                </div>
-                              )}
-                            </div>
-                            <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
-                            <IconButton
-                              size="small"
-                              color="error"
+                            <SelectedOpCodeContent
+                              item={item}
+                              description={getCodeDescription(item)}
+                              price={getCodePrice(item)}
                               disabled={disabled}
-                              onClick={() => deleteCode(item.id)}
-                            >
-                              <TrashBlue width={16} height={20} />
-                            </IconButton>
+                              codeStackClassName={classes.codeStack}
+                              codeClassName={classes.codeInline}
+                              descriptionClassName={classes.descriptionInline}
+                              priceClassName={classes.price}
+                              orderIndexClassName={classes.orderIndex}
+                              dragHandleClassName={classes.dragHandle}
+                              showDragHandle
+                              orderIndex={selectedOrderMap.get(item.id)}
+                              dragHandleProps={draggableProvided.dragHandleProps ?? undefined}
+                              onDelete={deleteCode}
+                            />
                           </div>
                         )}
                       </Draggable>
@@ -409,19 +377,19 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
             {filteredSelectedCodes.length ? (
               filteredSelectedCodes.map(item => (
                 <div key={item.id} className={cx(classes.row, classes.selectedRow)}>
-                  <div className={classMap.codeStack}>
-                    <span className={classMap.codeInline}>{item.serviceRequest.code}</span>
-                    <span className={classMap.descriptionInline}>{getCodeDescription(item)}</span>
-                  </div>
-                  <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
-                  <IconButton
-                    size="small"
-                    color="error"
+                  <SelectedOpCodeContent
+                    item={item}
+                    description={getCodeDescription(item)}
+                    price={getCodePrice(item)}
                     disabled={disabled}
-                    onClick={() => deleteCode(item.id)}
-                  >
-                    <TrashBlue width={16} height={20} />
-                  </IconButton>
+                    codeStackClassName={classes.codeStack}
+                    codeClassName={classes.codeInline}
+                    descriptionClassName={classes.descriptionInline}
+                    priceClassName={classes.price}
+                    orderIndexClassName={classes.orderIndex}
+                    dragHandleClassName={classes.dragHandle}
+                    onDelete={deleteCode}
+                  />
                 </div>
               ))
             ) : (
