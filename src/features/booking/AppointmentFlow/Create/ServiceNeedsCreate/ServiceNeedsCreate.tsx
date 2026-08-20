@@ -69,6 +69,11 @@ export const ServiceNeedsCreate: React.FC<
       } else {
         dispatch(setWelcomeScreenView('serviceSelect'));
         history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);
+        if (firstScreenOptionsUnavailable) {
+          setTimeout(() => {
+            dispatch(setWelcomeScreenView('select'));
+          }, 0);
+        }
       }
     }
   };
