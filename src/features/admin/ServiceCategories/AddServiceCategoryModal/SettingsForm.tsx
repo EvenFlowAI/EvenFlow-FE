@@ -208,7 +208,7 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
           control={
             <Switch onChange={handleSwitch} checked={form.isCommentRequired} color="primary" />
           }
-          label="Comment Field Is Required"
+          label="Comment Required"
           labelPlacement="start"
         />
       )}

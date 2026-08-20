@@ -284,11 +284,11 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
                 />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div className={classes.code}>{item.serviceRequest.code}</div>
-                  {getCodeDescription(item).length > 70 ? (
+                  {getCodeDescription(item).length > 60 ? (
                     <Tooltip placement="top" title={getCodeDescription(item)}>
                       <div className={classes.description}>
-                        {getCodeDescription(item).length > 70
-                          ? getCodeDescription(item).slice(0, 70).concat('...')
+                        {getCodeDescription(item).length > 60
+                          ? getCodeDescription(item).slice(0, 60).concat('...')
                           : getCodeDescription(item)}
                       </div>
                     </Tooltip>
@@ -365,9 +365,19 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
                               <span className={classMap.codeInline}>
                                 {item.serviceRequest.code}
                               </span>
-                              <span className={classMap.descriptionInline}>
-                                {getCodeDescription(item)}
-                              </span>
+                              {getCodeDescription(item).length > 60 ? (
+                                <Tooltip placement="top" title={getCodeDescription(item)}>
+                                  <div className={classes.descriptionInline}>
+                                    {getCodeDescription(item).length > 60
+                                      ? getCodeDescription(item).slice(0, 60).concat('...')
+                                      : getCodeDescription(item)}
+                                  </div>
+                                </Tooltip>
+                              ) : (
+                                <div className={classes.descriptionInline}>
+                                  {getCodeDescription(item)}
+                                </div>
+                              )}
                             </div>
                             <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
                             <IconButton
