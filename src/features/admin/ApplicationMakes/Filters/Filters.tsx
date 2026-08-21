@@ -56,7 +56,7 @@ const Filters: React.FC<TProps> = ({
         onChange={onMakesChange}
         renderInput={autocompleteRender({
           label: 'Makes',
-          placeholder: 'Not selected',
+          placeholder: selectedMake?.length ? '' : 'Not selected',
         })}
       />
       <Autocomplete
