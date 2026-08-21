@@ -4,7 +4,7 @@ export const useStyles = makeStyles()(() => ({
   wrapper: {
     display: 'flex',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     marginTop: 8,
     marginBottom: 16,
   },

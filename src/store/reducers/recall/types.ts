@@ -140,6 +140,7 @@ export type TRecallRequest = {
   serviceCenterId: number;
   pageSize: number;
   pageIndex: number;
+  makeIds?: number[];
   orderBy?: string;
   isAscending?: boolean;
   searchTerm?: string;
