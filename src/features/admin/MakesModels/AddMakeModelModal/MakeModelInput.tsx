@@ -12,7 +12,7 @@ import { useStyles } from './styles';
 import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { Delete } from '@mui/icons-material';
+import TagDeleteIcon from './TagDeleteIcon';
 
 interface MakeModelInputProps {
   isEditing?: boolean;
@@ -196,11 +196,10 @@ const MakeModelInput = ({
               <div {...props}>
                 <div className={autocompleteClasses.classes.tag}>
                   {isEditing ? 'All models' : 'All makes'}
-                  <Delete
+                  <TagDeleteIcon
                     onClick={() => {
                       isEditing ? setModelsToAdd([]) : setMakesToAdd([]);
                     }}
-                    style={{ cursor: 'pointer', marginLeft: 4 }}
                   />
                 </div>
               </div>
@@ -241,22 +240,17 @@ const MakeModelInput = ({
                   <div {...props}>
                     <Tooltip title={option.text} arrow placement="top">
                       <div className={autocompleteClasses.classes.tag}>
-                        <div
+                        <span
                           style={{
-                            maxWidth: value.length > 1 ? '150px' : '230px',
+                            maxWidth: value.length > 1 ? '110px' : '230px',
                             whiteSpace: 'nowrap',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                           }}
                         >
                           {option.text}
-                        </div>
-                        {props.onDelete && (
-                          <Delete
-                            onClick={props.onDelete}
-                            style={{ cursor: 'pointer', flexShrink: 0 }}
-                          />
-                        )}
+                        </span>
+                        {props.onDelete && <TagDeleteIcon onClick={props.onDelete} />}
                       </div>
                     </Tooltip>
                   </div>
