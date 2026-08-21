@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { IRecall } from '../../../../store/reducers/recall/types';
+import { IRecall, TIdName } from '../../../../store/reducers/recall/types';
 import { Table } from '../../../../components/tables/Table/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
@@ -21,11 +21,12 @@ type TRecallTableProps = {
   onOpenModal: () => void;
   currentItem: IRecall | null;
   setCurrentItem: Dispatch<SetStateAction<IRecall | null>>;
+  selectedMakes: TIdName[];
 };
 
 const RecallTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ onOpenModal, currentItem, setCurrentItem }) => {
+> = ({ onOpenModal, currentItem, setCurrentItem, selectedMakes }) => {
   const { recalls, recallsCount, order, searchTerm } = useSelector(
     (state: RootState) => state.recalls
   );
@@ -42,9 +43,14 @@ const RecallTable: React.FC<
 
   useEffect(() => {
     if (selectedSC) {
-      dispatch(loadRecalls(selectedSC.id));
+      dispatch(
+        loadRecalls(
+          selectedSC.id,
+          selectedMakes.length ? selectedMakes.map(make => make.id) : undefined
+        )
+      );
     }
-  }, [selectedSC, pageIndex, pageSize, order, searchTerm]);
+  }, [selectedSC, pageIndex, pageSize, order, searchTerm, selectedMakes]);
 
   const rowData: TableRowDataType<IRecall>[] = [
     {
