@@ -81,14 +81,6 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
   const [selectedSearchTerm, setSelectedSearchTerm] = useState('');
   const [pendingIds, setPendingIds] = useState<number[]>([]);
 
-  useEffect(() => {
-    if (form.selectedCodes.length) {
-      setPendingIds(form.selectedCodes.map(item => item.id));
-    } else {
-      setPendingIds([]);
-    }
-  }, [form.selectedCodes]);
-
   const selectedIds = useMemo(() => {
     if (categoryHasCodesOrder) {
       return [...form.selectedCodesWithOrder]
@@ -121,6 +113,11 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     () => allAssignedList.filter(item => !selectedIdSet.has(item.id)),
     [allAssignedList, selectedIdSet]
   );
+
+  useEffect(() => {
+    const availableIdSet = new Set(availableCodes.map(item => item.id));
+    setPendingIds(prev => prev.filter(id => availableIdSet.has(id)));
+  }, [availableCodes]);
 
   const filteredAvailableCodes = useMemo(
     () => availableCodes.filter(item => bySearchTerm(item, availableSearchTerm)),
