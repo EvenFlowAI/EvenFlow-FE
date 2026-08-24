@@ -62,16 +62,6 @@ export const SideBar: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
     });
   }, [currentUser, pathname]);
 
-  const baseRoles: TRole[] = [
-    Roles.EvenFlowAdmin,
-    Roles.EvenFlowAccountManager,
-    Roles.EvenFlowSupport,
-    Roles.EvenFlowAIAgent,
-    Roles.DealerOwner,
-    Roles.ServiceDirector,
-    Roles.ServiceManager,
-    Roles.BDCManager,
-  ];
   const restrictedSchedulerRoles: TRole[] = [Roles.EvenFlowAIAgent, Roles.Technician, Roles.Vendor];
 
   const isOpenSchedulerLinkVisible =

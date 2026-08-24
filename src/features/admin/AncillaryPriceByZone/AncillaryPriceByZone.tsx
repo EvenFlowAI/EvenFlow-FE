@@ -46,6 +46,7 @@ const AncillaryPriceByZone: React.FC<
     setAnchorEl(null);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSlide = (t: number) => (e: any, value: number | number[]) => {
     if (typeof value === 'number') {
       const item = zonesData.find(item => item.geographicZoneId === t);

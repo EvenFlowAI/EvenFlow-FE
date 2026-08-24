@@ -55,6 +55,7 @@ export const Transportations = () => {
     setAnchorEl(null);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSwitch = (id: number) => async (e: any, value: boolean) => {
     const option = options.find(item => item.id === id);
     if (selectedSC && option) {

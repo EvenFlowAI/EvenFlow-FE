@@ -34,7 +34,7 @@ const initialForm: TForm = [
 
 export const EditDemandSegmentsModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IOptimizationSetting[]>>>
-> = ({ onAction, payload, ...props }) => {
+> = ({ payload, ...props }) => {
   const [form, setForm] = useState<TForm>(initialForm);
   const [isSaving, setSaving] = useState<boolean>(false);
   const { selectedSC } = useSCs();

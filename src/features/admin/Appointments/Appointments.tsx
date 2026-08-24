@@ -29,6 +29,51 @@ const renamedColumnsMap: Record<string, string> = {
   'Customer Name': 'Customer',
 };
 
+const isDateRangeTooLarge = (dateFrom: TParsableDate, dateTo: TParsableDate): boolean => {
+  return Math.round(dayjs(dateTo).diff(dateFrom) / (1000 * 60 * 60 * 24)) > 90;
+};
+
+const shouldLoadListAppointments = (
+  filters: TFilters,
+  selectedView: TView,
+  isFiltersOpen: boolean
+): boolean => {
+  return (
+    Boolean(filters.scId) &&
+    selectedView === 'list' &&
+    (filters.initialFiltersSet || !isFiltersOpen)
+  );
+};
+
+const buildAppointmentsRequest = (
+  filters: TFilters,
+  order: IOrder<IAppointment>,
+  serviceCenterId: number
+): IAppointmentsRequest => {
+  const serviceBookId = filters.serviceBook?.id ?? null;
+  const isServiceBookServiceCenter = Boolean(filters.serviceBook && !serviceBookId);
+
+  return {
+    pageIndex: filters.pageData.pageIndex,
+    pageSize: filters.pageData.pageSize,
+    serviceCenterId,
+    orderBy: order.orderBy,
+    isAscending: order.isAscending,
+    startDate: dayjs(filters.dateFrom).add(dayjs(filters.dateFrom).utcOffset(), 'minute'),
+    endDate: dayjs(filters.dateTo).add(dayjs(filters.dateTo).utcOffset(), 'minute'),
+    reportingStatuses: filters.reportingStatus,
+    scheduler: filters.scheduler
+      ? { id: filters.scheduler.id, type: filters.scheduler.type }
+      : null,
+    serviceBookId,
+    searchTerm: filters.searchTerm,
+    isServiceBookServiceCenter,
+    dateRangeFilterBy: filters.dateRangeFilterBy,
+    ...(filters.advisor ? { advisorId: filters.advisor.id } : {}),
+    ...(filters.technician ? { technicianDmsId: filters.technician.dmsId } : {}),
+  };
+};
+
 export const Appointments = () => {
   const { isLoading } = useSelector((state: RootState) => state.appointments);
   const [viewItem, setViewItem] = useState<IAppointment | undefined>(undefined);
@@ -54,44 +99,30 @@ export const Appointments = () => {
       showError(
         'Please select either a “Date From” or a “Date To” value in the appointment filters'
       );
-    } else {
-      if (filters.dateTo && filters.dateFrom) {
-        if (Math.round(dayjs(filters.dateTo).diff(filters.dateFrom) / (1000 * 60 * 60 * 24)) > 90) {
-          showError(
-            'The “Date From” and “Date To” range is too large. Please adjust your selections so the range is less than 90 days'
-          );
-        } else {
-          if (
-            filters.scId &&
-            selectedView === 'list' &&
-            (filters.initialFiltersSet || !isFiltersOpen)
-          ) {
-            const serviceBookId = filters.serviceBook?.id ?? null;
-            const isServiceBookServiceCenter = Boolean(filters.serviceBook && !serviceBookId);
-            const data: IAppointmentsRequest = {
-              pageIndex: filters.pageData.pageIndex,
-              pageSize: filters.pageData.pageSize,
-              serviceCenterId: filters.scId,
-              orderBy: order.orderBy,
-              isAscending: order.isAscending,
-              startDate: dayjs(filters.dateFrom).add(dayjs(filters.dateFrom).utcOffset(), 'minute'),
-              endDate: dayjs(filters.dateTo).add(dayjs(filters.dateTo).utcOffset(), 'minute'),
-              reportingStatuses: filters.reportingStatus,
-              scheduler: filters.scheduler
-                ? { id: filters.scheduler.id, type: filters.scheduler.type }
-                : null,
-              serviceBookId,
-              searchTerm: filters.searchTerm,
-              isServiceBookServiceCenter,
-              dateRangeFilterBy: filters.dateRangeFilterBy,
-            };
-            if (filters.advisor) data.advisorId = filters.advisor.id;
-            if (filters.technician) data.technicianDmsId = filters.technician.dmsId;
-            dispatch(loadAppointments(data));
-          }
-        }
-      }
+      return;
     }
+
+    if (!filters.dateTo || !filters.dateFrom) {
+      return;
+    }
+
+    if (isDateRangeTooLarge(filters.dateFrom, filters.dateTo)) {
+      showError(
+        'The “Date From” and “Date To” range is too large. Please adjust your selections so the range is less than 90 days'
+      );
+      return;
+    }
+
+    if (!shouldLoadListAppointments(filters, selectedView, isFiltersOpen)) {
+      return;
+    }
+
+    if (!filters.scId) {
+      return;
+    }
+
+    const data = buildAppointmentsRequest(filters, order, filters.scId);
+    dispatch(loadAppointments(data));
   }, [filters, selectedView, order, isFiltersOpen]);
 
   useEffect(() => {

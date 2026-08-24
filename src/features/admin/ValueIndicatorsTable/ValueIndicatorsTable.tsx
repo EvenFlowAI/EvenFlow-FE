@@ -58,6 +58,7 @@ export const ValueIndicatorsTable = ({ onTabChange }: TProps) => {
     [onTabChange]
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (_: any, val: number | number[]) => {
     if (editItem) {
       setEditItem({ ...editItem, point: val as number });

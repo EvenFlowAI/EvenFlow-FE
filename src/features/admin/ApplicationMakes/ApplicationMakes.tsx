@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEditBlock';
 import { WrapperFlexEnd, WrapperJustify } from '../../../components/styled/WrappersFlex';
 import Filters from './Filters/Filters';
@@ -60,12 +60,12 @@ const ApplicationMakes = () => {
     );
   };
 
-  const onMakesChange = (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => {
+  const onMakesChange = (e: SyntheticEvent, option: IGlobalMake[]) => {
     onChangePage(null, 0);
     setSelectedMakes(option);
   };
 
-  const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption) => {
+  const onStatusChange = (e: SyntheticEvent, option: TReviewOption | null) => {
     onChangePage(null, 0);
     setSelectedStatus(option);
   };

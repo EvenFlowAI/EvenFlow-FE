@@ -16,7 +16,72 @@ type TModalFormProps<D> = {
   formIsChecked: boolean;
 };
 
-export const CreateServiceCenterForm = <Item extends {}>(
+const getItemName = <Item extends object>(item: TFormItem<Item>): string => item.name || item.id;
+
+const getFieldError = <Item extends object>(
+  item: TFormItem<Item>,
+  value: string,
+  formIsChecked: boolean
+): boolean => {
+  if (!item.required || !formIsChecked) {
+    return false;
+  }
+
+  if (item.inputType === 'number') {
+    return value.length < 11;
+  }
+
+  if (item.inputType === 'email') {
+    return !value || !checkEmail(value.trim());
+  }
+
+  return !value;
+};
+
+const renderField = <Item extends object>(
+  item: TFormItem<Item>,
+  value: string,
+  error: boolean,
+  props: TModalFormProps<Item>
+): JSX.Element | null => {
+  const name = getItemName(item);
+
+  if (!item.variant || item.variant === 'input') {
+    return (
+      <TextField
+        placeholder={item.label}
+        label={item.label}
+        name={name}
+        value={value}
+        onChange={props.onChange}
+        disabled={props.readOnly}
+        fullWidth
+        {...item.inputProps}
+        error={error}
+      />
+    );
+  }
+
+  if (item.variant === 'select') {
+    return (
+      <Autocomplete
+        options={item.selectOptions || []}
+        onChange={props?.onSelectChange ? props.onSelectChange(name) : noop}
+        value={value || null}
+        disabled={props.readOnly}
+        renderInput={autocompleteRender({
+          label: item.label || '',
+          error: item.required && props.formIsChecked && !value,
+          placeholder: item.label,
+        })}
+      />
+    );
+  }
+
+  return null;
+};
+
+export const CreateServiceCenterForm = <Item extends object>(
   props: TModalFormProps<Item>
 ): JSX.Element => {
   return (
@@ -26,44 +91,12 @@ export const CreateServiceCenterForm = <Item extends {}>(
           {idx ? <Divider /> : null}
           <Grid container spacing={2}>
             {itemGroup.map(item => {
-              const error =
-                item.inputType === 'number'
-                  ? item.required && props.formIsChecked && item.value(props.values).length < 11
-                  : item.inputType === 'email'
-                    ? item.required &&
-                      props.formIsChecked &&
-                      (!checkEmail(item.value(props.values).trim()) || !item.value(props.values))
-                    : item.required && props.formIsChecked && !item.value(props.values);
+              const value = item.value(props.values);
+              const error = getFieldError(item, value, props.formIsChecked);
 
               return (
                 <Grid item xs={item.xs || 12} sm={item.sm || 6} key={item.id}>
-                  {!item.variant || item.variant === 'input' ? (
-                    <TextField
-                      placeholder={item.label}
-                      label={item.label}
-                      name={item.name || item.id}
-                      value={item.value(props.values)}
-                      onChange={props.onChange}
-                      disabled={props.readOnly}
-                      fullWidth
-                      {...item.inputProps}
-                      error={error}
-                    />
-                  ) : item.variant === 'select' ? (
-                    <Autocomplete
-                      options={item.selectOptions || []}
-                      onChange={
-                        props?.onSelectChange ? props.onSelectChange(item.name || item.id) : noop
-                      }
-                      value={item.value(props.values) || null}
-                      disabled={props.readOnly}
-                      renderInput={autocompleteRender({
-                        label: item.label || '',
-                        error: item.required && props.formIsChecked && !item.value(props.values),
-                        placeholder: item.label,
-                      })}
-                    />
-                  ) : null}
+                  {renderField(item, value, error, props)}
                 </Grid>
               );
             })}
