@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { FiltersWrapper } from './styles';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { Autocomplete } from '@mui/material';
@@ -11,11 +11,11 @@ import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocomplete
 import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 
 type TProps = {
-  onMakesChange: (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => void;
-  onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption) => void;
+  onMakesChange: (e: SyntheticEvent, option: IGlobalMake[]) => void;
+  onStatusChange: (e: SyntheticEvent, option: TReviewOption | null) => void;
   isLoading: boolean;
-  selectedMake: any;
-  selectedStatus: any;
+  selectedMake: IGlobalMake[];
+  selectedStatus: TReviewOption | null;
   disabled: boolean;
 };
 

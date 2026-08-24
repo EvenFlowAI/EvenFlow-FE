@@ -20,7 +20,7 @@ const tabs: Tab[] = [
 const EligibilityStatuses = () => {
   const [selectedTab, selectTab] = useState<string>('0');
 
-  const handleTabChange = (e: any, value: string) => {
+  const handleTabChange = (_event: React.SyntheticEvent, value: string) => {
     selectTab(value);
   };
 

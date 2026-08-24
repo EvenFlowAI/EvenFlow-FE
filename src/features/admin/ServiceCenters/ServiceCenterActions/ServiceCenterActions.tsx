@@ -48,7 +48,7 @@ export const ServiceCenterActions = () => {
     dispatch(loadAll());
   }, []);
 
-  const onGroupChange = async (e: React.ChangeEvent<{}>, option: TSelectedGroup | null) => {
+  const onGroupChange = async (e: React.SyntheticEvent, option: TSelectedGroup | null) => {
     setSelectedGroup(option);
     await dispatch(setSelectedDealershipGroupId(option?.id ? Number(option.id) : undefined));
     await dispatch(loadAll());

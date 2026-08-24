@@ -5,7 +5,7 @@ import { TextLink } from '../../../../components/wrappers/TextLink/TextLink';
 import { SquarePaper } from '../../../../components/styled/Paper';
 import { Title, useStyles } from './styles';
 import { SwitchButtons } from '../../../../components/buttons/SwitchButtons/SwitchButtons';
-import { TSwitchButton } from '../../../../types/types';
+import { TSwitchButton, TSwitchButtonsProps } from '../../../../types/types';
 import { Routes } from '../../../../routes/constants';
 
 const buttons: TSwitchButton<string>[] = [
@@ -14,12 +14,12 @@ const buttons: TSwitchButton<string>[] = [
   { label: 'Desirable', type: '2' },
 ];
 
+const readOnlySwitchClick: TSwitchButtonsProps<string>['onClick'] = () => () => undefined;
+
 export const TimeOfDayPricingRules = () => {
   const { classes } = useStyles();
   const theme = useTheme();
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const handleSwitch = (t: string) => (s: string) => () => {};
 
   return (
     <div>
@@ -34,15 +34,15 @@ export const TimeOfDayPricingRules = () => {
             direction={isXS ? 'column' : 'row'}
           >
             <div className={classes.rowWrapper}>
-              <SwitchButtons onClick={handleSwitch('1')} active={'0'} buttons={buttons} />
+              <SwitchButtons onClick={readOnlySwitchClick} active={'0'} buttons={buttons} />
               <span className={classes.message}>= Low (Discount)</span>
             </div>
             <div className={classes.rowWrapper}>
-              <SwitchButtons onClick={handleSwitch('1')} active={'1'} buttons={buttons} />
+              <SwitchButtons onClick={readOnlySwitchClick} active={'1'} buttons={buttons} />
               <span className={classes.message}>= Average (Base)</span>
             </div>
             <div className={classes.rowWrapper}>
-              <SwitchButtons onClick={handleSwitch('1')} active={'2'} buttons={buttons} />
+              <SwitchButtons onClick={readOnlySwitchClick} active={'2'} buttons={buttons} />
               <span className={classes.message}>= High (Premium)</span>
             </div>
           </Grid>

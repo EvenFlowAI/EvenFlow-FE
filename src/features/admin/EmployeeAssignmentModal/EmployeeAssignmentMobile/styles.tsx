@@ -29,4 +29,4 @@ export const SmallGreyGrid = styled(Grid)({
   borderBottomWidth: 0,
 });
 
-export const StyledActions = styled(DialogActions)(({ theme }) => ({}));
+export const StyledActions = styled(DialogActions)(() => ({}));

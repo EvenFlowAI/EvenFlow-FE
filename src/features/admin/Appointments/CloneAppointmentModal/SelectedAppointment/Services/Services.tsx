@@ -12,7 +12,8 @@ const ServicesList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    selectedSC && dispatch(loadSCProfile(selectedSC.id));
+    if (!selectedSC) return;
+    dispatch(loadSCProfile(selectedSC.id));
   }, [selectedSC]);
 
   const selectedServices = useMemo(

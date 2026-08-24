@@ -57,10 +57,12 @@ const EditTimeRangeAndCapacityModal: React.FC<
     }
   }, [editingElement, open]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (e: any) => {
     showError(e);
     if (e.response?.data?.errors) {
       const data = [...e.response.data.errors];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setErrors(() => data.map((err: any): string => err.message).filter(el => el !== null));
     }
     if (e.response?.data?.message) {

@@ -44,6 +44,7 @@ const ZoneRouting = ({ serviceType }: { serviceType: string }) => {
   }, [zonesRouting]);
 
   const onCheckboxChange =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (zoneId: number, dayOfWeek: EDaysFromMonday) => (e: any, checked: boolean) => {
       const dayOfWeekData = initialZones.find(item => item.dayOfWeek === dayOfWeek);
       if (dayOfWeekData && selectedSC) {

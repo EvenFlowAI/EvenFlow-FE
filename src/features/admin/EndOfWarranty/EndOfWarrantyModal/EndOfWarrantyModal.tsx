@@ -21,7 +21,7 @@ import { useSelectedPod } from '../../../../hooks/useSelectedPod/useSelectedPod'
 
 export const EndOfWarrantyModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IEndOfWarranty>>>
-> = ({ payload, onAction, ...props }) => {
+> = ({ payload, ...props }) => {
   const [saving, setSaving] = useState<boolean>();
   const [months, setMonths] = useState<string>('');
   const { selectedSC } = useSCs();

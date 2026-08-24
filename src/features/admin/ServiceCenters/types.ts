@@ -19,6 +19,6 @@ export type TFormItem<DataType> = {
   inputType?: 'email' | 'password' | 'number';
   variant?: 'input' | 'textarea' | 'select';
   inputProps?: TextInputProps;
-  selectOptions?: any;
+  selectOptions?: string[];
   required?: boolean;
 };

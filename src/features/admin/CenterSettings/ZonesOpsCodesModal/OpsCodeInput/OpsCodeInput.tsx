@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo } from 'react';
+import React, { Dispatch, SetStateAction, SyntheticEvent, useMemo } from 'react';
 import { InputWrapper } from '../styles';
 import { Autocomplete } from '@mui/material';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
@@ -35,7 +35,7 @@ const OpsCodeInput: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
     return allAssignedList.find(el => el.id === zoneOpsCode?.id);
   }, [allAssignedList, zoneOpsCode]);
 
-  const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest) => {
+  const onOpsCodeChange = (e: SyntheticEvent, option: IAssignedServiceRequest) => {
     setFormChecked(false);
     const serviceRequest: TDefaultOpsCode = {
       id: option.id,

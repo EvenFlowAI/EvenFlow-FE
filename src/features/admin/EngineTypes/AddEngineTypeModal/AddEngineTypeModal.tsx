@@ -60,7 +60,7 @@ export const AddEngineTypeModal: React.FC<
     setNewEngineType('');
   };
 
-  const onKeyUp = (e: React.KeyboardEvent<{}>) => {
+  const onKeyUp = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') addEngineType();
   };
 

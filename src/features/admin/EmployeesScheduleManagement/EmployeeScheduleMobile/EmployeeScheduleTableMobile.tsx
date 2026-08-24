@@ -7,6 +7,7 @@ import EmployeeTableRow from './EmployeeTableRow/EmployeeTableRow';
 
 type TProps = {
   disabledDate: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleSwitch: (el: IScheduleByDate) => (e: any, value: boolean) => void;
   onTimeChange: (el: IScheduleByDate, field: 'startAt' | 'finishAt', value: string) => void;
   schedule: IHOODataForm | undefined;
