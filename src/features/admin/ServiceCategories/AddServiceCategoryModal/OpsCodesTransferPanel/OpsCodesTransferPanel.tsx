@@ -252,7 +252,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     <div className={classes.columns}>
       <div className={classes.column}>
         <div className={classes.titleRow}>
-          <span className={classes.title}>Add Op Codes</span>
+          <span className={classes.title}>Add Op Codes ({pendingIds.length})</span>
           <Button
             variant="contained"
             color="primary"
