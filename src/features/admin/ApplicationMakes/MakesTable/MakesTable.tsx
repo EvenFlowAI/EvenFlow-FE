@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, SyntheticEvent } from 'react';
 import { IOrder, IPageRequest, TableRowDataType } from '../../../../types/types';
 import { EReviewStatus, IGlobalMake } from '../../../../store/reducers/globalVehicles/types';
 import { useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ const MakesTable: React.FC<TProps> = ({
   const { classes } = useAutocompleteStyles();
   const showError = useException();
 
-  const onReviewChange = (el: IGlobalMake) => (e: React.ChangeEvent<{}>, option: string) => {
+  const onReviewChange = (el: IGlobalMake) => (e: SyntheticEvent, option: string) => {
     setData(prev => {
       const itemToChange = prev.find(item => item.id === el.id);
       if (itemToChange) {
@@ -61,18 +61,17 @@ const MakesTable: React.FC<TProps> = ({
     });
   };
 
-  const onMakeChange =
-    (el: IGlobalMake) => (e: React.ChangeEvent<{}>, option: IGlobalMake | null) => {
-      setData(prev => {
-        const itemToChange = prev.find(item => item.id === el.id);
-        if (itemToChange) {
-          const updated = { ...itemToChange, parent: option ?? undefined };
-          const filtered = prev.filter(item => item.id !== el.id);
-          return [...filtered, updated].sort(sortByLocalId);
-        }
-        return prev;
-      });
-    };
+  const onMakeChange = (el: IGlobalMake) => (e: SyntheticEvent, option: IGlobalMake | null) => {
+    setData(prev => {
+      const itemToChange = prev.find(item => item.id === el.id);
+      if (itemToChange) {
+        const updated = { ...itemToChange, parent: option ?? undefined };
+        const filtered = prev.filter(item => item.id !== el.id);
+        return [...filtered, updated].sort(sortByLocalId);
+      }
+      return prev;
+    });
+  };
 
   const RowData: TableRowDataType<IGlobalMake>[] = [
     {

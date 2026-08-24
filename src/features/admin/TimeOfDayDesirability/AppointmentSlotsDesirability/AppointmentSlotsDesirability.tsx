@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useMemo, useState } from 'react';
 import {
   Autocomplete,
   Box,
@@ -138,6 +138,7 @@ export const AppointmentSlotsDesirability = () => {
     setSaving(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (err: any) => {
     showError(err);
     setSaving(false);
@@ -173,7 +174,7 @@ export const AppointmentSlotsDesirability = () => {
     }
   };
 
-  const onDayOfWeekChange = (e: ChangeEvent<{}>, value: TOption) => {
+  const onDayOfWeekChange = (e: SyntheticEvent, value: TOption) => {
     setDayOfWeek(value);
   };
 

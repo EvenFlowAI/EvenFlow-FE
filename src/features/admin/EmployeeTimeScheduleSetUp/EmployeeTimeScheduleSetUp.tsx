@@ -85,6 +85,7 @@ const EmployeeTimeScheduleSetUp: React.FC<TProps> = ({ open, onClose, editingIte
     setInitialData();
   }, [setInitialData]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSwitch = (day: number) => (e: any, value: boolean) => {
     setFormIsChecked(false);
     setCurrentSchedule(prev => {

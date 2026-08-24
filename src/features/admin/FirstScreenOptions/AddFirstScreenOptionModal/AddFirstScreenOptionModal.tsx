@@ -1,23 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
-  DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
-import { Autocomplete, Button } from '@mui/material';
-import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { FileInput } from '../../../../components/formControls/FileInput/FileInput';
+import { Button } from '@mui/material';
 import { setAssignedFilter } from '../../../../store/reducers/serviceRequests/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { IIconState } from '../../ServiceCategories/AddServiceCategoryModal/types';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
-import {
-  IFirstScreenOption,
-  TNewFirstScreenOption,
-  TUpdateFirstScreenOption,
-} from '../../../../store/reducers/serviceTypes/types';
+import { IFirstScreenOption } from '../../../../store/reducers/serviceTypes/types';
 import { TOption } from '../../../../types/types';
 import { EServiceType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import {
@@ -32,11 +24,21 @@ import {
 import { RootState } from '../../../../store/rootReducer';
 import { loadTransportationOptions } from '../../../../store/reducers/transportationNeeds/actions';
 import { useStyles } from './styles';
-import { getTransportationOptionString } from '../../../../utils/utils';
-import { serviceTypeNames } from '../constants';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
+import { AddFirstScreenOptionModalForm } from './AddFirstScreenOptionModalForm';
+import {
+  buildFirstScreenOptionCreateData,
+  buildFirstScreenOptionUpdateData,
+  getInitialFormState,
+  getServiceTypeOptions,
+  resolveDefaultTransportationForEdit,
+  shouldApplyPickupDeliveryDefault,
+  shouldClearTransportationOnServiceTypeChange,
+  shouldShowPickupDropOffWarning,
+  validateFirstScreenOptionForm,
+} from './helpers';
 
 const initialFileState = { file: null, dataUrl: undefined };
 
@@ -69,6 +71,7 @@ export const AddFirstScreenOptionModal: React.FC<
   const showError = useException();
   const showMessage = useMessage();
   const { classes } = useStyles();
+  const serviceTypeOptions = useMemo(() => getServiceTypeOptions(), []);
 
   const enabledTransportationOptions = useMemo(() => options.filter(op => op.state), [options]);
   const pickUpDeliveryOption = useMemo(
@@ -93,26 +96,25 @@ export const AddFirstScreenOptionModal: React.FC<
   useEffect(() => {
     if (props.open && editingItem) {
       setFirstScreenOptionName(editingItem.name);
-      setOrderIndex(editingItem.orderIndex?.toString() ?? '');
-      setDescription(editingItem.description ?? '');
-      setNote(editingItem.note ?? '');
-      setExternalLink(editingItem.externalLink ?? '');
-      if (editingItem.transportationOption?.id) {
-        const transportation = options.find(
-          item => item.id === editingItem.transportationOption?.id
-        );
-        transportation && setDefaultTransportation(transportation);
-      }
+      const nextState = getInitialFormState(editingItem);
+      setOrderIndex(nextState.orderIndex);
+      setDescription(nextState.description);
+      setNote(nextState.note);
+      setExternalLink(nextState.externalLink);
+      setTaglineText(nextState.taglineText);
+      setTaglineColor(nextState.taglineColor);
+
+      const transportation = resolveDefaultTransportationForEdit(editingItem, options);
+      if (transportation) setDefaultTransportation(transportation);
+
       if (editingItem.type >= 0) {
-        const serviceTypeOption = getServiceTypeOptions().find(
+        const serviceTypeOption = serviceTypeOptions.find(
           item => item.value.toString() === editingItem.type.toString()
         );
-        serviceTypeOption && setSelectedServiceType(serviceTypeOption);
+        if (serviceTypeOption) setSelectedServiceType(serviceTypeOption);
       }
-      if (editingItem.taglineText) setTaglineText(editingItem.taglineText);
-      if (editingItem.taglineFontColorHex) setTaglineColor(editingItem.taglineFontColorHex);
     }
-  }, [props.open, editingItem, options]);
+  }, [props.open, editingItem, options, serviceTypeOptions]);
 
   useEffect(() => {
     if (!props.open || editingItem || !isPickUpDropOffType || defaultTransportation) {
@@ -138,7 +140,7 @@ export const AddFirstScreenOptionModal: React.FC<
     setTaglineColor('');
     setTaglineText('');
     props.onClose();
-  }, []);
+  }, [dispatch, props]);
 
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
@@ -153,11 +155,7 @@ export const AddFirstScreenOptionModal: React.FC<
       serviceType: string,
       defaultTransportationType?: ETransportationType
     ) => {
-      if (
-        serviceType === String(EServiceType.PickUpDropOff) &&
-        defaultTransportationType != null &&
-        defaultTransportationType !== ETransportationType.PickUpDelivery
-      ) {
+      if (shouldShowPickupDropOffWarning(serviceType, defaultTransportationType)) {
         showMessage(
           '“Time of Day” transportation constraint does not apply to Service Valet slots',
           'warning'
@@ -170,7 +168,7 @@ export const AddFirstScreenOptionModal: React.FC<
       }
       onCancel();
     },
-    [fileState, selectedSC]
+    [dispatch, fileState, onCancel, selectedSC, showError, showMessage]
   );
 
   const onNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -183,98 +181,80 @@ export const AddFirstScreenOptionModal: React.FC<
     setExternalLink(e.target.value);
   }, []);
 
-  const onOrderIndexChange = useCallback((e: React.ChangeEvent<{}>, value: string): void => {
+  const onOrderIndexChange = useCallback((e: SyntheticEvent, value: string): void => {
     setFormIsChecked(false);
     setOrderIndex(value);
   }, []);
 
   const onTransportationChange = useCallback(
-    (e: React.ChangeEvent<{}>, value: ITransportationOptionFull | null): void => {
+    (e: SyntheticEvent, value: ITransportationOptionFull | null): void => {
       setFormIsChecked(false);
       setDefaultTransportation(value);
     },
     []
   );
 
-  const checkIsValid = (): boolean => {
-    let isValid = true;
-    if (!selectedServiceType) {
-      showError('"Booking Flow Config" is required');
-      isValid = false;
-    }
-    if (!orderIndex) {
-      showError('"Order Index" is required');
-      isValid = false;
-    }
-    if (isPickUpDropOffType && !defaultTransportation) {
-      showError('Default Transportation Option is required');
-      isValid = false;
-    }
-    return isValid;
-  };
-
   const onSave = () => {
-    if (checkIsValid()) {
-      const data: TUpdateFirstScreenOption = {
-        name: firstScreenOptionName,
-        description,
-        note,
-        type: selectedServiceType?.value ?? EServiceType.VisitCenter,
-        orderIndex: +orderIndex,
-        taglineText: taglineText.trim().length ? taglineText.trim() : null,
-        taglineFontColorHex: taglineColor.length ? taglineColor : null,
-      };
-      if (externalLink) data.externalLink = externalLink;
-      if (selectedSC) {
-        if (defaultTransportation) data.transportationOptionId = defaultTransportation.id;
-        if (editingItem) {
-          dispatch(
-            updateFirstScreenOption(
-              editingItem.id,
-              selectedSC.id,
-              data,
-              onSuccessCreate,
-              showError,
-              defaultTransportation?.type
-            )
-          );
-        } else {
-          const newData: TNewFirstScreenOption = {
-            ...data,
-            serviceCenterId: selectedSC.id,
-          };
-          dispatch(
-            createFirstScreenOption(
-              newData,
-              selectedSC.id,
-              onSuccessCreate,
-              showError,
-              defaultTransportation?.type
-            )
-          );
-        }
-      }
-    }
-  };
+    const isValid = validateFirstScreenOptionForm({
+      selectedServiceType,
+      orderIndex,
+      isPickUpDropOffType,
+      defaultTransportation,
+      showError,
+    });
 
-  const getServiceTypeOptions = () => {
-    return Object.entries(serviceTypeNames).map(([value, name]) => ({ value, name }));
+    if (!isValid || !selectedSC) {
+      return;
+    }
+
+    const data = buildFirstScreenOptionUpdateData({
+      firstScreenOptionName,
+      description,
+      note,
+      selectedServiceType,
+      orderIndex,
+      taglineText,
+      taglineColor,
+      externalLink,
+      defaultTransportation,
+    });
+
+    if (editingItem) {
+      dispatch(
+        updateFirstScreenOption(
+          editingItem.id,
+          selectedSC.id,
+          data,
+          onSuccessCreate,
+          showError,
+          defaultTransportation?.type
+        )
+      );
+      return;
+    }
+
+    const newData = buildFirstScreenOptionCreateData(data, selectedSC.id);
+    dispatch(
+      createFirstScreenOption(
+        newData,
+        selectedSC.id,
+        onSuccessCreate,
+        showError,
+        defaultTransportation?.type
+      )
+    );
   };
 
   const onServiceTypeChange = useCallback(
-    (e: React.ChangeEvent<{}>, value: TOption | null) => {
+    (_e: SyntheticEvent, value: TOption | null) => {
       setFormIsChecked(false);
       setSelectedServiceType(value);
-      if (value && defaultTransportation) {
-        if (value?.value === EServiceType.MobileService.toString()) {
-          setDefaultTransportation(null);
-        }
+
+      if (shouldClearTransportationOnServiceTypeChange(value, defaultTransportation)) {
+        setDefaultTransportation(null);
       }
 
-      if (
-        value?.value === EServiceType.PickUpDropOff.toString() &&
-        (!defaultTransportation || !editingItem)
-      ) {
+      if (shouldApplyPickupDeliveryDefault(value, defaultTransportation, editingItem)) {
         setDefaultTransportation(pickUpDeliveryOption);
       }
     },
@@ -304,110 +284,38 @@ export const AddFirstScreenOptionModal: React.FC<
       <DialogTitle onClose={onCancel}>
         {editingItem ? 'Edit' : 'Add'} First Screen Option
       </DialogTitle>
-      <DialogContent>
-        <div className={classes.inputsWrapper}>
-          <div>
-            <TextField
-              fullWidth
-              label="Option Name"
-              placeholder="Type Option Name"
-              error={formIsChecked && !firstScreenOptionName}
-              onChange={onNameChange}
-              value={firstScreenOptionName}
-            />
-          </div>
-          <Autocomplete
-            options={getServiceTypeOptions()}
-            isOptionEqualToValue={option => option.value === selectedServiceType?.value}
-            getOptionLabel={o => o.name}
-            value={selectedServiceType}
-            onChange={onServiceTypeChange}
-            renderInput={autocompleteRender({
-              label: 'Booking Flow Config',
-              placeholder: 'Select Booking Flow Config',
-            })}
-          />
-          <FileInput
-            setState={setFileState}
-            label={`${fileState.file || editingItem?.iconPath ? 'Update' : 'Upload'} Option Icon`}
-          />
-          <Autocomplete
-            disableClearable
-            options={['1', '2', '3', '4', '5', '6', '7', '8']}
-            value={orderIndex}
-            isOptionEqualToValue={(o, v) => o === v}
-            onChange={onOrderIndexChange}
-            renderInput={autocompleteRender({
-              label: 'Order Index for Booking Flow',
-              placeholder: 'Select Order Index',
-              error: !orderIndex?.length && formIsChecked,
-            })}
-          />
-          <Autocomplete
-            disableClearable={isPickUpDropOffType}
-            options={enabledTransportationOptions}
-            isOptionEqualToValue={option => option.id === defaultTransportation?.id}
-            getOptionLabel={o => getTransportationOptionString(o.type.toString())}
-            value={defaultTransportation}
-            onChange={onTransportationChange}
-            disabled={isTransportationDisabled}
-            renderInput={autocompleteRender({
-              label: 'Default Transportation Option',
-              placeholder: 'Select Transportation Option',
-            })}
-          />
-          <div>
-            <TextField
-              fullWidth
-              label="External Link"
-              placeholder="Type External Link"
-              disabled={selectedServiceType?.value !== EServiceType.General.toString()}
-              onChange={onLinkChange}
-              value={externalLink}
-            />
-          </div>
-        </div>
-        <TextField
-          fullWidth
-          multiline
-          rows={4}
-          value={description}
-          style={{ marginBottom: 20 }}
-          label="Option Description"
-          placeholder="Enter Description"
-          onChange={onDescriptionChange}
-        />
-        <TextField
-          fullWidth
-          multiline
-          rows={1}
-          value={note}
-          label="Option Note for Confirmation Screen"
-          placeholder="Enter Note"
-          onChange={onNoteChange}
-        />
-        <div className={classes.twoInputsWrapper}>
-          <div>
-            <TextField
-              fullWidth
-              value={taglineText}
-              label="Tagline Text"
-              placeholder="Enter Tagline Text"
-              onChange={onTaglineTextChange}
-            />
-          </div>
-          <div>
-            <TextField
-              fullWidth
-              value={taglineColor}
-              inputProps={{ maxLength: 6 }}
-              label="Tagline Font Color hex #"
-              placeholder="Enter Tagline Font Color (6 symbols)"
-              onChange={onTaglineColorChange}
-            />
-          </div>
-        </div>
-      </DialogContent>
+      <AddFirstScreenOptionModalForm
+        classNames={{
+          inputsWrapper: classes.inputsWrapper,
+          twoInputsWrapper: classes.twoInputsWrapper,
+        }}
+        editingIconPath={editingItem?.iconPath}
+        fileState={fileState}
+        setFileState={setFileState}
+        formIsChecked={formIsChecked}
+        firstScreenOptionName={firstScreenOptionName}
+        selectedServiceType={selectedServiceType}
+        orderIndex={orderIndex}
+        enabledTransportationOptions={enabledTransportationOptions}
+        defaultTransportation={defaultTransportation}
+        isPickUpDropOffType={isPickUpDropOffType}
+        isTransportationDisabled={isTransportationDisabled}
+        externalLink={externalLink}
+        description={description}
+        note={note}
+        taglineText={taglineText}
+        taglineColor={taglineColor}
+        serviceTypeOptions={serviceTypeOptions}
+        onNameChange={onNameChange}
+        onServiceTypeChange={onServiceTypeChange}
+        onOrderIndexChange={onOrderIndexChange}
+        onTransportationChange={onTransportationChange}
+        onLinkChange={onLinkChange}
+        onDescriptionChange={onDescriptionChange}
+        onNoteChange={onNoteChange}
+        onTaglineTextChange={onTaglineTextChange}
+        onTaglineColorChange={onTaglineColorChange}
+      />
       <DialogActions>
         <Button onClick={onCancel} className={classes.cancelButton}>
           Cancel

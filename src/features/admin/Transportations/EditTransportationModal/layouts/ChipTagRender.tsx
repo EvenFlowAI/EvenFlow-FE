@@ -1,5 +1,6 @@
 import React from 'react';
 import { Chip, Tooltip } from '@mui/material';
+import { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
 import { TOption } from '../../types';
 import {
   calculateMaxVisibleTags,
@@ -24,7 +25,7 @@ const tooltipListStyle: React.CSSProperties = {
 
 export const renderChipTags = (
   selectedValues: TOption[],
-  getTagProps: (params: { index: number }) => any,
+  getTagProps: AutocompleteRenderGetTagProps,
   containerWidth = 500
 ) => {
   const sortedValues = [...selectedValues].sort((a, b) => {
@@ -49,9 +50,9 @@ export const renderChipTags = (
           const props = getTagProps({ index: tagIndex });
           return (
             <Chip
+              {...props}
               key={option.value}
               label={option.name}
-              onDelete={props.onDelete}
               size="medium"
               color="primary"
               variant="filled"
@@ -60,7 +61,6 @@ export const renderChipTags = (
                 flexShrink: 0,
                 maxWidth: '200px',
               }}
-              {...props}
             />
           );
         })}
@@ -96,7 +96,7 @@ export const renderChipTags = (
 
 export const renderChipTagsForDealership = (
   selectedValues: TOption[],
-  getTagProps: (params: { index: number }) => any,
+  getTagProps: AutocompleteRenderGetTagProps,
   containerWidth = 420
 ) => {
   const sortedValues = [...selectedValues].sort((a, b) => {
@@ -123,9 +123,9 @@ export const renderChipTagsForDealership = (
           const props = getTagProps({ index: tagIndex });
           return (
             <Chip
+              {...props}
               key={option.value}
               label={option.name}
-              onDelete={props.onDelete}
               size="medium"
               color="primary"
               variant="filled"
@@ -134,7 +134,6 @@ export const renderChipTagsForDealership = (
                 flexShrink: 0,
                 maxWidth: '200px',
               }}
-              {...props}
             />
           );
         })}
@@ -170,7 +169,7 @@ export const renderChipTagsForDealership = (
 
 export const renderChipTagsWithoutOptionObject = (
   selectedValues: string[],
-  getTagProps: (params: { index: number }) => any,
+  getTagProps: AutocompleteRenderGetTagProps,
   containerWidth = 350,
   handleDelete: (tag: string) => void
 ) => {
@@ -198,8 +197,9 @@ export const renderChipTagsWithoutOptionObject = (
           const props = getTagProps({ index: tagIndex });
           return (
             <Chip
-              key={option}
               label={option}
+              {...props}
+              key={option}
               onDelete={() => handleDelete(option)}
               size="medium"
               color="primary"
@@ -209,7 +209,6 @@ export const renderChipTagsWithoutOptionObject = (
                 flexShrink: 0,
                 maxWidth: '130px',
               }}
-              {...props}
             />
           );
         })}

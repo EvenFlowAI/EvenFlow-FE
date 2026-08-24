@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { RadioBlock, RadioGroupLabel } from './styles';
 import { FormControlLabel, Radio, RadioGroup, Tab } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ const CapacityTechnicians = () => {
     );
   }, []);
 
-  const handleTabChange = async (e: React.ChangeEvent<{}>, tab: string) => setTab(tab);
+  const handleTabChange = async (e: SyntheticEvent, tab: string) => setTab(tab);
 
   const handleType = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
     if (selectedSC) {

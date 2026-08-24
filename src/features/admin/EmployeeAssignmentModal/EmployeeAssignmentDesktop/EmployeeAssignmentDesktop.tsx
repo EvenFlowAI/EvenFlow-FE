@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { Table, TableBody, TableHead } from '@mui/material';
 import { SubCellsWrapper, SubCellTitle, THeadCell, THeadCellWithSub } from '../styles';
 import { TableRow } from '../../../../components/styled/TableRow';
@@ -17,7 +17,7 @@ type TProps = {
     item: IEmployeeAssignmentSetting,
     level: EAssignmentLevel,
     role: 'Advisor' | 'Technician'
-  ) => (e: ChangeEvent<{}>, value: TOption | null) => void;
+  ) => (e: SyntheticEvent, value: TOption | null) => void;
 };
 
 const EmployeeAssignmentDesktop: React.FC<TProps> = ({

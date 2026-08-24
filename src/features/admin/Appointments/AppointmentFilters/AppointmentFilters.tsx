@@ -1,14 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Autocomplete,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  Paper,
-  Radio,
-  RadioGroup,
-} from '@mui/material';
-import { Clear, DateRange } from '@mui/icons-material';
+import { Paper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loadSchedulerList,
@@ -24,15 +15,14 @@ import {
 } from '../../../../store/reducers/appointments/types';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { EReportingStatus } from '../../../../api/types';
-import { CustomDatePicker } from '../../../../components/pickers/CustomDatePicker/CustomDatePicker';
 import { TOption, TParsableDate } from '../../../../types/types';
 import dayjs from 'dayjs';
-import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { RadioBlock, RadioGroupLabel, useAutocompleteClasses } from './styles';
 import { statusOptions } from './constants';
 import { TAppointmentFilterProps } from './types';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import { EDate } from '../types';
+import { DateRangeTypeSelector } from './DateRangeTypeSelector';
+import { AppointmentFiltersFields } from './AppointmentFiltersFields';
 
 export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
   status,
@@ -54,7 +44,6 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
   const { selectedSC } = useSCs();
   const currentUser = useCurrentUser();
   const dispatch = useDispatch();
-  const { classes: autocompleteClasses } = useAutocompleteClasses();
   const rangeIsWrong = useMemo(() => {
     return (
       dateTo && dateFrom && Math.round(dayjs(dateTo).diff(dateFrom) / (1000 * 60 * 60 * 24)) > 90
@@ -135,7 +124,7 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
     });
   };
 
-  const handleClear = (e: any, field: 'dateFrom' | 'dateTo') => {
+  const handleClear = (e: React.MouseEvent<HTMLElement>, field: 'dateFrom' | 'dateTo') => {
     e.stopPropagation();
     setFilters(prev => {
       return { ...prev, [field]: null, pageData: { ...prev.pageData, pageIndex: 0 } };
@@ -196,167 +185,36 @@ export const AppointmentFilters: React.FC<TAppointmentFilterProps> = ({
         width: '100%',
       }}
     >
-      <RadioBlock>
-        <RadioGroupLabel>Date Search:</RadioGroupLabel>
-        <RadioGroup
-          row
-          aria-label="countType"
-          name="countType"
-          value={dateRangeType === EDate.AppointmentDate ? 'AppointmentDate' : 'CreatedDate'}
-          onChange={handleType}
-        >
-          <FormControlLabel
-            value={'CreatedDate'}
-            control={<Radio color="primary" />}
-            label="Created Date"
-          />
-          <FormControlLabel
-            value={'AppointmentDate'}
-            control={<Radio color="primary" />}
-            label="Appointment Date"
-          />
-        </RadioGroup>
-      </RadioBlock>
-      <Grid container spacing={2} justifyContent="space-between" alignItems="flex-start">
-        <Grid item xs={12} sm={3} key="datepickerFrom">
-          <CustomDatePicker
-            onOpen={handleOpenFrom(true)}
-            onClose={handleOpenFrom(false)}
-            open={isOpenFrom}
-            format="MMMM Do"
-            fullWidth
-            maxDate={dateTo}
-            required
-            label="Date From"
-            InputProps={{
-              placeholder: 'Not selected',
-              disabled: isLoading,
-              fullWidth: true,
-              error: !dateFrom || !!rangeIsWrong,
-              endAdornment: dateFrom ? (
-                <IconButton onClick={e => handleClear(e, 'dateFrom')} size="large">
-                  <Clear />
-                </IconButton>
-              ) : (
-                <DateRange
-                  cursor="pointer"
-                  htmlColor={!dateFrom || rangeIsWrong ? '#FF0000' : 'rgba(0, 0, 0, 0.54)'}
-                />
-              ),
-            }}
-            value={dateFrom}
-            onAccept={handleDateChange('dateFrom')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3} key="datepickerTo">
-          <CustomDatePicker
-            onOpen={handleOpenTo(true)}
-            onClose={handleOpenTo(false)}
-            open={isOpenTo}
-            minDate={dateFrom}
-            required
-            format="MMMM Do"
-            fullWidth
-            shouldDisableDate={day => dayjs(day).isBefore(dateFrom)}
-            label="Date To"
-            InputProps={{
-              placeholder: 'Not selected',
-              disabled: isLoading,
-              fullWidth: true,
-              error: !dateTo || !!rangeIsWrong,
-              endAdornment: dateTo ? (
-                <IconButton onClick={e => handleClear(e, 'dateTo')} size="large">
-                  <Clear />
-                </IconButton>
-              ) : (
-                <DateRange
-                  cursor="pointer"
-                  htmlColor={!dateTo || rangeIsWrong ? '#FF0000' : 'rgba(0, 0, 0, 0.54)'}
-                />
-              ),
-            }}
-            value={dateTo}
-            onAccept={handleDateChange('dateTo')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3} key="service advisor">
-          <Autocomplete
-            renderInput={autocompleteRender({
-              label: 'Service Advisor',
-              placeholder: 'Not selected',
-            })}
-            disabled={isLoading}
-            onChange={onAdvisorChange}
-            value={advisor}
-            getOptionLabel={o => (o.fullName ? `${o.fullName} - ${o.dmsId}` : o.dmsId)}
-            isOptionEqualToValue={(o, v) => o.id === v.id}
-            options={serviceAdvisors}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3} key="technician">
-          <Autocomplete
-            renderInput={autocompleteRender({
-              label: 'Technician',
-              placeholder: 'Not selected',
-            })}
-            disabled={isLoading}
-            onChange={onTechnicianChange}
-            value={technician}
-            getOptionLabel={o => (o.fullName ? `${o.fullName} - ${o.dmsId}` : o.dmsId)}
-            isOptionEqualToValue={(o, v) => o.id === v.id}
-            options={technicians}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3} key="scheduler">
-          <Autocomplete
-            renderInput={autocompleteRender({
-              label: 'Scheduler',
-              placeholder: 'Not selected',
-            })}
-            disabled={isLoading}
-            onChange={onSchedulerChange}
-            value={scheduler}
-            getOptionKey={o => (o.id ? o.id : o.fullName + new Date())}
-            getOptionLabel={o => o.fullName}
-            isOptionEqualToValue={(o, v) =>
-              o.id && v.id ? o.id === v.id : o.fullName === v.fullName
-            }
-            options={[...schedulerList].sort((a, b) => a.fullName.localeCompare(b.fullName))}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3} key="serviceBook">
-          <Autocomplete
-            renderInput={autocompleteRender({
-              label: 'Service Book',
-              placeholder: 'Not selected',
-            })}
-            disabled={isLoading}
-            fullWidth
-            onChange={onServiceBookChange}
-            value={serviceBook}
-            getOptionLabel={o => o.name}
-            isOptionEqualToValue={(o, v) => (o.id && v.id ? o.id === v.id : o.name === v.name)}
-            options={[...serviceBookList].sort((a, b) => a.name.localeCompare(b.name))}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} key="status">
-          <Autocomplete
-            renderInput={autocompleteRender({
-              label: 'Appointment Status',
-              placeholder: 'Not selected',
-            })}
-            multiple
-            disableCloseOnSelect
-            classes={autocompleteClasses}
-            disabled={isLoading}
-            onChange={onStatusChange}
-            value={selectedStatus}
-            getOptionLabel={o => o.name}
-            isOptionEqualToValue={(o, v) => o.value === v.value}
-            options={statusOptions}
-          />
-        </Grid>
-      </Grid>
+      <DateRangeTypeSelector dateRangeType={dateRangeType} onChange={handleType} />
+      <AppointmentFiltersFields
+        isLoading={isLoading}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        isOpenFrom={isOpenFrom}
+        isOpenTo={isOpenTo}
+        rangeIsWrong={!!rangeIsWrong}
+        selectedStatus={selectedStatus}
+        advisor={advisor}
+        technician={technician}
+        scheduler={scheduler}
+        serviceBook={serviceBook}
+        serviceAdvisors={serviceAdvisors}
+        technicians={technicians}
+        schedulerList={schedulerList}
+        serviceBookList={serviceBookList}
+        onOpenFrom={handleOpenFrom(true)}
+        onCloseFrom={handleOpenFrom(false)}
+        onOpenTo={handleOpenTo(true)}
+        onCloseTo={handleOpenTo(false)}
+        onClear={handleClear}
+        onDateFromChange={handleDateChange('dateFrom')}
+        onDateToChange={handleDateChange('dateTo')}
+        onAdvisorChange={onAdvisorChange}
+        onTechnicianChange={onTechnicianChange}
+        onSchedulerChange={onSchedulerChange}
+        onServiceBookChange={onServiceBookChange}
+        onStatusChange={onStatusChange}
+      />
     </Paper>
   );
 };
