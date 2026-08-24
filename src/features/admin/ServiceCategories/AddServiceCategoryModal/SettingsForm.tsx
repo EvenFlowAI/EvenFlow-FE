@@ -84,14 +84,19 @@ const SettingsForm = ({ editingItem, form, setForm }: SettingsFormProps) => {
   const onCategoryTypeChange = useCallback(
     (e: React.SyntheticEvent, value: TOption | null): void => {
       const isGeneralCategory = value?.value === EServiceCategoryType.GeneralCategory;
+      const supportsOpCodes =
+        value?.value === EServiceCategoryType.GeneralCategory ||
+        value?.value === EServiceCategoryType.IndividualServices ||
+        value?.value === EServiceCategoryType.Diagnose;
+
       setForm(prev => ({
         ...prev,
         formIsChecked: false,
         categoryType: value,
         isCommentRequired: isGeneralCategory ? prev.isCommentRequired : false,
-        selectedCodes: [],
-        selectedCodesWithOrder: [],
-        wrongOrderIndexes: [],
+        selectedCodes: supportsOpCodes ? prev.selectedCodes : [],
+        selectedCodesWithOrder: supportsOpCodes ? prev.selectedCodesWithOrder : [],
+        wrongOrderIndexes: supportsOpCodes ? prev.wrongOrderIndexes : [],
       }));
     },
     []

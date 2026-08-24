@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Divider } from '@mui/material';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
@@ -79,6 +79,14 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
   const [availableSearchTerm, setAvailableSearchTerm] = useState('');
   const [selectedSearchTerm, setSelectedSearchTerm] = useState('');
   const [pendingIds, setPendingIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (form.selectedCodes.length) {
+      setPendingIds(form.selectedCodes.map(item => item.id));
+    } else {
+      setPendingIds([]);
+    }
+  }, [form.selectedCodes]);
 
   const selectedIds = useMemo(() => {
     if (categoryHasCodesOrder) {
