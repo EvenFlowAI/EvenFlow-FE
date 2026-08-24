@@ -11,6 +11,7 @@ import { CategoryFormState } from '../types';
 import { useStyles } from './styles';
 import { AvailableOpCodeRow } from './AvailableOpCodeRow';
 import { SelectedOpCodeContent } from './SelectedOpCodeContent';
+import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 
 type TOpsCodesTransferPanelProps = {
   disabled: boolean;
@@ -304,7 +305,8 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
       <div className={classes.column}>
         <div className={classes.titleRowRight}>
           <span className={classes.title}>Selected ({selectedCodes.length})</span>
-          {categoryHasCodesOrder && (
+          {(form.categoryType?.value === EServiceCategoryType.IndividualServices ||
+            form.categoryType?.value === EServiceCategoryType.Diagnose) && (
             <span className={classes.helperText}>Use drag and drop to reorder</span>
           )}
         </div>
