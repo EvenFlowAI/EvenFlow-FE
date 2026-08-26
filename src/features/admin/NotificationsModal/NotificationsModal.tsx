@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { DialogProps } from '../../../components/modals/BaseModal/types';
 import {
   BaseModal,
@@ -63,7 +63,7 @@ const NotificationsModal: React.FC<
     }
   };
 
-  const handleTabChange = (e: React.ChangeEvent<{}>, tab: string) => {
+  const handleTabChange = (e: SyntheticEvent, tab: string) => {
     if (checkIfChangesSaved(currentTab)) {
       setCurrentTab(tab);
     } else {

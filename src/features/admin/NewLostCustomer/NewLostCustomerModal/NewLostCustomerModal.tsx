@@ -23,7 +23,7 @@ export const NewLostCustomerModal: React.FC<
   React.PropsWithChildren<
     React.PropsWithChildren<DialogProps<INewLostCustomer> & { isNew: boolean }>
   >
-> = ({ onAction, isNew = false, payload, ...props }) => {
+> = ({ isNew = false, payload, ...props }) => {
   const [saving, setSaving] = useState<boolean>(false);
   const [months, setMonths] = useState<string>('');
 

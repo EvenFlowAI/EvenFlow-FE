@@ -1,14 +1,6 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Autocomplete,
-  Button,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Switch,
-  TablePagination,
-} from '@mui/material';
+import { SelectChangeEvent, Switch, TablePagination } from '@mui/material';
 import { ContentTitle } from '../../../components/wrappers/ContentTitle/ContentTitle';
 import { RootState } from '../../../store/rootReducer';
 import { PackageAccordion } from './PackageAccordion/PackageAccordion';
@@ -22,7 +14,6 @@ import {
 import AddPackageModal from './AddPackageModal/AddPackageModal';
 import Disclaimer from './Disclaimer/Disclaimer';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
-import { autocompleteRender } from '../../../utils/autocompleteRenders';
 import { useMaintenancePackagesStyles } from './styles';
 import { MaintenanceOptionTypes, PackageSourceTypes } from './constants';
 import { TExpandedState, TOption, TPackageSource } from './types';
@@ -32,6 +23,7 @@ import { useConfirm } from '../../../hooks/useConfirm/useConfirm';
 import { useException } from '../../../hooks/useException/useException';
 import { useSCs } from '../../../hooks/useSCs/useSCs';
 import { usePagination } from '../../../hooks/usePaginations/usePaginations';
+import { MaintenancePackagesTopBar } from './MaintenancePackagesTopBar';
 
 export const MaintenancePackages = () => {
   const {
@@ -99,7 +91,7 @@ export const MaintenancePackages = () => {
 
   const handleAddDisclaimer = () => setDisclaimerOpen(!isDisclaimerOpen);
 
-  const handlePriceDetailsSwitch = (e: any, value: boolean) => {
+  const handlePriceDetailsSwitch = (_e: ChangeEvent<HTMLInputElement>, value: boolean) => {
     if (selectedSC) {
       dispatch(updatePackagePriceDetails(selectedSC.id, value, showError));
     }
@@ -141,7 +133,7 @@ export const MaintenancePackages = () => {
   );
 
   const onPresentedOptionsChange = useCallback(
-    (e: ChangeEvent<{}>, value: TOption[]) => {
+    (e: SyntheticEvent, value: TOption[]) => {
       if (selectedSC) {
         if (value.length > presentedOptions.length) {
           const newOption = value.find(
@@ -197,70 +189,19 @@ export const MaintenancePackages = () => {
         open={isOpen || isOpenEdit}
         isEditing={isEditing}
       />
-      <div className={classes.topLineWrapper}>
-        <div className={classes.selectWrapper}>
-          {loading ? (
-            <Loading />
-          ) : (
-            <>
-              <div className={classes.controlsRow}>
-                <div className={classes.controlColumn}>
-                  <p className={classes.optionsLabel}>Package Source</p>
-                  <Select
-                    id="package-source"
-                    className={classes.select}
-                    value={packageSourceType.value}
-                    onChange={handlePackageSourceSelect}
-                    disableUnderline
-                    displayEmpty
-                    variant="standard"
-                    size="small"
-                  >
-                    {PackageSourceTypes.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>
-                        {opt.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </div>
-                <div className={classes.controlColumn}>
-                  <p className={classes.optionsLabel}>Available Package Options</p>
-                  {packagesOptionsLoading ? (
-                    <Loading />
-                  ) : (
-                    <Autocomplete
-                      fullWidth
-                      multiple
-                      disableClearable
-                      classes={autocompleteClasses}
-                      options={MaintenanceOptionTypes}
-                      disableCloseOnSelect
-                      getOptionLabel={o => o.name}
-                      isOptionEqualToValue={(o, v) => o.value === v.value}
-                      value={presentedOptions}
-                      onChange={onPresentedOptionsChange}
-                      renderInput={autocompleteRender({
-                        label: '',
-                        placeholder: '',
-                      })}
-                    />
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-        <div className={classes.actionsWrapper}>
-          <div className={classes.actionsButtons}>
-            <Button color="primary" variant="contained" onClick={handleAddDisclaimer}>
-              {isDisclaimerOpen ? 'Close' : 'Open'} Disclaimer
-            </Button>
-            <Button color="primary" variant="contained" onClick={handleAddPackage}>
-              Add Package
-            </Button>
-          </div>
-        </div>
-      </div>
+      <MaintenancePackagesTopBar
+        classes={classes}
+        loading={loading}
+        packagesOptionsLoading={packagesOptionsLoading}
+        packageSourceType={packageSourceType}
+        presentedOptions={presentedOptions}
+        autocompleteClasses={autocompleteClasses}
+        onPackageSourceSelect={handlePackageSourceSelect}
+        onPresentedOptionsChange={onPresentedOptionsChange}
+        onAddDisclaimer={handleAddDisclaimer}
+        isDisclaimerOpen={isDisclaimerOpen}
+        onAddPackage={handleAddPackage}
+      />
       {isDisclaimerOpen ? <Disclaimer setDisclaimerOpen={setDisclaimerOpen} /> : null}
       <div className={classes.titleWrapper}>
         <ContentTitle title="Maintenance Package Pricing" />
