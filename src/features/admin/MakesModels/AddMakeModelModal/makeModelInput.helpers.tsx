@@ -1,8 +1,8 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
-import { Delete } from '@mui/icons-material';
 import { AutocompleteRenderGetTagProps } from '@mui/material/Autocomplete/Autocomplete';
 import { IData } from '../../../../components/DragAndDrop/types';
+import TagDeleteIcon from './TagDeleteIcon';
 
 type TRenderTagsParams = {
   value: IData[];
@@ -56,7 +56,7 @@ export const renderMakeModelTags = ({
       <div {...props}>
         <div className={tagClassName}>
           {isEditing ? 'All models' : 'All makes'}
-          <Delete
+          <TagDeleteIcon
             onClick={() => {
               if (isEditing) {
                 setModelsToAdd([]);
@@ -64,7 +64,6 @@ export const renderMakeModelTags = ({
                 setMakesToAdd([]);
               }
             }}
-            style={{ cursor: 'pointer', marginLeft: 4 }}
           />
         </div>
       </div>
@@ -87,7 +86,7 @@ export const renderMakeModelTags = ({
                 <div className={tagClassName}>
                   <div
                     style={{
-                      maxWidth: value.length > 1 ? '150px' : '230px',
+                      maxWidth: value.length > 1 ? '110px' : '230px',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -95,9 +94,7 @@ export const renderMakeModelTags = ({
                   >
                     {option.text}
                   </div>
-                  {props.onDelete ? (
-                    <Delete onClick={props.onDelete} style={{ cursor: 'pointer', flexShrink: 0 }} />
-                  ) : null}
+                  {props.onDelete ? <TagDeleteIcon onClick={props.onDelete} /> : null}
                 </div>
               </Tooltip>
             </div>
