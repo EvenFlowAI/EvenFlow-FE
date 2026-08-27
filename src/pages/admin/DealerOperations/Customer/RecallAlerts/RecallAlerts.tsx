@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import RecallCredits from './layouts/RecallCredits';
-import { loadAvailableCredits } from '../../../../../store/reducers/dealerOperations/actions';
+import {
+  loadAvailableCredits,
+  loadTextIntegrationSettings,
+} from '../../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import TableModeSwitcher from './layouts/TableModeSwitcher';
@@ -36,6 +39,7 @@ const RecallAlerts = () => {
   const { recallAlerts, selectedStatus, updatedAlerts, isEditName } = useSelector(
     (state: RootState) => state.recalls
   );
+  const { textIntegrationSettings } = useSelector((state: RootState) => state.dealerOperations);
   const { isOpen, onClose, onOpen } = useModal();
   const { isOpen: isOpenText, onClose: onCloseText, onOpen: onOpenText } = useModal();
   const { isOpen: isOpenHistory, onClose: onCloseHistory, onOpen: onOpenHistory } = useModal();
@@ -60,6 +64,8 @@ const RecallAlerts = () => {
     dispatch(setIsRecallAlertsTableLoading(true));
     dispatch(loadAvailableCredits(selectedSC.id, onSuccess));
     dispatch(getAllGlobalRecalls());
+    if (!textIntegrationSettings?.fromPhoneNumber)
+      dispatch(loadTextIntegrationSettings(selectedSC.id, () => {}));
   }, [selectedSC]);
 
   const setStartedNames = () => {
