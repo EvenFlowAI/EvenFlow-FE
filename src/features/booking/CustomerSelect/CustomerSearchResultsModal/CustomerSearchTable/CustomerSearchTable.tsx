@@ -138,15 +138,15 @@ const CustomerSearchTable: React.FC<
   }, [pageData]);
 
   useEffect(() => {
-    // Fixed widths for action icons + the first two sticky name columns
+    // Fixed widths for the first three columns
     const iconColumnWidth = 124;
-    const stickyNameColumnWidth = 150;
+    const lastNameWidth = 150;
 
     setOffset(() => ({
       secondColumn: iconColumnWidth,
-      thirdColumn: iconColumnWidth + stickyNameColumnWidth,
+      thirdColumn: iconColumnWidth + lastNameWidth,
     }));
-  }, []);
+  }, []); // Remove dependencies since we want fixed widths
 
   useEffect(() => {
     const orderedData = customers.map((el, i) => ({ ...el, sortOrder: i }));
@@ -544,9 +544,9 @@ const CustomerSearchTable: React.FC<
         if (!a[order] && !b[order]) {
           return sorting.isAscending ? 1 : -1;
         } else {
-          const left = String(a[order] ?? '');
-          const right = String(b[order] ?? '');
-          return sorting.isAscending ? right.localeCompare(left) : left.localeCompare(right);
+          return sorting.isAscending
+            ? b[order].toString().localeCompare(a[order].toString())
+            : a[order].toString().localeCompare(b[order].toString());
         }
       })
     );
@@ -561,44 +561,45 @@ const CustomerSearchTable: React.FC<
     );
   };
 
+  // This function will be added to reorder the columns
   const getOrderedColumns = (cols: TColumn[]) => {
-    const preferredOrder: TColumn['name'][] = [
-      'First Name',
-      'Middle Name',
-      'Last Name',
-      'Company Name',
-      'Make',
-      'Model',
-      'Year',
-      'VIN',
-      'Cell',
-      'Home',
-      'Work',
-      'Other',
-      'Email',
-      'Address',
-      'City',
-      'State',
-      'ZIP',
-    ];
+    // First we extract the specific columns we need to reorder
+    const lastName = cols.find(col => col.name === 'Last Name');
+    const firstName = cols.find(col => col.name === 'First Name');
+    const make = cols.find(col => col.name === 'Make');
+    const model = cols.find(col => col.name === 'Model');
+    const vin = cols.find(col => col.name === 'VIN');
+    const year = cols.find(col => col.name === 'Year');
 
-    const orderIndex = new Map(preferredOrder.map((name, index) => [name, index]));
+    // Then filter out these columns from the original array
+    const otherColumns = cols.filter(
+      col =>
+        col.name !== 'Last Name' &&
+        col.name !== 'First Name' &&
+        col.name !== 'Make' &&
+        col.name !== 'Model' &&
+        col.name !== 'VIN' &&
+        col.name !== 'Year'
+    );
 
-    return [...cols].sort((a, b) => {
-      const aIndex = orderIndex.get(a.name);
-      const bIndex = orderIndex.get(b.name);
+    // Now construct the new array in the desired order
+    const orderedColumns = [];
 
-      if (aIndex === undefined && bIndex === undefined) return 0;
-      if (aIndex === undefined) return 1;
-      if (bIndex === undefined) return -1;
-      return aIndex - bIndex;
-    });
+    if (lastName) orderedColumns.push(lastName);
+    if (firstName) orderedColumns.push(firstName);
+    if (make) orderedColumns.push(make);
+    if (model) orderedColumns.push(model);
+    if (vin) orderedColumns.push(vin);
+    if (year) orderedColumns.push(year);
+
+    // Add the rest of the columns
+    return [...orderedColumns, ...otherColumns];
   };
 
   // Use the ordered columns
   const orderedColumns = useMemo(() => getOrderedColumns(selectedColumns), [selectedColumns]);
 
-  const FIXED_COLUMNS_WIDTH = 424; // icons(124) + firstName(150) + middleName(150)
+  const FIXED_COLUMNS_WIDTH = 424; // icons(124) + lastName(150) + firstName(150)
   const MIN_TABLE_WIDTH = 1550;
 
   return isLoading ? (
@@ -624,33 +625,37 @@ const CustomerSearchTable: React.FC<
               <TableRow>
                 <TableCell className={classes.stickyTHeadCell} key="emptyCell" width={124} />
                 {orderedColumns.map(({ name, order }, index) => {
+                  const isLastName = name === 'Last Name';
                   const isFirstName = name === 'First Name';
-                  const isMiddleName = name === 'Middle Name';
                   return (
                     <TableCell
                       key={name}
                       className={
-                        isFirstName || isMiddleName ? classes.stickyTHeadCell : classes.headerCell
+                        isLastName || isFirstName ? classes.stickyTHeadCell : classes.headerCell
                       }
                       style={{
-                        left: isFirstName
+                        left: isLastName
                           ? offset.secondColumn
-                          : isMiddleName
+                          : isFirstName
                             ? offset.thirdColumn
                             : 'unset',
                       }}
                       width={
-                        isFirstName || isMiddleName
+                        // Fixed widths for sticky columns within the map
+                        isLastName || isFirstName
                           ? 150
-                          : name === 'Year'
+                          : // Special widths for other columns
+                            name === 'Year'
                             ? 60
                             : name === 'Address'
                               ? 225
-                              : name === 'State' || name === 'ZIP'
+                              : name === 'State' || name === 'ZIP' // Add State and ZIP check
                                 ? 70
-                                : index > 0 && index < 7
+                                : // Default width for other common columns (adjust range if needed)
+                                  index > 0 && index < 7
                                   ? 150
-                                  : 'auto'
+                                  : // Fallback width
+                                    'auto'
                       }
                     >
                       {order ? (
@@ -772,9 +777,9 @@ const CustomerSearchTable: React.FC<
                       </IconsBlock>
                     )}
                   </TableCell>
-                  {orderedColumns.find(el => el.name === 'First Name') ? (
+                  {orderedColumns.find(el => el.name === 'Last Name') ? (
                     <TableCell
-                      key="first"
+                      key="last"
                       className={classes.stickyLeftCell}
                       width={150}
                       style={{
@@ -785,15 +790,15 @@ const CustomerSearchTable: React.FC<
                       <CustomerInputField
                         editingElement={editingElement}
                         customer={customer}
-                        fieldName="firstName"
+                        fieldName="lastName"
                         isEdit={isEdit}
                         onFieldChange={onFieldChange}
                       />
                     </TableCell>
                   ) : null}
-                  {orderedColumns.find(el => el.name === 'Middle Name') ? (
+                  {orderedColumns.find(el => el.name === 'First Name') ? (
                     <TableCell
-                      key="middle"
+                      key="first"
                       className={classes.stickyLeftCell}
                       width={150}
                       style={{
@@ -804,39 +809,7 @@ const CustomerSearchTable: React.FC<
                       <CustomerInputField
                         editingElement={editingElement}
                         customer={customer}
-                        fieldName="middleName"
-                        isEdit={isEdit}
-                        onFieldChange={onFieldChange}
-                      />
-                    </TableCell>
-                  ) : null}
-                  {orderedColumns.find(el => el.name === 'Last Name') ? (
-                    <TableCell
-                      key="last"
-                      className={classes.bodyCell}
-                      width={150}
-                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                    >
-                      <CustomerInputField
-                        editingElement={editingElement}
-                        customer={customer}
-                        fieldName="lastName"
-                        isEdit={isEdit}
-                        onFieldChange={onFieldChange}
-                      />
-                    </TableCell>
-                  ) : null}
-                  {orderedColumns.find(el => el.name === 'Company Name') ? (
-                    <TableCell
-                      key="companyName"
-                      className={classes.bodyCell}
-                      width={150}
-                      style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
-                    >
-                      <CustomerInputField
-                        editingElement={editingElement}
-                        customer={customer}
-                        fieldName="companyName"
+                        fieldName="firstName"
                         isEdit={isEdit}
                         onFieldChange={onFieldChange}
                       />
@@ -852,19 +825,19 @@ const CustomerSearchTable: React.FC<
                       {customer.model ?? ''}
                     </TableCell>
                   ) : null}
-                  {orderedColumns.find(el => el.name === 'Year') ? (
-                    <TableCell key="year" className={classes.bodyCell} width={60}>
-                      {customer.year ?? ''}
-                    </TableCell>
-                  ) : null}
                   {orderedColumns.find(el => el.name === 'VIN') ? (
                     <TableCell key="vin" className={classes.bodyCell}>
                       {customer.vin ?? ''}
                     </TableCell>
                   ) : null}
-                  {orderedColumns.find(el => el.name === 'Cell') ? (
+                  {orderedColumns.find(el => el.name === 'Year') ? (
+                    <TableCell key="year" className={classes.bodyCell} width={60}>
+                      {customer.year ?? ''}
+                    </TableCell>
+                  ) : null}
+                  {orderedColumns.find(el => el.name === 'Company Name') ? (
                     <TableCell
-                      key="cell"
+                      key="companyName"
                       className={classes.bodyCell}
                       width={150}
                       style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
@@ -872,7 +845,7 @@ const CustomerSearchTable: React.FC<
                       <CustomerInputField
                         editingElement={editingElement}
                         customer={customer}
-                        fieldName="cellPhone"
+                        fieldName="companyName"
                         isEdit={isEdit}
                         onFieldChange={onFieldChange}
                       />
@@ -894,9 +867,9 @@ const CustomerSearchTable: React.FC<
                       />
                     </TableCell>
                   ) : null}
-                  {orderedColumns.find(el => el.name === 'Work') ? (
+                  {orderedColumns.find(el => el.name === 'Cell') ? (
                     <TableCell
-                      key="work"
+                      key="cell"
                       className={classes.bodyCell}
                       width={150}
                       style={{ padding: getIsEdit(customer) ? '12px 0px' : '12px 8px' }}
@@ -904,7 +877,7 @@ const CustomerSearchTable: React.FC<
                       <CustomerInputField
                         editingElement={editingElement}
                         customer={customer}
-                        fieldName="workPhone"
+                        fieldName="cellPhone"
                         isEdit={isEdit}
                         onFieldChange={onFieldChange}
                       />

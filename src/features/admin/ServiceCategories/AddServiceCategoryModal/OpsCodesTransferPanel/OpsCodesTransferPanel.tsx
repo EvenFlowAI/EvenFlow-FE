@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Divider } from '@mui/material';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { CategoryFormState } from '../types';
 import { useStyles } from './styles';
 import { AvailableOpCodeRow } from './AvailableOpCodeRow';
 import { SelectedOpCodeContent } from './SelectedOpCodeContent';
+import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 
 type TOpsCodesTransferPanelProps = {
   disabled: boolean;
@@ -112,6 +113,11 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     () => allAssignedList.filter(item => !selectedIdSet.has(item.id)),
     [allAssignedList, selectedIdSet]
   );
+
+  useEffect(() => {
+    const availableIdSet = new Set(availableCodes.map(item => item.id));
+    setPendingIds(prev => prev.filter(id => availableIdSet.has(id)));
+  }, [availableCodes]);
 
   const filteredAvailableCodes = useMemo(
     () => availableCodes.filter(item => bySearchTerm(item, availableSearchTerm)),
@@ -244,7 +250,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     <div className={classes.columns}>
       <div className={classes.column}>
         <div className={classes.titleRow}>
-          <span className={classes.title}>Add Op Codes</span>
+          <span className={classes.title}>Add Op Codes ({pendingIds.length})</span>
           <Button
             variant="contained"
             color="primary"
@@ -296,7 +302,8 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
       <div className={classes.column}>
         <div className={classes.titleRowRight}>
           <span className={classes.title}>Selected ({selectedCodes.length})</span>
-          {categoryHasCodesOrder && (
+          {(form.categoryType?.value === EServiceCategoryType.IndividualServices ||
+            form.categoryType?.value === EServiceCategoryType.Diagnose) && (
             <span className={classes.helperText}>Use drag and drop to reorder</span>
           )}
         </div>
