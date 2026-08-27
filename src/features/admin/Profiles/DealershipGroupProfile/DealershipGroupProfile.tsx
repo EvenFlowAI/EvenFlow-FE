@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { Button, Divider, Grid, useMediaQuery, useTheme } from '@mui/material';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
 import { AvatarUpload } from '../../../../components/formControls/AvatarUpload/AvatarUpload';
@@ -68,7 +68,7 @@ export const DealershipGroupProfile = () => {
     setForm({ ...form, address: { ...form.address, [e.target.name]: e.target.value } });
   };
 
-  const handleSelectState = (e: React.ChangeEvent<{}>, val: string | null) => {
+  const handleSelectState = (e: SyntheticEvent, val: string | null) => {
     setForm({ ...form, address: { ...form.address, state: val || '' } });
   };
 

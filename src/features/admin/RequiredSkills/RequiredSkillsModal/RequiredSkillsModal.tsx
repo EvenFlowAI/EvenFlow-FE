@@ -30,7 +30,7 @@ const initialForm: TForm = {
 
 export const RequiredSkillsModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAssignedServiceRequest>>>
-> = ({ onAction, payload, ...props }) => {
+> = ({ payload, ...props }) => {
   const [form, setForm] = useState<TForm>(initialForm);
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();

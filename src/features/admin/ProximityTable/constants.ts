@@ -1,7 +1,7 @@
 import { SliderRange, TForm, TProximity, TRow } from './types';
 import { EProximityType } from '../../../store/reducers/slotScoring/types';
 
-export const blankSlider: TProximity = { point: SliderRange.Default };
+export const blankSlider: TProximity = { point: SliderRange.Min };
 
 export const initialForm: TForm = {
   [EProximityType.Closest]: { ...blankSlider },

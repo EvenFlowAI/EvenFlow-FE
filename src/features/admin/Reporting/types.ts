@@ -4,5 +4,5 @@ export interface IEndUserConfig {
   domain: string;
   qv_token?: string;
   dashboard_id?: string;
-  styles?: {};
+  styles?: object;
 }
