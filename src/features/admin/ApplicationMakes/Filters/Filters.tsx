@@ -53,6 +53,11 @@ const Filters: React.FC<TProps> = ({
             }
           )
         }
+        sx={{
+          '& .MuiAutocomplete-inputRoot': {
+            flexWrap: 'nowrap',
+          },
+        }}
         onChange={onMakesChange}
         renderInput={autocompleteRender({
           label: 'Makes',
