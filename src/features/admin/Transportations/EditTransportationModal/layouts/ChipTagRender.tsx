@@ -171,7 +171,7 @@ export const renderChipTagsWithoutOptionObject = (
   selectedValues: string[],
   getTagProps: AutocompleteRenderGetTagProps,
   containerWidth = 350,
-  handleDelete: (tag: string) => void
+  handleDelete?: (tag: string) => void
 ) => {
   const sortedValues = [...selectedValues].sort((a, b) => {
     return (dayOrder[a] ?? 999) - (dayOrder[b] ?? 999);
@@ -195,12 +195,13 @@ export const renderChipTagsWithoutOptionObject = (
       >
         {visibleTags.map((option, tagIndex) => {
           const props = getTagProps({ index: tagIndex });
+          const { onDelete, ...restProps } = props;
           return (
             <Chip
               label={option}
-              {...props}
+              {...restProps}
               key={option}
-              onDelete={() => handleDelete(option)}
+              onDelete={handleDelete ? () => handleDelete(option) : onDelete}
               size="medium"
               color="primary"
               variant="filled"

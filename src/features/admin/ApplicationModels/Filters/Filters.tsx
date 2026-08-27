@@ -77,10 +77,7 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
             getTagProps,
-            400,
-            option => {
-              return option;
-            }
+            400
           )
         }
         renderInput={autocompleteRender({
@@ -108,10 +105,7 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinModel),
             getTagProps,
-            400,
-            option => {
-              return option;
-            }
+            400
           )
         }
         renderInput={autocompleteRender({
