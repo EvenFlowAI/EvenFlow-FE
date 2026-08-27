@@ -19,7 +19,7 @@ import { useException } from '../../../../hooks/useException/useException';
 
 export const PriceLevelsModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IPricingLevel>>>
-> = ({ onAction, payload, ...props }) => {
+> = ({ payload, ...props }) => {
   const [priceSetting, setSetting] = useState<string>('100');
   const [saving, setSaving] = useState<boolean>(false);
   const dispatch = useDispatch();

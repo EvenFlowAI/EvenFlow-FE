@@ -65,7 +65,8 @@ export const ProximityTable = () => {
   const handleEdit = (el: EProximityType) => () => {
     setEdit(el);
   };
-  const handleSlide = (_: any, val: number | number[]) => {
+
+  const handleSlide = (_: Event, val: number | number[]) => {
     if (edit !== null) {
       setForm({ ...form, [edit]: { point: val as number } });
     }

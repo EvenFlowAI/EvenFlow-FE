@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Grid, useMediaQuery, useTheme } from '@mui/material';
-import { AvatarUpload } from '../../../../components/formControls/AvatarUpload/AvatarUpload';
-import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { saveEmployeeAvatar, updateUser } from '../../../../store/reducers/users/actions';
 import { validatePhoneNumber } from '../../../../utils/utils';
 import { useStyles } from './styles';
 import { TForm, TPasswordForm } from './types';
-import { LoadingButton } from '../../../../components/buttons/LoadingButton/LoadingButton';
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
 import { Api } from '../../../../api/ApiEndpoints/ApiEndpoints';
 import { blankProfile, initialPasswordForm } from './constants';
 import { Roles } from '../../../../types/types';
+import { DealerOwnerProfileSection } from './DealerOwnerProfileSection';
+import { PasswordSection } from './PasswordSection';
 
 export const UserProfile = () => {
   const [saving, setSaving] = useState<boolean>(false);
@@ -119,197 +118,38 @@ export const UserProfile = () => {
 
   return (
     <div className={classes.container}>
-      {currentUser?.role === Roles.DealerOwner ? (
-        <React.Fragment>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={12} md={3}>
-              <div className={classes.avatarContainer}>
-                <AvatarUpload onChange={handleChangeAvatar} dataUrl={currentUser.avatarPath} />
-                <span className={classes.title}>{currentUser.fullName}</span>
-              </div>
-            </Grid>
-            <Grid item xs={1} hidden={isSM} />
-            <Grid item xs={12} sm={6} md={2}>
-              <TextField
-                fullWidth
-                label="Role"
-                name="role"
-                id="role"
-                disabled
-                value={currentUser.role}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                id="email"
-                disabled
-                value={currentUser.email}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={3} className={classes.editButtonContainer}>
-              {!isEdit ? (
-                <Button
-                  className={classes.centerButton}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setEdit(true)}
-                >
-                  Edit
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    style={{ marginRight: 10 }}
-                    className={classes.centerButton}
-                    color="info"
-                    onClick={handleCancel}
-                  >
-                    Cancel
-                  </Button>
-                  <LoadingButton
-                    fullWidth={false}
-                    loading={saving}
-                    className={classes.centerButton}
-                    color="primary"
-                    onClick={handleSave}
-                    variant="contained"
-                  >
-                    Save
-                  </LoadingButton>
-                </>
-              )}
-            </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                label="First name"
-                name="firstName"
-                id="firstName"
-                disabled={!isEdit}
-                value={form.firstName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={1} hidden={isSM} />
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastName"
-                id="lastName"
-                disabled={!isEdit}
-                value={form.lastName}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                label="Phone number"
-                name="phoneNumber"
-                id="phoneNumber"
-                disabled={!isEdit}
-                value={form.phoneNumber}
-                onChange={handleChange}
-              />
-            </Grid>
-          </Grid>
-          <Divider className={classes.divider} />
-        </React.Fragment>
+      {currentUser.role === Roles.DealerOwner ? (
+        <DealerOwnerProfileSection
+          currentUser={currentUser}
+          isSM={isSM}
+          isEdit={isEdit}
+          saving={saving}
+          form={form}
+          avatarContainerClassName={classes.avatarContainer}
+          titleClassName={classes.title}
+          editButtonContainerClassName={classes.editButtonContainer}
+          centerButtonClassName={classes.centerButton}
+          dividerClassName={classes.divider}
+          onStartEdit={() => setEdit(true)}
+          onCancelEdit={handleCancel}
+          onSave={handleSave}
+          onChange={handleChange}
+          onChangeAvatar={handleChangeAvatar}
+        />
       ) : null}
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={12} md={4}>
-          {!isEditPassword ? (
-            <TextField
-              disabled
-              value="12345678"
-              name="oldPasswordB"
-              type="password"
-              id="oldPasswordB"
-              label="Current Password"
-              fullWidth
-            />
-          ) : (
-            <TextField
-              label="Current Password"
-              fullWidth
-              value={passwordForm.oldPassword}
-              type="password"
-              id="oldPassword"
-              name="oldPassword"
-              onChange={handlePasswordChange}
-            />
-          )}
-        </Grid>
-        <Grid item xs={1} hidden={isSM} />
-        <Grid item xs={12} sm={12} md={7} className={classes.editButtonContainer}>
-          {!isEditPassword ? (
-            <Button
-              color="primary"
-              className={classes.centerButton}
-              onClick={() => setEditPassword(true)}
-              variant="contained"
-            >
-              Change Password
-            </Button>
-          ) : (
-            <>
-              <Button
-                style={{ marginRight: 10 }}
-                className={classes.centerButton}
-                color="info"
-                onClick={cancelPasswordEdit}
-              >
-                Cancel
-              </Button>
-              <LoadingButton
-                fullWidth={false}
-                className={classes.centerButton}
-                color="primary"
-                variant="contained"
-                onClick={handlePasswordSave}
-                loading={saving}
-              >
-                Save
-              </LoadingButton>
-            </>
-          )}
-        </Grid>
-        {isEditPassword ? (
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="New Password"
-              fullWidth
-              value={passwordForm.newPassword}
-              type="password"
-              id="newPassword"
-              name="newPassword"
-              onChange={handlePasswordChange}
-            />
-          </Grid>
-        ) : null}
-        <Grid item xs={1} hidden={isSM} />
-        {isEditPassword ? (
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="Repeat Password"
-              fullWidth
-              value={passwordForm.repeatPassword}
-              type="password"
-              id="repeatPassword"
-              name="repeatPassword"
-              onChange={handlePasswordChange}
-            />
-          </Grid>
-        ) : null}
-      </Grid>
+      <PasswordSection
+        isSM={isSM}
+        isEditPassword={isEditPassword}
+        saving={saving}
+        passwordForm={passwordForm}
+        editButtonContainerClassName={classes.editButtonContainer}
+        centerButtonClassName={classes.centerButton}
+        onStartEditPassword={() => setEditPassword(true)}
+        onCancelEditPassword={cancelPasswordEdit}
+        onSavePassword={handlePasswordSave}
+        onPasswordChange={handlePasswordChange}
+      />
     </div>
   );
 };

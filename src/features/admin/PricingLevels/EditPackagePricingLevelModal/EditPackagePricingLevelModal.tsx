@@ -16,6 +16,51 @@ import { useEditPricingLevelStyles } from '../styles';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
+const valuePattern = /(^\d*\.?\d{1,3}?)$/;
+
+const getPricingLevelValidationError = (discount: string, premium: string): string | null => {
+  if (discount && (+discount > 100 || +discount <= 0)) {
+    return '"Discount" must be more than 0 and less than 100';
+  }
+
+  if (premium && (+premium > 200 || +premium < 100)) {
+    return '"Premium" must be between 100 and 200';
+  }
+
+  if ((discount && !discount.match(valuePattern)) || (premium && !premium.match(valuePattern))) {
+    return 'Value must be a number with maximum 3 decimal digits';
+  }
+
+  return null;
+};
+
+const buildUpdatedSettings = (
+  serviceCenterId: number,
+  discount: string,
+  premium: string
+): TUpdatedSettings => {
+  const data: TUpdatedSettings = {
+    serviceCenterId,
+    values: [],
+  };
+
+  if (discount) {
+    data.values.push({
+      demandCategory: EDemandCategory.Low,
+      value: Number(discount),
+    });
+  }
+
+  if (premium) {
+    data.values.push({
+      demandCategory: EDemandCategory.High,
+      value: Number(premium),
+    });
+  }
+
+  return data;
+};
+
 type TEditPricingLevelsProps = DialogProps & {
   prisingLevel: TPackagePricingLevel | null;
 };
@@ -33,8 +78,8 @@ const EditPackagePricingLevelModal: React.FC<
 
   useEffect(() => {
     if (prisingLevel && props.open) {
-      prisingLevel?.premium && setPremium(prisingLevel.premium);
-      prisingLevel?.discount && setDiscount(prisingLevel.discount);
+      if (prisingLevel?.premium) setPremium(prisingLevel.premium);
+      if (prisingLevel?.discount) setDiscount(prisingLevel.discount);
     }
   }, [prisingLevel, props.open]);
 
@@ -43,44 +88,27 @@ const EditPackagePricingLevelModal: React.FC<
     setDiscount('');
     setPremium('');
     props.onClose();
-  }, []);
+  }, [props.onClose]);
 
   const onSave = useCallback(() => {
     setFormIsChecked(true);
-    if (discount && (+discount > 100 || +discount <= 0)) {
-      return showError('"Discount" must be more than 0 and less than 100');
+
+    const validationError = getPricingLevelValidationError(discount, premium);
+    if (validationError) {
+      showError(validationError);
+      return;
     }
-    if (premium && (+premium > 200 || +premium < 100)) {
-      return showError('"Premium" must be between 100 and 200');
+
+    if (!prisingLevel || !selectedSC) {
+      return;
     }
-    if (
-      (discount && !discount.match(/(^\d*\.?\d{1,3}?)$/)) ||
-      (premium && !premium.match(/(^\d*\.?\d{1,3}?)$/))
-    ) {
-      return showError('Value must be a number with maximum 3 decimal digits');
-    }
-    if (prisingLevel && selectedSC) {
-      const data: TUpdatedSettings = {
-        serviceCenterId: selectedSC.id,
-        values: [],
-      };
-      if (discount) {
-        data.values.push({
-          demandCategory: EDemandCategory.Low,
-          value: Number(discount),
-        });
-      }
-      if (premium) {
-        data.values.push({
-          demandCategory: EDemandCategory.High,
-          value: Number(premium),
-        });
-      }
-      try {
-        dispatch(updateMPPricingLevels(prisingLevel.maintenancePackageOptionId, data, onCancel));
-      } catch (e) {
-        showError(e);
-      }
+
+    const data = buildUpdatedSettings(selectedSC.id, discount, premium);
+
+    try {
+      dispatch(updateMPPricingLevels(prisingLevel.maintenancePackageOptionId, data, onCancel));
+    } catch (e) {
+      showError(e);
     }
   }, [prisingLevel, onCancel, premium, discount, selectedSC]);
 

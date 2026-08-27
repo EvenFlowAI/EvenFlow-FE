@@ -35,7 +35,7 @@ const RemindersModal: React.FC<
     setRemindersOn(reminders);
   }, [reminders]);
 
-  const handleSwitch = (e: any, value: boolean) => {
+  const handleSwitch = (e: React.ChangeEvent<HTMLInputElement>, value: boolean) => {
     setRemindersOn(value);
   };
 

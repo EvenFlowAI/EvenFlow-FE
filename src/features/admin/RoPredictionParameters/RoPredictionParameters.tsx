@@ -50,9 +50,11 @@ const RoPredictionParameters = () => {
 
   useEffect(() => {
     if (selectedSC) {
-      selectedPod
-        ? dispatch(loadPredictionParams(selectedSC.id, selectedPod.id))
-        : dispatch(loadPredictionParams(selectedSC.id));
+      if (selectedPod) {
+        dispatch(loadPredictionParams(selectedSC.id, selectedPod.id));
+      } else {
+        dispatch(loadPredictionParams(selectedSC.id));
+      }
     }
   }, [selectedSC, selectedPod]);
 

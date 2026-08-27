@@ -8,7 +8,7 @@ export type TStyleProps = {
 
 export const Background = styled('div', {
   shouldForwardProp: prop => prop !== 't',
-})<TStyleProps>(({ theme, t }) => ({
+})<TStyleProps>(({ t }) => ({
   position: 'absolute',
   top: 0,
   left: '20%',
@@ -24,7 +24,7 @@ export const Background = styled('div', {
 
 export const Label = styled('span', {
   shouldForwardProp: prop => prop !== 't',
-})<TStyleProps>(({ theme, t }) => ({
+})<TStyleProps>(({ t }) => ({
   paddingRight: '50%',
   fontSize: t === EOfferType.FreeService ? 18 : 32,
   fontWeight: 'bold',
