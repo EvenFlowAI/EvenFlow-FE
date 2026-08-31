@@ -31,7 +31,7 @@ From `package.json` scripts:
 
 ## Environment/CI Notes
 
-- `buildspec.yml` uses Node.js `24.13.1` in install phase.
+- `buildspec.yml` uses Node.js `20.19.0` in install phase.
 - CI pre-build appends `REACT_APP_ENV` to `.env` and runs `yarn install`.
 - CI build uses `yarn run build`.
 - Build artifacts include `build/**/*`, `deploy-scripts/*`, and `appspec.yml`.
