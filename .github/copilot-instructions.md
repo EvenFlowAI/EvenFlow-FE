@@ -201,7 +201,7 @@ From repository scripts/config:
 
 CI/CD notes:
 
-- `buildspec.yml` uses Node.js `20.19.0`, installs via yarn, and builds with `yarn run build`.
+- `buildspec.yml` uses Node.js `24.13.1`, installs via yarn, and builds with `yarn run build`.
 - `appspec.yml` deploys `build` output to `/home/ubuntu/evenflow/client`.
 
 ## Reference Docs
