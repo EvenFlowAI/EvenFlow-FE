@@ -7,6 +7,4 @@ scripts/
 .eslintrc.js
 
 
-src/api
-src/hooks
 src/features/booking

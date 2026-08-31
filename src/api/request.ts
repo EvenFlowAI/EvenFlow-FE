@@ -84,6 +84,7 @@ request.interceptors.response.use(
         rq.headers['Authorization'] = `Bearer ${authService.getLocalToken()}`;
         return request(rq);
       } catch (e) {
+        console.error(e);
         return Promise.reject(error);
       }
     }

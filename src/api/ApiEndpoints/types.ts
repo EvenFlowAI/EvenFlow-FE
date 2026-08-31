@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 export type TApiEndpoint = {
   route: string;
   method: 'get' | 'delete' | 'options' | 'post' | 'put' | 'patch';

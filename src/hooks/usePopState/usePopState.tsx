@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { setWelcomeScreenView } from '../../store/reducers/appointmentFrameReducer/actions';
 import { decodeSCID } from '../../utils/utils';
 import { useParams } from 'react-router-dom';
@@ -13,7 +13,7 @@ const usePopState = (screen: TView, onPopState?: TCallback, keepListener?: boole
 
   const listenToPopState = () => {
     dispatch(setWelcomeScreenView(screen));
-    onPopState && onPopState();
+    if (onPopState) onPopState();
   };
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const usePopState = (screen: TView, onPopState?: TCallback, keepListener?: boole
     }
     window.addEventListener('popstate', listenToPopState);
     return () => {
-      keepListener && window.removeEventListener('popstate', listenToPopState);
+      if (keepListener) window.removeEventListener('popstate', listenToPopState);
     };
   }, [id, scProfile]);
 };
