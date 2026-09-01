@@ -169,6 +169,7 @@ const YourLocation: React.FC<
     setZip('');
     dispatch(setZipCode(''));
     if (e?.value?.place_id && e?.label) {
+      console.log('event_data: ', e);
       geocodeByPlaceId(e.value.place_id).then(res => {
         const data = parseGeoCode(
           res[0].address_components,
@@ -176,6 +177,7 @@ const YourLocation: React.FC<
           e.value?.structured_formatting?.main_text,
           e.value?.structured_formatting?.secondary_text
         );
+        console.log('geocoded_data_from_google: ', data);
         if (data.city) dispatch(setCity(data.city));
         if (data.state) dispatch(setPoliticalState(data.state));
         if (data.address) dispatch(setStreetName(data.address));
