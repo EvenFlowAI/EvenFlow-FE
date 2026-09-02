@@ -109,15 +109,17 @@ const YourLocation: React.FC<
     serviceType === EServiceType.MobileService ? t('Mobile Service') : t('Pick Up / Drop Off');
 
   useEffect(() => {
-    if (!zip && zipCodeValue) {
-      setZip(zipCodeValue);
-    }
-
     // for cleaning zipCode if user clicks 'Try another location'
     if (!zipCodeValue) {
       setZip('');
     }
   }, [zipCodeValue]);
+
+  useEffect(() => {
+    if (!zip && zipCodeValue) {
+      setZip(zipCodeValue);
+    }
+  }, []);
 
   useEffect(() => {
     if (customerLoadedData?.address && !address) {
@@ -161,8 +163,8 @@ const YourLocation: React.FC<
     if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
     setFormChecked(false);
     dispatch(setAddress(e ?? null));
-    dispatch(setZipCode(''));
     setZip('');
+    dispatch(setZipCode(''));
     if (e?.value?.place_id && e?.label) {
       geocodeByPlaceId(e.value.place_id).then(res => {
         const data = parseGeoCode(
@@ -341,6 +343,8 @@ const YourLocation: React.FC<
   const handleAddressFocus = () => {
     setFormChecked(false);
     dispatch(setAddress(null));
+    dispatch(setZipCode(''));
+    setZip('');
   };
 
   return (
