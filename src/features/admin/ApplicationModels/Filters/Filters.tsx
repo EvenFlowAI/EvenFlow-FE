@@ -62,9 +62,10 @@ const Filters: React.FC<TProps> = ({
         multiple
         classes={classes}
         value={selectedMakes}
-        disabled={disabled || isLoading}
+        disabled={disabled}
         options={allMakesOptions}
         renderOption={renderMakeOption}
+        disableCloseOnSelect
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         onChange={onMakesChange}
@@ -90,10 +91,11 @@ const Filters: React.FC<TProps> = ({
       />
       <Autocomplete
         loading={isLoading}
-        disabled={disabled || isLoading || !selectedMakes.length}
+        disabled={disabled || !selectedMakes.length}
         value={selectedModel}
         options={modelsOptions}
         multiple
+        disableCloseOnSelect
         renderOption={renderModelOption}
         classes={classes}
         sx={{
