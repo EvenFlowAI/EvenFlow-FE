@@ -41,6 +41,7 @@ export interface IServiceCenterProfile {
   maintenancePackageOptionTypes: EMaintenanceOptionType[];
   packageSource: PackageSourceType;
   emailRequirement?: TEmailRequirement;
+  integration?: number;
 }
 
 export interface ISR {

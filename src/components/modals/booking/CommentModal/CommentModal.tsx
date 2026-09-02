@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BaseModal, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
 import { DialogProps } from '../../BaseModal/types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { TextFieldWhite } from '../../../styled/EndUserInputs';
 import { useException } from '../../../../hooks/useException/useException';
@@ -11,7 +11,15 @@ import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
 import { CharactersWrapper } from './styles';
 import { setCommentsForCategories } from '../../../../store/reducers/appointmentFrameReducer/actions';
+import { RootState } from '../../../../store/rootReducer';
+import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 const MAX_COUNT_WORDS_CAPACITY = 250;
+
+const filterAscii = (value: string): string =>
+  value
+    .split('')
+    .filter(character => character.charCodeAt(0) <= 127)
+    .join('');
 
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
@@ -20,6 +28,10 @@ const CommentModal: React.FC<
   const [selectedRequestState, setSelectedRequestState] = useState(selectedRequest);
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const { scProfile } = useSelector((state: RootState) => state.appointment);
+  const isFortellisIntegration =
+    (scProfile as { integration?: number } | undefined)?.integration ===
+    SystemIntegrationType.Fortellis;
   const showError = useException();
 
   useEffect(() => {
@@ -37,13 +49,16 @@ const CommentModal: React.FC<
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    if (value.length > MAX_COUNT_WORDS_CAPACITY) {
+    // ASCII-only validation must apply only for Fortellis integration.
+    const nextValue = isFortellisIntegration ? filterAscii(value) : value;
+
+    if (nextValue.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
-    if (/\s{2,}$/.test(value)) {
+    if (/\s{2,}$/.test(nextValue)) {
       return;
     }
-    setText(value);
+    setText(nextValue);
   };
 
   const onSave = () => {
