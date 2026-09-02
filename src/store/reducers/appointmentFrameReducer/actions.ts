@@ -1164,8 +1164,9 @@ export const createOrUpdateAppointment =
         : null;
 
     const slot =
-      appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
-      appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery
+      appointmentFrame?.serviceTypeOption?.type !== EServiceType.VisitCenter &&
+      (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
+        appointmentFrame?.transportation?.type === ETransportationType.PickUpDelivery)
         ? '00:00:00'
         : appointment.appointment?.id
           ? appointment.appointment?.id.split('|')[1]

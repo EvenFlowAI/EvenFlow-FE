@@ -63,7 +63,10 @@ export const AddMakeModelModal: React.FC<
 
   useEffect(() => {
     if (currentMake) {
-      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+      if (
+        selectedSC?.integration === SystemIntegrationType.Fortellis ||
+        selectedSC?.integration === SystemIntegrationType.XTime
+      ) {
         if (currentMake.makeCode) {
           dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
         } else {
@@ -111,7 +114,10 @@ export const AddMakeModelModal: React.FC<
     .filter(model => !configuredModels.some(configured => configured.id === model.globalId));
 
   const handleSaveMakes = () => {
-    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC?.integration === SystemIntegrationType.Fortellis ||
+      selectedSC?.integration === SystemIntegrationType.XTime
+    ) {
       onOpenConfigurationModal();
     } else {
       onSaveMakes();
@@ -119,7 +125,10 @@ export const AddMakeModelModal: React.FC<
   };
 
   const handleSaveModels = () => {
-    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC?.integration === SystemIntegrationType.Fortellis ||
+      selectedSC?.integration === SystemIntegrationType.XTime
+    ) {
       onOpenModelConfigurationModal();
     } else {
       onSaveModels();
@@ -130,7 +139,10 @@ export const AddMakeModelModal: React.FC<
     const makeCodes = Object.fromEntries(configuredMakes.map(m => [m.id, m.code!]));
 
     if (globalIds.length && selectedSC) {
-      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+      if (
+        selectedSC?.integration === SystemIntegrationType.Fortellis ||
+        selectedSC?.integration === SystemIntegrationType.XTime
+      ) {
         dispatch(
           createMake(
             {
@@ -196,7 +208,10 @@ export const AddMakeModelModal: React.FC<
 
   const saveModels = () => {
     if (selectedSC && currentMake) {
-      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+      if (
+        selectedSC?.integration === SystemIntegrationType.Fortellis ||
+        selectedSC?.integration === SystemIntegrationType.XTime
+      ) {
         const modelCodes: Record<string, string> = Object.fromEntries(
           configuredModels.map(model => {
             const found = makeModelCodes.find(mm => mm.modelCode === model.code);
@@ -274,7 +289,8 @@ export const AddMakeModelModal: React.FC<
                   <br />
                   order that is presented in the drop-down menu on the booking flow
                 </p>
-                {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
+                {selectedSC?.integration === SystemIntegrationType.Fortellis ||
+                selectedSC?.integration === SystemIntegrationType.XTime ? (
                   <p style={{ margin: 0 }}>
                     Click <span style={{ fontWeight: 'bold' }}>Next</span> to configure the
                     corresponding{' '}
@@ -311,7 +327,10 @@ export const AddMakeModelModal: React.FC<
             onClick={() => (isEditing ? handleSaveModels() : handleSaveMakes())}
             className={classes.saveButton}
           >
-            {selectedSC?.integration === SystemIntegrationType.Fortellis ? 'Next' : 'Save'}
+            {selectedSC?.integration === SystemIntegrationType.Fortellis ||
+            selectedSC?.integration === SystemIntegrationType.XTime
+              ? 'Next'
+              : 'Save'}
           </Button>
         </div>
       </DialogActions>
