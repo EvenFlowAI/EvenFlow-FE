@@ -43,6 +43,7 @@ import { useDebounce } from '../../../../../hooks/useDebounce/useDebounce';
 import { useException } from '../../../../../hooks/useException/useException';
 import { ReactComponent as MessageIcon } from '../../../../../assets/img/comment_icon.svg';
 import { ReactComponent as MessageIconFilled } from '../../../../../assets/img/comment_icon_filled.svg';
+import { SystemIntegrationType } from '../../../../../store/reducers/serviceCenters/types';
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -52,6 +53,12 @@ type TProps = {
 };
 
 const MAX_COUNT_WORDS_CAPACITY = 250;
+
+const filterAscii = (value: string): string =>
+  value
+    .split('')
+    .filter(character => character.charCodeAt(0) <= 127)
+    .join('');
 
 const MessageIconComponent = ({ filled }: { filled: boolean }) =>
   filled ? <MessageIconFilled /> : <MessageIcon />;
@@ -65,7 +72,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const { selectedSR, serviceRequests, search, scProfile, selectedSRComments } = useSelector(
     ({ appointment }: RootState) => appointment
   );
-  const { subService, service, serviceCategories, trackerData } = useSelector(
+  const { subService, service, serviceCategories } = useSelector(
     ({ appointmentFrame }: RootState) => appointmentFrame
   );
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
@@ -74,6 +81,9 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const [searchInput, setSearch] = useState<string>('');
   const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
   const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
+  const isFortellisIntegration =
+    (scProfile as { integration?: number } | undefined)?.integration ===
+    SystemIntegrationType.Fortellis;
 
   const dispatch = useDispatch();
   const isInit = useRef(true);
@@ -306,12 +316,15 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleCommentChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > MAX_COUNT_WORDS_CAPACITY) {
+    // ASCII-only validation must apply only for Fortellis integration.
+    const nextValue = isFortellisIntegration ? filterAscii(e.target.value) : e.target.value;
+
+    if (nextValue.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
     setCommentText(prev => ({
       ...prev,
-      [id]: e.target.value,
+      [id]: nextValue,
     }));
   };
 
