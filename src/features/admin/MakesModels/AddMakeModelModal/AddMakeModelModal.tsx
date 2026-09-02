@@ -53,7 +53,8 @@ export const AddMakeModelModal: React.FC<
                   <br />
                   order that is presented in the drop-down menu on the booking flow
                 </p>
-                {state.selectedSC?.integration === SystemIntegrationType.Fortellis || state.selectedSC?.integration === SystemIntegrationType.XTime ? (
+                {state.selectedSC?.integration === SystemIntegrationType.Fortellis ||
+                state.selectedSC?.integration === SystemIntegrationType.XTime ? (
                   <p style={{ margin: 0 }}>
                     Click <span style={{ fontWeight: 'bold' }}>Next</span> to configure the
                     corresponding{' '}
@@ -90,7 +91,10 @@ export const AddMakeModelModal: React.FC<
             onClick={() => (isEditing ? state.handleSaveModels() : state.handleSaveMakes())}
             className={classes.saveButton}
           >
-            {state.selectedSC?.integration === SystemIntegrationType.Fortellis || state.selectedSC?.integration === SystemIntegrationType.XTime ? 'Next' : 'Save'}
+            {state.selectedSC?.integration === SystemIntegrationType.Fortellis ||
+            state.selectedSC?.integration === SystemIntegrationType.XTime
+              ? 'Next'
+              : 'Save'}
           </Button>
         </div>
       </DialogActions>

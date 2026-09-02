@@ -49,7 +49,10 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
       return;
     }
 
-    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC?.integration === SystemIntegrationType.Fortellis ||
+      selectedSC?.integration === SystemIntegrationType.XTime
+    ) {
       if (currentMake.makeCode) {
         dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
       } else {
@@ -205,7 +208,10 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
   };
 
   const handleSaveMakes = () => {
-    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC?.integration === SystemIntegrationType.Fortellis ||
+      selectedSC?.integration === SystemIntegrationType.XTime
+    ) {
       onOpenConfigurationModal();
       return;
     }
@@ -214,7 +220,10 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
   };
 
   const handleSaveModels = () => {
-    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC?.integration === SystemIntegrationType.Fortellis ||
+      selectedSC?.integration === SystemIntegrationType.XTime
+    ) {
       onOpenModelConfigurationModal();
       return;
     }
