@@ -137,15 +137,17 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
     return user.id ? { ...base, id: user.id, emailConfirmed: user.emailConfirmed } : base;
   }
 
-  const handleError = (errorCode: number) => {
+  const handleError = (errorCode?: number) => {
+    if (!errorCode) {
+      setLoading(false);
+      dispatch(setTableLoading(false));
+      return;
+    }
     if (errorCode === ErrorCode.InvalidData) {
       dispatch(setDmsIdError(true));
     }
     if (errorCode === ErrorCode.EmailAlreadyTaken) {
       dispatch(setEmailError(true));
-    }
-    if (errorCode === ErrorCode.ValidationFailed) {
-      showError('Please fill in all required fields');
     }
     setLoading(false);
     dispatch(setTableLoading(false));
@@ -160,10 +162,24 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
     const mappedUser = mapUser(userForm);
 
     if (userForm.id) {
-      dispatch(updateRoleManagementUser(mappedUser as IUserAccount, onClose, handleError, avatar));
+      dispatch(
+        updateRoleManagementUser(
+          mappedUser as IUserAccount,
+          onClose,
+          handleError,
+          showError,
+          avatar
+        )
+      );
     } else {
       dispatch(
-        createRoleManagementUser(mappedUser as INewUserAccount, onClose, handleError, avatar)
+        createRoleManagementUser(
+          mappedUser as INewUserAccount,
+          onClose,
+          handleError,
+          showError,
+          avatar
+        )
       );
     }
   };
