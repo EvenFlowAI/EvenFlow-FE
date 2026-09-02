@@ -14,7 +14,7 @@ export const DescriptionWithTooltip: React.FC<TDescriptionWithTooltipProps> = ({
   className,
   maxLength = DEFAULT_MAX_TEXT_LENGTH,
 }) => {
-  const shouldTruncate = text.length > maxLength;
+  const shouldTruncate = text?.length > maxLength;
   const shortText = shouldTruncate ? `${text.slice(0, maxLength)}...` : text;
 
   if (!shouldTruncate) {

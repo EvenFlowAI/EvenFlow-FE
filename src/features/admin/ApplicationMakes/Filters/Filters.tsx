@@ -42,7 +42,6 @@ const Filters: React.FC<TProps> = ({
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         disableCloseOnSelect
-        disableClearable
         renderTags={(selected, getTagProps) =>
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
