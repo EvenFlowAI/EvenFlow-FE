@@ -68,6 +68,11 @@ const Filters: React.FC<TProps> = ({
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         onChange={onMakesChange}
+        sx={{
+          '& .MuiAutocomplete-inputRoot': {
+            flexWrap: 'nowrap',
+          },
+        }}
         renderTags={(selected, getTagProps) =>
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
@@ -80,7 +85,7 @@ const Filters: React.FC<TProps> = ({
         }
         renderInput={autocompleteRender({
           label: 'Makes',
-          placeholder: 'Not selected',
+          placeholder: selectedMakes?.length ? '' : 'Not selected',
         })}
       />
       <Autocomplete
@@ -91,6 +96,11 @@ const Filters: React.FC<TProps> = ({
         multiple
         renderOption={renderModelOption}
         classes={classes}
+        sx={{
+          '& .MuiAutocomplete-inputRoot': {
+            flexWrap: 'nowrap',
+          },
+        }}
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinModel}
         onChange={onModelsChange}
@@ -106,7 +116,7 @@ const Filters: React.FC<TProps> = ({
         }
         renderInput={autocompleteRender({
           label: 'Models',
-          placeholder: 'Not selected',
+          placeholder: selectedModel?.length ? '' : 'Not selected',
         })}
       />
       <Autocomplete

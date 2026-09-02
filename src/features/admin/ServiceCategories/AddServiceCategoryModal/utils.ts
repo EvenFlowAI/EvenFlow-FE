@@ -117,7 +117,28 @@ export function buildCategoryData(
   setForm: React.Dispatch<React.SetStateAction<CategoryFormState>>,
   showError: (msg: string) => void
 ): TUpdateCategoryData | null {
-  if (!(form.categoryName && form.definedPage && form.categoryType && form.orderIndex)) {
+  if (!form.categoryName.trim()) {
+    showError("'Name' must not be empty.");
+    return null;
+  }
+
+  if (!form.definedPage) {
+    showError("'Defined page' must not be empty.");
+    return null;
+  }
+
+  if (!form.categoryType) {
+    showError("'Category Type' must not be empty.");
+    return null;
+  }
+
+  if (!form.orderIndex) {
+    showError("'Order Index' must not be empty.");
+    return null;
+  }
+
+  if (+form.orderIndex <= 0) {
+    showError("'Order Index' must be greater than '0'.");
     return null;
   }
 
@@ -138,13 +159,17 @@ export function buildCategoryData(
 
   if (form.categoryType.value === EServiceCategoryType.GeneralCategory) {
     if (!form.selectedCodes.length) {
-      showError('Please choose service requests for category');
+      showError("'Service Requests' must not be empty.");
       return null;
     }
     data.serviceRequests = form.selectedCodes.map(({ id }) => ({ id }));
   } else if (categoryHasCodesOrder) {
-    if (!form.selectedCodesWithOrder.length) {
-      showError('Please choose service requests for category');
+    const opCodesRequired =
+      form.categoryType?.value === EServiceCategoryType.IndividualServices ||
+      form.categoryType?.value === EServiceCategoryType.Diagnose;
+
+    if (opCodesRequired && !form.selectedCodesWithOrder.length) {
+      showError("'Service Requests' must not be empty.");
       return null;
     }
     if (form.selectedCodesWithOrder.every(el => el.orderIndex !== '')) {

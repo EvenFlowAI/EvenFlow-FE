@@ -63,6 +63,7 @@ export const ServiceCenters = {
   KiaOfAttleboro: 2605,
   FremontFordSheridan: 3298,
   NewPortCDJR: 3199,
+  FremondFordLander: 26,
 };
 
 const parentTrackersMap: Record<number, GATrackers[]> = {
@@ -144,6 +145,7 @@ const parentTrackersMap: Record<number, GATrackers[]> = {
   [ServiceCenters.KiaOfAttleboro]: [{ measurementId: 'G-MM4Y8CQ735' }],
   [ServiceCenters.FremontFordSheridan]: [{ measurementId: 'G-JDTGJQJR4V' }],
   [ServiceCenters.NewPortCDJR]: [{ measurementId: 'G-39W8BHQBH2' }],
+  [ServiceCenters.FremondFordLander]: [{ measurementId: 'G-VSQ7H51M2D' }],
 };
 
 export const getTrackersForParentSite = (id: string): GATrackers[] => {

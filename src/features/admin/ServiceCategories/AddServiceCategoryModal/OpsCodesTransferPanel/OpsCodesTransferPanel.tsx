@@ -1,17 +1,17 @@
 /* eslint-disable max-lines */
 
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
-import { Button, Divider, IconButton } from '@mui/material';
-import { DragIndicator } from '@mui/icons-material';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Divider } from '@mui/material';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { useSelector } from 'react-redux';
-import Checkbox from '../../../../../components/formControls/Checkbox/Checkbox';
 import { SearchInput } from '../../../../../components/formControls/SearchInput/SearchInput';
 import { RootState } from '../../../../../store/rootReducer';
 import { IAssignedServiceRequest } from '../../../../../store/reducers/serviceRequests/types';
 import { CategoryFormState } from '../types';
 import { useStyles } from './styles';
-import { ReactComponent as TrashBlue } from '../../../../../assets/img/trash_blue.svg';
+import { AvailableOpCodeRow } from './AvailableOpCodeRow';
+import { SelectedOpCodeContent } from './SelectedOpCodeContent';
+import { EServiceCategoryType } from '../../../../../store/reducers/categories/types';
 
 type TOpsCodesTransferPanelProps = {
   disabled: boolean;
@@ -76,7 +76,6 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     (state: RootState) => state.serviceRequests
   );
   const { classes, cx } = useStyles();
-  const classMap = classes as Record<string, string>;
 
   const [availableSearchTerm, setAvailableSearchTerm] = useState('');
   const [selectedSearchTerm, setSelectedSearchTerm] = useState('');
@@ -114,6 +113,11 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     () => allAssignedList.filter(item => !selectedIdSet.has(item.id)),
     [allAssignedList, selectedIdSet]
   );
+
+  useEffect(() => {
+    const availableIdSet = new Set(availableCodes.map(item => item.id));
+    setPendingIds(prev => prev.filter(id => availableIdSet.has(id)));
+  }, [availableCodes]);
 
   const filteredAvailableCodes = useMemo(
     () => availableCodes.filter(item => bySearchTerm(item, availableSearchTerm)),
@@ -206,7 +210,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      if (disabled || !result.destination) {
+      if (disabled || !categoryHasCodesOrder || !result.destination) {
         return;
       }
 
@@ -246,7 +250,7 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
     <div className={classes.columns}>
       <div className={classes.column}>
         <div className={classes.titleRow}>
-          <span className={classes.title}>Add Op Codes</span>
+          <span className={classes.title}>Add Op Codes ({pendingIds.length})</span>
           <Button
             variant="contained"
             color="primary"
@@ -268,24 +272,26 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
           />
         </div>
 
-        <Divider className={classMap.divider} />
+        <Divider className={classes.divider} />
 
         <div className={classes.listBody}>
           {assignedLoading ? (
             <div className={classes.emptyState}>Loading op codes...</div>
           ) : filteredAvailableCodes.length ? (
             filteredAvailableCodes.map(item => (
-              <div key={item.id} className={classes.row}>
-                <Checkbox
-                  color="primary"
-                  disabled={disabled}
-                  checked={pendingIds.includes(item.id)}
-                  onChange={() => onPendingChange(item.id)}
-                />
-                <span className={classes.code}>{item.serviceRequest.code}</span>
-                <span className={classes.description}>{getCodeDescription(item)}</span>
-                <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
-              </div>
+              <AvailableOpCodeRow
+                key={item.id}
+                item={item}
+                description={getCodeDescription(item)}
+                price={getCodePrice(item)}
+                disabled={disabled}
+                checked={pendingIds.includes(item.id)}
+                rowClassName={classes.row}
+                codeClassName={classes.code}
+                descriptionClassName={classes.description}
+                priceClassName={classes.price}
+                onToggle={onPendingChange}
+              />
             ))
           ) : (
             <div className={classes.emptyState}>No op codes found</div>
@@ -296,7 +302,10 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
       <div className={classes.column}>
         <div className={classes.titleRowRight}>
           <span className={classes.title}>Selected ({selectedCodes.length})</span>
-          <span className={classes.helperText}>Use drag and drop to reorder</span>
+          {(form.categoryType?.value === EServiceCategoryType.IndividualServices ||
+            form.categoryType?.value === EServiceCategoryType.Diagnose) && (
+            <span className={classes.helperText}>Use drag and drop to reorder</span>
+          )}
         </div>
 
         <div className={classes.search}>
@@ -310,70 +319,95 @@ export const OpsCodesTransferPanel: React.FC<TOpsCodesTransferPanelProps> = ({
           />
         </div>
 
-        <Divider className={classMap.divider} />
+        <Divider className={classes.divider} />
 
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="selected-op-codes">
-            {provided => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={classes.listBody}
-              >
-                {filteredSelectedCodes.length ? (
-                  filteredSelectedCodes.map((item, index) => (
-                    <Draggable key={item.id} draggableId={`op-code-${item.id}`} index={index}>
-                      {(draggableProvided, snapshot) => (
-                        <div
-                          ref={draggableProvided.innerRef}
-                          {...draggableProvided.draggableProps}
-                          className={cx(classes.row, classes.selectedRow)}
-                          style={{
-                            ...draggableProvided.draggableProps.style,
-                            backgroundColor: snapshot.isDragging
-                              ? '#f5f7ff'
-                              : index % 2 === 1
-                                ? '#F2F4FB'
-                                : 'transparent',
-                          }}
-                        >
-                          <span {...draggableProvided.dragHandleProps}>
-                            <DragIndicator className={classes.dragHandle} />
-                          </span>
-                          <span className={classMap.orderIndex}>
-                            {selectedOrderMap.get(item.id)}
-                          </span>
-                          <div className={classMap.codeStack}>
-                            <span className={classMap.codeInline}>{item.serviceRequest.code}</span>
-                            <span className={classMap.descriptionInline}>
-                              {getCodeDescription(item)}
-                            </span>
-                          </div>
-                          <span className={classes.price}>${getCodePrice(item).toFixed(2)}</span>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            disabled={disabled}
-                            onClick={() => deleteCode(item.id)}
+        {categoryHasCodesOrder ? (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="selected-op-codes">
+              {provided => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={classes.listBody}
+                >
+                  {filteredSelectedCodes.length ? (
+                    filteredSelectedCodes.map((item, index) => (
+                      <Draggable key={item.id} draggableId={`op-code-${item.id}`} index={index}>
+                        {(draggableProvided, snapshot) => (
+                          <div
+                            ref={draggableProvided.innerRef}
+                            {...draggableProvided.draggableProps}
+                            className={cx(classes.row, classes.selectedRow)}
+                            style={{
+                              ...draggableProvided.draggableProps.style,
+                              backgroundColor: snapshot.isDragging
+                                ? '#f5f7ff'
+                                : index % 2 === 1
+                                  ? '#F2F4FB'
+                                  : 'transparent',
+                            }}
                           >
-                            <TrashBlue width={16} height={20} />
-                          </IconButton>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))
-                ) : (
-                  <div className={classes.emptyState}>
-                    {selectedSearchTerm.trim() && selectedCodes.length
-                      ? 'No matches'
-                      : 'No op codes selected'}
-                  </div>
-                )}
-                {provided.placeholder}
+                            <SelectedOpCodeContent
+                              item={item}
+                              description={getCodeDescription(item)}
+                              price={getCodePrice(item)}
+                              disabled={disabled}
+                              codeStackClassName={classes.codeStack}
+                              codeClassName={classes.codeInline}
+                              descriptionClassName={classes.descriptionInline}
+                              priceClassName={classes.price}
+                              orderIndexClassName={classes.orderIndex}
+                              dragHandleClassName={classes.dragHandle}
+                              showDragHandle
+                              orderIndex={selectedOrderMap.get(item.id)}
+                              dragHandleProps={draggableProvided.dragHandleProps ?? undefined}
+                              onDelete={deleteCode}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  ) : (
+                    <div className={classes.emptyState}>
+                      {selectedSearchTerm.trim() && selectedCodes.length
+                        ? 'No matches'
+                        : 'No op codes selected'}
+                    </div>
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        ) : (
+          <div className={classes.listBody}>
+            {filteredSelectedCodes.length ? (
+              filteredSelectedCodes.map(item => (
+                <div key={item.id} className={cx(classes.row, classes.selectedRow)}>
+                  <SelectedOpCodeContent
+                    item={item}
+                    description={getCodeDescription(item)}
+                    price={getCodePrice(item)}
+                    disabled={disabled}
+                    codeStackClassName={classes.codeStack}
+                    codeClassName={classes.codeInline}
+                    descriptionClassName={classes.descriptionInline}
+                    priceClassName={classes.price}
+                    orderIndexClassName={classes.orderIndex}
+                    dragHandleClassName={classes.dragHandle}
+                    onDelete={deleteCode}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className={classes.emptyState}>
+                {selectedSearchTerm.trim() && selectedCodes.length
+                  ? 'No matches'
+                  : 'No op codes selected'}
               </div>
             )}
-          </Droppable>
-        </DragDropContext>
+          </div>
+        )}
       </div>
     </div>
   );

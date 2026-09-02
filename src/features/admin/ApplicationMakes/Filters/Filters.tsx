@@ -42,7 +42,6 @@ const Filters: React.FC<TProps> = ({
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         disableCloseOnSelect
-        disableClearable
         renderTags={(selected, getTagProps) =>
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
@@ -53,10 +52,15 @@ const Filters: React.FC<TProps> = ({
             }
           )
         }
+        sx={{
+          '& .MuiAutocomplete-inputRoot': {
+            flexWrap: 'nowrap',
+          },
+        }}
         onChange={onMakesChange}
         renderInput={autocompleteRender({
           label: 'Makes',
-          placeholder: 'Not selected',
+          placeholder: selectedMake?.length ? '' : 'Not selected',
         })}
       />
       <Autocomplete

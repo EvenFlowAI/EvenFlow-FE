@@ -1,6 +1,6 @@
 {
   "name": "even_flow_ai",
-  "version": "3.9.9",
+  "version": "4.1.6",
   "private": true,
   "description": "EvenFlow AI frontend application. Run 'npm run setup-hooks' after cloning to enable automatic version incrementation.",
   "dependencies": {
@@ -70,7 +70,6 @@
     "generate-version-json": "node scripts/generate-version-json.js",
     "build": "react-scripts build && npm run generate-version-json",
     "startPreProd": "cross-env REACT_APP_ENV=PreProd react-scripts --max_old_space_size=8128 start",
-    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
@@ -95,7 +94,6 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@eslint/js": "^9.27.0",
-    "@testing-library/jest-dom": "^4.2.4",
     "@types/draft-convert": "^2.1.4",
     "@types/draft-js": "^0.11.9",
     "@types/jest": "^24.0.0",

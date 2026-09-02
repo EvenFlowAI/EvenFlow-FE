@@ -182,7 +182,9 @@ const RemoveAccess = ({ isOpen, onClose, payload }: RemoveAccessProps) => {
                     </button>
                   </p>
                 </div>
-                <p className={classes.serviceCenterCount}>{serviceCenters.length} centers</p>
+                <p className={classes.serviceCenterCount}>
+                  {serviceCenters.length} {serviceCenters.length === 1 ? 'center' : 'centers'}
+                </p>
               </div>
 
               {isDealershipExpanded(dealership.value) ? (
