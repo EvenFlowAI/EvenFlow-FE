@@ -32,7 +32,11 @@ const rowData: TableRowDataType<IHoliday>[] = [
     val: v =>
       v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description,
   },
-  { header: 'Date', val: v => dayjs.utc(v.date).format('MMMM D') },
+  {
+    header: 'Date',
+    val: v =>
+      v.isRecurring ? dayjs.utc(v.date).format('MMMM D') : dayjs.utc(v.date).format('MMMM D, YYYY'),
+  },
   { header: 'Recurring', val: v => (v.isRecurring ? 'Repeat' : 'No Repeat') },
 ];
 
