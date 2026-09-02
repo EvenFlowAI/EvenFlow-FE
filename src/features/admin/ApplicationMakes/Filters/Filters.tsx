@@ -38,7 +38,7 @@ const Filters: React.FC<TProps> = ({
         options={allMakesOptions}
         loading={isLoading}
         value={selectedMake}
-        disabled={isLoading || disabled}
+        disabled={disabled}
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         disableCloseOnSelect
