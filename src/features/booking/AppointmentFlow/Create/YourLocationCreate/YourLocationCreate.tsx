@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import {
-  clearAddress,
   clearAppointmentData,
   goToSlotsSelection,
   setShowServiceCentersList,
@@ -94,7 +93,6 @@ const YourLocationCreate: React.FC<TYourLocationProps> = ({
   };
 
   const handleBack = () => {
-    dispatch(clearAddress());
     clearSelectedData();
     handlePrevScreen();
   };
