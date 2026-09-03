@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TitleContainer } from '../../../components/wrappers/TitleContainer/TitleContainer';
 import { loadAppointments } from '../../../store/reducers/appointments/actions';
@@ -38,11 +38,16 @@ export const Appointments = () => {
   const [order, setOrder] = useState<IOrder<IAppointment>>(initialOrder);
   const [search, setSearch] = useState<string>('');
   const [selectedColumns, setSelectedColumns] = useState<string[]>(requiredColumns);
+  const isFiltersOpenRef = useRef(isFiltersOpen);
   const { isOpen: isListOpen, onClose: onListClose, onOpen: onListOpen } = useModal();
   const { isOpen: isColumnsOpen, onClose: onColumnsClose, onOpen: onColumnsOpen } = useModal();
   const dispatch = useDispatch();
   const { selectedSC } = useSCs();
   const showError = useException();
+
+  useEffect(() => {
+    isFiltersOpenRef.current = isFiltersOpen;
+  }, [isFiltersOpen]);
 
   const getAppointments = useCallback(() => {
     // for case if user has not selected service center yet and appointments are loading - stop loading
@@ -64,7 +69,7 @@ export const Appointments = () => {
           if (
             filters.scId &&
             selectedView === 'list' &&
-            (filters.initialFiltersSet || !isFiltersOpen)
+            (filters.initialFiltersSet || !isFiltersOpenRef.current)
           ) {
             const serviceBookId = filters.serviceBook?.id ?? null;
             const isServiceBookServiceCenter = Boolean(filters.serviceBook && !serviceBookId);
@@ -92,10 +97,12 @@ export const Appointments = () => {
         }
       }
     }
-  }, [filters, selectedView, order, isFiltersOpen]);
+  }, [filters, selectedView, order]);
 
   useEffect(() => {
-    setTimeout(() => getAppointments(), 1000);
+    const timeoutId = setTimeout(() => getAppointments(), 1000);
+
+    return () => clearTimeout(timeoutId);
   }, [getAppointments]);
 
   useEffect(() => {
@@ -103,7 +110,7 @@ export const Appointments = () => {
       setFilters({ ...initialFilters, scId: selectedSC?.id });
       setSearch('');
     }
-  }, [selectedSC, selectedView]);
+  }, [selectedSC]);
 
   useEffect(() => {
     const columns = localStorage.getItem(localStorageItemName);
@@ -163,9 +170,6 @@ export const Appointments = () => {
   }, []);
 
   const handleChangeView = (type: TView) => () => {
-    if (type === 'calendar') {
-      setFiltersOpen(false);
-    }
     setSelectedView(type);
   };
 
@@ -205,7 +209,7 @@ export const Appointments = () => {
           />
         }
       />
-      {isFiltersOpen ? (
+      {selectedView === 'list' && isFiltersOpen ? (
         <AppointmentFilters
           status={filters.reportingStatus}
           setFilters={setFilters}
