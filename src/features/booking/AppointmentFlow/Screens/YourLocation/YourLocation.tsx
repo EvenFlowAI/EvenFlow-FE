@@ -156,7 +156,10 @@ const YourLocation: React.FC<
   };
 
   const onGetZipCodesList = (list: string[], postalCode: string) => {
-    if (list.includes(postalCode)) setZip(postalCode);
+    if (list.includes(postalCode)) {
+      dispatch(setZipCode(postalCode));
+      setZip(postalCode);
+    }
   };
 
   const handleChangeAddress = async (e: any) => {
