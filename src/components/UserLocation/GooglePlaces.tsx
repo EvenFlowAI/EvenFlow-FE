@@ -21,10 +21,6 @@ const GooglePlaces = ({
 }: GooglePlacesProps) => {
   const { classes } = useLocationStyles();
 
-  const handleAddressFocus = () => {
-    handleChangeAddress(null);
-  };
-
   return (
     <GooglePlacesAutocomplete
       apiKey="AIzaSyCTy-LeuU4m1uoh1nhbUVZBC2G4HDUQQ04"
@@ -45,7 +41,6 @@ const GooglePlaces = ({
                 : classes.emptySelect
               : classes.select,
         onChange: handleChangeAddress,
-        onFocus: handleAddressFocus,
         openMenuOnFocus: true,
         placeholder: placeholderLabel,
         isClearable: true,
