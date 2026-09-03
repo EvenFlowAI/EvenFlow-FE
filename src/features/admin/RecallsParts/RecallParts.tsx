@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import RecallTable from './RecallTable/RecallTable';
 import { Autocomplete, Button } from '@mui/material';
 import AddRecallModal from './AddRecallModal/AddRecallModal';
@@ -58,7 +58,7 @@ const RecallParts = () => {
     onOpen();
   };
 
-  const onSRChange = (e: ChangeEvent<{}>, value: IAssignedServiceRequest | null) => {
+  const onSRChange = (e: SyntheticEvent, value: IAssignedServiceRequest | null) => {
     setLoading(true);
     if (selectedSC && value) {
       setSelectedOpsCode(value);

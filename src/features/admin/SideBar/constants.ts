@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { LinkTypeWithSub, Roles } from '../../../types/types';
 import { Routes } from '../../../routes/constants';
 import { TRole } from '../../../store/reducers/users/types';

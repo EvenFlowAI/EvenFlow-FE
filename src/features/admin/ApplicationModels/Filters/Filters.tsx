@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { FiltersWrapper } from './styles';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { Autocomplete } from '@mui/material';
@@ -14,9 +14,9 @@ import { reviewOptions } from '../../../../utils/constants';
 import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 
 type TProps = {
-  onMakesChange: (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => void;
-  onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption | null) => void;
-  onModelsChange: (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => void;
+  onMakesChange: (e: SyntheticEvent, options: IGlobalMake[]) => void;
+  onStatusChange: (e: SyntheticEvent, option: TReviewOption | null) => void;
+  onModelsChange: (e: SyntheticEvent, option: IGlobalModel[]) => void;
   modelsOptions: IGlobalModel[];
   isLoading: boolean;
   selectedMakes: IGlobalMake[];
@@ -39,17 +39,17 @@ const Filters: React.FC<TProps> = ({
   const { allMakesOptions } = useSelector((state: RootState) => state.globalVehicles);
   const { classes } = useAutocompleteStyles();
 
-  const renderModelOption = (props: any, option: IGlobalModel) => {
+  const renderModelOption = (props: React.HTMLAttributes<HTMLLIElement>, option: IGlobalModel) => {
     return (
-      <li style={{ height: 'fit-content' }} key={option} {...props}>
+      <li style={{ height: 'fit-content' }} key={option.id} {...props}>
         {option.vinModel}
       </li>
     );
   };
 
-  const renderMakeOption = (props: any, option: IGlobalMake) => {
+  const renderMakeOption = (props: React.HTMLAttributes<HTMLLIElement>, option: IGlobalMake) => {
     return (
-      <li style={{ height: 'fit-content' }} key={option} {...props}>
+      <li style={{ height: 'fit-content' }} key={option.id} {...props}>
         {option.vinMake}
       </li>
     );
@@ -78,10 +78,7 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
             getTagProps,
-            400,
-            option => {
-              return option;
-            }
+            400
           )
         }
         renderInput={autocompleteRender({
@@ -110,10 +107,7 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinModel),
             getTagProps,
-            400,
-            option => {
-              return option;
-            }
+            400
           )
         }
         renderInput={autocompleteRender({

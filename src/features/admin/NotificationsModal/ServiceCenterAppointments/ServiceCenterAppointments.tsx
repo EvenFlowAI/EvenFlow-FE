@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { useDispatch, useSelector } from 'react-redux';
@@ -69,7 +69,7 @@ const ServiceCenterAppointments: React.FC<
     setSelectedEmployees(selected);
   }, [usersShort, scData]);
 
-  const onEmployeeChange = (e: ChangeEvent<{}>, value: IAdvisorShort | null) => {
+  const onEmployeeChange = (e: SyntheticEvent, value: IAdvisorShort | null) => {
     setFormChecked(false);
     setCurrentEmployee(value);
   };

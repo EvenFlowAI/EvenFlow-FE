@@ -93,7 +93,7 @@ const MakeAndModel: React.FC<
   );
 
   const renderMakeOption = useCallback(
-    (props: any, option: any) => {
+    (props: React.HTMLAttributes<HTMLLIElement>, option: string) => {
       const currentOptionSelected = upperCase(selectedMakeValues).includes(option.toUpperCase());
       const allSelected = Boolean(
         !makesFromDB.find(make => !upperCase(selectedMakeValues).includes(make.name.toUpperCase()))
@@ -131,7 +131,7 @@ const MakeAndModel: React.FC<
   };
 
   const renderModelOption = useCallback(
-    (props: any, option: any) => {
+    (props: React.HTMLAttributes<HTMLLIElement>, option: string) => {
       const filteredMakes = makesFromDB.filter(item =>
         upperCase(selectedMakeValues).includes(item.name.toUpperCase())
       );

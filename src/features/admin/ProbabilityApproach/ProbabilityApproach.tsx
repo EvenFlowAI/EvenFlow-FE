@@ -7,15 +7,8 @@ import { useDispatch } from 'react-redux';
 import { autocompleteRender } from '../../../utils/autocompleteRenders';
 import { TextField } from '../../../components/formControls/TextFieldStyled/TextField';
 import { TableRow } from '../../../components/styled/TableRow';
-import { TableCell, TableCellLeft } from '../../../components/styled/TableCell';
-import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEditBlock';
-import dayjs from 'dayjs';
-import {
-  UnplannedTableCell,
-  UnplannedTableCellLeft,
-} from '../UnplannedDemand/UnplannedDemandSlots/styles';
-import { EDay } from '../../../store/reducers/demandSegments/types';
-import { STextField } from '../AncillaryPriceByDistance/styles';
+import { TableCellLeft } from '../../../components/styled/TableCell';
+import { UnplannedTableCellLeft } from '../UnplannedDemand/UnplannedDemandSlots/styles';
 import { DemandTable } from '../../../components/styled/DemandTable';
 
 type TStringOption = {

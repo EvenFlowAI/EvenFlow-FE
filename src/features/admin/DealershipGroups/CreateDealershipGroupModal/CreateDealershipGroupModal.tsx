@@ -88,6 +88,7 @@ export const CreateDealershipGroupModal: React.FC<
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (err: any) => {
     if (err.response?.data?.errors?.length) {
       const list: string[] = [];

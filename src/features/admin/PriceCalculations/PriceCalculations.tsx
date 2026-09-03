@@ -61,10 +61,10 @@ export const PriceCalculations = () => {
     }
   }, [sr, demand, dispatch, showError]);
 
-  const handleChange = (e: any, value: IAssignedServiceRequestShort | null) => {
+  const handleChange = (e: React.SyntheticEvent, value: IAssignedServiceRequestShort | null) => {
     setSr(value);
   };
-  const handleDemandChange = (e: any, value: TEnumMap<EDemandCategory> | null) => {
+  const handleDemandChange = (e: React.SyntheticEvent, value: TEnumMap<EDemandCategory> | null) => {
     setDemand(value);
   };
 

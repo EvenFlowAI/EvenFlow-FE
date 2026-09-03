@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, SetStateAction, Dispatch, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  SetStateAction,
+  Dispatch,
+  useState,
+  SyntheticEvent,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Radio } from '@mui/material';
 import { DialogProps } from '../../../../../../components/modals/BaseModal/types';
@@ -143,7 +150,7 @@ const AssignOpsCodeModal: React.FC<
   );
 
   const onSelectOption = useCallback(
-    (e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+    (e: SyntheticEvent, value: TSelectedOption | null) => {
       setOptionError(false);
       setSelectedOption(value);
       if (isEditing && currentPackage && value) {

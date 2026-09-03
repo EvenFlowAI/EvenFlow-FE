@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -57,8 +57,8 @@ export const EditTransportationDescriptionModal: React.FC<
       const code =
         allAssignedList.find(i => i?.serviceRequest?.code === editingElement?.opCode) ?? null;
       setSelectedCode(code);
-      editingElement.description && setDescription(editingElement.description);
-      editingElement.orderIndex && setOrderIndex(editingElement.orderIndex.toString());
+      if (editingElement.description) setDescription(editingElement.description);
+      if (editingElement.orderIndex) setOrderIndex(editingElement.orderIndex.toString());
     }
   }, [editingElement, props.open, allAssignedList]);
 
@@ -135,7 +135,7 @@ export const EditTransportationDescriptionModal: React.FC<
     saveIcon();
   };
 
-  const onOpsCodeChange = (e: React.ChangeEvent<{}>, option: IAssignedServiceRequest | null) => {
+  const onOpsCodeChange = (e: SyntheticEvent, option: IAssignedServiceRequest | null) => {
     setSelectedCode(option);
   };
 

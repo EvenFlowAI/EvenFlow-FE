@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { Table } from '../../../../components/tables/Table/Table';
 import { EReportingStatus, IAppointment } from '../../../../api/types';
 import { IconButton, Menu, MenuItem } from '@mui/material';
@@ -6,7 +6,7 @@ import { ViewAppointmentsModal } from '../ViewAppointmentsModal/ViewAppointments
 import { API } from '../../../../api/api';
 import { MoreHoriz } from '@mui/icons-material';
 import { IOrder, IPageRequest, TCallback } from '../../../../types/types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
@@ -51,7 +51,9 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
   const { askConfirm } = useConfirm();
 
   const handleOpen = (el: IAppointment) => (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    setViewItem && setViewItem(el);
+    if (setViewItem) {
+      setViewItem(el);
+    }
     setAnchorEl(e.currentTarget);
   };
 
@@ -116,7 +118,9 @@ export const AppointmentsTable: React.FC<TAppointmentsTable> = ({
     if (viewItem) {
       try {
         await API.appointment.cancel(viewItem.id);
-        setViewItem && setViewItem(undefined);
+        if (setViewItem) {
+          setViewItem(undefined);
+        }
         showMessage('Canceled');
         refresh();
       } catch (e) {

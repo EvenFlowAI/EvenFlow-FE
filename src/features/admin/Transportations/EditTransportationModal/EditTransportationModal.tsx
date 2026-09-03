@@ -98,6 +98,7 @@ export const EditTransportationModal: React.FC<
     setErrors([]);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (e: any) => {
     showError(e);
     if (e.response?.data?.errors) {
@@ -117,7 +118,7 @@ export const EditTransportationModal: React.FC<
           String(ruleForDeleting?.id),
           () => {
             onClose();
-            dispatch(setRules(rules.filter((rule, _) => rule?.id !== ruleForDeleting?.id)));
+            dispatch(setRules(rules.filter(rule => rule?.id !== ruleForDeleting?.id)));
             setRuleForDeleting(null);
             showMessage('Rule deleted');
             onCancel();

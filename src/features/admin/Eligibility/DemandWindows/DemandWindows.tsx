@@ -37,6 +37,7 @@ export const DemandWindows = () => {
     }
   }, [dispatch, selectedSC]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSwitch = (t: EWindowType) => async (e: any, checked: boolean) => {
     if (selectedSC) {
       try {

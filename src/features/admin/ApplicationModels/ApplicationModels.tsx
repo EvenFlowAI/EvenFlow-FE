@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { WrapperJustify } from '../../../components/styled/WrappersFlex';
 import { SaveEditBlock } from '../../../components/buttons/SaveEditBlock/SaveEditBlock';
 import StatisticBlock from './StatisticBlock/StatisticBlock';
@@ -83,7 +83,7 @@ const ApplicationModels = () => {
     );
   };
 
-  const onMakesChange = (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => {
+  const onMakesChange = (e: SyntheticEvent, options: IGlobalMake[]) => {
     onChangePage(null, 0);
     setSelectedMakes(options);
     const filteredAll = allModelsOptions.filter(el => options.find(item => item.id === el.make.id));
@@ -94,12 +94,12 @@ const ApplicationModels = () => {
     setSelectedModels(filteredSelected);
   };
 
-  const onModelsChange = (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => {
+  const onModelsChange = (e: SyntheticEvent, option: IGlobalModel[]) => {
     onChangePage(null, 0);
     setSelectedModels(option);
   };
 
-  const onStatusChange = (e: React.ChangeEvent<{}>, option: TReviewOption | null) => {
+  const onStatusChange = (e: SyntheticEvent, option: TReviewOption | null) => {
     onChangePage(null, 0);
     setSelectedStatus(option);
   };

@@ -7,12 +7,10 @@ import {
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
 import dayjs from 'dayjs';
-import { Switch, useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { IScheduleByDate, IUpdateByDateRequest } from '../../../../store/reducers/schedules/types';
-import { SwitcherLabel, SwitcherWrapper } from './styles';
-import { CALENDAR_FORMAT, timeSpanString } from '../../../../utils/constants';
+import { IScheduleByDate } from '../../../../store/reducers/schedules/types';
 import { loadHoursOfOperations } from '../../../../store/reducers/appointmentFrameReducer/actions';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { Table } from '../../../../components/tables/Table/Table';
@@ -25,9 +23,16 @@ import EmployeeScheduleFilters from '../EmployeeScheduleFilters/EmployeeSchedule
 import { TFilters } from '../types';
 import { compareName } from './utils';
 import { initialFilters } from './constants';
-import TimeBlock from './TimeBlock/TimeBlock';
 import EmployeeScheduleTableMobile from '../EmployeeScheduleMobile/EmployeeScheduleTableMobile';
 import { OneRowButtonsWrapper } from '../../../../components/styled/OneRowButtonsWrapper';
+import {
+  filterScheduleByFilters,
+  prepareScheduleUpdatePayload,
+  toggleScheduleByDateItem,
+  updateScheduleTimeByDateItem,
+  validateScheduleByDate,
+} from './helpers';
+import { getEmployeeScheduleRowData } from './getEmployeeScheduleRowData';
 
 type TProps = DialogProps & {
   date: TParsableDate;
@@ -50,7 +55,6 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
   );
   const { loading } = useSelector((state: RootState) => state.employees);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isForWeek, setForWeek] = useState<boolean>(false);
   const [formIsChecked, setFormChecked] = useState<boolean>(false);
   const [currentSchedule, setCurrentSchedule] = useState<IScheduleByDate[]>([]);
   const [filters, setFilters] = useState<TFilters>(initialFilters);
@@ -78,30 +82,9 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
 
   useEffect(() => {
     setLoading(true);
-    setCurrentSchedule(() => {
-      const filtered = sorted.filter(el => {
-        return (
-          el.employeeName.toLowerCase().includes(filters.name.trim().toLowerCase()) &&
-          el.role.toLowerCase().startsWith(filters.role.trim().toLowerCase())
-        );
-      });
-
-      return filtered.filter(el =>
-        filters.serviceBook
-          ? el.serviceBooks.some(book =>
-              book.serviceBookId
-                ? book.serviceBookId === filters.serviceBookId
-                : book.serviceBook === filters.serviceBook
-            )
-          : true
-      );
-    });
+    setCurrentSchedule(filterScheduleByFilters(sorted, filters));
     setLoading(false);
   }, [filters, sorted]);
-
-  const handleShowOnBookingChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    setForWeek(checked);
-  };
 
   const onCancel = () => {
     onClose();
@@ -111,134 +94,31 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
     setLoading(false);
   };
 
-  const handleSwitch = (el: IScheduleByDate) => (e: any, value: boolean) => {
-    setFormChecked(false);
-    setCurrentSchedule(prev => {
-      const itemToUpdate = prev.find(item => item.id === el.id);
-      if (itemToUpdate) {
-        const updated = { ...itemToUpdate, isOnSchedule: value };
-        const filtered = prev.filter(item => item.id !== el.id);
-        return [...filtered, updated].sort(compareName);
-      }
-      return prev;
-    });
-  };
+  const handleSwitch =
+    (el: IScheduleByDate) => (_e: React.ChangeEvent<HTMLInputElement>, value: boolean) => {
+      setFormChecked(false);
+      setCurrentSchedule(prev => toggleScheduleByDateItem(prev, el.id, value));
+    };
 
   const onTimeChange = (el: IScheduleByDate, field: 'startAt' | 'finishAt', value: string) => {
     setFormChecked(false);
-    setCurrentSchedule(prev => {
-      let element = prev.find(item => item.id === el.id);
-      if (element) {
-        element = { ...element, [field]: value };
-        const filtered = prev.filter(item => item.id !== el.id);
-        return [...filtered, element].sort(compareName);
-      }
-      return prev;
-    });
+    setCurrentSchedule(prev => updateScheduleTimeByDateItem(prev, el.id, field, value));
   };
 
-  const rowData: TableRowDataType<IScheduleByDate>[] = [
-    {
-      header: 'Employee',
-      val: el => el.employeeName,
-      verticalAlign: isTablet ? 'top' : 'middle',
-    },
-    {
-      header: 'Role',
-      val: el => el.role,
-      verticalAlign: isTablet ? 'top' : 'middle',
-    },
-    {
-      header: 'Service Book',
-      val: el => el.serviceBooks.map(book => book.serviceBook).join(', '),
-      verticalAlign: isTablet ? 'top' : 'middle',
-    },
-    {
-      header: 'On Schedule',
-      verticalAlign: isTablet ? 'top' : 'middle',
-      val: el => {
-        return (
-          <SwitcherWrapper>
-            <SwitcherLabel>NO</SwitcherLabel>
-            <Switch
-              disabled={disabledDate}
-              onChange={handleSwitch(el)}
-              checked={el.isOnSchedule}
-              color="primary"
-            />
-            <SwitcherLabel>YES</SwitcherLabel>
-          </SwitcherWrapper>
-        );
-      },
-    },
-    {
-      header: 'Scheduled Hours',
-      verticalAlign: isTablet ? 'top' : 'middle',
-      val: el => (
-        <TimeBlock
-          onTimeChange={onTimeChange}
-          el={el}
-          schedule={schedule}
-          disabledDate={disabledDate}
-          formIsChecked={formIsChecked}
-        />
-      ),
-    },
-  ];
+  const rowData: TableRowDataType<IScheduleByDate>[] = useMemo(
+    () =>
+      getEmployeeScheduleRowData({
+        isTablet,
+        disabledDate,
+        schedule,
+        formIsChecked,
+        handleSwitch,
+        onTimeChange,
+      }),
+    [isTablet, disabledDate, schedule, formIsChecked]
+  );
 
-  const checkIsValid = (): boolean => {
-    let valid = true;
-    const filtered = currentSchedule.filter(item => item.isOnSchedule);
-    if (!filtered.every(item => item.finishAt && item.startAt)) {
-      valid = false;
-      showError('Schedule for Employee that is "On Schedule" must not be empty');
-    }
-    if (
-      !filtered.every(item =>
-        dayjs(item.finishAt, timeSpanString).isAfter(dayjs(item.startAt, timeSpanString), 'minute')
-      )
-    ) {
-      valid = false;
-      showError('"End" value must be later than "Start"');
-    }
-    if (
-      !filtered.every(item =>
-        dayjs(item.finishAt, timeSpanString).isSameOrBefore(
-          dayjs(schedule?.to, timeSpanString),
-          'minute'
-        )
-      ) ||
-      !filtered.every(item =>
-        dayjs(item.finishAt, timeSpanString).isSameOrAfter(
-          dayjs(schedule?.from, timeSpanString),
-          'minute'
-        )
-      )
-    ) {
-      valid = false;
-      showError('"End" value must be inside of the Hours Of Operations');
-    }
-    if (
-      !filtered.every(item =>
-        dayjs(item.startAt, timeSpanString).isSameOrAfter(
-          dayjs(schedule?.from, timeSpanString),
-          'minute'
-        )
-      ) ||
-      !filtered.every(item =>
-        dayjs(item.startAt, timeSpanString).isSameOrBefore(
-          dayjs(schedule?.to, timeSpanString),
-          'minute'
-        )
-      )
-    ) {
-      valid = false;
-      showError('"Start" value must be inside of the Hours Of Operations');
-    }
-    return valid;
-  };
-
-  const onError = (err: any) => {
+  const onError = (err: string) => {
     setLoading(false);
     showError(err);
   };
@@ -246,44 +126,26 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
   const onSave = () => {
     setFormChecked(true);
     setLoading(true);
-    if (checkIsValid()) {
-      if (selectedSC && startDate && endDate) {
-        const utcOffset = dayjs().utcOffset();
-        const start = dayjs(startDate)
-          .startOf('day')
-          .add(utcOffset, 'minute')
-          .format(CALENDAR_FORMAT);
-        const end = dayjs(endDate)
-          .endOf('day')
-          .subtract(utcOffset, 'minute')
-          .format(CALENDAR_FORMAT);
-        const ids = currentSchedule.map(el => el.id);
-        const filtered = sorted.filter(el => !ids.includes(el.id));
-        const filteredData = filtered.map(({ isOnSchedule, employeeId, startAt, finishAt }) => ({
-          isOnSchedule,
-          employeeId,
-          startAt,
-          finishAt,
-        }));
-        const currentData = currentSchedule.map(
-          ({ isOnSchedule, employeeId, startAt, finishAt }) => ({
-            isOnSchedule,
-            employeeId,
-            startAt,
-            finishAt,
-          })
-        );
-        const data: IUpdateByDateRequest = {
-          date: dayjs(date).format(CALENDAR_FORMAT),
-          serviceCenterId: selectedSC.id,
-          isSetForWeek: isForWeek,
-          employeeScheduledHours: [...filteredData, ...currentData],
-        };
-        dispatch(updateScheduleByDate(data, start, end, onCancel, onError));
-      }
-    } else {
+    if (!validateScheduleByDate(currentSchedule, schedule, showError)) {
       setLoading(false);
+      return;
     }
+
+    if (!selectedSC || !startDate || !endDate) {
+      setLoading(false);
+      return;
+    }
+
+    const { data, start, end } = prepareScheduleUpdatePayload({
+      date,
+      startDate,
+      endDate,
+      serviceCenterId: selectedSC.id,
+      currentSchedule,
+      sorted,
+    });
+
+    dispatch(updateScheduleByDate(data, start, end, onCancel, onError));
   };
 
   return (
@@ -323,17 +185,6 @@ const EmployeeScheduleModal: React.FC<TProps> = ({
             )}
           </>
         )}
-        {/*<FormControlLabel*/}
-        {/*    style={{width: '35%', display: 'flex', justifyContent: 'space-between', marginBottom: 20}}*/}
-        {/*    labelPlacement="start"*/}
-        {/*    control={*/}
-        {/*        <Switch*/}
-        {/*            name="name"*/}
-        {/*            onChange={handleShowOnBookingChange}*/}
-        {/*            checked={isForWeek}*/}
-        {/*            color="primary"/>*/}
-        {/*    }*/}
-        {/*    label={<span style={{fontWeight: 'bold', textTransform: 'uppercase', fontSize: 14}}>Apply changes to entire week</span>}/>*/}
       </DialogContent>
       <OneRowButtonsWrapper>
         <LoadingButton

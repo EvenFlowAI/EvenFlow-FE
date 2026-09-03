@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { IServiceRequest } from '../../../../store/reducers/serviceRequests/types';
 import { Button, Radio } from '@mui/material';
@@ -139,7 +139,7 @@ const AssignOpsCodeModal: React.FC<
   };
 
   const onSelectOption = useCallback(
-    (e: React.ChangeEvent<{}>, value: TSelectedOption | null) => {
+    (e: SyntheticEvent, value: TSelectedOption | null) => {
       setOptionError(false);
       setSelectedOption(value);
       if (currentPackage && value) {

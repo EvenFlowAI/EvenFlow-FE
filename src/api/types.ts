@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { AxiosResponse } from 'axios';
 import {
   EContactMethodTypes,
@@ -22,6 +24,7 @@ import { IRecallByVin, ParsableDate, TParsableDate } from '../types/types';
 import { EPricingDisplayType } from '../store/reducers/pricingSettings/types';
 import { RepairOrderReportingStatus } from '../features/admin/Appointments/types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TApiResponse<R = any> = Promise<AxiosResponse<R>>;
 
 export type TServiceRequestAssigned = {
@@ -127,8 +130,6 @@ export interface IVehicleForRequest extends IVehicle {
 export interface IPasswordRecoveryData {
   email: string;
 }
-
-export interface IPasswordRecoveryResp {}
 
 export interface ISetNewPasswordData {
   userId: string;

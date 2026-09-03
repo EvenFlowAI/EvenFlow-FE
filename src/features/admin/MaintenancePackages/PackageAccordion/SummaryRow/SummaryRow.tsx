@@ -52,6 +52,7 @@ const SummaryRow: React.FC<React.PropsWithChildren<React.PropsWithChildren<TSumm
     if (item.fieldName && onInputChange) onInputChange(value, item.fieldName, item.optionType);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSwitch = (e: any, value: boolean) => {
     if (currentPackage) {
       if (toggleField === 'showSuggestedPrice') {

@@ -36,7 +36,7 @@ const tableData: TableRowDataType<IComplimentaryServiceByQuery>[] = [
 
 const AddComplimentaryModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAssignOpsCodeModalProps>>
-> = ({ selectedCodes, setSelectedCodes, isComplimentary, title, ...props }) => {
+> = ({ selectedCodes, setSelectedCodes, title, ...props }) => {
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
   const {

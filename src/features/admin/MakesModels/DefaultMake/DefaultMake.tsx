@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import { useStyles } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,11 +20,11 @@ export const DefaultMake = () => {
   useEffect(() => {
     if (selectedSC?.defaultVehicleMakeId) {
       const make = makes.find(item => item.id === selectedSC.defaultVehicleMakeId);
-      make && setSelectedMake(make);
+      if (make) setSelectedMake(make);
     }
   }, [selectedSC, makes]);
 
-  const onMakeChange = (e: ChangeEvent<{}>, value: IMake | null) => {
+  const onMakeChange = (e: SyntheticEvent, value: IMake | null) => {
     if (selectedSC) dispatch(updateDefaultMake(selectedSC.id, value?.id ?? null, showError));
   };
 

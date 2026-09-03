@@ -39,7 +39,7 @@ const LaborRateModal: React.FC<
   const showMessage = useMessage();
 
   useEffect(() => {
-    selectedSC && dispatch(loadLaborRate(selectedSC.id));
+    if (selectedSC) dispatch(loadLaborRate(selectedSC.id));
   }, [selectedSC]);
 
   useEffect(() => {
