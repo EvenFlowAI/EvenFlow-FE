@@ -118,7 +118,7 @@ export const Appointments = () => {
       return;
     }
 
-    if (!shouldLoadListAppointments(filters, selectedView, isFiltersOpen)) {
+    if (!shouldLoadListAppointments(filters, selectedView, isFiltersOpenRef.current)) {
       return;
     }
 
@@ -128,7 +128,7 @@ export const Appointments = () => {
 
     const data = buildAppointmentsRequest(filters, order, filters.scId);
     dispatch(loadAppointments(data));
-  }, [filters, selectedView, order, isFiltersOpen]);
+  }, [filters, selectedView, order]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => getAppointments(), 1000);
