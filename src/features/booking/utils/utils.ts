@@ -2,6 +2,94 @@ import { EServiceType } from '../../../store/reducers/appointmentFrameReducer/ty
 import { TScreen } from '../../../types/screens';
 import { ICurrentMenu, TData } from './types';
 
+const shiftStepsAfter = (data: { [K in TScreen]: number }, threshold: number): void => {
+  for (const key in data) {
+    const typedKey = key as keyof TData;
+    if (data[typedKey] > threshold) {
+      data[typedKey] = data[typedKey] - 1;
+    }
+  }
+};
+
+const disableStep = (data: { [K in TScreen]: number }, step: keyof TData): void => {
+  const currentStepValue = data[step];
+
+  if (currentStepValue > -1) {
+    shiftStepsAfter(data, currentStepValue);
+    data[step] = -1;
+  }
+};
+
+const getBaseFeatureStep = (serviceType: EServiceType): number =>
+  serviceType === EServiceType.VisitCenter ? 1 : 2;
+
+const getConsultantSelectionStep = (serviceType: EServiceType): number => {
+  if (serviceType === EServiceType.VisitCenter) {
+    return 2;
+  }
+
+  if (serviceType === EServiceType.MobileService) {
+    return -1;
+  }
+
+  return 3;
+};
+
+const getTimingAndSelectionStep = (
+  serviceType: EServiceType,
+  isTransportationNeeds: boolean
+): number => (serviceType === EServiceType.PickUpDropOff || isTransportationNeeds ? 4 : 3);
+
+const getFinalConfirmationStep = (serviceType: EServiceType): number =>
+  serviceType === EServiceType.MobileService ? 4 : 5;
+
+const createBaseStepsMap = (
+  serviceType: EServiceType,
+  isTransportationNeeds: boolean
+): { [K in TScreen]: number } => {
+  const baseFeatureStep = getBaseFeatureStep(serviceType);
+  const timingAndSelectionStep = getTimingAndSelectionStep(serviceType, isTransportationNeeds);
+  const finalConfirmationStep = getFinalConfirmationStep(serviceType);
+
+  return {
+    carSelection: 0,
+    location: 1,
+    serviceNeeds: baseFeatureStep,
+    maintenanceDetails: baseFeatureStep,
+    packageSelection: baseFeatureStep,
+    describeMore: baseFeatureStep,
+    opsCode: baseFeatureStep,
+    serviceOfferProductPage: baseFeatureStep,
+    consultantSelection: getConsultantSelectionStep(serviceType),
+    transportationNeeds: serviceType === EServiceType.VisitCenter ? 3 : -1,
+    appointmentTiming: timingAndSelectionStep,
+    appointmentSelection: timingAndSelectionStep,
+    appointmentConfirmation: finalConfirmationStep,
+    manageAppointment: finalConfirmationStep,
+    appointmentConfirmed: finalConfirmationStep,
+    payment: 6,
+  };
+};
+
+const applyStepsAvailability = (
+  data: { [K in TScreen]: number },
+  isAdvisorAvailable: boolean,
+  isAppointmentSelection: boolean,
+  isTransportationNeeds: boolean
+): void => {
+  if (!isAdvisorAvailable) {
+    disableStep(data, 'consultantSelection');
+  }
+
+  if (!isAppointmentSelection) {
+    data.appointmentTiming = -1;
+  }
+
+  if (!isTransportationNeeds) {
+    disableStep(data, 'transportationNeeds');
+  }
+};
+
 export const getCurrentMenu = (
   serviceType: EServiceType,
   advisor: boolean,
@@ -68,48 +156,8 @@ export const getStepsMap = (
   isAppointmentSelection: boolean,
   isTransportationNeeds: boolean
 ): { [K in TScreen]: number } => {
-  const data: { [K in TScreen]: number } = {
-    carSelection: 0,
-    location: 1,
-    serviceNeeds: serviceType === EServiceType.VisitCenter ? 1 : 2,
-    maintenanceDetails: serviceType === EServiceType.VisitCenter ? 1 : 2,
-    packageSelection: serviceType === EServiceType.VisitCenter ? 1 : 2,
-    describeMore: serviceType === EServiceType.VisitCenter ? 1 : 2,
-    opsCode: serviceType === EServiceType.VisitCenter ? 1 : 2,
-    serviceOfferProductPage: serviceType === EServiceType.VisitCenter ? 1 : 2,
-    consultantSelection:
-      serviceType === EServiceType.VisitCenter
-        ? 2
-        : serviceType === EServiceType.MobileService
-          ? -1
-          : 3,
-    transportationNeeds: serviceType === EServiceType.VisitCenter ? 3 : -1,
-    appointmentTiming: serviceType === EServiceType.PickUpDropOff || isTransportationNeeds ? 4 : 3,
-    appointmentSelection:
-      serviceType === EServiceType.PickUpDropOff || isTransportationNeeds ? 4 : 3,
-    appointmentConfirmation: serviceType === EServiceType.MobileService ? 4 : 5,
-    manageAppointment: serviceType === EServiceType.MobileService ? 4 : 5,
-    appointmentConfirmed: serviceType === EServiceType.MobileService ? 4 : 5,
-    payment: 6,
-  };
-  if (!isAdvisorAvailable && data.consultantSelection > -1) {
-    for (const key in data) {
-      if (data[key as keyof TData] > data.consultantSelection) {
-        data[key as keyof TData] = data[key as keyof TData] - 1;
-      }
-    }
-    data.consultantSelection = -1;
-  }
-  if (!isAppointmentSelection) {
-    data.appointmentTiming = -1;
-  }
-  if (!isTransportationNeeds && data.transportationNeeds > -1) {
-    for (const key in data) {
-      if (data[key as keyof TData] > data.transportationNeeds) {
-        data[key as keyof TData] = data[key as keyof TData] - 1;
-      }
-    }
-    data.transportationNeeds = -1;
-  }
+  const data = createBaseStepsMap(serviceType, isTransportationNeeds);
+  applyStepsAvailability(data, isAdvisorAvailable, isAppointmentSelection, isTransportationNeeds);
+
   return data;
 };

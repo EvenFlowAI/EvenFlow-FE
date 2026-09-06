@@ -13,6 +13,22 @@ interface GooglePlacesProps {
   handleChangeAddress: (e: any) => void;
 }
 
+type TOptionStyleState = {
+  isSelected: boolean;
+  isFocused: boolean;
+};
+
+const selectStyles = {
+  option: (provided: Record<string, unknown>, state: TOptionStyleState) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? '#EDEDED' : state.isFocused ? '#F5F5F5' : 'white',
+    color: '#212121',
+    ':active': {
+      backgroundColor: '#E0E0E0',
+    },
+  }),
+};
+
 const GooglePlaces = ({
   userAddress,
   isFormChecked,
@@ -41,11 +57,12 @@ const GooglePlaces = ({
                 : classes.emptySelect
               : classes.select,
         onChange: handleChangeAddress,
-        openMenuOnFocus: true,
+        // openMenuOnFocus: true,
         placeholder: placeholderLabel,
         isClearable: true,
         isSearchable: true,
         menuPosition: 'fixed',
+        styles: selectStyles,
       }}
     />
   );
