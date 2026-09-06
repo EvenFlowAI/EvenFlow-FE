@@ -1,378 +1,57 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { DialogProps } from '../../../components/modals/BaseModal/types';
+import React from 'react';
 import {
   BaseModal,
-  DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../components/modals/BaseModal/BaseModal';
 import { useTranslation } from 'react-i18next';
-import { TextWrapper } from './styles';
-import Consultant from './Consultant/Consultant';
-import Transportation from './Transportation/Transportation';
-import { Button, Grid } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/rootReducer';
-import {
-  EAncillaryType,
-  EServiceType,
-  IAncillaryByZipRequest,
-  TAncillaryPriceByZip,
-} from '../../../store/reducers/appointmentFrameReducer/types';
-import { EAppointmentTimingType } from '../../../store/reducers/appointment/types';
-import UserLocation from '../../../components/UserLocation/UserLocation';
-import { IServiceConsultant, ITransportation } from '../../../api/types';
-import Timing from './Timing/Timing';
-import { TCallback, TParsableDate } from '../../../types/types';
-import Calendar from './Calendar/Calendar';
-import {
-  loadActiveTransportations,
-  loadAncillaryPriceByZip,
-  setCity,
-  setFilteredZipCodes,
-  setIsPickupDropoffWithoutFirstScreenOption,
-  setPoliticalState,
-  setServiceTypeOption,
-  setStreetName,
-  setTransportation,
-  updateAppointmentDetails,
-} from '../../../store/reducers/appointmentFrameReducer/actions';
-import { geocodeByPlaceId } from 'react-google-places-autocomplete';
-import { parseGeoCode } from '../AppointmentFlow/Screens/YourLocation/utils';
-import { useException } from '../../../hooks/useException/useException';
 import AncillaryPriceModal from './AncillaryPriceModal/AncillaryPriceModal';
-import { useModal } from '../../../hooks/useModal/useModal';
-import { IFirstScreenOption } from '../../../store/reducers/serviceTypes/types';
-import {
-  selectAppointment,
-  selectServiceValetAppointment,
-} from '../../../store/reducers/appointment/actions';
-import { decodeSCID } from '../../../utils/utils';
-import { useParams } from 'react-router-dom';
-import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
+import Calendar from './Calendar/Calendar';
 import UnavailableServiceModal from '../../../components/modals/booking/UnavailableServiceModal/UnavailableServiceModal';
-import { setUnavailableServiceOpen } from '../../../store/reducers/modals/actions';
+import SwitchFlowModalActions from './SwitchFlowModalActions';
+import SwitchFlowModalContent from './SwitchFlowModalContent';
+import { TSwitchFlowModalProps } from './types';
+import useSwitchFlowModalLogic from './useSwitchFlowModalLogic';
 
-type TProps = DialogProps & {
-  selectedOption: IFirstScreenOption | null;
-  lastTransportation?: ITransportation | null;
-  resetLastTransportation?: TCallback;
-  onNext?: TCallback;
-};
-
-const SwitchFlowModal: React.FC<TProps> = ({
-  open,
-  onClose,
-  selectedOption,
-  lastTransportation,
-  resetLastTransportation,
-  onNext,
-}) => {
-  const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
-  const {
-    address,
-    zipCode: zipCodeValue,
-    transportation,
-    transportations,
-    isPickupDropoffWithoutFirstScreenOption,
-  } = useSelector((state: RootState) => state.appointmentFrame);
-  const { scProfile } = useSelector((state: RootState) => state.appointment);
-  const { id } = useParams<{ id: string }>();
-
-  const [consultant, setConsultant] = useState<IServiceConsultant | null>(null);
-  const [transportationOption, setTransportationOption] = useState<ITransportation | null>(null);
-  const [timingType, setTimingType] = useState<EAppointmentTimingType>(
-    EAppointmentTimingType.FirstAvailable
-  );
-  const { isUnavailableServiceOpen } = useSelector((state: RootState) => state.modals);
-
-  const [zip, setZip] = useState<string | null>(null);
-  const [userAddress, setUserAddress] = useState<any>(null);
-  const [selectedTime, setSelectedTime] = useState<TParsableDate>(null);
-  const [isCalendarOpen, setCalendarOpen] = useState<boolean>(false);
-  const [isAddressValid, setAddressValid] = useState<boolean>(false);
-  const [isAdvisorVisible, setAdvisorVisible] = useState<boolean>(false);
-  const [pendingAncillaryPrice, setPendingAncillaryPrice] = useState<TAncillaryPriceByZip | null>(
-    null
-  );
-
+const SwitchFlowModal: React.FC<TSwitchFlowModalProps> = props => {
+  const { open, selectedOption } = props;
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+
   const {
-    isOpen: isAncillaryPriceOpen,
-    onOpen: onAncillaryPriceOpen,
-    onClose: onAncillaryPriceClose,
-  } = useModal();
-  const showError = useException();
-
-  const newConfig = config.find(item =>
-    selectedOption
-      ? item.serviceType === selectedOption?.type
-      : transportation?.type === ETransportationType.PickUpDelivery
-        ? item.serviceType === EServiceType.PickUpDropOff
-        : item.serviceType === EServiceType.VisitCenter
-  );
-
-  const isDateSelectionOn =
-    selectedOption &&
-    newConfig?.appointmentSelection &&
-    selectedOption?.type !== EServiceType.PickUpDropOff;
-  const isTransportationsVisible =
-    Boolean(newConfig?.transportationNeeds) && !selectedOption?.transportationOption;
-  const isAddressVisible = selectedOption
-    ? selectedOption?.type === EServiceType.PickUpDropOff
-    : transportation?.type === ETransportationType.PickUpDelivery;
-  const nextButtonIsDisabled = useMemo(() => {
-    return !isAddressValid || (isTransportationsVisible && !transportationOption);
-  }, [isAddressValid, isTransportationsVisible, transportationOption]);
-
-  useEffect(() => {
-    if (open) {
-      const someFilterIsAvailable =
-        isAddressVisible || isDateSelectionOn || isTransportationsVisible || isAdvisorVisible;
-      if (!someFilterIsAvailable && selectedOption) {
-        dispatch(setServiceTypeOption(selectedOption));
-      }
-      setAddressValid(
-        selectedOption
-          ? selectedOption?.type !== EServiceType.PickUpDropOff
-          : transportation?.type !== ETransportationType.PickUpDelivery
-      );
-    }
-  }, [
-    isAddressVisible,
-    isDateSelectionOn,
-    isTransportationsVisible,
-    isAdvisorVisible,
-    selectedOption,
+    consultant,
     transportation,
-    open,
-  ]);
-
-  useEffect(() => {
-    if (userAddress && zip?.length === 5 && open) {
-      loadAncillaryPrice(zip, userAddress);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    setAdvisorVisible(!!newConfig?.advisorSelection);
-  }, [newConfig]);
-
-  useEffect(() => {
-    if (!isDateSelectionOn) {
-      setSelectedTime(null);
-      setTimingType(EAppointmentTimingType.FirstAvailable);
-    }
-  }, [isDateSelectionOn]);
-
-  useEffect(() => {
-    const addressIsSelectedByUser =
-      userAddress != null && address != null && userAddress.label === address.label;
-    const zipIsSelectedByUser = zip === zipCodeValue && zipCodeValue?.length === 5;
-    if (open && zipIsSelectedByUser && addressIsSelectedByUser) {
-      loadAncillaryPrice(zipCodeValue, address);
-    } else {
-      onAncillaryPriceClose();
-    }
-  }, [open, zipCodeValue, address, zip, userAddress]);
-
-  useEffect(() => {
-    if (open) {
-      if (!zip && zipCodeValue) {
-        setZip(zipCodeValue);
-      }
-      if (!userAddress && address) {
-        setUserAddress(address);
-      }
-    }
-    return () => {
-      setAddressValid(false);
-      setZip(null);
-      setUserAddress(null);
-      setPendingAncillaryPrice(null);
-    };
-  }, [open, zipCodeValue, address]);
-
-  useEffect(() => {
-    if (!isUnavailableServiceOpen && pendingAncillaryPrice && !isAncillaryPriceOpen) {
-      if (
-        pendingAncillaryPrice.feeAmount === 0 &&
-        pendingAncillaryPrice.feeType === EAncillaryType.Amount
-      ) {
-        setAddressValid(true);
-      } else {
-        onAncillaryPriceOpen();
-      }
-      setPendingAncillaryPrice(null);
-    }
-  }, [isUnavailableServiceOpen, pendingAncillaryPrice, isAncillaryPriceOpen]);
-
-  const clearData = () => {
-    setConsultant(null);
-    setTransportationOption(null);
-    setUserAddress(null);
-    setZip(null);
-    dispatch(setFilteredZipCodes([]));
-    setCalendarOpen(false);
-    setAddressValid(
-      selectedOption
-        ? selectedOption?.type !== EServiceType.PickUpDropOff
-        : transportation?.type !== ETransportationType.PickUpDelivery
-    );
-    setPendingAncillaryPrice(null);
-  };
-
-  const clearDate = () => {
-    setTimingType(EAppointmentTimingType.FirstAvailable);
-    setSelectedTime(null);
-  };
-
-  const onCancel = () => {
-    console.log('lastTransportation', lastTransportation);
-    if (lastTransportation !== undefined) {
-      dispatch(setTransportation(lastTransportation));
-    } else {
-      dispatch(setTransportation(null));
-    }
-    resetLastTransportation && resetLastTransportation();
-    clearData();
-    clearDate();
-    dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
-    onClose();
-    onAncillaryPriceClose();
-  };
-
-  const handleClose = () => {
-    clearData();
-    resetLastTransportation && resetLastTransportation();
-    onClose();
-  };
-
-  const clearPrevAppointments = () => {
-    dispatch(selectAppointment(null));
-    dispatch(selectServiceValetAppointment(null));
-  };
-
-  const handleNextStep = () => {
-    if (userAddress?.place_id && userAddress?.label) {
-      geocodeByPlaceId(userAddress.place_id).then(res => {
-        const data = parseGeoCode(
-          res[0].address_components,
-          userAddress.label,
-          userAddress?.structured_formatting?.main_text,
-          userAddress?.structured_formatting?.secondary_text
-        );
-        if (data.city) dispatch(setCity(data.city));
-        if (data.state) dispatch(setPoliticalState(data.state));
-        if (data.address) dispatch(setStreetName(data.address));
-      });
-    }
-
-    const svTransportation = transportations.find(
-      t => t.type === ETransportationType.PickUpDelivery
-    );
-
-    let selectedTransportation: ITransportation | null;
-
-    if (isPickupDropoffWithoutFirstScreenOption) {
-      selectedTransportation =
-        transportations?.find(t => t.type === ETransportationType.PickUpDelivery) || null;
-    } else {
-      selectedTransportation =
-        selectedOption?.transportationOption ||
-        transportationOption ||
-        (selectedOption?.type === EServiceType.PickUpDropOff
-          ? svTransportation || null
-          : selectedOption?.type === EServiceType.VisitCenter
-            ? transportations[0]
-            : transportation);
-    }
-
-    dispatch(
-      updateAppointmentDetails({
-        address: userAddress,
-        advisor: consultant,
-        date: timingType === EAppointmentTimingType.PreferredDate ? selectedTime : null,
-        timing: timingType,
-        transportation: selectedTransportation,
-        zip: zip ? zip.substring(0, 5) : '',
-        serviceTypeOption: selectedOption,
-      })
-    );
-    clearPrevAppointments();
-    handleClose();
-    onNext && onNext();
-  };
-
-  const moveToNextStep = () => {
-    if (timingType === EAppointmentTimingType.PreferredDate) {
-      setCalendarOpen(true);
-    } else {
-      handleNextStep();
-    }
-  };
-
-  const onClickNext = () => {
-    dispatch(loadActiveTransportations(decodeSCID(id), moveToNextStep));
-  };
-
-  const onSuccess = useCallback(
-    (data: TAncillaryPriceByZip) => {
-      if (isUnavailableServiceOpen) {
-        setPendingAncillaryPrice(data);
-      } else {
-        if (data.feeAmount === 0 && data.feeType === EAncillaryType.Amount) {
-          setAddressValid(true);
-        } else {
-          onAncillaryPriceOpen();
-        }
-      }
-    },
-    [isUnavailableServiceOpen, onAncillaryPriceOpen]
-  );
-
-  const onUnavailableOpen = () => dispatch(setUnavailableServiceOpen(true));
-
-  const onServiceIsUnavailable = useCallback(() => {
-    onAncillaryPriceClose();
-    setPendingAncillaryPrice(null);
-    setAddressValid(false);
-    onUnavailableOpen();
-  }, [onAncillaryPriceClose]);
-
-  const loadAncillaryPrice = (zipCode: string | null, address: any) => {
-    if (scProfile) {
-      if (
-        address &&
-        zipCode?.length === 5 &&
-        (selectedOption
-          ? selectedOption?.type === EServiceType.PickUpDropOff
-          : transportation?.type === ETransportationType.PickUpDelivery)
-      ) {
-        const data: IAncillaryByZipRequest = {
-          address: typeof address === 'string' ? address : address.label,
-          zipCode,
-          serviceCenterId: scProfile.id,
-          serviceTypeOptionId: selectedOption?.id,
-          transportationOptionId:
-            selectedOption?.transportationOption?.id ?? transportation?.id ?? null,
-        };
-        dispatch(loadAncillaryPriceByZip(data, onSuccess, showError, onServiceIsUnavailable));
-      }
-    }
-  };
-
-  const onAncillaryPriceAccepted = () => {
-    setAddressValid(true);
-    onAncillaryPriceClose();
-  };
-
-  const onTryAnotherLocation = () => {
-    setUserAddress(null);
-    setZip(null);
-    setAddressValid(false);
-  };
+    transportationOption,
+    timingType,
+    zip,
+    userAddress,
+    selectedTime,
+    isCalendarOpen,
+    isAddressVisible,
+    isAdvisorVisible,
+    isTransportationsVisible,
+    isDateSelectionOn,
+    isAddressValid,
+    nextButtonIsDisabled,
+    isUnavailableServiceOpen,
+    isAncillaryPriceOpen,
+    onAncillaryPriceClose,
+    setConsultant,
+    setTransportationOption,
+    setTimingType,
+    setZip,
+    setUserAddress,
+    setSelectedTime,
+    setCalendarOpen,
+    setAddressValid,
+    setAdvisorVisible,
+    loadAncillaryPrice,
+    onServiceIsUnavailable,
+    onCancel,
+    onClickNext,
+    handleNextStep,
+    onAncillaryPriceAccepted,
+    onTryAnotherLocation,
+  } = useSwitchFlowModalLogic(props);
 
   return (
     <BaseModal open={open} onClose={onCancel} width={700}>
@@ -381,102 +60,42 @@ const SwitchFlowModal: React.FC<TProps> = ({
           serviceName: selectedOption?.name ?? '',
         })}
       </DialogTitle>
+
       <DialogContent style={{ padding: '0 36px' }}>
-        <Grid container>
-          {isAddressVisible ? (
-            <>
-              <Grid item xs={12}>
-                <TextWrapper>{t('Where do you want to be picked up?')}</TextWrapper>
-              </Grid>
-              <Grid item xs={12}>
-                <UserLocation
-                  zipWidth={194}
-                  templateColumnsData="64% 31%"
-                  loadAncillaryPrice={loadAncillaryPrice}
-                  zip={zip}
-                  setZip={setZip}
-                  setAddressValid={setAddressValid}
-                  userAddress={userAddress}
-                  disabled={isAncillaryPriceOpen || isUnavailableServiceOpen}
-                  setUserAddress={setUserAddress}
-                />
-              </Grid>
-            </>
-          ) : null}
-          {isAdvisorVisible ? (
-            <>
-              <Grid item xs={12}>
-                <TextWrapper>{t('Do you have a preferred Service Advisor?')}</TextWrapper>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Consultant
-                  open={open}
-                  newOption={selectedOption}
-                  consultant={consultant}
-                  setConsultant={setConsultant}
-                  isVisible
-                  setAdvisorVisible={setAdvisorVisible}
-                  onServiceIsUnavailable={onServiceIsUnavailable}
-                  address={userAddress}
-                  zipCode={zip}
-                  disabled={
-                    (selectedOption
-                      ? selectedOption?.type === EServiceType.PickUpDropOff
-                      : transportation?.type === ETransportationType.PickUpDelivery) &&
-                    (!isAddressValid || isUnavailableServiceOpen || isAncillaryPriceOpen)
-                  }
-                />
-              </Grid>
-            </>
-          ) : null}
-          {isTransportationsVisible ? (
-            <>
-              <Grid item xs={12}>
-                <TextWrapper>{t('Do you need assistance with transportation?')}</TextWrapper>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Transportation
-                  isTransportationAvailable={isTransportationsVisible}
-                  selectedTransportation={transportationOption}
-                  setSelectedTransportation={setTransportationOption}
-                />
-              </Grid>
-            </>
-          ) : null}
-          {isDateSelectionOn ? (
-            <>
-              <Grid item xs={12}>
-                <TextWrapper>{t('When would you like your vehicle serviced?')}</TextWrapper>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Timing
-                  disabled={
-                    (selectedOption
-                      ? selectedOption?.type === EServiceType.PickUpDropOff
-                      : transportation?.type === ETransportationType.PickUpDelivery) &&
-                    (!userAddress || !zip || isUnavailableServiceOpen || isAncillaryPriceOpen)
-                  }
-                  timingType={timingType}
-                  setTimingType={setTimingType}
-                />
-              </Grid>
-            </>
-          ) : null}
-        </Grid>
+        <SwitchFlowModalContent
+          open={open}
+          selectedOption={selectedOption}
+          userAddress={userAddress}
+          zip={zip}
+          transportation={transportation}
+          consultant={consultant}
+          transportationOption={transportationOption}
+          timingType={timingType}
+          isAddressVisible={isAddressVisible}
+          isAdvisorVisible={isAdvisorVisible}
+          isTransportationsVisible={isTransportationsVisible}
+          isDateSelectionOn={isDateSelectionOn}
+          isAddressValid={isAddressValid}
+          isAncillaryPriceOpen={isAncillaryPriceOpen}
+          isUnavailableServiceOpen={isUnavailableServiceOpen}
+          setZip={setZip}
+          setAddressValid={setAddressValid}
+          setUserAddress={setUserAddress}
+          setConsultant={setConsultant}
+          setAdvisorVisible={setAdvisorVisible}
+          setTransportationOption={setTransportationOption}
+          setTimingType={setTimingType}
+          loadAncillaryPrice={loadAncillaryPrice}
+          onServiceIsUnavailable={onServiceIsUnavailable}
+        />
       </DialogContent>
-      <DialogActions style={{ padding: '32px 36px 25px 36px' }}>
-        <Button variant="outlined" onClick={onCancel} style={{ width: 145 }}>
-          {t('Cancel')}
-        </Button>
-        <Button
-          variant="contained"
-          onClick={onClickNext}
-          style={{ width: 145, marginLeft: 16 }}
-          disabled={nextButtonIsDisabled}
-        >
-          {t('Next')}
-        </Button>
-      </DialogActions>
+
+      <SwitchFlowModalActions
+        onCancel={onCancel}
+        onNext={onClickNext}
+        nextButtonIsDisabled={nextButtonIsDisabled}
+      />
+
       <Calendar
         time={selectedTime}
         setTime={setSelectedTime}
@@ -484,6 +103,7 @@ const SwitchFlowModal: React.FC<TProps> = ({
         setCalendarOpen={setCalendarOpen}
         onNext={handleNextStep}
       />
+
       <AncillaryPriceModal
         onNext={onAncillaryPriceAccepted}
         open={isAncillaryPriceOpen && !isUnavailableServiceOpen}
@@ -491,6 +111,7 @@ const SwitchFlowModal: React.FC<TProps> = ({
         serviceString={t('Pick Up / Drop Off')}
         onBack={onCancel}
       />
+
       <UnavailableServiceModal
         clearAnotherLocation={onTryAnotherLocation}
         setFormChecked={() => {}}

@@ -100,9 +100,11 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
 
   const redirect = () => {
     if (scId) {
-      customerLoadedData?.isUpdating
-        ? history.push(Routes.EndUser.ManageAppointmentFrame.replace(':id', scId))
-        : history.push(Routes.EndUser.AppointmentFrame.replace(':id', scId));
+      if (customerLoadedData?.isUpdating) {
+        history.push(Routes.EndUser.ManageAppointmentFrame.replace(':id', scId));
+      } else {
+        history.push(Routes.EndUser.AppointmentFrame.replace(':id', scId));
+      }
     }
   };
 
@@ -144,7 +146,7 @@ const ServiceTypeSelect: React.FC<React.PropsWithChildren<React.PropsWithChildre
   const handleUpdateOption = (serviceOption: IFirstScreenOption) => {
     const requestDataIsValid =
       serviceOption?.type === EServiceType.VisitCenter || Boolean(address && zipCode);
-    requestDataIsValid &&
+    if (requestDataIsValid)
       dispatch(checkCarIsValid(() => dispatch(loadConsultants(id, serviceOption.id))));
     if (serviceOption?.type === EServiceType.VisitCenter) {
       changeToVisitCenter(serviceOption);
