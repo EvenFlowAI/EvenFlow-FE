@@ -47,13 +47,14 @@ const SlotImpactedWarning = () => {
       }
     }
 
-    const nextScreen: TScreen = isAdvisorAvailable
-      ? 'consultantSelection'
-      : isTransportationAvailable && currentScreen !== 'transportationNeeds'
-        ? 'transportationNeeds'
-        : isAppointmentTimingAvailable
-          ? 'appointmentTiming'
-          : 'appointmentSelection';
+    const nextScreen: TScreen =
+      isAdvisorAvailable && currentScreen !== 'consultantSelection'
+        ? 'consultantSelection'
+        : isTransportationAvailable && currentScreen !== 'transportationNeeds'
+          ? 'transportationNeeds'
+          : isAppointmentTimingAvailable
+            ? 'appointmentTiming'
+            : 'appointmentSelection';
     dispatch(setCurrentFrameScreen(nextScreen));
     if (history.location.pathname.includes('welcome')) {
       redirect();
