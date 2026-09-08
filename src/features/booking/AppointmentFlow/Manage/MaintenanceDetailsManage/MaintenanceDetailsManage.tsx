@@ -60,7 +60,7 @@ const MaintenanceDetailsManage: React.FC<TMaintenanceDetailsProps> = ({
         if (advisorNotSelected) {
           onNext('consultantSelection');
         } else {
-          scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+          if (scProfile) dispatch(checkPodChanged(scProfile.id, showError));
         }
       }
     }

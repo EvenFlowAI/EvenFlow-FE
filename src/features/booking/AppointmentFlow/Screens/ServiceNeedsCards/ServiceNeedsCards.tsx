@@ -65,7 +65,6 @@ export const ServiceNeedsCards: React.FC<
     serviceTypeOption,
     packageEMenuType,
     selectedRecalls,
-    trackerData,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { selectedSR, serviceRequests, scProfile } = useSelector(
     (state: RootState) => state.appointment
@@ -178,7 +177,9 @@ export const ServiceNeedsCards: React.FC<
       } else {
         handleGA(selectedCategory);
         handleCategoryHighlight(selectedCategory);
-        !isManagingAppointment && clearData();
+        if (!isManagingAppointment) {
+          clearData();
+        }
 
         switch (selectedCategory?.type) {
           case 2:
@@ -200,9 +201,11 @@ export const ServiceNeedsCards: React.FC<
   };
 
   const handleSelectCard = (card: IServiceCategory) => () => {
-    page === EServiceCategoryPage.Page1
-      ? dispatch(selectService(card))
-      : dispatch(selectSubService(card));
+    if (page === EServiceCategoryPage.Page1) {
+      dispatch(selectService(card));
+    } else {
+      dispatch(selectSubService(card));
+    }
     handleSubmit(card);
   };
 

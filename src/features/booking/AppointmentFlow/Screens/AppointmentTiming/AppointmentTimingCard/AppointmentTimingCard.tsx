@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../../../../store/rootReducer';
 import { EAppointmentTimingType } from '../../../../../../store/reducers/appointment/types';
 import { RadioButtonChecked, RadioButtonUnchecked } from '@mui/icons-material';
 import { TArgCallback, TCallback, TParsableDate } from '../../../../../../types/types';
@@ -24,16 +22,11 @@ type TCardProps = {
 
 const AppointmentTimingCard: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TCardProps>>
-> = ({ card, active, onClick, onChangeTime, selectedTime, isLoading }) => {
+> = ({ card, active, onClick, onChangeTime, selectedTime }) => {
   const theme = useTheme();
   const isSm = useMediaQuery(theme.breakpoints.down('md'));
   const { t } = useTranslation();
-  const { appointmentSlots } = useSelector((state: RootState) => state.appointment);
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const shouldDisableDate = (date: TParsableDate) =>
-    !appointmentSlots.find(
-      item => dayjs.utc(item.date).format('YYYY-MM-DD') === dayjs.utc(date).format('YYYY-MM-DD')
-    );
   const { classes } = useStyles();
 
   useEffect(() => {

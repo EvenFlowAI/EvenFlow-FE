@@ -87,7 +87,7 @@ export const FormWithSelectors: React.FC<
     }
   };
 
-  const handleEngineTypeChange = (e: SelectChangeEvent<{}>) => {
+  const handleEngineTypeChange = (e: SelectChangeEvent<unknown>) => {
     const selected = engineTypes.find(el => el.id === e.target?.value);
     if (selected) {
       setSelectedEngine(selected);

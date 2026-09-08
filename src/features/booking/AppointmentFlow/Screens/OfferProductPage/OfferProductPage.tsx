@@ -29,7 +29,7 @@ type TOfferProductPageProps = {
 const OfferProductPage: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TOfferProductPageProps>>
 > = ({ category, onChangeVehicle, handleSetScreen, lastCategory }) => {
-  const { selectedVehicle, serviceCategories, subService, service, trackerData } = useSelector(
+  const { selectedVehicle, serviceCategories, subService, service } = useSelector(
     (state: RootState) => state.appointmentFrame
   );
   const { scProfile } = useSelector((state: RootState) => state.appointment);

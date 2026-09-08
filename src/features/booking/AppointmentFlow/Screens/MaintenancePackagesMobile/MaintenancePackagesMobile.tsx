@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, SyntheticEvent, useEffect, useState } from 'react';
 import { Tab } from '@mui/material';
 import { TabContext } from '@mui/lab';
 import { useSelector } from 'react-redux';
@@ -65,10 +65,10 @@ const MaintenancePackagesMobile: React.FC<
     }
   }, [selectedPackage, data]);
 
-  const handleChange = (e: ChangeEvent<{}>, newValue: any): void => {
+  const handleChange = (e: SyntheticEvent, newValue: string): void => {
     setValue(newValue);
-    const currentPackage = data[newValue];
-    currentPackage && setLocalPackage(currentPackage);
+    const currentPackage = data[Number(newValue)];
+    if (currentPackage) setLocalPackage(currentPackage);
     setLocalPricingType(EPackagePricingType.BasePrice);
   };
 

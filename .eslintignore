@@ -7,7 +7,6 @@ scripts/
 .eslintrc.js
 
 
-src/features/booking/ActionsButtons
 src/features/booking/AppointmentFlow
 src/features/booking/CustomerSelect
 src/features/booking/FrameWelcomeLayout

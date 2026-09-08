@@ -108,7 +108,7 @@ const ShoppingCart = () => {
 
   const deleteService = (item: IMaintenanceItem) => {
     switch (item.type) {
-      case 'service':
+      case 'service': {
         const itemId = item?.id;
         const newComments = Object.fromEntries(
           Object.entries(selectedSRComments).filter(([key]) => Number(key) !== itemId)
@@ -118,6 +118,7 @@ const ShoppingCart = () => {
         setAppointmentChanged();
         handleSideBarSteps();
         return;
+      }
       case 'package':
         dispatch(deletePackage());
         setAppointmentChanged();

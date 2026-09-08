@@ -35,7 +35,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
   const isXS = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange =
-    (name: TKey, skip?: boolean) => (e: React.ChangeEvent<{}>, option: string | null) => {
+    (name: TKey, skip?: boolean) => (e: React.SyntheticEvent, option: string | null) => {
       if (isXS) e.preventDefault();
       if (option && !skip) {
         if (['year', 'model', 'make', 'mileage'].includes(name)) {
@@ -59,7 +59,7 @@ const FormWithAutocompletes: React.FC<TFormProps> = ({
       }
     };
 
-  const handleEngineTypeChange = (e: React.ChangeEvent<{}>, option: IEngineType | null) => {
+  const handleEngineTypeChange = (e: React.SyntheticEvent, option: IEngineType | null) => {
     setSelectedEngine(option);
     dispatch(updateVehicle({ engineTypeId: option?.id ?? null }));
     setErrors(e => e.filter(err => err !== 'engineTypeId'));

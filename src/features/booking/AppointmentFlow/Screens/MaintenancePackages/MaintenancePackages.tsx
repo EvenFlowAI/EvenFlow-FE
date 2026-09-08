@@ -156,7 +156,11 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
       const isEMenuPackage = scProfile?.packageSource === PackageSourceType.eMenu;
       dispatch(setPackageIsSelected(true));
       if (sentGA) {
-        isEMenuPackage ? handleEMenuGA() : handleGA(usedPackage);
+        if (isEMenuPackage) {
+          handleEMenuGA();
+        } else {
+          handleGA(usedPackage);
+        }
       }
       if (isEMenuPackage) {
         dispatch(setPackageEMenuType(usedPackage.type));
@@ -202,14 +206,6 @@ export const MaintenancePackages: React.FC<TPackageSelectionProps> = ({
     } else {
       onAdditionalOpen();
     }
-  };
-
-  const onSave = async () => {
-    if (localSelectedPackage) {
-      dispatch(setSelectedPackageOptionType(localSelectedPackage.type));
-      dispatch(setPackage(localSelectedPackage));
-    }
-    await onSelectionCompleted();
   };
 
   const handleGA = (selectedPackage: IPackageOptions): void => {

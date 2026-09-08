@@ -111,7 +111,8 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
                       : item.requestName}
                   </span>
                   <div className={classes.pricesBlock}>
-                    {Object(item).hasOwnProperty('priceValue') && item.priceValue ? (
+                    {Object.prototype.hasOwnProperty.call(Object(item), 'priceValue') &&
+                    item.priceValue ? (
                       <span className={classes.price}>
                         ${scProfile?.isRoundPrice ? item.priceValue : item.priceValue.toFixed(2)}
                       </span>
@@ -140,7 +141,7 @@ const DetailedFees: React.FC<React.PropsWithChildren<React.PropsWithChildren<Dia
                         {getOfferString(item.offer, Boolean(scProfile?.isRoundPrice))}
                       </span>
                     ) : null}
-                    {Object(item).hasOwnProperty('priceValue') &&
+                    {Object.prototype.hasOwnProperty.call(Object(item), 'priceValue') &&
                     item.priceValue &&
                     item.pricingDisplayType !== EPricingDisplayType.Suppressed ? (
                       <span className={classes.price}>

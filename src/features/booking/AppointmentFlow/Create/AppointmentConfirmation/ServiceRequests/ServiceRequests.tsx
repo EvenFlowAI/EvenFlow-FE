@@ -21,10 +21,8 @@ const ServiceRequests = () => {
   const { isOpen: isCommentOpen, onClose: onCommentClose, onOpen: onCommentOpen } = useModal();
   const {
     serviceTypeOption,
-    packagePriceTitles,
     serviceCategories,
     selectedPackage,
-    packagePricingType,
     selectedRecalls,
     packageEMenuType,
     transportation,
@@ -47,15 +45,15 @@ const ServiceRequests = () => {
       serviceCategoriesWithComments.map(item => item.id).includes(category.id) &&
       category.type === 0
   );
-
-  let name;
-  if (selectedPackage) {
-    name = `${selectedPackage.name} package`;
-    if (packagePriceTitles?.length) {
-      const price = packagePriceTitles.find(item => item.type === packagePricingType);
-      if (price) name = name + ` (${price.title})`;
-    }
-  }
+  //
+  // let name;
+  // if (selectedPackage) {
+  //   name = `${selectedPackage.name} package`;
+  //   if (packagePriceTitles?.length) {
+  //     const price = packagePriceTitles.find(item => item.type === packagePricingType);
+  //     if (price) name = name + ` (${price.title})`;
+  //   }
+  // }
 
   const getPackageLabel = () => {
     if (selectedPackage?.name) {
