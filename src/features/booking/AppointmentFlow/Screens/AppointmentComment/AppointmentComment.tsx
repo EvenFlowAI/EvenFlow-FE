@@ -26,9 +26,17 @@ import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
 import { mergeArrayById } from '../../../../../utils/utils';
 import styled from '@mui/material/styles/styled';
-import { TServiceCategory } from '../../../../../store/reducers/appointmentFrameReducer/types';
+import { SystemIntegrationType } from '../../../../../store/reducers/serviceCenters/types';
 
 const MAX_COUNT_WORDS_CAPACITY = 250;
+
+const filterAscii = (value: string): string =>
+  value
+    .split('')
+    .filter(character => character.charCodeAt(0) <= 127)
+    .join('');
+
+const hasNonAsciiCharacters = (value: string): boolean => filterAscii(value) !== value;
 
 export const RemainingCharactersWrapper = styled('div')(() => ({
   color: '#202021',
@@ -64,18 +72,30 @@ export const AppointmentComment: React.FC<TProps> = ({
   const showError = useException();
   const ref = useRef<HTMLDivElement | null>(null);
   const [comment, setComment] = useState('');
+  const isFortellisIntegration = scProfile?.integration === SystemIntegrationType.Fortellis;
 
   useEffect(() => {
     if (ref) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [ref]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    if (value.length <= MAX_COUNT_WORDS_CAPACITY) {
-      if (/\s{2,}$/.test(value)) {
-        return;
-      }
-      setComment(value);
+    if (isFortellisIntegration && hasNonAsciiCharacters(value)) {
+      showError(t('Special characters not allowed'));
+      return;
     }
+
+    if (value.length > MAX_COUNT_WORDS_CAPACITY) {
+      if (isFortellisIntegration) {
+        showError(t('Only 250 characters allowed'));
+      }
+      return;
+    }
+
+    if (/\s{2,}$/.test(value)) {
+      return;
+    }
+
+    setComment(value);
   };
 
   const handleYes = () => {

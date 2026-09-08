@@ -21,6 +21,8 @@ const filterAscii = (value: string): string =>
     .filter(character => character.charCodeAt(0) <= 127)
     .join('');
 
+const hasNonAsciiCharacters = (value: string): boolean => filterAscii(value) !== value;
+
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
 > = ({ open, onClose, selectedRequest, currentComment }) => {
@@ -29,10 +31,8 @@ const CommentModal: React.FC<
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { scProfile } = useSelector((state: RootState) => state.appointment);
-  const isFortellisIntegration =
-    (scProfile as { integration?: number } | undefined)?.integration ===
-    SystemIntegrationType.Fortellis;
-  const showError = useException();
+  const isFortellisIntegration = scProfile?.integration === SystemIntegrationType.Fortellis;
+  const showError = useException(true);
 
   useEffect(() => {
     setText(currentComment);
@@ -49,10 +49,17 @@ const CommentModal: React.FC<
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    // ASCII-only validation must apply only for Fortellis integration.
-    const nextValue = isFortellisIntegration ? filterAscii(value) : value;
+    const nextValue = value;
+
+    if (isFortellisIntegration && hasNonAsciiCharacters(nextValue)) {
+      showError(t('Special characters not allowed'));
+      return;
+    }
 
     if (nextValue.length > MAX_COUNT_WORDS_CAPACITY) {
+      if (isFortellisIntegration) {
+        showError(t('Only 250 characters allowed'));
+      }
       return;
     }
     if (/\s{2,}$/.test(nextValue)) {

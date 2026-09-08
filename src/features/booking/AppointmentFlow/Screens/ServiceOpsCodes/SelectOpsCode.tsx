@@ -60,6 +60,8 @@ const filterAscii = (value: string): string =>
     .filter(character => character.charCodeAt(0) <= 127)
     .join('');
 
+const hasNonAsciiCharacters = (value: string): boolean => filterAscii(value) !== value;
+
 const MessageIconComponent = ({ filled }: { filled: boolean }) =>
   filled ? <MessageIconFilled /> : <MessageIcon />;
 
@@ -81,15 +83,13 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const [searchInput, setSearch] = useState<string>('');
   const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
   const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
-  const isFortellisIntegration =
-    (scProfile as { integration?: number } | undefined)?.integration ===
-    SystemIntegrationType.Fortellis;
+  const isFortellisIntegration = scProfile?.integration === SystemIntegrationType.Fortellis;
 
   const dispatch = useDispatch();
   const isInit = useRef(true);
   const { t } = useTranslation();
   const debouncedSearch = useDebounce(searchInput);
-  const showError = useException();
+  const showError = useException(true);
   const {
     isOpen: isAdditionalOpen,
     onOpen: onAdditionalOpen,
@@ -316,10 +316,17 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleCommentChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    // ASCII-only validation must apply only for Fortellis integration.
-    const nextValue = isFortellisIntegration ? filterAscii(e.target.value) : e.target.value;
+    const nextValue = e.target.value;
+
+    if (isFortellisIntegration && hasNonAsciiCharacters(nextValue)) {
+      showError(t('Special characters not allowed'));
+      return;
+    }
 
     if (nextValue.length > MAX_COUNT_WORDS_CAPACITY) {
+      if (isFortellisIntegration) {
+        showError(t('Only 250 characters allowed'));
+      }
       return;
     }
     setCommentText(prev => ({

@@ -7,11 +7,22 @@ import { setAppointmentNotes } from '../../../../../../store/reducers/appointmen
 import ClickAwayListener from 'react-click-away-listener';
 import { Textarea, useStyles } from './styles';
 import { useException } from '../../../../../../hooks/useException/useException';
+import { SystemIntegrationType } from '../../../../../../store/reducers/serviceCenters/types';
 
 const maxNoteLength = 250;
 
+const filterAscii = (value: string): string =>
+  value
+    .split('')
+    .filter(character => character.charCodeAt(0) <= 127)
+    .join('');
+
+const hasNonAsciiCharacters = (value: string): boolean => filterAscii(value) !== value;
+const legacyAllowedNotePattern = /^[A-Za-z0-9\s,.?!-]+$/;
+
 const AppointmentNotes = () => {
   const { appointmentNotes } = useSelector((state: RootState) => state.appointmentFrame);
+  const { scProfile } = useSelector((state: RootState) => state.appointment);
   const [isFocused, setFocused] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
@@ -19,6 +30,7 @@ const AppointmentNotes = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const showError = useException(true);
+  const isFortellisIntegration = scProfile?.integration === SystemIntegrationType.Fortellis;
 
   useEffect(() => {
     setText(appointmentNotes);
@@ -26,18 +38,39 @@ const AppointmentNotes = () => {
 
   const onNoteChange: React.ChangeEventHandler<HTMLTextAreaElement> = ({ target: { value } }) => {
     if (!isFocused) setFocused(true);
-    if (value.length <= maxNoteLength) {
-      if (value.match(/^[A-Za-z0-9\s,.?!-]+$/) || !value.length) {
-        setText(value);
-        setHasError(false);
+
+    if (!isFortellisIntegration) {
+      if (value.length <= maxNoteLength) {
+        if (value.match(legacyAllowedNotePattern) || !value.length) {
+          setText(value);
+          setHasError(false);
+        } else {
+          setHasError(true);
+          showError(t('Special characters not allowed'));
+        }
       } else {
         setHasError(true);
-        showError(t('Special characters not allowed'));
+        showError(t('Only 250 characters allowed'));
       }
-    } else {
-      setHasError(true);
-      showError(t('Only 250 characters allowed'));
+      return;
     }
+
+    if (isFortellisIntegration && hasNonAsciiCharacters(value)) {
+      setHasError(true);
+      showError(t('Special characters not allowed'));
+      return;
+    }
+
+    if (value.length > maxNoteLength) {
+      setHasError(true);
+      if (isFortellisIntegration) {
+        showError(t('Only 250 characters allowed'));
+      }
+      return;
+    }
+
+    setText(value);
+    setHasError(false);
   };
 
   const onCancel = () => {
@@ -46,11 +79,32 @@ const AppointmentNotes = () => {
     setFocused(false);
   };
   const onSave = () => {
-    if (text.match(/^[A-Za-z0-9\s,.?!-]+$/) || !text.length) {
-      dispatch(setAppointmentNotes(text.trim()));
-      setHasError(false);
-      setFocused(false);
+    if (!isFortellisIntegration) {
+      if (text.match(legacyAllowedNotePattern) || !text.length) {
+        dispatch(setAppointmentNotes(text.trim()));
+        setHasError(false);
+        setFocused(false);
+      }
+      return;
     }
+
+    if (isFortellisIntegration && hasNonAsciiCharacters(text)) {
+      setHasError(true);
+      showError(t('Special characters not allowed'));
+      return;
+    }
+
+    if (text.length > maxNoteLength) {
+      setHasError(true);
+      if (isFortellisIntegration) {
+        showError(t('Only 250 characters allowed'));
+      }
+      return;
+    }
+
+    dispatch(setAppointmentNotes(text.trim()));
+    setHasError(false);
+    setFocused(false);
   };
 
   const handleClickAway = () => {
