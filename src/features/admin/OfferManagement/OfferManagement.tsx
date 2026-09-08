@@ -9,7 +9,7 @@ import { pricingRoot } from '../../../utils/constants';
 
 export const OfferManagement = () => {
   const [selectedTab, setTab] = useState<string>('0');
-  const handleTabChange = (e: React.SyntheticEvent, val: string) => {
+  const handleTabChange = (e: any, val: string) => {
     setTab(val);
   };
   return (

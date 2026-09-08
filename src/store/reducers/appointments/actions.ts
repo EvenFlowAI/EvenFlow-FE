@@ -190,15 +190,14 @@ export const checkPodChanged =
         .then(result => {
           if (result?.data) {
             if (wasWarningShowed) {
-              const nextScreen: TScreen =
-                isAdvisorAvailable && appointmentFrame.currentScreen !== 'consultantSelection'
-                  ? 'consultantSelection'
-                  : isTransportationAvailable &&
-                      appointmentFrame.currentScreen !== 'transportationNeeds'
-                    ? 'transportationNeeds'
-                    : isAppointmentTimingAvailable
-                      ? 'appointmentTiming'
-                      : 'appointmentSelection';
+              const nextScreen: TScreen = isAdvisorAvailable
+                ? 'consultantSelection'
+                : isTransportationAvailable &&
+                    appointmentFrame.currentScreen !== 'transportationNeeds'
+                  ? 'transportationNeeds'
+                  : isAppointmentTimingAvailable
+                    ? 'appointmentTiming'
+                    : 'appointmentSelection';
               dispatch(setCurrentFrameScreen(nextScreen));
               if (onPodChanged) {
                 onPodChanged();

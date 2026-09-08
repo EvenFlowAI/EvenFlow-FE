@@ -10,44 +10,6 @@ import { TReactGATracker } from '../../utils/types';
 import { TArgCallback } from '../../types/types';
 import { getTrackersForParentSite } from '../../utils/getTrackersForParentSite';
 
-type TDealerInitMessage = {
-  type: 'init';
-  clientId?: string;
-  measurementId?: string;
-};
-
-const getClientIdFromOldDealers = (data: unknown): string =>
-  typeof data === 'string' && /^\d+$/.test(data) ? data : '';
-
-const getClientData = (data: unknown): TDealerInitMessage | null => {
-  if (typeof data !== 'object' || data === null) return null;
-
-  const initData = data as Partial<TDealerInitMessage>;
-  const hasClientData =
-    typeof initData.clientId === 'string' || typeof initData.measurementId === 'string';
-
-  return initData.type === 'init' && hasClientData ? (initData as TDealerInitMessage) : null;
-};
-
-const persistDealerAnalyticsData = (
-  clientData: TDealerInitMessage | null,
-  clientIdFromOldDealers: string
-) => {
-  if (clientIdFromOldDealers.length) {
-    console.log(
-      'TEMP_LOG: clientIdFromOldDealers obtained from the dealer website:',
-      clientIdFromOldDealers
-    );
-    sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientIdFromOldDealers);
-  }
-
-  if (clientData?.clientId?.length)
-    sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData.clientId);
-
-  if (clientData?.measurementId?.length)
-    sessionStorage.setItem(GA_MEASUREMENT_ID_FROM_DEALER, clientData.measurementId);
-};
-
 export const useAnalyticsForParentSite = (
   id: string,
   trackerCreated: boolean,
@@ -92,18 +54,35 @@ export const useAnalyticsForParentSite = (
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      const clientIdFromOldDealers = getClientIdFromOldDealers(event.data);
-      const clientData = getClientData(event.data);
+      const clientIdFromOldDealers =
+        typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
 
-      if (!clientData && !clientIdFromOldDealers.length) return;
+      const clientData =
+        typeof event.data === 'object' &&
+        event.data !== null &&
+        event.data?.type === 'init' &&
+        (typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string')
+          ? event.data
+          : '';
 
-      if (clientData)
-        console.log('TEMP_LOG: clientData obtained from the dealer website:', clientData);
+      if (clientData || clientIdFromOldDealers.length) {
+        if (clientData)
+          console.log('TEMP_LOG: clientData obtained from the dealer website:', clientData);
+        if (clientIdFromOldDealers?.length) {
+          console.log(
+            'TEMP_LOG: clientIdFromOldDealers obtained from the dealer website:',
+            clientIdFromOldDealers
+          );
+          sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientIdFromOldDealers);
+        }
+        if (clientData?.clientId?.length)
+          sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData?.clientId);
+        if (clientData?.measurementId?.length)
+          sessionStorage.setItem(GA_MEASUREMENT_ID_FROM_DEALER, clientData?.measurementId);
 
-      persistDealerAnalyticsData(clientData, clientIdFromOldDealers);
-
-      if (!trackerCreated && id) {
-        createTracker(trackerCreated);
+        if (!trackerCreated && id) {
+          createTracker(trackerCreated);
+        }
       }
     };
 
@@ -122,7 +101,7 @@ export const useAnalyticsForParentSite = (
   }, [id, trackerCreated]);
 
   useEffect(() => {
-    if (trackerCreated)
+    trackerCreated &&
       ReactGA.send({
         hitType: 'pageview',
         page: window.location.pathname + window.location.search,

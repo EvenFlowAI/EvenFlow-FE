@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -53,7 +53,7 @@ export const AddMileageModal: React.FC<
     setNewMileage('');
   };
 
-  const onKeyUp: KeyboardEventHandler<HTMLDivElement> = e => {
+  const onKeyUp = (e: React.KeyboardEvent<{}>) => {
     if (e.key === 'Enter') addMileage();
   };
 

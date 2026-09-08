@@ -43,7 +43,6 @@ import { useDebounce } from '../../../../../hooks/useDebounce/useDebounce';
 import { useException } from '../../../../../hooks/useException/useException';
 import { ReactComponent as MessageIcon } from '../../../../../assets/img/comment_icon.svg';
 import { ReactComponent as MessageIconFilled } from '../../../../../assets/img/comment_icon_filled.svg';
-import { SystemIntegrationType } from '../../../../../store/reducers/serviceCenters/types';
 
 type TProps = {
   handleSetScreen: TArgCallback<TScreen>;
@@ -53,14 +52,6 @@ type TProps = {
 };
 
 const MAX_COUNT_WORDS_CAPACITY = 250;
-
-const filterAscii = (value: string): string =>
-  value
-    .split('')
-    .filter(character => character.charCodeAt(0) <= 127)
-    .join('');
-
-const hasNonAsciiCharacters = (value: string): boolean => filterAscii(value) !== value;
 
 const MessageIconComponent = ({ filled }: { filled: boolean }) =>
   filled ? <MessageIconFilled /> : <MessageIcon />;
@@ -74,7 +65,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const { selectedSR, serviceRequests, search, scProfile, selectedSRComments } = useSelector(
     ({ appointment }: RootState) => appointment
   );
-  const { subService, service, serviceCategories } = useSelector(
+  const { subService, service, serviceCategories, trackerData } = useSelector(
     ({ appointmentFrame }: RootState) => appointmentFrame
   );
   const { allCategories } = useSelector(({ categories }: RootState) => categories);
@@ -83,13 +74,12 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const [searchInput, setSearch] = useState<string>('');
   const [opsCodesList, setOpsCodesList] = useState<IServiceRequest[]>([]);
   const [selectedOpsCodes, setSelectedOpsCodes] = useState<number[]>([]);
-  const isFortellisIntegration = scProfile?.integration === SystemIntegrationType.Fortellis;
 
   const dispatch = useDispatch();
   const isInit = useRef(true);
   const { t } = useTranslation();
   const debouncedSearch = useDebounce(searchInput);
-  const showError = useException(true);
+  const showError = useException();
   const {
     isOpen: isAdditionalOpen,
     onOpen: onAdditionalOpen,
@@ -316,22 +306,12 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleCommentChange = (id: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nextValue = e.target.value;
-
-    if (isFortellisIntegration && hasNonAsciiCharacters(nextValue)) {
-      showError(t('Special characters not allowed'));
-      return;
-    }
-
-    if (nextValue.length > MAX_COUNT_WORDS_CAPACITY) {
-      if (isFortellisIntegration) {
-        showError(t('Only 250 characters allowed'));
-      }
+    if (e.target.value.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
     setCommentText(prev => ({
       ...prev,
-      [id]: nextValue,
+      [id]: e.target.value,
     }));
   };
 

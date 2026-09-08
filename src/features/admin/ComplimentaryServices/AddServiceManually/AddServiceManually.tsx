@@ -88,11 +88,9 @@ const AddServiceManually: React.FC<
         price: +total,
         durationInHours: +duration,
       };
-      if (editedItem) {
-        dispatch(editComplimentary(editedItem.id, data, onSuccess, showError));
-      } else {
-        dispatch(addComplimentaryManually(data, onSuccess, showError));
-      }
+      editedItem
+        ? dispatch(editComplimentary(editedItem.id, data, onSuccess, showError))
+        : dispatch(addComplimentaryManually(data, onSuccess, showError));
     }
   }, [description, selectedSC, duration, total, editedItem]);
 

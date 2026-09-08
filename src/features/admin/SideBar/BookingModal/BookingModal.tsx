@@ -22,7 +22,7 @@ const restrictedRoles: TRole[] = [Roles.EvenFlowAIAgent, Roles.Technician, Roles
 
 export const BookingModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ ...props }) => {
+> = ({ onAction, payload, ...props }) => {
   const { selectedSC } = useSCs();
   const showMessage = useMessage();
   const currentUser = useCurrentUser();

@@ -34,7 +34,7 @@ const EngineTypes: React.FC<
   };
 
   const renderEngineTypeOption = useCallback(
-    (props: React.HTMLAttributes<HTMLLIElement>, option: IEngineType) => {
+    (props: any, option: IEngineType) => {
       const checked = !!selectedEngineTypes.find(el => el.id === option.id);
       return (
         <li style={{ display: 'flex', alignItems: 'center' }} {...props} key={option.id}>

@@ -36,7 +36,7 @@ const Mileage: React.FC<React.PropsWithChildren<React.PropsWithChildren<TMileage
   }, [mileage]);
 
   const renderOption = useCallback(
-    (props: React.HTMLAttributes<HTMLLIElement>, option: string) => {
+    (props: any, option: string) => {
       const allMileagesSelected = mileage.length
         ? mileage.every(item => selectedMileages.includes(item.value.toString()))
         : false;

@@ -7,11 +7,14 @@ import {
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { Button, SelectChangeEvent } from '@mui/material';
 import {
+  customerSegments,
+  dayOfWeek,
   ECustomerPresence,
   ECustomerSegment,
   EDayOfWeek,
   EOfferType,
   IOffer,
+  IOfferForm,
 } from '../../../../store/reducers/offers/types';
 import { useDispatch } from 'react-redux';
 import {
@@ -20,12 +23,17 @@ import {
   setArchiveOffer,
   updateOffer,
 } from '../../../../store/reducers/offers/actions';
-import { SC_UNDEFINED, SOMETHING_WRONG } from '../../../../utils/constants';
+import {
+  SC_UNDEFINED,
+  SOMETHING_WRONG,
+  time12HourSeconds,
+  timeSpanString,
+} from '../../../../utils/constants';
 import { IAssignedServiceRequestShort } from '../../../../store/reducers/serviceRequests/types';
 import { loadSCRequestsShort } from '../../../../store/reducers/serviceRequests/actions';
 import { ViewOffer } from './ViewOffer/ViewOffer';
 import { OfferForm } from './OfferForm/OfferForm';
-import { TOfferForm } from '../types';
+import { selectAllSR, TOfferForm } from '../types';
 import { EPricingDisplayType } from '../../../../store/reducers/pricingSettings/types';
 import { ICategory } from '../../../../store/reducers/categories/types';
 import { loadCategoriesByQuery } from '../../../../store/reducers/categories/actions';
@@ -37,20 +45,26 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { TEnumMap } from '../../../../store/reducers/types';
 import { TParsableDate } from '../../../../types/types';
-import {
-  buildOfferPayload,
-  initialOfferForm,
-  mapOfferToForm,
-  normalizeDaysOfWeek,
-  normalizeSegments,
-  normalizeServiceRequests,
-  validateOfferForm,
-} from './offerForm.helpers';
+import dayjs from 'dayjs';
+
+const initialForm: TOfferForm = {
+  offerValue: undefined,
+  offerTitle: undefined,
+  offerType: EOfferType.AmountOff,
+  serviceRequests: [selectAllSR],
+  serviceCategories: [],
+  customerSegments: [customerSegments[0]],
+  customerPresence: ECustomerPresence.Both,
+  dayOfWeek: [dayOfWeek[0]],
+  timeOfDayFrom: dayjs('00:00:00', time12HourSeconds),
+  timeOfDayTo: dayjs('23:59:59', time12HourSeconds),
+  isProductPageOn: false,
+};
 
 export const OfferModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IOffer> & { archive?: boolean }>>
-> = ({ archive, payload, ...props }) => {
-  const [form, setForm] = useState<TOfferForm>(initialOfferForm);
+> = ({ onAction, archive, payload, ...props }) => {
+  const [form, setForm] = useState<TOfferForm>(initialForm);
   const [archiving, setArchiving] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<boolean>(false);
   const [isSaving, setSaving] = useState<boolean>(false);
@@ -64,13 +78,45 @@ export const OfferModal: React.FC<
 
   useEffect(() => {
     if (props.open) {
-      setViewMode(Boolean(payload));
+      if (payload) {
+        setViewMode(true);
+      } else {
+        setViewMode(false);
+      }
     }
   }, [payload, props.open]);
 
   useEffect(() => {
     if (props.open) {
-      setForm(payload ? mapOfferToForm(payload) : initialOfferForm);
+      if (payload) {
+        setForm({
+          offerTitle: payload.title,
+          offerValue: String(payload.value),
+          offerType: payload.type,
+          serviceRequests: payload.isAllServiceRequestsIncluded
+            ? [selectAllSR]
+            : payload.serviceRequests,
+          customerSegments: payload.customerSegments
+            .map(s => {
+              return customerSegments.find(seg => seg.id === s);
+            })
+            .filter(el => el !== undefined) as TEnumMap<ECustomerSegment>[],
+          customerPresence: payload.customerPresence,
+          dayOfWeek: payload.dayOfWeeks.reduce((acc, el) => {
+            const dof = dayOfWeek.find(e => e.id === el);
+            if (dof) acc.push(dof);
+            return acc;
+          }, [] as TEnumMap<EDayOfWeek>[]),
+          durationFrom: dayjs(payload.duration.start),
+          durationTo: dayjs(payload.duration.end),
+          timeOfDayFrom: dayjs(payload.timeOfDay.start, timeSpanString),
+          timeOfDayTo: dayjs(payload.timeOfDay.end, timeSpanString),
+          serviceType: payload.serviceType?.name,
+          serviceCategories: payload.serviceCategories,
+        });
+      } else {
+        setForm(initialForm);
+      }
     }
   }, [props.open, payload]);
 
@@ -85,76 +131,60 @@ export const OfferModal: React.FC<
     target: { name, value },
   }) => {
     setFormIsChecked(false);
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm({ ...form, [name]: value });
   };
-
   const handleRadio = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
     setFormIsChecked(false);
-    setForm(prev => {
-      const offerType = Number(value) as EOfferType;
-      return {
-        ...prev,
-        offerType,
-        offerValue: offerType === EOfferType.FreeService ? undefined : prev.offerValue,
-        serviceType: offerType === EOfferType.FreeService ? prev.serviceType : undefined,
-      };
-    });
+    const nForm = { ...form, offerType: Number(value) as EOfferType };
+    if (nForm.offerType === EOfferType.FreeService) {
+      nForm.offerValue = undefined;
+    } else {
+      nForm.serviceType = undefined;
+    }
+    setForm(nForm);
   };
-
   const handleArchive = async () => {
     if (!payload) {
       showError(SOMETHING_WRONG);
-      return;
+    } else {
+      setArchiving(true);
+      try {
+        await dispatch(setArchiveOffer(payload, archive));
+        setArchiving(false);
+      } catch (e) {
+        setArchiving(false);
+        showError(e);
+      }
     }
+  };
 
-    setArchiving(true);
-    try {
-      await dispatch(setArchiveOffer(payload, archive));
-    } catch (e) {
-      showError(e);
-    } finally {
-      setArchiving(false);
+  const handleSegmentsSelect = (e: any, value: TEnumMap<ECustomerSegment>[]) => {
+    setFormIsChecked(false);
+    if (form.customerSegments.find(d => d.id === ECustomerSegment.All && value.length > 1)) {
+      setForm({ ...form, customerSegments: value.filter(s => s.id !== ECustomerSegment.All) });
+    } else if (value.find(s => s.id === ECustomerSegment.All)) {
+      setForm({ ...form, customerSegments: [customerSegments[0]] });
+    } else {
+      setForm({ ...form, customerSegments: value });
     }
   };
-
-  const handleSegmentsSelect = (e: React.SyntheticEvent, value: TEnumMap<ECustomerSegment>[]) => {
+  const handleDOWSelect = (e: any, value: TEnumMap<EDayOfWeek>[]) => {
     setFormIsChecked(false);
-    setForm(prev => ({
-      ...prev,
-      customerSegments: normalizeSegments(prev.customerSegments, value),
-    }));
+    if (form.dayOfWeek.find(d => d.id === EDayOfWeek.EveryDay) && value.length > 1) {
+      setForm({ ...form, dayOfWeek: value.filter(e => e.id !== EDayOfWeek.EveryDay) });
+    } else if (value.find(d => d.id === EDayOfWeek.EveryDay)) {
+      setForm({ ...form, dayOfWeek: [dayOfWeek[0]] });
+    } else {
+      setForm({ ...form, dayOfWeek: value });
+    }
   };
-
-  const handleDOWSelect = (e: React.SyntheticEvent, value: TEnumMap<EDayOfWeek>[]) => {
-    setFormIsChecked(false);
-    setForm(prev => ({
-      ...prev,
-      dayOfWeek: normalizeDaysOfWeek(prev.dayOfWeek, value),
-    }));
-  };
-
   const handleChangeDateTime = (name: keyof TOfferForm) => (date: TParsableDate) => {
     setFormIsChecked(false);
-    setForm(prev => ({ ...prev, [name]: date }));
+    setForm({ ...form, [name]: date });
   };
 
   const setEditMode = () => {
     setViewMode(false);
-  };
-
-  const handleRemove = async () => {
-    if (!payload) {
-      showError(SOMETHING_WRONG);
-      return;
-    }
-
-    try {
-      await dispatch(removeOffer(payload, archive));
-      showMessage('Offer removed');
-      props.onClose();
-    } catch (e) {
-      showError(e);
-    }
   };
 
   const askRemove = () =>
@@ -165,16 +195,32 @@ export const OfferModal: React.FC<
         await handleRemove();
       },
     });
-
-  const handleSRChange = (e: React.SyntheticEvent, value: IAssignedServiceRequestShort[]) => {
-    setFormIsChecked(false);
-    setForm(prev => ({
-      ...prev,
-      serviceRequests: normalizeServiceRequests(prev.serviceRequests, value),
-    }));
+  const handleRemove = async () => {
+    if (!payload) {
+      showError('Something wrong');
+    } else {
+      try {
+        await dispatch(removeOffer(payload, archive));
+        showMessage(`Offer removed`);
+        props.onClose();
+      } catch (e) {
+        showError(e);
+      }
+    }
   };
 
-  const onCategoryChange = (e: React.SyntheticEvent, value: ICategory[]) => {
+  const handleSRChange = (e: any, value: IAssignedServiceRequestShort[]) => {
+    setFormIsChecked(false);
+    if (form.serviceRequests.find(sr => sr.id === 0) && value.length > 1) {
+      setForm({ ...form, serviceRequests: value.filter(e => e.id !== 0) });
+    } else if (value.find(sr => sr.id === 0)) {
+      setForm({ ...form, serviceRequests: [selectAllSR] });
+    } else {
+      setForm({ ...form, serviceRequests: value });
+    }
+  };
+
+  const onCategoryChange = (e: any, value: ICategory[]) => {
     setForm(prev => ({ ...prev, serviceCategories: value }));
   };
 
@@ -182,13 +228,54 @@ export const OfferModal: React.FC<
     const { name, value } = e.target;
     setFormIsChecked(false);
     if (name) {
-      setForm(prev => ({ ...prev, [name]: value }));
+      setForm({ ...form, [name]: value });
     }
   };
 
   const handleValueChange = (name: keyof TOfferForm, value: unknown) => {
     setFormIsChecked(false);
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm({ ...form, [name]: value });
+  };
+
+  const checkIsValid = () => {
+    let valid = true;
+    if (!form.offerTitle?.length) {
+      valid = false;
+      showError('"Offer Title" must not be empty');
+    }
+    if (!form.offerValue?.length) {
+      valid = false;
+      showError('"Offer Value" must be greater than "0"');
+    }
+    if (!form.customerSegments.length) {
+      valid = false;
+      showError('"Customer Segment" must not be empty');
+    }
+    if (!form.serviceRequests.length) {
+      valid = false;
+      showError('"Service Request" must not be empty');
+    }
+    if (!form.dayOfWeek.length) {
+      valid = false;
+      showError('"Day of Week" must not be empty');
+    }
+    if (!form.durationFrom) {
+      valid = false;
+      showError('"Start Date" must not be empty');
+    }
+    if (!form.durationTo) {
+      valid = false;
+      showError('"End Date" must not be empty');
+    }
+    if (!form.timeOfDayFrom) {
+      valid = false;
+      showError('"Start Time" must not be empty');
+    }
+    if (!form.timeOfDayTo) {
+      valid = false;
+      showError('"End Time" must not be empty');
+    }
+    return valid;
   };
 
   const onCancel = () => {
@@ -199,31 +286,49 @@ export const OfferModal: React.FC<
   const handleSave = async () => {
     if (!selectedSC) {
       showError(SC_UNDEFINED);
-      return;
-    }
-
-    setFormIsChecked(true);
-    if (!validateOfferForm(form, showError)) {
-      return;
-    }
-
-    setSaving(true);
-    try {
-      const data = buildOfferPayload(form, selectedSC.id, payload?.id);
-      if (payload) {
-        await dispatch(updateOffer(data, archive));
-      } else {
-        await dispatch(createOffer(data));
+    } else {
+      setFormIsChecked(true);
+      if (checkIsValid()) {
+        setSaving(true);
+        try {
+          const data: IOfferForm = {
+            id: payload?.id,
+            title: form.offerTitle || '',
+            value: Number(form.offerValue),
+            serviceCenterId: selectedSC.id,
+            type: form.offerType,
+            customerPresence: form.customerPresence,
+            customerSegments: form.customerSegments.map(s => s.id),
+            dayOfWeeks: form.dayOfWeek.map(d => d.id),
+            duration: {
+              start: form.durationFrom?.toISOString(),
+              end: form.durationTo?.toISOString(),
+            },
+            timeOfDay: {
+              start: dayjs(form.timeOfDayFrom, time12HourSeconds).format(timeSpanString),
+              end: dayjs(form.timeOfDayTo, time12HourSeconds).format(timeSpanString),
+            },
+            isAllServiceRequestsIncluded: Boolean(form.serviceRequests.find(sr => sr.id === 0)),
+            serviceRequests: form.serviceRequests.find(sr => sr.id === 0)
+              ? null
+              : form.serviceRequests.map(s => s.id),
+            serviceType: form.serviceType ? { name: form.serviceType } : undefined,
+          };
+          if (payload) {
+            await dispatch(updateOffer(data, archive));
+          } else {
+            await dispatch(createOffer(data));
+          }
+          showMessage(`Offer ${payload ? 'updated' : 'created'}`);
+          setSaving(false);
+          onCancel();
+        } catch (e) {
+          setSaving(false);
+          showError(e);
+        }
       }
-      showMessage(`Offer ${payload ? 'updated' : 'created'}`);
-      onCancel();
-    } catch (e) {
-      showError(e);
-    } finally {
-      setSaving(false);
     }
   };
-
   return (
     <BaseModal {...props} width={600} onClose={onCancel}>
       <DialogTitle onClose={onCancel}>{viewMode ? '' : payload ? 'Edit' : 'Add'} Offer</DialogTitle>

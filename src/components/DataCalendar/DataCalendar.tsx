@@ -73,7 +73,7 @@ export function DataCalendar<U>({
 
   const onClick = (data: U | undefined, date: TParsableDate, dayType: TDayType) => {
     if (data && dayType === 'cur') {
-      if (onDayClick) onDayClick(data, date, dayType);
+      onDayClick(data, date, dayType);
     }
   };
 

@@ -5,7 +5,8 @@ import {
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
-import { useSelector } from 'react-redux';
+import { IAppointmentsRequest } from '../../../../store/reducers/appointments/types';
+import { useDispatch, useSelector } from 'react-redux';
 import { IAppointment } from '../../../../api/types';
 import { AppointmentsTable } from '../AppointmentsTable/AppointmentsTable';
 import { IOrder, TParsableDate } from '../../../../types/types';
@@ -14,6 +15,7 @@ import { useStatePagination } from '../../../../hooks/usePaginations/usePaginati
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import dayjs from 'dayjs';
 import { allColumns } from '../constants';
+import { EDate } from '../types';
 
 type TDialogProps = DialogProps & {
   date: TParsableDate;
@@ -29,18 +31,19 @@ export const AppointmentsListModal: React.FC<
 > = ({ date, refresh, order, setOrder, viewItem, setViewItem, ...props }) => {
   const { isModalLoading } = useSelector((state: RootState) => state.appointments);
   const { selectedSC } = useSCs();
+  const dispatch = useDispatch();
   const { pageData, onChangePage, onChangeRowsPerPage } = useStatePagination();
 
   useEffect(() => {
     if (selectedSC && props.open && date) {
-      // const data: IAppointmentsRequest = {
-      //   pageIndex: pageData.pageIndex,
-      //   pageSize: pageData.pageSize,
-      //   startDate: dayjs(date).add(dayjs(date).utcOffset(), 'minute'),
-      //   endDate: dayjs(date).endOf('day'),
-      //   serviceCenterId: selectedSC.id,
-      //   dateRangeFilterBy: EDate.AppointmentDate,
-      // };
+      const data: IAppointmentsRequest = {
+        pageIndex: pageData.pageIndex,
+        pageSize: pageData.pageSize,
+        startDate: dayjs(date).add(dayjs(date).utcOffset(), 'minute'),
+        endDate: dayjs(date).endOf('day'),
+        serviceCenterId: selectedSC.id,
+        dateRangeFilterBy: EDate.AppointmentDate,
+      };
       // todo uncomment for calendar functionality
       //   dispatch(loadAppointmentsForModal(data))
     }

@@ -123,7 +123,7 @@ const RemoveAccess = ({ isOpen, onClose, payload }: RemoveAccessProps) => {
 
     dispatch(setTableLoading(true));
     setIsLoading(true);
-    dispatch(updateRoleManagementUser(mappedUser, handleSuccess, handleError, showError));
+    dispatch(updateRoleManagementUser(mappedUser, handleSuccess, handleError));
   };
 
   if (!payload) return null;

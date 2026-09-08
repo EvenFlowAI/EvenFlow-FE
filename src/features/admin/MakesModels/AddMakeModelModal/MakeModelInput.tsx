@@ -1,12 +1,18 @@
 import React from 'react';
-import { Autocomplete, AutocompleteRenderOptionState, Button, Checkbox } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteRenderOptionState,
+  Button,
+  Checkbox,
+  Tooltip,
+} from '@mui/material';
 import { IData } from '../../../../components/DragAndDrop/types';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { useStyles } from './styles';
 import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocompleteStyles';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { renderMakeModelTags } from './makeModelInput.helpers';
+import TagDeleteIcon from './TagDeleteIcon';
 
 interface MakeModelInputProps {
   isEditing?: boolean;
@@ -50,10 +56,10 @@ const MakeModelInput = ({
   const selectAll = { text: 'Select All', id: 0 } as IData;
 
   const autocompleteOptionsRender =
-    (label: (el: IData) => string) =>
+    (label: (el: any) => string) =>
     (
       props: React.HTMLAttributes<HTMLLIElement>,
-      option: IData,
+      option: any,
       state: AutocompleteRenderOptionState
     ) => {
       if (option.text === 'Select All') {
@@ -179,24 +185,104 @@ const MakeModelInput = ({
         getOptionLabel={option => option.text}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         renderOption={autocompleteOptionsRender(e => e.text)}
-        renderTags={(value: IData[], getTagProps) =>
-          renderMakeModelTags({
-            value,
-            getTagProps,
-            isEditing,
-            filteredGlobalModels,
-            filteredGlobalMakes,
-            tagClassName: autocompleteClasses.classes.tag,
-            setModelsToAdd,
-            setMakesToAdd,
-          })
-        }
-        onChange={(_, value) => {
-          if (isEditing) {
-            onChangeModels(value);
-          } else {
-            onChangeMakes(value);
+        renderTags={(value: IData[], getTagProps) => {
+          const allSelected = isEditing
+            ? value.length === filteredGlobalModels.length
+            : value.length === filteredGlobalMakes.length;
+
+          if (allSelected) {
+            const props = getTagProps({ index: 0 });
+            return (
+              <div {...props}>
+                <div className={autocompleteClasses.classes.tag}>
+                  {isEditing ? 'All models' : 'All makes'}
+                  <TagDeleteIcon
+                    onClick={() => {
+                      isEditing ? setModelsToAdd([]) : setMakesToAdd([]);
+                    }}
+                  />
+                </div>
+              </div>
+            );
           }
+
+          // Calculate dynamic max visible tags based on text length
+          const calculateMaxVisibleTags = () => {
+            if (value.length === 0) return 0;
+
+            // Get the total length of all tags
+            const totalLength = value.reduce((sum, item) => sum + item.text.length, 0);
+
+            // If we have 3 or fewer items and all are very short (under 5 chars), show all
+            if (value.length <= 3 && value.every(item => item.text.length <= 5)) {
+              return value.length;
+            }
+
+            // If average length is very long (over 15 chars), show only 1 tag
+            if (totalLength / value.length > 15) return 1;
+
+            // If average length is medium (over 8 chars), show 2 tags
+            if (totalLength / value.length > 8) return 2;
+
+            // For shorter text, show up to 3 tags
+            return 2;
+          };
+
+          const maxVisibleTags = calculateMaxVisibleTags();
+          const visibleTags = value.slice(0, maxVisibleTags);
+          const remainingCount = value.length - maxVisibleTags;
+
+          return (
+            <>
+              {visibleTags.map((option, index) => {
+                const props = getTagProps({ index });
+                return (
+                  <div {...props}>
+                    <Tooltip title={option.text} arrow placement="top">
+                      <div className={autocompleteClasses.classes.tag}>
+                        <span
+                          style={{
+                            maxWidth: value.length > 1 ? '110px' : '230px',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {option.text}
+                        </span>
+                        {props.onDelete && <TagDeleteIcon onClick={props.onDelete} />}
+                      </div>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+              {remainingCount > 0 && (
+                <div {...getTagProps({ index: maxVisibleTags })}>
+                  <Tooltip
+                    title={
+                      <div
+                        style={{
+                          maxHeight: '400px',
+                          overflowY: 'auto',
+                        }}
+                      >
+                        {value.slice(maxVisibleTags).map(option => (
+                          <div key={option.id}>{option.text}</div>
+                        ))}
+                      </div>
+                    }
+                    arrow
+                    placement="bottom"
+                  >
+                    <div className={autocompleteClasses.classes.tag}>+{remainingCount} others</div>
+                  </Tooltip>
+                </div>
+              )}
+            </>
+          );
+        }}
+        onChange={(_, value) => {
+          isEditing ? onChangeModels(value) : onChangeMakes(value);
         }}
         value={isEditing ? modelsToAdd : makesToAdd}
         disabled={currentMake?.name === 'OTHER'}

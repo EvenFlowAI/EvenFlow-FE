@@ -8,6 +8,7 @@ export type TRow = {
 export enum SliderRange {
   Min = 0,
   Max = 10,
+  Default = 0,
 }
 export type TProximity = {
   point: number;

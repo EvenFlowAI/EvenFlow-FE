@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BaseModal,
   DialogActions,
@@ -7,14 +7,29 @@ import {
 } from '../../../../components/modals/BaseModal/BaseModal';
 import { Button, Divider } from '@mui/material';
 import { DialogProps } from '../../../../components/modals/BaseModal/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/rootReducer';
 import { useStyles } from './styles';
 import { ReactComponent as AttentionIcon } from '../../../../assets/img/attention.svg';
 import DragAndDrop from '../../../../components/DragAndDrop/DragAndDrop';
+import {
+  createMake,
+  loadGlobalModels,
+  loadMakeModelCodes,
+  setMakeModelCodes,
+  updateModel,
+} from '../../../../store/reducers/vehicleDetails/actions';
+import { useDispatch } from 'react-redux';
+import { IData } from '../../../../components/DragAndDrop/types';
+import { setCurrentMake } from '../../../../store/reducers/vehicleDetails/actions';
 import { MakeCodesConfiguration } from '../MakeCodesConfiguration/MakeCodesConfiguration';
+import { useModal } from '../../../../hooks/useModal/useModal';
+import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 import MakeModelInput from './MakeModelInput';
+import { ModelsTitle } from './modelsTitle';
+import { RemoveMakeTitle } from './RemoveMakeTitle';
 import ModelCodesConfiguration from '../ModelCodesConfiguration/ModelCodesConfiguration';
-import { useAddMakeModelModal } from './useAddMakeModelModal';
 
 type TAddMakeModalProps = DialogProps & {
   isEditing?: boolean;
@@ -23,27 +38,233 @@ type TAddMakeModalProps = DialogProps & {
 export const AddMakeModelModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAddMakeModalProps>>
 > = ({ isEditing, onClose, ...props }) => {
+  const dispatch = useDispatch();
+  const { currentMake, allMakes, makeModelCodes } = useSelector(
+    (state: RootState) => state.vehicleDetails
+  );
+  const {
+    onOpen: onOpenConfigurationModal,
+    onClose: onCloseConfigurationModal,
+    isOpen: isOpenConfigurationModal,
+  } = useModal();
+  const {
+    onOpen: onOpenModelConfigurationModal,
+    onClose: onCloseModelConfigurationModal,
+    isOpen: isOpenModelConfigurationModal,
+  } = useModal();
+  const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
+  const { askConfirm } = useConfirm();
+
+  const [configuredMakes, setConfiguredMakes] = useState<IData[]>([]);
+  const [configuredModels, setConfiguredModels] = useState<IData[]>([]);
+  const [makesToAdd, setMakesToAdd] = useState<IData[]>([]);
+  const [modelsToAdd, setModelsToAdd] = useState<IData[]>([]);
   const { classes } = useStyles();
-  const state = useAddMakeModelModal({ onClose });
+
+  useEffect(() => {
+    if (currentMake) {
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        if (currentMake.makeCode) {
+          dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
+        } else {
+          dispatch(setMakeModelCodes([]));
+        }
+      }
+      dispatch(loadGlobalModels(currentMake.globalId));
+    }
+  }, [currentMake, dispatch, selectedSC]);
+
+  useEffect(() => {
+    const filteredMakes = allMakes.map(el => ({
+      id: el.globalId,
+      text: el.name,
+      code: el.makeCode,
+    }));
+
+    setConfiguredMakes(filteredMakes);
+  }, [allMakes]);
+
+  useEffect(() => {
+    const filteredModels = currentMake?.models.map(el => ({
+      id: el.globalId,
+      text: el.name,
+      code: el.modelCode?.modelCode,
+    }));
+    setConfiguredModels(filteredModels ?? []);
+  }, [currentMake]);
+
+  const onCloseModal = () => {
+    onClose();
+    dispatch(setCurrentMake(null));
+    setModelsToAdd([]);
+    setMakesToAdd([]);
+    setConfiguredMakes([]);
+    setConfiguredModels([]);
+  };
+
+  const removedMakes = allMakes
+    .filter(el => !el.isReadOnly)
+    .filter(make => !configuredMakes.some(configured => configured.id === make.globalId));
+
+  const removedModels = currentMake?.models
+    .filter(el => !el.isReadOnly)
+    .filter(model => !configuredModels.some(configured => configured.id === model.globalId));
+
+  const handleSaveMakes = () => {
+    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+      onOpenConfigurationModal();
+    } else {
+      onSaveMakes();
+    }
+  };
+
+  const handleSaveModels = () => {
+    if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+      onOpenModelConfigurationModal();
+    } else {
+      onSaveModels();
+    }
+  };
+
+  const saveMakes = (globalIds: number[]) => {
+    const makeCodes = Object.fromEntries(configuredMakes.map(m => [m.id, m.code!]));
+
+    if (globalIds.length && selectedSC) {
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        dispatch(
+          createMake(
+            {
+              serviceCenterId: selectedSC?.id,
+              globalIds,
+              makeCodes,
+            },
+            () => {
+              onCloseModal();
+              onCloseConfigurationModal();
+            }
+          )
+        );
+      } else {
+        dispatch(
+          createMake(
+            {
+              serviceCenterId: selectedSC?.id,
+              globalIds,
+            },
+            () => {
+              onCloseModal();
+              onCloseConfigurationModal();
+            }
+          )
+        );
+      }
+    }
+  };
+
+  const onSaveMakes = () => {
+    if (selectedSC?.id) {
+      const globalIds = getGlobalIds();
+      if (removedMakes?.length) {
+        askConfirm({
+          isRemove: true,
+          title: RemoveMakeTitle(removedMakes),
+          content: (
+            <span>
+              After removing, please check configuration settings for Packages, Service Books,
+              Consent Messages, and Recalls which may have been impacted.
+            </span>
+          ),
+          onConfirm: () => saveMakes(globalIds),
+        });
+      } else {
+        saveMakes(globalIds);
+      }
+    }
+  };
+
+  const othersLast = (arr: IData[]) => {
+    const idx = arr.findIndex(el => el.text === 'OTHER');
+    if (idx === -1) return arr.map(el => el.id);
+    const copy = [...arr];
+    const [other] = copy.splice(idx, 1);
+    return [...copy.map(el => el.id), other.id];
+  };
+
+  const getGlobalIds = () => othersLast(configuredMakes);
+
+  const getModelIds = () => othersLast(configuredModels);
+
+  const saveModels = () => {
+    if (selectedSC && currentMake) {
+      if (selectedSC?.integration === SystemIntegrationType.Fortellis) {
+        const modelCodes: Record<string, string> = Object.fromEntries(
+          configuredModels.map(model => {
+            const found = makeModelCodes.find(mm => mm.modelCode === model.code);
+            return [model.id, found?.id?.toString() ?? ''];
+          })
+        );
+
+        return dispatch(
+          updateModel(
+            selectedSC?.id,
+            currentMake?.globalId,
+            getModelIds(),
+            () => {
+              onCloseModal();
+              onCloseModelConfigurationModal();
+            },
+            modelCodes
+          )
+        );
+      } else {
+        return dispatch(
+          updateModel(selectedSC?.id, currentMake?.globalId, getModelIds(), () => {
+            onCloseModal();
+            onCloseModelConfigurationModal();
+          })
+        );
+      }
+    }
+  };
+
+  const onSaveModels = () => {
+    if (!selectedSC?.id || !currentMake?.globalId) return;
+
+    if (removedModels?.length) {
+      askConfirm({
+        isRemove: true,
+        title: ModelsTitle(removedModels),
+        content: (
+          <span>
+            After removing, please check configuration settings for Packages, Service Books, Consent
+            Messages, and Recalls which may have been impacted.
+          </span>
+        ),
+        onConfirm: saveModels,
+      });
+    } else {
+      saveModels();
+    }
+  };
 
   return (
-    <BaseModal {...props} width={860} height={770} onClose={state.onCloseModal}>
-      <DialogTitle onClose={state.onCloseModal}>
-        {isEditing ? `${state.currentMake?.name} Model Options` : 'Make options'}
+    <BaseModal {...props} width={860} height={770} onClose={onCloseModal}>
+      <DialogTitle onClose={onCloseModal}>
+        {isEditing ? `${currentMake?.name} Model Options` : 'Make options'}
       </DialogTitle>
       <DialogContent>
         <div className={classes.wrapper}>
           <div className={classes.firstColumnLayout}>
             <MakeModelInput
-              configuredModels={state.configuredModels}
-              configuredMakes={state.configuredMakes}
-              setConfiguredMakes={state.setConfiguredMakes}
-              setConfiguredModels={state.setConfiguredModels}
+              configuredModels={configuredModels}
+              configuredMakes={configuredMakes}
+              setConfiguredMakes={setConfiguredMakes}
+              setConfiguredModels={setConfiguredModels}
               isEditing={isEditing}
-              makesToAdd={state.makesToAdd}
-              modelsToAdd={state.modelsToAdd}
-              setMakesToAdd={state.setMakesToAdd}
-              setModelsToAdd={state.setModelsToAdd}
+              makesToAdd={makesToAdd}
+              modelsToAdd={modelsToAdd}
+              setMakesToAdd={setMakesToAdd}
+              setModelsToAdd={setModelsToAdd}
             />
             <div className={classes.attentionWrapper}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -53,8 +274,7 @@ export const AddMakeModelModal: React.FC<
                   <br />
                   order that is presented in the drop-down menu on the booking flow
                 </p>
-                {state.selectedSC?.integration === SystemIntegrationType.Fortellis ||
-                state.selectedSC?.integration === SystemIntegrationType.XTime ? (
+                {selectedSC?.integration === SystemIntegrationType.Fortellis ? (
                   <p style={{ margin: 0 }}>
                     Click <span style={{ fontWeight: 'bold' }}>Next</span> to configure the
                     corresponding{' '}
@@ -73,10 +293,10 @@ export const AddMakeModelModal: React.FC<
               {isEditing ? 'configured models' : 'configured makes'}
             </div>
             <DragAndDrop
-              currentMake={state.currentMake}
+              currentMake={currentMake}
               isEditing={isEditing}
-              data={isEditing ? state.configuredModels : state.configuredMakes}
-              setData={isEditing ? state.setConfiguredModels : state.setConfiguredMakes}
+              data={isEditing ? configuredModels : configuredMakes}
+              setData={isEditing ? setConfiguredModels : setConfiguredMakes}
             />
           </div>
         </div>
@@ -84,33 +304,30 @@ export const AddMakeModelModal: React.FC<
       <Divider style={{ margin: 0 }} />
       <DialogActions>
         <div className={classes.buttonsWrapper}>
-          <Button onClick={state.onCloseModal} className={classes.cancelButton}>
+          <Button onClick={onCloseModal} className={classes.cancelButton}>
             Cancel
           </Button>
           <Button
-            onClick={() => (isEditing ? state.handleSaveModels() : state.handleSaveMakes())}
+            onClick={() => (isEditing ? handleSaveModels() : handleSaveMakes())}
             className={classes.saveButton}
           >
-            {state.selectedSC?.integration === SystemIntegrationType.Fortellis ||
-            state.selectedSC?.integration === SystemIntegrationType.XTime
-              ? 'Next'
-              : 'Save'}
+            {selectedSC?.integration === SystemIntegrationType.Fortellis ? 'Next' : 'Save'}
           </Button>
         </div>
       </DialogActions>
       <MakeCodesConfiguration
-        onClose={state.onCloseConfigurationModal}
-        open={state.isOpenConfigurationModal}
-        configuredMakes={state.configuredMakes}
-        setConfiguredMakes={state.setConfiguredMakes}
-        onSaveMakes={state.onSaveMakes}
+        onClose={onCloseConfigurationModal}
+        open={isOpenConfigurationModal}
+        configuredMakes={configuredMakes}
+        setConfiguredMakes={setConfiguredMakes}
+        onSaveMakes={onSaveMakes}
       />
       <ModelCodesConfiguration
-        onClose={state.onCloseModelConfigurationModal}
-        open={state.isOpenModelConfigurationModal}
-        configuredModels={state.configuredModels}
-        setConfiguredModels={state.setConfiguredModels}
-        onSaveModels={state.onSaveModels}
+        onClose={onCloseModelConfigurationModal}
+        open={isOpenModelConfigurationModal}
+        configuredModels={configuredModels}
+        setConfiguredModels={setConfiguredModels}
+        onSaveModels={onSaveModels}
       />
     </BaseModal>
   );

@@ -101,11 +101,7 @@ const RuleHeaderWrapper = ({
             size="medium"
             onClick={e => {
               e.stopPropagation();
-              if (rule.id) {
-                removeRule(String(rule.id));
-              } else {
-                removeLocalRule(index);
-              }
+              rule.id ? removeRule(String(rule.id)) : removeLocalRule(index);
             }}
             className={classes.deleteButton}
           >

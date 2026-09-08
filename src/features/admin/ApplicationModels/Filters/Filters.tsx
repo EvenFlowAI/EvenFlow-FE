@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React from 'react';
 import { FiltersWrapper } from './styles';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { Autocomplete } from '@mui/material';
@@ -14,9 +14,9 @@ import { reviewOptions } from '../../../../utils/constants';
 import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 
 type TProps = {
-  onMakesChange: (e: SyntheticEvent, options: IGlobalMake[]) => void;
-  onStatusChange: (e: SyntheticEvent, option: TReviewOption | null) => void;
-  onModelsChange: (e: SyntheticEvent, option: IGlobalModel[]) => void;
+  onMakesChange: (e: React.ChangeEvent<{}>, options: IGlobalMake[]) => void;
+  onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption | null) => void;
+  onModelsChange: (e: React.ChangeEvent<{}>, option: IGlobalModel[]) => void;
   modelsOptions: IGlobalModel[];
   isLoading: boolean;
   selectedMakes: IGlobalMake[];
@@ -39,17 +39,17 @@ const Filters: React.FC<TProps> = ({
   const { allMakesOptions } = useSelector((state: RootState) => state.globalVehicles);
   const { classes } = useAutocompleteStyles();
 
-  const renderModelOption = (props: React.HTMLAttributes<HTMLLIElement>, option: IGlobalModel) => {
+  const renderModelOption = (props: any, option: IGlobalModel) => {
     return (
-      <li style={{ height: 'fit-content' }} key={option.id} {...props}>
+      <li style={{ height: 'fit-content' }} key={option} {...props}>
         {option.vinModel}
       </li>
     );
   };
 
-  const renderMakeOption = (props: React.HTMLAttributes<HTMLLIElement>, option: IGlobalMake) => {
+  const renderMakeOption = (props: any, option: IGlobalMake) => {
     return (
-      <li style={{ height: 'fit-content' }} key={option.id} {...props}>
+      <li style={{ height: 'fit-content' }} key={option} {...props}>
         {option.vinMake}
       </li>
     );
@@ -62,10 +62,9 @@ const Filters: React.FC<TProps> = ({
         multiple
         classes={classes}
         value={selectedMakes}
-        disabled={disabled}
+        disabled={disabled || isLoading}
         options={allMakesOptions}
         renderOption={renderMakeOption}
-        disableCloseOnSelect
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         onChange={onMakesChange}
@@ -78,7 +77,10 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
             getTagProps,
-            400
+            400,
+            option => {
+              return option;
+            }
           )
         }
         renderInput={autocompleteRender({
@@ -88,11 +90,10 @@ const Filters: React.FC<TProps> = ({
       />
       <Autocomplete
         loading={isLoading}
-        disabled={disabled || !selectedMakes.length}
+        disabled={disabled || isLoading || !selectedMakes.length}
         value={selectedModel}
         options={modelsOptions}
         multiple
-        disableCloseOnSelect
         renderOption={renderModelOption}
         classes={classes}
         sx={{
@@ -107,7 +108,10 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinModel),
             getTagProps,
-            400
+            400,
+            option => {
+              return option;
+            }
           )
         }
         renderInput={autocompleteRender({

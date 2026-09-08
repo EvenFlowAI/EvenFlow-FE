@@ -41,14 +41,13 @@ const initialForm: TForm = {
 
 export const SendOfferModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ ...props }) => {
+> = ({ onAction, payload, ...props }) => {
   const [form, setForm] = useState<TForm>(initialForm);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
   const offers = useSelector((state: RootState) => state.offers.offersList);
   const showMessage = useMessage();
   const showError = useException();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSelect = (name: keyof TForm) => (e: any, value: unknown) => {
     setFormIsChecked(false);
     switch (name) {
@@ -88,7 +87,6 @@ export const SendOfferModal: React.FC<
       }
     }
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChannel = (e: any, value: string) => {
     setForm({ ...form, channel: Number(value) as EChannel });
   };

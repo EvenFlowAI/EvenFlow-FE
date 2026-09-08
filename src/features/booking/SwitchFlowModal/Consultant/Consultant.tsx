@@ -17,7 +17,6 @@ type TProps = {
   consultant: IServiceConsultant | null;
   setConsultant: Dispatch<SetStateAction<IServiceConsultant | null>>;
   newOption: IFirstScreenOption | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   address?: any;
   zipCode?: string | null;
   open: boolean;
@@ -61,7 +60,7 @@ const Consultant: React.FC<TProps> = ({
           const currentAdvisor = result.find(el => el.id === advisor?.id);
           setConsultant(currentAdvisor ?? null);
         })
-        .catch(() => {
+        .catch(err => {
           onServiceIsUnavailable();
         })
         .finally(() => setLoading(false));

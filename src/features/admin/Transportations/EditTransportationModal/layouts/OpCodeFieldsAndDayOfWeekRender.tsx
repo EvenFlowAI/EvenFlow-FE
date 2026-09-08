@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Autocomplete, Checkbox } from '@mui/material';
 import { renderChipTags } from './ChipTagRender';
 import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
@@ -84,7 +84,6 @@ const OpCodeFieldsAndDayOfWeekRender = ({
   );
 
   const onRequestChange = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (ruleIdx: number, _e: any, value: TOption[]) => {
       dispatch(setFormIsChecked(false));
       if (value.length > 0) {
@@ -142,7 +141,6 @@ const OpCodeFieldsAndDayOfWeekRender = ({
   );
 
   const onDaysChange = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (ruleIdx: number, _e: any, value: TOption[]) => {
       dispatch(setFormIsChecked(false));
       updateLocalRule(ruleIdx, { daysOfWeek: value });
@@ -151,7 +149,6 @@ const OpCodeFieldsAndDayOfWeekRender = ({
   );
 
   const onFilterModeChange = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (ruleIdx: number, _e: any, value: TOption | null) => {
       dispatch(setFormIsChecked(false));
       updateLocalRule(ruleIdx, { serviceRequestFilterMode: value });

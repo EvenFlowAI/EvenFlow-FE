@@ -25,7 +25,7 @@ const TimeRangesAndCapacity = () => {
   const { selectedSC } = useSCs();
 
   useEffect(() => {
-    if (selectedSC) dispatch(loadTimeRangesAndCapacity(selectedSC.id));
+    selectedSC && dispatch(loadTimeRangesAndCapacity(selectedSC.id));
   }, [selectedSC]);
 
   useEffect(() => {

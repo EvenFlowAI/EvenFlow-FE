@@ -1,6 +1,7 @@
 import {
   TApiResponse,
   IPasswordRecoveryData,
+  IPasswordRecoveryResp,
   ISetNewPasswordData,
   IConfig,
   IListAppointmentRequest,
@@ -12,7 +13,7 @@ import { PaginatedAPIResponse } from '../types/types';
 import { ITokens } from '../types/auth';
 
 const accounts = {
-  passwordRecovery: (data: IPasswordRecoveryData): TApiResponse<object> =>
+  passwordRecovery: (data: IPasswordRecoveryData): TApiResponse<IPasswordRecoveryResp> =>
     request.post('/accounts/password-recovery', data),
   setNewPassword: (data: ISetNewPasswordData): TApiResponse =>
     request.patch('/accounts/password-reset', data),
@@ -39,7 +40,7 @@ const authentication = {
 };
 
 const employeeSchedules = {
-  remove: (id: number): TApiResponse<object> => request.delete(`/employee-schedules/${id}`),
+  remove: (id: number): TApiResponse<{}> => request.delete(`/employee-schedules/${id}`),
 };
 
 const configs = {

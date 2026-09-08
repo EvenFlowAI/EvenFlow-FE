@@ -92,23 +92,9 @@ export const createUser =
       dispatch(loadByFilters());
       dispatch(saving(false));
       onSuccess();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
+    } catch (e) {
       dispatch(saving(false));
-      const errors: {
-        field: string;
-        message: string;
-      }[] = e.response?.data?.errors;
-      console.log(e.response.data);
-      if (errors?.length) {
-        errors.map(error => {
-          onError(error.message);
-        });
-      }
-      if (e.response?.data?.error) {
-        onError(e.response?.data?.error.message);
-      }
-
+      onError(e);
       console.log('createUser', e);
     }
   };
@@ -144,8 +130,7 @@ export const updateRoleManagementUser =
     payload: IUserAccount,
     onSuccess: () => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (err?: any) => void,
-    showError: (message: string) => void,
+    onError: (err: any) => void,
     avatar?: File
   ): AppThunk =>
   async dispatch => {
@@ -159,21 +144,8 @@ export const updateRoleManagementUser =
       // eslint-disable-next-line
     } catch (e: any) {
       const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
-      const errors: {
-        field: string;
-        message: string;
-      }[] = e.response?.data?.errors;
-      if (errors?.length) {
-        errors.map(error => {
-          showError(error.message);
-        });
-        onError();
-      }
-      if (e.response?.data?.error) {
-        onError(errorCode);
-      }
-      console.log(e);
-      console.log('createUser', e);
+      onError(errorCode);
+      console.log('updateUser', e);
     }
   };
 
@@ -182,8 +154,7 @@ export const createRoleManagementUser =
     payload: INewUserAccount,
     onSuccess: () => void,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onError: (err?: any) => void,
-    showError: (message: string) => void,
+    onError: (err: any) => void,
     avatar?: File
   ): AppThunk =>
   async dispatch => {
@@ -198,20 +169,8 @@ export const createRoleManagementUser =
       // eslint-disable-next-line
     } catch (e: any) {
       const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
-      const errors: {
-        field: string;
-        message: string;
-      }[] = e.response?.data?.errors;
-      if (errors?.length) {
-        errors.map(error => {
-          showError(error.message);
-        });
-        onError();
-      }
-      if (e.response?.data?.error) {
-        onError(errorCode);
-      }
       console.log(e);
-      console.log('createUser', e);
+      onError(errorCode);
+      console.log('updateUser', e);
     }
   };

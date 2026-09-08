@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactComponentElement } from 'react';
 import { useDetailsItemStyles } from './styles';
 
 export const DetailsItem: React.FC<
@@ -6,7 +6,7 @@ export const DetailsItem: React.FC<
     React.PropsWithChildren<{
       title: string;
       text: string | string[];
-      icon?: ReactElement;
+      icon?: ReactComponentElement<any>;
     }>
   >
 > = ({ title, text, icon }) => {

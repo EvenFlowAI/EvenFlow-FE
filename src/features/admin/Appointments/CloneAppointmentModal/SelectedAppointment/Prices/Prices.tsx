@@ -18,8 +18,7 @@ const Prices: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPricesPr
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!selectedSC) return;
-    dispatch(loadRoundPriceSetting(selectedSC.id));
+    selectedSC && dispatch(loadRoundPriceSetting(selectedSC.id));
   }, [selectedSC]);
 
   return (

@@ -120,8 +120,6 @@ class AuthService {
         type: ADMIN_TOKEN_UPDATED,
       });
 
-      console.error(e);
-
       // reload current page
       window.location.reload();
     }
@@ -137,7 +135,6 @@ class AuthService {
         type: ADMIN_TOKEN_UPDATED,
       });
       this.syncRequestAuthWithLocalStorage();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e?.response?.data?.errorCode === ErrorCode.InvalidPermission) {
         window.location.reload();

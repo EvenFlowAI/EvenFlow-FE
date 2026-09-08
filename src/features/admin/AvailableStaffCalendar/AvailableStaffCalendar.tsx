@@ -33,6 +33,8 @@ export const AvailableStaffCalendar = () => {
     );
   }, []);
 
+  const onDayClick = (el: TData | undefined, date: TParsableDate) => {};
+
   return (
     <DataCalendar
       data={data}
@@ -47,6 +49,7 @@ export const AvailableStaffCalendar = () => {
       timePeriod={timePeriod}
       setDate={setDate}
       dateFieldName={'date'}
+      onDayClick={onDayClick}
     />
   );
 };

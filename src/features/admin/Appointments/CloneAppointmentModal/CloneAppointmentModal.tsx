@@ -91,7 +91,7 @@ const CloneAppointmentModal: React.FC<
   };
 
   const handleConfirm = () => {
-    if (selectedSC) dispatch(cloneAppointment(selectedSC.id, onCloneSuccess, showError));
+    selectedSC && dispatch(cloneAppointment(selectedSC.id, onCloneSuccess, showError));
   };
 
   const groupedAppointments: TGroupedAppointments = useMemo(() => {

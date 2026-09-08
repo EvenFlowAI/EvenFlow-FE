@@ -24,7 +24,6 @@ const tabs: Tab[] = [
 const PricingLevelsBy = () => {
   const [selectedTab, selectTab] = useState<string>('0');
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleTabChange = (e: any, value: string) => {
     selectTab(value);
   };

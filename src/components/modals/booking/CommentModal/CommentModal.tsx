@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BaseModal, DialogContent, DialogTitle } from '../../BaseModal/BaseModal';
 import { DialogProps } from '../../BaseModal/types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { TextFieldWhite } from '../../../styled/EndUserInputs';
 import { useException } from '../../../../hooks/useException/useException';
@@ -11,17 +11,7 @@ import { ISR } from '../../../../store/reducers/appointment/types';
 import { selectSRComment } from '../../../../store/reducers/appointment/actions';
 import { CharactersWrapper } from './styles';
 import { setCommentsForCategories } from '../../../../store/reducers/appointmentFrameReducer/actions';
-import { RootState } from '../../../../store/rootReducer';
-import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 const MAX_COUNT_WORDS_CAPACITY = 250;
-
-const filterAscii = (value: string): string =>
-  value
-    .split('')
-    .filter(character => character.charCodeAt(0) <= 127)
-    .join('');
-
-const hasNonAsciiCharacters = (value: string): boolean => filterAscii(value) !== value;
 
 const CommentModal: React.FC<
   DialogProps & { selectedRequest: ISR | null; currentComment: string }
@@ -30,9 +20,7 @@ const CommentModal: React.FC<
   const [selectedRequestState, setSelectedRequestState] = useState(selectedRequest);
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { scProfile } = useSelector((state: RootState) => state.appointment);
-  const isFortellisIntegration = scProfile?.integration === SystemIntegrationType.Fortellis;
-  const showError = useException(true);
+  const showError = useException();
 
   useEffect(() => {
     setText(currentComment);
@@ -49,23 +37,13 @@ const CommentModal: React.FC<
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
-    const nextValue = value;
-
-    if (isFortellisIntegration && hasNonAsciiCharacters(nextValue)) {
-      showError(t('Special characters not allowed'));
+    if (value.length > MAX_COUNT_WORDS_CAPACITY) {
       return;
     }
-
-    if (nextValue.length > MAX_COUNT_WORDS_CAPACITY) {
-      if (isFortellisIntegration) {
-        showError(t('Only 250 characters allowed'));
-      }
+    if (/\s{2,}$/.test(value)) {
       return;
     }
-    if (/\s{2,}$/.test(nextValue)) {
-      return;
-    }
-    setText(nextValue);
+    setText(value);
   };
 
   const onSave = () => {

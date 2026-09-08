@@ -31,7 +31,15 @@ type TCallbackProps = {
 
 export const ViewAppointmentsModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAppointment> & TCallbackProps>>
-> = ({ onEditAppointment, onCloneAppointment, onCancelAppointment, payload, ...props }) => {
+> = ({
+  onAction,
+  refresh,
+  onEditAppointment,
+  onCloneAppointment,
+  onCancelAppointment,
+  payload,
+  ...props
+}) => {
   const { isAppointmentLoading } = useSelector((state: RootState) => state.appointments);
   const { isAppointmentSlotsLoading } = useSelector((state: RootState) => state.appointment);
   const { onOpen, isOpen, onClose } = useModal();
@@ -41,8 +49,7 @@ export const ViewAppointmentsModal: React.FC<
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!selectedSC) return;
-    dispatch(loadMileage(selectedSC.id));
+    selectedSC && dispatch(loadMileage(selectedSC.id));
   }, [selectedSC]);
 
   const handleExEvenFlowAppointments = () => {

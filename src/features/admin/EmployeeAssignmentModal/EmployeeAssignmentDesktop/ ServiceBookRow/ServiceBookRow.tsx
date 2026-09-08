@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React, { ChangeEvent } from 'react';
 import { TableRow } from '../../../../../components/styled/TableRow';
 import { Autocomplete, TableCell } from '@mui/material';
 import { SelectsWrapper, TCellData } from '../../styles';
@@ -18,7 +18,7 @@ type TProps = {
     item: IEmployeeAssignmentSetting,
     level: EAssignmentLevel,
     role: 'Advisor' | 'Technician'
-  ) => (e: SyntheticEvent, value: TOption | null) => void;
+  ) => (e: ChangeEvent<{}>, value: TOption | null) => void;
 };
 
 const ServiceBookRow: React.FC<TProps> = ({ item, onMethodChange }) => {

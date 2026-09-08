@@ -47,7 +47,7 @@ const levels: TOption[] = [
 
 export const OverrideOPsCodeModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps<IAssignedServiceRequest>>>
-> = ({ payload, ...props }) => {
+> = ({ onAction, payload, ...props }) => {
   const [form, setForm] = useState<TForm>(initialForm);
   const [isLoading, setLoading] = useState<boolean>(false);
   const showMessage = useMessage();

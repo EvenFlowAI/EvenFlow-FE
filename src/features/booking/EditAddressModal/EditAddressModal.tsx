@@ -49,7 +49,6 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose, openSwitchFlow }) =
   const showError = useException();
 
   const [zip, setZip] = useState<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [userAddress, setUserAddress] = useState<any>(null);
   const [isAddressValid, setAddressValid] = useState<boolean>(false);
   const {

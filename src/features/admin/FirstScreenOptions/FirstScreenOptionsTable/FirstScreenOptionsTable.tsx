@@ -53,7 +53,7 @@ export const FirstScreenOptionsTable: React.FC<
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (selectedSC) dispatch(loadFirstScreenOptionsList(selectedSC.id));
+    selectedSC && dispatch(loadFirstScreenOptionsList(selectedSC.id));
   }, [selectedSC]);
 
   const openMenu =

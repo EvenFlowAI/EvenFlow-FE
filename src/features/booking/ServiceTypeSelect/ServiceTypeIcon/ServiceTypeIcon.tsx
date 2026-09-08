@@ -2,6 +2,7 @@ import React from 'react';
 import { IFirstScreenOption } from '../../../../store/reducers/serviceTypes/types';
 import { useStyles } from './styles';
 import { ReactComponent as NoLogo } from '../../../../assets/img/noLogo.svg';
+import { ReactComponent as NoLogoBig } from '../../../../assets/img/noLogoBig.svg';
 import { useMediaQuery, useTheme } from '@mui/material';
 
 type TServiceTypeIconProps = { card: IFirstScreenOption };

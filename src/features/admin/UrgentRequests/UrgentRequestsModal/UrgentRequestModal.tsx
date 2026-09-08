@@ -33,7 +33,7 @@ const rowData: TableRowDataType<IAssignedServiceRequestShort>[] = [
 
 export const UrgentRequestModal: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<DialogProps>>
-> = ({ ...props }) => {
+> = ({ onAction, payload, ...props }) => {
   const [saving, setSaving] = useState<boolean>(false);
   const [selected, setSelected] = useState<number[]>([]);
   const dispatch = useDispatch();

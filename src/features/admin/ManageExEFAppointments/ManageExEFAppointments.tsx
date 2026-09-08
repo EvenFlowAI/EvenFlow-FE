@@ -22,11 +22,9 @@ const ManageExEFAppointments = () => {
   const { classes } = useStyles();
 
   useEffect(() => {
-    if (!selectedSC) return;
-    setManageOn(Boolean(selectedSC.isUpdateAdvisorInAppointments));
+    selectedSC && setManageOn(Boolean(selectedSC.isUpdateAdvisorInAppointments));
   }, [selectedSC]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSwitch = (e: any, value: boolean) => {
     setManageOn(value);
   };

@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react';
+import React from 'react';
 import { FiltersWrapper } from './styles';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { Autocomplete } from '@mui/material';
@@ -11,11 +11,11 @@ import { useAutocompleteStyles } from '../../../../hooks/styling/useAutocomplete
 import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 
 type TProps = {
-  onMakesChange: (e: SyntheticEvent, option: IGlobalMake[]) => void;
-  onStatusChange: (e: SyntheticEvent, option: TReviewOption | null) => void;
+  onMakesChange: (e: React.ChangeEvent<{}>, option: IGlobalMake[]) => void;
+  onStatusChange: (e: React.ChangeEvent<{}>, option: TReviewOption) => void;
   isLoading: boolean;
-  selectedMake: IGlobalMake[];
-  selectedStatus: TReviewOption | null;
+  selectedMake: any;
+  selectedStatus: any;
   disabled: boolean;
 };
 
@@ -38,7 +38,7 @@ const Filters: React.FC<TProps> = ({
         options={allMakesOptions}
         loading={isLoading}
         value={selectedMake}
-        disabled={disabled}
+        disabled={isLoading || disabled}
         isOptionEqualToValue={(o, v) => o.id === v.id}
         getOptionLabel={o => o.vinMake}
         disableCloseOnSelect

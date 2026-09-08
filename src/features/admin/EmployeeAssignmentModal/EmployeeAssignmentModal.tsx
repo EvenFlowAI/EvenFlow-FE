@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   BaseModal,
   DialogContent,
@@ -64,7 +64,7 @@ const EmployeeAssignmentModal: React.FC<
 
   useEffect(() => {
     if (props.open) {
-      if (selectedSC) dispatch(loadAssignmentSettings(selectedSC.id));
+      selectedSC && dispatch(loadAssignmentSettings(selectedSC.id));
     }
   }, [props.open, selectedSC]);
 
@@ -168,7 +168,7 @@ const EmployeeAssignmentModal: React.FC<
 
   const onMethodChange = useCallback(
     (item: IEmployeeAssignmentSetting, level: EAssignmentLevel, role: 'Advisor' | 'Technician') =>
-      (e: SyntheticEvent, value: TOption | null) => {
+      (e: ChangeEvent<{}>, value: TOption | null) => {
         onChange(item, level, role, value ? value?.value : null);
       },
     [data]
