@@ -224,7 +224,7 @@ export const ManageAppointment: React.FC<
     if (!customer.email && isEmailRequired) {
       isValid = false;
       localErrors.push('email');
-      showError(t('\"Email\" must not be empty'));
+      showError(t('"Email" must not be empty'));
     }
     if (!customer?.fullName) {
       isValid = false;
@@ -256,6 +256,7 @@ export const ManageAppointment: React.FC<
     return isValid;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (e: any) => {
     const timeSlotUnavailable = e.response?.data?.message?.toLowerCase().includes('time slot');
     const transportationUnavailable = e.response?.data?.message
@@ -385,7 +386,11 @@ export const ManageAppointment: React.FC<
   };
 
   const onSaveMileage = () => {
-    userClickedOnSave ? handleCreateAppointment() : onMileageClose();
+    if (userClickedOnSave) {
+      handleCreateAppointment();
+    } else {
+      onMileageClose();
+    }
   };
   const showLoader = isAppointmentSaving || isConsentsLoading || isCloneMode;
 

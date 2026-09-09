@@ -30,7 +30,7 @@ export const DescriptionWrapper = styled('div')({
   width: '100%',
 });
 
-export const CodeWrapper = styled('div')<CodeWrapperProps>(({ opened }) => ({
+export const CodeWrapper = styled('div')<CodeWrapperProps>(() => ({
   border: '1px solid #DADADA',
   display: 'flex',
   flexDirection: 'column',
@@ -71,16 +71,6 @@ export const PricesWrapper = styled('div')({
   paddingRight: 16,
 });
 
-const OfferPrice = styled('div')({
-  display: 'flex',
-  flexWrap: 'nowrap',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginRight: 28,
-  fontSize: 14,
-  color: '#008331',
-});
-
 export const Code = styled(FormControlLabel)<FormControlLabelProps>({
   padding: 0,
   margin: 0,
@@ -117,7 +107,7 @@ export const MessageIconWrapper = styled('div')<CodeWrapperProps>(({ opened }) =
   },
 }));
 
-export const RemainingCharactersWrapper = styled('div')<CodeWrapperProps>(({ opened }) => ({
+export const RemainingCharactersWrapper = styled('div')<CodeWrapperProps>(() => ({
   color: '#202021',
   fontFamily: 'Proxima Nova',
   fontSize: '14px',

@@ -5,8 +5,6 @@ import { request } from '../request';
 import { enqueueSnackbar } from 'notistack';
 import { apiEndpoints } from './endpoints';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
 export type TOptions = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any;

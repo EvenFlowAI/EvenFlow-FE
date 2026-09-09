@@ -53,9 +53,11 @@ const AppointmentTimingManage: React.FC<{ handleSetScreen: TArgCallback<TScreen>
   };
 
   const handleServiceTypeEditing = () => {
-    isTransportationAvailable
-      ? handleSetScreen('transportationNeeds')
-      : redirectToServiceTypeOptions();
+    if (isTransportationAvailable) {
+      handleSetScreen('transportationNeeds');
+    } else {
+      redirectToServiceTypeOptions();
+    }
   };
 
   const handlePrevScreen = () => {

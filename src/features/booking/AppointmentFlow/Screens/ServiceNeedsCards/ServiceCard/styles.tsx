@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import React from 'react';
 
 export const CardWrapper = styled('div')<{
   active?: boolean;

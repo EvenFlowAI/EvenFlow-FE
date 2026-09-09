@@ -10,7 +10,6 @@ import {
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { RootState } from '../../../../../../store/rootReducer';
 import { TModel, TSeries } from '../../../../../../store/reducers/appointmentFrameReducer/types';
-import { Loading } from '../../../../../../components/wrappers/Loading/Loading';
 import { useTranslation } from 'react-i18next';
 import { useOfferInputStyles } from '../../../../../../hooks/styling/useOfferInputStyles';
 import { SelectWrapper } from '../../../../../../components/styled/SelectWrapper';
@@ -40,7 +39,9 @@ export const YearModel: React.FC<
   const { t } = useTranslation();
 
   useEffect(() => {
-    scProfile && dispatch(loadSeriesModels());
+    if (scProfile) {
+      dispatch(loadSeriesModels());
+    }
   }, [dispatch, scProfile]);
 
   useEffect(() => {
@@ -59,10 +60,10 @@ export const YearModel: React.FC<
             dispatch(setValueServicePartial({ year: year }));
             if (selectedVehicle?.model) {
               const series = year.series?.find(item => item.name === selectedVehicle?.model);
-              series && dispatch(setValueServicePartial({ series }));
+              if (series) dispatch(setValueServicePartial({ series }));
               if (selectedVehicle?.modelDetails && series) {
                 const model = series.models.find(el => el.name === selectedVehicle.modelDetails);
-                model && dispatch(setValueServicePartial({ model }));
+                if (model) dispatch(setValueServicePartial({ model }));
               }
             }
           }
@@ -85,7 +86,7 @@ export const YearModel: React.FC<
     onBack();
   };
 
-  const onYearChange = (e: React.ChangeEvent<{}>, option: string | null) => {
+  const onYearChange = (e: React.SyntheticEvent, option: string | null) => {
     const year = seriesModels.find(item => item.year.toString() === option);
     dispatch(
       setValueServicePartial({
@@ -100,13 +101,13 @@ export const YearModel: React.FC<
     }
   };
 
-  const onSeriesChange = (e: React.ChangeEvent<{}>, option: TSeries | null) => {
+  const onSeriesChange = (e: React.SyntheticEvent, option: TSeries | null) => {
     const series = option ? option : undefined;
     dispatch(setValueServicePartial({ series, model: null, selectedService: null }));
     setCurrentModels(option?.models ?? []);
   };
 
-  const onModelChange = (e: React.ChangeEvent<{}>, option: TModel | null) => {
+  const onModelChange = (e: React.SyntheticEvent, option: TModel | null) => {
     dispatch(setValueServicePartial({ model: option, selectedService: null }));
   };
 

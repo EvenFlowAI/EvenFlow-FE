@@ -39,11 +39,10 @@ const ServiceSelection: React.FC<
     if (year && seriesId && modelId && scProfile) dispatch(loadServiceOffers());
   }, [valueService]);
 
-  const onSelectClick =
-    (item: IServiceOffer) => async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      await dispatch(setValueServicePartial({ selectedService: item }));
-      onNext();
-    };
+  const onSelectClick = (item: IServiceOffer) => async () => {
+    await dispatch(setValueServicePartial({ selectedService: item }));
+    onNext();
+  };
 
   return (
     <OfferPageWrapper>
@@ -60,7 +59,7 @@ const ServiceSelection: React.FC<
         ) : (
           serviceOffers.map(service => {
             return (
-              <OfferCardWrapper>
+              <OfferCardWrapper key={service.id}>
                 <ServiceTitle>{service.name}</ServiceTitle>
                 <div className="image" style={{ backgroundImage: `url(${service.imagePath})` }} />
                 <div className="buttonsWrapper">

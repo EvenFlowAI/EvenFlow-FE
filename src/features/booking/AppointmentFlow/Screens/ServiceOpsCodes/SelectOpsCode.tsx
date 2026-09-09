@@ -229,7 +229,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
   const handleValidateCheckedServiceCommentsUpdate = () => {
     if (
       Object.keys(commentText).some(
-        (i: any) => !selectedOpsCodes.includes(+i) && commentText[i].length > 0
+        i => !selectedOpsCodes.includes(+i) && (commentText[Number(i)]?.length ?? 0) > 0
       )
     ) {
       onAddCommentedService();
@@ -262,7 +262,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
       new Set([
         ...selectedOpsCodes,
         ...Object.keys(commentText)
-          .filter((i: any) => commentText[i].length > 0)
+          .filter(i => (commentText[Number(i)]?.length ?? 0) > 0)
           .map(i => +i),
       ])
     );
@@ -276,7 +276,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
       new Set([
         ...selectedOpsCodes,
         ...Object.keys(commentText)
-          .filter((i: any) => commentText[i].length > 0)
+          .filter(i => (commentText[Number(i)]?.length ?? 0) > 0)
           .map(i => +i),
       ])
     );

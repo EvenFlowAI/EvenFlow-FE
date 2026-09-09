@@ -74,7 +74,7 @@ const DetailedFeesManage: React.FC<
                     {getOfferString(item.offer, Boolean(scProfile?.isRoundPrice))}
                   </span>
                 ) : null}
-                {Object(item).hasOwnProperty('priceValue') &&
+                {Object.prototype.hasOwnProperty.call(Object(item), 'priceValue') &&
                 item.priceValue &&
                 item.pricingDisplayType !== EPricingDisplayType.Suppressed ? (
                   <span className={classes.price}>

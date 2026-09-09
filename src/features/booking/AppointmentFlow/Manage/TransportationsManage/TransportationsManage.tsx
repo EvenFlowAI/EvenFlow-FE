@@ -62,9 +62,11 @@ const TransportationsManage: React.FC<TActionProps> = ({ onBack, onNext }) => {
   };
 
   const handleNext = useCallback(() => {
-    editingPosition === 'transportation' && !wasWarningShowed
-      ? dispatch(setSlotsWarningOpen(true))
-      : onNext();
+    if (editingPosition === 'transportation' && !wasWarningShowed) {
+      dispatch(setSlotsWarningOpen(true));
+    } else {
+      onNext();
+    }
   }, [editingPosition, wasWarningShowed, onNext]);
 
   return (

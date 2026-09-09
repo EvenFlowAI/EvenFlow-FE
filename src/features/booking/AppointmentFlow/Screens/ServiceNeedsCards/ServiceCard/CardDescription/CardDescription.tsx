@@ -6,7 +6,7 @@ type TProps = {
   description?: string;
   active?: boolean;
   isSM?: boolean;
-  onClick: (e: any) => any;
+  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
 
 const CardDescription: React.FC<TProps> = ({ description, active, isSM, onClick }) => {

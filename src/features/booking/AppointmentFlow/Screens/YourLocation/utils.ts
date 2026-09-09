@@ -1,26 +1,42 @@
 import { TParsedAddress } from './types';
 
-export const parseGeoCode = (
-  data: any[],
-  addressString: string,
-  mainText?: string,
-  secondaryText?: string
-): TParsedAddress => {
-  let city = data.find(el => el.types?.includes('locality'));
-  if (!city) city = data.find(el => el.types?.includes('sublocality'));
-  if (!city) city = data.find(el => el.types?.includes('colloquial_area'));
+type TGeoCodeItem = {
+  types?: string[];
+  short_name?: string;
+  long_name?: string;
+};
 
-  const state = data.find(el => el?.types?.includes('administrative_area_level_1'));
-  let address = mainText;
+const findCity = (data: TGeoCodeItem[]): TGeoCodeItem | undefined => {
+  return (
+    data.find(el => el.types?.includes('locality')) ||
+    data.find(el => el.types?.includes('sublocality')) ||
+    data.find(el => el.types?.includes('colloquial_area'))
+  );
+};
+
+const resolveAddressAndCity = ({
+  city,
+  addressString,
+  mainText,
+  secondaryText,
+}: {
+  city?: TGeoCodeItem;
+  addressString: string;
+  mainText?: string;
+  secondaryText?: string;
+}): { address: string; cityName: string } => {
+  let address = mainText ?? '';
   let cityName = city?.short_name ?? '';
 
-  const postalCode = data.find(el => el?.types?.includes('postal_code'));
+  if (cityName && !addressString.includes(cityName)) {
+    cityName = city?.long_name ?? '';
+  }
 
-  if (cityName && !addressString.includes(cityName)) cityName = city?.long_name ?? '';
-
-  if (city && secondaryText?.includes(city.long_name)) {
-    let index = addressString.lastIndexOf(city?.short_name);
-    if (index <= 0) index = addressString.lastIndexOf(city?.long_name);
+  if (city && secondaryText?.includes(city.long_name ?? '')) {
+    let index = addressString.lastIndexOf(city.short_name ?? '');
+    if (index <= 0) {
+      index = addressString.lastIndexOf(city.long_name ?? '');
+    }
     if (index > 0) {
       address = addressString.slice(0, index);
       const commaIndex = address.lastIndexOf(',');
@@ -29,8 +45,27 @@ export const parseGeoCode = (
       }
     }
   } else {
-    cityName = secondaryText?.split(',')[0].trim();
+    cityName = secondaryText?.split(',')[0].trim() ?? cityName;
   }
+
+  return { address, cityName };
+};
+
+export const parseGeoCode = (
+  data: TGeoCodeItem[],
+  addressString: string,
+  mainText?: string,
+  secondaryText?: string
+): TParsedAddress => {
+  const city = findCity(data);
+  const state = data.find(el => el?.types?.includes('administrative_area_level_1'));
+  const postalCode = data.find(el => el?.types?.includes('postal_code'));
+  const { address, cityName } = resolveAddressAndCity({
+    city,
+    addressString,
+    mainText,
+    secondaryText,
+  });
 
   return {
     city: cityName ?? '',

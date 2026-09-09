@@ -84,14 +84,14 @@ const ServiceRequestsManaging = () => {
       category.type === 0
   );
 
-  let name;
-  if (selectedPackage) {
-    name = `${selectedPackage.name} package`;
-    if (packagePriceTitles?.length) {
-      const price = packagePriceTitles.find(item => item.type === packagePricingType);
-      if (price) name = name + ` (${price.title})`;
-    }
-  }
+  // let name;
+  // if (selectedPackage) {
+  //   name = `${selectedPackage.name} package`;
+  //   if (packagePriceTitles?.length) {
+  //     const price = packagePriceTitles.find(item => item.type === packagePricingType);
+  //     if (price) name = name + ` (${price.title})`;
+  //   }
+  // }
 
   const getPackageLabel = () => {
     if (selectedPackage?.name) {

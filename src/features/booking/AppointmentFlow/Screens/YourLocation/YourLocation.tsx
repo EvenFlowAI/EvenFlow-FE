@@ -162,6 +162,7 @@ const YourLocation: React.FC<
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChangeAddress = async (e: any) => {
     if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
     setFormChecked(false);
@@ -191,7 +192,7 @@ const YourLocation: React.FC<
       });
     }
   };
-  const handleChangeZip = (e: React.ChangeEvent<{}>, option: string | null) => {
+  const handleChangeZip = (e: React.SyntheticEvent, option: string | null) => {
     if (!serviceOptionChangedFromSlotPage && !isManagingFlow) clearSelectedData();
     setFormChecked(false);
     setZip(option ?? '');
@@ -205,7 +206,11 @@ const YourLocation: React.FC<
   };
 
   const onGoToSlotsForVisitCenter = () => {
-    appointmentByKey && restoreAddress ? restoreAddress() : dispatch(clearAddress());
+    if (appointmentByKey && restoreAddress) {
+      restoreAddress();
+    } else {
+      dispatch(clearAddress());
+    }
     setPrevSelectedOption();
   };
 
@@ -254,7 +259,11 @@ const YourLocation: React.FC<
         )
       );
     } else {
-      serviceOptionChangedFromSlotPage ? setPrevSelectedOption() : onBack();
+      if (serviceOptionChangedFromSlotPage) {
+        setPrevSelectedOption();
+      } else {
+        onBack();
+      }
     }
     dispatch(setIsPickupDropoffWithoutFirstScreenOption(false));
   };
@@ -295,7 +304,7 @@ const YourLocation: React.FC<
     loadAncillaryPrice();
   };
 
-  const onInputChange = (e: React.ChangeEvent<{}>, value: string) => {
+  const onInputChange = (e: React.SyntheticEvent, value: string) => {
     if (scProfile) {
       if (value.length && filteredZipCodes.includes(value)) {
         if (
@@ -335,11 +344,15 @@ const YourLocation: React.FC<
     if (serviceOptionChangedFromSlotPage) {
       onGoToSlotsForVisitCenter();
     } else {
-      customerLoadedData?.isUpdating
-        ? isSameServiceTypeOption
-          ? restorePrevData()
-          : onClose()
-        : setDefaultVisitCenter();
+      if (customerLoadedData?.isUpdating) {
+        if (isSameServiceTypeOption) {
+          restorePrevData();
+        } else {
+          onClose();
+        }
+      } else {
+        setDefaultVisitCenter();
+      }
     }
   };
 

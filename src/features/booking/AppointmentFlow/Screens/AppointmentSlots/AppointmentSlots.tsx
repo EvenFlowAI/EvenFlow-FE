@@ -308,32 +308,36 @@ export const AppointmentSlots: React.FC<
         const theSameTransportation = slotsTransportationId === transportation?.id;
         if (theSameServiceOption && sameSearchDate && slotTimeIsValid) {
           if (theSameTransportation) {
-            selectedTime
-              ? selectFirstSlot(
-                  dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime
-                )
-              : selectFirstSlot();
+            if (selectedTime) {
+              selectFirstSlot(dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime);
+            } else {
+              selectFirstSlot();
+            }
           } else {
             setDate(dayjs.utc(currentAppointment.date).startOf('day'));
             if (serviceType === EServiceType.PickUpDropOff) selectFirstSlot();
           }
         } else {
-          selectedTime
-            ? selectFirstSlot(
-                dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime,
-                undefined,
-                true
-              )
-            : selectFirstSlot();
-        }
-      } else {
-        selectedTime
-          ? selectFirstSlot(
+          if (selectedTime) {
+            selectFirstSlot(
               dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime,
               undefined,
               true
-            )
-          : selectFirstSlot();
+            );
+          } else {
+            selectFirstSlot();
+          }
+        }
+      } else {
+        if (selectedTime) {
+          selectFirstSlot(
+            dayjs(selectedTime).isSame(dayjs(), 'date') ? dayjs() : selectedTime,
+            undefined,
+            true
+          );
+        } else {
+          selectFirstSlot();
+        }
       }
       isMount.current = false;
     }

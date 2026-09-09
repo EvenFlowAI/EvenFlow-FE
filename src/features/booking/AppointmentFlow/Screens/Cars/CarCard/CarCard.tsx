@@ -7,7 +7,6 @@ import { RootState } from '../../../../../../store/rootReducer';
 import { CarDataWithBtn, CardBtnWrapper, CarInfo, StyledButton, Wrapper } from './styles';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { Api } from '../../../../../../api/ApiEndpoints/ApiEndpoints';
-import { useSCs } from '../../../../../../hooks/useSCs/useSCs';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import AppointmentSelectionModal from '../../../../CustomerSelect/AppointmentSelectionModal/AppointmentSelectionModal';
 import { AppointmentSummaryI } from '../../../../utils/types';
@@ -25,7 +24,6 @@ export const CarCard: React.FC<React.PropsWithChildren<React.PropsWithChildren<T
   clearData,
   onSelectCar,
   onScheduleNewAppointment,
-  customerId,
 }) => {
   const { mileage } = useSelector((state: RootState) => state.vehicleDetails);
   const dispatch = useDispatch();

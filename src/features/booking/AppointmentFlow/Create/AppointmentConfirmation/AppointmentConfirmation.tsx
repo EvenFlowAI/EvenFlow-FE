@@ -69,7 +69,7 @@ export const AppointmentConfirmation: React.FC<
   }, [currentUser, scProfile]);
 
   useEffect(() => {
-    scProfile && dispatch(loadAllServiceCategories(scProfile.id));
+    if (scProfile) dispatch(loadAllServiceCategories(scProfile.id));
   }, [scProfile]);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export const AppointmentConfirmation: React.FC<
     if (!customer.email && isEmailRequired) {
       isValid = false;
       localErrors.push('email');
-      showError(t('\"Email\" must not be empty'));
+      showError(t('"Email" must not be empty'));
     }
     if (!customer?.fullName) {
       isValid = false;
@@ -114,6 +114,7 @@ export const AppointmentConfirmation: React.FC<
     return isValid;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (e: any) => {
     const internalError = e.response?.data?.message?.toLowerCase().includes('internal server');
     if (internalError) {

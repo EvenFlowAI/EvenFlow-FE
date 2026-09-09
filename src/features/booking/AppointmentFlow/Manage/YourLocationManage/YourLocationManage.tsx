@@ -80,7 +80,7 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
 
   const setPrevServiceType = () => {
     if (mobileServiceSelected || mobileServiceChanged) {
-      selectedVehicle && onUpdateAppointment(selectedVehicle);
+      if (selectedVehicle) onUpdateAppointment(selectedVehicle);
     }
   };
 
@@ -111,7 +111,7 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
     } else if (managedToPickUp && !wasWarningShowed) {
       dispatch(setSlotsWarningOpen(true));
     } else {
-      scProfile && dispatch(checkPodChanged(scProfile.id, showError));
+      if (scProfile) dispatch(checkPodChanged(scProfile.id, showError));
     }
   };
 
@@ -119,10 +119,14 @@ const YourLocationManage: React.FC<TYourLocationProps> = ({
     if ((mobileServiceSelected || mobileServiceChanged) && editingPosition === 'serviceOption') {
       handleManagingFlow();
     } else {
-      changedToPickUpFromSlots ||
-      (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
-        ? scProfile && dispatch(checkPodChanged(scProfile.id, showError))
-        : handleManagingFlow();
+      if (
+        changedToPickUpFromSlots ||
+        (appointmentByKey?.address?.zipCode && zipCodeValue !== appointmentByKey?.address?.zipCode)
+      ) {
+        if (scProfile) dispatch(checkPodChanged(scProfile.id, showError));
+      } else {
+        handleManagingFlow();
+      }
     }
   };
 

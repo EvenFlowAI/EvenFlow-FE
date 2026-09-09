@@ -1,5 +1,4 @@
 import { styled } from '@mui/material';
-import React from 'react';
 import { CustomDatePicker } from '../../../../../../components/pickers/CustomDatePicker/CustomDatePicker';
 import { makeStyles, withStyles } from 'tss-react/mui';
 

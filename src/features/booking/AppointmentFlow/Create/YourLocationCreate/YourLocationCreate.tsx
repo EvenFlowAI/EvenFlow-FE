@@ -98,7 +98,11 @@ const YourLocationCreate: React.FC<TYourLocationProps> = ({
   };
 
   const onNextStep = () => {
-    changedToPickUpFromSlots ? dispatch(goToSlotsSelection()) : onNext();
+    if (changedToPickUpFromSlots) {
+      dispatch(goToSlotsSelection());
+    } else {
+      onNext();
+    }
   };
 
   return (

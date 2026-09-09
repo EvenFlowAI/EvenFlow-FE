@@ -147,7 +147,7 @@ const AppointmentFlow: React.FC<TProps> = ({
         });
       };
     } else {
-      currentFrameScreen && setCurrentScreen(currentFrameScreen);
+      if (currentFrameScreen) setCurrentScreen(currentFrameScreen);
     }
   }, [currentScreen, currentFrameScreen]);
 

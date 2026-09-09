@@ -36,7 +36,7 @@ export const ReviewManaging = () => {
       const selectedPreviouslyConsultant = appointmentByKey?.advisorId
         ? consultants?.find(item => item.id === appointmentByKey?.advisorId)
         : undefined;
-      selectedPreviouslyConsultant && dispatch(setAdvisor(selectedPreviouslyConsultant));
+      if (selectedPreviouslyConsultant) dispatch(setAdvisor(selectedPreviouslyConsultant));
     }
   }, [appointmentByKey, consultants, advisor]);
 

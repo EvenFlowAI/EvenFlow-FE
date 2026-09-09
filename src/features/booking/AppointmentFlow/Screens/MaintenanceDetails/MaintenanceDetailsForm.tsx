@@ -237,7 +237,7 @@ export const MaintenanceDetailsForm: React.FC<
   useEffect(() => {
     if (selectedVehicle?.engineTypeId && engineTypes.length) {
       const option = engineTypes.find(item => item.id === Number(selectedVehicle.engineTypeId));
-      option && setSelectedEngine(option);
+      if (option) setSelectedEngine(option);
     }
   }, [selectedVehicle, engineTypes]);
 
@@ -280,7 +280,7 @@ export const MaintenanceDetailsForm: React.FC<
     if (!selectedVehicle?.make) {
       const defaultMake = makes.find(item => item.id === scProfile?.defaultVehicleMakeId);
       if (defaultMake) {
-        selectedVehicle && dispatch(setVehicle({ ...selectedVehicle, make: defaultMake.name }));
+        if (selectedVehicle) dispatch(setVehicle({ ...selectedVehicle, make: defaultMake.name }));
         setCurrentModels(defaultMake.models.map(model => model.name));
       }
     }
@@ -485,6 +485,7 @@ export const MaintenanceDetailsForm: React.FC<
               }
               setLoading(false);
             } catch (err) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const errors = (err as any).response?.data?.errors;
               if (errors?.length) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -492,6 +493,7 @@ export const MaintenanceDetailsForm: React.FC<
                   showError(err.message || '');
                 });
               }
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               if ((err as any).response?.data?.errorCode === ErrorCode.TimeoutError) {
                 onManufacturerRecallsOpen();
               }

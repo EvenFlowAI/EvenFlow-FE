@@ -54,9 +54,11 @@ const ConsultantsManage: React.FC<{ onNext: TCallback }> = ({ onNext }) => {
   };
 
   const handleBack = () => {
-    serviceOptionChangedFromSlotPage && editingPosition === 'slot'
-      ? onBackToPrevServiceOption()
-      : dispatch(setCurrentFrameScreen('manageAppointment'));
+    if (serviceOptionChangedFromSlotPage && editingPosition === 'slot') {
+      onBackToPrevServiceOption();
+    } else {
+      dispatch(setCurrentFrameScreen('manageAppointment'));
+    }
   };
 
   const handleNext = () => {

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { ActionButtons } from '../../../ActionButtons/ActionButtons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,6 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
   );
   const { selectedInitialTiming, selectedTime, serviceTypeOption, sideBarSteps, transportation } =
     useSelector((state: RootState) => state.appointmentFrame);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -130,7 +129,7 @@ export const AppointmentTiming: React.FC<TProps> = ({ handleSetScreen, onBack })
             <AppointmentTimingCard
               onClick={handleSelectTiming(card.name)}
               card={card}
-              isLoading={isLoading}
+              isLoading={false}
               onChangeTime={handleChangeTime}
               selectedTime={
                 selectedInitialTiming === EAppointmentTimingType.PreferredDate ? selectedTime : null
