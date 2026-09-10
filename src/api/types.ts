@@ -361,6 +361,7 @@ export interface IServiceConsultant {
 export interface IServiceRequestIds {
   id: number;
   comment: string | null;
+  serviceCategoryId?: number;
 }
 
 export interface IConsultantsRequestData {

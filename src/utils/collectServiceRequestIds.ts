@@ -9,7 +9,7 @@ export const collectServiceRequestIds = (
   selectedRecalls?: IRecallByVin[],
   individualOpsCodesComments?: Record<number, string>
 ): IServiceRequestIds[] => {
-  const ids = [];
+  const ids: number[] = [];
 
   if (selectedRecalls?.length) {
     selectedRecalls.forEach(item => ids.push(item.serviceRequestId));
@@ -19,9 +19,17 @@ export const collectServiceRequestIds = (
       ids.push(c);
     }
   }
-  const set = new Set(ids);
+  const set = new Set<number>(ids);
+  const subServiceRequestIds = sub
+    ? new Set(sub.serviceRequests.map(serviceRequest => serviceRequest.id))
+    : null;
+
   return Array.from(set).map(i => {
     const currComment = individualOpsCodesComments ? individualOpsCodesComments[i] : null;
-    return { id: i, comment: currComment ?? '' };
+    return {
+      id: i,
+      comment: currComment ?? '',
+      ...(subServiceRequestIds?.has(i) ? { serviceCategoryId: sub?.id } : {}),
+    };
   });
 };
