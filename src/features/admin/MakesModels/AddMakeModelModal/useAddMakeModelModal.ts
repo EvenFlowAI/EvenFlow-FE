@@ -174,7 +174,10 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
       onCloseModelConfigurationModal();
     };
 
-    if (selectedSC.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC.integration === SystemIntegrationType.Fortellis ||
+      selectedSC.integration === SystemIntegrationType.XTime
+    ) {
       const modelCodes: Record<string, string> = Object.fromEntries(
         configuredModels.map(model => {
           const found = makeModelCodes.find(item => item.modelCode === model.code);
