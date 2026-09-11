@@ -122,7 +122,10 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
       return;
     }
 
-    if (selectedSC.integration === SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC.integration === SystemIntegrationType.Fortellis ||
+      selectedSC.integration === SystemIntegrationType.XTime
+    ) {
       const makeCodes = Object.fromEntries(configuredMakes.map(make => [make.id, make.code ?? '']));
       dispatch(
         createMake({ serviceCenterId: selectedSC.id, globalIds, makeCodes }, () => {
