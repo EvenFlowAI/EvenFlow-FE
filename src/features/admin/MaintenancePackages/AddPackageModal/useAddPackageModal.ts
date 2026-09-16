@@ -1,4 +1,4 @@
-import { ChangeEvent, SyntheticEvent, useCallback, useEffect } from 'react';
+import { ChangeEvent, SyntheticEvent, useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ECustomerCriteria, IPackageByQuery } from '../../../../api/types';
 import { useException } from '../../../../hooks/useException/useException';
@@ -58,8 +58,25 @@ export const useAddPackageModal = ({ isEditing, onClose }: TProps) => {
     dispatch(loadUpsellServiceRequests(selectedSC.id));
   }, [dispatch, isEditing, selectedSC]);
 
+  const prefilledKeyRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!isEditing || !currentPackage) return;
+    if (!isEditing || !currentPackage) {
+      prefilledKeyRef.current = null;
+      return;
+    }
+
+    // Prefill only when the edited package changes or the source lists finish loading.
+    // Without this guard the effect re-ran on every render and reset user selections.
+    const prefillKey = [
+      currentPackage.id,
+      allAssignedList?.length ?? 0,
+      intervalUpsellList?.length ?? 0,
+      engineTypes?.length ?? 0,
+    ].join('|');
+
+    if (prefilledKeyRef.current === prefillKey) return;
+    prefilledKeyRef.current = prefillKey;
 
     setters.setPackageName(currentPackage.name);
     setters.setComplimentary(currentPackage.complimentaryServices.map(item => item.id));
@@ -103,6 +120,7 @@ export const useAddPackageModal = ({ isEditing, onClose }: TProps) => {
   }, [allAssignedList, currentPackage, engineTypes, intervalUpsellList, isEditing, setters]);
 
   const onCancel = useCallback(() => {
+    prefilledKeyRef.current = null;
     setters.setFormIsChecked(false);
     setters.setVehiclesData(initialValues);
     setters.setPackageName('');

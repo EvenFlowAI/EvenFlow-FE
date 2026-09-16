@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { TAssignedRequest } from '../../../../store/reducers/packages/types';
 import {
@@ -44,6 +44,30 @@ export const useAddPackageModalUiState = () => {
   } = useModal();
   const { isOpen: isExistingOpen, onOpen: onExistingOpen, onClose: onExistingClose } = useModal();
 
+  // `useState` setters are stable, so this object is created once.
+  // A stable reference prevents effects that depend on `setters` from re-running
+  // on every render and overwriting user selections.
+  const setters = useMemo(
+    () => ({
+      setPackageName,
+      setSelectedPackages,
+      setOpsCodes,
+      setUpsellCodes,
+      setAssignedOpsCodes,
+      setComplimentary,
+      setVehiclesData,
+      setFormIsChecked,
+      setApplyBusinessRules,
+      setSelectedMakes,
+      setSelectedModels,
+      setSelectedMileages,
+      setOptionError,
+      setSelectedEngineTypes,
+      setIsSaving,
+    }),
+    []
+  );
+
   return {
     state: {
       packageName,
@@ -62,23 +86,7 @@ export const useAddPackageModalUiState = () => {
       selectedEngineTypes,
       isSaving,
     },
-    setters: {
-      setPackageName,
-      setSelectedPackages,
-      setOpsCodes,
-      setUpsellCodes,
-      setAssignedOpsCodes,
-      setComplimentary,
-      setVehiclesData,
-      setFormIsChecked,
-      setApplyBusinessRules,
-      setSelectedMakes,
-      setSelectedModels,
-      setSelectedMileages,
-      setOptionError,
-      setSelectedEngineTypes,
-      setIsSaving,
-    },
+    setters,
     modals: {
       isAssignOpsCodeOpen,
       onAssignOpsCodeOpen,
