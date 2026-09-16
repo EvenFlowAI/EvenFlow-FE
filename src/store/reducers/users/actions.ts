@@ -9,6 +9,7 @@ import {
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
 import { loadRoleUsers } from '../roleManagement/actions';
 import { INewUserAccount, IUserAccount } from '../../../pages/admin/RoleManagement/types';
+import { TApiValidationError } from '../../../utils/apiErrors';
 
 const _getCurrentUser = (payload: ICurrentUser): TUserActions => ({
   type: 'User/GetCurrentUser',
@@ -159,16 +160,8 @@ export const updateRoleManagementUser =
       // eslint-disable-next-line
     } catch (e: any) {
       const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
-      const errors: {
-        field: string;
-        message: string;
-      }[] = e.response?.data?.errors;
-      if (errors?.length) {
-        errors.map(error => {
-          showError(error.message);
-        });
-        onError();
-      }
+      const errors: TApiValidationError[] = e.response?.data?.errors;
+      errors?.forEach(error => showError(error.message));
       if (e.response?.data?.error) {
         onError(errorCode);
       }
@@ -198,16 +191,8 @@ export const createRoleManagementUser =
       // eslint-disable-next-line
     } catch (e: any) {
       const errorCode = e?.response?.data?.error?.errorCode || e?.response?.data?.errorCode;
-      const errors: {
-        field: string;
-        message: string;
-      }[] = e.response?.data?.errors;
-      if (errors?.length) {
-        errors.map(error => {
-          showError(error.message);
-        });
-        onError();
-      }
+      const errors: TApiValidationError[] = e.response?.data?.errors;
+      errors?.forEach(error => showError(error.message));
       if (e.response?.data?.error) {
         onError(errorCode);
       }

@@ -17,6 +17,7 @@ import ServiceCenterCategoryDropdown from './ServiceCenterCategoryDropdown';
 import { ServiceCenterSection } from './ServiceCenterSection';
 import { Roles } from '../../../../../types/types';
 import { useMessage } from '../../../../../hooks/useMessage/useMessage';
+import { isScConfigurationVisible } from '../validation';
 
 type TTFormProps = {
   form: TUserAccountForm;
@@ -76,11 +77,7 @@ export const AddUserAccountForm: React.FC<
     }));
   };
 
-  const isShowScConfiguration =
-    form.role &&
-    form.role !== Roles.EvenFlowAccountManager &&
-    form.role !== Roles.Vendor &&
-    form.role !== Roles.AIBookingAgent;
+  const isShowScConfiguration = isScConfigurationVisible(form.role);
 
   return (
     <Grid container spacing={3}>

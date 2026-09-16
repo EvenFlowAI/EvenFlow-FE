@@ -24,6 +24,7 @@ import { Roles } from '../../../../types/types';
 import { ErrorCode } from '../../../../types/errorCodes';
 import { useException } from '../../../../hooks/useException/useException';
 import { useCurrentUser } from '../../../../hooks/useCurrentUser/useCurrentUser';
+import { isUserAccountFormValid } from './validation';
 
 type AddUserAccountProps = React.PropsWithChildren<DialogProps<TUserAccountForm | null>> & {
   isAdminPanel: boolean;
@@ -42,7 +43,7 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   const dispatch = useDispatch();
   const { serviceCenters } = useSelector((state: RootState) => state.serviceCenters);
   const { emailError, dmsIdError } = useSelector((state: RootState) => state.roleManagement);
-  const showError = useException();
+  const showError = useException(true);
 
   useEffect(() => {
     if (payload) {
@@ -185,8 +186,8 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   };
 
   const isDisabledSave = useMemo(() => {
-    return dmsIdError || emailError;
-  }, [dmsIdError, emailError]);
+    return dmsIdError || emailError || !isUserAccountFormValid(userForm, !payload);
+  }, [dmsIdError, emailError, userForm, payload]);
 
   return (
     <BaseModal {...props} width={940} onClose={onClose}>
