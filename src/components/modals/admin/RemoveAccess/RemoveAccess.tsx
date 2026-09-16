@@ -212,11 +212,13 @@ const RemoveAccess = ({ isOpen, onClose, payload }: RemoveAccessProps) => {
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose} color="info">
+          Cancel
+        </Button>
         <LoadingButton
           disabled={isRemoveDisabled}
           loading={isLoading}
-          color="primary"
+          color="secondary"
           onClick={handleRemove}
           variant="contained"
         >

@@ -29,7 +29,7 @@ export const HolidayForm: React.FC<
             InputProps={{
               placeholder: 'Select Date',
             }}
-            format="MMMM, DD"
+            format="MMMM, DD, YYYY"
           />
         </Grid>
         <Grid item xs={12}>

@@ -29,6 +29,7 @@ import dayjs from 'dayjs';
 const rowData: TableRowDataType<IHoliday>[] = [
   {
     header: 'Description Title',
+    width: 410,
     val: v =>
       v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description,
   },
@@ -142,7 +143,7 @@ export const HolidaysModal: React.FC<
   };
 
   return (
-    <BaseModal {...props} onClose={onCloseModal} width={720}>
+    <BaseModal {...props} onClose={onCloseModal} width={780}>
       <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
       {!viewMode && currentUser?.role !== Roles.ServiceManager ? (
         <div className={classes.addHoliday}>
@@ -166,7 +167,7 @@ export const HolidaysModal: React.FC<
         actions={actions}
       />
       <DialogActions>
-        <Button onClick={onCloseModal} variant="contained" color="primary">
+        <Button onClick={onCloseModal} color="info">
           Close
         </Button>
       </DialogActions>

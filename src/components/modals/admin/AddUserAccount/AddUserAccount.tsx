@@ -205,7 +205,9 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose} color="info">
+          Cancel
+        </Button>
         <LoadingButton
           disabled={isDisabledSave}
           loading={isLoading}
