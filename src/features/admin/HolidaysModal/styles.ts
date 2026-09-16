@@ -8,6 +8,5 @@ export const useStyles = makeStyles()({
   addHoliday: {
     textAlign: 'right',
     marginBottom: 5,
-    marginRight: 15,
   },
 });

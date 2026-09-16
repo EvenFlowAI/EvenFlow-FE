@@ -29,7 +29,7 @@ import dayjs from 'dayjs';
 const rowData: TableRowDataType<IHoliday>[] = [
   {
     header: 'Description Title',
-    width: 410,
+    width: 360,
     val: v =>
       v.description.length > 40 ? v.description.slice(0, 39).concat('...') : v.description,
   },
@@ -144,28 +144,30 @@ export const HolidaysModal: React.FC<
 
   return (
     <BaseModal {...props} onClose={onCloseModal} width={780}>
-      <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
-      {!viewMode && currentUser?.role !== Roles.ServiceManager ? (
-        <div className={classes.addHoliday}>
-          <Button variant="contained" color="primary" onClick={handleOpenCreate}>
-            Add Holiday
-          </Button>
-        </div>
-      ) : null}
-      <Table<IHoliday>
-        onChangePage={changePage}
-        page={pageIndex}
-        viewMode={viewMode}
-        rowsPerPage={pageSize}
-        onChangeRowsPerPage={changeRowsPerPage}
-        compact
-        count={paging.numberOfRecords}
-        isLoading={loading}
-        data={holidaysList}
-        index={'id'}
-        rowData={rowData}
-        actions={actions}
-      />
+      <div style={{ padding: '0 25px' }}>
+        <DialogTitle onClose={onCloseModal}>Holidays</DialogTitle>
+        {!viewMode && currentUser?.role !== Roles.ServiceManager ? (
+          <div className={classes.addHoliday}>
+            <Button variant="contained" color="primary" onClick={handleOpenCreate}>
+              Add Holiday
+            </Button>
+          </div>
+        ) : null}
+        <Table<IHoliday>
+          onChangePage={changePage}
+          page={pageIndex}
+          viewMode={viewMode}
+          rowsPerPage={pageSize}
+          onChangeRowsPerPage={changeRowsPerPage}
+          compact
+          count={paging.numberOfRecords}
+          isLoading={loading}
+          data={holidaysList}
+          index={'id'}
+          rowData={rowData}
+          actions={actions}
+        />
+      </div>
       <DialogActions>
         <Button onClick={onCloseModal} color="info">
           Close
