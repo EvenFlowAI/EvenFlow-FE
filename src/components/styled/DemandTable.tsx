@@ -11,7 +11,7 @@ export const DenseTable = withStyles(DemandTable, {
   root: {
     '& .MuiTableCell-root': {
       padding: 12,
-      fontSize: 15,
+      fontSize: 14,
     },
   },
 });

@@ -5,6 +5,7 @@ import { Credits, DashboardItemI, IntegrationSettingsI, ITag } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
 import { ActionCreator } from 'redux';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
+import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/ServicePulse/ServicePulse';
 
 export const getDashboardItems = createAction<DashboardItemI[]>(
   'DealerOperations/GetDashboardItems'
@@ -52,6 +53,15 @@ export const setAvailableTagsForOutboundEvents = createAction<ITag[]>(
 export const setAvailableTagsForRecallAlerts = createAction<ITag[]>(
   'Optimizer/SetAvailableTagsForRecallAlerts'
 );
+
+export const setPlays = createAction<IPlayWithServiceBook[]>('Optimizer/SetPlays');
+
+export const setUpdatedPlaysName = createAction<
+  {
+    id?: string;
+    name: string;
+  }[]
+>('Optimizer/SetUpdatedPlaysName');
 
 export const setTextIntegrationSettings = createAction<IntegrationSettingsI>(
   'Optimizer/setTextIntegrationSettings'

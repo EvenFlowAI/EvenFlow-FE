@@ -1,4 +1,5 @@
 import { IPageRequest, IPagingResponse } from '../../../types/types';
+import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/ServicePulse/ServicePulse';
 
 export interface ITag {
   tag: string;
@@ -22,6 +23,11 @@ export type TState = {
   credits: Credits | null;
   availableTagsForOutboundEvents: ITag[];
   availableTagsForRecallAlerts: ITag[];
+  plays: IPlayWithServiceBook[];
+  updatedPlaysName: {
+    id?: string;
+    name: string;
+  }[];
 };
 
 export interface Credits {
