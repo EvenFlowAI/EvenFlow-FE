@@ -14,6 +14,8 @@ import {
   setCredits,
   setAvailableTagsForOutboundEvents,
   setAvailableTagsForRecallAlerts,
+  setPlays,
+  setUpdatedPlaysName,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -34,6 +36,8 @@ const initialState: TState = {
   credits: null,
   availableTagsForOutboundEvents: [],
   availableTagsForRecallAlerts: [],
+  plays: [],
+  updatedPlaysName: [],
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -71,6 +75,9 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     .addCase(setUpdatedEventsName, (state, { payload }) => {
       return { ...state, updatedEventsName: payload };
     })
+    .addCase(setUpdatedPlaysName, (state, { payload }) => {
+      return { ...state, updatedPlaysName: payload };
+    })
     .addCase(setCredits, (state, { payload }) => {
       return { ...state, credits: payload };
     })
@@ -79,5 +86,8 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(setAvailableTagsForRecallAlerts, (state, { payload }) => {
       return { ...state, availableTagsForRecallAlerts: payload };
+    })
+    .addCase(setPlays, (state, { payload }) => {
+      return { ...state, plays: payload };
     })
 );

@@ -104,7 +104,7 @@ export const loadPodById =
   };
 
 export const loadPodsSummary =
-  (serviceCenterId: number, active: boolean): AppThunk =>
+  (serviceCenterId: number, active: boolean, cb?: () => void): AppThunk =>
   dispatch => {
     dispatch(setPodsLoading(true));
     Api.call<IPodSummary[]>(Api.endpoints.Pods.GetSummary, { params: { serviceCenterId, active } })
@@ -114,7 +114,10 @@ export const loadPodsSummary =
       .catch(err => {
         console.log('get pod summary error', err);
       })
-      .finally(() => dispatch(setPodsLoading(false)));
+      .finally(() => {
+        dispatch(setPodsLoading(false));
+        if (cb) cb();
+      });
   };
 
 export const deactivatePod =
