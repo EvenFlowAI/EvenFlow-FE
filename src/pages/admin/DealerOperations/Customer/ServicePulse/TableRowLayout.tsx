@@ -1,7 +1,7 @@
 import { useStyles } from './styles';
 import { TableRow } from '../../../../../components/styled/TableRow';
 import { IPlayWithServiceBook } from './ServicePulse';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { StyledTableCell } from '../../../../../features/admin/DemandPredictionTable/styles';
 import LabelLink from '../../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
 import { ReactComponent as CheckIcon } from '../../../../../assets/img/checkboxSmallGreen.svg';
@@ -18,6 +18,8 @@ interface ITableRowLayoutProps {
   showServiceBookName?: boolean;
   className?: string;
   isEdit: boolean;
+  setCurrentItem: Dispatch<SetStateAction<IPlayWithServiceBook | null>>;
+  onOpen: () => void;
 }
 
 const TableRowLayout = ({
@@ -25,6 +27,8 @@ const TableRowLayout = ({
   showServiceBookName = true,
   className,
   isEdit,
+  setCurrentItem,
+  onOpen,
 }: ITableRowLayoutProps) => {
   const { classes } = useStyles();
   const { updatedPlaysName } = useSelector((state: RootState) => state.dealerOperations);
@@ -65,7 +69,10 @@ const TableRowLayout = ({
     return <StyledTableCell>{play.name}</StyledTableCell>;
   };
 
-  const handleClickTextConfiguration = () => {};
+  const handleClickTextConfiguration = () => {
+    setCurrentItem(play);
+    onOpen();
+  };
 
   const askRemove = () => {
     askConfirm({

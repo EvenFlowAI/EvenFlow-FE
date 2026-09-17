@@ -85,4 +85,18 @@ export const useStyles = makeStyles()(() => ({
       width: '135px',
     },
   },
+  modalBodyContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fieldWrapper: {
+    width: '500px',
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#F50057',
+  },
 }));

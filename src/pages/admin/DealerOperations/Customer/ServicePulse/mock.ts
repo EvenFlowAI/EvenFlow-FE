@@ -7,7 +7,7 @@ export const serviceBooksWithPlays = [
         name: 'play415 1',
         id: 'play11',
         play: {
-          services: ['157', '15122'],
+          services: [],
           advisor: null,
           transportation: 4,
         },
