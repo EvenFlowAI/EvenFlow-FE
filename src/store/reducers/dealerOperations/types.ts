@@ -9,7 +9,9 @@ export interface ITag {
 export type TState = {
   dashboardItems: DashboardItemI[];
   customerCommunicationPageData: IPageRequest;
+  playsPageData: IPageRequest;
   customerCommunicationPaging: IPagingResponse;
+  playsPaging: IPagingResponse;
   newEventName: string;
   textIntegrationSettings: null | IntegrationSettingsI;
   availablePhoneNumberList: string[];

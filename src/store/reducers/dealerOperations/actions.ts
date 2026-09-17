@@ -15,6 +15,8 @@ export const setCustomerCommunicationDashboardPageData = createAction<Partial<IP
   'Optimizer/setCustomerCommunicationDashboardPageData'
 );
 
+export const setPlaysPageData = createAction<Partial<IPageRequest>>('Optimizer/setPlaysPageData');
+
 export const getCustomerCommunicationPaging = createAction<IPagingResponse>(
   'Optimizer/getCustomerCommunicationPaging'
 );
@@ -363,6 +365,12 @@ export const changeDealerOperationsPageData: ActionCreator<AppThunk> = (
 ) => {
   return async dispatch => {
     await dispatch(setCustomerCommunicationDashboardPageData(payload));
+  };
+};
+
+export const changePlaysPageData: ActionCreator<AppThunk> = (payload: Partial<IPageRequest>) => {
+  return async dispatch => {
+    await dispatch(setPlaysPageData(payload));
   };
 };
 
