@@ -11,6 +11,7 @@ import { TextField } from '../../../../../components/formControls/TextFieldStyle
 import { setUpdatedPlaysName } from '../../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
+import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 
 interface ITableRowLayoutProps {
   play: IPlayWithServiceBook;
@@ -28,6 +29,7 @@ const TableRowLayout = ({
   const { classes } = useStyles();
   const { updatedPlaysName } = useSelector((state: RootState) => state.dealerOperations);
   const dispatch = useDispatch();
+  const { askConfirm } = useConfirm();
 
   const renderServiceBookName = () => {
     return <StyledTableCell>{showServiceBookName ? play.serviceBookName : ''}</StyledTableCell>;
@@ -64,6 +66,14 @@ const TableRowLayout = ({
   };
 
   const handleClickTextConfiguration = () => {};
+
+  const askRemove = () => {
+    askConfirm({
+      isRemove: true,
+      title: `Please confirm you want to remove ${play.name}?`,
+      onConfirm: () => {},
+    });
+  };
 
   const renderPlayConfigured = () => {
     const isConfigured =
@@ -132,7 +142,7 @@ const TableRowLayout = ({
           style={{ textTransform: 'uppercase', fontWeight: '700' }}
           subText="Remove"
           color="#7898FF"
-          onClick={() => {}}
+          onClick={() => askRemove()}
         />
       </div>
     </StyledTableCell>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, TableBody } from '@mui/material';
+import { Button, TableBody, TablePagination } from '@mui/material';
 import { useStyles } from './styles';
 import { DenseTable } from '../../../../../components/styled/DemandTable';
 import { TableRow } from '../../../../../components/styled/TableRow';
@@ -14,10 +14,12 @@ import AddPlayModal from './AddPlayModal';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { serviceBooksWithPlays } from './mock';
 import {
+  changeDealerOperationsPageData,
   setPlays,
   setUpdatedPlaysName,
 } from '../../../../../store/reducers/dealerOperations/actions';
 import { RootState } from '../../../../../store/rootReducer';
+import { usePagination } from '../../../../../hooks/usePaginations/usePaginations';
 
 interface IPlayDetails {
   services: string[];
@@ -48,13 +50,22 @@ const TABLE_COLUMNS_COUNT = 7;
 const ServicePulse = () => {
   const { classes } = useStyles();
   const dispatch = useDispatch();
-  const { plays } = useSelector((state: RootState) => state.dealerOperations);
+  const { plays, playsPaging, playsPageData } = useSelector(
+    (state: RootState) => state.dealerOperations
+  );
+  console.log(playsPageData);
+  console.log(playsPaging);
   const { selectedSC } = useSCs();
   const [loader, setLoader] = React.useState(false);
   const [selectedServiceBookName, setSelectedServiceBookName] = React.useState<string>('');
   const [isEditEventName, setIsEditEventName] = useState<boolean>(false);
 
   const { onOpen: opOpen, onClose: onClose, isOpen: isOpen } = useModal();
+
+  const { changeRowsPerPage, changePage } = usePagination(
+    (s: RootState) => s.dealerOperations.playsPageData,
+    changeDealerOperationsPageData
+  );
 
   useEffect(() => {
     if (selectedSC?.id) {
@@ -92,6 +103,17 @@ const ServicePulse = () => {
   const handleAddPlay = (serviceBookName: string) => {
     setSelectedServiceBookName(serviceBookName);
     opOpen();
+  };
+
+  const handleChangePage = async (
+    e: React.MouseEvent<Element, MouseEvent> | null,
+    pageNumber: number
+  ) => {
+    changePage(e, pageNumber);
+  };
+
+  const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    changeRowsPerPage(e);
   };
 
   const renderPlayRows = (): React.JSX.Element[] => {
@@ -191,6 +213,17 @@ const ServicePulse = () => {
         <TableHeadLayout />
         <TableBody>{renderPlayRows()}</TableBody>
       </DenseTable>
+      {playsPaging.numberOfRecords > 10 && plays.length ? (
+        <TablePagination
+          component="div"
+          count={playsPaging.numberOfRecords}
+          page={playsPageData.pageIndex}
+          onPageChange={handleChangePage}
+          rowsPerPageOptions={[10, 25, 100]}
+          onRowsPerPageChange={handleChangeRows}
+          rowsPerPage={playsPageData.pageSize}
+        />
+      ) : null}
       <AddPlayModal open={isOpen} onClose={onClose} serviceBookName={selectedServiceBookName} />
     </div>
   );

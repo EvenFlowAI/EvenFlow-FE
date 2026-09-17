@@ -16,6 +16,7 @@ import {
   setAvailableTagsForRecallAlerts,
   setPlays,
   setUpdatedPlaysName,
+  setPlaysPageData,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -26,6 +27,7 @@ const initialState: TState = {
     pageIndex: 0,
   },
   customerCommunicationPaging: { ...defaultPaging },
+  playsPaging: { ...defaultPaging },
   newEventName: '',
   textIntegrationSettings: null,
   availablePhoneNumberList: [],
@@ -38,6 +40,10 @@ const initialState: TState = {
   availableTagsForRecallAlerts: [],
   plays: [],
   updatedPlaysName: [],
+  playsPageData: {
+    pageSize: 10,
+    pageIndex: 0,
+  },
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -49,6 +55,12 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
       return {
         ...state,
         customerCommunicationPageData: { ...state.customerCommunicationPageData, ...payload },
+      };
+    })
+    .addCase(setPlaysPageData, (state, { payload }) => {
+      return {
+        ...state,
+        playsPageData: { ...state.playsPageData, ...payload },
       };
     })
     .addCase(getCustomerCommunicationPaging, (state, { payload }) => {
