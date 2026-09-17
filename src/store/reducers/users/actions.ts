@@ -164,6 +164,8 @@ export const updateRoleManagementUser =
       errors?.forEach(error => showError(error.message));
       if (e.response?.data?.error) {
         onError(errorCode);
+      } else {
+        onError();
       }
       console.log(e);
       console.log('createUser', e);
@@ -195,6 +197,8 @@ export const createRoleManagementUser =
       errors?.forEach(error => showError(error.message));
       if (e.response?.data?.error) {
         onError(errorCode);
+      } else {
+        onError();
       }
       console.log(e);
       console.log('createUser', e);

@@ -46,10 +46,7 @@ const Filters: React.FC<TProps> = ({
           renderChipTagsWithoutOptionObject(
             selected.map(item => item.vinMake),
             getTagProps,
-            400,
-            option => {
-              return option;
-            }
+            400
           )
         }
         sx={{
