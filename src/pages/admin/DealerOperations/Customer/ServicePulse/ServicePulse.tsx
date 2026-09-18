@@ -27,6 +27,7 @@ import { loadServiceConsultants } from '../../../../../store/reducers/appointmen
 import { TServiceConsultant } from '../../../../../store/reducers/appointments/types';
 import { loadTransportationOptionsShort } from '../../../../../store/reducers/transportationNeeds/actions';
 import { TTransportationShort } from '../../../../../store/reducers/transportationNeeds/types';
+import TextConfigurationServicePulse from './TextConfigurationServicePulse';
 
 interface IPlayDetails {
   services: string[];
@@ -80,6 +81,7 @@ const ServicePulse = () => {
     onClose: onClosePlaySettings,
     isOpen: isOpenPlaySettings,
   } = useModal();
+  const { isOpen: isOpenText, onClose: onCloseText, onOpen: onOpenText } = useModal();
 
   const { changeRowsPerPage, changePage } = usePagination(
     (s: RootState) => s.dealerOperations.playsPageData,
@@ -149,6 +151,11 @@ const ServicePulse = () => {
     changePage(e, pageNumber);
   };
 
+  const handleOpenText = () => {
+    onOpenText();
+    setIsEditEventName(false);
+  };
+
   const handleChangeRows = async (e: React.ChangeEvent<HTMLInputElement>) => {
     changeRowsPerPage(e);
   };
@@ -170,6 +177,7 @@ const ServicePulse = () => {
           <TableRowLayout
             play={play}
             isEdit={isEditEventName}
+            handleOpenText={handleOpenText}
             showServiceBookName={showServiceBookName}
             className={rowClassName}
             setCurrentItem={setCurrentItem}
@@ -277,6 +285,7 @@ const ServicePulse = () => {
         isFormChecked={isFormChecked}
         setIsFormChecked={setIsFormChecked}
       />
+      <TextConfigurationServicePulse open={isOpenText} onClose={onCloseText} play={currentItem} />
     </div>
   );
 };
