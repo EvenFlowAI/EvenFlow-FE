@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { EServiceCategoryType } from '../../store/reducers/categories/types';
 import { getCategories, decodeSCID, mapRecallsForRequest } from '../../utils/utils';
-import { collectServiceRequestIds } from '../../utils/collectServiceRequestIds';
+import {
+  collectServiceRequestIds,
+  getRecallCategoryId,
+  getSelectedCategoriesWithRequests,
+} from '../../utils/collectServiceRequestIds';
 import { IConsultantsRequestData } from '../../api/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
@@ -72,14 +76,18 @@ const useGetConsultantsData = (
       packagePricingType,
       packageEMenuType
     );
-    const recalls = mapRecallsForRequest(selectedRecalls);
+    const recalls = mapRecallsForRequest(
+      selectedRecalls,
+      getRecallCategoryId(service, subService, allCategories, serviceCategories)
+    );
     const serviceRequestIds = collectServiceRequestIds(
       service,
       subService,
       null,
       selectedSR,
       undefined,
-      selectedSRComments
+      selectedSRComments,
+      getSelectedCategoriesWithRequests(allCategories, serviceCategories)
     );
 
     const hasRequestSelected =

@@ -148,17 +148,17 @@ export const getOfferString = (offer: IOfferForCategory, isRoundPrice: boolean):
   }
 };
 
-export const mapRecallsForRequest = (selectedRecalls: IRecallByVin[]): TRecallForRequest[] => {
-  return selectedRecalls.map(recall => {
-    const data: TRecallForRequest = {
-      serviceRequestId: recall.serviceRequestId,
-      number: recall.campaignNumber ?? recall.oemProgram ?? recall.number,
-      recallComponent: recall.recallComponent,
-    };
-    if (recall.id) data.id = recall.id;
-    return data;
-  });
-};
+export const mapRecallsForRequest = (
+  selectedRecalls: IRecallByVin[],
+  categoryId?: number
+): TRecallForRequest[] =>
+  selectedRecalls.map(recall => ({
+    serviceRequestId: recall.serviceRequestId,
+    number: recall.campaignNumber ?? recall.oemProgram ?? recall.number,
+    recallComponent: recall.recallComponent,
+    ...(recall.id ? { id: recall.id } : {}),
+    ...(categoryId !== undefined ? { categoryId } : {}),
+  }));
 
 export const getCategories = (
   allCategories: ICategory[],

@@ -106,7 +106,11 @@ import { API } from '../../../api/api';
 import { Dispatch, SetStateAction } from 'react';
 import { TTransportationData } from '../../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
 import { collectServiceRequestsForConsents } from '../../../utils/collectServiceRequestsForConsents';
-import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
+import {
+  collectServiceRequestIds,
+  getRecallCategoryId,
+  getSelectedCategoriesWithRequests,
+} from '../../../utils/collectServiceRequestIds';
 import { ETransportationType } from '../transportationNeeds/types';
 
 export const selectService = createAction<IServiceCategory | null>('fAppointment/selectService');
@@ -344,10 +348,17 @@ export const loadConsultantsForUpdating =
       appointmentByKey,
       serviceTypeOption,
       transportation,
+      service,
+      subService,
+      serviceCategories: selectedServiceCategories,
     } = getState().appointmentFrame;
     const { isCloneMode } = getState().appointment;
+    const { allCategories } = getState().categories;
     const { isAdvisorAvailable, currentConfig } = getState().bookingFlowConfig;
-    const recalls = mapRecallsForRequest(selectedRecalls);
+    const recalls = mapRecallsForRequest(
+      selectedRecalls,
+      getRecallCategoryId(service, subService, allCategories, selectedServiceCategories)
+    );
     if (selectedVehicle) {
       if (
         serviceRequests?.length ||
@@ -461,14 +472,18 @@ export const loadConsultants =
         : packageEMenuType !== null
           ? { optionType: packageEMenuType }
           : null;
-      const recalls = mapRecallsForRequest(selectedRecalls);
+      const recalls = mapRecallsForRequest(
+        selectedRecalls,
+        getRecallCategoryId(service, subService, allCategories, serviceCategories)
+      );
       const serviceRequestIds = collectServiceRequestIds(
         service,
         subService,
         null,
         selectedSR,
         undefined,
-        selectedSRComments
+        selectedSRComments,
+        getSelectedCategoriesWithRequests(allCategories, serviceCategories)
       );
 
       const transportationOptionId =
@@ -1148,13 +1163,24 @@ export const createOrUpdateAppointment =
           ? (appointmentFrame.serviceTypeOption?.transportationOption?.id ?? null)
           : null;
 
+    console.log(categories);
+    console.log(appointmentFrame);
+
+    const tempCategories = appointment.isEditMode
+      ? categories.allCategories
+      : getSelectedCategoriesWithRequests(
+          categories.allCategories,
+          appointmentFrame.serviceCategories
+        );
+
     const serviceRequests = collectServiceRequestIds(
       appointmentFrame.service,
       appointmentFrame.subService,
       appointmentFrame.selectedPackage,
       appointment.selectedSR,
       undefined,
-      appointment.selectedSRComments
+      appointment.selectedSRComments,
+      tempCategories
     );
 
     const maintenancePackageOption: TMaintenanceOption | null = appointmentFrame.selectedPackage
@@ -1229,7 +1255,15 @@ export const createOrUpdateAppointment =
       maintenancePackageOption,
       searchTerm: appointment.customerEnteredEmail,
       serviceTypeOptionId: isServiceValetExist ? optionId : isPickDropOff ? null : optionId,
-      recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+      recalls: mapRecallsForRequest(
+        appointmentFrame.selectedRecalls,
+        getRecallCategoryId(
+          appointmentFrame.service,
+          appointmentFrame.subService,
+          categories.allCategories,
+          appointmentFrame.serviceCategories
+        )
+      ),
       schedulerType: isMobile ? EScheduler.SelfMobile : EScheduler.SelfWebsite,
       notes: appointmentFrame.appointmentNotes,
       address:
@@ -1353,7 +1387,11 @@ export const loadAppointmentRequestsPrices =
       appointmentFrame.selectedPackage,
       appointment.selectedSR,
       undefined,
-      appointment.selectedSRComments
+      appointment.selectedSRComments,
+      getSelectedCategoriesWithRequests(
+        categories.allCategories,
+        appointmentFrame.serviceCategories
+      )
     );
 
     const time =
@@ -1375,7 +1413,15 @@ export const loadAppointmentRequestsPrices =
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
-      recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+      recalls: mapRecallsForRequest(
+        appointmentFrame.selectedRecalls,
+        getRecallCategoryId(
+          appointmentFrame.service,
+          appointmentFrame.subService,
+          categories.allCategories,
+          appointmentFrame.serviceCategories
+        )
+      ),
       maintenancePackageOption,
       date,
       time,
@@ -1540,7 +1586,9 @@ export const cloneAppointment =
     (dispatch, getState) => {
       const { currentAppointment } = getState().appointments;
       const appointment = getState().appointment;
-      const { selectedRecalls, consultants, makes } = getState().appointmentFrame;
+      const { selectedRecalls, consultants, makes, service, subService, serviceCategories } =
+        getState().appointmentFrame;
+      const { allCategories } = getState().categories;
       if (currentAppointment) {
         dispatch(setAppointmentSaving(true));
 
@@ -1623,7 +1671,10 @@ export const cloneAppointment =
           maintenancePackageOption,
           searchTerm: '',
           serviceTypeOptionId: currentAppointment.serviceTypeOption?.id ?? null,
-          recalls: mapRecallsForRequest(selectedRecalls),
+          recalls: mapRecallsForRequest(
+            selectedRecalls,
+            getRecallCategoryId(service, subService, allCategories, serviceCategories)
+          ),
           notes: currentAppointment.notes ?? '',
           address: currentAppointment.address ?? null,
           isWaitlist: Boolean(isWaitlist),
@@ -1802,10 +1853,14 @@ export const loadActiveTransportations =
           null,
           selectedSR,
           undefined,
-          selectedSRComments
+          selectedSRComments,
+          getSelectedCategoriesWithRequests(allCategories, serviceCategories)
         ),
         serviceCategories: getCategories(allCategories, serviceCategories),
-        recalls: mapRecallsForRequest(selectedRecalls),
+        recalls: mapRecallsForRequest(
+          selectedRecalls,
+          getRecallCategoryId(service, subService, allCategories, serviceCategories)
+        ),
         maintenancePackageOption,
         vehicle: {
           vin: selectedVehicle.vin,

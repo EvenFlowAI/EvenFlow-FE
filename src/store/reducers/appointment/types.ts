@@ -156,6 +156,7 @@ export type TRecallForRequest = {
   number?: string;
   id?: number;
   recallComponent?: string;
+  categoryId?: number;
 };
 
 export type MPOptionShort = {

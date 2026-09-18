@@ -40,7 +40,11 @@ import {
 } from '../appointment/actions';
 import { IServiceCenterProfile } from '../appointment/types';
 import { getRecallsByVin } from '../recall/actions';
-import { collectServiceRequestIds } from '../../../utils/collectServiceRequestIds';
+import {
+  collectServiceRequestIds,
+  getRecallCategoryId,
+  getSelectedCategoriesWithRequests,
+} from '../../../utils/collectServiceRequestIds';
 
 export const getAppointments = createAction<IAppointment[]>('Appointments/GetAppointments');
 export const getAllAppointments = createAction<IAppointment[]>('Appointments/GetAllAppointments');
@@ -140,7 +144,11 @@ export const checkPodChanged =
       appointmentFrame.selectedPackage,
       appointment.selectedSR,
       undefined,
-      appointment.selectedSRComments
+      appointment.selectedSRComments,
+      getSelectedCategoriesWithRequests(
+        categories.allCategories,
+        appointmentFrame.serviceCategories
+      )
     );
     const maintenancePackageOption = appointmentFrame.selectedPackage
       ? { id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType }
@@ -154,7 +162,15 @@ export const checkPodChanged =
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
-      recalls: mapRecallsForRequest(appointmentFrame.selectedRecalls),
+      recalls: mapRecallsForRequest(
+        appointmentFrame.selectedRecalls,
+        getRecallCategoryId(
+          appointmentFrame.service,
+          appointmentFrame.subService,
+          categories.allCategories,
+          appointmentFrame.serviceCategories
+        )
+      ),
       maintenancePackageOption,
       appointmentTimingType,
       serviceCenterId,

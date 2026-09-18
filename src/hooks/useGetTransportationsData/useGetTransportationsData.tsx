@@ -3,7 +3,11 @@ import { getCategories, mapRecallsForRequest } from '../../utils/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/rootReducer';
 import { TTransportationData } from '../../features/booking/AppointmentFlow/Screens/TransportationNeeds/types';
-import { collectServiceRequestIds } from '../../utils/collectServiceRequestIds';
+import {
+  collectServiceRequestIds,
+  getRecallCategoryId,
+  getSelectedCategoriesWithRequests,
+} from '../../utils/collectServiceRequestIds';
 
 const useGetTransportationsData = () => {
   const {
@@ -39,10 +43,14 @@ const useGetTransportationsData = () => {
           null,
           selectedSR,
           undefined,
-          selectedSRComments
+          selectedSRComments,
+          getSelectedCategoriesWithRequests(allCategories, serviceCategories)
         ),
         serviceCategories: getCategories(allCategories, serviceCategories),
-        recalls: mapRecallsForRequest(selectedRecalls),
+        recalls: mapRecallsForRequest(
+          selectedRecalls,
+          getRecallCategoryId(service, subService, allCategories, serviceCategories)
+        ),
         maintenancePackageOption,
         vehicle: {
           vin: selectedVehicle.vin,

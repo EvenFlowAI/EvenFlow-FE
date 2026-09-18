@@ -58,7 +58,11 @@ import {
   sortAppointments,
   sortSVAppointments,
 } from '../../../../../utils/svAppointments';
-import { collectServiceRequestIds } from '../../../../../utils/collectServiceRequestIds';
+import {
+  collectServiceRequestIds,
+  getRecallCategoryId,
+  getSelectedCategoriesWithRequests,
+} from '../../../../../utils/collectServiceRequestIds';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 
 dayjs.extend(utc);
@@ -562,13 +566,17 @@ export const AppointmentSlots: React.FC<
             selectedPackage,
             selectedSR,
             undefined,
-            selectedSRComments
+            selectedSRComments,
+            getSelectedCategoriesWithRequests(allCategories, serviceCategories)
           ),
           serviceCategories: getCategories(allCategories, serviceCategories),
           customerId: customerLoadedData?.id,
           warrantyExpiration: selectedVehicle?.warrantyExpiration,
           serviceTypeOptionId: isServiceValetExist ? optionId : isPickDropOff ? null : optionId,
-          recalls: mapRecallsForRequest(selectedRecalls),
+          recalls: mapRecallsForRequest(
+            selectedRecalls,
+            getRecallCategoryId(service, subService, allCategories, serviceCategories)
+          ),
           transportationOptionId: isServiceValetExist
             ? transportationOptionId
             : isPickDropOff
