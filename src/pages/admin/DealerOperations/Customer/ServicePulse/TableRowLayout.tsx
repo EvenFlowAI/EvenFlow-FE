@@ -20,6 +20,7 @@ interface ITableRowLayoutProps {
   isEdit: boolean;
   setCurrentItem: Dispatch<SetStateAction<IPlayWithServiceBook | null>>;
   onOpen: () => void;
+  handleOpenText: () => void;
 }
 
 const TableRowLayout = ({
@@ -29,6 +30,7 @@ const TableRowLayout = ({
   isEdit,
   setCurrentItem,
   onOpen,
+  handleOpenText,
 }: ITableRowLayoutProps) => {
   const { classes } = useStyles();
   const { updatedPlaysName } = useSelector((state: RootState) => state.dealerOperations);
@@ -71,6 +73,11 @@ const TableRowLayout = ({
 
   const handleClickTextConfiguration = () => {
     setCurrentItem(play);
+    handleOpenText();
+  };
+
+  const handleClickPlayConfiguration = () => {
+    setCurrentItem(play);
     onOpen();
   };
 
@@ -92,7 +99,7 @@ const TableRowLayout = ({
             subText={isConfigured ? 'Configured' : 'Not Configured'}
             color={isConfigured ? '#5FA077' : '#C71062'}
             icon={isConfigured ? <CheckIcon /> : <RedCross />}
-            onClick={() => handleClickTextConfiguration()}
+            onClick={() => handleClickPlayConfiguration()}
           />
         </div>
       </StyledTableCell>
