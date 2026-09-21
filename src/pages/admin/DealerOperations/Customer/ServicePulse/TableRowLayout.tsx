@@ -8,7 +8,10 @@ import { ReactComponent as CheckIcon } from '../../../../../assets/img/checkboxS
 import { ReactComponent as RedCross } from '../../../../../assets/img/redCross.svg';
 import { Switch } from '@mui/material';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
-import { setUpdatedPlaysName } from '../../../../../store/reducers/dealerOperations/actions';
+import {
+  setSelectedPlay,
+  setUpdatedPlaysName,
+} from '../../../../../store/reducers/dealerOperations/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
@@ -19,6 +22,7 @@ interface ITableRowLayoutProps {
   className?: string;
   isEdit: boolean;
   setCurrentItem: Dispatch<SetStateAction<IPlayWithServiceBook | null>>;
+  setIsEditEventName: Dispatch<SetStateAction<boolean>>;
   onOpen: () => void;
   handleOpenText: () => void;
 }
@@ -26,6 +30,7 @@ interface ITableRowLayoutProps {
 const TableRowLayout = ({
   play,
   showServiceBookName = true,
+  setIsEditEventName,
   className,
   isEdit,
   setCurrentItem,
@@ -76,6 +81,11 @@ const TableRowLayout = ({
     handleOpenText();
   };
 
+  const handleClickAudienceConfiguration = () => {
+    setIsEditEventName(false);
+    dispatch(setSelectedPlay(play));
+  };
+
   const handleClickPlayConfiguration = () => {
     setCurrentItem(play);
     onOpen();
@@ -115,7 +125,7 @@ const TableRowLayout = ({
             subText={isConfigured ? 'Configured' : 'Not Configured'}
             color={isConfigured ? '#5FA077' : '#C71062'}
             icon={isConfigured ? <CheckIcon /> : <RedCross />}
-            onClick={() => handleClickTextConfiguration()}
+            onClick={() => handleClickAudienceConfiguration()}
           />
         </div>
       </StyledTableCell>

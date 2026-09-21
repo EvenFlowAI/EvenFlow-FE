@@ -11,7 +11,14 @@ export const serviceBooksWithPlays = [
           advisor: null,
           transportation: 4,
         },
-        filterRules: [],
+        filterRules: [
+          {
+            type: 'Days From Last No Show Appointment',
+            operator: 'Equal',
+            value: '1',
+            isCriteria: true,
+          },
+        ],
         communicationDetails: {
           textMessage: 'Hello, this is a test message.',
         },

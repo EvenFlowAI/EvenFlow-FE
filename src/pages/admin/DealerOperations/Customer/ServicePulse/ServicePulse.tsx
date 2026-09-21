@@ -28,6 +28,7 @@ import { TServiceConsultant } from '../../../../../store/reducers/appointments/t
 import { loadTransportationOptionsShort } from '../../../../../store/reducers/transportationNeeds/actions';
 import { TTransportationShort } from '../../../../../store/reducers/transportationNeeds/types';
 import TextConfigurationServicePulse from './TextConfigurationServicePulse';
+import { CriteriaI, TriggerI } from '../types';
 
 interface IPlayDetails {
   services: string[];
@@ -39,11 +40,11 @@ export interface IPlayItem {
   name: string;
   id?: string;
   play: IPlayDetails;
-  filterRules: unknown[];
+  filterRules: CriteriaI[];
   communicationDetails: {
     textMessage: string;
   };
-  triggers: unknown[];
+  triggers: TriggerI[];
   active: boolean;
   activeText: string;
 }
@@ -178,6 +179,7 @@ const ServicePulse = () => {
             play={play}
             isEdit={isEditEventName}
             handleOpenText={handleOpenText}
+            setIsEditEventName={setIsEditEventName}
             showServiceBookName={showServiceBookName}
             className={rowClassName}
             setCurrentItem={setCurrentItem}

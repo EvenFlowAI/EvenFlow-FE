@@ -17,6 +17,8 @@ import {
   setPlays,
   setUpdatedPlaysName,
   setPlaysPageData,
+  setPlaysAudienceEditMode,
+  setSelectedPlay,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -44,6 +46,8 @@ const initialState: TState = {
     pageSize: 10,
     pageIndex: 0,
   },
+  playsAudienceEditMode: false,
+  selectedPlay: null,
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -101,5 +105,11 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(setPlays, (state, { payload }) => {
       return { ...state, plays: payload };
+    })
+    .addCase(setPlaysAudienceEditMode, (state, { payload }) => {
+      return { ...state, playsAudienceEditMode: payload };
+    })
+    .addCase(setSelectedPlay, (state, { payload }) => {
+      return { ...state, selectedPlay: payload };
     })
 );

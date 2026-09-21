@@ -57,6 +57,10 @@ export const setAvailableTagsForRecallAlerts = createAction<ITag[]>(
 );
 
 export const setPlays = createAction<IPlayWithServiceBook[]>('Optimizer/SetPlays');
+export const setPlaysAudienceEditMode = createAction<boolean>('Optimizer/SetPlaysAudienceEditMode');
+export const setSelectedPlay = createAction<IPlayWithServiceBook | null>(
+  'Optimizer/SetSelectedPlay'
+);
 
 export const setUpdatedPlaysName = createAction<
   {

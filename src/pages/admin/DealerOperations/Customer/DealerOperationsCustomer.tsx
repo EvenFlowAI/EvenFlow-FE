@@ -12,11 +12,12 @@ import OutboundEvents from './OutboundEvents/OutboundEvents';
 import RecallAlerts from './RecallAlerts/RecallAlerts';
 import RecallAlertSettings from './RecallAlerts/layouts/RecallAlertSettings/RecallAlertSettings';
 import ServicePulse from './ServicePulse/ServicePulse';
+import ServicePulseSettings from './ServicePulse/ServicePulseSettings';
 
 const DealerOperationsCustomer = () => {
   const { classes } = useStyles();
 
-  const { eventIdForRulesConfiguration } = useSelector(
+  const { eventIdForRulesConfiguration, selectedPlay } = useSelector(
     (state: RootState) => state.dealerOperations
   );
 
@@ -26,6 +27,10 @@ const DealerOperationsCustomer = () => {
 
   if (selectedRecallAlert) {
     return <RecallAlertSettings />;
+  }
+
+  if (selectedPlay) {
+    return <ServicePulseSettings />;
   }
 
   if (eventIdForRulesConfiguration) {

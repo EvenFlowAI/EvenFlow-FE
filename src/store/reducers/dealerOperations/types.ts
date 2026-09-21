@@ -30,6 +30,8 @@ export type TState = {
     id?: string;
     name: string;
   }[];
+  playsAudienceEditMode: boolean;
+  selectedPlay: IPlayWithServiceBook | null;
 };
 
 export interface Credits {
