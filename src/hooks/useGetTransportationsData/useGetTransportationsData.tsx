@@ -20,6 +20,7 @@ const useGetTransportationsData = () => {
     hashKey,
     service,
     subService,
+    appointmentByKey,
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { selectedSR, scProfile, selectedSRComments } = useSelector(
@@ -44,7 +45,8 @@ const useGetTransportationsData = () => {
           selectedSR,
           undefined,
           selectedSRComments,
-          getSelectedCategoriesWithRequests(allCategories, serviceCategories)
+          getSelectedCategoriesWithRequests(allCategories, serviceCategories),
+          appointmentByKey?.serviceRequests
         ),
         serviceCategories: getCategories(allCategories, serviceCategories),
         recalls: mapRecallsForRequest(

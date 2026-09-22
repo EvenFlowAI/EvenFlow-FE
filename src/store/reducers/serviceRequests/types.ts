@@ -25,6 +25,7 @@ export interface IServiceRequestShort {
   price: number;
   orderIndex?: number;
   comment?: string;
+  categoryId?: number | null;
 }
 export interface IServiceRequestNonAddedFilter {
   searchTerm: string;
