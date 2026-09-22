@@ -484,7 +484,8 @@ export const loadConsultants =
         undefined,
         selectedSRComments,
         getSelectedCategoriesWithRequests(allCategories, serviceCategories),
-        appointmentByKey?.serviceRequests
+        appointmentByKey?.serviceRequests,
+        appointmentByKey ? allCategories : undefined
       );
 
       const transportationOptionId =
@@ -1164,15 +1165,10 @@ export const createOrUpdateAppointment =
           ? (appointmentFrame.serviceTypeOption?.transportationOption?.id ?? null)
           : null;
 
-    console.log(categories);
-    console.log(appointmentFrame);
-
-    const tempCategories = appointment.isEditMode
-      ? categories.allCategories
-      : getSelectedCategoriesWithRequests(
-          categories.allCategories,
-          appointmentFrame.serviceCategories
-        );
+    const selectedCategoriesWithRequests = getSelectedCategoriesWithRequests(
+      categories.allCategories,
+      appointmentFrame.serviceCategories
+    );
 
     const serviceRequests = collectServiceRequestIds(
       appointmentFrame.service,
@@ -1181,8 +1177,10 @@ export const createOrUpdateAppointment =
       appointment.selectedSR,
       undefined,
       appointment.selectedSRComments,
-      tempCategories,
-      appointmentFrame.appointmentByKey?.serviceRequests
+      selectedCategoriesWithRequests,
+      appointmentFrame.appointmentByKey?.serviceRequests,
+      // in edit mode ops codes can come from categories that are not selected anymore
+      appointment.isEditMode ? categories.allCategories : undefined
     );
 
     const maintenancePackageOption: TMaintenanceOption | null = appointmentFrame.selectedPackage
@@ -1394,7 +1392,8 @@ export const loadAppointmentRequestsPrices =
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
-      appointmentFrame.appointmentByKey?.serviceRequests
+      appointmentFrame.appointmentByKey?.serviceRequests,
+      appointmentFrame.appointmentByKey ? categories.allCategories : undefined
     );
 
     const time =
@@ -1859,7 +1858,8 @@ export const loadActiveTransportations =
           undefined,
           selectedSRComments,
           getSelectedCategoriesWithRequests(allCategories, serviceCategories),
-          appointmentByKey?.serviceRequests
+          appointmentByKey?.serviceRequests,
+          appointmentByKey ? allCategories : undefined
         ),
         serviceCategories: getCategories(allCategories, serviceCategories),
         recalls: mapRecallsForRequest(

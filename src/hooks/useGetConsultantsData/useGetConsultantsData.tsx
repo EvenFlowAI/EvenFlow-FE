@@ -88,7 +88,8 @@ const useGetConsultantsData = (
       undefined,
       selectedSRComments,
       getSelectedCategoriesWithRequests(allCategories, serviceCategories),
-      appointmentByKey?.serviceRequests
+      appointmentByKey?.serviceRequests,
+      appointmentByKey ? allCategories : undefined
     );
 
     const hasRequestSelected =
