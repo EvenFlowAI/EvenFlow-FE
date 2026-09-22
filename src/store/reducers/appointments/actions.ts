@@ -149,7 +149,8 @@ export const checkPodChanged =
         categories.allCategories,
         appointmentFrame.serviceCategories
       ),
-      appointmentFrame.appointmentByKey?.serviceRequests
+      appointmentFrame.appointmentByKey?.serviceRequests,
+      appointmentFrame.appointmentByKey ? categories.allCategories : undefined
     );
     const maintenancePackageOption = appointmentFrame.selectedPackage
       ? { id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType }

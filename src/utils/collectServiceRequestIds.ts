@@ -67,23 +67,40 @@ const buildCategoryIdByRequestId = (
   sub: IServiceCategory | null,
   selectedRecalls?: IRecallByVin[],
   selectedCategories?: TCategoryWithRequests[],
-  existingServiceRequests?: TExistingServiceRequest[]
+  existingServiceRequests?: TExistingServiceRequest[],
+  fallbackCategories?: TCategoryWithRequests[]
 ): Map<number, number> => {
   const categoryIdByRequestId = new Map<number, number>();
 
-  // all categories selected during the flow (e.g. Individual Services + Diagnose)
-  selectedCategories?.forEach(category => {
-    category.serviceRequests?.forEach(serviceRequest => {
-      if (!categoryIdByRequestId.has(serviceRequest.id)) {
+  const fillMissing = (categories?: TCategoryWithRequests[]) =>
+    categories?.forEach(category => {
+      category.serviceRequests?.forEach(serviceRequest => {
+        if (!categoryIdByRequestId.has(serviceRequest.id)) {
+          categoryIdByRequestId.set(serviceRequest.id, category.id);
+        }
+      });
+    });
+
+  // ops codes already saved on the appointment keep their own category,
+  // so they are never re-assigned to the category card opened right now
+  const existingRequestIds = new Set(existingServiceRequests?.map(item => item.id) ?? []);
+
+  // 1. the category card opened right now (sub service wins over the service)
+  //    is the most precise context for the ops codes added during this session
+  [s, sub].forEach(category => {
+    category?.serviceRequests?.forEach(serviceRequest => {
+      if (!existingRequestIds.has(serviceRequest.id)) {
         categoryIdByRequestId.set(serviceRequest.id, category.id);
       }
     });
   });
 
-  // currently selected sub service has the highest priority
-  sub?.serviceRequests?.forEach(serviceRequest => {
-    categoryIdByRequestId.set(serviceRequest.id, sub.id);
-  });
+  // 2. all categories selected during the flow (e.g. Individual Services + Diagnose)
+  fillMissing(selectedCategories);
+
+  // 3. last resort: any known category containing the ops code
+  //    (needed in edit mode for codes restored from the appointment)
+  fillMissing(fallbackCategories);
 
   // recall ops codes belong to the Open Recalls category even if it has no service requests
   if (selectedRecalls?.length) {
@@ -117,7 +134,8 @@ export const collectServiceRequestIds = (
   selectedRecalls?: IRecallByVin[],
   individualOpsCodesComments?: Record<number, string>,
   selectedCategories?: TCategoryWithRequests[],
-  existingServiceRequests?: TExistingServiceRequest[]
+  existingServiceRequests?: TExistingServiceRequest[],
+  fallbackCategories?: TCategoryWithRequests[]
 ): IServiceRequestIds[] => {
   const ids: number[] = [];
 
@@ -136,7 +154,8 @@ export const collectServiceRequestIds = (
     sub,
     selectedRecalls,
     selectedCategories,
-    existingServiceRequests
+    existingServiceRequests,
+    fallbackCategories
   );
 
   return Array.from(set).map(i => {

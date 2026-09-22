@@ -46,7 +46,8 @@ const useGetTransportationsData = () => {
           undefined,
           selectedSRComments,
           getSelectedCategoriesWithRequests(allCategories, serviceCategories),
-          appointmentByKey?.serviceRequests
+          appointmentByKey?.serviceRequests,
+          appointmentByKey ? allCategories : undefined
         ),
         serviceCategories: getCategories(allCategories, serviceCategories),
         recalls: mapRecallsForRequest(
