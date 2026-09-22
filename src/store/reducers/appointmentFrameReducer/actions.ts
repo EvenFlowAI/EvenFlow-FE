@@ -483,7 +483,8 @@ export const loadConsultants =
         selectedSR,
         undefined,
         selectedSRComments,
-        getSelectedCategoriesWithRequests(allCategories, serviceCategories)
+        getSelectedCategoriesWithRequests(allCategories, serviceCategories),
+        appointmentByKey?.serviceRequests
       );
 
       const transportationOptionId =
@@ -1180,7 +1181,8 @@ export const createOrUpdateAppointment =
       appointment.selectedSR,
       undefined,
       appointment.selectedSRComments,
-      tempCategories
+      tempCategories,
+      appointmentFrame.appointmentByKey?.serviceRequests
     );
 
     const maintenancePackageOption: TMaintenanceOption | null = appointmentFrame.selectedPackage
@@ -1391,7 +1393,8 @@ export const loadAppointmentRequestsPrices =
       getSelectedCategoriesWithRequests(
         categories.allCategories,
         appointmentFrame.serviceCategories
-      )
+      ),
+      appointmentFrame.appointmentByKey?.serviceRequests
     );
 
     const time =
@@ -1833,6 +1836,7 @@ export const loadActiveTransportations =
       hashKey,
       service,
       subService,
+      appointmentByKey,
     } = getState().appointmentFrame;
     const { allCategories } = getState().categories;
     const { selectedSR, selectedSRComments, isCloneMode } = getState().appointment;
@@ -1854,7 +1858,8 @@ export const loadActiveTransportations =
           selectedSR,
           undefined,
           selectedSRComments,
-          getSelectedCategoriesWithRequests(allCategories, serviceCategories)
+          getSelectedCategoriesWithRequests(allCategories, serviceCategories),
+          appointmentByKey?.serviceRequests
         ),
         serviceCategories: getCategories(allCategories, serviceCategories),
         recalls: mapRecallsForRequest(

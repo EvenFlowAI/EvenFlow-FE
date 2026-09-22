@@ -148,7 +148,8 @@ export const checkPodChanged =
       getSelectedCategoriesWithRequests(
         categories.allCategories,
         appointmentFrame.serviceCategories
-      )
+      ),
+      appointmentFrame.appointmentByKey?.serviceRequests
     );
     const maintenancePackageOption = appointmentFrame.selectedPackage
       ? { id: appointmentFrame.selectedPackage?.id, priceType: appointmentFrame.packagePricingType }

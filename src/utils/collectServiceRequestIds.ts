@@ -10,6 +10,15 @@ type TCategoryWithRequests = {
 };
 
 /**
+ * Service requests already saved on the appointment (received from the `by-key` request).
+ * Their `categoryId` is the source of truth and must not be recalculated.
+ */
+type TExistingServiceRequest = {
+  id: number;
+  categoryId?: number | null;
+};
+
+/**
  * Returns full category data (with service requests) for categories selected during the flow.
  * Used to resolve which category a particular ops code belongs to.
  */
@@ -57,11 +66,10 @@ const buildCategoryIdByRequestId = (
   s: IServiceCategory | null,
   sub: IServiceCategory | null,
   selectedRecalls?: IRecallByVin[],
-  selectedCategories?: TCategoryWithRequests[]
+  selectedCategories?: TCategoryWithRequests[],
+  existingServiceRequests?: TExistingServiceRequest[]
 ): Map<number, number> => {
   const categoryIdByRequestId = new Map<number, number>();
-
-  console.log('selectedCategories', selectedCategories);
 
   // all categories selected during the flow (e.g. Individual Services + Diagnose)
   selectedCategories?.forEach(category => {
@@ -90,6 +98,14 @@ const buildCategoryIdByRequestId = (
     }
   }
 
+  // categories that came from the `by-key` appointment have the highest priority:
+  // an already saved `categoryId` must be sent back as is
+  existingServiceRequests?.forEach(serviceRequest => {
+    if (serviceRequest.categoryId !== undefined && serviceRequest.categoryId !== null) {
+      categoryIdByRequestId.set(serviceRequest.id, serviceRequest.categoryId);
+    }
+  });
+
   return categoryIdByRequestId;
 };
 
@@ -100,7 +116,8 @@ export const collectServiceRequestIds = (
   individualOpsCodes?: number[],
   selectedRecalls?: IRecallByVin[],
   individualOpsCodesComments?: Record<number, string>,
-  selectedCategories?: TCategoryWithRequests[]
+  selectedCategories?: TCategoryWithRequests[],
+  existingServiceRequests?: TExistingServiceRequest[]
 ): IServiceRequestIds[] => {
   const ids: number[] = [];
 
@@ -118,7 +135,8 @@ export const collectServiceRequestIds = (
     s,
     sub,
     selectedRecalls,
-    selectedCategories
+    selectedCategories,
+    existingServiceRequests
   );
 
   return Array.from(set).map(i => {
