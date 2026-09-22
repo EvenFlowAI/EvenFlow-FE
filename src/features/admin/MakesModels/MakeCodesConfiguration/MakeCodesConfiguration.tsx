@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { capitalizeName } from '../helper';
+import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
 
 type TMakeCodesConfiguration = DialogProps & {
   configuredMakes: IData[];
@@ -28,6 +29,7 @@ export const MakeCodesConfiguration: React.FC<
 > = ({ onClose, configuredMakes, setConfiguredMakes, onSaveMakes, ...props }) => {
   const { classes } = useStyles();
   const { makeCodes } = useSelector((state: RootState) => state.vehicleDetails);
+  const { selectedSC } = useSelector((state: RootState) => state.serviceCenters);
 
   const handleUpdateCode = (prevEl: IData, value: string) => {
     setConfiguredMakes(prev => prev.map(el => (el.id === prevEl.id ? { ...el, code: value } : el)));
@@ -36,7 +38,10 @@ export const MakeCodesConfiguration: React.FC<
   return (
     <BaseModal {...props} width={860} height={770} onClose={onClose}>
       <DialogTitle onClose={onClose}>
-        <span>CDK Make Codes Configuration</span>
+        <span>
+          {selectedSC?.integration === SystemIntegrationType.XTime ? 'Xtime ' : 'CDK'} Make Codes
+          Configuration
+        </span>
       </DialogTitle>
       <p className={classes.codeTitle}>Configured Makes</p>
       <DialogContent

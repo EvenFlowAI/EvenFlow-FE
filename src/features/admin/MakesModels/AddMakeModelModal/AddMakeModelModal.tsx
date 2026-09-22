@@ -59,7 +59,10 @@ export const AddMakeModelModal: React.FC<
                     Click <span style={{ fontWeight: 'bold' }}>Next</span> to configure the
                     corresponding{' '}
                     <span style={{ fontWeight: 'bold' }}>
-                      CDK {isEditing ? 'Model' : 'Make'} Codes.
+                      {state.selectedSC?.integration === SystemIntegrationType.XTime
+                        ? 'Xtime '
+                        : 'CDK'}{' '}
+                      {isEditing ? 'Model' : 'Make'} Codes.
                     </span>
                   </p>
                 ) : null}
