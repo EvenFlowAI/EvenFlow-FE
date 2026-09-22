@@ -57,7 +57,10 @@ export const ModelCodesConfiguration: React.FC<
   return (
     <BaseModal {...props} width={860} height={770} onClose={onClose}>
       <DialogTitle onClose={onClose}>
-        <span>CDK Model Codes Configuration</span>
+        <span>
+          {selectedSC?.integration === SystemIntegrationType.XTime ? 'Xtime ' : 'CDK'} Model Codes
+          Configuration
+        </span>
       </DialogTitle>
       <p className={classes.codeTitle}>Configured Models</p>
       <DialogContent
