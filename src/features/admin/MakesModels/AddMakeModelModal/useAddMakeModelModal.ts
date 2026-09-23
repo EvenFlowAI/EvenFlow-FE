@@ -10,7 +10,7 @@ import {
   updateModel,
 } from '../../../../store/reducers/vehicleDetails/actions';
 import { IData } from '../../../../components/DragAndDrop/types';
-import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { SystemIntegrationType, SystemType } from '../../../../store/reducers/serviceCenters/types';
 import { useModal } from '../../../../hooks/useModal/useModal';
 import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { ModelsTitle } from './modelsTitle';
@@ -51,7 +51,7 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
 
     if (
       selectedSC?.integration === SystemIntegrationType.Fortellis ||
-      selectedSC?.integration === SystemIntegrationType.XTime
+      selectedSC?.system === SystemType.Xtime
     ) {
       if (currentMake.makeCode) {
         dispatch(loadMakeModelCodes(selectedSC.id, currentMake.makeCode));
@@ -124,7 +124,7 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
 
     if (
       selectedSC.integration === SystemIntegrationType.Fortellis ||
-      selectedSC.integration === SystemIntegrationType.XTime
+      selectedSC.system === SystemType.Xtime
     ) {
       const makeCodes = Object.fromEntries(configuredMakes.map(make => [make.id, make.code ?? '']));
       dispatch(
@@ -176,7 +176,7 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
 
     if (
       selectedSC.integration === SystemIntegrationType.Fortellis ||
-      selectedSC.integration === SystemIntegrationType.XTime
+      selectedSC.system === SystemType.Xtime
     ) {
       const modelCodes: Record<string, string> = Object.fromEntries(
         configuredModels.map(model => {
@@ -216,7 +216,7 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
   const handleSaveMakes = () => {
     if (
       selectedSC?.integration === SystemIntegrationType.Fortellis ||
-      selectedSC?.integration === SystemIntegrationType.XTime
+      selectedSC?.system === SystemType.Xtime
     ) {
       onOpenConfigurationModal();
       return;
@@ -228,7 +228,7 @@ export const useAddMakeModelModal = ({ onClose }: TProps) => {
   const handleSaveModels = () => {
     if (
       selectedSC?.integration === SystemIntegrationType.Fortellis ||
-      selectedSC?.integration === SystemIntegrationType.XTime
+      selectedSC?.system === SystemType.Xtime
     ) {
       onOpenModelConfigurationModal();
       return;

@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { TextField } from '../../../../components/formControls/TextFieldStyled/TextField';
-import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { SystemIntegrationType, SystemType } from '../../../../store/reducers/serviceCenters/types';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 
 type TModelCodesConfiguration = DialogProps & {
@@ -58,8 +58,7 @@ export const ModelCodesConfiguration: React.FC<
     <BaseModal {...props} width={860} height={770} onClose={onClose}>
       <DialogTitle onClose={onClose}>
         <span>
-          {selectedSC?.integration === SystemIntegrationType.XTime ? 'Xtime ' : 'CDK'} Model Codes
-          Configuration
+          {selectedSC?.system === SystemType.Xtime ? 'Xtime ' : 'CDK'} Model Codes Configuration
         </span>
       </DialogTitle>
       <p className={classes.codeTitle}>Configured Models</p>

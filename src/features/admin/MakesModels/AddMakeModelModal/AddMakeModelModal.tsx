@@ -11,7 +11,7 @@ import { useStyles } from './styles';
 import { ReactComponent as AttentionIcon } from '../../../../assets/img/attention.svg';
 import DragAndDrop from '../../../../components/DragAndDrop/DragAndDrop';
 import { MakeCodesConfiguration } from '../MakeCodesConfiguration/MakeCodesConfiguration';
-import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { SystemIntegrationType, SystemType } from '../../../../store/reducers/serviceCenters/types';
 import MakeModelInput from './MakeModelInput';
 import ModelCodesConfiguration from '../ModelCodesConfiguration/ModelCodesConfiguration';
 import { useAddMakeModelModal } from './useAddMakeModelModal';
@@ -54,14 +54,12 @@ export const AddMakeModelModal: React.FC<
                   order that is presented in the drop-down menu on the booking flow
                 </p>
                 {state.selectedSC?.integration === SystemIntegrationType.Fortellis ||
-                state.selectedSC?.integration === SystemIntegrationType.XTime ? (
+                state.selectedSC?.system === SystemType.Xtime ? (
                   <p style={{ margin: 0 }}>
                     Click <span style={{ fontWeight: 'bold' }}>Next</span> to configure the
                     corresponding{' '}
                     <span style={{ fontWeight: 'bold' }}>
-                      {state.selectedSC?.integration === SystemIntegrationType.XTime
-                        ? 'Xtime '
-                        : 'CDK'}{' '}
+                      {state.selectedSC?.system === SystemType.Xtime ? 'Xtime ' : 'CDK'}{' '}
                       {isEditing ? 'Model' : 'Make'} Codes.
                     </span>
                   </p>
@@ -95,7 +93,7 @@ export const AddMakeModelModal: React.FC<
             className={classes.saveButton}
           >
             {state.selectedSC?.integration === SystemIntegrationType.Fortellis ||
-            state.selectedSC?.integration === SystemIntegrationType.XTime
+            state.selectedSC?.system === SystemType.Xtime
               ? 'Next'
               : 'Save'}
           </Button>

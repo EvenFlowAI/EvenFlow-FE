@@ -19,7 +19,7 @@ import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { truncateMakes } from './utils';
 import { usePagination } from '../../../../hooks/usePaginations/usePaginations';
-import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { SystemIntegrationType, SystemType } from '../../../../store/reducers/serviceCenters/types';
 const RowData: TableRowDataType<IMake>[] = [
   {
     val: (el: IMake) => <span style={{ fontWeight: 'bold' }}>{el.name}</span>,
@@ -133,7 +133,10 @@ export const MakesModelsTable: React.FC<
   };
 
   const openEdit = () => {
-    if (selectedSC?.integration !== SystemIntegrationType.Fortellis) {
+    if (
+      selectedSC?.integration !== SystemIntegrationType.Fortellis &&
+      selectedSC?.system !== SystemType.Xtime
+    ) {
       if (currentMake?.isReadOnly) {
         showError('You cannot edit a read-only make');
         return;

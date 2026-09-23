@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
 import { capitalizeName } from '../helper';
-import { SystemIntegrationType } from '../../../../store/reducers/serviceCenters/types';
+import { SystemType } from '../../../../store/reducers/serviceCenters/types';
 
 type TMakeCodesConfiguration = DialogProps & {
   configuredMakes: IData[];
@@ -39,8 +39,7 @@ export const MakeCodesConfiguration: React.FC<
     <BaseModal {...props} width={860} height={770} onClose={onClose}>
       <DialogTitle onClose={onClose}>
         <span>
-          {selectedSC?.integration === SystemIntegrationType.XTime ? 'Xtime ' : 'CDK'} Make Codes
-          Configuration
+          {selectedSC?.system === SystemType.Xtime ? 'Xtime ' : 'CDK'} Make Codes Configuration
         </span>
       </DialogTitle>
       <p className={classes.codeTitle}>Configured Makes</p>
