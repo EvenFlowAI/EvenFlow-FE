@@ -1,6 +1,5 @@
 import { useStyles } from './styles';
 import { TableRow } from '../../../../../components/styled/TableRow';
-import { IPlayWithServiceBook } from './ServicePulse';
 import React, { Dispatch, SetStateAction } from 'react';
 import { StyledTableCell } from '../../../../../features/admin/DemandPredictionTable/styles';
 import LabelLink from '../../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
@@ -15,6 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
+import { IPlayWithServiceBook } from '../types';
 
 interface ITableRowLayoutProps {
   play: IPlayWithServiceBook;
@@ -25,6 +25,7 @@ interface ITableRowLayoutProps {
   setIsEditEventName: Dispatch<SetStateAction<boolean>>;
   onOpen: () => void;
   handleOpenText: () => void;
+  showError: (message: string) => void;
 }
 
 const TableRowLayout = ({
@@ -35,6 +36,7 @@ const TableRowLayout = ({
   isEdit,
   setCurrentItem,
   onOpen,
+  showError,
   handleOpenText,
 }: ITableRowLayoutProps) => {
   const { classes } = useStyles();
@@ -152,7 +154,13 @@ const TableRowLayout = ({
     return (
       <StyledTableCell>
         <div className={classes.textRow}>
-          <Switch onClick={() => {}} checked={play.active} color="primary" />
+          <Switch
+            onClick={() => {
+              showError('Something went wrong');
+            }}
+            checked={play.active}
+            color="primary"
+          />
           <p>{play.activeText}</p>
         </div>
       </StyledTableCell>

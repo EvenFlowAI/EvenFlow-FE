@@ -43,3 +43,27 @@ export interface HistoryRecallData {
     value: HistoryRecallStatus;
   }[];
 }
+
+interface IPlayDetails {
+  services: string[];
+  advisor: number | null;
+  transportation: number;
+}
+
+export interface IPlayItem {
+  name: string;
+  id?: string;
+  play: IPlayDetails;
+  filterRules: CriteriaI[];
+  communicationDetails: {
+    textMessage: string;
+  };
+  triggers: TriggerI[];
+  active: boolean;
+  activeText: string;
+}
+
+export interface IPlayWithServiceBook extends IPlayItem {
+  serviceBookName: string;
+  serviceBookId: string;
+}
