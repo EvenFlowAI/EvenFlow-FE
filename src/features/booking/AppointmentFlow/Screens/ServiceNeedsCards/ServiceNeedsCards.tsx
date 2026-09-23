@@ -154,7 +154,10 @@ export const ServiceNeedsCards: React.FC<
 
   const handleCategoryHighlight = (selectedCategory: IServiceCategory) => {
     if (serviceCategories && selectedCategory.type !== EServiceCategoryType.LinkToPage2) {
-      dispatch(selectCategories([...serviceCategories, selectedCategory]));
+      const isAlreadySelected = serviceCategories.some(item => item.id === selectedCategory.id);
+      if (!isAlreadySelected) {
+        dispatch(selectCategories([...serviceCategories, selectedCategory]));
+      }
     }
   };
 

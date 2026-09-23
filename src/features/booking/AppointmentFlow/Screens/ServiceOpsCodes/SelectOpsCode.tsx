@@ -19,6 +19,7 @@ import {
   selectCategories,
   setAdditionalServicesChosen,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
+import { TServiceCategory } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import { Caption } from '../../../../../components/wrappers/Caption/Caption';
 import { useTranslation } from 'react-i18next';
 import { EServiceCategoryPage } from '../../../../../api/types';
@@ -172,26 +173,40 @@ export const SelectOpsCode: React.FC<TProps> = ({
   };
 
   const handleCategories = (value: string) => {
+    const codeId = Number(value);
+    if (!codeId) return;
+
     const diagnoseCategory = allCategories.find(
       item => item.type === EServiceCategoryType.Diagnose && item.page === page
     );
-    const diagnoseCategoryRequestsIds =
-      diagnoseCategory?.serviceRequests.map(item => item.id) || [];
     const individualCategory = allCategories.find(
       item => item.type === EServiceCategoryType.IndividualServices && item.page === page
     );
-    const individualRequestsIds = individualCategory?.serviceRequests.map(item => item.id) || [];
-    let categories = [...serviceCategories];
-    if (Number(value) && selectedSR.includes(Number(value))) {
-      const filteredCodes = selectedSR.filter(id => id !== Number(value));
-      if (!filteredCodes.find(code => diagnoseCategoryRequestsIds.includes(code))) {
-        categories = categories.filter(id => id.id !== diagnoseCategory?.id);
-      }
-      if (!filteredCodes.find(code => individualRequestsIds.includes(code))) {
-        categories = categories.filter(id => id.id !== individualCategory?.id);
-      }
-      dispatch(selectCategories(categories));
-    }
+
+    const nextSelectedCodes = selectedOpsCodes.includes(codeId)
+      ? selectedOpsCodes.filter(id => id !== codeId)
+      : [...selectedOpsCodes, codeId];
+
+    // keep `serviceCategories` in sync with the codes selected on this screen:
+    // a category stays selected while at least one of its ops codes is checked,
+    // so re-checking a code restores its category and its `categoryId` is sent again
+    const categories = [diagnoseCategory, individualCategory].reduce<TServiceCategory[]>(
+      (acc, category) => {
+        if (!category) return acc;
+        const requestIds = category.serviceRequests.map(item => item.id);
+        const hasSelectedCodes = nextSelectedCodes.some(code => requestIds.includes(code));
+        const isSelectedCategory = acc.some(item => item.id === category.id);
+
+        if (hasSelectedCodes && !isSelectedCategory) return [...acc, category];
+        if (!hasSelectedCodes && isSelectedCategory) {
+          return acc.filter(item => item.id !== category.id);
+        }
+        return acc;
+      },
+      [...serviceCategories]
+    );
+
+    dispatch(selectCategories(categories));
   };
 
   const handleSelectCode = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
