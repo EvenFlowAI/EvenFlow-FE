@@ -19,6 +19,20 @@ type TExistingServiceRequest = {
 };
 
 /**
+ * Only these category types own individually selected ops codes.
+ * The same service request can also be listed inside a General category (such a category
+ * is booked as a whole and is sent through `serviceCategories`), so it must never be used
+ * as the `categoryId` of an ops code.
+ */
+const OPS_CODE_CATEGORY_TYPES = [
+  EServiceCategoryType.IndividualServices,
+  EServiceCategoryType.Diagnose,
+];
+
+const canOwnOpsCode = (category?: { type?: EServiceCategoryType } | null): boolean =>
+  category?.type === undefined || OPS_CODE_CATEGORY_TYPES.includes(category.type);
+
+/**
  * Returns full category data (with service requests) for categories selected during the flow.
  * Used to resolve which category a particular ops code belongs to.
  */
@@ -74,6 +88,7 @@ const buildCategoryIdByRequestId = (
 
   const fillMissing = (categories?: TCategoryWithRequests[]) =>
     categories?.forEach(category => {
+      if (!canOwnOpsCode(category)) return;
       category.serviceRequests?.forEach(serviceRequest => {
         if (!categoryIdByRequestId.has(serviceRequest.id)) {
           categoryIdByRequestId.set(serviceRequest.id, category.id);
@@ -88,6 +103,7 @@ const buildCategoryIdByRequestId = (
   // 1. the category card opened right now (sub service wins over the service)
   //    is the most precise context for the ops codes added during this session
   [s, sub].forEach(category => {
+    if (!canOwnOpsCode(category)) return;
     category?.serviceRequests?.forEach(serviceRequest => {
       if (!existingRequestIds.has(serviceRequest.id)) {
         categoryIdByRequestId.set(serviceRequest.id, category.id);
@@ -116,10 +132,20 @@ const buildCategoryIdByRequestId = (
   }
 
   // categories that came from the `by-key` appointment have the highest priority:
-  // an already saved `categoryId` must be sent back as is
+  // an already saved `categoryId` must be sent back as is,
+  // unless it points to a category that cannot own an ops code (e.g. a General category)
+  const notOwningCategoryIds = new Set(
+    [...(selectedCategories ?? []), ...(fallbackCategories ?? [])]
+      .filter(
+        category => !canOwnOpsCode(category) && category.type !== EServiceCategoryType.OpenRecalls
+      )
+      .map(category => category.id)
+  );
+
   existingServiceRequests?.forEach(serviceRequest => {
-    if (serviceRequest.categoryId !== undefined && serviceRequest.categoryId !== null) {
-      categoryIdByRequestId.set(serviceRequest.id, serviceRequest.categoryId);
+    const { categoryId } = serviceRequest;
+    if (categoryId !== undefined && categoryId !== null && !notOwningCategoryIds.has(categoryId)) {
+      categoryIdByRequestId.set(serviceRequest.id, categoryId);
     }
   });
 
