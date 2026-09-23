@@ -13,7 +13,6 @@ import { autocompleteRender } from '../../../../../utils/autocompleteRenders';
 import { useAutocompleteStyles } from '../../../../../hooks/styling/useAutocompleteStyles';
 import { RootState } from '../../../../../store/rootReducer';
 import { IAssignedServiceRequestShort } from '../../../../../store/reducers/serviceRequests/types';
-import { IPlayWithServiceBook } from './ServicePulse';
 import { useStyles } from './styles';
 import { renderChipTagsWithoutOptionObject } from '../../../../../features/admin/Transportations/EditTransportationModal/layouts/ChipTagRender';
 import {
@@ -21,6 +20,7 @@ import {
   TServiceConsultant,
 } from '../../../../../store/reducers/appointments/types';
 import { TTransportationShort } from '../../../../../store/reducers/transportationNeeds/types';
+import { IPlayWithServiceBook } from '../types';
 
 export const FIRST_AVAILABLE_ADVISOR: TServiceConsultant = {
   id: -1,

@@ -5,7 +5,6 @@ import { DialogProps } from '../../../../../components/modals/BaseModal/types';
 import { useSCs } from '../../../../../hooks/useSCs/useSCs';
 import { useException } from '../../../../../hooks/useException/useException';
 import { useMessage } from '../../../../../hooks/useMessage/useMessage';
-import { IPlayWithServiceBook } from './ServicePulse';
 import { RootState } from '../../../../../store/rootReducer';
 import {
   loadExistingTags,
@@ -27,6 +26,7 @@ import { Textarea } from '../../../../../features/admin/RecallsParts/AddRecallMo
 import { LightTooltip } from '../RecallAlerts/layouts/LightTooltip';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { LoadingButton } from '../../../../../components/buttons/LoadingButton/LoadingButton';
+import { IPlayWithServiceBook } from '../types';
 
 type TextConfigurationRecallProps = DialogProps & {
   play: IPlayWithServiceBook | null;

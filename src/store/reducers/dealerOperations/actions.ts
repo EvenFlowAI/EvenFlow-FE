@@ -5,7 +5,7 @@ import { Credits, DashboardItemI, IntegrationSettingsI, ITag } from './types';
 import { AppThunk, IPageRequest, IPagingResponse } from '../../../types/types';
 import { ActionCreator } from 'redux';
 import { Api } from '../../../api/ApiEndpoints/ApiEndpoints';
-import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/ServicePulse/ServicePulse';
+import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export const getDashboardItems = createAction<DashboardItemI[]>(
   'DealerOperations/GetDashboardItems'

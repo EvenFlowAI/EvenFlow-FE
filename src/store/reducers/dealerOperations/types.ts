@@ -1,5 +1,5 @@
 import { IPageRequest, IPagingResponse } from '../../../types/types';
-import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/ServicePulse/ServicePulse';
+import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export interface ITag {
   tag: string;

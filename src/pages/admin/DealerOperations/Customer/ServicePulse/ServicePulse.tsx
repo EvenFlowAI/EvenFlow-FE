@@ -28,31 +28,9 @@ import { TServiceConsultant } from '../../../../../store/reducers/appointments/t
 import { loadTransportationOptionsShort } from '../../../../../store/reducers/transportationNeeds/actions';
 import { TTransportationShort } from '../../../../../store/reducers/transportationNeeds/types';
 import TextConfigurationServicePulse from './TextConfigurationServicePulse';
-import { CriteriaI, TriggerI } from '../types';
-
-interface IPlayDetails {
-  services: string[];
-  advisor: number | null;
-  transportation: number;
-}
-
-export interface IPlayItem {
-  name: string;
-  id?: string;
-  play: IPlayDetails;
-  filterRules: CriteriaI[];
-  communicationDetails: {
-    textMessage: string;
-  };
-  triggers: TriggerI[];
-  active: boolean;
-  activeText: string;
-}
-
-export interface IPlayWithServiceBook extends IPlayItem {
-  serviceBookName: string;
-  serviceBookId: string;
-}
+import { IPlayWithServiceBook } from '../types';
+import { useErrorBanners } from '../../../../../hooks/useErrorBanners/useErrorBanners';
+import { ErrorBanners } from '../../../../../components/ErrorBanner';
 
 const TABLE_COLUMNS_COUNT = 7;
 
@@ -75,6 +53,7 @@ const ServicePulse = () => {
     null
   );
   const [isFormChecked, setIsFormChecked] = useState<boolean>(false);
+  const { banners, hideError, showNotification } = useErrorBanners();
 
   const { onOpen: opOpen, onClose: onClose, isOpen: isOpen } = useModal();
   const {
@@ -176,6 +155,7 @@ const ServicePulse = () => {
       return (
         <React.Fragment key={play.id ?? `${play.serviceBookId}-${play.name}`}>
           <TableRowLayout
+            showError={showNotification}
             play={play}
             isEdit={isEditEventName}
             handleOpenText={handleOpenText}
@@ -258,6 +238,7 @@ const ServicePulse = () => {
           </Button>
         )}
       </div>
+      <ErrorBanners banners={banners} onClose={hideError} />
       <DenseTable>
         <TableHeadLayout />
         <TableBody>{renderPlayRows()}</TableBody>
