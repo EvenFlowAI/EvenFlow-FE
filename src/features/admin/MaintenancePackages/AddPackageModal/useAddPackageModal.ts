@@ -47,7 +47,7 @@ export const useAddPackageModal = ({ isEditing, onClose }: TProps) => {
   const { state, setters, modals } = ui;
 
   const dispatch = useDispatch();
-  const showError = useException();
+  const showError = useException(true);
 
   useEffect(() => {
     if (!selectedSC) return;
@@ -203,6 +203,7 @@ export const useAddPackageModal = ({ isEditing, onClose }: TProps) => {
   const onSave = () => {
     if (!isValid()) {
       setters.setFormIsChecked(true);
+      showError('Please fill in all required fields');
       return;
     }
     if (!selectedSC) return;
@@ -240,7 +241,12 @@ export const useAddPackageModal = ({ isEditing, onClose }: TProps) => {
       return;
     }
 
-    dispatch(createPackage(selectedSC.id, data, onSuccess, e => showError(e)));
+    dispatch(
+      createPackage(selectedSC.id, data, onSuccess, e => {
+        showError(e);
+        setters.setIsSaving(false);
+      })
+    );
   };
 
   const handleOpsCodeSelect = useCallback(
