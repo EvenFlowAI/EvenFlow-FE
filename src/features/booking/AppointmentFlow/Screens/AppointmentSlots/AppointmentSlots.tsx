@@ -75,7 +75,7 @@ type TAppointmentSelectionProps = {
   isManaging?: boolean;
 };
 
-export const AppointmentSlots: React.FC<
+const AppointmentSlotsContent: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TAppointmentSelectionProps>>
 > = ({ handleSetScreen, onNext, prevLogicalScreen, fromServiceValetToVisitCenter, isManaging }) => {
   const {
@@ -907,4 +907,15 @@ export const AppointmentSlots: React.FC<
       <MileageModal open={isMileageOpen} onClose={onMileageClose} onSave={loadDataForMileage} />
     </StepWrapper>
   );
+};
+
+// Remounts the slots screen when the address changes (e.g. from EditAddressModal),
+// so it behaves exactly like leaving the screen and coming back
+export const AppointmentSlots: React.FC<TAppointmentSelectionProps> = props => {
+  const { address, zipCode } = useSelector((state: RootState) => state.appointmentFrame);
+  const addressKey = `${typeof address === 'string' ? address : (address?.label ?? '')}_${
+    zipCode ?? ''
+  }`;
+
+  return <AppointmentSlotsContent key={addressKey} {...props} />;
 };

@@ -17,8 +17,14 @@ import {
   setFilteredZipCodes,
   setPoliticalState,
   setStreetName,
+  setTime,
   updateAppointmentAddress,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
+import {
+  getServiceValetSlots,
+  selectAppointment,
+  selectServiceValetAppointment,
+} from '../../../store/reducers/appointment/actions';
 import { geocodeByPlaceId } from 'react-google-places-autocomplete';
 import { parseGeoCode } from '../AppointmentFlow/Screens/YourLocation/utils';
 import { IAncillaryByZipRequest } from '../../../store/reducers/appointmentFrameReducer/types';
@@ -99,6 +105,15 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose, openSwitchFlow }) =
     }, 100);
   };
 
+  const resetSlotsState = () => {
+    // Same reset as the "Back" button on the slots screen, so slots are reloaded from scratch
+    console.log('test');
+    dispatch(setTime(null));
+    dispatch(selectAppointment(null));
+    dispatch(selectServiceValetAppointment(null));
+    dispatch(getServiceValetSlots([]));
+  };
+
   const onSuccess = () => {
     if (userAddress?.value?.place_id && userAddress?.label) {
       geocodeByPlaceId(userAddress.value.place_id).then(res => {
@@ -108,6 +123,7 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose, openSwitchFlow }) =
           userAddress?.structured_formatting?.main_text,
           userAddress?.structured_formatting?.secondary_text
         );
+        resetSlotsState();
         if (data.city) dispatch(setCity(data.city));
         if (data.state) dispatch(setPoliticalState(data.state));
         if (data.address) dispatch(setStreetName(data.address));
@@ -123,6 +139,7 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose, openSwitchFlow }) =
         onCancel();
       });
     } else if (typeof userAddress === 'string') {
+      resetSlotsState();
       dispatch(
         updateAppointmentAddress({
           address: userAddress,
