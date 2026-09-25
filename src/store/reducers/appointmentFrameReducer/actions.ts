@@ -922,8 +922,20 @@ export const clearAppointmentsWhileCreating = (): AppThunk => (dispatch, getStat
   if (!customerLoadedData?.isUpdating && !appointmentByKey) {
     dispatch(selectAppointment(null));
     dispatch(selectServiceValetAppointment(null));
+    dispatch(getAppointmentSlots([]));
+    dispatch(getServiceValetSlots([]));
   }
 };
+
+export const updateSelectedServiceRequests =
+  (ids: number[], comments: Record<number, string>): AppThunk =>
+  (dispatch, getState) => {
+    const { selectedSR } = getState().appointment;
+    const selectionChanged =
+      ids.length !== selectedSR.length || ids.some(id => !selectedSR.includes(id));
+    dispatch(selectSRMultiple({ ids, comments }));
+    if (selectionChanged) dispatch(clearAppointmentsWhileCreating());
+  };
 
 export const deleteIndService =
   (item: IMaintenanceItem): AppThunk =>
@@ -1022,6 +1034,7 @@ export const deleteRecall =
     if (item.campaignNumber) {
       dispatch(setSelectedRecalls(recalls));
     }
+    dispatch(clearAppointmentsWhileCreating());
 
     if (!recalls.length) {
       dispatch(setRecallsAreShown(false));

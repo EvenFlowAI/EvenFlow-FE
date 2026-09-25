@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { StepWrapper } from '../../../../../components/styled/StepWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../store/rootReducer';
-import { handleSearch, selectSRMultiple } from '../../../../../store/reducers/appointment/actions';
+import { handleSearch } from '../../../../../store/reducers/appointment/actions';
 import { Checkbox, IconButton } from '@mui/material';
 import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
 import { InfoOutlined, Search } from '@mui/icons-material';
@@ -18,6 +18,7 @@ import {
   checkCarIsValid,
   selectCategories,
   setAdditionalServicesChosen,
+  updateSelectedServiceRequests,
 } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { TServiceCategory } from '../../../../../store/reducers/appointmentFrameReducer/types';
 import { Caption } from '../../../../../components/wrappers/Caption/Caption';
@@ -249,7 +250,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
     ) {
       onAddCommentedService();
     } else {
-      dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: commentText }));
+      dispatch(updateSelectedServiceRequests(selectedOpsCodes, commentText));
       dispatch(checkCarIsValid(onCarIsValid, goNext));
     }
   };
@@ -259,7 +260,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
     const filteredComments = Object.fromEntries(
       Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
     );
-    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
+    dispatch(updateSelectedServiceRequests(selectedOpsCodes, filteredComments));
   };
 
   const onCloseValidationCommentsModalUpdate = () => {
@@ -267,7 +268,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
     const filteredComments = Object.fromEntries(
       Object.entries(commentText).filter(([key]) => selectedOpsCodes.includes(Number(key)))
     );
-    dispatch(selectSRMultiple({ ids: selectedOpsCodes, comments: filteredComments }));
+    dispatch(updateSelectedServiceRequests(selectedOpsCodes, filteredComments));
     dispatch(checkCarIsValid(onCarIsValid, goNext));
   };
 
@@ -282,7 +283,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
       ])
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
-    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
+    dispatch(updateSelectedServiceRequests(newSelectedOpsCodes, commentText));
   };
 
   const confirmValidationCommentsModalUpdate = () => {
@@ -296,7 +297,7 @@ export const SelectOpsCode: React.FC<TProps> = ({
       ])
     );
     setSelectedOpsCodes(newSelectedOpsCodes);
-    dispatch(selectSRMultiple({ ids: newSelectedOpsCodes, comments: commentText }));
+    dispatch(updateSelectedServiceRequests(newSelectedOpsCodes, commentText));
     dispatch(checkCarIsValid(onCarIsValid, goNext));
   };
 

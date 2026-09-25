@@ -195,7 +195,13 @@ export const appointmentReducer = createReducer(initialState, builder =>
       return { ...state, sessionId: payload };
     })
     .addCase(setPackage, state => {
-      return { ...state, appointment: null };
+      return {
+        ...state,
+        appointment: null,
+        serviceValetAppointment: null,
+        appointmentSlots: [],
+        serviceValetSlots: [],
+      };
     })
     .addCase(getServiceCategories, (state, { payload }) => {
       return { ...state, serviceCategories: payload };
