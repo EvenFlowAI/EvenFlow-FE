@@ -21,6 +21,7 @@ import {
   updateAppointmentAddress,
 } from '../../../store/reducers/appointmentFrameReducer/actions';
 import {
+  getAppointmentSlots,
   getServiceValetSlots,
   selectAppointment,
   selectServiceValetAppointment,
@@ -107,10 +108,11 @@ const EditAddressModal: React.FC<TProps> = ({ open, onClose, openSwitchFlow }) =
 
   const resetSlotsState = () => {
     // Same reset as the "Back" button on the slots screen, so slots are reloaded from scratch
-    console.log('test');
     dispatch(setTime(null));
     dispatch(selectAppointment(null));
+    dispatch(getAppointmentSlots([]));
     dispatch(selectServiceValetAppointment(null));
+    dispatch(selectAppointment(null));
     dispatch(getServiceValetSlots([]));
   };
 
