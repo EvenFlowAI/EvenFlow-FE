@@ -831,8 +831,6 @@ export const AppointmentSlots: React.FC<
     }
   };
 
-  console.log(selectedTiming);
-
   return (
     <StepWrapper>
       <SlotsScreenWrapper>
