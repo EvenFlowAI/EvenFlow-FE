@@ -503,7 +503,7 @@ export const AppointmentSlots: React.FC<
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
-    setFirstDayWithSlots(apiStartDate);
+    if (!firstDayWithSlots) setFirstDayWithSlots(apiStartDate);
     setCurrentApiStartDate(apiStartDate);
     setCurrentApiEndDate(apiEndDate);
   };
@@ -830,6 +830,8 @@ export const AppointmentSlots: React.FC<
       }
     }
   };
+
+  console.log(selectedTiming);
 
   return (
     <StepWrapper>
