@@ -123,11 +123,15 @@ const UserLocation: React.FC<TProps> = ({
   };
 
   const onGetZipCodesList = (list: string[], postalCode: string, label?: string) => {
+    const isZipAvailable = list.includes(postalCode) && postalCode.length === 5;
     if (list.includes(postalCode)) setZip(postalCode);
     if (label && postalCode.length === 5 && loadAncillaryPrice) {
       loadAncillaryPrice(postalCode, label);
     } else {
-      setAddressValid(false);
+      // Without ancillary price check the address is valid as soon as the ZIP is available.
+      // Explicitly setting it is required: when the same address is selected again the ZIP
+      // doesn't change, so parent effects depending on ZIP won't re-validate the form
+      setAddressValid(!loadAncillaryPrice && isZipAvailable);
     }
   };
 
