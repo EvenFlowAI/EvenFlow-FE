@@ -247,22 +247,13 @@ const AppointmentSlotsContent: React.FC<
           transportation?.type === ETransportationType.PickUpDelivery
         ) {
           const sorted = [...serviceValetSlots].sort(sortSVAppointments);
-          firstAvailableSlot =
-            sorted.find(slot => {
-              const formatted = dayjs(slot?.date).add(Math.abs(utcOffset), 'minutes');
-              return (
-                formatted.isAfter(getClearDate(newDate)) ||
-                formatted.isSame(getClearDate(newDate), 'day')
-              );
-            }) ??
-            // Fallback: no slots after the anchor date - select the first available one from today
-            sorted.find(slot => {
-              const formatted = dayjs(slot?.date).add(Math.abs(utcOffset), 'minutes');
-              return (
-                formatted.isAfter(getClearDate(dayjs())) ||
-                formatted.isSame(getClearDate(dayjs()), 'day')
-              );
-            });
+          firstAvailableSlot = sorted.find(slot => {
+            const formatted = dayjs(slot?.date).add(Math.abs(utcOffset), 'minutes');
+            return (
+              formatted.isAfter(getClearDate(newDate)) ||
+              formatted.isSame(getClearDate(newDate), 'day')
+            );
+          });
           if (!firstAvailableSlot) {
             console.info('Can not assign first available slot for pickUpDropOff');
           } else {
@@ -285,14 +276,10 @@ const AppointmentSlotsContent: React.FC<
           }
         } else {
           const sorted = [...appointmentSlots].sort(sortAppointments);
-          firstAvailableSlot =
-            sorted.find(slot => {
-              const formatted = getClearDate(slot?.date);
-              return dayjs(formatted).isAfter(dateWithOffset);
-            }) ??
-            // Fallback: no slots after the anchor date (e.g. new address returned earlier slots) -
-            // select the first available slot in the future
-            sorted.find(slot => dayjs(getClearDate(slot?.date)).isAfter(dayjs()));
+          firstAvailableSlot = sorted.find(slot => {
+            const formatted = getClearDate(slot?.date);
+            return dayjs(formatted).isAfter(dateWithOffset);
+          });
           if (!firstAvailableSlot) {
             console.info('Can not assign first available slot for general');
           } else {
@@ -359,7 +346,6 @@ const AppointmentSlotsContent: React.FC<
       isMount.current = false;
     }
   }, [
-    address,
     selectedTime,
     selectFirstSlot,
     currentSlots,
@@ -386,7 +372,7 @@ const AppointmentSlotsContent: React.FC<
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [appointment, date, address]);
+  }, [appointment, date]);
 
   useEffect(() => {
     const shouldLoadConsultants = Boolean(currentConfig?.advisorSelection);
@@ -485,7 +471,7 @@ const AppointmentSlotsContent: React.FC<
   };
 
   const setApiDates = (newStartDate: string, isPickUpDropOff: boolean) => {
-    // Only run once per initial slots load (reset when search params change)
+    // Only run once per session/component mount
     if (apiDatesSetRef.current) {
       return;
     }
@@ -503,7 +489,7 @@ const AppointmentSlotsContent: React.FC<
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
-    setFirstDayWithSlots(apiStartDate);
+    if (!firstDayWithSlots) setFirstDayWithSlots(apiStartDate);
     setCurrentApiStartDate(apiStartDate);
     setCurrentApiEndDate(apiEndDate);
   };
@@ -661,15 +647,10 @@ const AppointmentSlotsContent: React.FC<
       }, 1000);
     } else {
       const { apiStartDate, apiEndDate } = getApiDates();
-      // Reset range adjustment so the visible date range can move to the first available slot
-      // after search params change (e.g. address), the same way it does on the initial mount
-      apiDatesSetRef.current = false;
-      setFirstDayWithSlots(apiStartDate);
       loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
   }, [
     dispatch,
-    address,
     selectedVehicle,
     customerLoadedData,
     service,
