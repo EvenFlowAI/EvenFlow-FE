@@ -484,7 +484,7 @@ const AppointmentSlotsContent: React.FC<
     return { apiStartDate, apiEndDate };
   };
 
-  const setApiDates = (newStartDate: string, isPickUpDropOff: boolean, needShow?: boolean) => {
+  const setApiDates = (newStartDate: string, isPickUpDropOff: boolean) => {
     // Only run once per initial slots load (reset when search params change)
     if (apiDatesSetRef.current) {
       return;
@@ -503,11 +503,7 @@ const AppointmentSlotsContent: React.FC<
     const desiredEndDate = desiredStartDate.add(daysPerScreen - 1, 'day');
     const apiStartDate = desiredStartDate.add(utcOffset, 'minute').toISOString();
     const apiEndDate = desiredEndDate.add(utcOffset, 'minute').toISOString();
-    if (needShow) {
-      setFirstDayWithSlots(apiStartDate);
-    } else {
-      if (!firstDayWithSlots) setFirstDayWithSlots(apiStartDate);
-    }
+    if (!firstDayWithSlots) setFirstDayWithSlots(apiStartDate);
     setCurrentApiStartDate(apiStartDate);
     setCurrentApiEndDate(apiEndDate);
   };
@@ -515,11 +511,9 @@ const AppointmentSlotsContent: React.FC<
   const loadData = async ({
     requestedStartDate,
     requestedEndDate,
-    needShow,
   }: {
     requestedStartDate?: string;
     requestedEndDate?: string;
-    needShow?: boolean;
   }) => {
     if (!initialSlotsRangeRef.current.start && requestedStartDate && requestedEndDate) {
       initialSlotsRangeRef.current = {
@@ -634,9 +628,7 @@ const AppointmentSlotsContent: React.FC<
                 undefined,
                 isEmptyList => onLoadSlots(isEmptyList, requestedStartDate, requestedEndDate),
                 handleError,
-                (newStartDatenewStartDate, isPickUpDropOffisPickUpDropOff) => {
-                  setApiDates(newStartDatenewStartDate, isPickUpDropOffisPickUpDropOff, needShow);
-                }
+                setApiDates
               )
             );
         } else {
@@ -647,9 +639,7 @@ const AppointmentSlotsContent: React.FC<
               () => handleDateRangeSet(false),
               isEmptyList => onLoadSlots(isEmptyList, requestedStartDate, requestedEndDate),
               handleError,
-              (newStartDatenewStartDate, isPickUpDropOffisPickUpDropOff) => {
-                setApiDates(newStartDatenewStartDate, isPickUpDropOffisPickUpDropOff, needShow);
-              }
+              setApiDates
             )
           );
         }
@@ -675,11 +665,7 @@ const AppointmentSlotsContent: React.FC<
       // after search params change (e.g. address), the same way it does on the initial mount
       apiDatesSetRef.current = false;
       setFirstDayWithSlots(apiStartDate);
-      loadData({
-        requestedStartDate: apiStartDate,
-        requestedEndDate: apiEndDate,
-        needShow: true,
-      }).finally();
+      loadData({ requestedStartDate: apiStartDate, requestedEndDate: apiEndDate }).finally();
     }
   }, [
     dispatch,
