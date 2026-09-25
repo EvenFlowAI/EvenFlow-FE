@@ -831,6 +831,8 @@ const AppointmentSlotsContent: React.FC<
     }
   };
 
+  console.log(selectedTiming);
+
   return (
     <StepWrapper>
       <SlotsScreenWrapper>
