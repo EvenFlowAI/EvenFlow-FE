@@ -10,7 +10,16 @@ import {
 } from '../../../../../store/reducers/enhancedCustomerSearch/types';
 import { TColumn, TSortColumn } from '../types';
 
-const prioritizedColumns = ['Last Name', 'First Name', 'Make', 'Model', 'VIN', 'Year'];
+const prioritizedColumns = [
+  'First Name',
+  'Middle Name',
+  'Last Name',
+  'Company Name',
+  'Make',
+  'Model',
+  'VIN',
+  'Year',
+];
 
 export const getOrderedColumns = (columns: TColumn[]): TColumn[] => {
   const ordered = prioritizedColumns
@@ -43,14 +52,14 @@ export const sortByColumn = (
     return isAscending ? 1 : -1;
   }
 
-  const firstText = firstValue.toString();
-  const secondText = secondValue.toString();
+  const firstText = firstValue?.toString() || '';
+  const secondText = secondValue?.toString() || '';
 
   return isAscending ? secondText.localeCompare(firstText) : firstText.localeCompare(secondText);
 };
 
 export const getTableColumnWidth = (name: string, index: number): number | 'auto' => {
-  if (name === 'Last Name' || name === 'First Name') {
+  if (name === 'First Name' || name === 'Middle Name' || name === 'Last Name') {
     return 150;
   }
 
