@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { ECustomerProfileType } from '../../../api/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
@@ -75,10 +76,14 @@ export const ServiceCenterSwitcher = () => {
         dispatch(
           setCustomer({
             fullName: '',
+            firstName: '',
+            middleName: '',
+            lastName: '',
             phoneNumber: '',
             email: '',
             city: '',
             companyName: '',
+            customerProfileType: ECustomerProfileType.Personal,
           })
         );
         if (scProfile) {

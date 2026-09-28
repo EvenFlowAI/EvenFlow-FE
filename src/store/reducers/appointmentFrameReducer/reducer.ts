@@ -32,6 +32,7 @@ import {
   setConsultantsLoading,
   setCurrentFrameScreen,
   setCustomer,
+  setAppointmentPhoneNumber,
   setEditingPosition,
   setFilteredZipCodes,
   setFiltersVisibility,
@@ -84,6 +85,7 @@ import {
 } from './actions';
 import { EAppointmentTimingType } from '../appointment/types';
 import { EServiceType, TState } from './types';
+import { ECustomerProfileType } from '../../../api/types';
 
 const initialState: TState = {
   service: null,
@@ -96,11 +98,16 @@ const initialState: TState = {
   selectedVehicle: null,
   customer: {
     fullName: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
     phoneNumber: '',
     email: '',
     city: '',
     companyName: '',
+    customerProfileType: ECustomerProfileType.Personal,
   },
+  appointmentPhoneNumber: '',
   reminders: [],
   transportation: null,
   transportations: [],
@@ -224,6 +231,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setCustomer, (state, { payload }) => {
       return { ...state, customer: payload };
     })
+    .addCase(setAppointmentPhoneNumber, (state, { payload }) => {
+      return { ...state, appointmentPhoneNumber: payload };
+    })
     .addCase(setReminders, (state, { payload }) => {
       return { ...state, reminders: payload };
     })
@@ -248,7 +258,11 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
         ...state,
         id: payload.id,
         hashKey: payload.hashKey,
-        customer: { ...payload.driver },
+        customer: {
+          ...payload.driver,
+          customerProfileType: payload.driver.customerProfileType ?? ECustomerProfileType.Personal,
+        },
+        appointmentPhoneNumber: payload.appointmentPhoneNumber ?? payload.driver.phoneNumber ?? '',
         reminders: payload.contactMethodTypes,
         serviceCategories: payload.serviceCategories.map(item => ({
           id: item.id,

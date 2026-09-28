@@ -116,6 +116,12 @@ export const EditAppointment = () => {
               id: String(rawId),
               vehicles: [vehicle],
               phoneNumbers: [data.driver.phoneNumber],
+              phoneNumbersByCategory: {
+                cell: data.driver.cellPhone,
+                home: data.driver.homePhone,
+                work: data.driver.workPhone,
+                other: data.driver.otherPhone,
+              },
               emails: [data.driver.email],
               fullName: data.driver.fullName,
               fromSearchByName: isFromAdmin,

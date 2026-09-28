@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { IAddressData } from '../../../../../api/types';
+import { ECustomerProfileType, IAddressData } from '../../../../../api/types';
 import {
   changePageData,
   updateCustomer,
@@ -25,6 +25,7 @@ import {
   getIsEditRow,
   getOrderedColumns,
   getServiceType,
+  getCustomerProfileType,
   getSortOrderDifference,
   getTransportationOptionId,
   sortByColumn,
@@ -183,7 +184,16 @@ const useCustomerSearchTableController = ({
 
   const onFieldChange =
     (fieldName: keyof ICustomerForTable) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEditingElement(prev => (prev ? { ...prev, [fieldName]: e.target.value } : prev));
+      setEditingElement(prev => {
+        if (
+          prev &&
+          fieldName === 'companyName' &&
+          getCustomerProfileType(prev) === ECustomerProfileType.Personal
+        ) {
+          return prev;
+        }
+        return prev ? { ...prev, [fieldName]: e.target.value } : prev;
+      });
     };
 
   const onCancelEditing = () => {
@@ -217,6 +227,14 @@ const useCustomerSearchTableController = ({
     }
 
     if (!editingElement) {
+      return;
+    }
+
+    if (
+      getCustomerProfileType(editingElement) === ECustomerProfileType.Personal &&
+      editingElement.companyName?.trim()
+    ) {
+      showError(t('Company Name is not allowed for Personal Profiles'));
       return;
     }
 
