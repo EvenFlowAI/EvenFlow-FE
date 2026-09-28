@@ -25,7 +25,10 @@ import PaymentTypeModal from '../../../PaymentTypeModal/PaymentTypeModal';
 import ServiceType from './ServiceType/ServiceType';
 import { useTranslation } from 'react-i18next';
 import { isMobile } from 'react-device-detect';
-import { EServiceType } from '../../../../../store/reducers/appointmentFrameReducer/types';
+import {
+  EServiceType,
+  EUserType,
+} from '../../../../../store/reducers/appointmentFrameReducer/types';
 import { Wrapper } from './styles';
 import { useModal } from '../../../../../hooks/useModal/useModal';
 import { useException } from '../../../../../hooks/useException/useException';
@@ -33,6 +36,7 @@ import { useCurrentUser } from '../../../../../hooks/useCurrentUser/useCurrentUs
 import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/OpenModalLink';
 import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
+import { ECustomerProfileType } from '../../../../../api/types';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -51,6 +55,7 @@ export const AppointmentConfirmation: React.FC<
     customer,
     serviceTypeOption,
     transportation,
+    userType,
     isAppointmentSaving: saving,
   } = useSelector((state: RootState) => state.appointmentFrame);
 
@@ -84,10 +89,28 @@ export const AppointmentConfirmation: React.FC<
       localErrors.push('email');
       showError(t('"Email" must not be empty'));
     }
-    if (!customer?.fullName) {
+    if (userType === EUserType.Existing && !customer.fullName) {
       isValid = false;
       localErrors.push('fullname');
       showError(t('"Full Name" must not be empty'));
+    }
+    if (userType !== EUserType.Existing && !customer.firstName) {
+      isValid = false;
+      localErrors.push('firstname');
+      showError(t('"First Name" must not be empty'));
+    }
+    if (userType !== EUserType.Existing && !customer.lastName) {
+      isValid = false;
+      localErrors.push('lastname');
+      showError(t('"Last Name" must not be empty'));
+    }
+    if (
+      customer.customerProfileType === ECustomerProfileType.Business &&
+      !customer.companyName?.trim()
+    ) {
+      isValid = false;
+      localErrors.push('companyname');
+      showError(t('"Company Name" must not be empty'));
     }
     if (!customer?.phoneNumber) {
       isValid = false;

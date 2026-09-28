@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 
 import {
+  ECustomerProfileType,
   EMaintenanceOptionType,
   IAddressData,
   IAppointmentByKey,
@@ -144,6 +145,7 @@ export type TState = {
   selectedTime: TParsableDate;
   selectedVehicle: ILoadedVehicle | null;
   customer: ICustomer;
+  appointmentPhoneNumber: string;
   reminders: EContactMethodTypes[];
   transportation: ITransportation | null;
   transportations: ITransportation[];
@@ -229,9 +231,14 @@ export type TMaintenanceOption = TEMenuOption | TPackageOptionRequestData;
 
 export type TDriverForRequest = {
   fullName: string;
-  phoneNumber: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  cellPhone: string;
   city?: string;
   email: string | null;
+  companyName?: string;
+  customerProfileType: ECustomerProfileType;
 };
 
 export type TVehicleForRequest = {
@@ -251,6 +258,7 @@ export interface ICreateAppointmentRequest {
   id?: number;
   appointmentTimingType: EAppointmentTimingType;
   customerId: string | number | null;
+  appointmentPhoneNumber: string;
   driver: TDriverForRequest;
   vehicle: TVehicleForRequest;
   gmt: ParsableDate;

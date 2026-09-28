@@ -1,4 +1,4 @@
-import { IAddressData } from '../../../api/types';
+import { ECustomerProfileType, IAddressData } from '../../../api/types';
 import { IPageRequest, IPagingResponse, ParsableDate } from '../../../types/types';
 
 export interface ICustomerByName {
@@ -40,7 +40,24 @@ export interface ICustomerWithPhones extends ICustomerByName {
   warrantyExpiration: ParsableDate | null;
   sortOrder?: number;
   companyName?: string;
+  customerProfileType?: ECustomerProfileType;
   hasPlannedAppointment: boolean;
+}
+
+export interface IUpdateCustomerData {
+  customerId: number;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  cellPhone: string;
+  homePhone: string;
+  workPhone: string;
+  otherPhone: string;
+  email: string;
+  companyName?: string;
+  customerProfileType?: ECustomerProfileType;
+  customerType: ECustomerProfileType;
+  address?: IAddressData | null;
 }
 
 export type ICustomerForTable = Omit<
@@ -76,6 +93,8 @@ export interface ICustomerWithVehicles {
   homePhone: string;
   otherPhone: string;
   email: string;
+  companyName?: string;
+  customerProfileType?: ECustomerProfileType;
   workPhone: string;
   communications: TCustomerCommunication[];
   vehicles: ICustomerVehicle[];

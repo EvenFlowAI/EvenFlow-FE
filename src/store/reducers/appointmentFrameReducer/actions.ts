@@ -3,6 +3,7 @@
 
 import { createAction } from '@reduxjs/toolkit';
 import {
+  ECustomerProfileType,
   EMaintenanceOptionType,
   EServiceCategoryPage,
   EServiceCenterName,
@@ -131,6 +132,9 @@ export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
 export const setCustomer = createAction<ICustomer>('fAppointment/setCustomer');
+export const setAppointmentPhoneNumber = createAction<string>(
+  'fAppointment/setAppointmentPhoneNumber'
+);
 export const setReminders = createAction<EContactMethodTypes[]>('fAppointment/setReminders');
 export const setAppointmentId = createAction<IAppointmentId>('fAppointment/setAppointmentId');
 export const setTransportation = createAction<ITransportation | null>(
@@ -650,6 +654,7 @@ export const clearAppointmentData =
     dispatch(setEditingPosition(null));
     dispatch(setAppointmentWasChanged(false));
     dispatch(setAppointmentNotes(''));
+    dispatch(setAppointmentPhoneNumber(''));
     dispatch(setConsultants([]));
     dispatch(setWaitListSettings(null));
     dispatch(setAcceptedConsentIds([]));
@@ -802,14 +807,43 @@ export const handleAppointmentResponse =
         }
       }
 
-      updatedData.fullName = data.driver?.fullName;
+      const firstName = data.driver.firstName || customer.firstName || updatedData.firstName;
+      const middleName = data.driver.middleName || customer.middleName || updatedData.middleName;
+      const lastName = data.driver.lastName || customer.lastName || updatedData.lastName;
+      const fullName = data.driver.fullName || customer.fullName || updatedData.fullName || '';
+      const appointmentPhoneNumber =
+        data.appointmentPhoneNumber ||
+        data.driver.phoneNumber ||
+        customer.phoneNumber ||
+        updatedData.phoneNumber ||
+        updatedData.phoneNumbers[0] ||
+        '';
+
+      updatedData.firstName = firstName;
+      updatedData.middleName = middleName;
+      updatedData.lastName = lastName;
+      updatedData.fullName = fullName;
       updatedData.id = data.customerId;
-      updatedData.phoneNumbers = [data.driver?.phoneNumber];
+      updatedData.phoneNumber = appointmentPhoneNumber;
+      updatedData.phoneNumbers = appointmentPhoneNumber ? [appointmentPhoneNumber] : [];
       updatedData.companyName = data.driver.companyName;
+      updatedData.customerProfileType =
+        data.driver.customerProfileType ?? ECustomerProfileType.Personal;
       updatedData.isUpdating = false;
 
       dispatch(setCustomerLoadedData(updatedData));
-      dispatch(setCustomer(data.driver));
+      dispatch(
+        setCustomer({
+          ...data.driver,
+          firstName,
+          middleName,
+          lastName,
+          fullName,
+          phoneNumber: appointmentPhoneNumber,
+          customerProfileType: updatedData.customerProfileType,
+        })
+      );
+      dispatch(setAppointmentPhoneNumber(appointmentPhoneNumber));
       saveCustomerCache(updatedData);
     }
     if (onNext) {
@@ -1150,7 +1184,12 @@ export const createOrUpdateAppointment =
 
     const driver: TDriverForRequest = {
       ...appointmentFrame.customer,
+      cellPhone: appointmentFrame.appointmentPhoneNumber || appointmentFrame.customer.phoneNumber,
       email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+      companyName:
+        appointmentFrame.customer.customerProfileType === ECustomerProfileType.Business
+          ? appointmentFrame.customer.companyName
+          : undefined,
     };
 
     const date =
@@ -1246,6 +1285,8 @@ export const createOrUpdateAppointment =
       id: appointmentFrame.id,
       appointmentTimingType,
       customerId: appointment.customerLoadedData?.id ?? appointmentFrame?.customer?.id ?? null,
+      appointmentPhoneNumber:
+        appointmentFrame.appointmentPhoneNumber || appointmentFrame.customer.phoneNumber,
       driver,
       vehicle,
       gmt: dayjs().utcOffset(),
@@ -1624,9 +1665,18 @@ export const cloneAppointment =
 
         const driver: TDriverForRequest = {
           fullName: currentAppointment?.driver?.fullName ?? '',
-          phoneNumber: currentAppointment?.driver?.phoneNumber ?? '',
+          firstName: currentAppointment?.driver?.firstName,
+          middleName: currentAppointment?.driver?.middleName,
+          lastName: currentAppointment?.driver?.lastName,
+          cellPhone:
+            currentAppointment.appointmentPhoneNumber ??
+            currentAppointment?.driver?.phoneNumber ??
+            '',
           city: currentAppointment?.driver?.city ?? '',
           email: currentAppointment?.driver?.email ?? null,
+          companyName: currentAppointment?.driver?.companyName,
+          customerProfileType:
+            currentAppointment?.driver?.customerProfileType ?? ECustomerProfileType.Personal,
         };
 
         const date =
@@ -1668,6 +1718,8 @@ export const cloneAppointment =
           id: currentAppointment.id,
           appointmentTimingType,
           customerId: currentAppointment.driver?.id ?? null,
+          appointmentPhoneNumber:
+            currentAppointment.appointmentPhoneNumber ?? currentAppointment.driver.phoneNumber,
           driver,
           vehicle,
           gmt: dayjs().utcOffset(),

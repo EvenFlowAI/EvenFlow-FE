@@ -15,7 +15,6 @@ import MakeNewButton from './MakeNewButton/MakeNewButton';
 import { ButtonsWrapper, Divider, Paper, Wrapper } from './styles';
 import { TItem } from './types';
 import { getServiceName } from './utils';
-import { ESettingType } from '../../../../../store/reducers/generalSettings/types';
 import { getMaintenanceDescription } from '../../../../../utils/getMaintenanceDescription';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 import {
@@ -67,12 +66,6 @@ export const AppointmentConfirmed: React.FC<
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
-  const { settings } = useSelector((state: RootState) => state.generalSettings);
-
-  const companyNameIsOn = useMemo(
-    () => settings.find(el => el.settingType === ESettingType.CompanyName)?.data?.isOn,
-    [settings]
-  );
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -245,7 +238,6 @@ export const AppointmentConfirmed: React.FC<
       servicesList,
       selectedPriceContent,
       customer,
-      companyNameIsOn,
       vehicleData,
     });
 
@@ -271,7 +263,6 @@ export const AppointmentConfirmed: React.FC<
     servicesList,
     selectedPriceContent,
     customer,
-    companyNameIsOn,
     vehicleData,
     serviceValetAppointment,
     dropOffSettings,
