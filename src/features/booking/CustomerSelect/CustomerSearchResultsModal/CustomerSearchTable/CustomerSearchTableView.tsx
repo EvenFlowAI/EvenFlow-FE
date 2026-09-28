@@ -65,6 +65,8 @@ const CustomerSearchTableView: React.FC<TTableViewProps> = ({
     );
   }
 
+  const hasMiddleName = orderedColumns.some(column => column.name === 'Middle Name');
+
   return (
     <div className={classes.tableWrapper}>
       <div className={classes.tableContainer}>
@@ -86,19 +88,24 @@ const CustomerSearchTableView: React.FC<TTableViewProps> = ({
                 {orderedColumns.map(({ name, order }, index) => {
                   const isLastName = name === 'Last Name';
                   const isFirstName = name === 'First Name';
+                  const isMiddleName = name === 'Middle Name';
 
                   return (
                     <TableCell
                       key={name}
                       className={
-                        isLastName || isFirstName ? classes.stickyTHeadCell : classes.headerCell
+                        isFirstName || isMiddleName || isLastName
+                          ? classes.stickyTHeadCell
+                          : classes.headerCell
                       }
                       style={{
-                        left: isLastName
+                        left: isFirstName
                           ? offset.secondColumn
-                          : isFirstName
+                          : isMiddleName
                             ? offset.thirdColumn
-                            : 'unset',
+                            : isLastName
+                              ? offset.thirdColumn + (hasMiddleName ? 150 : 0)
+                              : 'unset',
                       }}
                       width={getTableColumnWidth(name, index)}
                     >
