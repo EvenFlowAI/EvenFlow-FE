@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { ECustomerProfileType, IAddressData } from '../../../../../api/types';
-import {
-  changePageData,
-  updateCustomer,
-} from '../../../../../store/reducers/enhancedCustomerSearch/actions';
+import { updateCustomer } from '../../../../../store/reducers/enhancedCustomerSearch/actions';
 import {
   ICustomerForTable,
   ICustomerWithPhones,
@@ -16,22 +13,17 @@ import { RootState } from '../../../../../store/rootReducer';
 import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
 import { useException } from '../../../../../hooks/useException/useException';
 import { useModal } from '../../../../../hooks/useModal/useModal';
-import { usePagination } from '../../../../../hooks/usePaginations/usePaginations';
-import { initialColumnOffset } from '../constants';
-import { TOffset, TSortColumn, TSortOrder } from '../types';
-import { AppointmentSummaryI } from '../../../utils/types';
 import {
   customerIdentityMatches,
   getIsEditRow,
-  getOrderedColumns,
   getServiceType,
   getCustomerProfileType,
-  getSortOrderDifference,
   getTransportationOptionId,
-  sortByColumn,
 } from './helpers';
 import { TCustomerSearchTableProps } from './types';
 import useCustomerSearchTableActions from './useCustomerSearchTableActions';
+import useCustomerTableState from './useCustomerTableState';
+import useCustomerAppointmentSelection from './useCustomerAppointmentSelection';
 
 const useCustomerSearchTableController = ({
   onClose,
@@ -55,31 +47,38 @@ const useCustomerSearchTableController = ({
   );
   const { config } = useSelector((state: RootState) => state.bookingFlowConfig);
 
-  const [data, setData] = useState<ICustomerWithPhones[]>([]);
-  const [sorting, setSorting] = useState<TSortOrder>({ isAscending: true, order: null });
   const [isEdit, setEdit] = useState<boolean>(false);
   const [editingElement, setEditingElement] = useState<ICustomerWithPhones | null>(null);
-  const [offset, setOffset] = useState<TOffset>(initialColumnOffset);
-  const [hashIdForSelectedAppointment, setHashIdForSelectedAppointment] = useState<string | null>(
-    null
-  );
-  const [loadedAppointmentsByCar, setLoadedAppointmentsByCar] = useState<AppointmentSummaryI[]>([]);
-  const [selectedAppointmentForCancelOrEdit, setSelectedAppointmentForCancelOrEdit] =
-    useState<ICustomerWithPhones | null>(null);
-  const [isEditAppointment, setIsEditAppointment] = useState<boolean>(false);
 
-  const { changeRowsPerPage, changePage } = usePagination(
-    (state: RootState) => state.customers.pageData,
-    changePageData
-  );
+  const {
+    data,
+    sorting,
+    offset,
+    orderedColumns,
+    currentFirstItemIndex,
+    currentLastItemIndex,
+    resetData,
+    onSort,
+    handleChangePage,
+    handleChangeRows,
+  } = useCustomerTableState({ customers, pageData, selectedColumns });
+  const {
+    hashIdForSelectedAppointment,
+    loadedAppointmentsByCar,
+    selectedAppointmentForCancelOrEdit,
+    isEditAppointment,
+    isOpenAppointmentSelection,
+    setHashIdForSelectedAppointment,
+    setLoadedAppointmentsByCar,
+    setSelectedAppointmentForCancelOrEdit,
+    setIsEditAppointment,
+    onOpenAppointmentSelection,
+    onCloseAppointmentSelection,
+    resetSelectedAppointmentData,
+  } = useCustomerAppointmentSelection(() => setEditingElement(null));
 
   const { onOpen: onOpenHistory, onClose: onCloseHistory, isOpen: isOpenHistory } = useModal();
   const { onOpen: onOpenConfirm, onClose: onCloseConfirm, isOpen: isOpenConfirm } = useModal();
-  const {
-    onOpen: onOpenAppointmentSelection,
-    onClose: onCloseAppointmentSelection,
-    isOpen: isOpenAppointmentSelection,
-  } = useModal();
 
   const serviceType = useMemo(
     () => getServiceType(serviceTypeOption?.type ?? null, transportation?.type),
@@ -111,20 +110,6 @@ const useCustomerSearchTableController = ({
       mobileServiceConfig?.checkRecallsExisting
     );
   }, [config]);
-
-  const orderedColumns = useMemo(() => getOrderedColumns(selectedColumns), [selectedColumns]);
-  const [currentFirstItemIndex, currentLastItemIndex] = useMemo(
-    () => [pageData.pageIndex * pageData.pageSize, (pageData.pageIndex + 1) * pageData.pageSize],
-    [pageData]
-  );
-
-  useEffect(() => {
-    setOffset({ secondColumn: 124, thirdColumn: 274 });
-  }, []);
-
-  useEffect(() => {
-    setData(customers.map((customer, index) => ({ ...customer, sortOrder: index })));
-  }, [customers]);
 
   const {
     onSelectCustomerForNewVehicle,
@@ -160,14 +145,6 @@ const useCustomerSearchTableController = ({
     onOpenConfirm();
   };
 
-  const resetSelectedAppointmentData = () => {
-    setHashIdForSelectedAppointment(null);
-    setEditingElement(null);
-    setSelectedAppointmentForCancelOrEdit(null);
-    setLoadedAppointmentsByCar([]);
-    onCloseAppointmentSelection();
-  };
-
   const onAddressChange =
     (fieldName: keyof IAddressData) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setEditingElement(prev =>
@@ -197,7 +174,7 @@ const useCustomerSearchTableController = ({
     };
 
   const onCancelEditing = () => {
-    setData(customers.slice().sort(getSortOrderDifference));
+    resetData();
     setEdit(false);
   };
 
@@ -253,13 +230,6 @@ const useCustomerSearchTableController = ({
     dispatch(updateCustomer(editingElement, onSaveSuccess, err => showError(err)));
   };
 
-  const onSort = (order: TSortColumn) => {
-    setData(prev =>
-      [...prev].sort((first, second) => sortByColumn(first, second, order, sorting.isAscending))
-    );
-    setSorting(prev => ({ isAscending: !prev.isAscending, order }));
-  };
-
   return {
     data,
     sorting,
@@ -303,12 +273,8 @@ const useCustomerSearchTableController = ({
     onSaveInfo,
     onFieldChange,
     onAddressChange,
-    handleChangePage: (e: React.MouseEvent<Element, MouseEvent> | null, pageNumber: number) => {
-      changePage(e, pageNumber);
-    },
-    handleChangeRows: (e: React.ChangeEvent<HTMLInputElement>) => {
-      changeRowsPerPage(e);
-    },
+    handleChangePage,
+    handleChangeRows,
     loadData,
     isNewVehicleMode,
     selectedColumns,

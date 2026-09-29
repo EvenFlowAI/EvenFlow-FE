@@ -1,4 +1,5 @@
 import { ECustomerProfileType, IAddressData, ICustomerLoadedData } from '../../../../../api/types';
+import { normalizeCustomerProfileType } from '../../../../../utils/appointmentCustomer';
 import {
   EServiceType,
   EUserType,
@@ -142,7 +143,7 @@ export const buildVehicle = (customer: ICustomerWithPhones) => ({
 export const getCustomerProfileType = (
   customer: Pick<ICustomerWithPhones, 'customerProfileType' | 'companyName'>
 ): ECustomerProfileType =>
-  customer.customerProfileType ??
+  normalizeCustomerProfileType(customer.customerProfileType) ??
   (customer.companyName ? ECustomerProfileType.Business : ECustomerProfileType.Personal);
 
 export const buildCustomerLoadedData = ({

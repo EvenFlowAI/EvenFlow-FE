@@ -60,8 +60,15 @@ export enum ECustomerCriteria {
 }
 
 export enum ECustomerProfileType {
-  Personal = 0,
-  Business = 1,
+  Personal = 'Personal',
+  Business = 'Business',
+}
+
+export enum ECommunicationPhoneType {
+  CellPhone,
+  WorkPhone,
+  HomePhone,
+  OtherPhone,
 }
 
 export enum EMaintenanceOptionType {
@@ -167,7 +174,7 @@ export interface IDriverInfo {
   firstName?: string;
   middleName?: string;
   lastName?: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   cellPhone?: string;
   homePhone?: string;
   workPhone?: string;
@@ -204,8 +211,8 @@ export interface IBaseAppointment {
   customerId: string;
   maintenancePackageOptionId: number | null;
   maintenancePackageOption: IPackageOptions | null;
-  driver: IDriverInfo;
-  appointmentPhoneNumber?: string;
+  customer: IDriverInfo;
+  communicationPhoneType?: ECommunicationPhoneType | null;
   duration: number;
   transactionValue: number;
   serviceCenterId: number;

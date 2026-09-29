@@ -213,10 +213,7 @@ export const updateCustomer =
             email: responseData.email ?? data.email,
             address: responseData.address ?? data.address,
             companyName: responseData.companyName ?? data.companyName,
-            customerProfileType:
-              responseData.customerProfileType ??
-              data.customerProfileType ??
-              (data as Partial<IUpdateCustomerData>).customerType,
+            customerProfileType: responseData.customerProfileType ?? data.customerProfileType,
           };
           const filtered = [...customers].map(item =>
             item.customerId === data.customerId ? { ...item, ...customerData } : item

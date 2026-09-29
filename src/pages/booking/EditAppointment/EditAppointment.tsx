@@ -19,6 +19,10 @@ import { RootState } from '../../../store/rootReducer';
 import { NotFoundError } from '../../../components/wrappers/NotFoundError/NotFoundError';
 import { encodeSCID } from '../../../utils/utils';
 import {
+  getAppointmentCustomerPhone,
+  normalizeCustomerProfileType,
+} from '../../../utils/appointmentCustomer';
+import {
   clearAppointmentData,
   setCurrentFrameScreen,
   setServiceTypeOption,
@@ -109,23 +113,29 @@ export const EditAppointment = () => {
               appointmentHashKeys: [data.hashKey],
             };
 
-            const rawId = data.driver?.id ?? data.customerId;
+            const rawId = data.customer?.id ?? data.customerId;
+            const communicationPhone = getAppointmentCustomerPhone(
+              data.customer,
+              data.communicationPhoneType
+            );
 
             const customer: ICustomerLoadedData = {
-              ...data.driver,
+              ...data.customer,
               id: String(rawId),
               vehicles: [vehicle],
-              phoneNumbers: [data.driver.phoneNumber],
+              phoneNumber: communicationPhone,
+              phoneNumbers: communicationPhone ? [communicationPhone] : [],
               phoneNumbersByCategory: {
-                cell: data.driver.cellPhone,
-                home: data.driver.homePhone,
-                work: data.driver.workPhone,
-                other: data.driver.otherPhone,
+                cell: data.customer?.cellPhone,
+                home: data.customer?.homePhone,
+                work: data.customer?.workPhone,
+                other: data.customer?.otherPhone,
               },
-              emails: [data.driver.email],
-              fullName: data.driver.fullName,
+              emails: data.customer?.email ? [data.customer.email] : [],
+              fullName: data.customer?.fullName,
               fromSearchByName: isFromAdmin,
-              companyName: data.driver.companyName,
+              companyName: data.customer?.companyName,
+              customerProfileType: normalizeCustomerProfileType(data.customer?.customerProfileType),
               isUpdating: isAuth,
             };
             if (data.address) customer.address = data.address;

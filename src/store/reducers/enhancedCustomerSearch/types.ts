@@ -55,8 +55,7 @@ export interface IUpdateCustomerData {
   otherPhone: string;
   email: string;
   companyName?: string;
-  customerProfileType?: ECustomerProfileType;
-  customerType: ECustomerProfileType;
+  customerProfileType: ECustomerProfileType;
   address?: IAddressData | null;
 }
 

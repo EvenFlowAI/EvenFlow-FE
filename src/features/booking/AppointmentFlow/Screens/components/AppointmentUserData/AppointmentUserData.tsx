@@ -6,16 +6,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
 import {
   setAppointmentPhoneNumber,
+  setCommunicationPhoneType,
   setCustomer,
+  setSelectedAppointmentPhoneNumber,
 } from '../../../../../../store/reducers/appointmentFrameReducer/actions';
 import { setCustomerLoadedData } from '../../../../../../store/reducers/appointment/actions';
 import { useTranslation } from 'react-i18next';
 import { ProfileTypeWrapper, TitleRow, Wrapper } from './styles';
 import { EUserType } from '../../../../../../store/reducers/appointmentFrameReducer/types';
-import { ECustomerProfileType, ICustomer } from '../../../../../../api/types';
+import {
+  ECommunicationPhoneType,
+  ECustomerProfileType,
+  ICustomer,
+} from '../../../../../../api/types';
 import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { IUpdateCustomerData } from '../../../../../../store/reducers/enhancedCustomerSearch/types';
 import { EditCustomerModal } from './EditCustomerModal/EditCustomerModal';
+import { communicationTypeToPhoneCategory } from '../../../../../../utils/communicationPhoneType';
 
 type TUserDataProps = {
   errors: string[];
@@ -27,9 +34,8 @@ export const AppointmentUserData: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TUserDataProps>>
 > = ({ errors, setErrors, isEmailRequired }) => {
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
-  const { appointmentPhoneNumber, customer, userType } = useSelector(
-    (state: RootState) => state.appointmentFrame
-  );
+  const { selectedAppointmentPhoneNumber, communicationPhoneType, customer, userType } =
+    useSelector((state: RootState) => state.appointmentFrame);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useModal();
@@ -62,9 +68,19 @@ export const AppointmentUserData: React.FC<
       ]
         .filter(Boolean)
         .join(' ');
-      const defaultCommunicationPhone =
-        customerLoadedData.phoneNumbersByCategory?.cell ?? customerLoadedData.phoneNumbers[0] ?? '';
-      const communicationPhone = appointmentPhoneNumber || defaultCommunicationPhone;
+      const phonesByCategory = customerLoadedData.phoneNumbersByCategory;
+      const phoneByType =
+        communicationPhoneType !== null && communicationPhoneType !== undefined
+          ? phonesByCategory?.[communicationTypeToPhoneCategory[communicationPhoneType]]
+          : undefined;
+      // keep the number chosen in Edit Customer modal / bound by communicationPhoneType
+      const communicationPhone =
+        selectedAppointmentPhoneNumber ||
+        phoneByType ||
+        customerLoadedData.phoneNumber ||
+        phonesByCategory?.cell ||
+        customerLoadedData.phoneNumbers?.[0] ||
+        '';
 
       const data: ICustomer = {
         ...customer,
@@ -79,11 +95,16 @@ export const AppointmentUserData: React.FC<
         customerProfileType: loadedProfileType,
       };
       dispatch(setCustomer(data));
-      if (!appointmentPhoneNumber) {
-        dispatch(setAppointmentPhoneNumber(defaultCommunicationPhone));
-      }
+      dispatch(setAppointmentPhoneNumber(communicationPhone));
     }
-  }, [appointmentPhoneNumber, customerLoadedData, dispatch, isExistingCustomer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    customerLoadedData,
+    dispatch,
+    isExistingCustomer,
+    selectedAppointmentPhoneNumber,
+    communicationPhoneType,
+  ]);
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({
     target: { name, value },
@@ -108,7 +129,7 @@ export const AppointmentUserData: React.FC<
   };
 
   const handleProfileTypeChange = (_: React.ChangeEvent<HTMLInputElement>, value: string) => {
-    const profileType = Number(value) as ECustomerProfileType;
+    const profileType = value as ECustomerProfileType;
     const fullName = [customer.firstName, customer.lastName].filter(Boolean).join(' ');
     dispatch(
       setCustomer({
@@ -124,9 +145,10 @@ export const AppointmentUserData: React.FC<
 
   const handleCustomerUpdated = (
     updatedCustomer: IUpdateCustomerData,
-    communicationPhone: string
+    communicationPhone: string,
+    selectedCommunicationPhoneType: ECommunicationPhoneType
   ) => {
-    const updatedProfileType = updatedCustomer.customerProfileType ?? updatedCustomer.customerType;
+    const updatedProfileType = updatedCustomer.customerProfileType;
     const fullName = [
       updatedCustomer.firstName,
       updatedProfileType === ECustomerProfileType.Personal ? updatedCustomer.middleName : undefined,
@@ -149,6 +171,8 @@ export const AppointmentUserData: React.FC<
       })
     );
     dispatch(setAppointmentPhoneNumber(communicationPhone));
+    dispatch(setSelectedAppointmentPhoneNumber(communicationPhone));
+    dispatch(setCommunicationPhoneType(selectedCommunicationPhoneType));
 
     if (customerLoadedData) {
       dispatch(
@@ -161,6 +185,7 @@ export const AppointmentUserData: React.FC<
           companyName: updatedCustomer.companyName,
           customerProfileType: updatedProfileType,
           emails: updatedCustomer.email ? [updatedCustomer.email] : [],
+          phoneNumber: communicationPhone,
           phoneNumbers: communicationPhone ? [communicationPhone] : [],
           phoneNumbersByCategory: {
             cell: updatedCustomer.cellPhone,
@@ -288,7 +313,8 @@ export const AppointmentUserData: React.FC<
           open={isEditOpen}
           onClose={onEditClose}
           customerLoadedData={customerLoadedData}
-          communicationPhone={appointmentPhoneNumber || customer.phoneNumber}
+          communicationPhone={selectedAppointmentPhoneNumber || customer.phoneNumber}
+          communicationPhoneType={communicationPhoneType}
           isEmailRequired={isEmailRequired}
           onUpdated={handleCustomerUpdated}
         />

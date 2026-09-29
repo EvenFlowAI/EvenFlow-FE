@@ -77,11 +77,11 @@ const CancelAppointmentModal: React.FC<
 
   const getTimeInfo = () => {
     return data?.serviceTypeOption?.type === EServiceType.PickUpDropOff ? (
-      ` for customer ${data?.driver.fullName}`
+      ` for customer ${data?.customer.fullName}`
     ) : (
       <span>
         {dayjs.utc(data?.dateInUtc).format('MMMM Do, YYYY')} at{' '}
-        {dayjs(data?.timeSlot, 'hh:mm:ss').format('hh:mm a')} for customer {data?.driver.fullName}
+        {dayjs(data?.timeSlot, 'hh:mm:ss').format('hh:mm a')} for customer {data?.customer.fullName}
       </span>
     );
   };
