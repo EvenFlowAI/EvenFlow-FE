@@ -1,6 +1,4 @@
-/* eslint-disable max-lines */
 import React, { useEffect, useState } from 'react';
-import { FormControlLabel, Radio } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -10,75 +8,28 @@ import {
 } from '../../../../../../../components/modals/BaseModal/BaseModal';
 import { TextField } from '../../../../../../../components/formControls/TextFieldStyled/TextField';
 import { LoadingButton } from '../../../../../../../components/buttons/LoadingButton/LoadingButton';
-import { ECustomerProfileType, ICustomerLoadedData } from '../../../../../../../api/types';
+import { ECustomerProfileType } from '../../../../../../../api/types';
 import { updateCustomer } from '../../../../../../../store/reducers/enhancedCustomerSearch/actions';
 import { IUpdateCustomerData } from '../../../../../../../store/reducers/enhancedCustomerSearch/types';
 import { RootState } from '../../../../../../../store/rootReducer';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import { useMessage } from '../../../../../../../hooks/useMessage/useMessage';
+import { ActionsWrapper, FieldWrapper } from './styles';
+import { getInitialPhones, getProfileType, hasCustomerChanges, phoneTypes } from './helpers';
+import { TEditCustomerModalProps, TPhoneType, TPhoneValues } from './types';
+import { CustomerPhoneFields } from './CustomerPhoneFields';
 import {
-  ActionsWrapper,
-  CommunicationHint,
-  FieldWrapper,
-  PhoneHeader,
-  PhoneInput,
-  PhoneLabel,
-  PhoneRow,
-  PhoneTable,
-} from './styles';
-
-type TPhoneType = 'cell' | 'home' | 'work' | 'other';
-type TPhoneValues = Record<TPhoneType, string>;
-type TProps = {
-  open: boolean;
-  onClose: () => void;
-  customerLoadedData: ICustomerLoadedData;
-  communicationPhone: string;
-  isEmailRequired: boolean;
-  onUpdated: (customer: IUpdateCustomerData, communicationPhone: string) => void;
-};
-
-const phoneTypes: { type: TPhoneType; label: string; placeholder: string }[] = [
-  { type: 'cell', label: 'Cell', placeholder: 'Cell phone' },
-  { type: 'home', label: 'Home', placeholder: 'Home phone' },
-  { type: 'work', label: 'Work', placeholder: 'Work phone' },
-  { type: 'other', label: 'Other', placeholder: 'Other phone' },
-];
-
-const getInitialPhones = (customerLoadedData: ICustomerLoadedData): TPhoneValues => ({
-  cell: customerLoadedData.phoneNumbersByCategory?.cell ?? '',
-  home: customerLoadedData.phoneNumbersByCategory?.home ?? '',
-  work: customerLoadedData.phoneNumbersByCategory?.work ?? '',
-  other: customerLoadedData.phoneNumbersByCategory?.other ?? '',
-});
-
-const getProfileType = (customerLoadedData: ICustomerLoadedData): ECustomerProfileType =>
-  customerLoadedData.customerProfileType ?? ECustomerProfileType.Personal;
-
-const hasCustomerChanges = (
-  data: IUpdateCustomerData,
-  customerLoadedData: ICustomerLoadedData,
-  initialPhones: TPhoneValues
-): boolean => {
-  return (
-    data.firstName !== (customerLoadedData.firstName ?? '').trim() ||
-    data.middleName !== (customerLoadedData.middleName ?? '').trim() ||
-    data.lastName !== (customerLoadedData.lastName ?? '').trim() ||
-    (data.companyName ?? '') !== (customerLoadedData.companyName ?? '').trim() ||
-    data.email !== (customerLoadedData.emails[0] ?? '').trim() ||
-    data.cellPhone !== initialPhones.cell.trim() ||
-    data.homePhone !== initialPhones.home.trim() ||
-    data.workPhone !== initialPhones.work.trim() ||
-    data.otherPhone !== initialPhones.other.trim()
-  );
-};
+  communicationTypeToPhoneCategory,
+  phoneCategoryToCommunicationType,
+} from '../../../../../../../utils/communicationPhoneType';
 
 // eslint-disable-next-line complexity
-export const EditCustomerModal: React.FC<TProps> = ({
+export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
   open,
   onClose,
   customerLoadedData,
   communicationPhone,
+  communicationPhoneType,
   isEmailRequired,
   onUpdated,
 }) => {
@@ -119,11 +70,14 @@ export const EditCustomerModal: React.FC<TProps> = ({
     if (!Object.values(nextPhones).some(Boolean) && customer.phoneNumber) {
       nextPhones.cell = customer.phoneNumber;
     }
-    const currentPhoneType = phoneTypes.find(
-      ({ type }) => nextPhones[type] && nextPhones[type] === communicationPhone
-    )?.type;
-
-    console.log(customerLoadedData);
+    const typeFromAppointment =
+      communicationPhoneType !== null && communicationPhoneType !== undefined
+        ? communicationTypeToPhoneCategory[communicationPhoneType]
+        : undefined;
+    const currentPhoneType =
+      (typeFromAppointment && nextPhones[typeFromAppointment] ? typeFromAppointment : undefined) ??
+      phoneTypes.find(({ type }) => nextPhones[type] && nextPhones[type] === communicationPhone)
+        ?.type;
 
     setFirstName(customerLoadedData.firstName ?? customer.firstName ?? '');
     setMiddleName(customerLoadedData.middleName ?? customer.middleName ?? '');
@@ -136,7 +90,9 @@ export const EditCustomerModal: React.FC<TProps> = ({
       currentPhoneType ?? phoneTypes.find(({ type }) => nextPhones[type])?.type ?? 'cell'
     );
     setErrors([]);
-  }, [communicationPhone, customer, customerLoadedData, open]);
+    // initialize form only when the modal is opened, so user selection is not reset while editing
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const handlePhoneChange =
     (type: TPhoneType): React.ChangeEventHandler<HTMLInputElement> =>
@@ -183,13 +139,14 @@ export const EditCustomerModal: React.FC<TProps> = ({
       workPhone: phones.work.trim(),
       otherPhone: phones.other.trim(),
       email: email.trim(),
-      customerType: profileType,
+      customerProfileType: profileType,
       address: customerLoadedData.address,
     };
 
     const selectedCommunicationPhone = phones[selectedPhoneType].trim();
+    const selectedCommunicationPhoneType = phoneCategoryToCommunicationType[selectedPhoneType];
     if (!hasCustomerChanges(data, customerLoadedData, initialPhones)) {
-      onUpdated(data, selectedCommunicationPhone);
+      onUpdated(data, selectedCommunicationPhone, selectedCommunicationPhoneType);
       showMessage(t('Appointment communication number was updated'));
       onClose();
       return;
@@ -199,7 +156,7 @@ export const EditCustomerModal: React.FC<TProps> = ({
       updateCustomer(
         data,
         updatedCustomer => {
-          onUpdated(updatedCustomer, selectedCommunicationPhone);
+          onUpdated(updatedCustomer, selectedCommunicationPhone, selectedCommunicationPhoneType);
           showMessage(t('Customer information was updated'));
           onClose();
         },
@@ -257,37 +214,13 @@ export const EditCustomerModal: React.FC<TProps> = ({
           />
         </FieldWrapper>
 
-        <PhoneHeader>
-          <span>{t('Phone Numbers on File')}</span>
-          <span>{t('Appointment Communication')}</span>
-        </PhoneHeader>
-        <PhoneTable hasError={errors.includes('phone')}>
-          {phoneTypes.map(({ type, label, placeholder }) => (
-            <PhoneRow key={type} selected={selectedPhoneType === type}>
-              <PhoneLabel>{t(label)}</PhoneLabel>
-              <PhoneInput
-                value={phones[type]}
-                onChange={handlePhoneChange(type)}
-                placeholder={t(placeholder)}
-              />
-              <FormControlLabel
-                value={type}
-                control={
-                  <Radio
-                    size="small"
-                    checked={selectedPhoneType === type}
-                    onChange={() => setSelectedPhoneType(type)}
-                    disabled={!phones[type].trim()}
-                  />
-                }
-                label=""
-              />
-            </PhoneRow>
-          ))}
-        </PhoneTable>
-        <CommunicationHint>
-          <span>ⓘ</span> {t('This number will be used for appointment communication')}
-        </CommunicationHint>
+        <CustomerPhoneFields
+          hasError={errors.includes('phone')}
+          phones={phones}
+          selectedPhoneType={selectedPhoneType}
+          onPhoneChange={handlePhoneChange}
+          onPhoneTypeChange={setSelectedPhoneType}
+        />
 
         <FieldWrapper>
           <TextField

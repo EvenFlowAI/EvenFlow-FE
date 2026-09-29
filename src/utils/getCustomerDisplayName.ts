@@ -13,15 +13,6 @@ export const getCustomerDisplayName = (customer?: TCustomerDisplayNameData | nul
     return '';
   }
 
-  const profileType = customer.customerProfileType;
-  const companyName = customer.companyName?.trim() ?? '';
-  const isBusiness =
-    profileType === ECustomerProfileType.Business || (profileType == null && Boolean(companyName));
-
-  if (isBusiness) {
-    return companyName;
-  }
-
   const personalName = [customer.firstName, customer.lastName]
     .map(value => value?.trim())
     .filter(Boolean)
