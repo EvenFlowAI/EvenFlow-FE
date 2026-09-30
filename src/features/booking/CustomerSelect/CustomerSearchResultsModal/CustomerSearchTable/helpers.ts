@@ -1,4 +1,5 @@
-import { IAddressData, ICustomerLoadedData } from '../../../../../api/types';
+import { ECustomerProfileType, IAddressData, ICustomerLoadedData } from '../../../../../api/types';
+import { normalizeCustomerProfileType } from '../../../../../utils/appointmentCustomer';
 import {
   EServiceType,
   EUserType,
@@ -10,7 +11,16 @@ import {
 } from '../../../../../store/reducers/enhancedCustomerSearch/types';
 import { TColumn, TSortColumn } from '../types';
 
-const prioritizedColumns = ['Last Name', 'First Name', 'Make', 'Model', 'VIN', 'Year'];
+const prioritizedColumns = [
+  'First Name',
+  'Middle Name',
+  'Last Name',
+  'Company Name',
+  'Make',
+  'Model',
+  'VIN',
+  'Year',
+];
 
 export const getOrderedColumns = (columns: TColumn[]): TColumn[] => {
   const ordered = prioritizedColumns
@@ -43,14 +53,14 @@ export const sortByColumn = (
     return isAscending ? 1 : -1;
   }
 
-  const firstText = firstValue.toString();
-  const secondText = secondValue.toString();
+  const firstText = firstValue?.toString() || '';
+  const secondText = secondValue?.toString() || '';
 
   return isAscending ? secondText.localeCompare(firstText) : firstText.localeCompare(secondText);
 };
 
 export const getTableColumnWidth = (name: string, index: number): number | 'auto' => {
-  if (name === 'Last Name' || name === 'First Name') {
+  if (name === 'First Name' || name === 'Middle Name' || name === 'Last Name') {
     return 150;
   }
 
@@ -113,6 +123,7 @@ export const shouldLoadRecalls = (
 export const getPhoneNumbersByCategory = (customer?: ICustomerWithPhones | null) => ({
   cell: customer?.cellPhone,
   home: customer?.homePhone,
+  work: customer?.workPhone,
   other: customer?.otherPhone,
 });
 
@@ -128,6 +139,12 @@ export const buildVehicle = (customer: ICustomerWithPhones) => ({
   engineTypeId: customer.engineTypeId ?? null,
   id: customer.vehicleId,
 });
+
+export const getCustomerProfileType = (
+  customer: Pick<ICustomerWithPhones, 'customerProfileType' | 'companyName'>
+): ECustomerProfileType =>
+  normalizeCustomerProfileType(customer.customerProfileType) ??
+  (customer.companyName ? ECustomerProfileType.Business : ECustomerProfileType.Personal);
 
 export const buildCustomerLoadedData = ({
   customer,
@@ -150,8 +167,10 @@ export const buildCustomerLoadedData = ({
   const customerData: ICustomerLoadedData = {
     emails: customer?.email ? [customer.email] : [],
     firstName: customer?.firstName ?? '',
+    middleName: customer?.middleName ?? '',
     lastName: customer?.lastName ?? '',
     companyName: customer?.companyName ?? '',
+    customerProfileType: getCustomerProfileType(customer),
     id: customer.customerId?.toString() ?? null,
     phoneNumbers,
     phoneNumbersByCategory: getPhoneNumbersByCategory(selectedCustomer ?? customer),

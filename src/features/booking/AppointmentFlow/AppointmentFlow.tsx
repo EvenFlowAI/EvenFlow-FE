@@ -35,8 +35,6 @@ import { loadEngineType, loadMileage } from '../../../store/reducers/vehicleDeta
 import { decodeSCID } from '../../../utils/utils';
 import { useAnalyticsForParentSite } from '../../../hooks/useAnalyticsBySCId/useAnalyticsBySCId';
 import { useStorage } from '../../../hooks/useStorage/useStorage';
-import { loadGeneralSettings } from '../../../store/reducers/generalSettings/actions';
-import { ESettingType } from '../../../store/reducers/generalSettings/types';
 import { useParams } from 'react-router-dom';
 import { ETransportationType } from '../../../store/reducers/transportationNeeds/types';
 
@@ -102,7 +100,6 @@ const AppointmentFlow: React.FC<TProps> = ({
   useEffect(() => {
     dispatch(loadEngineType(decodeSCID(id)));
     dispatch(loadMakes(decodeSCID(id)));
-    dispatch(loadGeneralSettings(decodeSCID(id), [ESettingType.CompanyName]));
   }, [id]);
 
   useEffect(() => {

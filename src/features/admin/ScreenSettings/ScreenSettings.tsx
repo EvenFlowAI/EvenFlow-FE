@@ -23,9 +23,6 @@ import { loadRoundPriceSetting } from '../../../store/reducers/pricingSettings/a
 import { loadWaitListSettings } from '../../../store/reducers/optimizationWindows/actions';
 import WaitListSlotSettingsModal from './WaitListSlotSettingsModal/WaitListSlotSettingsModal';
 import { getWaitlistValue } from './utils';
-import { EditCompanyNameModal } from './EditCompanyNameModal/EditCompanyNameModal';
-import { loadGeneralSettings } from '../../../store/reducers/generalSettings/actions';
-import { ESettingType } from '../../../store/reducers/generalSettings/types';
 
 export const ScreenSettings = () => {
   const { emailRequirement, isEmailRequirementLoading, consentsList, isConsentLoading } =
@@ -36,7 +33,6 @@ export const ScreenSettings = () => {
   const { waitListSettings, isWaitListLoading } = useSelector(
     (state: RootState) => state.optimizationWindows
   );
-  const { settings, isLoading } = useSelector((state: RootState) => state.generalSettings);
   const { selectedSC } = useSCs();
   const dispatch = useDispatch();
   const { selectedPod } = useSelectedPod();
@@ -47,11 +43,6 @@ export const ScreenSettings = () => {
   } = useModal();
   const { onOpen: onConsentOpen, isOpen: isConsentOpen, onClose: onConsentClose } = useModal();
   const { onOpen: onPricingOpen, isOpen: isPricingOpen, onClose: onPricingClose } = useModal();
-  const {
-    onOpen: onCompanyNameOpen,
-    isOpen: isCompanyNameOpen,
-    onClose: onCompanyNameClose,
-  } = useModal();
   const { onOpen: onWaitlistOpen, isOpen: isWaitlistOpen, onClose: onWaitlistClose } = useModal();
 
   useEffect(() => {
@@ -66,7 +57,6 @@ export const ScreenSettings = () => {
       dispatch(loadConsentsList(selectedSC.id, selectedPod?.id));
       dispatch(loadRange(selectedSC.id, null, selectedPod?.id));
       dispatch(loadWaitListSettings(selectedSC.id, selectedPod?.id));
-      dispatch(loadGeneralSettings(selectedSC.id, [ESettingType.CompanyName]));
     }
   }, [selectedSC, selectedPod]);
 
@@ -94,11 +84,6 @@ export const ScreenSettings = () => {
     return roundPrice ? 'Rounded' : 'Fractional';
   };
 
-  const getCompanyNameValue = () => {
-    const companyNameSetting = settings.find(el => el.settingType === ESettingType.CompanyName);
-    return companyNameSetting?.data?.isOn ? 'On' : 'Off';
-  };
-
   const getCount = (k: EScreenSettingsType): string | number => {
     switch (k) {
       case EScreenSettingsType.EmailRequirement:
@@ -109,8 +94,6 @@ export const ScreenSettings = () => {
         return getPriceDisplayValue(roundPrice);
       case EScreenSettingsType.Waitlist:
         return getWaitlistValue(Boolean(waitListSettings?.isEnabled));
-      case EScreenSettingsType.CompanyName:
-        return getCompanyNameValue();
       default:
         return 'No data';
     }
@@ -141,12 +124,6 @@ export const ScreenSettings = () => {
       title: 'Waitlist',
       isLoading: isWaitListLoading,
     },
-    [EScreenSettingsType.CompanyName]: {
-      helperText: 'Display of Company Name field option on confirmation page',
-      label: getCompanyNameValue(),
-      title: 'Company Name',
-      isLoading: isLoading,
-    },
   };
 
   const getPlateEdit = (k: EScreenSettingsType): void => {
@@ -159,9 +136,6 @@ export const ScreenSettings = () => {
         break;
       case EScreenSettingsType.PriceDisplay:
         onPricingOpen();
-        break;
-      case EScreenSettingsType.CompanyName:
-        onCompanyNameOpen();
         break;
       case EScreenSettingsType.Waitlist:
         onWaitlistOpen();
@@ -192,7 +166,6 @@ export const ScreenSettings = () => {
         })}
       </Grid>
       <EditEmailRequirementModal open={isEmailEditOpen} onClose={onEmailEditClose} />
-      <EditCompanyNameModal open={isCompanyNameOpen} onClose={onCompanyNameClose} />
       <CustomerConsentsModal open={isConsentOpen} onClose={onConsentClose} />
       <PriceDisplayModal open={isPricingOpen} onClose={onPricingClose} />
       <WaitListSlotSettingsModal open={isWaitlistOpen} onClose={onWaitlistClose} />

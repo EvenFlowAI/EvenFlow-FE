@@ -32,6 +32,8 @@ import {
   setConsultantsLoading,
   setCurrentFrameScreen,
   setCustomer,
+  setSelectedAppointmentPhoneNumber,
+  setCommunicationPhoneType,
   setEditingPosition,
   setFilteredZipCodes,
   setFiltersVisibility,
@@ -84,6 +86,11 @@ import {
 } from './actions';
 import { EAppointmentTimingType } from '../appointment/types';
 import { EServiceType, TState } from './types';
+import { ECustomerProfileType, IAppointmentByKey } from '../../../api/types';
+import {
+  getAppointmentCustomerPhone,
+  normalizeCustomerProfileType,
+} from '../../../utils/appointmentCustomer';
 
 const initialState: TState = {
   service: null,
@@ -96,11 +103,17 @@ const initialState: TState = {
   selectedVehicle: null,
   customer: {
     fullName: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
     phoneNumber: '',
     email: '',
     city: '',
     companyName: '',
+    customerProfileType: ECustomerProfileType.Personal,
   },
+  selectedAppointmentPhoneNumber: null,
+  communicationPhoneType: null,
   reminders: [],
   transportation: null,
   transportations: [],
@@ -174,6 +187,14 @@ const initialState: TState = {
   isPickupDropoffWithoutFirstScreenOption: false,
 };
 
+const getAppointmentAddressState = (address: IAppointmentByKey['address']) => ({
+  address: address?.fullAddress ?? null,
+  zipCode: address?.zipCode ?? '',
+  city: address?.city ?? '',
+  streetName: address?.address ?? '',
+  politicalState: address?.state ?? '',
+});
+
 export const appointmentFrameReducer = createReducer(initialState, builder =>
   builder
     .addCase(selectService, (state, { payload }) => {
@@ -224,6 +245,12 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
     .addCase(setCustomer, (state, { payload }) => {
       return { ...state, customer: payload };
     })
+    .addCase(setSelectedAppointmentPhoneNumber, (state, { payload }) => {
+      return { ...state, selectedAppointmentPhoneNumber: payload };
+    })
+    .addCase(setCommunicationPhoneType, (state, { payload }) => {
+      return { ...state, communicationPhoneType: payload };
+    })
     .addCase(setReminders, (state, { payload }) => {
       return { ...state, reminders: payload };
     })
@@ -244,25 +271,38 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
       return { ...state, maintenanceDetails: { ...state.maintenanceDetails, ...payload } };
     })
     .addCase(setUpdateAppointment, (state, { payload }) => {
+      // keep the number selected by the user if the appointment is re-fetched before saving
+      const selectedPhone = state.selectedAppointmentPhoneNumber;
+      const appointmentCustomerPhone = getAppointmentCustomerPhone(
+        payload.customer,
+        payload.communicationPhoneType
+      );
       return {
         ...state,
         id: payload.id,
         hashKey: payload.hashKey,
-        customer: { ...payload.driver },
+        customer: {
+          ...payload.customer,
+          fullName: payload.customer?.fullName ?? '',
+          email: payload.customer?.email ?? '',
+          phoneNumber: selectedPhone || appointmentCustomerPhone,
+          customerProfileType:
+            normalizeCustomerProfileType(payload.customer?.customerProfileType) ??
+            ECustomerProfileType.Personal,
+        },
+        communicationPhoneType: selectedPhone
+          ? state.communicationPhoneType
+          : (payload.communicationPhoneType ?? null),
         reminders: payload.contactMethodTypes,
         serviceCategories: payload.serviceCategories.map(item => ({
           id: item.id,
           comment: item.comment,
         })),
         serviceType: payload.serviceTypeOption?.type ?? EServiceType.VisitCenter,
-        address: payload.address?.fullAddress ?? null,
-        zipCode: payload.address?.zipCode ?? '',
+        ...getAppointmentAddressState(payload.address),
         serviceTypeOption: payload.serviceTypeOption ?? null,
         transportation: payload.transportationOption ?? null,
         appointmentRequestsPrices: payload.detailedPriceList ?? [],
-        city: payload?.address?.city ?? '',
-        streetName: payload?.address?.address ?? '',
-        politicalState: payload?.address?.state ?? '',
         packagePricingType: payload?.maintenancePackageOption?.priceType ?? null,
       };
     })
