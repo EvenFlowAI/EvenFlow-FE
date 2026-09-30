@@ -23,7 +23,6 @@ import {
   phoneCategoryToCommunicationType,
 } from '../../../../../../../utils/communicationPhoneType';
 
-// eslint-disable-next-line complexity
 export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
   open,
   onClose,
@@ -60,7 +59,6 @@ export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
     }
   };
 
-  // eslint-disable-next-line complexity
   useEffect(() => {
     if (!open) {
       return;
@@ -91,7 +89,6 @@ export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
     );
     setErrors([]);
     // initialize form only when the modal is opened, so user selection is not reset while editing
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handlePhoneChange =

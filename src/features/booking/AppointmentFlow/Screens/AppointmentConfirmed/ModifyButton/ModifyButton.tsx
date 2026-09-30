@@ -37,7 +37,6 @@ const ModifyButton: React.FC<React.PropsWithChildren<React.PropsWithChildren<TPr
   const onModify = async () => {
     if (selectedVehicle) {
       if (customerLoadedData) {
-        console.log(customerLoadedData);
         await dispatch(setCustomerLoadedData({ ...customerLoadedData, isUpdating: true }));
         await dispatch(clearAppointmentData(true));
         await dispatch(setServiceOptionChanged(false));
