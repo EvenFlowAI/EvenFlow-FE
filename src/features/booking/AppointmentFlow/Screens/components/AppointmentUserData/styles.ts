@@ -17,6 +17,15 @@ export const TitleRow = styled('div')(({ theme }) => ({
   },
 }));
 
+export const EditButton = styled('p')({
+  textTransform: 'uppercase',
+  color: '#142EA1',
+  fontSize: 14,
+  cursor: 'pointer',
+  margin: '0 0 0 24px',
+  fontWeight: 'bold',
+});
+
 export const ProfileTypeWrapper = styled('div')(({ theme }) => ({
   marginBottom: theme.spacing(1),
   '& .MuiFormControlLabel-root': {

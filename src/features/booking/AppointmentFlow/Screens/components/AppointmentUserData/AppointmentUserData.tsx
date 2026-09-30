@@ -50,7 +50,6 @@ export const AppointmentUserData: React.FC<
     [customer.customerProfileType, customerLoadedData]
   );
 
-  // eslint-disable-next-line complexity
   useEffect(() => {
     if (isExistingCustomer && customerLoadedData) {
       const driverEmail = customerLoadedData?.emails?.length ? customerLoadedData.emails[0] : '';
@@ -97,7 +96,6 @@ export const AppointmentUserData: React.FC<
       dispatch(setCustomer(data));
       dispatch(setAppointmentPhoneNumber(communicationPhone));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     customerLoadedData,
     dispatch,
