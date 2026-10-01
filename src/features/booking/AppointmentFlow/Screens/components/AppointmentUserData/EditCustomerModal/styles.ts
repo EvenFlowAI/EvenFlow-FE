@@ -16,7 +16,7 @@ export const PhoneHeader = styled('div')(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '1fr 191px',
   gap: theme.spacing(1),
-  marginTop: theme.spacing(0.5),
+  marginTop: 16,
   paddingBottom: theme.spacing(0.75),
   fontSize: 12,
   color: '#202021',
@@ -41,7 +41,7 @@ export const PhoneRow = styled('div', {
   alignItems: 'center',
   minHeight: 42,
   padding: theme.spacing(0.5, 1.5),
-  backgroundColor: selected ? theme.palette.action.selected : 'transparent',
+  backgroundColor: selected ? '#F6F6F6' : 'transparent',
   borderBottom: `1px solid ${theme.palette.divider}`,
   '&:last-child': {
     borderBottom: 0,

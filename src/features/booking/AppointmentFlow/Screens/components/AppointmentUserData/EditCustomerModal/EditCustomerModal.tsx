@@ -14,7 +14,7 @@ import { IUpdateCustomerData } from '../../../../../../../store/reducers/enhance
 import { RootState } from '../../../../../../../store/rootReducer';
 import { useException } from '../../../../../../../hooks/useException/useException';
 import { useMessage } from '../../../../../../../hooks/useMessage/useMessage';
-import { ActionsWrapper, FieldWrapper } from './styles';
+import { ActionsWrapper } from './styles';
 import { getInitialPhones, getProfileType, hasCustomerChanges, phoneTypes } from './helpers';
 import { TEditCustomerModalProps, TPhoneType, TPhoneValues } from './types';
 import { CustomerPhoneFields } from './CustomerPhoneFields';
@@ -167,50 +167,54 @@ export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
       <DialogTitle onClose={handleClose} style={{ textAlign: 'left' }}>
         {t('Edit Customer Information')}
       </DialogTitle>
+      <hr style={{ width: '100%', height: '1px', color: '#DADADA', opacity: 0.4, margin: 0 }} />
       <DialogContent>
-        {isBusiness ? (
-          <FieldWrapper>
+        <div style={{ display: 'grid', gap: 14 }}>
+          {isBusiness ? (
+            <div style={{ marginTop: 6 }}>
+              <TextField
+                label={t('Company Name').toUpperCase() + ':'}
+                value={companyName}
+                onChange={event => {
+                  setCompanyName(event.target.value);
+                  setErrors(currentErrors =>
+                    currentErrors.filter(error => error !== 'companyName')
+                  );
+                }}
+                error={errors.includes('companyName')}
+                fullWidth
+              />
+            </div>
+          ) : null}
+          <div>
             <TextField
-              label={t('Company Name').toUpperCase() + ':'}
-              value={companyName}
-              onChange={event => {
-                setCompanyName(event.target.value);
-                setErrors(currentErrors => currentErrors.filter(error => error !== 'companyName'));
-              }}
-              error={errors.includes('companyName')}
+              label={t('First Name').toUpperCase() + ':'}
+              value={firstName}
+              onChange={event => setFirstName(event.target.value)}
+              error={errors.includes('firstName')}
               fullWidth
             />
-          </FieldWrapper>
-        ) : null}
-        <FieldWrapper>
-          <TextField
-            label={t('First Name').toUpperCase() + ':'}
-            value={firstName}
-            onChange={event => setFirstName(event.target.value)}
-            error={errors.includes('firstName')}
-            fullWidth
-          />
-        </FieldWrapper>
-        {!isBusiness ? (
-          <FieldWrapper>
+          </div>
+          {!isBusiness ? (
+            <div>
+              <TextField
+                label={`${t('Middle Name').toUpperCase()} (${t('Optional')})`.toUpperCase() + ':'}
+                value={middleName}
+                onChange={event => setMiddleName(event.target.value)}
+                fullWidth
+              />
+            </div>
+          ) : null}
+          <div>
             <TextField
-              label={`${t('Middle Name').toUpperCase()} (${t('Optional')})`.toUpperCase() + ':'}
-              value={middleName}
-              onChange={event => setMiddleName(event.target.value)}
+              label={t('Last Name').toUpperCase() + ':'}
+              value={lastName}
+              onChange={event => setLastName(event.target.value)}
+              error={errors.includes('lastName')}
               fullWidth
             />
-          </FieldWrapper>
-        ) : null}
-        <FieldWrapper>
-          <TextField
-            label={t('Last Name').toUpperCase() + ':'}
-            value={lastName}
-            onChange={event => setLastName(event.target.value)}
-            error={errors.includes('lastName')}
-            fullWidth
-          />
-        </FieldWrapper>
-
+          </div>
+        </div>
         <CustomerPhoneFields
           hasError={errors.includes('phone')}
           phones={phones}
@@ -219,7 +223,7 @@ export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
           onPhoneTypeChange={setSelectedPhoneType}
         />
 
-        <FieldWrapper>
+        <div>
           <TextField
             label={t('Email').toUpperCase() + ':'}
             value={email}
@@ -227,7 +231,7 @@ export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
             error={errors.includes('email')}
             fullWidth
           />
-        </FieldWrapper>
+        </div>
       </DialogContent>
       <ActionsWrapper>
         <LoadingButton

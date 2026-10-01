@@ -260,7 +260,7 @@ export const AppointmentUserData: React.FC<
               name="middleName"
               fullWidth
               placeholder={t('Type here')}
-              label={`${t('Middle Name')}:`}
+              label={`${t('Middle Name')} (${t('Optional')}):`}
             />
           ) : null}
           <TextField
