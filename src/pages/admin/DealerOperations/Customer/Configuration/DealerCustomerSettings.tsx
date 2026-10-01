@@ -142,6 +142,12 @@ const DealerCustomerSettings = () => {
     setIsLoading(false);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleOnError = (e: any) => {
+    setIsLoading(false);
+    showError(e);
+  };
+
   const validateChangesBeforeSave = () => {
     let haveErrors = false;
 
@@ -226,7 +232,8 @@ const DealerCustomerSettings = () => {
             filterRules,
             triggers: validTriggers,
           },
-          handleOnSuccess
+          handleOnSuccess,
+          handleOnError
         )
       );
     }
