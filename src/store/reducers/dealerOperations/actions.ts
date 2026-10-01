@@ -318,7 +318,9 @@ export const updateCustomerEventRulesC =
         scheduledTime: string;
       }[];
     },
-    onSuccess: () => void
+    onSuccess: () => void,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError?: (e: any) => void
   ): AppThunk =>
   async dispatch => {
     const filterRules = data.filterRules.map(el => {
@@ -345,6 +347,7 @@ export const updateCustomerEventRulesC =
       })
       .catch(e => {
         console.log('Update Customer Event error', e);
+        if (onError) onError(e);
       });
   };
 
