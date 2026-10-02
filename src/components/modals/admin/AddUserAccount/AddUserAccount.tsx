@@ -56,7 +56,6 @@ export const AddUserAccount: React.FC<AddUserAccountProps> = ({
   useEffect(() => {
     dispatch(setDmsIdError(false));
     dispatch(setEmailError(false));
-    console.log('test');
   }, [userForm]);
 
   const onClose = () => {
