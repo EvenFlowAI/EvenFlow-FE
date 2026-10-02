@@ -77,7 +77,7 @@ export const setRecallAlertSettingsEditMode = createAction<boolean>(
 export const setAffectedModels = createAction<IRecallAffectedModel[]>('Recall/SetAffectedModels');
 
 export const loadRecalls =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, makeIds?: number[]): AppThunk =>
   (dispatch, getState) => {
     dispatch(setLoading(true));
     const { recallPageData, order, searchTerm } = getState().recalls;
@@ -88,6 +88,9 @@ export const loadRecalls =
       pageIndex,
       searchTerm,
     };
+    if (makeIds?.length) {
+      data.makeIds = makeIds;
+    }
     if (order) {
       data.orderBy = order.orderBy;
       data.isAscending = order.isAscending;
