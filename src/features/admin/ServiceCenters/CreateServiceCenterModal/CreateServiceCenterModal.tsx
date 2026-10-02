@@ -22,6 +22,7 @@ import { LoadingButton } from '../../../../components/buttons/LoadingButton/Load
 
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
+import { getServerErrorFields } from './utils';
 
 type TSCFormState = {
   scName: string;
@@ -72,6 +73,7 @@ export const CreateServiceCenterModal: React.FC<
   const [formState, setFormState] = useState<TSCFormState>(initialState);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [formIsChecked, setFormIsChecked] = useState<boolean>(false);
+  const [serverErrorFields, setServerErrorFields] = useState<string[]>([]);
 
   const formItems: TFormItem<TSCFormState>[][] = useMemo(
     () => [
@@ -134,6 +136,7 @@ export const CreateServiceCenterModal: React.FC<
   useEffect(() => {
     if (props.open) {
       setFormState(initialState);
+      setServerErrorFields([]);
     }
   }, [props.open, initialState]);
 
@@ -151,6 +154,7 @@ export const CreateServiceCenterModal: React.FC<
   const handleChange = useCallback(
     ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>) => {
       setFormIsChecked(false);
+      setServerErrorFields(prev => prev.filter(f => f !== name));
       if (name === 'scPhoneNumber') {
         value = validatePhoneNumber(value);
       }
@@ -162,6 +166,7 @@ export const CreateServiceCenterModal: React.FC<
   const handleSelectChange: (name: string) => TSelectChange = useCallback(
     (name: string) => (e, val) => {
       setFormIsChecked(false);
+      setServerErrorFields(prev => prev.filter(f => f !== name));
       setFormState({ ...formState, [name]: val || '' });
     },
     [formState]
@@ -200,10 +205,21 @@ export const CreateServiceCenterModal: React.FC<
 
   const onSuccess = () => {
     showMessage(`Service Center ${isEdit ? 'updated' : 'created'}`);
+    setFormState(initialFormState);
+    setFormIsChecked(false);
+    setServerErrorFields([]);
+    props.onClose();
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onError = (e: any) => {
+    showError(e);
+    setServerErrorFields(getServerErrorFields(e));
   };
 
   const handleCreate = async () => {
     setFormIsChecked(true);
+    setServerErrorFields([]);
     const isValid = validateData();
     if (isValid) {
       const data: IServiceCenterForm = {
@@ -221,15 +237,12 @@ export const CreateServiceCenterModal: React.FC<
       };
       try {
         if (payload?.id) {
-          await dispatch(updateSC(data, payload.id, avatar, onSuccess, showError));
+          await dispatch(updateSC(data, payload.id, avatar, onSuccess, onError));
         } else {
-          await dispatch(createSC(data, avatar, onSuccess, showError));
+          await dispatch(createSC(data, avatar, onSuccess, onError));
         }
-        setFormState(initialFormState);
-        setFormIsChecked(false);
-        props.onClose();
       } catch (e) {
-        showError(e);
+        onError(e);
       }
     }
   };
@@ -237,6 +250,7 @@ export const CreateServiceCenterModal: React.FC<
   const onClose = () => {
     props.onClose();
     setFormIsChecked(false);
+    setServerErrorFields([]);
   };
 
   return (
@@ -252,6 +266,7 @@ export const CreateServiceCenterModal: React.FC<
         />
         <CreateServiceCenterForm
           formIsChecked={formIsChecked}
+          serverErrorFields={serverErrorFields}
           readOnly={readOnly}
           items={formItems}
           values={formState}
