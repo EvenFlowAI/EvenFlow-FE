@@ -14,6 +14,7 @@ type TModalFormProps<D> = {
   onSelectChange?: (name: string) => TSelectChange;
   readOnly?: boolean;
   formIsChecked: boolean;
+  serverErrorFields?: string[];
 };
 
 const getItemName = <Item extends object>(item: TFormItem<Item>): string => item.name || item.id;
@@ -71,7 +72,7 @@ const renderField = <Item extends object>(
         disabled={props.readOnly}
         renderInput={autocompleteRender({
           label: item.label || '',
-          error: item.required && props.formIsChecked && !value,
+          error,
           placeholder: item.label,
         })}
       />
@@ -92,7 +93,9 @@ export const CreateServiceCenterForm = <Item extends object>(
           <Grid container spacing={2}>
             {itemGroup.map(item => {
               const value = item.value(props.values);
-              const error = getFieldError(item, value, props.formIsChecked);
+              const error =
+                getFieldError(item, value, props.formIsChecked) ||
+                Boolean(props.serverErrorFields?.includes(item.id));
 
               return (
                 <Grid item xs={item.xs || 12} sm={item.sm || 6} key={item.id}>
