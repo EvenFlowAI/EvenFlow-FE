@@ -269,7 +269,7 @@ const OrderIndexModal: React.FC<
         </DialogContent>
       )}
       <DialogActions>
-        <Button variant="outlined" onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="info">
           Cancel
         </Button>
         <LoadingButton variant="contained" onClick={onSubmit} loading={isPackageLoading}>

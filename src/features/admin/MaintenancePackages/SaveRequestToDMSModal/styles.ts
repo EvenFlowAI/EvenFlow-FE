@@ -101,7 +101,7 @@ export const useTableStyles = makeStyles()(() => ({
     alignItems: 'center',
   },
   cancelButton: {
-    color: '#9FA2B4',
+    color: 'black',
     marginRight: 20,
     border: 'none',
     outline: 'none',

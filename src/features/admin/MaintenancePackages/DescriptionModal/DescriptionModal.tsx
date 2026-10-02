@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   BaseModal,
+  DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
@@ -8,7 +9,7 @@ import { DialogProps } from '../../../../components/modals/BaseModal/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { Delete, EditOutlined } from '@mui/icons-material';
-import { Divider, IconButton } from '@mui/material';
+import { Button, Divider, IconButton } from '@mui/material';
 import HtmlEditor from '../../../../components/modals/admin/HTMLEditor/HTMLEditor';
 import { TExtendedComplimentary, TExtendedService } from '../../../../api/types';
 import { Loading } from '../../../../components/wrappers/Loading/Loading';
@@ -103,78 +104,90 @@ const DescriptionModal: React.FC<
       {isPackageLoading ? (
         <Loading />
       ) : (
-        <DialogContent sx={{ fontSize: 14 }}>
-          <h3 className={classes.title}>Op Codes</h3>
-          <div className={classes.wrapper}>
-            <h4>Op Code</h4>
-            <h4>Title</h4>
-            <h4>Description</h4>
-            <h4 className={classes.title}>Edit</h4>
-            <h4 className={classes.title}>Delete</h4>
-          </div>
-          {currentPackage?.serviceRequests
-            .slice()
-            .sort((a, b) => a.orderIndex - b.orderIndex)
-            .map(item => (
-              <div className={classes.wrapper} key={item.id}>
-                <p>{item.code}</p>
-                <p>{item.description}</p>
-                <div>
-                  {item.detailedDescription ? (
-                    <div dangerouslySetInnerHTML={{ __html: item.detailedDescription }} />
-                  ) : (
-                    <h3>_</h3>
-                  )}
+        <>
+          <DialogContent sx={{ fontSize: 14 }}>
+            <h3 className={classes.title}>Op Codes</h3>
+            <div className={classes.wrapper}>
+              <h4>Op Code</h4>
+              <h4>Title</h4>
+              <h4>Description</h4>
+              <h4 className={classes.title}>Edit</h4>
+              <h4 className={classes.title}>Delete</h4>
+            </div>
+            {currentPackage?.serviceRequests
+              .slice()
+              .sort((a, b) => a.orderIndex - b.orderIndex)
+              .map(item => (
+                <div className={classes.wrapper} key={item.id}>
+                  <p>{item.code}</p>
+                  <p>{item.description}</p>
+                  <div>
+                    {item.detailedDescription ? (
+                      <div dangerouslySetInnerHTML={{ __html: item.detailedDescription }} />
+                    ) : (
+                      <h3>_</h3>
+                    )}
+                  </div>
+                  <div className={classes.iconWrapper}>
+                    <IconButton size="small" onClick={() => onEditSR(item)}>
+                      <EditOutlined />
+                    </IconButton>
+                  </div>
+                  <div className={classes.iconWrapper}>
+                    <IconButton size="small" onClick={() => onDeleteSR(item)}>
+                      <Delete />
+                    </IconButton>
+                  </div>
                 </div>
-                <div className={classes.iconWrapper}>
-                  <IconButton size="small" onClick={() => onEditSR(item)}>
-                    <EditOutlined />
-                  </IconButton>
+              ))}
+            {currentPackage?.complimentaryServices?.length ? (
+              <>
+                <Divider />
+
+                <h3 className={classes.title}>Complimentary Services</h3>
+                <div className={classes.wrapper}>
+                  <h4 />
+                  <h4>Title</h4>
+                  <h4>Description</h4>
+                  <h4 className={classes.title}>Edit</h4>
+                  <h4 className={classes.title}>Delete</h4>
                 </div>
-                <div className={classes.iconWrapper}>
-                  <IconButton size="small" onClick={() => onDeleteSR(item)}>
-                    <Delete />
-                  </IconButton>
-                </div>
-              </div>
-            ))}
-          <Divider />
-          <h3 className={classes.title}>Complimentary Services</h3>
-          <div className={classes.wrapper}>
-            <h4 />
-            <h4>Title</h4>
-            <h4>Description</h4>
-            <h4 className={classes.title}>Edit</h4>
-            <h4 className={classes.title}>Delete</h4>
-          </div>
-          {currentPackage?.complimentaryServices
-            .slice()
-            .sort((a, b) => a.orderIndex - b.orderIndex)
-            .map(item => (
-              <div className={classes.wrapper} key={item.id}>
-                <div />
-                <p>{item.name}</p>
-                <div>
-                  {item.detailedDescription ? (
-                    <div dangerouslySetInnerHTML={{ __html: item.detailedDescription }} />
-                  ) : (
-                    <h3>_</h3>
-                  )}
-                </div>
-                <div className={classes.iconWrapper}>
-                  <IconButton size="small" onClick={() => onEditComplimentary(item)}>
-                    <EditOutlined />
-                  </IconButton>
-                </div>
-                <div className={classes.iconWrapper}>
-                  <IconButton size="small" onClick={() => onDeleteComplimentary(item)}>
-                    <Delete />
-                  </IconButton>
-                </div>
-              </div>
-            ))}
-        </DialogContent>
+                {currentPackage?.complimentaryServices
+                  .slice()
+                  .sort((a, b) => a.orderIndex - b.orderIndex)
+                  .map(item => (
+                    <div className={classes.wrapper} key={item.id}>
+                      <div />
+                      <p>{item.name}</p>
+                      <div>
+                        {item.detailedDescription ? (
+                          <div dangerouslySetInnerHTML={{ __html: item.detailedDescription }} />
+                        ) : (
+                          <h3>_</h3>
+                        )}
+                      </div>
+                      <div className={classes.iconWrapper}>
+                        <IconButton size="small" onClick={() => onEditComplimentary(item)}>
+                          <EditOutlined />
+                        </IconButton>
+                      </div>
+                      <div className={classes.iconWrapper}>
+                        <IconButton size="small" onClick={() => onDeleteComplimentary(item)}>
+                          <Delete />
+                        </IconButton>
+                      </div>
+                    </div>
+                  ))}
+              </>
+            ) : null}
+          </DialogContent>
+        </>
       )}
+      <DialogActions>
+        <Button onClick={onCancel} color="info">
+          Close
+        </Button>
+      </DialogActions>
       <HtmlEditor
         open={isEditorOpen}
         onSave={onSave}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Dispatch, SetStateAction, useCallback } from 'react';
 import {
   BaseModal,
+  DialogActions,
   DialogContent,
   DialogTitle,
 } from '../../../../components/modals/BaseModal/BaseModal';
@@ -191,15 +192,15 @@ const SaveRequestToDMSModal: React.FC<
             </Table>
           </TableContainer>
         </div>
-        <div className={classes.buttonsWrapper}>
-          <Button onClick={onCancel} className={classes.cancelButton}>
-            Cancel
-          </Button>
-          <Button onClick={onSaveRequest} className={classes.saveButton}>
-            save
-          </Button>
-        </div>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel} color="info" className={classes.cancelButton}>
+          Cancel
+        </Button>
+        <Button onClick={onSaveRequest} className={classes.saveButton}>
+          Save
+        </Button>
+      </DialogActions>
     </BaseModal>
   );
 };

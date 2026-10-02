@@ -19,6 +19,7 @@ type THTMLEditor = DialogProps & {
 const useStyles = makeStyles()({
   editor: {
     border: '1px solid #F1F1F1',
+    padding: '0 10px',
   },
 });
 
@@ -81,7 +82,7 @@ const HtmlEditor: React.FC<React.PropsWithChildren<React.PropsWithChildren<THTML
         </div>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="info">
           Cancel
         </Button>
         <LoadingButton variant="contained" onClick={onSubmit} loading={isLoading}>
