@@ -1274,6 +1274,7 @@ export const createOrUpdateAppointment =
           : null,
       isWaitlist: Boolean(isWaitlist),
       customerConsentIds: appointmentFrame.acceptedConsentIds,
+      isAppointmentClone: appointment.isCloneMode,
     };
 
     if (isAdmin) delete data.schedulerType;
