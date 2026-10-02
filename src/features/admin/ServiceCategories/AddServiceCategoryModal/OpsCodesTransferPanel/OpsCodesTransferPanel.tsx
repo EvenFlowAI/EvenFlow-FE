@@ -37,8 +37,8 @@ const bySearchTerm = (item: IAssignedServiceRequest, searchTerm: string): boolea
 
   const normalized = searchTerm.trim().toLowerCase();
   return (
-    item.serviceRequest.code.toLowerCase().includes(normalized) ||
-    getCodeDescription(item).toLowerCase().includes(normalized)
+    item.serviceRequest.code?.toLowerCase()?.includes(normalized) ||
+    getCodeDescription(item)?.toLowerCase()?.includes(normalized)
   );
 };
 
