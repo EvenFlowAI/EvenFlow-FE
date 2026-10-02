@@ -175,7 +175,7 @@ const AssignOpsCodeModal: React.FC<
   return (
     <BaseModal {...props}>
       <DialogTitle onClose={handleClose}>
-        ASSIGN OP CODES TO MAINTENANCE PACKAGE OPTIONS
+        Assign Op codes to maintenance package options
       </DialogTitle>
       <div className={classes.subTitle}>{packageName}</div>
       <DialogContent>
@@ -219,7 +219,9 @@ const AssignOpsCodeModal: React.FC<
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose} color="info">
+          Close
+        </Button>
         <LoadingButton
           loading={saving}
           disabled={!selectedCode || !selectedOption}

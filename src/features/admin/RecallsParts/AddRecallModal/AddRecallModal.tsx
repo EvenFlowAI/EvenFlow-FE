@@ -125,7 +125,7 @@ const AddRecallModal: React.FC<React.PropsWithChildren<TAddRecallProps>> = ({
       <DialogActions>
         <div className={classes.actionsWrapper}>
           <div className={classes.buttonsWrapper}>
-            <Button onClick={onCancel} variant="text" className={classes.cancelButton} color="info">
+            <Button onClick={onCancel} className={classes.cancelButton} color="info">
               Cancel
             </Button>
             <Button onClick={onSave} className={classes.saveButton}>

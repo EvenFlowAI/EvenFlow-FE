@@ -143,7 +143,7 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
       </DialogActions>
 
       <AssignOpsCode
-        title="ASSIGN OP CODES TO MAINTENANCE PACKAGE OPTIONS"
+        title="Assign Op codes to maintenance package options"
         open={isAssignOpsCodeOpen}
         optionError={optionError}
         setOptionError={setOptionError}
