@@ -11,11 +11,13 @@ import TabWrapper from './TabWrapper';
 import OutboundEvents from './OutboundEvents/OutboundEvents';
 import RecallAlerts from './RecallAlerts/RecallAlerts';
 import RecallAlertSettings from './RecallAlerts/layouts/RecallAlertSettings/RecallAlertSettings';
+import ServicePulse from './ServicePulse/ServicePulse';
+import ServicePulseSettings from './ServicePulse/ServicePulseSettings';
 
 const DealerOperationsCustomer = () => {
   const { classes } = useStyles();
 
-  const { eventIdForRulesConfiguration } = useSelector(
+  const { eventIdForRulesConfiguration, selectedPlay } = useSelector(
     (state: RootState) => state.dealerOperations
   );
 
@@ -25,6 +27,10 @@ const DealerOperationsCustomer = () => {
 
   if (selectedRecallAlert) {
     return <RecallAlertSettings />;
+  }
+
+  if (selectedPlay) {
+    return <ServicePulseSettings />;
   }
 
   if (eventIdForRulesConfiguration) {
@@ -38,6 +44,9 @@ const DealerOperationsCustomer = () => {
         <TabWrapper setActiveTab={setActiveTab} />
         <TabPanel className={classes.tabPanel} value="0">
           <OutboundEvents />
+        </TabPanel>
+        <TabPanel className={classes.rightTab} value="3">
+          <ServicePulse />
         </TabPanel>
         <TabPanel className={classes.rightTab} value="1">
           <TextIntegration />

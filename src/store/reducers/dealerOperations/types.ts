@@ -1,4 +1,5 @@
 import { IPageRequest, IPagingResponse } from '../../../types/types';
+import { IPlayWithServiceBook } from '../../../pages/admin/DealerOperations/Customer/types';
 
 export interface ITag {
   tag: string;
@@ -8,7 +9,9 @@ export interface ITag {
 export type TState = {
   dashboardItems: DashboardItemI[];
   customerCommunicationPageData: IPageRequest;
+  playsPageData: IPageRequest;
   customerCommunicationPaging: IPagingResponse;
+  playsPaging: IPagingResponse;
   newEventName: string;
   textIntegrationSettings: null | IntegrationSettingsI;
   availablePhoneNumberList: string[];
@@ -22,6 +25,13 @@ export type TState = {
   credits: Credits | null;
   availableTagsForOutboundEvents: ITag[];
   availableTagsForRecallAlerts: ITag[];
+  plays: IPlayWithServiceBook[];
+  updatedPlaysName: {
+    id?: string;
+    name: string;
+  }[];
+  playsAudienceEditMode: boolean;
+  selectedPlay: IPlayWithServiceBook | null;
 };
 
 export interface Credits {

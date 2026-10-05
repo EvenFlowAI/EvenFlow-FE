@@ -14,6 +14,11 @@ import {
   setCredits,
   setAvailableTagsForOutboundEvents,
   setAvailableTagsForRecallAlerts,
+  setPlays,
+  setUpdatedPlaysName,
+  setPlaysPageData,
+  setPlaysAudienceEditMode,
+  setSelectedPlay,
 } from './actions';
 import { defaultPaging } from '../constants';
 
@@ -24,6 +29,7 @@ const initialState: TState = {
     pageIndex: 0,
   },
   customerCommunicationPaging: { ...defaultPaging },
+  playsPaging: { ...defaultPaging },
   newEventName: '',
   textIntegrationSettings: null,
   availablePhoneNumberList: [],
@@ -34,6 +40,14 @@ const initialState: TState = {
   credits: null,
   availableTagsForOutboundEvents: [],
   availableTagsForRecallAlerts: [],
+  plays: [],
+  updatedPlaysName: [],
+  playsPageData: {
+    pageSize: 10,
+    pageIndex: 0,
+  },
+  playsAudienceEditMode: false,
+  selectedPlay: null,
 };
 
 export const dealerOperationsReducer = createReducer<TState>(initialState, builder =>
@@ -45,6 +59,12 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
       return {
         ...state,
         customerCommunicationPageData: { ...state.customerCommunicationPageData, ...payload },
+      };
+    })
+    .addCase(setPlaysPageData, (state, { payload }) => {
+      return {
+        ...state,
+        playsPageData: { ...state.playsPageData, ...payload },
       };
     })
     .addCase(getCustomerCommunicationPaging, (state, { payload }) => {
@@ -71,6 +91,9 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     .addCase(setUpdatedEventsName, (state, { payload }) => {
       return { ...state, updatedEventsName: payload };
     })
+    .addCase(setUpdatedPlaysName, (state, { payload }) => {
+      return { ...state, updatedPlaysName: payload };
+    })
     .addCase(setCredits, (state, { payload }) => {
       return { ...state, credits: payload };
     })
@@ -79,5 +102,14 @@ export const dealerOperationsReducer = createReducer<TState>(initialState, build
     })
     .addCase(setAvailableTagsForRecallAlerts, (state, { payload }) => {
       return { ...state, availableTagsForRecallAlerts: payload };
+    })
+    .addCase(setPlays, (state, { payload }) => {
+      return { ...state, plays: payload };
+    })
+    .addCase(setPlaysAudienceEditMode, (state, { payload }) => {
+      return { ...state, playsAudienceEditMode: payload };
+    })
+    .addCase(setSelectedPlay, (state, { payload }) => {
+      return { ...state, selectedPlay: payload };
     })
 );
