@@ -1,38 +1,43 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { IRecall, TIdName } from '../../../../store/reducers/recall/types';
+import { IRecall } from '../../../../store/reducers/recall/types';
 import { Table } from '../../../../components/tables/Table/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
 import {
-  deleteRecall,
   loadRecalls,
   setRecallOrder,
   setRecallPageData,
 } from '../../../../store/reducers/recall/actions';
 import { IOrder, TableRowDataType } from '../../../../types/types';
-import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { usePagination } from '../../../../hooks/usePaginations/usePaginations';
-import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
-import {
-  formatYearRange,
-  getRecallDmsVehicles,
-  getRecallVehicleLines,
-  TRecallVehicleLine,
-} from '../utils';
+import { formatYears } from '../../../../components/modals/admin/ViewGlobalRecall/helper';
+import { getRecallDmsVehicles, getRecallMakes, getRecallModelsWithYears } from '../utils';
 
-const renderLines = (
-  lines: TRecallVehicleLine[],
-  getValue: (line: TRecallVehicleLine) => string
-): JSX.Element | string => {
-  const values = Array.from(new Set(lines.map(getValue)));
+const RECALL_COMPONENT_MAX_LENGTH = 20;
+const MODEL_MAX_LENGTH = 12;
+
+const renderTruncated = (value: string | undefined | null, maxLength: number) => {
+  const text = value ?? '';
+  return text.length > maxLength ? (
+    <Tooltip placement="top" title={text}>
+      <p style={{ cursor: 'pointer', userSelect: 'none', margin: 0 }}>
+        {text.slice(0, maxLength) + '...'}
+      </p>
+    </Tooltip>
+  ) : (
+    text
+  );
+};
+
+const renderList = (values: string[], maxLength?: number): JSX.Element | string => {
   if (!values.length) return '-';
   return (
     <>
-      {values.map(value => (
-        <div key={value}>{value}</div>
+      {values.map((value, index) => (
+        <div key={`${value}-${index}`}>{maxLength ? renderTruncated(value, maxLength) : value}</div>
       ))}
     </>
   );
@@ -40,22 +45,20 @@ const renderLines = (
 
 type TRecallTableProps = {
   onOpenModal: () => void;
+  onOpenGrouping: () => void;
   currentItem: IRecall | null;
   setCurrentItem: Dispatch<SetStateAction<IRecall | null>>;
-  selectedMakes: TIdName[];
 };
 
 const RecallTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
-> = ({ onOpenModal, currentItem, setCurrentItem, selectedMakes }) => {
+> = ({ onOpenModal, onOpenGrouping, setCurrentItem }) => {
   const { recalls, recallsCount, order, searchTerm } = useSelector(
     (state: RootState) => state.recalls
   );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const dispatch = useDispatch();
-  const showError = useException();
-  const { askConfirm } = useConfirm();
   const { selectedSC } = useSCs();
   const { changeRowsPerPage, changePage, pageIndex, pageSize } = usePagination(
     (s: RootState) => s.recalls.recallPageData,
@@ -64,14 +67,9 @@ const RecallTable: React.FC<
 
   useEffect(() => {
     if (selectedSC) {
-      dispatch(
-        loadRecalls(
-          selectedSC.id,
-          selectedMakes.length ? selectedMakes.map(make => make.id) : undefined
-        )
-      );
+      dispatch(loadRecalls(selectedSC.id));
     }
-  }, [selectedSC, pageIndex, pageSize, order, searchTerm, selectedMakes]);
+  }, [selectedSC, pageIndex, pageSize, order, searchTerm]);
 
   const rowData: TableRowDataType<IRecall>[] = [
     {
@@ -89,19 +87,27 @@ const RecallTable: React.FC<
     {
       header: 'Make',
       width: 112,
-      val: el => renderLines(getRecallVehicleLines(el), line => line.make?.name ?? '-'),
+      val: el => renderList(getRecallMakes(el)),
       orderId: 'Make',
     },
     {
       header: 'Model',
       width: 126,
-      val: el => renderLines(getRecallVehicleLines(el), line => line.model?.name ?? '-'),
+      val: el =>
+        renderList(
+          getRecallModelsWithYears(el).map(model => model.name),
+          MODEL_MAX_LENGTH
+        ),
     },
     {
       header: 'Years',
-      width: 128,
+      width: 300,
       val: el =>
-        renderLines(getRecallVehicleLines(el), line => formatYearRange(line.yearFrom, line.yearTo)),
+        renderList(
+          getRecallModelsWithYears(el).map(model =>
+            model.years.length ? formatYears(model.years) : '-'
+          )
+        ),
     },
     {
       header: 'DMS Vehicles',
@@ -111,7 +117,7 @@ const RecallTable: React.FC<
     {
       header: 'Recall Component',
       width: 276,
-      val: el => el.recallComponent,
+      val: el => renderTruncated(el.recallComponent, RECALL_COMPONENT_MAX_LENGTH),
       orderId: 'RecallComponent',
     },
     {
@@ -140,44 +146,9 @@ const RecallTable: React.FC<
     onOpenModal();
   };
 
-  const handleRemove = async () => {
-    if (!currentItem) {
-      showError('Make is not chosen');
-    } else {
-      if (selectedSC) {
-        try {
-          dispatch(deleteRecall(currentItem.id, selectedSC.id, showError));
-          setCurrentItem(null);
-        } catch (e) {
-          showError(e);
-        }
-      }
-    }
-  };
-
-  const askRemove = () => {
+  const openGrouping = () => {
     setAnchorEl(null);
-    if (!currentItem) {
-      showError('Recall is not chosen');
-    } else {
-      let itemName = '';
-      if (currentItem.recallCampaignNumber) {
-        itemName =
-          currentItem.recallCampaignNumber?.length < 25
-            ? currentItem.recallCampaignNumber
-            : currentItem.recallCampaignNumber.slice(0, 24).concat('...');
-      } else if (currentItem.oemProgram) {
-        itemName =
-          currentItem.oemProgram?.length < 25
-            ? currentItem.oemProgram
-            : currentItem.oemProgram.slice(0, 24).concat('...');
-      }
-      askConfirm({
-        isRemove: true,
-        title: `Please confirm you want to remove Recall ${itemName}?`,
-        onConfirm: handleRemove,
-      });
-    }
+    onOpenGrouping();
   };
 
   const onSort = (o: IOrder<IRecall>) => () => {
@@ -208,7 +179,7 @@ const RecallTable: React.FC<
       />
       <Menu open={Boolean(anchorEl)} onClose={onMenuClose} anchorEl={anchorEl}>
         <MenuItem onClick={openEdit}>Edit</MenuItem>
-        <MenuItem onClick={askRemove}>Remove</MenuItem>
+        <MenuItem onClick={openGrouping}>Group</MenuItem>
       </Menu>
     </div>
   );

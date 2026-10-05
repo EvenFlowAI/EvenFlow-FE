@@ -4,6 +4,8 @@ import { createAction } from '@reduxjs/toolkit';
 import {
   ICreateUpdateRecall,
   IEditRecall,
+  IRecallGroupingRequest,
+  IRecallSyncRequest,
   IGlobalModelYear,
   IRecall,
   IRecallAffectedModel,
@@ -633,5 +635,44 @@ export const viewHistoryData =
       .catch(e => {
         if (onError) onError();
         console.log('viewHistoryData error', e);
+      });
+  };
+export const updateRecallGrouping =
+  (
+    recallId: number,
+    data: IRecallGroupingRequest,
+    onError: (err: string) => void,
+    onSuccess: () => void
+  ): AppThunk =>
+  dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.Recalls.UpdateGrouping, { urlParams: { id: recallId }, data })
+      .then(result => {
+        if (result) {
+          dispatch(loadRecalls(data.serviceCenterId));
+          onSuccess();
+        }
+      })
+      .catch(err => {
+        console.log('update recall grouping err', err);
+        onError(err);
+        dispatch(setLoading(false));
+      });
+  };
+export const syncRecallMakes =
+  (data: IRecallSyncRequest, onError: (err: string) => void, onSuccess: () => void): AppThunk =>
+  dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.Recalls.SyncMakes, { data })
+      .then(result => {
+        if (result) {
+          dispatch(loadRecalls(data.serviceCenterId));
+          onSuccess();
+        }
+      })
+      .catch(err => {
+        console.log('sync recall makes err', err);
+        onError(err);
+        dispatch(setLoading(false));
       });
   };

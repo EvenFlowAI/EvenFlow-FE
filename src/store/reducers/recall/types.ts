@@ -180,3 +180,22 @@ export type TUpdateRecall = {
   isRemedyAvailable: boolean;
   rolloverMessage?: string;
 };
+export interface IRecallGroupingItemRequest {
+  id: number;
+  itemIndex: number;
+}
+export interface IRecallGroupingGroupRequest {
+  groupId?: number;
+  groupIndex: number;
+  serviceRequestId: number | null;
+  recallComponent: string;
+  items: IRecallGroupingItemRequest[];
+}
+export interface IRecallGroupingRequest {
+  serviceCenterId: number;
+  groups: IRecallGroupingGroupRequest[];
+}
+export interface IRecallSyncRequest {
+  serviceCenterId: number;
+  makeIds: number[];
+}

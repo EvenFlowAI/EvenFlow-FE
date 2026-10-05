@@ -2,7 +2,8 @@ import React, { SyntheticEvent, useEffect, useState } from 'react';
 import RecallTable from './RecallTable/RecallTable';
 import { Autocomplete } from '@mui/material';
 import AddRecallModal from './AddRecallModal/AddRecallModal';
-import { IRecall, TIdName } from '../../../store/reducers/recall/types';
+import RecallGroupingModal from './RecallGroupingModal/RecallGroupingModal';
+import { IRecall } from '../../../store/reducers/recall/types';
 import { autocompleteRender } from '../../../utils/autocompleteRenders';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
@@ -16,7 +17,7 @@ import { useInputStyles, useStyles } from './styles';
 import { SearchDebounced } from '../../../components/formControls/SearchDebounced/SearchDebounced';
 import { setRecallPageData, setRecallSearch } from '../../../store/reducers/recall/actions';
 import MakesForm from './MakesForm/MakesForm';
-import { loadAllGlobalMakes } from '../../../store/reducers/globalVehicles/actions';
+import { loadMakesAll } from '../../../store/reducers/vehicleDetails/actions';
 
 const RecallParts = () => {
   const [currentItem, setCurrentItem] = useState<IRecall | null>(null);
@@ -27,11 +28,11 @@ const RecallParts = () => {
   const { selectedSC } = useSCs();
   const { allAssignedList } = useSelector((state: RootState) => state.serviceRequests);
   const { isOpen, onOpen, onClose } = useModal();
+  const { isOpen: isGroupingOpen, onOpen: onOpenGrouping, onClose: closeGrouping } = useModal();
   const { classes } = useStyles();
   const { classes: inputClasses } = useInputStyles();
   const dispatch = useDispatch();
   const showError = useException();
-  const [makes, setMakes] = useState<TIdName[]>([]);
 
   useEffect(() => {
     return () => {
@@ -50,7 +51,7 @@ const RecallParts = () => {
   useEffect(() => {
     if (selectedSC) {
       dispatch(loadAllAssignedServiceRequests(selectedSC.id));
-      dispatch(loadAllGlobalMakes());
+      dispatch(loadMakesAll(selectedSC.id));
     }
   }, [selectedSC]);
 
@@ -63,6 +64,11 @@ const RecallParts = () => {
 
   const handleAddRecall = () => {
     onOpen();
+  };
+
+  const onCloseGrouping = () => {
+    closeGrouping();
+    setCurrentItem(null);
   };
 
   const onSRChange = (e: SyntheticEvent, value: IAssignedServiceRequest | null) => {
@@ -108,8 +114,6 @@ const RecallParts = () => {
             })}
           />
           <MakesForm
-            selectedMakes={makes}
-            setMakes={setMakes}
             hasDefaultRecallOpsCode={Boolean(selectedOpsCode)}
             clearSelectionErrorTrigger={defaultOpsDropdownOpenCount}
           />
@@ -132,9 +136,9 @@ const RecallParts = () => {
       </div>
       <RecallTable
         onOpenModal={handleAddRecall}
+        onOpenGrouping={onOpenGrouping}
         currentItem={currentItem}
         setCurrentItem={setCurrentItem}
-        selectedMakes={makes}
       />
       <AddRecallModal
         open={isOpen}
@@ -142,6 +146,7 @@ const RecallParts = () => {
         onClose={onClose}
         setEditingItem={setCurrentItem}
       />
+      <RecallGroupingModal open={isGroupingOpen} recall={currentItem} onClose={onCloseGrouping} />
     </>
   );
 };

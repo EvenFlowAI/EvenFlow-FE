@@ -1,155 +1,143 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
-import { Autocomplete, FormHelperText, Tooltip } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { useMultipleACStyles } from '../../Transportations/EditTransportationModal/styles';
-import { RootState } from '../../../../store/rootReducer';
+import React, { useMemo } from 'react';
+import {
+  Autocomplete,
+  Checkbox,
+  Chip,
+  FormHelperText,
+  Tooltip,
+  createFilterOptions,
+} from '@mui/material';
 import { autocompleteRender } from '../../../../utils/autocompleteRenders';
-import { renderChipTagsWithoutOptionObject } from '../../Transportations/EditTransportationModal/layouts/ChipTagRender';
 import { TIdName } from '../../../../store/reducers/recall/types';
+import { useMakesFormStyles } from './styles';
+import { useMakesForm } from './useMakesForm';
+import { isSelectAll, SELECT_ALL_OPTION } from './helpers';
+import { MakesDropdownFooterContext, MakesDropdownPaper } from './MakesDropdownPaper';
 
 interface MakesFormProps {
-  selectedMakes: TIdName[];
-  setMakes: React.Dispatch<React.SetStateAction<TIdName[]>>;
   hasDefaultRecallOpsCode: boolean;
   clearSelectionErrorTrigger: number;
 }
 
-const MakesForm = ({
-  selectedMakes,
-  setMakes,
+// the field has a fixed 40px height, so only a few chips fit; the rest go into "+N"
+const MAX_VISIBLE_CHIPS = 3;
+
+const defaultFilter = createFilterOptions<TIdName>();
+
+const MakesForm: React.FC<MakesFormProps> = ({
   hasDefaultRecallOpsCode,
   clearSelectionErrorTrigger,
-}: MakesFormProps) => {
-  const { classes: multipleACSClasses } = useMultipleACStyles();
-  const { allMakesOptions } = useSelector((state: RootState) => state.globalVehicles);
+}) => {
+  const { classes, cx } = useMakesFormStyles();
+  const {
+    options,
+    draft,
+    isOpen,
+    loading,
+    allSelected,
+    someSelected,
+    isSelectionBlockedError,
+    onOpen,
+    onCancel,
+    onAdd,
+    onChange,
+  } = useMakesForm({ hasDefaultRecallOpsCode, clearSelectionErrorTrigger });
 
-  const [inputValue, setInputValue] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSelectionBlockedError, setIsSelectionBlockedError] = useState(false);
-
-  useEffect(() => {
-    if (hasDefaultRecallOpsCode) {
-      setIsSelectionBlockedError(false);
-    }
-  }, [hasDefaultRecallOpsCode]);
-
-  useEffect(() => {
-    setIsSelectionBlockedError(false);
-  }, [clearSelectionErrorTrigger]);
-
-  const mappedOptions: TIdName[] = useMemo(() => {
-    let filtered = allMakesOptions;
-    if (inputValue) {
-      filtered = allMakesOptions.filter(m =>
-        m.vinMake.toLowerCase().includes(inputValue.toLowerCase())
-      );
-    }
-    return filtered.map(m => ({ id: m.id, name: m.vinMake }));
-  }, [allMakesOptions, inputValue]);
-
-  const onCheckboxChange = useCallback(
-    (option: TIdName) => {
-      let next: TIdName[];
-      const current = selectedMakes ?? [];
-
-      const exists = current.some(o => o === option);
-      next = exists ? current.filter(o => o !== option) : [...current, option];
-      if (next.length === allMakesOptions.length) {
-        next = [...allMakesOptions.map(m => ({ id: m.id, name: m.vinMake }))];
-      }
-
-      setMakes(next);
-    },
-    [selectedMakes, allMakesOptions, setMakes]
-  );
-
-  const makeRenderDealershipGroupOption = useCallback(
-    () => (props: React.HTMLAttributes<HTMLLIElement>, option: TIdName) => {
-      return (
-        <li
-          {...props}
-          key={option.id}
-          style={{ display: 'flex', alignItems: 'center', height: '34px' }}
-        >
-          {option.name.length > 35 ? (
-            <Tooltip placement="top" title={option.name}>
-              <p style={{ cursor: 'pointer', userSelect: 'none' }}>
-                {option.name.slice(0, 34) + '...'}
-              </p>
-            </Tooltip>
-          ) : (
-            option.name
-          )}
-        </li>
-      );
-    },
-    [selectedMakes, onCheckboxChange, allMakesOptions]
-  );
-
-  const handleSelectDealerships = (e: React.SyntheticEvent, val: TIdName[]) => {
-    if (!hasDefaultRecallOpsCode && val.length > selectedMakes.length) {
-      setIsSelectionBlockedError(true);
-      setIsDropdownOpen(false);
-      return;
-    }
-
-    setIsSelectionBlockedError(false);
-    setMakes(val);
-  };
+  const footerContext = useMemo(() => ({ loading, onCancel, onAdd }), [loading, onCancel, onAdd]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Autocomplete
-        multiple
-        classes={multipleACSClasses}
-        open={isDropdownOpen}
-        onOpen={() => {
-          setIsDropdownOpen(true);
-          setIsSelectionBlockedError(false);
-        }}
-        onClose={() => {
-          setIsDropdownOpen(false);
-          setIsSelectionBlockedError(false);
-        }}
-        options={mappedOptions}
-        getOptionLabel={option => option.name}
-        isOptionEqualToValue={(o, v) => o.id === v.id}
-        disableCloseOnSelect
-        inputValue={inputValue}
-        onInputChange={(e, val) => {
-          setInputValue(val);
-        }}
-        sx={{
-          '& .MuiAutocomplete-inputRoot': {
-            flexWrap: 'nowrap',
-            width: 380,
-            padding: '0',
-          },
-          '& .MuiInputBase-root': {
-            border: isSelectionBlockedError ? '1px solid #F50057' : undefined,
-          },
-        }}
-        renderOption={makeRenderDealershipGroupOption()}
-        value={selectedMakes}
-        onChange={handleSelectDealerships}
-        renderTags={(selected, getTagProps) =>
-          renderChipTagsWithoutOptionObject(
-            selected.map(r => r.name),
-            getTagProps,
-            346,
-            option => {
-              setMakes(prev => prev.filter(t => t.name !== option));
-            }
-          )
-        }
-        renderInput={autocompleteRender({
-          label: 'Makes supported',
-          placeholder: 'Not Selected',
-          error: isSelectionBlockedError,
-        })}
-      />
+    <div className={classes.wrapper}>
+      <MakesDropdownFooterContext.Provider value={footerContext}>
+        <Autocomplete<TIdName, true>
+          multiple
+          disableCloseOnSelect
+          className={cx(classes.autocomplete, isSelectionBlockedError && classes.autocompleteError)}
+          open={isOpen}
+          onOpen={onOpen}
+          onClose={(e, reason) => {
+            if (reason !== 'selectOption' && reason !== 'removeOption') onCancel();
+          }}
+          options={options.length ? [SELECT_ALL_OPTION, ...options] : []}
+          filterOptions={(opts, state) => {
+            const filtered = defaultFilter(
+              opts.filter(option => !isSelectAll(option)),
+              state
+            );
+            return state.inputValue || !filtered.length
+              ? filtered
+              : [SELECT_ALL_OPTION, ...filtered];
+          }}
+          value={draft}
+          onChange={onChange}
+          getOptionLabel={option => option.name}
+          isOptionEqualToValue={(o, v) => o.id === v.id}
+          PaperComponent={MakesDropdownPaper}
+          renderOption={(props, option, { selected }) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { key, ...optionProps } = props as React.HTMLAttributes<HTMLLIElement> & {
+              key?: string;
+            };
+            const selectAll = isSelectAll(option);
+            return (
+              <li
+                {...optionProps}
+                key={option.id}
+                className={cx(optionProps.className, classes.option)}
+              >
+                <Checkbox
+                  size="small"
+                  color="primary"
+                  className={classes.checkbox}
+                  checked={selectAll ? allSelected : selected}
+                  indeterminate={selectAll && someSelected}
+                />
+                {option.name}
+              </li>
+            );
+          }}
+          renderTags={(value, getTagProps) => {
+            const hidden = value.slice(MAX_VISIBLE_CHIPS);
+            return (
+              <>
+                {value.slice(0, MAX_VISIBLE_CHIPS).map((option, index) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  const { key, ...tagProps } = getTagProps({ index });
+                  return (
+                    <Chip
+                      {...tagProps}
+                      key={option.id}
+                      label={option.name}
+                      size="small"
+                      className={classes.chip}
+                    />
+                  );
+                })}
+                {hidden.length > 0 && (
+                  <Tooltip
+                    placement="top"
+                    title={
+                      <div>
+                        {hidden.map(option => (
+                          <div key={option.id}>{option.name}</div>
+                        ))}
+                      </div>
+                    }
+                  >
+                    <Chip label={`+${hidden.length}`} size="small" className={classes.moreChip} />
+                  </Tooltip>
+                )}
+              </>
+            );
+          }}
+          renderInput={autocompleteRender({
+            label: 'Makes supported',
+            placeholder: draft?.length >= MAX_VISIBLE_CHIPS ? undefined : 'List of makes',
+            error: isSelectionBlockedError,
+          })}
+        />
+      </MakesDropdownFooterContext.Provider>
       {isSelectionBlockedError && (
-        <FormHelperText error style={{ margin: 0, width: 364, fontSize: 14, color: '#E3256B' }}>
+        <FormHelperText error className={classes.error}>
           Please select a Default recall op code to load and manage recall data for the selected
           make(s).
         </FormHelperText>
