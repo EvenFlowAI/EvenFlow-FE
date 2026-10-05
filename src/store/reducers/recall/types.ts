@@ -6,25 +6,45 @@ export type TIdName = {
   name: string;
 };
 
+export interface IRecallPartGroupItem {
+  id: number;
+  recallPartGroupId: number;
+  make: TIdName | null;
+  model: TIdName | null;
+  year: number | null;
+  itemIndex: number;
+  numberOfVehiclesInDms?: number;
+}
+
+export interface IRecallPartGroup {
+  id: number;
+  recallPartId: number;
+  recallComponent?: string;
+  serviceRequest?: TIdName | null;
+  groupIndex: number;
+  numberOfVehiclesInDms?: number;
+  items: IRecallPartGroupItem[];
+}
+
 export interface IRecall {
   id: number;
+  serviceCenterId?: number;
   recallCampaignNumber?: string;
-  make: TIdName;
-  models: TIdName[];
-  model?: {
-    id: number;
-    name: string;
-  };
-  yearFrom: number | null;
-  yearTo: number | null;
+  oemProgram?: string;
   recallComponent: string;
   recallSummary: string;
+  reportedDate?: string;
+  impactedVehicles?: number;
+  doNotDrive?: boolean;
+  fireRisk?: boolean;
+  safetyRisk?: string;
+  remedy?: string;
   partLeadDaysCount: number;
   dailyPartsCount: number;
-  serviceRequest: TIdName;
-  oemProgram?: string;
   isRemedyAvailable: boolean;
   rolloverMessage?: string;
+  serviceRequest: TIdName | null;
+  groups: IRecallPartGroup[];
   localIndex: number;
 }
 
@@ -80,6 +100,12 @@ export interface ICreateUpdateRecall {
   serviceRequestId: number | null;
   serviceCenterId: number;
   oemProgram?: string;
+}
+
+export interface IEditRecall {
+  serviceCenterId: number;
+  recallComponent: string;
+  serviceRequestId: number | null;
 }
 
 export interface IRecallResponse {

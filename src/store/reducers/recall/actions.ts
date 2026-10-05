@@ -3,6 +3,7 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   ICreateUpdateRecall,
+  IEditRecall,
   IGlobalModelYear,
   IRecall,
   IRecallAffectedModel,
@@ -130,7 +131,7 @@ export const createRecall =
 
 export const updateRecall =
   (
-    data: ICreateUpdateRecall,
+    data: IEditRecall,
     id: number,
     onError: (err: string) => void,
     onSuccess: () => void

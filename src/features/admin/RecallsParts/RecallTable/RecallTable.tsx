@@ -16,6 +16,27 @@ import { useConfirm } from '../../../../hooks/useConfirm/useConfirm';
 import { usePagination } from '../../../../hooks/usePaginations/usePaginations';
 import { useException } from '../../../../hooks/useException/useException';
 import { useSCs } from '../../../../hooks/useSCs/useSCs';
+import {
+  formatYearRange,
+  getRecallDmsVehicles,
+  getRecallVehicleLines,
+  TRecallVehicleLine,
+} from '../utils';
+
+const renderLines = (
+  lines: TRecallVehicleLine[],
+  getValue: (line: TRecallVehicleLine) => string
+): JSX.Element | string => {
+  const values = Array.from(new Set(lines.map(getValue)));
+  if (!values.length) return '-';
+  return (
+    <>
+      {values.map(value => (
+        <div key={value}>{value}</div>
+      ))}
+    </>
+  );
+};
 
 type TRecallTableProps = {
   onOpenModal: () => void;
@@ -55,40 +76,47 @@ const RecallTable: React.FC<
   const rowData: TableRowDataType<IRecall>[] = [
     {
       header: 'NHTSA Campaign',
+      width: 116,
       val: el => el.recallCampaignNumber,
       orderId: 'CampaignNumber',
     },
     {
       header: 'OEM Program',
+      width: 104,
       val: el => el.oemProgram,
       orderId: 'OemProgram',
     },
     {
       header: 'Make',
-      val: el => el.make?.name ?? '',
+      width: 112,
+      val: el => renderLines(getRecallVehicleLines(el), line => line.make?.name ?? '-'),
       orderId: 'Make',
     },
     {
       header: 'Model',
-      val: el => (el.models ? el.models.map(el => el.name).join(', ') : (el.model?.name ?? '-')),
+      width: 126,
+      val: el => renderLines(getRecallVehicleLines(el), line => line.model?.name ?? '-'),
     },
     {
-      header: 'From',
-      val: el => el.yearFrom?.toString() ?? '',
-      orderId: 'YearFrom',
+      header: 'Years',
+      width: 128,
+      val: el =>
+        renderLines(getRecallVehicleLines(el), line => formatYearRange(line.yearFrom, line.yearTo)),
     },
     {
-      header: 'To',
-      val: el => el.yearTo?.toString() ?? '',
-      orderId: 'YearTo',
+      header: 'DMS Vehicles',
+      width: 103,
+      val: el => getRecallDmsVehicles(el)?.toLocaleString() ?? '-',
     },
     {
       header: 'Recall Component',
+      width: 276,
       val: el => el.recallComponent,
       orderId: 'RecallComponent',
     },
     {
       header: 'Op Code',
+      width: 130,
       val: el => el.serviceRequest?.name ?? '',
       orderId: 'OpCode',
     },
