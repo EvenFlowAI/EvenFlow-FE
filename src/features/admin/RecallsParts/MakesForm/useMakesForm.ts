@@ -18,17 +18,19 @@ export const useMakesForm = ({ hasDefaultRecallOpsCode, clearSelectionErrorTrigg
   const showError = useException();
   const { selectedSC } = useSCs();
   const { allMakes } = useSelector((state: RootState) => state.vehicleDetails);
-  const { recalls } = useSelector((state: RootState) => state.recalls);
 
   const options = useMemo(() => mapMakesToOptions(allMakes), [allMakes]);
-  const appliedMakes = useMemo(() => getAppliedMakes(recalls, options), [recalls, options]);
+  const appliedMakes = useMemo(() => getAppliedMakes(allMakes, options), [allMakes, options]);
+  // already supported makes are locked: the user can't uncheck them
+  const lockedIds = useMemo(() => new Set(appliedMakes.map(make => make.id)), [appliedMakes]);
+  const isLocked = (option: TIdName): boolean => lockedIds.has(option.id);
 
   const [draft, setDraft] = useState<TIdName[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isSelectionBlockedError, setIsSelectionBlockedError] = useState(false);
 
-  // keep the draft in sync with recalls while the dropdown is closed
+  // keep the draft in sync with supported makes while the dropdown is closed
   useEffect(() => {
     if (!isOpen) setDraft(appliedMakes);
   }, [appliedMakes, isOpen]);
@@ -84,12 +86,17 @@ export const useMakesForm = ({ hasDefaultRecallOpsCode, clearSelectionErrorTrigg
     details?: AutocompleteChangeDetails<TIdName>
   ) => {
     if (isSelectAll(details?.option)) {
-      setDraft(allSelected ? [] : options);
+      // "deselect all" keeps the locked makes selected
+      setDraft(allSelected ? appliedMakes : options);
       return;
     }
-    setDraft(value.filter(option => !isSelectAll(option)));
+    const valueIds = new Set(value.filter(option => !isSelectAll(option)).map(o => o.id));
+    const next = options.filter(option => isLocked(option) || valueIds.has(option.id));
+    setDraft(next);
     // removing a chip / clearing changes the draft, so open the dropdown to confirm via Add
-    if (reason === 'removeOption' || reason === 'clear') setIsOpen(true);
+    if ((reason === 'removeOption' || reason === 'clear') && next.length !== draft.length) {
+      setIsOpen(true);
+    }
   };
 
   return {
@@ -100,6 +107,7 @@ export const useMakesForm = ({ hasDefaultRecallOpsCode, clearSelectionErrorTrigg
     allSelected,
     someSelected,
     isSelectionBlockedError,
+    isLocked,
     onOpen,
     onCancel,
     onAdd,

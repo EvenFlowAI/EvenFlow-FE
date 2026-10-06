@@ -16,7 +16,7 @@ import { useSCs } from '../../../../hooks/useSCs/useSCs';
 import { formatYears } from '../../../../components/modals/admin/ViewGlobalRecall/helper';
 import { getRecallDmsVehicles, getRecallMakes, getRecallModelsWithYears } from '../utils';
 
-const RECALL_COMPONENT_MAX_LENGTH = 20;
+const RECALL_COMPONENT_MAX_LENGTH = 24;
 const MODEL_MAX_LENGTH = 12;
 
 const renderTruncated = (value: string | undefined | null, maxLength: number) => {
@@ -101,7 +101,7 @@ const RecallTable: React.FC<
     },
     {
       header: 'Years',
-      width: 300,
+      width: 180,
       val: el =>
         renderList(
           getRecallModelsWithYears(el).map(model =>

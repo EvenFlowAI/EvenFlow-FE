@@ -37,6 +37,7 @@ const MakesForm: React.FC<MakesFormProps> = ({
     allSelected,
     someSelected,
     isSelectionBlockedError,
+    isLocked,
     onOpen,
     onCancel,
     onAdd,
@@ -71,6 +72,7 @@ const MakesForm: React.FC<MakesFormProps> = ({
           onChange={onChange}
           getOptionLabel={option => option.name}
           isOptionEqualToValue={(o, v) => o.id === v.id}
+          getOptionDisabled={option => !isSelectAll(option) && isLocked(option)}
           PaperComponent={MakesDropdownPaper}
           renderOption={(props, option, { selected }) => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -89,6 +91,7 @@ const MakesForm: React.FC<MakesFormProps> = ({
                   color="primary"
                   className={classes.checkbox}
                   checked={selectAll ? allSelected : selected}
+                  disabled={!selectAll && isLocked(option)}
                   indeterminate={selectAll && someSelected}
                 />
                 {option.name}
@@ -101,7 +104,7 @@ const MakesForm: React.FC<MakesFormProps> = ({
               <>
                 {value.slice(0, MAX_VISIBLE_CHIPS).map((option, index) => {
                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const { key, ...tagProps } = getTagProps({ index });
+                  const { key, onDelete, ...tagProps } = getTagProps({ index });
                   return (
                     <Chip
                       {...tagProps}
@@ -109,6 +112,7 @@ const MakesForm: React.FC<MakesFormProps> = ({
                       label={option.name}
                       size="small"
                       className={classes.chip}
+                      onDelete={isLocked(option) ? undefined : onDelete}
                     />
                   );
                 })}
