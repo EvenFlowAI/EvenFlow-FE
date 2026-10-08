@@ -102,7 +102,9 @@ const AddComplimentaryModal: React.FC<
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button color="info" onClick={handleClose}>
+          Close
+        </Button>
       </DialogActions>
     </BaseModal>
   );

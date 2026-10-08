@@ -66,7 +66,9 @@ const ExistingPackagesModal: React.FC<
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose}>Close</Button>
+        <Button color="info" onClick={props.onClose}>
+          Close
+        </Button>
       </DialogActions>
     </BaseModal>
   );
