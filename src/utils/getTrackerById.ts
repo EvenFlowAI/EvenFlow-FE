@@ -64,7 +64,7 @@ const productionTrackerMap: Record<string, string> = {
   [ServiceCenters.FremontFordSheridan]: 'G-JDTGJQJR4V',
   [ServiceCenters.NewPortCDJR]: 'G-39W8BHQBH2',
   [ServiceCenters.FremondFordLander]: 'G-VSQ7H51M2D',
-  [ServiceCenters.FremondFordCody]: 'G-X15YHVL690',
+  [ServiceCenters.FremontFordCody]: 'G-X15YHVL690',
 };
 
 export const getTrackerById = (id: string): string => {
