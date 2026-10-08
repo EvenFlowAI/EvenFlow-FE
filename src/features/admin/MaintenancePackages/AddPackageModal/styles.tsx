@@ -120,6 +120,7 @@ export const useStyles = makeStyles()(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 12,
   },
   cancelButton: {
     color: 'black',

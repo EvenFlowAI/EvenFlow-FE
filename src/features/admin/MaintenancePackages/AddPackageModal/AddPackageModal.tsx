@@ -132,10 +132,15 @@ const AddPackageModal: React.FC<React.PropsWithChildren<React.PropsWithChildren<
       <DialogActions>
         <div className={classes.wrapper}>
           <div className={classes.buttonsWrapper}>
-            <Button onClick={onCancel} className={classes.cancelButton}>
+            <Button onClick={onCancel} color="info">
               Cancel
             </Button>
-            <Button onClick={onSave} disabled={isPackageLoading} className={classes.saveButton}>
+            <Button
+              onClick={onSave}
+              color="primary"
+              variant="contained"
+              disabled={isPackageLoading}
+            >
               Save
             </Button>
           </div>
