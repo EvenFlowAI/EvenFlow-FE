@@ -181,42 +181,36 @@ const App = () => {
 
   LicenseInfo.setLicenseKey(MUI_PRO_LICENSE_KEY);
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      const clientIdFromOldDealers =
-        typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
+  const handleMessage = (event: MessageEvent) => {
+    const clientIdFromOldDealers =
+      typeof event.data === 'string' && /^\d+$/.test(event.data) ? event.data : '';
 
-      const clientData =
-        typeof event.data === 'object' &&
-        event.data !== null &&
-        event.data.type === 'init' &&
-        (typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string')
-          ? event.data
-          : '';
+    const clientData =
+      typeof event.data === 'object' &&
+      event.data !== null &&
+      event.data.type === 'init' &&
+      (typeof event.data?.clientId === 'string' || typeof event.data?.measurementId === 'string')
+        ? event.data
+        : '';
 
-      if (clientData || clientIdFromOldDealers.length) {
-        if (clientData)
-          console.log(
-            'TEMP_LOG: App.tsx: clientData obtained from the dealer website:',
-            clientData
-          );
-        if (clientIdFromOldDealers?.length) {
-          console.log(
-            'TEMP_LOG: App.tsx: clientId obtained from the dealer website:',
-            clientIdFromOldDealers
-          );
-          sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientIdFromOldDealers);
-        }
-        if (clientData?.clientId?.length)
-          sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData?.clientId);
-        if (clientData?.measurementId?.length)
-          sessionStorage.setItem(GA_MEASUREMENT_ID_FROM_DEALER, clientData?.measurementId);
+    if (clientData || clientIdFromOldDealers.length) {
+      if (clientData)
+        console.log('TEMP_LOG: App.tsx: clientData obtained from the dealer website:', clientData);
+      if (clientIdFromOldDealers?.length) {
+        console.log(
+          'TEMP_LOG: App.tsx: clientId obtained from the dealer website:',
+          clientIdFromOldDealers
+        );
+        sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientIdFromOldDealers);
       }
-    };
+      if (clientData?.clientId?.length)
+        sessionStorage.setItem(GA_CLIENT_ID_FROM_DEALER, clientData?.clientId);
+      if (clientData?.measurementId?.length)
+        sessionStorage.setItem(GA_MEASUREMENT_ID_FROM_DEALER, clientData?.measurementId);
+    }
+  };
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  window.addEventListener('message', handleMessage);
 
   const handleClose = (key: React.ReactText) => () => {
     notificationsRef?.current?.closeSnackbar(key);
