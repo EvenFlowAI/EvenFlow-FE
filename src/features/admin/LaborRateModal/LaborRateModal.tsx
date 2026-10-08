@@ -155,17 +155,14 @@ const LaborRateModal: React.FC<
       <DialogActions>
         <div className={classes.actionsWrapper}>
           <div className={classes.buttonsWrapper}>
-            <Button
-              disabled={predictionParamsLoading}
-              onClick={onCancel}
-              className={classes.cancelButton}
-            >
+            <Button disabled={predictionParamsLoading} onClick={onCancel} color="info">
               Cancel
             </Button>
             <Button
               onClick={onSave}
               disabled={predictionParamsLoading}
-              className={classes.saveButton}
+              color="primary"
+              variant="contained"
             >
               Save
             </Button>
