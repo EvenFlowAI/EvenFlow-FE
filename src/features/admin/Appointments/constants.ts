@@ -3,6 +3,7 @@ import { IAppointment, reportingStatuses } from '../../../api/types';
 import { TableRowDataType } from '../../../types/types';
 import dayjs from 'dayjs';
 import { time12HourFormat } from '../../../utils/constants';
+import { getCustomerDisplayName } from '../../../utils/getCustomerDisplayName';
 
 export const initialOrder = {
   orderBy: 'date',
@@ -48,7 +49,10 @@ export const AppointmentsColumns: TableRowDataType<IAppointment>[] = [
   {
     header: 'Customer',
     required: true,
-    val: el => el.customerInformation?.fullName ?? 'DMS missing customer information',
+    val: el =>
+      el.customerInformation?.companyName?.trim() ||
+      getCustomerDisplayName(el.customerInformation) ||
+      'DMS missing customer information',
     orderId: 'fullName',
   },
   {

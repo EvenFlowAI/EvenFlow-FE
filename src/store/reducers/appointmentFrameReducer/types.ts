@@ -1,6 +1,8 @@
 /* eslint-disable max-lines */
 
 import {
+  ECommunicationPhoneType,
+  ECustomerProfileType,
   EMaintenanceOptionType,
   IAddressData,
   IAppointmentByKey,
@@ -144,6 +146,11 @@ export type TState = {
   selectedTime: TParsableDate;
   selectedVehicle: ILoadedVehicle | null;
   customer: ICustomer;
+  // phone number explicitly selected by the user in the Edit Customer modal;
+  // survives appointment re-fetching until the appointment is saved
+  selectedAppointmentPhoneNumber: string | null;
+  // phone type (cell/work/home/other) the appointment communication number is bound to
+  communicationPhoneType: ECommunicationPhoneType | null;
   reminders: EContactMethodTypes[];
   transportation: ITransportation | null;
   transportations: ITransportation[];
@@ -229,12 +236,22 @@ export type TMaintenanceOption = TEMenuOption | TPackageOptionRequestData;
 
 export type TDriverForRequest = {
   fullName: string;
-  phoneNumber: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  cellPhone: string;
+  homePhone?: string;
+  workPhone?: string;
+  otherPhone?: string;
   city?: string;
   email: string | null;
+  companyName?: string;
+  customerProfileType: ECustomerProfileType;
 };
 
-export type TVehicleForRequest = {
+export type TVehicleForRequest = TNewVehicleForRequest | TExistingVehicleForRequest;
+
+export type TNewVehicleForRequest = {
   id: number | null;
   dmsId: string | null;
   engineTypeId: number | null;
@@ -247,11 +264,26 @@ export type TVehicleForRequest = {
   modelDetails: string;
 };
 
+// existing vehicle: only editable fields are sent together with its id
+export type TExistingVehicleForRequest = {
+  id: number;
+  mileage: number | null;
+  engineTypeId: number | null;
+};
+
+// existing customer: only the id is sent
+export type TExistingCustomerForRequest = {
+  id: number;
+};
+
+export type TCustomerForRequest = TDriverForRequest | TExistingCustomerForRequest;
+
 export interface ICreateAppointmentRequest {
   id?: number;
   appointmentTimingType: EAppointmentTimingType;
-  customerId: string | number | null;
-  driver: TDriverForRequest;
+  customerId?: string | number | null;
+  communicationPhoneType: ECommunicationPhoneType;
+  customer: TCustomerForRequest;
   vehicle: TVehicleForRequest;
   gmt: ParsableDate;
   offerId: number | null;

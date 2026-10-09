@@ -3,6 +3,8 @@
 
 import { createAction } from '@reduxjs/toolkit';
 import {
+  ECommunicationPhoneType,
+  ECustomerProfileType,
   EMaintenanceOptionType,
   EServiceCategoryPage,
   EServiceCenterName,
@@ -12,6 +14,7 @@ import {
   ICreateAppointmentResp,
   ICustomer,
   ICustomerLoadedData,
+  IDriverInfo,
   ILoadedVehicle,
   IMake,
   IPackage,
@@ -40,7 +43,7 @@ import {
   ISearchConsentsData,
   IValueService,
   TAncillaryPriceByZip,
-  TDriverForRequest,
+  TCustomerForRequest,
   TEditingPosition,
   TFiltersVisibility,
   TLanguage,
@@ -72,6 +75,12 @@ import {
   mapRecallsForRequest,
 } from '../../../utils/utils';
 import { getYearOptions } from '../../../utils/getDate';
+import { getCommunicationPhoneTypeByNumber } from '../../../utils/communicationPhoneType';
+import {
+  getAppointmentCustomerPhone,
+  normalizeCustomerProfileType,
+} from '../../../utils/appointmentCustomer';
+import { buildVehicleForRequest, getExistingCustomerId } from './helpers';
 import {
   getAppointmentSlots,
   getServiceValetSlots,
@@ -131,6 +140,13 @@ export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
 export const setCustomer = createAction<ICustomer>('fAppointment/setCustomer');
+
+export const setSelectedAppointmentPhoneNumber = createAction<string | null>(
+  'fAppointment/setSelectedAppointmentPhoneNumber'
+);
+export const setCommunicationPhoneType = createAction<ECommunicationPhoneType | null>(
+  'fAppointment/setCommunicationPhoneType'
+);
 export const setReminders = createAction<EContactMethodTypes[]>('fAppointment/setReminders');
 export const setAppointmentId = createAction<IAppointmentId>('fAppointment/setAppointmentId');
 export const setTransportation = createAction<ITransportation | null>(
@@ -650,6 +666,8 @@ export const clearAppointmentData =
     dispatch(setEditingPosition(null));
     dispatch(setAppointmentWasChanged(false));
     dispatch(setAppointmentNotes(''));
+    dispatch(setSelectedAppointmentPhoneNumber(null));
+    dispatch(setCommunicationPhoneType(null));
     dispatch(setConsultants([]));
     dispatch(setWaitListSettings(null));
     dispatch(setAcceptedConsentIds([]));
@@ -802,16 +820,61 @@ export const handleAppointmentResponse =
         }
       }
 
-      updatedData.fullName = data.driver?.fullName;
-      updatedData.id = data.customerId;
-      updatedData.phoneNumbers = [data.driver?.phoneNumber];
-      updatedData.companyName = data.driver.companyName;
+      const responseCustomer: Partial<IDriverInfo> = data.customer ?? {};
+      const firstName = responseCustomer.firstName || customer.firstName || updatedData.firstName;
+      const middleName =
+        responseCustomer.middleName || customer.middleName || updatedData.middleName;
+      const lastName = responseCustomer.lastName || customer.lastName || updatedData.lastName;
+      const fullName = responseCustomer.fullName || customer.fullName || updatedData.fullName || '';
+      const appointmentPhoneNumber =
+        getAppointmentCustomerPhone(data.customer, data.communicationPhoneType) ||
+        customer.phoneNumber ||
+        updatedData.phoneNumber ||
+        updatedData.phoneNumbers[0] ||
+        '';
+
+      updatedData.firstName = firstName;
+      updatedData.middleName = middleName;
+      updatedData.lastName = lastName;
+      updatedData.fullName = fullName;
+      updatedData.id = String(responseCustomer.id ?? data.customerId ?? updatedData.id);
+      updatedData.phoneNumber = appointmentPhoneNumber;
+      updatedData.phoneNumbers = appointmentPhoneNumber ? [appointmentPhoneNumber] : [];
+      if (data.customer) {
+        updatedData.phoneNumbersByCategory = {
+          cell: data.customer.cellPhone,
+          home: data.customer.homePhone,
+          work: data.customer.workPhone,
+          other: data.customer.otherPhone,
+        };
+      }
+      updatedData.companyName = responseCustomer.companyName;
+      updatedData.customerProfileType =
+        normalizeCustomerProfileType(responseCustomer.customerProfileType) ??
+        customer.customerProfileType ??
+        ECustomerProfileType.Personal;
       updatedData.isUpdating = false;
 
       dispatch(setCustomerLoadedData(updatedData));
-      dispatch(setCustomer(data.driver));
+      dispatch(
+        setCustomer({
+          ...customer,
+          ...data.customer,
+          firstName,
+          middleName,
+          lastName,
+          fullName,
+          email: data.customer?.email ?? customer.email,
+          phoneNumber: appointmentPhoneNumber,
+          customerProfileType: updatedData.customerProfileType,
+        })
+      );
       saveCustomerCache(updatedData);
     }
+    if (data.communicationPhoneType !== undefined) {
+      dispatch(setCommunicationPhoneType(data.communicationPhoneType ?? null));
+    }
+    dispatch(setSelectedAppointmentPhoneNumber(null));
     if (onNext) {
       onNext();
     }
@@ -1131,7 +1194,7 @@ export const createOrUpdateAppointment =
     const serviceType: EServiceType =
       appointmentFrame?.serviceTypeOption?.type ?? EServiceType.VisitCenter;
 
-    const vehicle: TVehicleForRequest = {
+    const vehicle: TVehicleForRequest = buildVehicleForRequest({
       id: appointmentFrame?.selectedVehicle?.id
         ? Number(appointmentFrame.selectedVehicle?.id)
         : null,
@@ -1146,12 +1209,44 @@ export const createOrUpdateAppointment =
       vin: appointmentFrame.selectedVehicle?.vin ?? '',
       mileage: appointmentFrame?.selectedVehicle?.mileage ?? null,
       modelDetails: appointmentFrame?.valueService?.model?.name ?? '',
-    };
+    });
 
-    const driver: TDriverForRequest = {
-      ...appointmentFrame.customer,
-      email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
-    };
+    const appointmentPhoneNumber =
+      appointmentFrame.selectedAppointmentPhoneNumber || appointmentFrame.customer.phoneNumber;
+
+    // existing customer: send phones on file as they are (appointment number goes separately)
+    const phonesByCategory = appointment.customerLoadedData?.phoneNumbersByCategory;
+    const hasPhonesByCategory = Boolean(
+      phonesByCategory && Object.values(phonesByCategory).some(Boolean)
+    );
+
+    const communicationPhoneType: ECommunicationPhoneType =
+      appointmentFrame.communicationPhoneType ??
+      getCommunicationPhoneTypeByNumber(phonesByCategory, appointmentPhoneNumber) ??
+      ECommunicationPhoneType.CellPhone;
+
+    // existing customer: only the id is sent, customer data is updated via Edit Customer modal
+    const existingCustomerId = getExistingCustomerId(
+      appointment.customerLoadedData?.id ?? appointmentFrame.customer?.id
+    );
+    const driver: TCustomerForRequest = existingCustomerId
+      ? { id: existingCustomerId }
+      : {
+          ...appointmentFrame.customer,
+          ...(hasPhonesByCategory
+            ? {
+                cellPhone: phonesByCategory?.cell ?? '',
+                homePhone: phonesByCategory?.home ?? '',
+                workPhone: phonesByCategory?.work ?? '',
+                otherPhone: phonesByCategory?.other ?? '',
+              }
+            : { cellPhone: appointmentPhoneNumber }),
+          email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+          companyName:
+            appointmentFrame.customer.customerProfileType === ECustomerProfileType.Business
+              ? appointmentFrame.customer.companyName
+              : undefined,
+        };
 
     const date =
       (appointmentFrame.serviceTypeOption?.type === EServiceType.PickUpDropOff ||
@@ -1245,8 +1340,8 @@ export const createOrUpdateAppointment =
     const data: ICreateAppointmentRequest = {
       id: appointmentFrame.id,
       appointmentTimingType,
-      customerId: appointment.customerLoadedData?.id ?? appointmentFrame?.customer?.id ?? null,
-      driver,
+      communicationPhoneType,
+      customer: driver,
       vehicle,
       gmt: dayjs().utcOffset(),
       offerId: appointment.appointment?.offer?.id ?? null,
@@ -1608,7 +1703,7 @@ export const cloneAppointment =
       if (currentAppointment) {
         dispatch(setAppointmentSaving(true));
 
-        const vehicle: TVehicleForRequest = {
+        const vehicle: TVehicleForRequest = buildVehicleForRequest({
           id: currentAppointment?.vehicle?.id ? Number(currentAppointment?.vehicle?.id) : null,
           dmsId: currentAppointment?.vehicle?.dmsId ?? null,
           engineTypeId: currentAppointment?.vehicle?.engineTypeId ?? null,
@@ -1621,14 +1716,45 @@ export const cloneAppointment =
           vin: currentAppointment?.vehicle?.vin ?? '',
           mileage: currentAppointment?.vehicle?.mileage ?? null,
           modelDetails: '',
-        };
+        });
 
-        const driver: TDriverForRequest = {
-          fullName: currentAppointment?.driver?.fullName ?? '',
-          phoneNumber: currentAppointment?.driver?.phoneNumber ?? '',
-          city: currentAppointment?.driver?.city ?? '',
-          email: currentAppointment?.driver?.email ?? null,
-        };
+        const cloneAppointmentPhone = getAppointmentCustomerPhone(
+          currentAppointment.customer,
+          currentAppointment.communicationPhoneType
+        );
+        const existingCloneCustomerId = getExistingCustomerId(
+          currentAppointment.customer?.id ?? currentAppointment.customerId
+        );
+        const driver: TCustomerForRequest = existingCloneCustomerId
+          ? { id: existingCloneCustomerId }
+          : {
+              fullName: currentAppointment?.customer?.fullName ?? '',
+              firstName: currentAppointment?.customer?.firstName,
+              middleName: currentAppointment?.customer?.middleName,
+              lastName: currentAppointment?.customer?.lastName,
+              cellPhone:
+                (currentAppointment?.communicationPhoneType ??
+                  ECommunicationPhoneType.CellPhone) === ECommunicationPhoneType.CellPhone
+                  ? cloneAppointmentPhone
+                  : '',
+              homePhone:
+                currentAppointment?.communicationPhoneType === ECommunicationPhoneType.HomePhone
+                  ? cloneAppointmentPhone
+                  : '',
+              workPhone:
+                currentAppointment?.communicationPhoneType === ECommunicationPhoneType.WorkPhone
+                  ? cloneAppointmentPhone
+                  : '',
+              otherPhone:
+                currentAppointment?.communicationPhoneType === ECommunicationPhoneType.OtherPhone
+                  ? cloneAppointmentPhone
+                  : '',
+              email: currentAppointment?.customer?.email ?? null,
+              companyName: currentAppointment?.customer?.companyName,
+              customerProfileType:
+                normalizeCustomerProfileType(currentAppointment?.customer?.customerProfileType) ??
+                ECustomerProfileType.Personal,
+            };
 
         const date =
           currentAppointment?.serviceTypeOption?.type === EServiceType.PickUpDropOff &&
@@ -1668,8 +1794,9 @@ export const cloneAppointment =
         const data: ICreateAppointmentRequest = {
           id: currentAppointment.id,
           appointmentTimingType,
-          customerId: currentAppointment.driver?.id ?? null,
-          driver,
+          communicationPhoneType:
+            currentAppointment.communicationPhoneType ?? ECommunicationPhoneType.CellPhone,
+          customer: driver,
           vehicle,
           gmt: dayjs().utcOffset(),
           offerId: appointment.appointment?.offer?.id ?? null,
