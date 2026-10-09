@@ -33,6 +33,7 @@ import type {
   TriggerI,
 } from '../../../pages/admin/DealerOperations/Customer/types';
 import { ErrorCode } from '../../../types/errorCodes';
+import { setAllMakes } from '../vehicleDetails/actions';
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
 export const setLoading = createAction<boolean>('Recall/SetLoading');
@@ -661,11 +662,22 @@ export const updateRecallGrouping =
   };
 export const syncRecallMakes =
   (data: IRecallSyncRequest, onError: (err: string) => void, onSuccess: () => void): AppThunk =>
-  dispatch => {
+  (dispatch, getState) => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.Recalls.SyncMakes, { data })
       .then(result => {
         if (result) {
+          // mark synced makes as supported right away, so the makes dropdown keeps them
+          // selected/locked after closing; then refresh from the server
+          const syncedIds = new Set(data.makeIds);
+          const { allMakes } = getState().vehicleDetails;
+          dispatch(
+            setAllMakes(
+              allMakes.map(make =>
+                syncedIds.has(make.id) ? { ...make, isSupportedForRecalls: true } : make
+              )
+            )
+          );
           dispatch(loadRecalls(data.serviceCenterId));
           onSuccess();
         }

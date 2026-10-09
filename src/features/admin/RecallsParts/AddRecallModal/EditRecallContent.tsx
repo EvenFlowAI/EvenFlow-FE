@@ -20,6 +20,18 @@ type TProps = {
   onSRChange: (e: React.SyntheticEvent, value: IAssignedServiceRequest | null) => void;
 };
 
+const EMPTY_VALUE = '-';
+
+const orEmpty = (value?: string | null): string => value || EMPTY_VALUE;
+
+const formatYesNo = (value?: boolean | null): string => {
+  if (value == null) return EMPTY_VALUE;
+  return value ? 'Yes' : 'No';
+};
+
+const formatReportedDate = (date?: dayjs.ConfigType): string =>
+  date ? dayjs(date).format('MMMM D, YYYY') : EMPTY_VALUE;
+
 const InfoItem: React.FC<React.PropsWithChildren<{ label: string }>> = ({ label, children }) => {
   const { classes } = useEditRecallStyles();
   return (
@@ -83,10 +95,12 @@ export const EditRecallContent: React.FC<React.PropsWithChildren<TProps>> = ({
       <div className={classes.body}>
         <div className={classes.infoPanel}>
           <InfoItem label="NHTSA Campaign">
-            <Typography className={classes.value}>{recall.recallCampaignNumber || '-'}</Typography>
+            <Typography className={classes.value}>
+              {orEmpty(recall.recallCampaignNumber)}
+            </Typography>
           </InfoItem>
           <InfoItem label="OEM Program">
-            <Typography className={classes.value}>{recall.oemProgram || '-'}</Typography>
+            <Typography className={classes.value}>{orEmpty(recall.oemProgram)}</Typography>
           </InfoItem>
           <InfoItem label="Makes">
             <Typography className={classes.value}>
@@ -111,7 +125,7 @@ export const EditRecallContent: React.FC<React.PropsWithChildren<TProps>> = ({
           </InfoItem>
           <InfoItem label="Reported Date">
             <Typography className={classes.value}>
-              {recall.reportedDate ? dayjs(recall.reportedDate).format('MMMM D, YYYY') : '-'}
+              {formatReportedDate(recall.reportedDate)}
             </Typography>
           </InfoItem>
           <InfoItem label="Impacted Vehicles">
@@ -120,10 +134,10 @@ export const EditRecallContent: React.FC<React.PropsWithChildren<TProps>> = ({
             </Typography>
           </InfoItem>
           <InfoItem label="Do Not Drive">
-            <Typography className={classes.value}>{recall.doNotDrive ? 'Yes' : 'No'}</Typography>
+            <Typography className={classes.value}>{formatYesNo(recall.doNotDrive)}</Typography>
           </InfoItem>
           <InfoItem label="Fire Risk">
-            <Typography className={classes.value}>{recall.fireRisk ? 'Yes' : 'No'}</Typography>
+            <Typography className={classes.value}>{formatYesNo(recall.fireRisk)}</Typography>
           </InfoItem>
           <InfoItem label="Recall Link">
             {recall.recallCampaignNumber ? (
@@ -143,13 +157,13 @@ export const EditRecallContent: React.FC<React.PropsWithChildren<TProps>> = ({
         <div className={classes.details}>
           <Divider className={classes.divider} />
           <Typography className={classes.bigLabel}>Summary</Typography>
-          <Typography className={classes.text}>{recall.recallSummary || '-'}</Typography>
+          <Typography className={classes.text}>{orEmpty(recall.recallSummary)}</Typography>
           <Divider className={classes.divider} />
           <Typography className={classes.bigLabel}>Safety Risk</Typography>
-          <Typography className={classes.text}>{recall.safetyRisk || '-'}</Typography>
+          <Typography className={classes.text}>{orEmpty(recall.safetyRisk)}</Typography>
           <Divider className={classes.divider} />
           <Typography className={classes.bigLabel}>Remedy</Typography>
-          <Typography className={classes.text}>{recall.remedy || '-'}</Typography>
+          <Typography className={classes.text}>{orEmpty(recall.remedy)}</Typography>
         </div>
       </div>
     </>

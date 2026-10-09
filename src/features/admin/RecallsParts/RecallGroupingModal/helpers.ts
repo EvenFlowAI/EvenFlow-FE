@@ -36,7 +36,7 @@ export const createEmptyGroup = (source?: TGroupingGroup): TGroupingGroup => ({
 
 const getSplitKey = (item: IRecallPartGroupItem, { byModel, byYear }: TSplitOptions): string => {
   const parts: string[] = [];
-  if (byModel) parts.push(`${item.make?.name ?? ''}|${item.model?.name ?? ''}`);
+  if (byModel) parts.push(`${item.make?.id ?? 'none'}|${item.model?.id ?? 'none'}`);
   if (byYear) parts.push(String(item.year ?? ''));
   return parts.join('#');
 };

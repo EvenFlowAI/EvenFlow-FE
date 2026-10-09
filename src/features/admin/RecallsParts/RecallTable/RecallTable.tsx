@@ -23,7 +23,7 @@ const renderTruncated = (value: string | undefined | null, maxLength: number) =>
   const text = value ?? '';
   return text.length > maxLength ? (
     <Tooltip placement="top" title={text}>
-      <p style={{ cursor: 'pointer', userSelect: 'none', margin: 0 }}>
+      <p tabIndex={0} style={{ cursor: 'pointer', userSelect: 'none', margin: 0 }}>
         {text.slice(0, maxLength) + '...'}
       </p>
     </Tooltip>
@@ -53,7 +53,7 @@ type TRecallTableProps = {
 const RecallTable: React.FC<
   React.PropsWithChildren<React.PropsWithChildren<TRecallTableProps>>
 > = ({ onOpenModal, onOpenGrouping, setCurrentItem }) => {
-  const { recalls, recallsCount, order, searchTerm } = useSelector(
+  const { recalls, recallsCount, order, searchTerm, isLoading } = useSelector(
     (state: RootState) => state.recalls
   );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -164,6 +164,7 @@ const RecallTable: React.FC<
     <div>
       <Table<IRecall>
         data={recalls}
+        isLoading={isLoading}
         index={'id'}
         isAscending={order.isAscending}
         order={order?.orderBy}
