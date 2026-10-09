@@ -201,7 +201,8 @@ export const AppointmentUserData: React.FC<
       <TitleRow>
         <AppointmentConfirmationTitle>{t('Customer Information')}</AppointmentConfirmationTitle>
         {isExistingCustomer && customerLoadedData ? (
-          <p
+          <button
+            type="button"
             style={{
               textTransform: 'uppercase',
               color: '#142EA1',
@@ -209,11 +210,14 @@ export const AppointmentUserData: React.FC<
               cursor: 'pointer',
               margin: '0 0 0 24px',
               fontWeight: 'bold',
+              border: 0,
+              background: 'transparent',
+              padding: 0,
             }}
             onClick={onEditOpen}
           >
             {t('Edit')}
-          </p>
+          </button>
         ) : null}
       </TitleRow>
       {!isExistingCustomer ? (

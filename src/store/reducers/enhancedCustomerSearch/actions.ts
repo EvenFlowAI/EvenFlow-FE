@@ -16,7 +16,8 @@ import {
   PaginatedAPIResponse,
 } from '../../../types/types';
 import { ActionCreator } from 'redux';
-import { ICustomerLoadedData, ILoadedVehicle } from '../../../api/types';
+import { ECustomerProfileType, ICustomerLoadedData, ILoadedVehicle } from '../../../api/types';
+import { normalizeCustomerProfileType } from '../../../utils/appointmentCustomer';
 import { saveAppointmentReducer, setCustomerLoadedData } from '../appointment/actions';
 import {
   setAddress,
@@ -143,8 +144,8 @@ export const loadCustomersByPhoneOrEmail =
       .then(result => {
         if (result.data?.result) {
           const customer = result.data.result;
-          const { cellPhone, homePhone, otherPhone, vehicles } = customer;
-          const phoneNumber = cellPhone ?? homePhone ?? otherPhone;
+          const { cellPhone, homePhone, workPhone, otherPhone, vehicles } = customer;
+          const phoneNumber = cellPhone ?? homePhone ?? workPhone ?? otherPhone;
           const vehiclesData = normalizeVehicles(vehicles);
 
           const data: ICustomerLoadedData = {
@@ -165,7 +166,11 @@ export const loadCustomersByPhoneOrEmail =
             },
             vehicles: vehiclesData,
             companyName: customer.companyName,
-            customerProfileType: customer.customerProfileType,
+            customerProfileType:
+              normalizeCustomerProfileType(customer.customerProfileType) ??
+              (customer.companyName
+                ? ECustomerProfileType.Business
+                : ECustomerProfileType.Personal),
           };
           data.address = normalizeAddress(customer, dispatch);
           dispatch(setCustomerLoadedData(data));

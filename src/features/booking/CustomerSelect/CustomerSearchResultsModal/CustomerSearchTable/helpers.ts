@@ -157,7 +157,8 @@ export const buildCustomerLoadedData = ({
   isUpdating?: boolean;
   includeVehicles: boolean;
 }): ICustomerLoadedData => {
-  const fallbackPhoneNumber = customer.cellPhone ?? customer.homePhone ?? customer.otherPhone;
+  const fallbackPhoneNumber =
+    customer.cellPhone ?? customer.homePhone ?? customer.workPhone ?? customer.otherPhone;
   const phoneNumbers = fallbackPhoneNumber ? [fallbackPhoneNumber] : [];
 
   if (selectedCustomer?.homePhone && !phoneNumbers.includes(selectedCustomer.homePhone)) {

@@ -4,6 +4,7 @@ export type TCustomerDisplayNameData = {
   customerProfileType?: ECustomerProfileType;
   companyName?: string;
   firstName?: string;
+  middleName?: string;
   lastName?: string;
   fullName?: string;
 };
@@ -13,7 +14,7 @@ export const getCustomerDisplayName = (customer?: TCustomerDisplayNameData | nul
     return '';
   }
 
-  const personalName = [customer.firstName, customer.lastName]
+  const personalName = [customer.firstName, customer.middleName, customer.lastName]
     .map(value => value?.trim())
     .filter(Boolean)
     .join(' ');

@@ -42,8 +42,9 @@ type TProps = {
 };
 
 const customerFieldConfigs: TCustomerFieldConfig[] = [
-  { key: 'home', name: 'Home', fieldName: 'homePhone', width: 150 },
   { key: 'cell', name: 'Cell', fieldName: 'cellPhone', width: 150 },
+  { key: 'home', name: 'Home', fieldName: 'homePhone', width: 150 },
+  { key: 'work', name: 'Work', fieldName: 'workPhone', width: 150 },
   { key: 'otherPhone', name: 'Other', fieldName: 'otherPhone', width: 150 },
   { key: 'email', name: 'Email', fieldName: 'email', width: 150 },
 ];

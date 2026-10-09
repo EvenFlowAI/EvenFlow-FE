@@ -52,6 +52,7 @@ export const CustomerPhoneFields: React.FC<TProps> = ({
                   checked={selectedPhoneType === type}
                   onChange={() => onPhoneTypeChange(type)}
                   disabled={!phones[type].trim()}
+                  inputProps={{ 'aria-label': `${t(label)} ${t('Appointment Communication')}` }}
                 />
               }
               label=""

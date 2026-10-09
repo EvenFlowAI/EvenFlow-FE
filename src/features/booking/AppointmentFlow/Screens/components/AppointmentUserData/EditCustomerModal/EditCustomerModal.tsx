@@ -120,7 +120,7 @@ export const EditCustomerModal: React.FC<TEditCustomerModalProps> = ({
     }
 
     const customerId = Number(customerLoadedData.id);
-    if (!Number.isFinite(customerId)) {
+    if (!Number.isFinite(customerId) || customerId <= 0) {
       showError(t('Customer identifier is invalid'));
       return;
     }
