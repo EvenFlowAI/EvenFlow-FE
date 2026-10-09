@@ -89,6 +89,8 @@ export const endpointsPart3: TEndpointsPart3 = {
     DeleteRecallEvent: { route: '/recall-events/{id}', method: 'delete' },
     UploadCSV: { route: '/recall-events/{id}/upload-csv', method: 'patch' },
     RecallTrigger: { route: '/recall/groups/{id}/trigger', method: 'patch' },
+    UpdateGrouping: { route: '/recall/{id}/grouping', method: 'put' },
+    SyncMakes: { route: '/recall/sync', method: 'post' },
   },
   Audit: {
     History: { route: '/audit/history', method: 'get' },

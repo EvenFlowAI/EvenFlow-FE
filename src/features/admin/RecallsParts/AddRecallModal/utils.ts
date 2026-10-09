@@ -51,3 +51,15 @@ export const checkIsValid = (form: TForm, showError: TArgCallback<string>) => {
   getValidationMessages(form).forEach(showError);
   return hasRequiredFields(form);
 };
+
+export const checkIsEditValid = (form: TForm, showError: TArgCallback<string>) => {
+  const messages: string[] = [];
+  if (!form.recallComponent?.trim().length) {
+    messages.push('"Recall Component" must not be empty');
+  }
+  if (!form.serviceRequest) {
+    messages.push('"Op Code Assignment" must not be empty');
+  }
+  messages.forEach(showError);
+  return !messages.length;
+};

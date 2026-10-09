@@ -3,6 +3,9 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
   ICreateUpdateRecall,
+  IEditRecall,
+  IRecallGroupingRequest,
+  IRecallSyncRequest,
   IGlobalModelYear,
   IRecall,
   IRecallAffectedModel,
@@ -30,6 +33,7 @@ import type {
   TriggerI,
 } from '../../../pages/admin/DealerOperations/Customer/types';
 import { ErrorCode } from '../../../types/errorCodes';
+import { setAllMakes } from '../vehicleDetails/actions';
 export const getRecalls = createAction<IRecall[]>('Recall/GetRecalls');
 export const setRecallAlerts = createAction<IRecallAlert[]>('Recall/SetRecallAlert');
 export const setLoading = createAction<boolean>('Recall/SetLoading');
@@ -77,7 +81,7 @@ export const setRecallAlertSettingsEditMode = createAction<boolean>(
 export const setAffectedModels = createAction<IRecallAffectedModel[]>('Recall/SetAffectedModels');
 
 export const loadRecalls =
-  (serviceCenterId: number): AppThunk =>
+  (serviceCenterId: number, makeIds?: number[]): AppThunk =>
   (dispatch, getState) => {
     dispatch(setLoading(true));
     const { recallPageData, order, searchTerm } = getState().recalls;
@@ -88,6 +92,9 @@ export const loadRecalls =
       pageIndex,
       searchTerm,
     };
+    if (makeIds?.length) {
+      data.makeIds = makeIds;
+    }
     if (order) {
       data.orderBy = order.orderBy;
       data.isAscending = order.isAscending;
@@ -127,7 +134,7 @@ export const createRecall =
 
 export const updateRecall =
   (
-    data: ICreateUpdateRecall,
+    data: IEditRecall,
     id: number,
     onError: (err: string) => void,
     onSuccess: () => void
@@ -629,5 +636,55 @@ export const viewHistoryData =
       .catch(e => {
         if (onError) onError();
         console.log('viewHistoryData error', e);
+      });
+  };
+export const updateRecallGrouping =
+  (
+    recallId: number,
+    data: IRecallGroupingRequest,
+    onError: (err: string) => void,
+    onSuccess: () => void
+  ): AppThunk =>
+  dispatch => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.Recalls.UpdateGrouping, { urlParams: { id: recallId }, data })
+      .then(result => {
+        if (result) {
+          dispatch(loadRecalls(data.serviceCenterId));
+          onSuccess();
+        }
+      })
+      .catch(err => {
+        console.log('update recall grouping err', err);
+        onError(err);
+        dispatch(setLoading(false));
+      });
+  };
+export const syncRecallMakes =
+  (data: IRecallSyncRequest, onError: (err: string) => void, onSuccess: () => void): AppThunk =>
+  (dispatch, getState) => {
+    dispatch(setLoading(true));
+    Api.call(Api.endpoints.Recalls.SyncMakes, { data })
+      .then(result => {
+        if (result) {
+          // mark synced makes as supported right away, so the makes dropdown keeps them
+          // selected/locked after closing; then refresh from the server
+          const syncedIds = new Set(data.makeIds);
+          const { allMakes } = getState().vehicleDetails;
+          dispatch(
+            setAllMakes(
+              allMakes.map(make =>
+                syncedIds.has(make.id) ? { ...make, isSupportedForRecalls: true } : make
+              )
+            )
+          );
+          dispatch(loadRecalls(data.serviceCenterId));
+          onSuccess();
+        }
+      })
+      .catch(err => {
+        console.log('sync recall makes err', err);
+        onError(err);
+        dispatch(setLoading(false));
       });
   };
