@@ -94,7 +94,7 @@ export const AppointmentConfirmation: React.FC<
       localErrors.push('fullname');
       showError(t('"Full Name" must not be empty'));
     }
-    if (userType !== EUserType.Existing && !customer.firstName) {
+    if (userType !== EUserType.Existing && !customer.firstName?.trim()) {
       isValid = false;
       localErrors.push('firstname');
       showError(t('"First Name" must not be empty'));

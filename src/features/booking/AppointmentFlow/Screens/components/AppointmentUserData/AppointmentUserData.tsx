@@ -5,7 +5,6 @@ import { TextField } from '../../../../../../components/formControls/TextFieldSt
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../../../store/rootReducer';
 import {
-  setAppointmentPhoneNumber,
   setCommunicationPhoneType,
   setCustomer,
   setSelectedAppointmentPhoneNumber,
@@ -94,7 +93,6 @@ export const AppointmentUserData: React.FC<
         customerProfileType: loadedProfileType,
       };
       dispatch(setCustomer(data));
-      dispatch(setAppointmentPhoneNumber(communicationPhone));
     }
   }, [
     customerLoadedData,
@@ -119,9 +117,6 @@ export const AppointmentUserData: React.FC<
           .join(' ');
       }
       dispatch(setCustomer(updatedCustomer));
-      if (name === 'phoneNumber') {
-        dispatch(setAppointmentPhoneNumber(value));
-      }
     }
     setErrors(errors => errors.filter(err => err !== name.toLowerCase()));
   };
@@ -168,7 +163,6 @@ export const AppointmentUserData: React.FC<
         customerProfileType: updatedProfileType,
       })
     );
-    dispatch(setAppointmentPhoneNumber(communicationPhone));
     dispatch(setSelectedAppointmentPhoneNumber(communicationPhone));
     dispatch(setCommunicationPhoneType(selectedCommunicationPhoneType));
 

@@ -288,7 +288,9 @@ export const appointmentFrameReducer = createReducer(initialState, builder =>
           phoneNumber: selectedPhone || appointmentCustomerPhone,
           customerProfileType:
             normalizeCustomerProfileType(payload.customer?.customerProfileType) ??
-            ECustomerProfileType.Personal,
+            (payload.customer?.companyName
+              ? ECustomerProfileType.Business
+              : ECustomerProfileType.Personal),
         },
         communicationPhoneType: selectedPhone
           ? state.communicationPhoneType

@@ -140,9 +140,7 @@ export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
 export const setCustomer = createAction<ICustomer>('fAppointment/setCustomer');
-export const setAppointmentPhoneNumber = createAction<string>(
-  'fAppointment/setAppointmentPhoneNumber'
-);
+
 export const setSelectedAppointmentPhoneNumber = createAction<string | null>(
   'fAppointment/setSelectedAppointmentPhoneNumber'
 );
@@ -668,7 +666,6 @@ export const clearAppointmentData =
     dispatch(setEditingPosition(null));
     dispatch(setAppointmentWasChanged(false));
     dispatch(setAppointmentNotes(''));
-    dispatch(setAppointmentPhoneNumber(''));
     dispatch(setSelectedAppointmentPhoneNumber(null));
     dispatch(setCommunicationPhoneType(null));
     dispatch(setConsultants([]));
@@ -872,7 +869,6 @@ export const handleAppointmentResponse =
           customerProfileType: updatedData.customerProfileType,
         })
       );
-      dispatch(setAppointmentPhoneNumber(appointmentPhoneNumber));
       saveCustomerCache(updatedData);
     }
     if (data.communicationPhoneType !== undefined) {
@@ -1736,7 +1732,23 @@ export const cloneAppointment =
               firstName: currentAppointment?.customer?.firstName,
               middleName: currentAppointment?.customer?.middleName,
               lastName: currentAppointment?.customer?.lastName,
-              cellPhone: cloneAppointmentPhone,
+              cellPhone:
+                (currentAppointment?.communicationPhoneType ??
+                  ECommunicationPhoneType.CellPhone) === ECommunicationPhoneType.CellPhone
+                  ? cloneAppointmentPhone
+                  : '',
+              homePhone:
+                currentAppointment?.communicationPhoneType === ECommunicationPhoneType.HomePhone
+                  ? cloneAppointmentPhone
+                  : '',
+              workPhone:
+                currentAppointment?.communicationPhoneType === ECommunicationPhoneType.WorkPhone
+                  ? cloneAppointmentPhone
+                  : '',
+              otherPhone:
+                currentAppointment?.communicationPhoneType === ECommunicationPhoneType.OtherPhone
+                  ? cloneAppointmentPhone
+                  : '',
               email: currentAppointment?.customer?.email ?? null,
               companyName: currentAppointment?.customer?.companyName,
               customerProfileType:
