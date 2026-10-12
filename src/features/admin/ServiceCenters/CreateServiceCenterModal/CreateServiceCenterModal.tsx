@@ -23,30 +23,8 @@ import { LoadingButton } from '../../../../components/buttons/LoadingButton/Load
 import { useMessage } from '../../../../hooks/useMessage/useMessage';
 import { useException } from '../../../../hooks/useException/useException';
 import { getServerErrorFields } from './utils';
-
-type TSCFormState = {
-  scName: string;
-  scEmail: string;
-  scPhoneNumber: string;
-  cpEmail: string;
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  timeZoneId: string;
-};
-
-const initialFormState: TSCFormState = {
-  scName: '',
-  scEmail: '',
-  scPhoneNumber: '',
-  cpEmail: '',
-  street: '',
-  city: '',
-  state: '',
-  zipCode: '',
-  timeZoneId: '',
-};
+import { TSCFormState } from './types';
+import { initialFormState } from './constants';
 
 export const CreateServiceCenterModal: React.FC<
   React.PropsWithChildren<
@@ -126,6 +104,15 @@ export const CreateServiceCenterModal: React.FC<
       ],
     ],
     [timeZones]
+  );
+
+  const isFormFilled = useMemo(
+    () =>
+      formItems
+        .flat()
+        .filter(item => item.required)
+        .every(item => String(item.value(formState) ?? '').trim().length > 0),
+    [formItems, formState]
   );
 
   const dispatch = useDispatch();
@@ -282,6 +269,7 @@ export const CreateServiceCenterModal: React.FC<
           <LoadingButton
             color="primary"
             loading={saving}
+            disabled={!isFormFilled}
             variant="contained"
             onClick={handleCreate}
             type="submit"
