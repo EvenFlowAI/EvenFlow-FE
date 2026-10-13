@@ -1,0 +1,196 @@
+import { useStyles } from './styles';
+import { TableRow } from '../../../../../components/styled/TableRow';
+import React, { Dispatch, SetStateAction } from 'react';
+import { StyledTableCell } from '../../../../../features/admin/DemandPredictionTable/styles';
+import LabelLink from '../../../../../features/admin/DemandPredictionTable/LabelLink/LabelLink';
+import { ReactComponent as CheckIcon } from '../../../../../assets/img/checkboxSmallGreen.svg';
+import { ReactComponent as RedCross } from '../../../../../assets/img/redCross.svg';
+import { Switch } from '@mui/material';
+import { TextField } from '../../../../../components/formControls/TextFieldStyled/TextField';
+import {
+  setSelectedPlay,
+  setUpdatedPlaysName,
+} from '../../../../../store/reducers/dealerOperations/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../../store/rootReducer';
+import { useConfirm } from '../../../../../hooks/useConfirm/useConfirm';
+import { IPlayWithServiceBook } from '../types';
+
+interface ITableRowLayoutProps {
+  play: IPlayWithServiceBook;
+  showServiceBookName?: boolean;
+  className?: string;
+  isEdit: boolean;
+  setCurrentItem: Dispatch<SetStateAction<IPlayWithServiceBook | null>>;
+  setIsEditEventName: Dispatch<SetStateAction<boolean>>;
+  onOpen: () => void;
+  handleOpenText: () => void;
+  showError: (message: string) => void;
+}
+
+const TableRowLayout = ({
+  play,
+  showServiceBookName = true,
+  setIsEditEventName,
+  className,
+  isEdit,
+  setCurrentItem,
+  onOpen,
+  showError,
+  handleOpenText,
+}: ITableRowLayoutProps) => {
+  const { classes } = useStyles();
+  const { updatedPlaysName } = useSelector((state: RootState) => state.dealerOperations);
+  const dispatch = useDispatch();
+  const { askConfirm } = useConfirm();
+
+  const renderServiceBookName = () => {
+    return <StyledTableCell>{showServiceBookName ? play.serviceBookName : ''}</StyledTableCell>;
+  };
+
+  const handleNameChange = (value: string) => {
+    dispatch(
+      setUpdatedPlaysName(
+        updatedPlaysName.map(ev => {
+          if (ev.id === play.id && value.length < 51) {
+            return { ...ev, name: value };
+          }
+          return ev;
+        })
+      )
+    );
+  };
+
+  const renderPlayName = () => {
+    if (isEdit) {
+      return (
+        <StyledTableCell>
+          <TextField
+            className={classes.eventInput}
+            fullWidth
+            value={updatedPlaysName.find(ev => ev.id === play.id)?.name || play.name}
+            onChange={e => handleNameChange(e.target.value)}
+          />
+        </StyledTableCell>
+      );
+    }
+
+    return <StyledTableCell>{play.name}</StyledTableCell>;
+  };
+
+  const handleClickTextConfiguration = () => {
+    setCurrentItem(play);
+    handleOpenText();
+  };
+
+  const handleClickAudienceConfiguration = () => {
+    setIsEditEventName(false);
+    dispatch(setSelectedPlay(play));
+  };
+
+  const handleClickPlayConfiguration = () => {
+    setCurrentItem(play);
+    onOpen();
+  };
+
+  const askRemove = () => {
+    askConfirm({
+      isRemove: true,
+      title: `Please confirm you want to remove ${play.name}?`,
+      onConfirm: () => {},
+    });
+  };
+
+  const renderPlayConfigured = () => {
+    const isConfigured =
+      play.play.services.length > 0 || play.play.advisor !== null || play.play.transportation;
+    return (
+      <StyledTableCell>
+        <div className={classes.textRow}>
+          <LabelLink
+            subText={isConfigured ? 'Configured' : 'Not Configured'}
+            color={isConfigured ? '#5FA077' : '#C71062'}
+            icon={isConfigured ? <CheckIcon /> : <RedCross />}
+            onClick={() => handleClickPlayConfiguration()}
+          />
+        </div>
+      </StyledTableCell>
+    );
+  };
+
+  const renderPlayAudience = () => {
+    const isConfigured = play.triggers.length > 0 && play.filterRules.length > 0;
+    return (
+      <StyledTableCell>
+        <div className={classes.textRow}>
+          <LabelLink
+            subText={isConfigured ? 'Configured' : 'Not Configured'}
+            color={isConfigured ? '#5FA077' : '#C71062'}
+            icon={isConfigured ? <CheckIcon /> : <RedCross />}
+            onClick={() => handleClickAudienceConfiguration()}
+          />
+        </div>
+      </StyledTableCell>
+    );
+  };
+
+  const renderPlayText = () => {
+    const isConfigured = play.communicationDetails.textMessage.length > 0;
+    return (
+      <StyledTableCell>
+        <div className={classes.textRow}>
+          <LabelLink
+            subText={isConfigured ? 'Configured' : 'Not Configured'}
+            color={isConfigured ? '#5FA077' : '#C71062'}
+            icon={isConfigured ? <CheckIcon /> : <RedCross />}
+            onClick={() => handleClickTextConfiguration()}
+          />
+        </div>
+      </StyledTableCell>
+    );
+  };
+
+  const renderPlayActive = () => {
+    return (
+      <StyledTableCell>
+        <div className={classes.textRow}>
+          <Switch
+            onClick={() => {
+              showError('Something went wrong');
+            }}
+            checked={play.active}
+            color="primary"
+          />
+          <p>{play.activeText}</p>
+        </div>
+      </StyledTableCell>
+    );
+  };
+
+  const renderRemoveCell = () => (
+    <StyledTableCell>
+      <div className={classes.removeBlock}>
+        <LabelLink
+          style={{ textTransform: 'uppercase', fontWeight: '700' }}
+          subText="Remove"
+          color="#7898FF"
+          onClick={() => askRemove()}
+        />
+      </div>
+    </StyledTableCell>
+  );
+
+  return (
+    <TableRow key={play.id} className={className}>
+      {renderServiceBookName()}
+      {renderPlayName()}
+      {renderPlayConfigured()}
+      {renderPlayAudience()}
+      {renderPlayText()}
+      {renderPlayActive()}
+      {renderRemoveCell()}
+    </TableRow>
+  );
+};
+
+export default TableRowLayout;
