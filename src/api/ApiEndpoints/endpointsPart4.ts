@@ -11,6 +11,7 @@ type TEndpointsPart4 = Pick<
   | 'DealerOperations'
   | 'ServiceCenterCredits'
   | 'ShortUrls'
+  | 'DmsConfiguration'
 >;
 
 export const endpointsPart4: TEndpointsPart4 = {
@@ -89,5 +90,10 @@ export const endpointsPart4: TEndpointsPart4 = {
   },
   ShortUrls: {
     Resolve: { route: '/short-urls/{code}/resolve', method: 'get' },
+  },
+  DmsConfiguration: {
+    Get: { route: '/dms-configuration', method: 'get' },
+    GetCsv: { route: '/dms-configuration/csv', method: 'get' },
+    CreateServiceRequests: { route: '/dms-configuration/service-requests', method: 'post' },
   },
 };

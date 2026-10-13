@@ -1,0 +1,1 @@
+export { ConfigurationQuery } from './ConfigurationQuery';
