@@ -555,6 +555,7 @@ export interface IMake {
   globalId: number;
   isReadOnly: boolean;
   orderIndex: number;
+  isSupportedForRecalls?: boolean;
 }
 
 export interface IModel {

@@ -249,7 +249,9 @@ export interface IApiEndpoints {
     | 'UpdateRecallEvent'
     | 'DeleteRecallEvent'
     | 'UploadCSV'
-    | 'RecallTrigger',
+    | 'RecallTrigger'
+    | 'UpdateGrouping'
+    | 'SyncMakes',
     TApiEndpoint
   >;
   ServiceCategories: Record<

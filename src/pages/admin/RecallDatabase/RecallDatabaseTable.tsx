@@ -77,7 +77,7 @@ const RecallDatabaseTable: React.FC<TProps> = ({
     },
     {
       header: 'Impacted Vehicles',
-      val: el => String(el.impactedVehicles),
+      val: el => String(el.impactedVehicles ?? ''),
       width: 119,
       orderId: String(OrderByField.ImpactedVehicles),
       align: 'left',
