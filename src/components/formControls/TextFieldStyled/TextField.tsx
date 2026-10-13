@@ -6,21 +6,31 @@ import { TextInputProps } from '../types';
 import { CustomInputLabel } from '../../styled/CustomInputLabel';
 
 export const TextField = forwardRef<unknown, TextInputProps>(
-  ({ label, params, hideLabel, spacing, isLowerCase, labelFitContent, ...props }, ref) => {
+  (
+    {
+      label,
+      params,
+      hideLabel,
+      spacing,
+      isLowerCase,
+      labelFitContent,
+      disabledLabelColor,
+      ...props
+    },
+    ref
+  ) => {
     const { InputProps = {}, InputLabelProps = {}, ...p } = params || {};
+    const labelColor = props.disabled && disabledLabelColor ? disabledLabelColor : undefined;
 
     return (
       <>
         {label && (
           <CustomInputLabel
             shrink
-            style={
-              labelFitContent
-                ? {
-                    width: 'fit-content',
-                  }
-                : {}
-            }
+            style={{
+              ...(labelFitContent ? { width: 'fit-content' } : {}),
+              ...(labelColor ? { color: labelColor } : {}),
+            }}
             htmlFor={props.id}
             {...InputLabelProps}
             visible={Boolean(!hideLabel)}

@@ -23,6 +23,16 @@ import { IUpdateCustomerData } from '../../../../../../store/reducers/enhancedCu
 import { EditCustomerModal } from './EditCustomerModal/EditCustomerModal';
 import { communicationTypeToPhoneCategory } from '../../../../../../utils/communicationPhoneType';
 
+const DISABLED_LABEL_COLOR = '#828282';
+
+const buildFullName = (
+  { firstName, middleName, lastName }: Pick<ICustomer, 'firstName' | 'middleName' | 'lastName'>,
+  profileType?: ECustomerProfileType
+) =>
+  [firstName, profileType === ECustomerProfileType.Business ? undefined : middleName, lastName]
+    .filter(Boolean)
+    .join(' ');
+
 type TUserDataProps = {
   errors: string[];
   setErrors: Dispatch<SetStateAction<string[]>>;
@@ -57,15 +67,7 @@ export const AppointmentUserData: React.FC<
         (customerLoadedData.companyName
           ? ECustomerProfileType.Business
           : ECustomerProfileType.Personal);
-      const structuredFullName = [
-        customerLoadedData.firstName,
-        loadedProfileType === ECustomerProfileType.Personal
-          ? customerLoadedData.middleName
-          : undefined,
-        customerLoadedData.lastName,
-      ]
-        .filter(Boolean)
-        .join(' ');
+      const structuredFullName = buildFullName(customerLoadedData, loadedProfileType);
       const phonesByCategory = customerLoadedData.phoneNumbersByCategory;
       const phoneByType =
         communicationPhoneType !== null && communicationPhoneType !== undefined
@@ -108,13 +110,7 @@ export const AppointmentUserData: React.FC<
     if (customer) {
       const updatedCustomer = { ...customer, [name]: value };
       if (['firstName', 'middleName', 'lastName'].includes(name)) {
-        updatedCustomer.fullName = [
-          updatedCustomer.firstName,
-          updatedCustomer.middleName,
-          updatedCustomer.lastName,
-        ]
-          .filter(Boolean)
-          .join(' ');
+        updatedCustomer.fullName = buildFullName(updatedCustomer, customerProfileType);
       }
       dispatch(setCustomer(updatedCustomer));
     }
@@ -123,13 +119,11 @@ export const AppointmentUserData: React.FC<
 
   const handleProfileTypeChange = (_: React.ChangeEvent<HTMLInputElement>, value: string) => {
     const profileType = value as ECustomerProfileType;
-    const fullName = [customer.firstName, customer.lastName].filter(Boolean).join(' ');
+    // hidden fields (middle name / company name) keep their values when switching profiles
     dispatch(
       setCustomer({
         ...customer,
-        middleName: '',
-        companyName: '',
-        fullName,
+        fullName: buildFullName(customer, profileType),
         customerProfileType: profileType,
       })
     );
@@ -142,13 +136,7 @@ export const AppointmentUserData: React.FC<
     selectedCommunicationPhoneType: ECommunicationPhoneType
   ) => {
     const updatedProfileType = updatedCustomer.customerProfileType;
-    const fullName = [
-      updatedCustomer.firstName,
-      updatedProfileType === ECustomerProfileType.Personal ? updatedCustomer.middleName : undefined,
-      updatedCustomer.lastName,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const fullName = buildFullName(updatedCustomer, updatedProfileType);
 
     dispatch(
       setCustomer({
@@ -230,53 +218,12 @@ export const AppointmentUserData: React.FC<
           </RadioGroup>
         </ProfileTypeWrapper>
       ) : null}
-      {isExistingCustomer ? (
-        <TextField
-          value={customer.fullName}
-          error={errors.includes('fullname')}
-          name="fullName"
-          disabled
-          fullWidth
-          placeholder={t('Type here')}
-          label={`${t('Full Name')}:`}
-        />
-      ) : (
-        <>
-          <TextField
-            onChange={handleChange}
-            value={customer.firstName ?? ''}
-            error={errors.includes('firstname')}
-            name="firstName"
-            fullWidth
-            placeholder={t('Type here')}
-            label={`${t('First Name')}:`}
-          />
-          {customerProfileType === ECustomerProfileType.Personal ? (
-            <TextField
-              onChange={handleChange}
-              value={customer.middleName ?? ''}
-              name="middleName"
-              fullWidth
-              placeholder={t('Type here')}
-              label={`${t('Middle Name')} (${t('Optional')}):`}
-            />
-          ) : null}
-          <TextField
-            onChange={handleChange}
-            value={customer.lastName ?? ''}
-            error={errors.includes('lastname')}
-            name="lastName"
-            fullWidth
-            placeholder={t('Type here')}
-            label={`${t('Last Name')}:`}
-          />
-        </>
-      )}
       {customerProfileType === ECustomerProfileType.Business ? (
         <TextField
           onChange={handleChange}
           value={customer?.companyName ?? ''}
           disabled={isExistingCustomer}
+          disabledLabelColor={DISABLED_LABEL_COLOR}
           name="companyName"
           fullWidth
           error={errors.includes('companyname')}
@@ -286,8 +233,43 @@ export const AppointmentUserData: React.FC<
       ) : null}
       <TextField
         onChange={handleChange}
+        value={customer.firstName ?? ''}
+        error={errors.includes('firstname') || errors.includes('fullname')}
+        name="firstName"
+        disabled={isExistingCustomer}
+        disabledLabelColor={DISABLED_LABEL_COLOR}
+        fullWidth
+        placeholder={t('Type here')}
+        label={`${t('First Name')}:`}
+      />
+      {customerProfileType === ECustomerProfileType.Personal ? (
+        <TextField
+          onChange={handleChange}
+          value={customer.middleName ?? ''}
+          name="middleName"
+          disabled={isExistingCustomer}
+          disabledLabelColor={DISABLED_LABEL_COLOR}
+          fullWidth
+          placeholder={t('Type here')}
+          label={`${t('Middle Name')} (${t('Optional')}):`}
+        />
+      ) : null}
+      <TextField
+        onChange={handleChange}
+        value={customer.lastName ?? ''}
+        error={errors.includes('lastname') || errors.includes('fullname')}
+        name="lastName"
+        disabled={isExistingCustomer}
+        disabledLabelColor={DISABLED_LABEL_COLOR}
+        fullWidth
+        placeholder={t('Type here')}
+        label={`${t('Last Name')}:`}
+      />
+      <TextField
+        onChange={handleChange}
         value={customer?.phoneNumber}
         disabled={isExistingCustomer}
+        disabledLabelColor={DISABLED_LABEL_COLOR}
         name="phoneNumber"
         fullWidth
         error={errors.includes('phonenumber')}
@@ -300,6 +282,7 @@ export const AppointmentUserData: React.FC<
         error={errors.includes('email') && isEmailRequired}
         name="email"
         disabled={isExistingCustomer}
+        disabledLabelColor={DISABLED_LABEL_COLOR}
         fullWidth
         placeholder={t('Type here')}
         label={`${t('Email')}:`}

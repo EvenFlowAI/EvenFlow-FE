@@ -1242,6 +1242,10 @@ export const createOrUpdateAppointment =
               }
             : { cellPhone: appointmentPhoneNumber }),
           email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
+          middleName:
+            appointmentFrame.customer.customerProfileType === ECustomerProfileType.Business
+              ? undefined
+              : appointmentFrame.customer.middleName,
           companyName:
             appointmentFrame.customer.customerProfileType === ECustomerProfileType.Business
               ? appointmentFrame.customer.companyName
