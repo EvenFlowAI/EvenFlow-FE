@@ -5,7 +5,6 @@ export type TState = {
 
 export enum ESettingType {
   DemandManagement = 'DemandManagement',
-  CompanyName = 'CompanyName',
   DMS = 'DMS',
 }
 

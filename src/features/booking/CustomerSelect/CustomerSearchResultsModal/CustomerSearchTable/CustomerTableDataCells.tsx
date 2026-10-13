@@ -42,9 +42,9 @@ type TProps = {
 };
 
 const customerFieldConfigs: TCustomerFieldConfig[] = [
-  { key: 'companyName', name: 'Company Name', fieldName: 'companyName', width: 150 },
-  { key: 'home', name: 'Home', fieldName: 'homePhone', width: 150 },
   { key: 'cell', name: 'Cell', fieldName: 'cellPhone', width: 150 },
+  { key: 'home', name: 'Home', fieldName: 'homePhone', width: 150 },
+  { key: 'work', name: 'Work', fieldName: 'workPhone', width: 150 },
   { key: 'otherPhone', name: 'Other', fieldName: 'otherPhone', width: 150 },
   { key: 'email', name: 'Email', fieldName: 'email', width: 150 },
 ];
@@ -72,15 +72,53 @@ const CustomerTableDataCells: React.FC<TProps> = ({
   onAddressChange,
 }) => {
   const rowPaddingStyle = isEditRow ? editablePadding : readonlyPadding;
+  const hasMiddleName = hasColumn(orderedColumns, 'Middle Name');
 
   return (
     <>
+      {hasColumn(orderedColumns, 'First Name') ? (
+        <TableCell
+          key="first"
+          className={stickyCellClassName}
+          width={150}
+          style={{ left: offset.secondColumn, ...rowPaddingStyle }}
+        >
+          <CustomerInputField
+            editingElement={editingElement}
+            customer={customer}
+            fieldName="firstName"
+            isEdit={isEdit}
+            onFieldChange={onFieldChange}
+          />
+        </TableCell>
+      ) : null}
+
+      {hasMiddleName ? (
+        <TableCell
+          key="middle"
+          className={stickyCellClassName}
+          width={150}
+          style={{ left: offset.thirdColumn, ...rowPaddingStyle }}
+        >
+          <CustomerInputField
+            editingElement={editingElement}
+            customer={customer}
+            fieldName="middleName"
+            isEdit={isEdit}
+            onFieldChange={onFieldChange}
+          />
+        </TableCell>
+      ) : null}
+
       {hasColumn(orderedColumns, 'Last Name') ? (
         <TableCell
           key="last"
           className={stickyCellClassName}
           width={150}
-          style={{ left: offset.secondColumn, ...rowPaddingStyle }}
+          style={{
+            left: offset.thirdColumn + (hasMiddleName ? 150 : 0),
+            ...rowPaddingStyle,
+          }}
         >
           <CustomerInputField
             editingElement={editingElement}
@@ -92,17 +130,17 @@ const CustomerTableDataCells: React.FC<TProps> = ({
         </TableCell>
       ) : null}
 
-      {hasColumn(orderedColumns, 'First Name') ? (
+      {hasColumn(orderedColumns, 'Company Name') ? (
         <TableCell
-          key="first"
-          className={stickyCellClassName}
+          key="companyName"
+          className={bodyCellClassName}
           width={150}
-          style={{ left: offset.thirdColumn, ...rowPaddingStyle }}
+          style={rowPaddingStyle}
         >
           <CustomerInputField
             editingElement={editingElement}
             customer={customer}
-            fieldName="firstName"
+            fieldName="companyName"
             isEdit={isEdit}
             onFieldChange={onFieldChange}
           />

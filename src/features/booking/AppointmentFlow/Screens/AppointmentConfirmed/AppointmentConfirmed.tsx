@@ -8,14 +8,12 @@ import { EServiceType } from '../../../../../store/reducers/appointmentFrameRedu
 import { useTranslation } from 'react-i18next';
 import { setWelcomeScreenView } from '../../../../../store/reducers/appointmentFrameReducer/actions';
 import { ILoadedVehicle } from '../../../../../api/types';
-import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import AddToCalendarButton from './AddToCalendarButton/AddToCalendarButton';
 import ModifyButton from './ModifyButton/ModifyButton';
 import MakeNewButton from './MakeNewButton/MakeNewButton';
 import { ButtonsWrapper, Divider, Paper, Wrapper } from './styles';
 import { TItem } from './types';
 import { getServiceName } from './utils';
-import { ESettingType } from '../../../../../store/reducers/generalSettings/types';
 import { getMaintenanceDescription } from '../../../../../utils/getMaintenanceDescription';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 import {
@@ -27,6 +25,7 @@ import {
   resolveServiceType,
 } from './helpers';
 import { buildConfirmationItems, withPickUpTime } from './itemBuilders';
+import { ConfirmationDetails } from './ConfirmationDetails';
 
 type TProps = {
   onUpdateAppointment: TArgCallback<ILoadedVehicle>;
@@ -67,12 +66,6 @@ export const AppointmentConfirmed: React.FC<
   } = useSelector((state: RootState) => state.appointmentFrame);
   const { allCategories } = useSelector((state: RootState) => state.categories);
   const { engineTypes } = useSelector((state: RootState) => state.vehicleDetails);
-  const { settings } = useSelector((state: RootState) => state.generalSettings);
-
-  const companyNameIsOn = useMemo(
-    () => settings.find(el => el.settingType === ESettingType.CompanyName)?.data?.isOn,
-    [settings]
-  );
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -245,7 +238,6 @@ export const AppointmentConfirmed: React.FC<
       servicesList,
       selectedPriceContent,
       customer,
-      companyNameIsOn,
       vehicleData,
     });
 
@@ -271,7 +263,6 @@ export const AppointmentConfirmed: React.FC<
     servicesList,
     selectedPriceContent,
     customer,
-    companyNameIsOn,
     vehicleData,
     serviceValetAppointment,
     dropOffSettings,
@@ -282,23 +273,7 @@ export const AppointmentConfirmed: React.FC<
       <Paper>
         <Wrapper>
           <h2>Appointment Confirmed!</h2>
-          {isAppointmentSaving ? (
-            <div className="emptyContainer">
-              <Loading />
-            </div>
-          ) : (
-            data
-              .filter(el => el.content)
-              .map((item, index) => {
-                if (!item.label.length && item.content.length) return null;
-                return (
-                  <div className="item" key={item.label + index}>
-                    <div className="label">{item.label}</div>
-                    <div className="content">{item.content}</div>
-                  </div>
-                );
-              })
-          )}
+          <ConfirmationDetails isLoading={isAppointmentSaving} items={data} />
         </Wrapper>
         <ButtonsWrapper>
           <ModifyButton onUpdateAppointment={onUpdateAppointment} />

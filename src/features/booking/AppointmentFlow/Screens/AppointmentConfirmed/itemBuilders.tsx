@@ -96,7 +96,6 @@ export const buildConfirmationItems = ({
   servicesList,
   selectedPriceContent,
   customer,
-  companyNameIsOn,
   vehicleData,
 }: {
   t: TTranslate;
@@ -109,7 +108,6 @@ export const buildConfirmationItems = ({
   servicesList: string[];
   selectedPriceContent: string;
   customer: { fullName: string; companyName?: string; phoneNumber: string; email: string };
-  companyNameIsOn?: boolean;
   vehicleData: string | JSX.Element[];
 }): TItem[] => {
   return [
@@ -130,7 +128,7 @@ export const buildConfirmationItems = ({
     { label: t('Name'), content: customer.fullName },
     {
       label: t('Company Name'),
-      content: companyNameIsOn && customer.companyName ? customer.companyName : '',
+      content: customer.companyName ?? '',
     },
     { label: t('Vehicle'), content: vehicleData },
     { label: t('Phone number'), content: customer.phoneNumber },

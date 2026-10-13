@@ -4,6 +4,7 @@ import {
   ICustomerWithPhones,
   ICustomerWithVehicles,
   IRepairHistory,
+  IUpdateCustomerData,
   TCustomerSearchData,
   TSearchCustomerParams,
 } from './types';
@@ -15,7 +16,8 @@ import {
   PaginatedAPIResponse,
 } from '../../../types/types';
 import { ActionCreator } from 'redux';
-import { ICustomerLoadedData, ILoadedVehicle } from '../../../api/types';
+import { ECustomerProfileType, ICustomerLoadedData, ILoadedVehicle } from '../../../api/types';
+import { normalizeCustomerProfileType } from '../../../utils/appointmentCustomer';
 import { saveAppointmentReducer, setCustomerLoadedData } from '../appointment/actions';
 import {
   setAddress,
@@ -93,7 +95,7 @@ export const loadCustomersBySearchTerm =
   };
 
 const normalizeVehicles = (vehicles: ICustomerVehicle[]) => {
-  const vehiclesData = vehicles.map(item => {
+  return vehicles.map(item => {
     const vehicle: ILoadedVehicle = {
       vin: item.vin,
       year: item.year,
@@ -110,7 +112,6 @@ const normalizeVehicles = (vehicles: ICustomerVehicle[]) => {
     if (item.hasOrders) vehicle.hasRepairOrders = true;
     return vehicle;
   });
-  return vehiclesData;
 };
 
 const normalizeAddress = (customer: ICustomerWithVehicles, dispatch: AppDispatch) => {
@@ -143,18 +144,33 @@ export const loadCustomersByPhoneOrEmail =
       .then(result => {
         if (result.data?.result) {
           const customer = result.data.result;
-          const { cellPhone, homePhone, otherPhone, vehicles } = customer;
-          const phoneNumber = cellPhone ?? homePhone ?? otherPhone;
+          const { cellPhone, homePhone, workPhone, otherPhone, vehicles } = customer;
+          const phoneNumber = cellPhone ?? homePhone ?? workPhone ?? otherPhone;
           const vehiclesData = normalizeVehicles(vehicles);
 
           const data: ICustomerLoadedData = {
             emails: customer.email ? [customer.email] : [],
             firstName: customer.firstName,
+            middleName: customer.middleName,
             lastName: customer.lastName,
-            fullName: `${customer.firstName} ${customer.lastName}`,
+            fullName: [customer.firstName, customer.middleName, customer.lastName]
+              .filter(Boolean)
+              .join(' '),
             id: customer.customerId ? customer.customerId.toString() : '',
             phoneNumbers: phoneNumber ? [phoneNumber] : [],
+            phoneNumbersByCategory: {
+              cell: customer.cellPhone,
+              home: customer.homePhone,
+              work: customer.workPhone,
+              other: customer.otherPhone,
+            },
             vehicles: vehiclesData,
+            companyName: customer.companyName,
+            customerProfileType:
+              normalizeCustomerProfileType(customer.customerProfileType) ??
+              (customer.companyName
+                ? ECustomerProfileType.Business
+                : ECustomerProfileType.Personal),
           };
           data.address = normalizeAddress(customer, dispatch);
           dispatch(setCustomerLoadedData(data));
@@ -179,28 +195,36 @@ export const changePageData: ActionCreator<AppThunk> = (payload: Partial<IPageRe
 };
 
 export const updateCustomer =
-  (data: ICustomerWithPhones, onSuccess: () => void, onError: (err: string) => void): AppThunk =>
+  (
+    data: IUpdateCustomerData | ICustomerWithPhones,
+    onSuccess: (customer: IUpdateCustomerData) => void,
+    onError: (err: string) => void
+  ): AppThunk =>
   (dispatch, getState) => {
     dispatch(setLoading(true));
     Api.call(Api.endpoints.Customers.Update, { data })
       .then(res => {
         if (res.data) {
           const { customers } = getState().customers;
+          const responseData = res.data.result ?? res.data;
           const customerData: Partial<ICustomerWithPhones> = {
-            cellPhone: res.data.cellPhone,
-            homePhone: res.data.homePhone,
-            otherPhone: res.data.otherPhone,
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            email: res.data.email,
-            address: res.data.address,
-            companyName: res.data.companyName,
+            cellPhone: responseData.cellPhone ?? data.cellPhone,
+            homePhone: responseData.homePhone ?? data.homePhone,
+            workPhone: responseData.workPhone ?? data.workPhone,
+            otherPhone: responseData.otherPhone ?? data.otherPhone,
+            firstName: responseData.firstName ?? data.firstName,
+            middleName: responseData.middleName ?? data.middleName,
+            lastName: responseData.lastName ?? data.lastName,
+            email: responseData.email ?? data.email,
+            address: responseData.address ?? data.address,
+            companyName: responseData.companyName ?? data.companyName,
+            customerProfileType: responseData.customerProfileType ?? data.customerProfileType,
           };
           const filtered = [...customers].map(item =>
             item.customerId === data.customerId ? { ...item, ...customerData } : item
           );
           dispatch(getCustomers(filtered));
-          onSuccess();
+          onSuccess({ ...data, ...customerData } as IUpdateCustomerData);
         }
       })
       .catch(err => {

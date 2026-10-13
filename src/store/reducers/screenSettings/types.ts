@@ -10,7 +10,6 @@ export enum EScreenSettingsType {
   EmailRequirement,
   CustomerConsent,
   PriceDisplay,
-  CompanyName,
   Waitlist,
 }
 
@@ -18,7 +17,6 @@ export const screenSettingsList: EScreenSettingsType[] = [
   EScreenSettingsType.EmailRequirement,
   EScreenSettingsType.CustomerConsent,
   EScreenSettingsType.PriceDisplay,
-  EScreenSettingsType.CompanyName,
   EScreenSettingsType.Waitlist,
 ];
 

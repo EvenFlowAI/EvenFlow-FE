@@ -137,7 +137,6 @@ export const useCarsController = ({
       return;
     }
     handleSetScreen(getNextScreen());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isAuthorized,
     shouldHideScreen,

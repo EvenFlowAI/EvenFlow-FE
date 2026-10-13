@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useCurrentUser } from '../../../../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../../../../routes/constants';
+import { ECustomerProfileType } from '../../../../../../api/types';
 
 const MakeNewButton = () => {
   const { isAppointmentSaving } = useSelector((state: RootState) => state.appointmentFrame);
@@ -47,10 +48,14 @@ const MakeNewButton = () => {
     dispatch(
       setCustomer({
         fullName: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
         phoneNumber: '',
         email: '',
         city: '',
         companyName: '',
+        customerProfileType: ECustomerProfileType.Personal,
       })
     );
     history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);

@@ -59,6 +59,18 @@ export enum ECustomerCriteria {
   Lease,
 }
 
+export enum ECustomerProfileType {
+  Personal = 'Personal',
+  Business = 'Business',
+}
+
+export enum ECommunicationPhoneType {
+  CellPhone,
+  WorkPhone,
+  HomePhone,
+  OtherPhone,
+}
+
 export enum EMaintenanceOptionType {
   Base,
   Value,
@@ -79,6 +91,7 @@ export interface ICreateAppointmentResp extends IAppointmentByQuery {
 export interface ICustomerLoadedData {
   emails: string[];
   firstName?: string;
+  middleName?: string;
   lastName?: string;
   fullName?: string;
   id: string;
@@ -88,6 +101,7 @@ export interface ICustomerLoadedData {
   phoneNumbersByCategory?: {
     home?: string;
     cell?: string;
+    work?: string;
     other?: string;
   };
   vehicles: ILoadedVehicle[];
@@ -95,6 +109,7 @@ export interface ICustomerLoadedData {
   isUpdating?: boolean;
   address?: IAddressData | null;
   companyName?: string;
+  customerProfileType?: ECustomerProfileType;
 }
 
 export interface IVehicle {
@@ -156,9 +171,17 @@ export interface IListAppointmentRequest {
 
 export interface IDriverInfo {
   fullName: string;
-  phoneNumber: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  cellPhone?: string;
+  homePhone?: string;
+  workPhone?: string;
+  otherPhone?: string;
   email: string;
   companyName?: string;
+  customerProfileType?: ECustomerProfileType;
   city?: string;
   id?: number;
 }
@@ -188,7 +211,8 @@ export interface IBaseAppointment {
   customerId: string;
   maintenancePackageOptionId: number | null;
   maintenancePackageOption: IPackageOptions | null;
-  driver: IDriverInfo;
+  customer: IDriverInfo;
+  communicationPhoneType?: ECommunicationPhoneType | null;
   duration: number;
   transactionValue: number;
   serviceCenterId: number;
@@ -261,10 +285,13 @@ export interface IAppointmentByQuery extends IBaseAppointment {
 
 export interface IAppointmentCustomerInfo {
   fullName?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
   phoneNumber?: string;
   dmsId?: string;
   companyName?: string;
+  customerProfileType?: ECustomerProfileType;
 }
 
 export interface IAppointmentVehicle {
@@ -383,11 +410,15 @@ export interface IConsultantsRequestData {
 
 export interface ICustomer {
   fullName: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
   phoneNumber: string;
   email: string;
   city?: string;
   id?: number;
   companyName?: string;
+  customerProfileType: ECustomerProfileType;
 }
 
 export interface ITransportation {

@@ -4,15 +4,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/rootReducer';
 import { EUserType } from '../../../../store/reducers/appointmentFrameReducer/types';
 import { useStyles } from './styles';
+import { getCustomerDisplayName } from '../../../../utils/getCustomerDisplayName';
+import { ECustomerProfileType } from '../../../../api/types';
 
 const CustomerInfo = () => {
   const { customerLoadedData } = useSelector((state: RootState) => state.appointment);
   const { selectedVehicle, userType } = useSelector((state: RootState) => state.appointmentFrame);
   const { classes } = useStyles();
   const { t } = useTranslation();
-  const customerName =
-    customerLoadedData?.fullName ??
-    `${customerLoadedData?.firstName ?? ''} ${customerLoadedData?.lastName ?? ''}`;
+  const customerName = getCustomerDisplayName(customerLoadedData);
+  const isBusiness =
+    customerLoadedData?.customerProfileType === ECustomerProfileType.Business ||
+    (customerLoadedData?.customerProfileType == null && Boolean(customerLoadedData?.companyName));
+  const companyName = customerLoadedData?.companyName?.trim() ?? '';
 
   const formatPhoneNumber = (raw?: string): string => {
     if (!raw) return '';
@@ -37,6 +41,7 @@ const CustomerInfo = () => {
   return userType === EUserType.Existing && customerLoadedData ? (
     <div className={classes.wrapper}>
       <div className={classes.title}>{t('Customer')}</div>
+      {isBusiness && <div>{companyName}</div>}
       <div>{customerName}</div>
 
       <div>{getPreferredPhone()}</div>

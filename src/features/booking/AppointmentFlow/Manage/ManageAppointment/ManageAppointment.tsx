@@ -43,7 +43,7 @@ import { SelectedPriceManaging } from './SelectedPriceManaging/SelectedPriceMana
 import ServiceTypeManaging from './ServiceTypeManaging/ServiceTypeManaging';
 import { ReviewManaging } from './ReviewManaging/ReviewManaging';
 import ConfirmCancelUpdate from './ConfirmCancelUpdateModal/ConfirmCancelUpdate';
-import { ILoadedVehicle } from '../../../../../api/types';
+import { ECustomerProfileType, ILoadedVehicle } from '../../../../../api/types';
 import { loadCategoriesByQuery } from '../../../../../store/reducers/categories/actions';
 import { Loading } from '../../../../../components/wrappers/Loading/Loading';
 import {
@@ -230,6 +230,14 @@ export const ManageAppointment: React.FC<
       isValid = false;
       localErrors.push('fullname');
       showError(t('"Full Name" must not be empty'));
+    }
+    if (
+      customer.customerProfileType === ECustomerProfileType.Business &&
+      !customer.companyName?.trim()
+    ) {
+      isValid = false;
+      localErrors.push('companyname');
+      showError(t('"Company Name" must not be empty'));
     }
     if (!customer?.phoneNumber) {
       isValid = false;
