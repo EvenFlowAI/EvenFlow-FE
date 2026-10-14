@@ -44,19 +44,28 @@ export const CustomerPhoneFields: React.FC<TProps> = ({
               onChange={onPhoneChange(type)}
               placeholder={t(placeholder)}
             />
-            <FormControlLabel
-              value={type}
-              control={
-                <Radio
-                  size="small"
-                  checked={selectedPhoneType === type}
-                  onChange={() => onPhoneTypeChange(type)}
-                  disabled={!phones[type].trim()}
-                  inputProps={{ 'aria-label': `${t(label)} ${t('Appointment Communication')}` }}
-                />
-              }
-              label=""
-            />
+            <div
+              style={{
+                display: 'flex',
+                width: '47%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <FormControlLabel
+                value={type}
+                control={
+                  <Radio
+                    size="small"
+                    checked={selectedPhoneType === type}
+                    onChange={() => onPhoneTypeChange(type)}
+                    disabled={!phones[type].trim()}
+                    inputProps={{ 'aria-label': `${t(label)} ${t('Appointment Communication')}` }}
+                  />
+                }
+                label=""
+              />
+            </div>
           </PhoneRow>
         ))}
       </PhoneTable>

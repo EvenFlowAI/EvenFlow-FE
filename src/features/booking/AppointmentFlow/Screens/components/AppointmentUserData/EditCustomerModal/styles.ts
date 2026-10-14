@@ -36,9 +36,9 @@ export const PhoneTable = styled('div', {
 export const PhoneRow = styled('div', {
   shouldForwardProp: property => property !== 'selected',
 })<{ selected: boolean }>(({ theme, selected }) => ({
-  display: 'grid',
-  gridTemplateColumns: '52px 1fr 70px',
+  display: 'flex',
   alignItems: 'center',
+  justifyContent: 'flex-start',
   minHeight: 42,
   padding: theme.spacing(0.5, 1.5),
   backgroundColor: selected ? '#F6F6F6' : 'transparent',
@@ -51,7 +51,6 @@ export const PhoneRow = styled('div', {
     margin: 0,
   },
   [theme.breakpoints.down('sm')]: {
-    gridTemplateColumns: '48px 1fr 48px',
     padding: theme.spacing(0.5, 1),
   },
 }));
@@ -59,26 +58,32 @@ export const PhoneRow = styled('div', {
 export const PhoneLabel = styled('span')({
   fontSize: 13,
   fontWeight: 600,
+  width: 44,
+  display: 'block',
+  marginRight: '24px',
 });
 
 export const PhoneInput = styled('input')(({ theme }) => ({
   boxSizing: 'border-box',
-  width: '100%',
+  width: '210px',
   minWidth: 0,
   padding: theme.spacing(0.75, 1),
   border: `1px solid ${theme.palette.divider}`,
-  borderRadius: 2,
+  borderRadius: 4,
   backgroundColor: theme.palette.background.paper,
   font: 'inherit',
   fontSize: 13,
   '&:focus': {
-    borderColor: theme.palette.primary.main,
+    borderColor: '#eeeeee',
     outline: 0,
   },
 }));
 
 export const CommunicationHint = styled('div')(({ theme }) => ({
   margin: theme.spacing(1, 0, 1.5),
+  width: '100%',
+  display: 'block',
+  marginLeft: 'auto',
   color: '#142EA1',
   fontSize: 12,
   '& span': {
