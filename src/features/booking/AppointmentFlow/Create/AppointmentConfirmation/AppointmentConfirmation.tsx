@@ -37,6 +37,7 @@ import OpenModalLink from '../../../../../components/wrappers/OpenModalLink/Open
 import { EContactMethodTypes } from '../../../../../store/reducers/appointment/types';
 import { ETransportationType } from '../../../../../store/reducers/transportationNeeds/types';
 import { ECustomerProfileType } from '../../../../../api/types';
+import { normalizeOptionalWhitespace } from '../../../../../utils/string';
 
 type TProps = {
   onChangeSlot: TCallback;
@@ -84,35 +85,35 @@ export const AppointmentConfirmation: React.FC<
   const checkIsValid = () => {
     let isValid = true;
     const localErrors: string[] = [];
-    if (!customer.email && isEmailRequired) {
+    if (!normalizeOptionalWhitespace(customer.email) && isEmailRequired) {
       isValid = false;
       localErrors.push('email');
       showError(t('"Email" must not be empty'));
     }
-    if (userType === EUserType.Existing && !customer.fullName) {
+    if (userType === EUserType.Existing && !normalizeOptionalWhitespace(customer.fullName)) {
       isValid = false;
       localErrors.push('fullname');
       showError(t('"Full Name" must not be empty'));
     }
-    if (userType !== EUserType.Existing && !customer.firstName?.trim()) {
+    if (userType !== EUserType.Existing && !normalizeOptionalWhitespace(customer.firstName)) {
       isValid = false;
       localErrors.push('firstname');
       showError(t('"First Name" must not be empty'));
     }
-    if (userType !== EUserType.Existing && !customer.lastName) {
+    if (userType !== EUserType.Existing && !normalizeOptionalWhitespace(customer.lastName)) {
       isValid = false;
       localErrors.push('lastname');
       showError(t('"Last Name" must not be empty'));
     }
     if (
       customer.customerProfileType === ECustomerProfileType.Business &&
-      !customer.companyName?.trim()
+      !normalizeOptionalWhitespace(customer.companyName)
     ) {
       isValid = false;
       localErrors.push('companyname');
       showError(t('"Company Name" must not be empty'));
     }
-    if (!customer?.phoneNumber) {
+    if (!normalizeOptionalWhitespace(customer?.phoneNumber)) {
       isValid = false;
       localErrors.push('phonenumber');
       showError(t('"Phone Number" must not be empty'));

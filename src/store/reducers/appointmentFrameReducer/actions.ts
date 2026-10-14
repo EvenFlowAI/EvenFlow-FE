@@ -76,6 +76,7 @@ import {
 } from '../../../utils/utils';
 import { getYearOptions } from '../../../utils/getDate';
 import { getCommunicationPhoneTypeByNumber } from '../../../utils/communicationPhoneType';
+import { normalizeOptionalWhitespace } from '../../../utils/string';
 import {
   getAppointmentCustomerPhone,
   normalizeCustomerProfileType,
@@ -1229,27 +1230,38 @@ export const createOrUpdateAppointment =
     const existingCustomerId = getExistingCustomerId(
       appointment.customerLoadedData?.id ?? appointmentFrame.customer?.id
     );
+    const customerData = appointmentFrame.customer;
+    const isBusinessProfile = customerData.customerProfileType === ECustomerProfileType.Business;
+    const normalizedEmail = normalizeOptionalWhitespace(customerData.email);
+    const normalizedFirstName = normalizeOptionalWhitespace(customerData.firstName);
+    const normalizedMiddleName = normalizeOptionalWhitespace(customerData.middleName);
+    const normalizedLastName = normalizeOptionalWhitespace(customerData.lastName);
     const driver: TCustomerForRequest = existingCustomerId
       ? { id: existingCustomerId }
       : {
-          ...appointmentFrame.customer,
+          ...customerData,
           ...(hasPhonesByCategory
             ? {
-                cellPhone: phonesByCategory?.cell ?? '',
-                homePhone: phonesByCategory?.home ?? '',
-                workPhone: phonesByCategory?.work ?? '',
-                otherPhone: phonesByCategory?.other ?? '',
+                cellPhone: normalizeOptionalWhitespace(phonesByCategory?.cell),
+                homePhone: normalizeOptionalWhitespace(phonesByCategory?.home),
+                workPhone: normalizeOptionalWhitespace(phonesByCategory?.work),
+                otherPhone: normalizeOptionalWhitespace(phonesByCategory?.other),
               }
-            : { cellPhone: appointmentPhoneNumber }),
-          email: appointmentFrame.customer.email?.length ? appointmentFrame.customer.email : null,
-          middleName:
-            appointmentFrame.customer.customerProfileType === ECustomerProfileType.Business
-              ? undefined
-              : appointmentFrame.customer.middleName,
-          companyName:
-            appointmentFrame.customer.customerProfileType === ECustomerProfileType.Business
-              ? appointmentFrame.customer.companyName
-              : undefined,
+            : { cellPhone: normalizeOptionalWhitespace(appointmentPhoneNumber) }),
+          firstName: normalizedFirstName,
+          lastName: normalizedLastName,
+          fullName:
+            [normalizedFirstName, isBusinessProfile ? '' : normalizedMiddleName, normalizedLastName]
+              .filter(Boolean)
+              .join(' ') || normalizeOptionalWhitespace(customerData.fullName),
+          city: customerData.city
+            ? normalizeOptionalWhitespace(customerData.city)
+            : customerData.city,
+          email: normalizedEmail.length ? normalizedEmail : null,
+          middleName: isBusinessProfile ? undefined : normalizedMiddleName,
+          companyName: isBusinessProfile
+            ? normalizeOptionalWhitespace(customerData.companyName)
+            : undefined,
         };
 
     const date =

@@ -22,6 +22,7 @@ import { useModal } from '../../../../../../hooks/useModal/useModal';
 import { IUpdateCustomerData } from '../../../../../../store/reducers/enhancedCustomerSearch/types';
 import { EditCustomerModal } from './EditCustomerModal/EditCustomerModal';
 import { communicationTypeToPhoneCategory } from '../../../../../../utils/communicationPhoneType';
+import { normalizeOptionalWhitespace } from '../../../../../../utils/string';
 
 const DISABLED_LABEL_COLOR = '#828282';
 
@@ -115,6 +116,20 @@ export const AppointmentUserData: React.FC<
       dispatch(setCustomer(updatedCustomer));
     }
     setErrors(errors => errors.filter(err => err !== name.toLowerCase()));
+  };
+
+  // trims leading/trailing spaces and collapses multiple spaces; whitespace-only becomes empty
+  const handleBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement> = ({
+    target: { name, value },
+  }) => {
+    if (!customer) return;
+    const normalizedValue = normalizeOptionalWhitespace(value);
+    if (normalizedValue === value) return;
+    const updatedCustomer = { ...customer, [name]: normalizedValue };
+    if (['firstName', 'middleName', 'lastName'].includes(name)) {
+      updatedCustomer.fullName = buildFullName(updatedCustomer, customerProfileType);
+    }
+    dispatch(setCustomer(updatedCustomer));
   };
 
   const handleProfileTypeChange = (_: React.ChangeEvent<HTMLInputElement>, value: string) => {
@@ -221,6 +236,7 @@ export const AppointmentUserData: React.FC<
       {customerProfileType === ECustomerProfileType.Business ? (
         <TextField
           onChange={handleChange}
+          onBlur={handleBlur}
           value={customer?.companyName ?? ''}
           disabled={isExistingCustomer}
           disabledLabelColor={DISABLED_LABEL_COLOR}
@@ -233,6 +249,7 @@ export const AppointmentUserData: React.FC<
       ) : null}
       <TextField
         onChange={handleChange}
+        onBlur={handleBlur}
         value={customer.firstName ?? ''}
         error={errors.includes('firstname') || errors.includes('fullname')}
         name="firstName"
@@ -245,6 +262,7 @@ export const AppointmentUserData: React.FC<
       {customerProfileType === ECustomerProfileType.Personal ? (
         <TextField
           onChange={handleChange}
+          onBlur={handleBlur}
           value={customer.middleName ?? ''}
           name="middleName"
           disabled={isExistingCustomer}
@@ -256,6 +274,7 @@ export const AppointmentUserData: React.FC<
       ) : null}
       <TextField
         onChange={handleChange}
+        onBlur={handleBlur}
         value={customer.lastName ?? ''}
         error={errors.includes('lastname') || errors.includes('fullname')}
         name="lastName"
@@ -267,6 +286,7 @@ export const AppointmentUserData: React.FC<
       />
       <TextField
         onChange={handleChange}
+        onBlur={handleBlur}
         value={customer?.phoneNumber}
         disabled={isExistingCustomer}
         disabledLabelColor={DISABLED_LABEL_COLOR}
@@ -278,6 +298,7 @@ export const AppointmentUserData: React.FC<
       />
       <TextField
         onChange={handleChange}
+        onBlur={handleBlur}
         value={customer?.email}
         error={errors.includes('email') && isEmailRequired}
         name="email"
