@@ -47,7 +47,7 @@ export const CustomerPhoneFields: React.FC<TProps> = ({
             <div
               style={{
                 display: 'flex',
-                width: '47%',
+                width: '45%',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}

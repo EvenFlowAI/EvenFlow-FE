@@ -67,6 +67,7 @@ export const PhoneInput = styled('input')(({ theme }) => ({
   boxSizing: 'border-box',
   width: '210px',
   minWidth: 0,
+  marginRight: 12,
   padding: theme.spacing(0.75, 1),
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: 4,
