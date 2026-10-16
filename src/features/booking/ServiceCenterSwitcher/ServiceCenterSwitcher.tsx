@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { ECustomerProfileType } from '../../../api/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/rootReducer';
 import { Loading } from '../../../components/wrappers/Loading/Loading';
@@ -17,7 +16,7 @@ import {
   setCurrentFrameScreen,
   setIsPickupDropoffWithoutFirstScreenOption,
   setRecallsAreShown,
-  setCustomer,
+  resetCustomer,
   setServiceOptionChanged,
   setServiceTypeOption,
   setSideBarSteps,
@@ -73,19 +72,7 @@ export const ServiceCenterSwitcher = () => {
         dispatch(setHasManufacturerDidNotReturnRecalls(false));
         dispatch(setRecallsAreShown(false));
         dispatch(setRecallByVinLoading(false));
-        dispatch(
-          setCustomer({
-            fullName: '',
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            phoneNumber: '',
-            email: '',
-            city: '',
-            companyName: '',
-            customerProfileType: ECustomerProfileType.Personal,
-          })
-        );
+        dispatch(resetCustomer());
         if (scProfile) {
           const encoded = encodeSCID(scProfile.id);
           history.push(`${Routes.EndUser.Welcome}/${encoded}?frame=1`);

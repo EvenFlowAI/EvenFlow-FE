@@ -141,6 +141,21 @@ export const setTime = createAction<TParsableDate>('fAppointment/setTime');
 export const setVehicle = createAction<ILoadedVehicle | null>('fAppointment/setVehicle');
 export const updateVehicle = createAction<Partial<IVehicle>>('fAppointment/updateVehicle');
 export const setCustomer = createAction<ICustomer>('fAppointment/setCustomer');
+export const resetCustomer = (): AppThunk => dispatch => {
+  dispatch(
+    setCustomer({
+      fullName: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      phoneNumber: '',
+      email: '',
+      city: '',
+      companyName: '',
+      customerProfileType: ECustomerProfileType.Personal,
+    })
+  );
+};
 
 export const setSelectedAppointmentPhoneNumber = createAction<string | null>(
   'fAppointment/setSelectedAppointmentPhoneNumber'

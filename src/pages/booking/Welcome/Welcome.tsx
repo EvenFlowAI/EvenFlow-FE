@@ -17,6 +17,7 @@ import { FrameWelcomeLayout } from '../../../features/booking/FrameWelcomeLayout
 import { ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { frameTheme } from '../../../theme/theme';
 import {
+  resetCustomer,
   setAddress,
   setCurrentFrameScreen,
   setServiceTypeOption,
@@ -233,6 +234,7 @@ export const Welcome = () => {
     dispatch(setCustomerEnteredEmail(''));
     dispatch(setCustomerSearchData(initialCustomerSearch));
     dispatch(setCustomerLoadedData(null));
+    dispatch(resetCustomer());
     dispatch(setAddress(null));
     dispatch(setZipCode(''));
     dispatch(setShowServiceCentersList(false));

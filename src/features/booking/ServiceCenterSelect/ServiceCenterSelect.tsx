@@ -6,6 +6,7 @@ import { IServiceCenter } from '../../../store/reducers/serviceCenters/types';
 import { TRole } from '../../../store/reducers/users/types';
 import {
   clearAppointmentData,
+  resetCustomer,
   setAddress,
   setServiceOptionChanged,
   setServiceTypeOption,
@@ -103,6 +104,7 @@ const ServiceCenterSelect = () => {
     dispatch(setSideBarSteps([]));
     dispatch(setVehicle(null));
     dispatch(setCustomerLoadedData(null));
+    dispatch(resetCustomer());
     dispatch(setServiceTypeOption(null));
     dispatch(setWelcomeScreenView('select'));
     const encoded = encodeSCID(sc.id);
