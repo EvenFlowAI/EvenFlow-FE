@@ -24,7 +24,10 @@ let latestRequestId = 0;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getDmsConfigurationError = (err: any): string =>
-  err?.response?.data?.error?.message || getAPIException(err);
+  err?.response?.data?.error?.message ||
+  (err && getAPIException(err)) ||
+  err?.message ||
+  'Something went wrong';
 
 const fetchDmsConfiguration = async (query: IDmsConfigurationQuery): Promise<IDmsConfiguration> => {
   const { data: response } = await Api.call<IDmsConfigurationApiResponse<IDmsConfiguration>>(
@@ -99,7 +102,7 @@ export const importDmsOpCodes =
     }
 
     // Refresh statuses in place unless the user has started a different query meanwhile.
-    if (requestId !== latestRequestId) return;
+    if (requestId !== latestRequestId && getState().dmsConfiguration.query !== query) return;
     const refreshId = ++latestRequestId;
     try {
       const configuration = await fetchDmsConfiguration(query);
