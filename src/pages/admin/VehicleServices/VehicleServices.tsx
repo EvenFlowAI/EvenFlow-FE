@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tab } from '@mui/material';
 import { TabList } from '../../../components/styled/Tabs';
 import { TabContext, TabPanel } from '@mui/lab';
@@ -12,17 +12,29 @@ import { IntervalUpsell } from '../../../features/admin/IntervallUpsell/Interval
 import { servicesRoot } from '../../../utils/constants';
 import RecallParts from '../../../features/admin/RecallsParts/RecallParts';
 import { setVehicleServicesTab } from '../../../store/reducers/adminPanel/actions';
+import { useSCs } from '../../../hooks/useSCs/useSCs';
+import { SystemType } from '../../../store/reducers/serviceCenters/types';
+import { ConfigurationRetrieval } from '../../../features/admin/ConfigurationRetrieval/ConfigurationRetrieval';
 
 export const VehicleServices = () => {
   const { vehicleServicesTab } = useSelector((state: RootState) => state.adminPanel);
   const dispatch = useDispatch();
+  const { selectedSC } = useSCs();
+  const isXtime = selectedSC?.system === SystemType.Xtime;
+  const activeTab = vehicleServicesTab === '5' && !isXtime ? '0' : vehicleServicesTab;
+
+  useEffect(() => {
+    if (!isXtime && vehicleServicesTab === '5') {
+      dispatch(setVehicleServicesTab('0'));
+    }
+  }, [dispatch, isXtime, vehicleServicesTab]);
 
   const handleTabChange = (e: React.SyntheticEvent, tab: string) => {
     dispatch(setVehicleServicesTab(tab));
   };
 
   return (
-    <TabContext value={vehicleServicesTab}>
+    <TabContext value={activeTab}>
       <TitleContainer title="Vehicle Services" pad parent={servicesRoot} />
       <TabList
         onChange={handleTabChange}
@@ -35,6 +47,7 @@ export const VehicleServices = () => {
         <Tab label="Complimentary Services" value="2" />
         <Tab label="Interval Upsell" value="3" />
         <Tab label="Recalls" value="4" />
+        {isXtime && <Tab label="Configuration Retrieval" value="5" />}
       </TabList>
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="0">
         <ServiceRequests />
@@ -51,6 +64,11 @@ export const VehicleServices = () => {
       <TabPanel style={{ width: '100%', padding: '24px 0' }} value="4">
         <RecallParts />
       </TabPanel>
+      {isXtime && (
+        <TabPanel style={{ width: '100%', padding: '24px 0' }} value="5">
+          <ConfigurationRetrieval />
+        </TabPanel>
+      )}
     </TabContext>
   );
 };

@@ -92,6 +92,7 @@ export interface IApiEndpoints {
     TApiEndpoint
   >;
   DemandManagement: Record<'GetSettings' | 'UpdateSettings', TApiEndpoint>;
+  DmsConfiguration: Record<'Get' | 'GetCsv' | 'CreateServiceRequests', TApiEndpoint>;
   Employees: Record<'GetAssignmentSettings' | 'UpdateAssignmentSettings', TApiEndpoint>;
   EmployeeCapacity: Record<
     | 'GetAdvisorsCapacity'
