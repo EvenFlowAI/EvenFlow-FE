@@ -6,7 +6,7 @@ import {
   clearAppointmentData,
   setAddress,
   setCity,
-  setCustomer,
+  resetCustomer,
   setPoliticalState,
   setServiceOptionChanged,
   setSideBarSteps,
@@ -19,7 +19,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useCurrentUser } from '../../../../../../hooks/useCurrentUser/useCurrentUser';
 import { Routes } from '../../../../../../routes/constants';
-import { ECustomerProfileType } from '../../../../../../api/types';
 
 const MakeNewButton = () => {
   const { isAppointmentSaving } = useSelector((state: RootState) => state.appointmentFrame);
@@ -45,19 +44,7 @@ const MakeNewButton = () => {
     await dispatch(setServiceOptionChanged(false));
     await dispatch(setSideBarSteps([]));
     await dispatch(setWelcomeScreenView(currentUser ? 'serviceCenterSelect' : 'select'));
-    dispatch(
-      setCustomer({
-        fullName: '',
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
-        city: '',
-        companyName: '',
-        customerProfileType: ECustomerProfileType.Personal,
-      })
-    );
+    dispatch(resetCustomer());
     history.push(`${Routes.EndUser.Welcome}/${id}?frame=1`);
   };
 

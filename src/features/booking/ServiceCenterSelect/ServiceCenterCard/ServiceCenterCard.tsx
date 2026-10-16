@@ -10,6 +10,7 @@ import {
 } from '../../../../store/reducers/appointment/actions';
 import {
   clearAppointmentData,
+  resetCustomer,
   setAddress,
   setServiceOptionChanged,
   setServiceTypeOption,
@@ -42,6 +43,7 @@ export const ServiceCenterCard: React.FC<
     dispatch(setSideBarSteps([]));
     dispatch(setVehicle(null));
     dispatch(setCustomerLoadedData(null));
+    dispatch(resetCustomer());
     dispatch(setServiceTypeOption(null));
     dispatch(setWelcomeScreenView('select'));
     const encoded = encodeSCID(sc.id);

@@ -13,6 +13,7 @@ import {
   loadActiveTransportations,
   loadAppointmentRequestsPrices,
   loadConsultantsForUpdating,
+  resetCustomer,
   searchForCustomerConsents,
   setAppointmentSaving,
   setCurrentFrameScreen,
@@ -362,6 +363,7 @@ export const ManageAppointment: React.FC<
         dispatch(clearAppointmentData());
         dispatch(setServiceTypeOption(null));
         dispatch(setCustomerLoadedData(null));
+        dispatch(resetCustomer());
         dispatch(setWelcomeScreenView('select'));
         dispatch(setIsCloneMode(false));
         dispatch(setIsEditMode(false));
